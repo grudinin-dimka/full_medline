@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+* {
+  font-family: "Rubik", sans-serif;
+} 
+
+:root {
+  /* Основные цвета */
+  --primary-color: #00ABBD;
+
+  /* Кнопки */
+  --button-default-color: var(--primary-color);
+  --button-default-color-hover: #26b8c7;
+  --button-remove-color: #cd3f3f;
+  --button-remove-color-hover: #d74949;
+
+  /* Поля ввода какой-либо информации */
+  --input-border-color-inactive: #cccccc;
+  --input-border-color-active: var(--primary-color);
+  --input-border-color-error: #ff9b9b;
+  --input-background-color-error: #fff4f4;
+
+  /* Капча */
+  --captcha-background-color: #dcdcdc;
+
+  /* svg */
+  --svg-icon-arrow-fill: rgba(0, 171, 189, 0.5);
+  --svg-icon-arrow-fill-hover: var(--primary-color);
+
+  /* Блоки с выводом ошибок */
+  --span-color-error: #ff5b5b;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #ffffff;
+}
+
+html, 
+body,
+#app {
+  min-height: 100dvh;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
