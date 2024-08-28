@@ -84,7 +84,15 @@ export default {
 		},
 		/* Получение ссылки к динамичному изображению */
 		getImagePath(path) {
-			return new URL(`../../../../storage/app/public/${path}`, import.meta.url).href;
+			const images = import.meta.glob('/storage/app/public/img/*', { eager: true });
+
+			const imagePath = `/storage/app/public/img/${path}.png`;
+			if (images[imagePath]) {
+				return images[imagePath].default;
+			} else {
+				const imagePath = `/storage/app/public/img/default.png`;
+				return images[imagePath].default;
+			};
 		},
       /* Изменение настроек слайдера */
 		changeCarousel() {

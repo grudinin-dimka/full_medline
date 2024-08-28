@@ -54,6 +54,9 @@
 							@input="currentSlide.data.name.edited = true"
 						/>
 					</article>
+					<span v-if="currentSlide.errors.name.status">{{
+						currentSlide.errors.name.value
+					}}</span>
 				</div>
 				<div class="modal-body-inputs-block">
 					<block-label
@@ -70,13 +73,23 @@
 							@input="currentSlide.data.link.edited = true"
 						/>
 					</article>
+					<span v-if="currentSlide.errors.link.status">
+						{{ currentSlide.errors.link.value }}
+					</span>
 				</div>
 				<div class="modal-body-inputs-block">
 					<block-label>Загрузить новое фото</block-label>
 					<article>
 						<SlidePath :height="50" :width="50" />
-						<input type="file" ref="fileUpload" />
+						<input
+							type="file"
+							ref="fileUpload"
+							:class="{ erros: currentSlide.errors.file.status }"
+						/>
 					</article>
+					<span v-if="currentSlide.errors.file.status">
+						{{ currentSlide.errors.file.value }}
+					</span>
 				</div>
 			</div>
 			<BlockButtons>
@@ -109,7 +122,16 @@
 				:class="{ hide: slide.hide }"
 				@click="openSlide(slide)"
 			>
-				<img :src="getImagePath(slide.path)" :alt="slide.name" />
+				<div
+					v-bind:style="{
+						'background-image': `url(${getImagePath(slide.path)})`,
+						height: '275px',
+						'background-size': 'contain	',
+						'background-position': 'center center',
+						'background-repeat': 'no-repeat',
+					}"
+				></div>
+				<!-- <img :src="getImagePath(slide.path)" :alt="slide.name" /> -->
 				<div class="slider-block-id">#{{ slide.order }}</div>
 				<div class="slider-block-info">
 					<article>
@@ -126,13 +148,13 @@
 					</article>
 					<article>
 						<SlidePath />
-						<label> {{ slide.path }} </label>
+						<label> {{ slide.path }}.png </label>
 					</article>
 				</div>
 			</div>
 		</div>
 		<BlockButtons>
-			<ButtonDefault @click="saveFooterChanges"> Добавить </ButtonDefault>
+			<ButtonDefault @click=""> Добавить </ButtonDefault>
 		</BlockButtons>
 	</block>
 
@@ -282,10 +304,27 @@ export default {
 	},
 	data() {
 		return {
+			url: {
+				images: import.meta.env.VITE_SOME_URL,
+			},	
 			slides: [],
 			currentSlide: {
 				status: false,
 				file: null,
+				errors: {
+					name: {
+						status: true,
+						value: null,
+					},
+					link: {
+						status: true,
+						value: null,
+					},
+					file: {
+						status: true,
+						value: null,
+					},
+				},
 				data: {
 					id: {
 						body: null,
@@ -364,7 +403,22 @@ export default {
 		},
 		/* Получение ссылки к динамичному изображению */
 		getImagePath(path) {
-			return new URL(`/storage/app/public/${path}`, import.meta.url).href;
+			const images = import.meta.glob("/storage/app/public/img/*.png", {
+				eager: true,
+			});
+
+			const imagePath = `/storage/app/public/img/${path}.png`;
+			if (images[imagePath]) {
+				return images[imagePath].default;
+			} else {
+				const imagePath = `/storage/app/public/img/default.png`;
+				return images[imagePath].default;
+			}
+		},
+		/* Получение ссылки к динамичному изображению */
+		getImagePathNEW(path) {
+			const imgUrl = `/storage/app/public/img/${path}.png`;
+			return imgUrl;
 		},
 		/* Открытие выбранного слайда */
 		openSlide(selectedSlide) {
@@ -501,51 +555,55 @@ export default {
 		},
 		/* Обновление данных слайда по данным из модального окна */
 		updateSlide() {
-			// /* Получение текущего объекта из массива this.slides */
-			// let resultSlideCurrent = this.slides.filter(
-			// 	(slide) => slide.id === this.currentSlide.data.id.body
-			// );
-			// let filteredSlideCurrent = resultSlideCurrent[0];
+			/* Получение текущего объекта из массива this.slides */
+			let resultSlideCurrent = this.slides.filter(
+				(slide) => slide.id === this.currentSlide.data.id.body
+			);
+			let filteredSlideCurrent = resultSlideCurrent[0];
 
-			// for (let key in filteredSlideCurrent) {
-			// 	if (key == "name" || key == "link") {
-			// 		filteredSlideCurrent[key] = this.currentSlide.data[key].body;
-			// 	} else if (key == "hide") {
-			// 		filteredSlideCurrent[key] = this.currentSlide.data[key].body;
-			// 	}
-			// }
+			for (let key in filteredSlideCurrent) {
+				if (key == "name" || key == "link") {
+					filteredSlideCurrent[key] = this.currentSlide.data[key].body;
+				} else if (key == "hide") {
+					filteredSlideCurrent[key] = this.currentSlide.data[key].body;
+				}
+			}
 
-			// /* Присваивание данных поля ввода файла пользователем в переменную */
-			// this.currentSlide.file = this.$refs.fileUpload.files[0];
-			// // Проверка на загрузку файла пользователем
-			// if (this.currentSlide.file) {
-			// 	this.currentSlide.file = this.$refs.fileUpload.files[0];
-			// 	let formData = new FormData();
-			// 	formData.append("image", this.currentSlide.file);
+			/* Присваивание данных поля ввода файла пользователем в переменную */
+			this.currentSlide.file = this.$refs.fileUpload.files[0];
 
-			// 	axios({
-			// 		method: "post",
-			// 		url: `${this.$store.state.axios.urlApi}` + `upload-file`,
-			// 		headers: {
-			// 			"Content-Type": "multipart/form-data",
-			// 			Authorization: `Bearer ${localStorage.getItem("token")}`,
-			// 		},
-			// 		data: formData,
-			// 	})
-			// 		.then((response) => {
-			// 			console.log(response.data);
-			// 			console.log(this.$refs.modalImg.src);
+			/* Проверка на загрузку файла пользователем */
+			if (!this.currentSlide.file) return;
 
-			// 			this.$refs.modalImg.src = this.getImagePath(response.data);
-			// 		})
-			// 		.catch((error) => {
-			// 			console.log(error);
-			// 		});
-			// }
+			/* Проверка на тип загруженного файла */
+			if (this.currentSlide.file.type !== "image/png") {
+				this.currentSlide.errors.file.value = "Недопустимый тип файла.";
+				this.currentSlide.errors.file.status = true;
+				return;
+			}
 
-			const glob = import.meta.glob("/storage/app/public/img/*.png", { eager: true });
-			console.log(glob);
-			
+			this.currentSlide.file = this.$refs.fileUpload.files[0];
+			let formData = new FormData();
+			formData.append("image", this.currentSlide.file);
+			filteredSlideCurrent.path = 'testname';
+
+			axios({
+				method: "post",
+				url: `${this.$store.state.axios.urlApi}` + `upload-file`,
+				headers: {
+					"Content-Type": "multipart/form-data",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: formData,
+			})
+				.then((response) => {
+					filteredSlideCurrent.path = 'testname';
+					console.log(response);
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+
 			// this.$refs.modal.closeModal();
 			// this.clearSlideEdited();
 		},
@@ -690,6 +748,7 @@ export default {
 		},
 	},
 	mounted() {
+		console.log(import.meta.env.VITE_SOME_URL);
 		// Получение массива слайдов с сервера
 		axios({
 			method: "post",
@@ -752,7 +811,7 @@ export default {
 .modal-body-inputs-block {
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: 5px;
 }
 
 .modal-body-inputs-block > article {
@@ -793,6 +852,10 @@ export default {
 
 .modal-body-inputs-block > article > input:focus {
 	border: 2px solid var(--input-border-color-active);
+}
+
+.modal-body-inputs-block > span {
+	color: var(--span-color-error);
 }
 
 textarea {

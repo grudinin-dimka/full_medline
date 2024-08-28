@@ -21,7 +21,7 @@ class AdminController extends Controller
   /*-----------------------------------------*/
   /*-----------Изменение слайдера------------*/
   /*-----------------------------------------*/
-  // Изменение состояние слайда 
+  /* Изменение состояние слайда  */
   public function saveSlidesChanges(Request $request) {
     foreach ($request->slides as $key => $value) {
       $slide = Slide::find($value['id']);
@@ -35,19 +35,23 @@ class AdminController extends Controller
     return "Данные обновлены.";
   } 
 
-  // Изменение состояние слайда 
+  /* Изменение состояние слайда */ 
   	public function uploadFile(Request $request) {
 		// Проверка на наличие переменной image с файлом в запросе 
 		if($request->hasFile('image')) {
-			$newFile = $request->file('image')->store('img', 'public'); 
-		};
-		return $newFile;
+      $path = $request->file('image')->storeAs(
+          'img',
+          'testname.png',
+          'public'
+      );
+    };
+    return $path;
 	} 
 
   /*-----------------------------------------*/
   /*------------Изменение футера-------------*/
   /*-----------------------------------------*/
-  // Сохранение футера 
+  /* Сохранение футера */ 
   public function saveFooter(Request $request) {
     $footer = Footer::find(1);
     $footerUpdate = $footer->update([
@@ -66,7 +70,7 @@ class AdminController extends Controller
     };
   }
 
-  // Очистка футера 
+  /* Очистка футера */ 
   public function clearFooter(Request $request) {
     $footer = Footer::find(1);
     $footer->update([
