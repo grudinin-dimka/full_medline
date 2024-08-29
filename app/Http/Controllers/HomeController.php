@@ -19,8 +19,16 @@ class HomeController extends Controller
   /*-----------------------------------------*/
   /*-------------Вывод значений--------------*/
   /*-----------------------------------------*/
-  public function getSlides(Request $request) {
+  public function getSlidesAll(Request $request) {
     $slides = Slide::all();
+    foreach ($slides as $key => $value) {
+      $slides[$key]->path = Storage::url($value->filename);
+    };
+    return $slides;
+  } 
+
+  public function getSlidesNotHide(Request $request) {
+    $slides = Slide::where('hide', false)->get();
     foreach ($slides as $key => $value) {
       $slides[$key]->path = Storage::url($value->filename);
     };

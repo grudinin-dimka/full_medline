@@ -1,7 +1,7 @@
 <template>
 	<!-- Модальное окно -->
-	<modal ref="modal" @closeModal="clearSlideEdited">
-		<template #button-hide>
+	<modal ref="modal" @closeModal="closeSlide" :modal="modal">
+		<template #button-hide v-if="modal.type == 'edit'">
 			<IconHide
 				v-if="currentSlide.data.hide.body"
 				:height="26"
@@ -15,7 +15,10 @@
 				@click="changeSlideHide"
 			/>
 		</template>
-		<template #title>
+		<template #title v-if="modal.type == 'add'">
+			Добавление нового слайда
+		</template>
+		<template #title v-if="modal.type == 'edit'">
 			<icon-arrow
 				:width="16"
 				:height="16"
@@ -32,20 +35,13 @@
 		</template>
 		<template #body>
 			<div
+				v-if="modal.type == 'edit'"
 				class="modal-body-img"
-				v-bind:style="{
-					backgroundImage : `url(${currentSlide.data.path.body})`,
+				:style="{
+					backgroundImage: `url(${currentSlide.data.path.body})`,
 				}"
 				ref="modalImg"
 			></div>
-
-			<!-- <img
-				v-if="currentSlide.status"
-				:src="`${currentSlide.data.path.body}`"
-				:alt="currentSlide.name"
-				class="modal-img"
-				ref="modalImg"
-			/> -->
 			<div class="modal-body-inputs">
 				<div class="modal-body-inputs-block">
 					<block-label
@@ -60,6 +56,7 @@
 							type="text"
 							v-model="currentSlide.data.name.body"
 							@input="currentSlide.data.name.edited = true"
+							placeholder="Название слайда"
 						/>
 					</article>
 					<span v-if="currentSlide.errors.name.status">{{
@@ -79,6 +76,7 @@
 							type="text"
 							v-model="currentSlide.data.link.body"
 							@input="currentSlide.data.link.edited = true"
+							placeholder="Ссылка слайда"
 						/>
 					</article>
 					<span v-if="currentSlide.errors.link.status">
@@ -86,13 +84,14 @@
 					</span>
 				</div>
 				<div class="modal-body-inputs-block">
-					<block-label>Загрузить новое фото</block-label>
+					<block-label>Загрузить новое фото (820x958)</block-label>
 					<article>
 						<SlidePath :height="50" :width="50" />
 						<input
 							type="file"
 							ref="fileUpload"
 							:class="{ erros: currentSlide.errors.file.status }"
+							placeholder="Файл"
 						/>
 					</article>
 					<span v-if="currentSlide.errors.file.status">
@@ -100,10 +99,15 @@
 					</span>
 				</div>
 			</div>
-			<BlockButtons>
+			<BlockButtons v-if="modal.type == 'edit'">
 				<ButtonRemove @click.prevent="deleteSlide"> Удалить </ButtonRemove>
 				<ButtonDefault @click.prevent="updateSlide">
 					Обновить
+				</ButtonDefault>
+			</BlockButtons>
+			<BlockButtons v-if="modal.type == 'add'">
+				<ButtonDefault @click.prevent="createSlide">
+					Добавить
 				</ButtonDefault>
 			</BlockButtons>
 		</template>
@@ -128,7 +132,7 @@
 				:key="slide.id"
 				class="slider-block"
 				:class="{ hide: slide.hide }"
-				@click="openSlide(slide)"
+				@click="openSlide(slide, 'edit')"
 			>
 				<div
 					v-bind:style="{
@@ -139,7 +143,6 @@
 						'background-repeat': 'no-repeat',
 					}"
 				></div>
-				<!-- <img :src="getImagePathLink(slide.path)" :alt="slide.name" /> -->
 				<div class="slider-block-id">#{{ slide.order }}</div>
 				<div class="slider-block-info">
 					<article>
@@ -162,7 +165,9 @@
 			</div>
 		</div>
 		<BlockButtons>
-			<ButtonDefault @click=""> Добавить </ButtonDefault>
+			<ButtonDefault @click="openSlide(null, 'add')">
+				Добавить
+			</ButtonDefault>
 		</BlockButtons>
 	</block>
 
@@ -314,9 +319,13 @@ export default {
 		return {
 			url: {
 				images: import.meta.env.VITE_SOME_URL,
-				public: 'http://127.0.0.1:5173/storage/app/public/img',
-			},	
+				public: "http://127.0.0.1:5173/storage/app/public/img",
+			},
 			slides: [],
+			modal: {
+				status: false,
+				type: null,
+			},
 			currentSlide: {
 				status: false,
 				file: null,
@@ -428,14 +437,22 @@ export default {
 				return images[imagePath].default;
 			}
 		},
-		/* Открытие выбранного слайда */
-		openSlide(selectedSlide) {
+		/* Открытие слайда */
+		openSlide(selectedSlide, type) {
+			document.body.classList.toggle("modal-open");
 			try {
-				for (let key in selectedSlide) {
-					this.currentSlide.data[key].body = selectedSlide[key];
+				if (type == "edit") {
+					for (let key in selectedSlide) {
+						this.currentSlide.data[key].body = selectedSlide[key];
+					}
+					this.modal.status = true;
+					this.modal.type = "edit";
+					this.currentSlide.status = true;
+				} else if (type == "add") {
+					this.modal.status = true;
+					this.modal.type = type;
+					this.currentSlide.status = true;
 				}
-				this.$store.commit("changeModal");
-				this.currentSlide.status = true;
 			} catch (error) {
 				let debbugStory = {
 					title: "Ошибка.",
@@ -444,6 +461,15 @@ export default {
 				};
 				this.$store.commit("debuggerState", debbugStory);
 			}
+		},
+		/* Закрытие слайда */
+		closeSlide() {
+			document.body.classList.toggle("modal-open");
+			for (let key in this.currentSlide.data) {
+				this.currentSlide.data[key].body = null;
+			}
+			this.modal.status = false;
+			this.clearSlideEdited();
 		},
 		/* Изменение состояния скрытия выбранного слайда */
 		changeSlideHide() {
@@ -581,7 +607,7 @@ export default {
 			this.currentSlide.file = this.$refs.fileUpload.files[0];
 
 			/* Проверка на загрузку файла пользователем */
-			if (!this.currentSlide.file) return;
+			if (!this.currentSlide.file) return this.closeSlide();
 
 			/* Проверка на тип загруженного файла */
 			if (this.currentSlide.file.type !== "image/png") {
@@ -589,7 +615,7 @@ export default {
 				this.currentSlide.errors.file.status = true;
 				return;
 			}
-
+			/* Загрузка файла */
 			this.currentSlide.file = this.$refs.fileUpload.files[0];
 			let formData = new FormData();
 			formData.append("image", this.currentSlide.file);
@@ -609,36 +635,87 @@ export default {
 						body: "Картинка успешно загружена.",
 						type: "Completed",
 					};
-					this.$store.commit("debuggerState", debbugStory);
 					this.currentSlide.data.path.body = response.data;
 					filteredSlideCurrent.path = response.data;
-					filteredSlideCurrent.filename = response.data.substring(9, response.data.length);
+					filteredSlideCurrent.filename = response.data.substring(
+						9,
+						response.data.length
+					);
 				})
 				.catch((error) => {
 					console.log(error);
 				});
-
-			this.$refs.modal.closeModal();
-			this.clearSlideEdited();
+			this.closeSlide();
 		},
 		/* Удаление выбранного слайда */
 		deleteSlide() {
 			console.log(this.currentSlide);
 			console.log("delete");
 		},
+		/* Создание нового слайда */
+		createSlide() {
+			/* Присваивание данных поля ввода файла пользователем в переменную */
+			this.currentSlide.file = this.$refs.fileUpload.files[0];
+
+			/* Проверка на загрузку файла пользователем */
+			if (!this.currentSlide.file) return console.log("Файл не загружен.");
+
+			/* Проверка на тип загруженного файла */
+			if (this.currentSlide.file.type !== "image/png") {
+				this.currentSlide.errors.file.value = "Недопустимый тип файла.";
+				this.currentSlide.errors.file.status = true;
+				return;
+			}
+			/* Загрузка файла */
+			this.currentSlide.file = this.$refs.fileUpload.files[0];
+			let formData = new FormData();
+			formData.append("image", this.currentSlide.file);
+
+			axios({
+				method: "post",
+				url: `${this.$store.state.axios.urlApi}` + `upload-file`,
+				headers: {
+					"Content-Type": "multipart/form-data",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: formData,
+			})
+				.then((response) => {
+					let debbugStory = {
+						title: "Успешно!",
+						body: "Картинка успешно загружена.",
+						type: "Completed",
+					};
+
+					this.slides.push({
+						id: 0,
+						name: this.currentSlide.data.name.body,
+						link: this.currentSlide.data.link.body,
+						path: response.data,
+						filename: response.data.substring(9, response.data.length),
+						hide: false,
+						order: 7,
+					});
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+
+			console.log("create");
+		},
 		/* Сохранение изменений в базе данных */
 		saveSlidesChanges() {
 			let dataSlides = [];
 			/* Копирование данных слайдов */
-			for(let i = 0; i < this.slides.length; i++) {
-				dataSlides.push(Object.assign({}, this.slides[i])); 
-			};
+			for (let i = 0; i < this.slides.length; i++) {
+				dataSlides.push(Object.assign({}, this.slides[i]));
+			}
 			/* Удаление свойства path из данных */
-			for(let i = 0; i < dataSlides.length; i++) {
-				for(let key in dataSlides[i]) {
+			for (let i = 0; i < dataSlides.length; i++) {
+				for (let key in dataSlides[i]) {
 					delete dataSlides[i].path;
 				}
-			};
+			}
 			axios({
 				method: "post",
 				url: `${this.$store.state.axios.urlApi}` + `save-slides-changes`,
@@ -777,10 +854,9 @@ export default {
 		// Получение массива слайдов с сервера
 		axios({
 			method: "post",
-			url: `${this.$store.state.axios.urlApi}` + `get-slides`,
+			url: `${this.$store.state.axios.urlApi}` + `get-slides-all`,
 		})
 			.then((response) => {
-				console.log(response.data);
 				this.slides = response.data;
 				this.sortSlider();
 			})
@@ -831,8 +907,8 @@ export default {
 .modal-body-img {
 	height: 350px;
 	background-size: contain;
-	background-position : center center;
-	background-repeat : no-repeat;
+	background-position: center center;
+	background-repeat: no-repeat;
 	padding: 5px;
 	border-radius: 10px;
 }

@@ -13,7 +13,8 @@ Route::post('/logout', [LoginController::class, 'logoutUser'])->middleware('auth
 Route::post('/create', [LoginController::class, 'createUser']);
 
 // Общий функционал
-Route::post('/get-slides', [HomeController::class, 'getSlides']);
+Route::post('/get-slides-all', [HomeController::class, 'getSlidesAll']);
+Route::post('/get-slides-not-hide', [HomeController::class, 'getSlidesNotHide']);
 Route::post('/get-footer', [HomeController::class, 'getFooter']);
 
 // Функционал администратора

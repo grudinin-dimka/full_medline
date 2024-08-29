@@ -10,11 +10,21 @@
 	>
 		<slide v-for="slide in slides" :key="slide">
 			<a :href="slide.link">
-				<img
+				<div
+					:style="{
+						backgroundImage: `url(${slide.path})`,
+						height: '375px',
+						width: '300px',
+						backgroundSize: 'contain',
+						backgroundPosition: 'center center',
+						backgroundRepeat: 'no-repeat',
+					}"
+				></div>
+				<!-- <img
 					:src="slide.path"
 					:alt="slide.name"
 					width="300px"
-				/>
+				/> -->
 			</a>
 		</slide>
 
@@ -53,7 +63,7 @@ export default {
 		// Получение массива слайдов с сервера
 		axios({
 			method: "post",
-			url: `${this.$store.state.axios.urlApi}` + `get-slides`,
+			url: `${this.$store.state.axios.urlApi}` + `get-slides-not-hide`,
 		})
 			.then((response) => {
 				this.slides = response.data;
@@ -82,7 +92,7 @@ export default {
 		sortSlider() {
 			this.slides.sort((a, b) => a.order - b.order);
 		},
-      /* Изменение настроек слайдера */
+		/* Изменение настроек слайдера */
 		changeCarousel() {
 			let windowWidth = window.document.documentElement.clientWidth;
 

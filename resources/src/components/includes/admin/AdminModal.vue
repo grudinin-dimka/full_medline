@@ -1,7 +1,7 @@
 <template>
 	<div
 		class="modal"
-		:class="{ active: $store.state.modal.status }"
+		:class="{ active: modal.status }"
 		@click.self="closeModal()"
 	>
 		<div class="modal-container">
@@ -43,9 +43,17 @@
 
 <script>
 export default {
+	props: {
+		modal: Object,
+		required: true,
+		default: () => {
+			return {
+				status: false,
+			};
+		},
+	},
 	methods: {
 		closeModal() {
-			this.$store.commit("changeModal");
 			this.$emit("closeModal");
 		},
 	},

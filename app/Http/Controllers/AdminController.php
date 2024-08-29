@@ -33,7 +33,23 @@ class AdminController extends Controller
         'order' => $value['order'],
       ]);
     };
-    return "Данные обновлены.";
+
+    $slides = Slide::all();
+    $files = Storage::allFiles('public');
+    foreach ($files as $fileKey => $fileValue) {
+      $fileUses = false;
+      foreach ($slides as $slideKey => $slideValue) {
+        if ($slideValue->filename == substr($fileValue, 7)) {
+          $fileUses = true;
+        };
+      };
+
+      if (!$fileUses) {
+        Storage::delete($fileValue);
+      }
+    };
+
+    return true;
   } 
 
   /* Изменение состояние слайда */ 
