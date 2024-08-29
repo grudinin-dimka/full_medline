@@ -23,8 +23,9 @@ class AdminController extends Controller
   /*-----------------------------------------*/
   /* Изменение состояние слайда  */
   public function saveSlidesChanges(Request $request) {
+    /* Изменение содержимого слайдов */
     foreach ($request->slides as $key => $value) {
-      $slide = Slide::find($value['id']);
+      $slide = Slide::find($value['order']);
       $slideUpdate = $slide->update([
         'name' => $value['name'],
         'link' => $value['link'],
@@ -34,6 +35,7 @@ class AdminController extends Controller
       ]);
     };
 
+    /* Удаление неиспользуемых файлов */
     $slides = Slide::all();
     $files = Storage::allFiles('public');
     foreach ($files as $fileKey => $fileValue) {

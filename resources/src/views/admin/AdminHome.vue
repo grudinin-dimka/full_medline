@@ -344,10 +344,6 @@ export default {
 					},
 				},
 				data: {
-					id: {
-						body: null,
-						edited: false,
-					},
 					link: {
 						body: null,
 						edited: false,
@@ -361,14 +357,6 @@ export default {
 						edited: false,
 					},
 					path: {
-						body: null,
-						edited: false,
-					},
-					created_at: {
-						body: null,
-						edited: false,
-					},
-					updated_at: {
 						body: null,
 						edited: false,
 					},
@@ -476,7 +464,7 @@ export default {
 			try {
 				/* Фильтрация массива с объектми до нашего объекта в новый массив */
 				let resultSlideCurrent = this.slides.filter(
-					(slide) => slide.id === this.currentSlide.data.id.body
+					(slide) => slide.order === this.currentSlide.data.order.body
 				);
 				/* Получение нужного объекта */
 				let filteredSlideCurrent = resultSlideCurrent[0];
@@ -521,7 +509,7 @@ export default {
 
 				/* Фильтрация массива с объектми до нашего объекта в новый массив */
 				let resultSlideCurrent = this.slides.filter(
-					(slide) => slide.id === this.currentSlide.data.id.body
+					(slide) => slide.order === this.currentSlide.data.order.body
 				);
 				/* Получение текущего объекта */
 				let filteredSlideCurrent = resultSlideCurrent[0];
@@ -591,7 +579,7 @@ export default {
 		updateSlide() {
 			/* Получение текущего объекта из массива this.slides */
 			let resultSlideCurrent = this.slides.filter(
-				(slide) => slide.id === this.currentSlide.data.id.body
+				(slide) => slide.order === this.currentSlide.data.order.body
 			);
 			let filteredSlideCurrent = resultSlideCurrent[0];
 
@@ -688,20 +676,19 @@ export default {
 					};
 
 					this.slides.push({
-						id: 0,
 						name: this.currentSlide.data.name.body,
 						link: this.currentSlide.data.link.body,
 						path: response.data,
 						filename: response.data.substring(9, response.data.length),
 						hide: false,
-						order: 7,
+						order: 1 + this.slides[this.slides.length - 1].order,
 					});
 				})
 				.catch((error) => {
 					console.log(error);
 				});
 
-			console.log("create");
+			console.log(this.slides);
 		},
 		/* Сохранение изменений в базе данных */
 		saveSlidesChanges() {
@@ -857,6 +844,7 @@ export default {
 			url: `${this.$store.state.axios.urlApi}` + `get-slides-all`,
 		})
 			.then((response) => {
+				console.log(response.data);
 				this.slides = response.data;
 				this.sortSlider();
 			})
