@@ -27,11 +27,12 @@ class AdminController extends Controller
       $slide = Slide::find($value['id']);
       $slideUpdate = $slide->update([
         'name' => $value['name'],
-        'path' => $value['path'],
+        'link' => $value['link'],
+        'filename' => $value['filename'],
         'hide' => $value['hide'],
         'order' => $value['order'],
       ]);
-    }
+    };
     return "Данные обновлены.";
   } 
 
@@ -39,13 +40,12 @@ class AdminController extends Controller
   	public function uploadFile(Request $request) {
 		// Проверка на наличие переменной image с файлом в запросе 
 		if($request->hasFile('image')) {
-      $path = $request->file('image')->storeAs(
-          'img',
-          'testname.png',
+      $path = $request->file('image')->store(
+          './',
           'public'
       );
     };
-    return $path;
+    return Storage::url(substr($path, 3));
 	} 
 
   /*-----------------------------------------*/

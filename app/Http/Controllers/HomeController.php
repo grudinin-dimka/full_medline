@@ -12,6 +12,8 @@ use App\Models\User;
 use App\Models\Slide;
 use App\Models\Footer;
 
+use Illuminate\Support\Facades\Storage;
+
 class HomeController extends Controller
 {
   /*-----------------------------------------*/
@@ -19,6 +21,9 @@ class HomeController extends Controller
   /*-----------------------------------------*/
   public function getSlides(Request $request) {
     $slides = Slide::all();
+    foreach ($slides as $key => $value) {
+      $slides[$key]->path = Storage::url($value->filename);
+    };
     return $slides;
   } 
 

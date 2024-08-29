@@ -31,13 +31,21 @@
 			/>
 		</template>
 		<template #body>
-			<img
+			<div
+				class="modal-body-img"
+				v-bind:style="{
+					backgroundImage : `url(${currentSlide.data.path.body})`,
+				}"
+				ref="modalImg"
+			></div>
+
+			<!-- <img
 				v-if="currentSlide.status"
-				:src="getImagePath(currentSlide.data.path.body)"
+				:src="`${currentSlide.data.path.body}`"
 				:alt="currentSlide.name"
 				class="modal-img"
 				ref="modalImg"
-			/>
+			/> -->
 			<div class="modal-body-inputs">
 				<div class="modal-body-inputs-block">
 					<block-label
@@ -124,14 +132,14 @@
 			>
 				<div
 					v-bind:style="{
-						'background-image': `url(${getImagePath(slide.path)})`,
+						'background-image': `url(${slide.path})`,
 						height: '275px',
 						'background-size': 'contain	',
 						'background-position': 'center center',
 						'background-repeat': 'no-repeat',
 					}"
 				></div>
-				<!-- <img :src="getImagePath(slide.path)" :alt="slide.name" /> -->
+				<!-- <img :src="getImagePathLink(slide.path)" :alt="slide.name" /> -->
 				<div class="slider-block-id">#{{ slide.order }}</div>
 				<div class="slider-block-info">
 					<article>
@@ -148,7 +156,7 @@
 					</article>
 					<article>
 						<SlidePath />
-						<label> {{ slide.path }}.png </label>
+						<label> {{ slide.path }} </label>
 					</article>
 				</div>
 			</div>
@@ -306,6 +314,7 @@ export default {
 		return {
 			url: {
 				images: import.meta.env.VITE_SOME_URL,
+				public: 'http://127.0.0.1:5173/storage/app/public/img',
 			},	
 			slides: [],
 			currentSlide: {
@@ -335,6 +344,10 @@ export default {
 						edited: false,
 					},
 					name: {
+						body: null,
+						edited: false,
+					},
+					filename: {
 						body: null,
 						edited: false,
 					},
@@ -402,7 +415,7 @@ export default {
 			this.slides.sort((a, b) => a.order - b.order);
 		},
 		/* Получение ссылки к динамичному изображению */
-		getImagePath(path) {
+		getImagePathGlob(path) {
 			const images = import.meta.glob("/storage/app/public/img/*.png", {
 				eager: true,
 			});
@@ -414,11 +427,6 @@ export default {
 				const imagePath = `/storage/app/public/img/default.png`;
 				return images[imagePath].default;
 			}
-		},
-		/* Получение ссылки к динамичному изображению */
-		getImagePathNEW(path) {
-			const imgUrl = `/storage/app/public/img/${path}.png`;
-			return imgUrl;
 		},
 		/* Открытие выбранного слайда */
 		openSlide(selectedSlide) {
@@ -585,7 +593,6 @@ export default {
 			this.currentSlide.file = this.$refs.fileUpload.files[0];
 			let formData = new FormData();
 			formData.append("image", this.currentSlide.file);
-			filteredSlideCurrent.path = 'testname';
 
 			axios({
 				method: "post",
@@ -597,15 +604,22 @@ export default {
 				data: formData,
 			})
 				.then((response) => {
-					filteredSlideCurrent.path = 'testname';
-					console.log(response);
+					let debbugStory = {
+						title: "Успешно!",
+						body: "Картинка успешно загружена.",
+						type: "Completed",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+					this.currentSlide.data.path.body = response.data;
+					filteredSlideCurrent.path = response.data;
+					filteredSlideCurrent.filename = response.data.substring(9, response.data.length);
 				})
 				.catch((error) => {
 					console.log(error);
 				});
 
-			// this.$refs.modal.closeModal();
-			// this.clearSlideEdited();
+			this.$refs.modal.closeModal();
+			this.clearSlideEdited();
 		},
 		/* Удаление выбранного слайда */
 		deleteSlide() {
@@ -614,6 +628,17 @@ export default {
 		},
 		/* Сохранение изменений в базе данных */
 		saveSlidesChanges() {
+			let dataSlides = [];
+			/* Копирование данных слайдов */
+			for(let i = 0; i < this.slides.length; i++) {
+				dataSlides.push(Object.assign({}, this.slides[i])); 
+			};
+			/* Удаление свойства path из данных */
+			for(let i = 0; i < dataSlides.length; i++) {
+				for(let key in dataSlides[i]) {
+					delete dataSlides[i].path;
+				}
+			};
 			axios({
 				method: "post",
 				url: `${this.$store.state.axios.urlApi}` + `save-slides-changes`,
@@ -622,7 +647,7 @@ export default {
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: {
-					slides: this.slides,
+					slides: dataSlides,
 				},
 			})
 				.then((response) => {
@@ -640,6 +665,7 @@ export default {
 						type: "Error",
 					};
 					this.$store.commit("debuggerState", debbugStory);
+					console.log(error);
 				});
 		},
 
@@ -748,13 +774,13 @@ export default {
 		},
 	},
 	mounted() {
-		console.log(import.meta.env.VITE_SOME_URL);
 		// Получение массива слайдов с сервера
 		axios({
 			method: "post",
 			url: `${this.$store.state.axios.urlApi}` + `get-slides`,
 		})
 			.then((response) => {
+				console.log(response.data);
 				this.slides = response.data;
 				this.sortSlider();
 			})
@@ -800,6 +826,15 @@ export default {
 	border-radius: 20px;
 	width: 300px;
 	align-self: center;
+}
+
+.modal-body-img {
+	height: 350px;
+	background-size: contain;
+	background-position : center center;
+	background-repeat : no-repeat;
+	padding: 5px;
+	border-radius: 10px;
 }
 
 .modal-body-inputs {
