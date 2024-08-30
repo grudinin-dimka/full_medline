@@ -7,6 +7,10 @@
 :root {
   /* Основные цвета */
   --primary-color: #00ABBD;
+  --create-background-color: rgb(243, 255, 240);
+  --create-border-color: #aaf281;
+  --delete-background-color: rgb(255, 240, 240);
+  --delete-border-color: #f28181;
 
   /* Кнопки */
   --button-default-color: var(--primary-color);
@@ -45,4 +49,6 @@ body,
 
 body.modal-open {
   overflow: hidden;
+  padding-right: 17px;
+  background-color: #ececec;
 }

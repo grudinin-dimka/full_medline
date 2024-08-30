@@ -1,7 +1,11 @@
 <template>
 	<div
 		class="modal"
-		:class="{ active: modal.status }"
+		:class="{ 
+			active: modal.status,
+			create: modal.slide.create,
+			delete: modal.slide.delete,
+		}"
 		@click.self="closeModal()"
 	>
 		<div class="modal-container">
@@ -100,6 +104,16 @@ export default {
 
 .modal.active .modal-container {
 	transform: scale(1);
+}
+
+.modal.create .modal-container {
+	background-color: var(--create-background-color);
+	border: 3px solid var(--create-border-color);
+}
+
+.modal.delete .modal-container {
+	background-color: var(--delete-background-color);
+	border: 2px solid var(--delete-border-color);
 }
 
 .modal-head {

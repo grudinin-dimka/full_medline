@@ -1,8 +1,9 @@
 <template>
 	<!-- Дебагер -->
 	<debugger />
+
 	<!-- Модальное окно -->
-	<modal />
+	<modal/>
 	<!-- Шапка -->
 	<main-header />
 	<!-- Навигация -->
@@ -19,8 +20,17 @@ import Modal from "./includes/main/MainModal.vue";
 import MainHeader from "./includes/main/MainHeader.vue";
 import MainNav from "./includes/main/MainNav.vue";
 import MainFooter from "./includes/main/MainFooter.vue";
+import Loader from "./includes/loader.vue";
 
 export default {
+	data() {
+		return {
+			loader: {
+				loading: true,
+				other: false,
+			},
+		};
+	},
 	components: {
 		Debugger,
 		Modal,

@@ -2,17 +2,21 @@
 	<!-- Дебагер -->
 	<debugger></debugger>
 
+	<!-- Загрузка страницы -->
+	<Loader v-if="loader.loading" />
+
 	<!-- Шапка страницы -->
-	<AdminHeader />
+	<AdminHeader v-if="loader.other" />
 	<!-- Боковая панель страницы -->
-	<AdminAside />
+	<AdminAside v-if="loader.other" />
 	<!-- Основное содержимое страницы -->
-	<AdminContent />
+	<AdminContent v-if="loader.other" />
 </template>
 
 <script>
 import { RouterLink, RouterView } from "vue-router";
 import Debugger from "./includes/Debugger.vue";
+import Loader from "./includes/loader.vue";
 import axios from "axios";
 import AdminHeader from "./includes/admin/AdminHeader.vue";
 import AdminAside from "./includes/admin/AdminAside.vue";
@@ -20,6 +24,14 @@ import AdminContent from "./includes/admin/AdminContent.vue";
 import { compile } from "vue";
 
 export default {
+	data() {
+		return {
+			loader: {
+				loading: true,
+				other: false,
+			},
+		};
+	},
 	beforeCreate() {
 		// Проверка начилия токена в локальном хранилище
 		if (!localStorage.getItem("token")) {
@@ -36,7 +48,8 @@ export default {
 				},
 			})
 				.then((response) => {
-					return "bad";
+					this.loader.loading = false;
+					this.loader.other = true;
 				})
 				.catch((error) => {
 					this.$router.push("/login");
@@ -46,6 +59,7 @@ export default {
 		}
 	},
 	components: {
+		Loader,
 		Debugger,
 		RouterLink,
 		RouterView,

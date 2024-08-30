@@ -1,7 +1,14 @@
 <template>
 	<!-- Модальное окно -->
 	<modal ref="modal" @closeModal="closeSlide" :modal="modal">
-		<template #button-hide v-if="modal.type == 'edit'">
+		<template
+			#button-hide
+			v-if="
+				(modal.type == 'edit') &
+				!currentSlide.data.delete.body &
+				!currentSlide.data.create.body
+			"
+		>
 			<IconHide
 				v-if="currentSlide.data.hide.body"
 				:height="26"
@@ -18,7 +25,14 @@
 		<template #title v-if="modal.type == 'add'">
 			Добавление нового слайда
 		</template>
-		<template #title v-if="modal.type == 'edit'">
+		<template
+			#title
+			v-if="
+				(modal.type == 'edit') &
+				!currentSlide.data.delete.body &
+				!currentSlide.data.create.body
+			"
+		>
 			<icon-arrow
 				:width="16"
 				:height="16"
@@ -55,6 +69,7 @@
 						<input
 							type="text"
 							v-model="currentSlide.data.name.body"
+							ref="inputName"
 							@input="currentSlide.data.name.edited = true"
 							@blur="checkSliderName"
 							:class="{ error: currentSlide.errors.name.status }"
@@ -77,6 +92,7 @@
 						<input
 							type="text"
 							v-model="currentSlide.data.link.body"
+							ref="inputLink"
 							@input="currentSlide.data.link.edited = true"
 							@blur="checkSliderLink"
 							:class="{ error: currentSlide.errors.link.status }"
@@ -107,9 +123,26 @@
 				</div>
 			</div>
 			<BlockButtons v-if="modal.type == 'edit'">
-				<ButtonRemove @click.prevent="deleteSlide"> Удалить </ButtonRemove>
-				<ButtonDefault @click.prevent="updateSlide">
+				<ButtonRemove
+					v-if="
+						!currentSlide.data.create.body &
+						!currentSlide.data.delete.body
+					"
+					@click.prevent="deleteSlide"
+				>
+					Удалить
+				</ButtonRemove>
+				<ButtonDefault
+					v-if="!currentSlide.data.delete.body"
+					@click.prevent="updateSlide"
+				>
 					Обновить
+				</ButtonDefault>
+				<ButtonDefault
+					v-if="currentSlide.data.delete.body"
+					@click.prevent="deleteSlide"
+				>
+					Восстановить
 				</ButtonDefault>
 			</BlockButtons>
 			<BlockButtons v-if="modal.type == 'add'">
@@ -138,7 +171,11 @@
 				v-for="slide in slides"
 				:key="slide.id"
 				class="slider-block"
-				:class="{ hide: slide.hide }"
+				:class="{
+					hide: slide.hide,
+					create: slide.create,
+					delete: slide.delete,
+				}"
 				@click="openSlide(slide, 'edit')"
 			>
 				<div
@@ -332,6 +369,10 @@ export default {
 			modal: {
 				status: false,
 				type: null,
+				slide: {
+					create: false,
+					delete: false,
+				},
 			},
 			currentSlide: {
 				status: false,
@@ -351,11 +392,11 @@ export default {
 					},
 				},
 				data: {
-					link: {
+					name: {
 						body: "",
 						edited: false,
 					},
-					name: {
+					link: {
 						body: "",
 						edited: false,
 					},
@@ -373,6 +414,12 @@ export default {
 					},
 					hide: {
 						body: "",
+					},
+					create: {
+						body: false,
+					},
+					delete: {
+						body: false,
 					},
 				},
 			},
@@ -411,11 +458,11 @@ export default {
 		};
 	},
 	methods: {
-		/* -------------------------------------*/
-		/* ---------------Слайдер---------------*/
-		/* -------------------------------------*/
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |              СЛАЙДЕР              |*/
+		/* |___________________________________|*/
 		/* _____________________________________*/
-		/* 1.------Работа с полями ввода--------*/
+		/* 1.       Работа с полями ввода       */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		// Проверка поля имени
 		checkSliderName() {
@@ -487,9 +534,14 @@ export default {
 				this.currentSlide.data[key].edited = false;
 			}
 		},
-
+		// Очистка состояния редактирования
+		clearSlideErrors() {
+			for (let key in this.currentSlide.errors) {
+				this.currentSlide.errors[key].status = false;
+			}
+		},
 		/* _____________________________________*/
-		/* 2.--------Основные действия----------*/
+		/* 2.        Основные действия          */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		// Сортировка списка слайдов по порядку
 		sortSlider() {
@@ -511,20 +563,38 @@ export default {
 		},
 		// Открытие слайда
 		openSlide(selectedSlide, type) {
-			document.body.classList.toggle("modal-open");
 			try {
+				this.$refs.fileUpload.value = "";
+				
 				if (type == "edit") {
 					for (let key in selectedSlide) {
 						this.currentSlide.data[key].body = selectedSlide[key];
 					}
+					// Проверка, создан ли слайд или уже имеется
+					if (this.currentSlide.data.create.body === true) {
+						this.modal.slide.create = true;
+					} else {
+						this.modal.slide.create = false;
+					}
+					// Проверка, помечен ли слайд на удаление
+					if (this.currentSlide.data.delete.body === true) {
+						this.modal.slide.delete = true;
+					} else {
+						this.modal.slide.delete = false;
+					}
+
 					this.modal.status = true;
 					this.modal.type = "edit";
 					this.currentSlide.status = true;
 				} else if (type == "add") {
+					for (let key in this.currentSlide.data) {
+						this.currentSlide.data[key].body = "";
+					}
 					this.modal.status = true;
 					this.modal.type = type;
 					this.currentSlide.status = true;
 				}
+				document.body.classList.toggle("modal-open");
 			} catch (error) {
 				let debbugStory = {
 					title: "Ошибка.",
@@ -537,14 +607,12 @@ export default {
 		// Закрытие слайда
 		closeSlide() {
 			document.body.classList.toggle("modal-open");
-			for (let key in this.currentSlide.data) {
-				this.currentSlide.data[key].body = "";
-			}
 			this.modal.status = false;
 			this.clearSlideEdited();
+			this.clearSlideErrors();
 		},
 		/* _____________________________________*/
-		/* 3.-------Изменение состояний---------*/
+		/* 3.       Изменение состояний         */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		// Изменение скрытия выбранного слайда
 		changeSlideHide() {
@@ -657,116 +725,151 @@ export default {
 			}
 		},
 		/* _____________________________________*/
-		/* 4.-Сохранение, удаление, обновление--*/
+		/* 4. Сохранение, обновление, удаление  */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		// Создание нового слайда
 		createSlide() {
-			/* Присваивание данных поля ввода файла пользователем в переменную */
-			this.currentSlide.file = this.$refs.fileUpload.files[0];
+			try {
+				/* Присваивание данных поля ввода файла пользователем в переменную */
+				this.currentSlide.file = this.$refs.fileUpload.files[0];
 
-			if (!this.checkAllInputs(true, true, true)) {
-				return;
-			}
+				if (!this.checkAllInputs(true, true, true)) {
+					return;
+				}
 
-			/* Загрузка файла */
-			this.currentSlide.file = this.$refs.fileUpload.files[0];
-			let formData = new FormData();
-			formData.append("image", this.currentSlide.file);
+				/* Загрузка файла */
+				this.currentSlide.file = this.$refs.fileUpload.files[0];
+				let formData = new FormData();
+				formData.append("image", this.currentSlide.file);
 
-			axios({
-				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `upload-file`,
-				headers: {
-					"Content-Type": "multipart/form-data",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-				data: formData,
-			})
-				.then((response) => {
-					this.slides.push({
-						name: String(this.currentSlide.data.path.body),
-						link: String(this.currentSlide.data.link.body),
-						path: response.data,
-						filename: response.data.substring(9, response.data.length),
-						hide: false,
-						order: 1 + Number(this.slides[this.slides.length - 1].order),
-					});
+				axios({
+					method: "post",
+					url: `${this.$store.state.axios.urlApi}` + `upload-file`,
+					headers: {
+						"Content-Type": "multipart/form-data",
+						Authorization: `Bearer ${localStorage.getItem("token")}`,
+					},
+					data: formData,
 				})
-				.catch((error) => {
-					console.log(error);
-				});
-			console.log(this.currentSlide.data.name.body);
-			console.log(this.currentSlide.data.link.body);
-			this.closeSlide();
+					.then((response) => {
+						let debbugStory = {
+							title: "Успешно!",
+							body: "Картинка успешно загружена.",
+							type: "Completed",
+						};
+
+						this.slides.push({
+							name: this.$refs.inputName.value,
+							link: this.$refs.inputLink.value,
+							path: response.data,
+							filename: response.data.substring(9, response.data.length),
+							hide: false,
+							order: 1 + this.slides[this.slides.length - 1].order,
+							create: true,
+							delete: false,
+						});
+					})
+					.catch((error) => {
+						console.log(error);
+					});
+				this.closeSlide();
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Не удалось создать новый слайд.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
 		},
 		// Обновление данных слайда по данным из модального окна
 		updateSlide() {
-			if (!this.checkAllInputs(true, true, false)) {
-				return;
-			}
+			try {
+				if (!this.checkAllInputs(true, true, false)) {
+					return;
+				}
 
+				/* Получение текущего объекта из массива this.slides */
+				let resultSlideCurrent = this.slides.filter(
+					(slide) => slide.order === this.currentSlide.data.order.body
+				);
+				let filteredSlideCurrent = resultSlideCurrent[0];
+
+				for (let key in filteredSlideCurrent) {
+					if (key == "name" || key == "link") {
+						filteredSlideCurrent[key] = this.currentSlide.data[key].body;
+					} else if (key == "hide") {
+						filteredSlideCurrent[key] = this.currentSlide.data[key].body;
+					}
+				}
+
+				/* Присваивание данных поля ввода файла пользователем в переменную */
+				this.currentSlide.file = this.$refs.fileUpload.files[0];
+
+				/* Проверка на загрузку файла пользователем */
+				if (!this.currentSlide.file) return this.closeSlide();
+
+				/* Проверка на тип загруженного файла */
+				if (this.currentSlide.file.type !== "image/png") {
+					this.currentSlide.errors.file.value = "Недопустимый тип файла.";
+					this.currentSlide.errors.file.status = true;
+					return;
+				}
+				/* Загрузка файла */
+				this.currentSlide.file = this.$refs.fileUpload.files[0];
+				let formData = new FormData();
+				formData.append("image", this.currentSlide.file);
+
+				axios({
+					method: "post",
+					url: `${this.$store.state.axios.urlApi}` + `upload-file`,
+					headers: {
+						"Content-Type": "multipart/form-data",
+						Authorization: `Bearer ${localStorage.getItem("token")}`,
+					},
+					data: formData,
+				})
+					.then((response) => {
+						let debbugStory = {
+							title: "Успешно!",
+							body: "Картинка успешно загружена.",
+							type: "Completed",
+						};
+						this.currentSlide.data.path.body = response.data;
+						filteredSlideCurrent.path = response.data;
+						filteredSlideCurrent.filename = response.data.substring(
+							9,
+							response.data.length
+						);
+					})
+					.catch((error) => {
+						console.log(error);
+					});
+				this.closeSlide();
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Не удалось обновить данные слайда.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
+		// Удаление выбранного слайда
+		deleteSlide() {
 			/* Получение текущего объекта из массива this.slides */
 			let resultSlideCurrent = this.slides.filter(
 				(slide) => slide.order === this.currentSlide.data.order.body
 			);
 			let filteredSlideCurrent = resultSlideCurrent[0];
 
-			for (let key in filteredSlideCurrent) {
-				if (key == "name" || key == "link") {
-					filteredSlideCurrent[key] = this.currentSlide.data[key].body;
-				} else if (key == "hide") {
-					filteredSlideCurrent[key] = this.currentSlide.data[key].body;
-				}
+			if (filteredSlideCurrent.delete) {
+				filteredSlideCurrent.delete = false;
+			} else {
+				filteredSlideCurrent.delete = true;
 			}
 
-			/* Присваивание данных поля ввода файла пользователем в переменную */
-			this.currentSlide.file = this.$refs.fileUpload.files[0];
-
-			/* Проверка на загрузку файла пользователем */
-			if (!this.currentSlide.file) return this.closeSlide();
-
-			/* Проверка на тип загруженного файла */
-			if (this.currentSlide.file.type !== "image/png") {
-				this.currentSlide.errors.file.value = "Недопустимый тип файла.";
-				this.currentSlide.errors.file.status = true;
-				return;
-			}
-			/* Загрузка файла */
-			this.currentSlide.file = this.$refs.fileUpload.files[0];
-			let formData = new FormData();
-			formData.append("image", this.currentSlide.file);
-
-			axios({
-				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `upload-file`,
-				headers: {
-					"Content-Type": "multipart/form-data",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-				data: formData,
-			})
-				.then((response) => {
-					let debbugStory = {
-						title: "Успешно!",
-						body: "Картинка успешно загружена.",
-						type: "Completed",
-					};
-					this.currentSlide.data.path.body = response.data;
-					filteredSlideCurrent.path = response.data;
-					filteredSlideCurrent.filename = response.data.substring(
-						9,
-						response.data.length
-					);
-				})
-				.catch((error) => {
-					console.log(error);
-				});
 			this.closeSlide();
-		},
-		// Удаление выбранного слайда
-		deleteSlide() {
-			console.log(this.currentSlide);
-			console.log("delete");
 		},
 		// Сохранение изменений в базе данных
 		saveSlidesChanges() {
@@ -799,6 +902,11 @@ export default {
 						type: "Completed",
 					};
 					this.$store.commit("debuggerState", debbugStory);
+
+					/* Обновление свойства create в массиве слайдов */
+					for (let slide in this.slides) {
+						this.slides[slide].create = false;
+					}
 				})
 				.catch((error) => {
 					let debbugStory = {
@@ -810,10 +918,12 @@ export default {
 					console.log(error);
 				});
 		},
-
-		/* -------------------------------------*/
-		/* ----------Изменение футера-----------*/
-		/* -------------------------------------*/
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |               ФУТЕР               |*/
+		/* |___________________________________|*/
+		/* _____________________________________*/
+		/* 1.    Работа с текстовыми полями     */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		// Очистка всех полей футера
 		clearTextareaAll() {
 			for (const obj in this.footer) {
@@ -829,34 +939,10 @@ export default {
 			}
 			return true;
 		},
-		// Очистка футера
+		// Очистка всех полей футера
 		clearFooter() {
 			this.clearTextareaAll();
 			this.clearTextareaEdited();
-			axios({
-				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `clear-footer`,
-				headers: {
-					Accept: "application/json",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-			})
-				.then((response) => {
-					let debbugStory = {
-						title: "Успешно!",
-						body: "Все поля подвала в базе данных очищены.",
-						type: "Completed",
-					};
-					this.$store.commit("debuggerState", debbugStory);
-				})
-				.catch((error) => {
-					let debbugStory = {
-						title: "Ошибка.",
-						body: error.response.data,
-						type: "Error",
-					};
-					this.$store.commit("debuggerState", debbugStory);
-				});
 		},
 		// Контроль количества символов
 		controlSymbols(obj) {
@@ -877,10 +963,12 @@ export default {
 			// Отображение текущего количества символов
 			this.footer[`${obj}`].symbolsCount = this.footer[`${obj}`].body.length;
 		},
+		/* _____________________________________*/
+		/* 2.    Сохранение, редактирование     */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		// Сохранение всех полей
 		saveFooterChanges() {
 			this.clearTextareaEdited();
-
 			// Сохранение данных в базу данных
 			axios({
 				method: "post",
@@ -923,6 +1011,11 @@ export default {
 		})
 			.then((response) => {
 				this.slides = response.data;
+				// Добавление полей "delete" и "create" в каждую строку массива
+				for (let key in this.slides) {
+					this.slides[key].delete = false;
+					this.slides[key].create = false;
+				}
 				this.sortSlider();
 			})
 			.catch((error) => {
@@ -1086,6 +1179,16 @@ textarea:focus {
 .slider-block.hide {
 	border: 2px solid rgb(210, 210, 210);
 	background-color: rgb(230, 230, 230);
+}
+
+.slider-block.create {
+	background-color: var(--create-background-color);
+	border: 2px solid var(--create-border-color);
+}
+
+.slider-block.delete {
+	background-color: var(--delete-background-color);
+	border: 2px solid var(--delete-border-color);
 }
 
 .slider-block:hover {

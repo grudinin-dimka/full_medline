@@ -18,21 +18,37 @@ use App\Models\Footer;
 
 class AdminController extends Controller
 {
-  /*-----------------------------------------*/
-  /*-----------Изменение слайдера------------*/
-  /*-----------------------------------------*/
-  /* Изменение состояние слайда  */
+  /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+  /* |              СЛАЙДЕР              |*/
+  /* |___________________________________|*/
+  /* _____________________________________*/
+  /* 1.      Сохранение, удаление         */
+  /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+  // Сохранение содержимого всех слайдов
   public function saveSlidesChanges(Request $request) {
     /* Изменение содержимого слайдов */
     foreach ($request->slides as $key => $value) {
-      $slide = Slide::find($value['order']);
-      $slideUpdate = $slide->update([
-        'name' => $value['name'],
-        'link' => $value['link'],
-        'filename' => $value['filename'],
-        'hide' => $value['hide'],
-        'order' => $value['order'],
-      ]);
+      if ($value['delete'] === true) {
+        $slide = Slide::where('order', $value['order'])->first();
+        $slide->delete();
+      } else if ($value['create'] === true){
+        $slideCreate = Slide::create([
+          'name' => $value['name'],
+          'link' => $value['link'],
+          'filename' => $value['filename'],
+          'hide' => $value['hide'],
+          'order' => $value['order'],
+        ]);
+      } else {
+        $slide = Slide::where('order', $value['order'])->first();
+        $slideUpdate = $slide->update([
+          'name' => $value['name'],
+          'link' => $value['link'],
+          'filename' => $value['filename'],
+          'hide' => $value['hide'],
+          'order' => $value['order'],
+        ]);  
+      };
     };
 
     /* Удаление неиспользуемых файлов */
@@ -53,10 +69,9 @@ class AdminController extends Controller
 
     return true;
   } 
-
-  /* Изменение состояние слайда */ 
-  	public function uploadFile(Request $request) {
-		// Проверка на наличие переменной image с файлом в запросе 
+  // Загрузка файла на сервер 
+  public function uploadFile(Request $request) {
+		/* Проверка на наличие переменной image с файлом в запросе */  
 		if($request->hasFile('image')) {
       $path = $request->file('image')->store(
           './',
@@ -66,10 +81,13 @@ class AdminController extends Controller
     return Storage::url(substr($path, 3));
 	} 
 
-  /*-----------------------------------------*/
-  /*------------Изменение футера-------------*/
-  /*-----------------------------------------*/
-  /* Сохранение футера */ 
+  /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+  /* |               ФУТЕР               |*/
+  /* |___________________________________|*/
+  /* _____________________________________*/
+  /* 1.       Сохранение, очистка         */
+  /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+  // Сохранение футера 
   public function saveFooter(Request $request) {
     $footer = Footer::find(1);
     $footerUpdate = $footer->update([
@@ -80,7 +98,7 @@ class AdminController extends Controller
       'footer' => $request->footer,
     ]);
     
-    // Проверка обновления футера
+    /* Проверка обновления футера */
     if ($footerUpdate) {
       return true;
     } else {
@@ -88,7 +106,7 @@ class AdminController extends Controller
     };
   }
 
-  /* Очистка футера */ 
+  // Очистка футера 
   public function clearFooter(Request $request) {
     $footer = Footer::find(1);
     $footer->update([
