@@ -20,7 +20,7 @@ Route::post('/get-footer', [HomeController::class, 'getFooter']);
 // Функционал администратора
 Route::post('/save-footer', [AdminController::class, 'saveFooter'])->middleware('auth:sanctum');
 Route::post('/clear-footer', [AdminController::class, 'clearFooter'])->middleware('auth:sanctum');
-Route::post('/save-slides-changes', [AdminController::class, 'saveSlidesChanges'])->middleware('auth:sanctum');
+Route::post('/save-slides-changes', [AdminController::class, 'saveSlidesChanges']);
 Route::post('/upload-file', [AdminController::class, 'uploadFile'])->middleware('auth:sanctum');
 
 

@@ -26,48 +26,53 @@ class AdminController extends Controller
   /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
   // Сохранение содержимого всех слайдов
   public function saveSlidesChanges(Request $request) {
-    /* Изменение содержимого слайдов */
-    foreach ($request->slides as $key => $value) {
-      if ($value['delete'] === true) {
-        $slide = Slide::where('order', $value['order'])->first();
-        $slide->delete();
-      } else if ($value['create'] === true){
-        $slideCreate = Slide::create([
-          'name' => $value['name'],
-          'link' => $value['link'],
-          'filename' => $value['filename'],
-          'hide' => $value['hide'],
-          'order' => $value['order'],
-        ]);
-      } else {
-        $slide = Slide::where('order', $value['order'])->first();
-        $slideUpdate = $slide->update([
-          'name' => $value['name'],
-          'link' => $value['link'],
-          'filename' => $value['filename'],
-          'hide' => $value['hide'],
-          'order' => $value['order'],
-        ]);  
-      };
+    // /* Изменение содержимого слайдов */
+    // foreach ($request->slides as $key => $value) {
+    //   if ($value['delete'] === true) {
+    //     $slide = Slide::where('order', $value['order'])->first();
+    //     $slide->delete();
+    //   } else if ($value['create'] === true){
+    //     $slideCreate = Slide::create([
+    //       'name' => $value['name'],
+    //       'link' => $value['link'],
+    //       'filename' => $value['filename'],
+    //       'hide' => $value['hide'],
+    //       'order' => $value['order'],
+    //     ]);
+    //   } else {
+    //     $slide = Slide::where('order', $value['order'])->first();
+    //     $slideUpdate = $slide->update([
+    //       'name' => $value['name'],
+    //       'link' => $value['link'],
+    //       'filename' => $value['filename'],
+    //       'hide' => $value['hide'],
+    //       'order' => $value['order'],
+    //     ]);  
+    //   };
+    // };
+
+    $slides = Slide::all()->SortBy('order');
+    var_dump(count($slides));
+    var_dump($slides[5]);
+
+    foreach ($slides as $slideKey => $slideValue) {
+      // var_dump($slideValue);
     };
 
-    /* Удаление неиспользуемых файлов */
-    $slides = Slide::all();
-    $files = Storage::allFiles('public');
-    foreach ($files as $fileKey => $fileValue) {
-      $fileUses = false;
-      foreach ($slides as $slideKey => $slideValue) {
-        if ($slideValue->filename == substr($fileValue, 7)) {
-          $fileUses = true;
-        };
-      };
+    // /* Удаление неиспользуемых файлов */
+    // $files = Storage::allFiles('public');
+    // foreach ($files as $fileKey => $fileValue) {
+    //   $fileUses = false;
+    //   foreach ($slides as $slideKey => $slideValue) {
+    //     if ($slideValue->filename == substr($fileValue, 7)) {
+    //       $fileUses = true;
+    //     };
+    //   };
 
-      if (!$fileUses) {
-        Storage::delete($fileValue);
-      }
-    };
-
-    return true;
+    //   if (!$fileUses) {
+    //     Storage::delete($fileValue);
+    //   }
+    // };
   } 
   // Загрузка файла на сервер 
   public function uploadFile(Request $request) {
