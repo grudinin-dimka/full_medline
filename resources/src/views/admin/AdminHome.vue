@@ -56,12 +56,14 @@
 							type="text"
 							v-model="currentSlide.data.name.body"
 							@input="currentSlide.data.name.edited = true"
+							@blur="checkName"
+							:class="{ error : currentSlide.errors.name.status }"
 							placeholder="Название слайда"
 						/>
 					</article>
-					<span v-if="currentSlide.errors.name.status">{{
-						currentSlide.errors.name.value
-					}}</span>
+					<span v-if="currentSlide.errors.name.status">
+						{{ currentSlide.errors.name.value }}
+					</span>
 				</div>
 				<div class="modal-body-inputs-block">
 					<block-label
@@ -76,6 +78,8 @@
 							type="text"
 							v-model="currentSlide.data.link.body"
 							@input="currentSlide.data.link.edited = true"
+							@blur="checkLink"
+							:class="{ error : currentSlide.errors.link.status }"
 							placeholder="Ссылка слайда"
 						/>
 					</article>
@@ -331,15 +335,15 @@ export default {
 				file: null,
 				errors: {
 					name: {
-						status: true,
+						status: false,
 						value: null,
 					},
 					link: {
-						status: true,
+						status: false,
 						value: null,
 					},
 					file: {
-						status: true,
+						status: false,
 						value: null,
 					},
 				},
@@ -404,6 +408,61 @@ export default {
 		};
 	},
 	methods: {
+		/* -------------------------------------*/
+		/* --------Проверки полей ввода---------*/
+		/* -------------------------------------*/
+		/* Проверка поля имени */
+		checkName() {
+			// Пустота
+			if (this.currentSlide.data.name.body === "") {
+				this.currentSlide.errors.name.status = true;
+				this.currentSlide.errors.name.value = "Поле не может быть пустым";
+				return true;
+			}
+
+			this.currentSlide.errors.name.status = false;
+			this.currentSlide.errors.name.value = "";
+			return false;
+		},
+
+		/* Проверка поля ссылки */
+		checkLink() {
+			if (this.currentSlide.data.link.body === "") {
+				this.currentSlide.errors.link.status = true;
+				this.currentSlide.errors.link.value = "Поле не может быть пустым";
+				return true;
+			};
+
+			this.currentSlide.errors.link.status = false;
+			this.currentSlide.errors.link.value = "";
+			return false;
+		},
+
+		/* Проверка поля Файл */
+		checkPassword() {
+			// Пустота
+			if (this.password === "") {
+				this.errors.password.status = true;
+				this.errors.password.value = "Поле не может быть пустым";
+				return true;
+			}
+
+			this.errors.password.status = false;
+			this.errors.password.value = "";
+			return false;
+		},
+
+		/* Проверка всех полей */
+		checkAllInputs() {
+			let errors = 0;
+
+			if (this.checkName()) errors++;
+			if (this.checkPassword()) errors++;
+
+			if (errors !== 0) return false;
+			else return true;
+		},
+
 		/* -------------------------------------*/
 		/* ---------------Слайдер---------------*/
 		/* -------------------------------------*/
@@ -844,7 +903,6 @@ export default {
 			url: `${this.$store.state.axios.urlApi}` + `get-slides-all`,
 		})
 			.then((response) => {
-				console.log(response.data);
 				this.slides = response.data;
 				this.sortSlider();
 			})
@@ -951,6 +1009,13 @@ export default {
 
 .modal-body-inputs-block > article > input:focus {
 	border: 2px solid var(--input-border-color-active);
+}
+
+.modal-body-inputs-block > article > input.error {
+   background-color: var(--input-background-color-error);
+   border: 2px solid var(--input-border-color-error);
+
+   caret-color: red;
 }
 
 .modal-body-inputs-block > span {
