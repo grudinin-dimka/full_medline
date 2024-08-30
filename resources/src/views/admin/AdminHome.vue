@@ -45,7 +45,7 @@
 			<div class="modal-body-inputs">
 				<div class="modal-body-inputs-block">
 					<block-label
-						>Название
+						>Название*
 						<span v-if="currentSlide.data.name.edited"
 							>(Изменено)</span
 						></block-label
@@ -56,7 +56,7 @@
 							type="text"
 							v-model="currentSlide.data.name.body"
 							@input="currentSlide.data.name.edited = true"
-							@blur="checkName"
+							@blur="checkSliderName"
 							:class="{ error: currentSlide.errors.name.status }"
 							placeholder="Название слайда"
 						/>
@@ -67,7 +67,7 @@
 				</div>
 				<div class="modal-body-inputs-block">
 					<block-label
-						>Ссылка
+						>Ссылка*
 						<span v-if="currentSlide.data.link.edited"
 							>(Изменено)</span
 						></block-label
@@ -78,7 +78,7 @@
 							type="text"
 							v-model="currentSlide.data.link.body"
 							@input="currentSlide.data.link.edited = true"
-							@blur="checkLink"
+							@blur="checkSliderLink"
 							:class="{ error: currentSlide.errors.link.status }"
 							placeholder="Ссылка слайда"
 						/>
@@ -88,13 +88,16 @@
 					</span>
 				</div>
 				<div class="modal-body-inputs-block">
-					<block-label>Загрузить новое фото (820x958)</block-label>
+					<block-label
+						>Загрузить новое фото (820x958)
+						<span v-if="modal.type == 'add'">*</span></block-label
+					>
 					<article>
 						<SlidePath :height="50" :width="50" />
 						<input
 							type="file"
 							ref="fileUpload"
-							:class="{ erros: currentSlide.errors.file.status }"
+							:class="{ error: currentSlide.errors.file.status }"
 							placeholder="Файл"
 						/>
 					</article>
@@ -409,11 +412,13 @@ export default {
 	},
 	methods: {
 		/* -------------------------------------*/
-		/* --------Проверки полей ввода---------*/
+		/* ---------------Слайдер---------------*/
 		/* -------------------------------------*/
-		/* Проверка поля имени */
-		checkName() {
-			// Пустота
+		/* _____________________________________*/
+		/* 1.------Работа с полями ввода--------*/
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		// Проверка поля имени
+		checkSliderName() {
 			if (this.currentSlide.data.name.body === "") {
 				this.currentSlide.errors.name.status = true;
 				this.currentSlide.errors.name.value = "Поле не может быть пустым";
@@ -424,9 +429,8 @@ export default {
 			this.currentSlide.errors.name.value = "";
 			return true;
 		},
-
-		/* Проверка поля ссылки */
-		checkLink() {
+		// Проверка поля ссылки
+		checkSliderLink() {
 			if (this.currentSlide.data.link.body === "") {
 				this.currentSlide.errors.link.status = true;
 				this.currentSlide.errors.link.value = "Поле не может быть пустым";
@@ -437,9 +441,8 @@ export default {
 			this.currentSlide.errors.link.value = "";
 			return true;
 		},
-
-		/* Проверка поля Файл */
-		checkFile() {
+		// Проверка поля Файл
+		checkSliderFile() {
 			/* Присваивание данных поля ввода файла пользователем в переменную */
 			this.currentSlide.file = this.$refs.fileUpload.files[0];
 
@@ -461,27 +464,38 @@ export default {
 			this.currentSlide.errors.file.value = "";
 			return true;
 		},
-
-		/* Проверка всех полей */
-		checkAllInputs() {
+		// Проверка всех полей
+		checkAllInputs(name, link, file) {
 			let errors = 0;
 
-			if (!this.checkName()) errors++;
-			if (!this.checkLink()) errors++;
-			if (!this.checkFile()) errors++;
+			if (name) {
+				if (!this.checkSliderName()) errors++;
+			}
+			if (link) {
+				if (!this.checkSliderLink()) errors++;
+			}
+			if (file) {
+				if (!this.checkSliderFile()) errors++;
+			}
 
 			if (errors !== 0) return false;
 			else return true;
 		},
+		// Очистка состояния редактирования
+		clearSlideEdited() {
+			for (let key in this.currentSlide.data) {
+				this.currentSlide.data[key].edited = false;
+			}
+		},
 
-		/* -------------------------------------*/
-		/* ---------------Слайдер---------------*/
-		/* -------------------------------------*/
-		/* Сортировка списка слайдов по порядку */
+		/* _____________________________________*/
+		/* 2.--------Основные действия----------*/
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		// Сортировка списка слайдов по порядку
 		sortSlider() {
 			this.slides.sort((a, b) => a.order - b.order);
 		},
-		/* Получение ссылки к динамичному изображению */
+		// Получение ссылки к динамичному изображению
 		getImagePathGlob(path) {
 			const images = import.meta.glob("/storage/app/public/img/*.png", {
 				eager: true,
@@ -495,7 +509,7 @@ export default {
 				return images[imagePath].default;
 			}
 		},
-		/* Открытие слайда */
+		// Открытие слайда
 		openSlide(selectedSlide, type) {
 			document.body.classList.toggle("modal-open");
 			try {
@@ -520,7 +534,7 @@ export default {
 				this.$store.commit("debuggerState", debbugStory);
 			}
 		},
-		/* Закрытие слайда */
+		// Закрытие слайда
 		closeSlide() {
 			document.body.classList.toggle("modal-open");
 			for (let key in this.currentSlide.data) {
@@ -529,7 +543,10 @@ export default {
 			this.modal.status = false;
 			this.clearSlideEdited();
 		},
-		/* Изменение состояния скрытия выбранного слайда */
+		/* _____________________________________*/
+		/* 3.-------Изменение состояний---------*/
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		// Изменение скрытия выбранного слайда
 		changeSlideHide() {
 			try {
 				/* Фильтрация массива с объектми до нашего объекта в новый массив */
@@ -555,7 +572,7 @@ export default {
 				this.$store.commit("debuggerState", debbugStory);
 			}
 		},
-		/* Изменение порядка выбранного слайда */
+		// Изменение порядка выбранного слайда
 		changeSlideOrder(type) {
 			try {
 				/* Объявление переменных предидущего слайда */
@@ -639,13 +656,55 @@ export default {
 				this.$store.commit("debuggerState", debbugStory);
 			}
 		},
-		/* Очистка состояния редактирования */
-		clearSlideEdited() {
-			for (let key in this.currentSlide.data) {
-				this.currentSlide.data[key].edited = false;
+		/* _____________________________________*/
+		/* 4.-Сохранение, удаление, обновление--*/
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		// Создание нового слайда
+		createSlide() {
+			/* Присваивание данных поля ввода файла пользователем в переменную */
+			this.currentSlide.file = this.$refs.fileUpload.files[0];
+
+			if (!this.checkAllInputs(true, true, true)) {
+				return;
 			}
+
+			/* Загрузка файла */
+			this.currentSlide.file = this.$refs.fileUpload.files[0];
+			let formData = new FormData();
+			formData.append("image", this.currentSlide.file);
+
+			axios({
+				method: "post",
+				url: `${this.$store.state.axios.urlApi}` + `upload-file`,
+				headers: {
+					"Content-Type": "multipart/form-data",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: formData,
+			})
+				.then((response) => {
+					let debbugStory = {
+						title: "Успешно!",
+						body: "Картинка успешно загружена.",
+						type: "Completed",
+					};
+
+					this.slides.push({
+						name: this.currentSlide.data.name.body,
+						link: this.currentSlide.data.link.body,
+						path: response.data,
+						filename: response.data.substring(9, response.data.length),
+						hide: false,
+						order: 1 + this.slides[this.slides.length - 1].order,
+					});
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+
+			console.log(this.slides);
 		},
-		/* Обновление данных слайда по данным из модального окна */
+		// Обновление данных слайда по данным из модального окна
 		updateSlide() {
 			/* Получение текущего объекта из массива this.slides */
 			let resultSlideCurrent = this.slides.filter(
@@ -705,57 +764,12 @@ export default {
 				});
 			this.closeSlide();
 		},
-		/* Удаление выбранного слайда */
+		// Удаление выбранного слайда
 		deleteSlide() {
 			console.log(this.currentSlide);
 			console.log("delete");
 		},
-		/* Создание нового слайда */
-		createSlide() {
-			/* Присваивание данных поля ввода файла пользователем в переменную */
-			this.currentSlide.file = this.$refs.fileUpload.files[0];
-
-			if (!this.checkAllInputs()) {
-				return;
-			}
- 
-			/* Загрузка файла */
-			this.currentSlide.file = this.$refs.fileUpload.files[0];
-			let formData = new FormData();
-			formData.append("image", this.currentSlide.file);
-
-			axios({
-				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `upload-file`,
-				headers: {
-					"Content-Type": "multipart/form-data",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-				data: formData,
-			})
-				.then((response) => {
-					let debbugStory = {
-						title: "Успешно!",
-						body: "Картинка успешно загружена.",
-						type: "Completed",
-					};
-
-					this.slides.push({
-						name: this.currentSlide.data.name.body,
-						link: this.currentSlide.data.link.body,
-						path: response.data,
-						filename: response.data.substring(9, response.data.length),
-						hide: false,
-						order: 1 + this.slides[this.slides.length - 1].order,
-					});
-				})
-				.catch((error) => {
-					console.log(error);
-				});
-
-			console.log(this.slides);
-		},
-		/* Сохранение изменений в базе данных */
+		// Сохранение изменений в базе данных
 		saveSlidesChanges() {
 			let dataSlides = [];
 			/* Копирование данных слайдов */
