@@ -16,9 +16,13 @@ use Illuminate\Support\Facades\Storage;
 
 class HomeController extends Controller
 {
-  /*-----------------------------------------*/
-  /*-------------Вывод значений--------------*/
-  /*-----------------------------------------*/
+  /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+  /* |              СЛАЙДЕР              |*/
+  /* |___________________________________|*/
+  /* _____________________________________*/
+  /* 1.        Получение данных           */
+  /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+  // Получение данных о всех слайдах
   public function getSlidesAll(Request $request) {
     $slides = Slide::all();
     foreach ($slides as $key => $value) {
@@ -26,15 +30,21 @@ class HomeController extends Controller
     };
     return $slides;
   } 
-
+  // Получение данных о всех слайдах, которые не скрыты
   public function getSlidesNotHide(Request $request) {
     $slides = Slide::where('hide', false)->get();
     foreach ($slides as $key => $value) {
       $slides[$key]->path = Storage::url($value->filename);
     };
     return $slides;
-  } 
-
+  }
+  /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+  /* |               ФУТЕР               |*/
+  /* |___________________________________|*/
+  /* _____________________________________*/
+  /* 1.        Получение данных           */
+  /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+  // Получение данных о футере
   public function getFooter(Request $request) {
     $footer = Footer::find(1);
 
@@ -48,7 +58,4 @@ class HomeController extends Controller
         
     return $data;
   } 
-
-  
-
-}
+};
