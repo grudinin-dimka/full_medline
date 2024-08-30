@@ -27,7 +27,7 @@ return new class extends Migration
               'order' => 1,
               'name' => 'Власов Павел Александрович',
               'link' => 'https://prodoctorov.ru/shadrinsk/vrach/871312-vlasov/',
-              'filename' => 'vlasov',
+              'filename' => 'vlasov.png',
               'hide' => false,
             ],
         );    
@@ -36,7 +36,7 @@ return new class extends Migration
               'order' => 2,
               'name' => 'Дымшакова Наталья Юрьевна',
               'link' => 'https://prodoctorov.ru/shadrinsk/vrach/513584-dymshakova/',
-              'filename' => 'dimshakova',
+              'filename' => 'dimshakova.png',
               'hide' => false,
             ],
         );    
@@ -45,7 +45,7 @@ return new class extends Migration
               'order' => 3,
               'name' => 'Кузовникова Тамара Георгиевна',
               'link' => 'https://prodoctorov.ru/shadrinsk/vrach/649542-kuzovnikova/',
-              'filename' => 'kuzovnikova',
+              'filename' => 'kuzovnikova.png',
               'hide' => false,
             ],
         );    
@@ -54,7 +54,7 @@ return new class extends Migration
               'order' => 4,
               'name' => 'Лесникова Анна Леонидовна',
               'link' => 'https://prodoctorov.ru/shadrinsk/vrach/513564-lesnikova/',
-              'filename' => 'lesnikova',
+              'filename' => 'lesnikova.png',
               'hide' => false,
             ],
         );    
@@ -63,7 +63,7 @@ return new class extends Migration
               'order' => 5,
               'name' => 'Лукьянов Сергей Анатольевич',
               'link' => 'https://medlinegroup.ru/doctors/doc?smid=2539',
-              'filename' => 'lukyanov',
+              'filename' => 'lukyanov.png',
               'hide' => false,
             ],
         );    
@@ -72,7 +72,7 @@ return new class extends Migration
               'order' => 6,
               'name' => 'Оболдин Игорь Михайлович',
               'link' => 'https://prodoctorov.ru/shadrinsk/vrach/513603-oboldin/',
-              'filename' => 'oboldin',
+              'filename' => 'oboldin.png',
               'hide' => false,
             ],
         );    

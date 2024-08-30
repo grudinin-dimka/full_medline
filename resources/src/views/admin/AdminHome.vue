@@ -683,29 +683,28 @@ export default {
 				data: formData,
 			})
 				.then((response) => {
-					let debbugStory = {
-						title: "Успешно!",
-						body: "Картинка успешно загружена.",
-						type: "Completed",
-					};
-
 					this.slides.push({
-						name: this.currentSlide.data.name.body,
-						link: this.currentSlide.data.link.body,
+						name: String(this.currentSlide.data.path.body),
+						link: String(this.currentSlide.data.link.body),
 						path: response.data,
 						filename: response.data.substring(9, response.data.length),
 						hide: false,
-						order: 1 + this.slides[this.slides.length - 1].order,
+						order: 1 + Number(this.slides[this.slides.length - 1].order),
 					});
 				})
 				.catch((error) => {
 					console.log(error);
 				});
-
-			console.log(this.slides);
+			console.log(this.currentSlide.data.name.body);
+			console.log(this.currentSlide.data.link.body);
+			this.closeSlide();
 		},
 		// Обновление данных слайда по данным из модального окна
 		updateSlide() {
+			if (!this.checkAllInputs(true, true, false)) {
+				return;
+			}
+
 			/* Получение текущего объекта из массива this.slides */
 			let resultSlideCurrent = this.slides.filter(
 				(slide) => slide.order === this.currentSlide.data.order.body
