@@ -85,12 +85,12 @@ export default {
          if (this.name === "") {
             this.errors.name.status = true;
             this.errors.name.value = "Поле не может быть пустым";
-            return true;
+            return false;
          }
 
          this.errors.name.status = false;
          this.errors.name.value = "";
-         return false;
+         return true;
       },
 
       // Проверка поля email
@@ -99,20 +99,20 @@ export default {
          if (this.password === "") {
             this.errors.password.status = true;
             this.errors.password.value = "Поле не может быть пустым";
-            return true;
+            return false;
          }
 
          this.errors.password.status = false;
          this.errors.password.value = "";
-         return false;
+         return true;
       },
 
       // Проверка всех полей
       checkAllInputs() {
          let errors = 0;
 
-         if (this.checkName()) errors++;
-         if (this.checkPassword()) errors++;
+         if (!this.checkName()) errors++;
+         if (!this.checkPassword()) errors++;
 
          if (errors !== 0) return false;
          else return true;

@@ -57,7 +57,7 @@
 							v-model="currentSlide.data.name.body"
 							@input="currentSlide.data.name.edited = true"
 							@blur="checkName"
-							:class="{ error : currentSlide.errors.name.status }"
+							:class="{ error: currentSlide.errors.name.status }"
 							placeholder="Название слайда"
 						/>
 					</article>
@@ -79,7 +79,7 @@
 							v-model="currentSlide.data.link.body"
 							@input="currentSlide.data.link.edited = true"
 							@blur="checkLink"
-							:class="{ error : currentSlide.errors.link.status }"
+							:class="{ error: currentSlide.errors.link.status }"
 							placeholder="Ссылка слайда"
 						/>
 					</article>
@@ -349,27 +349,27 @@ export default {
 				},
 				data: {
 					link: {
-						body: null,
+						body: "",
 						edited: false,
 					},
 					name: {
-						body: null,
+						body: "",
 						edited: false,
 					},
 					filename: {
-						body: null,
+						body: "",
 						edited: false,
 					},
 					path: {
-						body: null,
+						body: "",
 						edited: false,
 					},
 					order: {
-						body: null,
+						body: "",
 						edited: false,
 					},
 					hide: {
-						body: null,
+						body: "",
 					},
 				},
 			},
@@ -417,12 +417,12 @@ export default {
 			if (this.currentSlide.data.name.body === "") {
 				this.currentSlide.errors.name.status = true;
 				this.currentSlide.errors.name.value = "Поле не может быть пустым";
-				return true;
+				return false;
 			}
 
 			this.currentSlide.errors.name.status = false;
 			this.currentSlide.errors.name.value = "";
-			return false;
+			return true;
 		},
 
 		/* Проверка поля ссылки */
@@ -430,34 +430,45 @@ export default {
 			if (this.currentSlide.data.link.body === "") {
 				this.currentSlide.errors.link.status = true;
 				this.currentSlide.errors.link.value = "Поле не может быть пустым";
-				return true;
-			};
+				return false;
+			}
 
 			this.currentSlide.errors.link.status = false;
 			this.currentSlide.errors.link.value = "";
-			return false;
+			return true;
 		},
 
 		/* Проверка поля Файл */
-		checkPassword() {
-			// Пустота
-			if (this.password === "") {
-				this.errors.password.status = true;
-				this.errors.password.value = "Поле не может быть пустым";
-				return true;
+		checkFile() {
+			/* Присваивание данных поля ввода файла пользователем в переменную */
+			this.currentSlide.file = this.$refs.fileUpload.files[0];
+
+			/* Проверка на загрузку файла пользователем */
+			if (!this.currentSlide.file) {
+				this.currentSlide.errors.file.status = true;
+				this.currentSlide.errors.file.value = "Поле не может быть пустым";
+				return false;
 			}
 
-			this.errors.password.status = false;
-			this.errors.password.value = "";
-			return false;
+			/* Проверка на тип загруженного файла */
+			if (this.currentSlide.file.type !== "image/png") {
+				this.currentSlide.errors.file.value = "Недопустимый тип файла.";
+				this.currentSlide.errors.file.status = true;
+				return false;
+			}
+
+			this.currentSlide.errors.file.status = false;
+			this.currentSlide.errors.file.value = "";
+			return true;
 		},
 
 		/* Проверка всех полей */
 		checkAllInputs() {
 			let errors = 0;
 
-			if (this.checkName()) errors++;
-			if (this.checkPassword()) errors++;
+			if (!this.checkName()) errors++;
+			if (!this.checkLink()) errors++;
+			if (!this.checkFile()) errors++;
 
 			if (errors !== 0) return false;
 			else return true;
@@ -513,7 +524,7 @@ export default {
 		closeSlide() {
 			document.body.classList.toggle("modal-open");
 			for (let key in this.currentSlide.data) {
-				this.currentSlide.data[key].body = null;
+				this.currentSlide.data[key].body = "";
 			}
 			this.modal.status = false;
 			this.clearSlideEdited();
@@ -704,15 +715,10 @@ export default {
 			/* Присваивание данных поля ввода файла пользователем в переменную */
 			this.currentSlide.file = this.$refs.fileUpload.files[0];
 
-			/* Проверка на загрузку файла пользователем */
-			if (!this.currentSlide.file) return console.log("Файл не загружен.");
-
-			/* Проверка на тип загруженного файла */
-			if (this.currentSlide.file.type !== "image/png") {
-				this.currentSlide.errors.file.value = "Недопустимый тип файла.";
-				this.currentSlide.errors.file.status = true;
+			if (!this.checkAllInputs()) {
 				return;
 			}
+ 
 			/* Загрузка файла */
 			this.currentSlide.file = this.$refs.fileUpload.files[0];
 			let formData = new FormData();
@@ -1012,10 +1018,10 @@ export default {
 }
 
 .modal-body-inputs-block > article > input.error {
-   background-color: var(--input-background-color-error);
-   border: 2px solid var(--input-border-color-error);
+	background-color: var(--input-background-color-error);
+	border: 2px solid var(--input-border-color-error);
 
-   caret-color: red;
+	caret-color: red;
 }
 
 .modal-body-inputs-block > span {
