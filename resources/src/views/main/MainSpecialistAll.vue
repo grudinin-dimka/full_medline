@@ -1,10 +1,12 @@
 <template>
-   <info-bar>
+	<info-bar>
 		<router-link to="/">Главная</router-link>
 		<span class="link-arrow"> / </span>
 		<router-link to="/specialists">Специалисты</router-link>
-   </info-bar>
+	</info-bar>
+
 	<filters></filters>
+
 	<block>
 		<div class="doctor" v-for="doctor in doctors" :key="doctor.id">
 			<img :src="doctor.img" />
@@ -34,9 +36,12 @@
 						</div>
 					</div>
 				</div>
-				<div class="doctor-body-link" @click="$router.push('/specialists/' + doctor.id)"> 
-               Подробнее
-            </div>
+				<div
+					class="doctor-body-link"
+					@click="$router.push('/specialists/' + doctor.id)"
+				>
+					Подробнее
+				</div>
 			</div>
 		</div>
 	</block>
@@ -100,6 +105,16 @@ export default {
 </script>
 
 <style scoped>
+.list-enter-active,
+.list-leave-active {
+	transition: all 0.5s ease;
+}
+.list-enter-from,
+.list-leave-to {
+	opacity: 0;
+	transform: translateX(30px);
+}
+
 .doctor {
 	box-sizing: border-box;
 	display: flex;
@@ -167,10 +182,11 @@ export default {
 }
 
 .doctor-body-link {
+	margin-top: 10px;
 	font-size: 16px;
 	color: var(--primary-color);
 	cursor: pointer;
-   text-align: right;
+	text-align: right;
 }
 
 @media screen and (max-width: 775px) {
