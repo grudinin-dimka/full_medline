@@ -1,7 +1,7 @@
 <template>
-  <article>
+  <section>
     <slot></slot>
-  </article>
+  </section>
 </template>
 
 <script>
@@ -11,7 +11,7 @@ export default {
 </script>
 
 <style scoped>
-  article {
+  section {
     display: flex;
     flex-direction: column;
     gap: 20px;

@@ -321,15 +321,15 @@
 import axios from "axios";
 
 import Modal from "../../components/includes/admin/AdminModal.vue";
-import InfoBar from "../../components/ui/InfoBar.vue";
+import InfoBar from "../../components/ui/admin/InfoBar.vue";
 
-import BlockTitle from "../../components/ui/BlockTitle.vue";
-import Block from "../../components/ui/Block.vue";
-import BlockLabel from "../../components/ui/BlockLabel.vue";
-import BlockButtons from "../../components/ui/BlockButtons.vue";
+import BlockTitle from "../../components/ui/admin/BlockTitle.vue";
+import Block from "../../components/ui/admin/Block.vue";
+import BlockLabel from "../../components/ui/admin/BlockLabel.vue";
+import BlockButtons from "../../components/ui/admin/BlockButtons.vue";
 
-import ButtonDefault from "../../components/ui/ButtonDefault.vue";
-import ButtonRemove from "../../components/ui/ButtonRemove.vue";
+import ButtonDefault from "../../components/ui/admin/ButtonDefault.vue";
+import ButtonRemove from "../../components/ui/admin/ButtonRemove.vue";
 
 import SlideUserCard from "../../components/icons/SlideUserCard.vue";
 import SlideLink from "../../components/icons/SlideLink.vue";
