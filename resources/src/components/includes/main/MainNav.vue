@@ -11,14 +11,14 @@ export default {
       return {
          isActiv: true,
          menu: [
-            { id: "1", name: "О Нас", href: "about" },
-            { id: "2", name: "Специалисты", href: "specialists" },
-            { id: "3", name: "Цены", href: "prices" },
-            { id: "4", name: "Направления", href: "directions" },
-            { id: "5", name: "Диагностика", href: "diagnostics" },
-            { id: "6", name: "Лицензии", href: "licenses" },
-            { id: "7", name: "Видео", href: "videos" },
-            { id: "8", name: "Контакты", href: "contacts" },
+            { id: "1", name: "О Нас", href: "/about" },
+            { id: "2", name: "Специалисты", href: "/specialists" },
+            { id: "3", name: "Цены", href: "/prices" },
+            { id: "4", name: "Направления", href: "/directions" },
+            { id: "5", name: "Диагностика", href: "/diagnostics" },
+            { id: "6", name: "Лицензии", href: "/licenses" },
+            { id: "7", name: "Видео", href: "/videos" },
+            { id: "8", name: "Контакты", href: "/contacts" },
          ],
       };
    },
