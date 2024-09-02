@@ -3,7 +3,7 @@
 	<debugger></debugger>
 
 	<!-- Загрузка страницы -->
-	<Loader v-if="loader.loading" />
+	<Loader :isLoading="loader.loading" />
 
 	<!-- Шапка страницы -->
 	<AdminHeader v-if="loader.other" />

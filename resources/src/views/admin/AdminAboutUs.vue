@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import InfoBar from '../../components/ui/InfoBar.vue';
+import InfoBar from '../../components/ui/admin/InfoBar.vue';
 
 export default {
   components: {

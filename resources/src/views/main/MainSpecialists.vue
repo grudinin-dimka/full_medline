@@ -4,6 +4,7 @@
 		<span class="link-arrow"> / </span>
 		<router-link to="/specialists">Специалисты</router-link>
 	</info-bar>
+   <filters></filters>
 	<block>
 		<div class="doctor" v-for="doctor in doctors" :key="doctor.id">
 			<img :src="doctor.img" />
@@ -33,8 +34,9 @@
 						</div>
 					</div>
 				</div>
-				<div class="doctor-body-price">
-					Стоимость приёма: {{ doctor.price }} ₽
+				<div class="doctor-body-advanced">
+               <span class="doctor-body-advanced-link">Подробнее</span>
+               <span class="doctor-body-advanced-price">Стоимость приёма: {{ doctor.price }} ₽</span>
 				</div>
 			</div>
 		</div>
@@ -44,6 +46,7 @@
 <script>
 import Block from "../../components/ui/main/Block.vue";
 import InfoBar from "../../components/ui/main/InfoBar.vue";
+import Filters from "../../components/ui/main/Filters.vue";
 import { RouterLink } from "vue-router";
 
 export default {
@@ -51,6 +54,7 @@ export default {
 		Block,
 		InfoBar,
 		RouterLink,
+      Filters
 	},
 	data() {
 		return {
@@ -108,7 +112,7 @@ export default {
 	border-radius: 20px;
 	padding: 20px;
 
-	width: 900px;
+	max-width: 900px;
 
 	transition: all 0.2s;
 }
@@ -123,7 +127,7 @@ export default {
 }
 
 .doctor-body {
-	flex: 1 0 500px;
+	flex: 1 0 0px;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
@@ -158,4 +162,23 @@ export default {
 	font-size: 20px;
 	text-align: right;
 }
+
+.doctor-body-advanced {
+   display: flex;
+   justify-content: space-between
+}
+
+.doctor-body-advanced-link {
+   font-size: 16px;
+   color: var(--primary-color);
+   cursor: pointer;
+}
+
+@media screen and (max-width: 775px) {
+   .doctor {
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+   }
+}  
 </style>

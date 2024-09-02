@@ -25,4 +25,10 @@ export default {
    .info-bar-title {
       width: 900px;
    }
+
+   @media screen and (max-width: 500px) {
+      .info-bar {
+         margin-top: 100px;
+      }
+   }
 </style>
