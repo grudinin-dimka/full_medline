@@ -73,8 +73,8 @@
 </template>
 
 <script>
-import InfoBar from "../../components/ui/main/InfoBar.vue";
-import Block from "../../components/ui/main/Block.vue";
+import InfoBar from "../../../components/ui/main/InfoBar.vue";
+import Block from "../../../components/ui/main/Block.vue";
 
 export default {
 	components: {

@@ -11,6 +11,7 @@ use Illuminate\Validation\ValidationException;
 use App\Models\User;
 use App\Models\Slide;
 use App\Models\Footer;
+use App\Models\Doctor;
 
 use Illuminate\Support\Facades\Storage;
 
@@ -58,4 +59,21 @@ class HomeController extends Controller
         
     return $data;
   } 
+
+  /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+  /* |              Доктора              |*/
+  /* |___________________________________|*/
+  /* _____________________________________*/
+  /* 1.      Вывод данных на фронт        */
+  /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+  // Вывод всех докторов 
+  public function getDoctors(Request $request) {
+    $doctors = Doctor::all();
+    return $doctors;
+  }
+  // Вывод конкретного доктора
+  public function getDoctorProfile(Request $request) {
+    $doctors = Doctor::all();
+    return $doctors;
+  }
 };

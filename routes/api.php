@@ -16,6 +16,8 @@ Route::post('/create', [LoginController::class, 'createUser']);
 Route::post('/get-slides-all', [HomeController::class, 'getSlidesAll']);
 Route::post('/get-slides-not-hide', [HomeController::class, 'getSlidesNotHide']);
 Route::post('/get-footer', [HomeController::class, 'getFooter']);
+Route::post('/get-doctors', [HomeController::class, 'getDoctors']);
+Route::post('/get-doctor-profile', [HomeController::class, 'getDoctorProfile']);
 
 // Функционал администратора
 Route::post('/save-footer', [AdminController::class, 'saveFooter'])->middleware('auth:sanctum');

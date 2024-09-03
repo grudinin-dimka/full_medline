@@ -32,13 +32,13 @@ const router = createRouter({
 							path: "",
 							name: "all",
 							component: () =>
-								import("../views/main/MainSpecialistAll.vue"),
+								import("../views/main/specialists/MainSpecialistAll.vue"),
 						},
 						{
 							path: ":id",
 							name: "doctorname",
 							component: () =>
-								import("../views/main/MainSpecialistProfile.vue"),
+								import("../views/main/specialists/MainSpecialistProfile.vue"),
 						},
 					],
 				},

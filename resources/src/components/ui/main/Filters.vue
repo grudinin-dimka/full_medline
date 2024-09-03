@@ -52,6 +52,8 @@ export default {
    display: flex;
    justify-content: center;
    align-items: center;
+
+   animation: show 0.5s ease-out;
 }
 
 .filters-body {
@@ -73,5 +75,14 @@ export default {
 .filters-body-item:hover {
 	border: 2px solid var(--input-border-color-active);
 	background-color: #f2feff;
+}
+
+@keyframes show {
+   0% {
+      opacity: 0;
+   }
+   100% {
+      opacity: 1;
+   }
 }
 </style>

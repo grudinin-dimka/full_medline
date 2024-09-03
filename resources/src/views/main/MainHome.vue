@@ -27,7 +27,6 @@ p {
 }
 
 .section-info {
-
   text-align: center;
   text-transform: uppercase;
 }
