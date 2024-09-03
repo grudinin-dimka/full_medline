@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Transliterator;
+
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -69,11 +71,29 @@ class HomeController extends Controller
   // Вывод всех докторов 
   public function getDoctors(Request $request) {
     $doctors = Doctor::all();
+    
+    foreach ($doctors as $key => $value) {
+      $stringTransliterate = Transliterator::create('Any-Latin; Latin-ASCII')->transliterate($doctors[$key]->name);
+      $stringUnderCase = strtolower($stringTransliterate);
+      $stringReplace = str_replace(" ", "-", $stringUnderCase);
+
+      $doctors[$key]->url = $stringReplace;
+    };
+
     return $doctors;
   }
   // Вывод конкретного доктора
   public function getDoctorProfile(Request $request) {
-    $doctors = Doctor::all();
-    return $doctors;
+    $doctor = Doctor::all();
+
+    foreach ($doctor as $key => $value) {
+      $stringTransliterate = Transliterator::create('Any-Latin; Latin-ASCII')->transliterate($doctor[$key]->name);
+      $stringUnderCase = strtolower($stringTransliterate);
+      $stringReplace = str_replace(" ", "-", $stringUnderCase);
+
+      if ($request->url == $stringReplace) {
+        return $doctor[$key];
+      };
+    };
   }
 };

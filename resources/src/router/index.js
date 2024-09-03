@@ -35,7 +35,7 @@ const router = createRouter({
 								import("../views/main/specialists/MainSpecialistAll.vue"),
 						},
 						{
-							path: ":id",
+							path: ":name",
 							name: "doctorname",
 							component: () =>
 								import("../views/main/specialists/MainSpecialistProfile.vue"),

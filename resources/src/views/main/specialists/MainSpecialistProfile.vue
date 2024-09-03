@@ -4,37 +4,39 @@
 		<span class="link-arrow"> / </span>
 		<router-link to="/specialists">Специалисты</router-link>
 		<span class="link-arrow"> / </span>
-		<router-link :to="`/specialists/${$route.params.id}`">{{
-			$route.params.id
-		}}</router-link>
+		<router-link :to="`/specialists/${$route.params.name}`">
+			<load-text :isLoading="isLoading">
+				Загрузка...
+			</load-text>
+			<span class="doctor-name" v-if="isDoctor">{{ doctor.name }}</span>
+		</router-link>
 	</info-bar>
 
-	<block>
+	<loader-child :isLoading="isLoading" />
+
+	<block v-if="isDoctor">
 		<div class="container-doctor-profile">
 			<img :src="`/storage/HKK2mLj6iM8WK2z9hkBMCI7YQ1IzBxDI8MYTp8dk.png`" />
 			<div class="doctor-profile">
 				<div class="doctor-profile-head">
 					<div class="doctor-profile-head-title">
-						<span>Иванов Иван Иванович</span>
-					</div>
-					<div class="doctor-profile-head-item">
-						<span>Специальность:</span>
-						<span>Нейрохирург.</span>
-					</div>
-					<div class="doctor-profile-head-item">
-						<span>Сертификаты:</span>
-						<span>«Нейрохирургия».</span>
+						<span>{{ doctor.name }}</span>
 					</div>
 					<div class="doctor-profile-head-item">
 						<span>Образование:</span>
-						<span
-							>Тюменский государственный медицинский университет, 2004
-							г.</span
-						>
+						<span>{{ doctor.education }}</span>
+					</div>
+					<div class="doctor-profile-head-item">
+						<span>Специальность:</span>
+						<span>{{ doctor.specialization }}</span>
+					</div>
+					<div class="doctor-profile-head-item">
+						<span>Сертификаты:</span>
+						<span>{{ doctor.certificates }}</span>
 					</div>
 					<div class="doctor-profile-head-item">
 						<span>Врачебный стаж:</span>
-						<span>19 лет.</span>
+						<span>{{ doctor.startWorkAge }}</span>
 					</div>
 				</div>
 				<div class="doctor-profile-body">
@@ -45,24 +47,25 @@
 						<li>
 							Дегенеративно-дистрофические поражения позвоночника
 							(остеохондроз, сколиотические деформации позвоночника,
-							стеноз позвоночного канала, спондилолистез, спондилоартроз, 
-                     грыжи дисков, протрузии дисков, дискогенные болевые
+							стеноз позвоночного канала, спондилолистез, спондилоартроз,
+							грыжи дисков, протрузии дисков, дискогенные болевые
 							синдромы).
 						</li>
 						<li>
 							Травмы позвоночника и спинного мозга и их последствия.
 						</li>
 						<li>
-							Новообразования позвоночника, оболочек и корешков спинного мозга.
+							Новообразования позвоночника, оболочек и корешков спинного
+							мозга.
 						</li>
 						<li>
-							Патология периферической нервной системы (радикулопатии, нейропатии, травмы нервов конечностей).
+							Патология периферической нервной системы (радикулопатии,
+							нейропатии, травмы нервов конечностей).
 						</li>
+						<li>Нейропатический болевой синдром различной этиологии.</li>
 						<li>
-							Нейропатический болевой синдром различной этиологии.
-						</li>
-						<li>
-							Последствия оперативных вмешательств на позвоночнике и спинном мозге (болезнь оперированного позвоночника).
+							Последствия оперативных вмешательств на позвоночнике и
+							спинном мозге (болезнь оперированного позвоночника).
 						</li>
 					</ul>
 				</div>
@@ -75,21 +78,66 @@
 <script>
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import Block from "../../../components/ui/main/Block.vue";
+import axios from "axios";
+import LoaderChild from "../../../components/includes/LoaderChild.vue";
+import LoadText from "../../../components/ui/main/LoadText.vue";
 
 export default {
 	components: {
 		InfoBar,
 		Block,
+		axios,
+		LoaderChild,
+		LoadText,
+	},
+	data() {
+		return {
+			isLoading: true,
+			isDoctor: false,
+			doctor: {},
+		};
+	},
+	mounted() {
+		// Получение массива слайдов с сервера
+		axios({
+			method: "post",
+			url: `${this.$store.state.axios.urlApi}` + `get-doctor-profile`,
+			data: {
+				url: this.$route.params.name,
+			},
+		})
+			.then((response) => {
+				this.doctor = response.data;
+
+				this.isLoading = false;
+				setTimeout(() => {
+					this.isDoctor = true;
+				}, 500);
+			})
+			.catch((error) => {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Произошла ошибка при получении данных о враче.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			});
 	},
 };
 </script>
 
 <style scoped>
+.doctor-name {
+	animation: show 0.5s linear;
+}
+
 .container-doctor-profile {
-   margin: 0px 30px;
+	margin: 0px 30px;
 	display: flex;
-   gap: 20px;
+	gap: 20px;
 	max-width: 900px;
+
+	animation: transform 0.5s ease-out;
 }
 
 .container-doctor-profile > img {
@@ -134,19 +182,39 @@ export default {
 }
 
 .doctor-profile-body > ul {
-   margin: 0px;
-   padding-left: 20px;
+	margin: 0px;
+	padding-left: 20px;
 }
 
 .doctor-profile-body > ul > li:not(:last-child) {
-   margin-bottom: 10px;
+	margin-bottom: 10px;
+}
+
+@keyframes show {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+@keyframes transform {
+	0% {
+		opacity: 0;
+		transform: translateY(30px);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
 
 @media screen and (max-width: 780px) {
-   .container-doctor-profile {
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-   }
+	.container-doctor-profile {
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+	}
 }
 </style>

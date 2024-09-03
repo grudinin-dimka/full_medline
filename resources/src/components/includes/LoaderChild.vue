@@ -8,20 +8,19 @@
 
 <script>
 export default {
-   props: {
-      isLoading: {
-         type: Boolean,
-         default: true
-      }
-   }
-}
+	props: {
+		isLoading: {
+			type: Boolean,
+			default: true,
+		},
+	},
+};
 </script>
 
 <style scoped>
 .container-loader {
-   min-height: 400px;
-	margin-bottom: -100px;
-   display: flex;
+	min-height: 400px;
+	display: flex;
 	justify-content: center;
 	align-items: center;
 }
@@ -40,12 +39,12 @@ export default {
 
 .v-enter-active,
 .v-leave-active {
-  transition: opacity 0.5s ease;
+	transition: opacity 0.5s ease;
 }
 
 .v-enter-from,
 .v-leave-to {
-  opacity: 0;
+	opacity: 0;
 }
 
 @keyframes mulShdSpin {
