@@ -15,6 +15,7 @@ use Illuminate\Validation\ValidationException;
 use App\Models\User;
 use App\Models\Slide;
 use App\Models\Footer;
+use App\Models\Doctor;
 
 class AdminController extends Controller
 {
@@ -52,11 +53,11 @@ class AdminController extends Controller
     // };
 
     $slides = Slide::all()->SortBy('order');
-    var_dump(count($slides));
-    var_dump($slides[5]);
+    // var_dump(count($slides));
+    // var_dump($slides[5]);
 
     foreach ($slides as $slideKey => $slideValue) {
-      // var_dump($slideValue);
+      var_dump($slideValue['order']);
     };
 
     // /* Удаление неиспользуемых файлов */
@@ -124,4 +125,16 @@ class AdminController extends Controller
     
     return 'Футер очищен.';
   } 
+
+  /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+  /* |              Доктора              |*/
+  /* |___________________________________|*/
+  /* _____________________________________*/
+  /* 1.      Вывод данных на фронт        */
+  /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+  // Сохранение футера 
+  public function getDoctors(Request $request) {
+    $doctors = Doctor::all();
+    return $doctors;
+  }
 }

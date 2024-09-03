@@ -38,7 +38,7 @@
 				</div>
 				<div
 					class="doctor-body-link"
-					@click="$router.push('/specialists/' + doctor.id)"
+					@click="openDoctorProfile(doctor.id)"
 				>
 					Подробнее
 				</div>
@@ -100,6 +100,16 @@ export default {
 				},
 			],
 		};
+	},
+	methods: {
+		openDoctorProfile(id) {
+			window.scrollTo({
+				top: 0,
+				left: 0,
+				behavior: 'smooth'
+			});
+			this.$router.push('/specialists/' + id);
+		},
 	},
 };
 </script>

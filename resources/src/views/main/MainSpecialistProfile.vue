@@ -36,10 +36,6 @@
 						<span>Врачебный стаж:</span>
 						<span>19 лет.</span>
 					</div>
-					<div class="doctor-profile-head-item">
-						<span>Стоимость приёма:</span>
-						<span>1400 рублей.</span>
-					</div>
 				</div>
 				<div class="doctor-profile-body">
 					<div class="doctor-profile-body-title">

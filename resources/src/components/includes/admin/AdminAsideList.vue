@@ -40,7 +40,13 @@ export default {
          linkPrev = linkActive;
 
          this.$store.state.burger.status = false;
+
          this.$router.push(link);
+         window.scrollTo({
+				top: 0,
+				left: 0,
+				behavior: 'instant'
+			});
       },
    },
 }
