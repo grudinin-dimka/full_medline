@@ -1,9 +1,9 @@
 <template>
-   <span
-      v-if="isLoading"
-   >
-      <slot></slot>
-   </span>
+	<transition appear>
+		<span v-if="isLoading">
+         <slot></slot>
+		</span>
+	</transition>
 </template>
 
 <script>
@@ -18,26 +18,17 @@ export default {
 </script>
 
 <style scoped>
-span {
-	color: rgb(151, 151, 151);
-	animation: myAnim 3s infinite linear;
-
-   opacity: 1;
-   visibility: visible;
-
-   transition: all 0.5s ease;
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
 }
 
-@keyframes myAnim {
-	0%,
-	50%,
-	100% {
-		opacity: 1;
-	}
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
 
-	25%,
-	75% {
-		opacity: 0;
-	}
+span {
+   color: rgb(139, 139, 139);
 }
 </style>
