@@ -167,9 +167,9 @@
 			</template>
 		</block-title>
 
-		<LoaderChild></LoaderChild>
+		<LoaderChild :isLoading="loading.loader.slider"></LoaderChild>
 		
-		<div class="slider">
+		<div class="slider" v-if="loading.slider">
 			<div
 				v-for="slide in slides"
 				:key="slide.id"
@@ -226,96 +226,101 @@
 				<icon-save :width="28" :height="28" @click="saveFooterChanges" />
 			</template>
 		</block-title>
-		<!-- Заголовок -->
-		<block-label>
-			Заголовок <span v-if="footer.title.edited">(Изменено)</span>
-		</block-label>
-		<div class="block-textarea">
-			<textarea
-				rows="4"
-				placeholder="Заголовок"
-				v-model="footer.title.body"
-				@input="controlSymbols('title')"
+		
+		<LoaderChild :isLoading="loading.loader.footer"></LoaderChild>
+
+		<div class="footer-container" v-if="loading.footer">
+			<!-- Заголовок -->
+			<block-label>
+				Заголовок <span v-if="footer.title.edited">(Изменено)</span>
+			</block-label>
+			<div class="block-textarea">
+				<textarea
+					rows="4"
+					placeholder="Заголовок"
+					v-model="footer.title.body"
+					@input="controlSymbols('title')"
+				>
+				</textarea>
+				<span
+					>{{ footer.title.symbolsCount }}/{{
+						footer.title.symbolsCountMax
+					}}</span
+				>
+			</div>
+			<!-- Дополнение к заголовку -->
+			<block-label>
+				Дополнение к заголовку
+				<span v-if="footer.titleDesc.edited">(Изменено)</span></block-label
 			>
-			</textarea>
-			<span
-				>{{ footer.title.symbolsCount }}/{{
-					footer.title.symbolsCountMax
-				}}</span
+			<div class="block-textarea">
+				<textarea
+					rows="10"
+					placeholder="Заголовок"
+					v-model="footer.titleDesc.body"
+					@input="controlSymbols('titleDesc')"
+				>
+				</textarea>
+				<span
+					>{{ footer.titleDesc.symbolsCount }}/{{
+						footer.titleDesc.symbolsCountMax
+					}}</span
+				>
+			</div>
+			<!-- Лицензия -->
+			<block-label>
+				Лицензия
+				<span v-if="footer.license.edited">(Изменено)</span></block-label
 			>
-		</div>
-		<!-- Дополнение к заголовку -->
-		<block-label>
-			Дополнение к заголовку
-			<span v-if="footer.titleDesc.edited">(Изменено)</span></block-label
-		>
-		<div class="block-textarea">
-			<textarea
-				rows="10"
-				placeholder="Заголовок"
-				v-model="footer.titleDesc.body"
-				@input="controlSymbols('titleDesc')"
+			<div class="block-textarea">
+				<textarea
+					rows="4"
+					placeholder="Заголовок"
+					v-model="footer.license.body"
+					@input="controlSymbols('license')"
+				>
+				</textarea>
+				<span
+					>{{ footer.license.symbolsCount }}/{{
+						footer.license.symbolsCountMax
+					}}</span
+				>
+			</div>
+			<!-- Основной текст -->
+			<block-label>
+				Основной текст
+				<span v-if="footer.licenseDesc.edited">(Изменено)</span></block-label
 			>
-			</textarea>
-			<span
-				>{{ footer.titleDesc.symbolsCount }}/{{
-					footer.titleDesc.symbolsCountMax
-				}}</span
+			<div class="block-textarea">
+				<textarea
+					rows="10"
+					placeholder="Основной текст"
+					v-model="footer.licenseDesc.body"
+					@input="controlSymbols('licenseDesc')"
+				>
+				</textarea>
+				<span
+					>{{ footer.licenseDesc.symbolsCount }}/{{
+						footer.licenseDesc.symbolsCountMax
+					}}</span
+				>
+			</div>
+			<!-- Подвал -->
+			<block-label>
+				Подвал <span v-if="footer.footer.edited">(Изменено)</span></block-label
 			>
-		</div>
-		<!-- Лицензия -->
-		<block-label>
-			Лицензия
-			<span v-if="footer.license.edited">(Изменено)</span></block-label
-		>
-		<div class="block-textarea">
-			<textarea
-				rows="4"
-				placeholder="Заголовок"
-				v-model="footer.license.body"
-				@input="controlSymbols('license')"
-			>
-			</textarea>
-			<span
-				>{{ footer.license.symbolsCount }}/{{
-					footer.license.symbolsCountMax
-				}}</span
-			>
-		</div>
-		<!-- Основной текст -->
-		<block-label>
-			Основной текст
-			<span v-if="footer.licenseDesc.edited">(Изменено)</span></block-label
-		>
-		<div class="block-textarea">
-			<textarea
-				rows="10"
-				placeholder="Основной текст"
-				v-model="footer.licenseDesc.body"
-				@input="controlSymbols('licenseDesc')"
-			>
-			</textarea>
-			<span
-				>{{ footer.licenseDesc.symbolsCount }}/{{
-					footer.licenseDesc.symbolsCountMax
-				}}</span
-			>
-		</div>
-		<!-- Подвал -->
-		<block-label>
-			Подвал <span v-if="footer.footer.edited">(Изменено)</span></block-label
-		>
-		<div class="block-textarea">
-			<textarea
-				rows="10"
-				placeholder="Подвал"
-				v-model="footer.footer.body"
-				@input="controlSymbols('footer')"
-			>
-			</textarea>
-			<span>
-				{{ footer.footer.symbolsCount }}/{{ footer.footer.symbolsCountMax }}
-			</span>
+			<div class="block-textarea">
+				<textarea
+					rows="10"
+					placeholder="Подвал"
+					v-model="footer.footer.body"
+					@input="controlSymbols('footer')"
+				>
+				</textarea>
+				<span>
+					{{ footer.footer.symbolsCount }}/{{ footer.footer.symbolsCountMax }}
+				</span>
+			</div>
 		</div>
 	</block>
 </template>
@@ -367,6 +372,14 @@ export default {
 	},
 	data() {
 		return {
+			loading: {
+				loader: {
+					slider: true,
+					footer: true,
+				},
+				slider: false,
+				footer: false,
+			},
 			url: {
 				images: import.meta.env.VITE_SOME_URL,
 				public: "http://127.0.0.1:5173/storage/app/public/img",
@@ -1023,6 +1036,11 @@ export default {
 					this.slides[key].create = false;
 				}
 				this.sortSlider();
+
+				this.loading.loader.slider = false;
+				setTimeout(() => {
+					this.loading.slider = true;
+				}, 500)
 			})
 			.catch((error) => {
 				let debbugStory = {
@@ -1047,6 +1065,11 @@ export default {
 						this.footer[key].symbolsCount = response.data[key].length;
 					}
 				}
+
+				this.loading.loader.footer = false;
+				setTimeout(() => {
+					this.loading.footer = true;
+				}, 500)
 			})
 			.catch((error) => {
 				let debbugStory = {
@@ -1166,7 +1189,7 @@ textarea:focus {
 	grid-template-columns: repeat(4, 1fr);
 	gap: 20px;
 
-	animation: show 1s;
+	animation: show 1s linear;
 }
 
 .slider-block {
@@ -1233,6 +1256,10 @@ textarea:focus {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-end;
+}
+
+.footer-container {
+	animation: show 1s linear;
 }
 
 @keyframes show {

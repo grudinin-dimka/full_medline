@@ -80,6 +80,8 @@ export default {
 <style scoped>
 table {
 	border-collapse: collapse;
+
+   animation: show 1s linear;
 }
 
 th,
@@ -116,5 +118,14 @@ td {
    cursor: pointer;
    position: absolute;
    right: 5px;
+}
+
+@keyframes show {
+	from {
+		opacity: 0.5;
+	}
+	to {
+		opacity: 1;
+	}
 }
 </style>

@@ -1,4 +1,22 @@
 <template>
+	<!-- Модальное окно -->
+	<admin-modal>
+		<template #title>
+			Добавление нового слайда
+		</template>
+		<template #body>
+			<BlockButtons>
+				<ButtonRemove>
+					Удалить
+				</ButtonRemove>
+				<ButtonDefault>
+					Обновить
+				</ButtonDefault>
+			</BlockButtons>
+		</template>
+	</admin-modal>
+
+
 	<info-bar>
 		<template v-slot:title>Специалисты</template>
 		<template v-slot:addreas>specialists</template>
@@ -12,8 +30,9 @@
 			</template>
 		</block-title>
 
+      <LoaderChild :isLoading="loading.loader.specialists"></LoaderChild>
 
-		<table-container :doctors="doctors"/>
+		<table-container v-if="loading.specialists" :doctors="doctors"/>
 
 		<block-buttons>
 			<button-default @click=""> Добавить </button-default>
@@ -22,7 +41,11 @@
 </template>
 
 <script>
+import AdminModal from "../../components/includes/admin/AdminModal.vue";
+
 import InfoBar from "../../components/ui/admin/InfoBar.vue";
+
+import LoaderChild from "../../components/includes/LoaderChild.vue";
 
 import BlockTitle from "../../components/ui/admin/BlockTitle.vue";
 import Block from "../../components/ui/admin/Block.vue";
@@ -40,7 +63,9 @@ import axios from "axios";
 
 export default {
 	components: {
+      AdminModal,
 		InfoBar,
+      LoaderChild,
 		BlockTitle,
 		Block,
 		BlockLabel,
@@ -53,6 +78,12 @@ export default {
 	},
 	data() {
 		return {
+         loading: {
+				loader: {
+					specialists: true,
+				},
+				specialists: false,
+			},
          doctors: [],
       };
 	},
@@ -64,6 +95,11 @@ export default {
 		})
 			.then((response) => {
 				this.doctors = response.data;
+
+            this.loading.loader.specialists = false;
+				setTimeout(() => {
+					this.loading.specialists = true;
+				}, 515);
 			})
 			.catch((error) => {
 				let debbugStory = {
