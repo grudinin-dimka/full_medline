@@ -1,5 +1,7 @@
 <template>
-	<!-- Модальное окно -->
+	<!----------------------------------------------------------------------->
+	<!----------------------------Модальное окно----------------------------->
+	<!----------------------------------------------------------------------->
 	<modal ref="modal" @closeModal="closeSlide" :modal="modal">
 		<template
 			#button-hide
@@ -47,7 +49,7 @@
 				@click="changeSlideOrder('up')"
 			/>
 		</template>
-		<template #body>
+		<template #img>
 			<div
 				v-if="modal.type == 'edit'"
 				class="modal-body-img"
@@ -56,14 +58,23 @@
 				}"
 				ref="modalImg"
 			></div>
+		</template>
+		<template #img-input>
+			<input
+				class="modal-img-input"
+				type="file"
+				ref="fileUpload"
+				:class="{ error: currentSlide.errors.file.status }"
+				placeholder="Файл"
+			/>
+		</template>
+		<template #body>
 			<div class="modal-body-inputs">
 				<div class="modal-body-inputs-block">
-					<block-label
-						>Название*
-						<span v-if="currentSlide.data.name.edited"
-							>(Изменено)</span
-						></block-label
-					>
+					<element-input-label>
+						Название*
+						<span v-if="currentSlide.data.name.edited"> (Изменено) </span>
+					</element-input-label>
 					<article>
 						<SlideUserCard :height="50" :width="50" />
 						<input
@@ -81,12 +92,10 @@
 					</span>
 				</div>
 				<div class="modal-body-inputs-block">
-					<block-label
-						>Ссылка*
-						<span v-if="currentSlide.data.link.edited"
-							>(Изменено)</span
-						></block-label
-					>
+					<element-input-label>
+						Ссылка*
+						<span v-if="currentSlide.data.link.edited">(Изменено)</span>
+					</element-input-label>
 					<article>
 						<SlideLink :height="50" :width="50" />
 						<input
@@ -103,25 +112,9 @@
 						{{ currentSlide.errors.link.value }}
 					</span>
 				</div>
-				<div class="modal-body-inputs-block">
-					<block-label
-						>Загрузить новое фото (820x958)
-						<span v-if="modal.type == 'add'">*</span></block-label
-					>
-					<article>
-						<SlidePath :height="50" :width="50" />
-						<input
-							type="file"
-							ref="fileUpload"
-							:class="{ error: currentSlide.errors.file.status }"
-							placeholder="Файл"
-						/>
-					</article>
-					<span v-if="currentSlide.errors.file.status">
-						{{ currentSlide.errors.file.value }}
-					</span>
-				</div>
 			</div>
+		</template>
+		<template #footer>
 			<BlockButtons v-if="modal.type == 'edit'">
 				<ButtonRemove
 					v-if="
@@ -158,7 +151,9 @@
 		<template #addreas>home</template>
 	</info-bar>
 
-	<!-- Слайдер -->
+	<!----------------------------------------------------------------------->
+	<!--------------------------------Слайдер-------------------------------->
+	<!----------------------------------------------------------------------->
 	<block>
 		<block-title>
 			<template #title>Слайдер</template>
@@ -168,7 +163,7 @@
 		</block-title>
 
 		<LoaderChild :isLoading="loading.loader.slider"></LoaderChild>
-		
+
 		<div class="slider" v-if="loading.slider">
 			<div
 				v-for="slide in slides"
@@ -218,7 +213,9 @@
 		</BlockButtons>
 	</block>
 
-	<!-- Футер -->
+	<!----------------------------------------------------------------------->
+	<!---------------------------------Футер--------------------------------->
+	<!----------------------------------------------------------------------->
 	<block>
 		<block-title>
 			<template #title>Футер</template>
@@ -226,15 +223,15 @@
 				<icon-save :width="28" :height="28" @click="saveFooterChanges" />
 			</template>
 		</block-title>
-		
+
 		<LoaderChild :isLoading="loading.loader.footer"></LoaderChild>
 
 		<div class="footer-container" v-if="loading.footer">
 			<!-- Заголовок -->
-			<block-label>
+			<element-input-label>
 				Заголовок <span v-if="footer.title.edited">(Изменено)</span>
-			</block-label>
-			<div class="block-textarea">
+			</element-input-label>
+			<div class="block-textarea">				
 				<textarea
 					rows="4"
 					placeholder="Заголовок"
@@ -249,9 +246,11 @@
 				>
 			</div>
 			<!-- Дополнение к заголовку -->
-			<block-label>
+			<element-input-label>
 				Дополнение к заголовку
-				<span v-if="footer.titleDesc.edited">(Изменено)</span></block-label
+				<span v-if="footer.titleDesc.edited"
+					>(Изменено)</span
+				></element-input-label
 			>
 			<div class="block-textarea">
 				<textarea
@@ -268,10 +267,10 @@
 				>
 			</div>
 			<!-- Лицензия -->
-			<block-label>
+			<element-input-label>
 				Лицензия
-				<span v-if="footer.license.edited">(Изменено)</span></block-label
-			>
+				<span v-if="footer.license.edited">(Изменено)</span>
+			</element-input-label>
 			<div class="block-textarea">
 				<textarea
 					rows="4"
@@ -280,17 +279,17 @@
 					@input="controlSymbols('license')"
 				>
 				</textarea>
-				<span
-					>{{ footer.license.symbolsCount }}/{{
-						footer.license.symbolsCountMax
-					}}</span
-				>
+				<span>
+					{{ footer.license.symbolsCount }}
+					/
+					{{ footer.license.symbolsCountMax }}
+				</span>
 			</div>
 			<!-- Основной текст -->
-			<block-label>
+			<element-input-label>
 				Основной текст
-				<span v-if="footer.licenseDesc.edited">(Изменено)</span></block-label
-			>
+				<span v-if="footer.licenseDesc.edited"> (Изменено) </span>
+			</element-input-label>
 			<div class="block-textarea">
 				<textarea
 					rows="10"
@@ -306,8 +305,11 @@
 				>
 			</div>
 			<!-- Подвал -->
-			<block-label>
-				Подвал <span v-if="footer.footer.edited">(Изменено)</span></block-label
+			<element-input-label>
+				Подвал
+				<span v-if="footer.footer.edited"
+					>(Изменено)</span
+				></element-input-label
 			>
 			<div class="block-textarea">
 				<textarea
@@ -318,7 +320,9 @@
 				>
 				</textarea>
 				<span>
-					{{ footer.footer.symbolsCount }}/{{ footer.footer.symbolsCountMax }}
+					{{ footer.footer.symbolsCount }}/{{
+						footer.footer.symbolsCountMax
+					}}
 				</span>
 			</div>
 		</div>
@@ -328,6 +332,8 @@
 <script>
 import axios from "axios";
 
+import ElementInputLabel from "../../components/ui/admin/ElementInputLabel.vue";
+
 import LoaderChild from "../../components/includes/LoaderChild.vue";
 
 import Modal from "../../components/includes/admin/AdminModal.vue";
@@ -335,7 +341,6 @@ import InfoBar from "../../components/ui/admin/InfoBar.vue";
 
 import BlockTitle from "../../components/ui/admin/BlockTitle.vue";
 import Block from "../../components/ui/admin/Block.vue";
-import BlockLabel from "../../components/ui/admin/BlockLabel.vue";
 import BlockButtons from "../../components/ui/admin/BlockButtons.vue";
 
 import ButtonDefault from "../../components/ui/admin/ButtonDefault.vue";
@@ -353,13 +358,13 @@ import IconSave from "../../components/icons/IconSave.vue";
 export default {
 	components: {
 		axios,
+		ElementInputLabel,
 		LoaderChild,
 		Modal,
 		InfoBar,
 		Block,
 		BlockTitle,
 		BlockButtons,
-		BlockLabel,
 		ButtonDefault,
 		ButtonRemove,
 		SlideUserCard,
@@ -560,31 +565,46 @@ export default {
 			}
 		},
 		/* _____________________________________*/
-		/* 2.        Основные действия          */
+		/* 2.         Модальное окно            */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		// Открытие модального окна
+		openModal(type) {
+			if (type == "create") {
+				this.modal.status = true;
+				this.modal.type = "create";
+				this.currentSlide.status = true;
+			} else if (type == "edit") {
+				this.modal.status = true;
+				this.modal.type = "edit";
+				this.currentSlide.status = true;
+			}
+			document.body.classList.toggle("modal-open");
+		},
+
+		// Закрытие модального окна
+		closeModal() {
+			document.body.classList.toggle("modal-open");
+			this.modal.status = false;
+		},
+
+		// Закрытие модального окна с выбранным слайдом
+		closeSlide() {
+			this.closeModal();
+			this.clearSlideEdited();
+			this.clearSlideErrors();
+		},
+		/* _____________________________________*/
+		/* 3.        Основные действия          */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		// Сортировка списка слайдов по порядку
 		sortSlider() {
 			this.slides.sort((a, b) => a.order - b.order);
 		},
-		// Получение ссылки к динамичному изображению
-		getImagePathGlob(path) {
-			const images = import.meta.glob("/storage/app/public/img/*.png", {
-				eager: true,
-			});
-
-			const imagePath = `/storage/app/public/img/${path}.png`;
-			if (images[imagePath]) {
-				return images[imagePath].default;
-			} else {
-				const imagePath = `/storage/app/public/img/default.png`;
-				return images[imagePath].default;
-			}
-		},
 		// Открытие слайда
 		openSlide(selectedSlide, type) {
 			try {
 				this.$refs.fileUpload.value = "";
-				
+
 				if (type == "edit") {
 					for (let key in selectedSlide) {
 						this.currentSlide.data[key].body = selectedSlide[key];
@@ -602,18 +622,16 @@ export default {
 						this.modal.slide.delete = false;
 					}
 
-					this.modal.status = true;
-					this.modal.type = "edit";
-					this.currentSlide.status = true;
+					// Открытие модального окна
+					this.openModal(type);
 				} else if (type == "add") {
 					for (let key in this.currentSlide.data) {
 						this.currentSlide.data[key].body = "";
 					}
-					this.modal.status = true;
-					this.modal.type = type;
-					this.currentSlide.status = true;
+
+					// Открытие модального окна
+					this.openModal(type);
 				}
-				document.body.classList.toggle("modal-open");
 			} catch (error) {
 				let debbugStory = {
 					title: "Ошибка.",
@@ -622,13 +640,6 @@ export default {
 				};
 				this.$store.commit("debuggerState", debbugStory);
 			}
-		},
-		// Закрытие слайда
-		closeSlide() {
-			document.body.classList.toggle("modal-open");
-			this.modal.status = false;
-			this.clearSlideEdited();
-			this.clearSlideErrors();
 		},
 		/* _____________________________________*/
 		/* 3.       Изменение состояний         */
@@ -1040,7 +1051,7 @@ export default {
 				this.loading.loader.slider = false;
 				setTimeout(() => {
 					this.loading.slider = true;
-				}, 500)
+				}, 500);
 			})
 			.catch((error) => {
 				let debbugStory = {
@@ -1069,7 +1080,7 @@ export default {
 				this.loading.loader.footer = false;
 				setTimeout(() => {
 					this.loading.footer = true;
-				}, 500)
+				}, 500);
 			})
 			.catch((error) => {
 				let debbugStory = {
@@ -1084,15 +1095,31 @@ export default {
 </script>
 
 <style scoped>
-.modal-img {
+.modal-img-input {
+	box-sizing: border-box;
+	outline: none;
+
+	padding: 10px;
 	border: 2px solid var(--input-border-color-inactive);
-	border-radius: 20px;
-	width: 300px;
-	align-self: center;
+	border-radius: 10px;
+
+	font-size: 20px;
+	caret-color: var(--input-border-color-active);
+
+	transition: all 0.2s;
+}
+
+.modal-img-input::file-selector-button {
+	cursor: pointer;
+	background-color: var(--button-default-color);
+	border: 0px;
+	border-radius: 5px;
+	color: white;
+	padding: 5px;
 }
 
 .modal-body-img {
-	height: 350px;
+	height: 275px;
 	background-size: contain;
 	background-position: center center;
 	background-repeat: no-repeat;
@@ -1189,7 +1216,7 @@ textarea:focus {
 	grid-template-columns: repeat(4, 1fr);
 	gap: 20px;
 
-	animation: show 1s linear;
+	animation: show 0.5s ease-out;
 }
 
 .slider-block {
@@ -1259,7 +1286,7 @@ textarea:focus {
 }
 
 .footer-container {
-	animation: show 1s linear;
+	animation: show 0.5s ease-out;
 }
 
 @keyframes show {

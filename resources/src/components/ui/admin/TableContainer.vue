@@ -43,8 +43,8 @@
 				<td>{{ doctor.specialization }}</td>
 				<td>
 					<table-container-buttons>
-						<table-button-default> Изменить </table-button-default>
-						<table-button-remove> Удалить </table-button-remove>
+						<table-button-default @click="$emit('editDoctor', doctor)"> Изменить </table-button-default>
+						<table-button-remove @click="$emit('removeDoctor', doctor)"> Удалить </table-button-remove>
 					</table-container-buttons>
 				</td>
 			</tr>
@@ -81,7 +81,7 @@ export default {
 table {
 	border-collapse: collapse;
 
-   animation: show 1s linear;
+   animation: show 0.5s ease-out;
 }
 
 th,

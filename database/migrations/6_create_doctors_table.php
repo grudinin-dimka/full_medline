@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name')->nullable();
             $table->string('specialization')->nullable();
-            $table->year('startWorkAge')->nullable()->default(date('Y'));
+            $table->date('startWorkAge')->nullable()->default(date('c'));
             $table->text('education')->nullable();
             $table->text('advancedTraining')->nullable();
             $table->text('certificates')->nullable();
@@ -26,7 +26,7 @@ return new class extends Migration
         DB::table('doctors')->insert([
             "name" => "Иванов Иван Иванович",
             "specialization" => "Терапевт",
-            "startWorkAge" => date('Y'),
+            "startWorkAge" => date("c"),
             "education" => "Высшее",
             "advancedTraining" => "Терапевт",
             "certificates" => "Сертификат",
@@ -36,7 +36,7 @@ return new class extends Migration
         DB::table('doctors')->insert([
             "name" => "Ёжиков Ёжик Ёжикович",
             "specialization" => "Эндокринолог",
-            "startWorkAge" => date('Y'),
+            "startWorkAge" => date("c"),
             "education" => "Высшее",
             "advancedTraining" => "Терапевт",
             "certificates" => "Сертификат",
@@ -46,7 +46,7 @@ return new class extends Migration
         DB::table('doctors')->insert([
             "name" => "Васьков Василий Васильевич",
             "specialization" => "Эндокринолог",
-            "startWorkAge" => date('Y'),
+            "startWorkAge" => date("c"),
             "education" => "Высшее",
             "advancedTraining" => "Терапевт",
             "certificates" => "Сертификат",

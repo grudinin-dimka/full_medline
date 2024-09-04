@@ -1,7 +1,7 @@
 <template>
 	<div
 		class="modal"
-		:class="{ 
+		:class="{
 			active: modal.status,
 			create: modal.slide.create,
 			delete: modal.slide.delete,
@@ -33,13 +33,17 @@
 					</button>
 				</div>
 			</div>
+			<div class="modal-img">
+				<slot name="img"></slot>
+				<slot name="img-input"></slot>
+			</div>
 			<!-- Тело окна -->
 			<div class="modal-body">
 				<slot name="body"></slot>
 			</div>
 			<!-- Нижняя часть окна -->
 			<slot name="footer">
-				<div class="modal-footer"></div>
+				<slot name="footer"></slot>
 			</slot>
 		</div>
 	</div>
@@ -70,7 +74,7 @@ export default {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	z-index: 300;
+	z-index: 500;
 	top: 0px;
 	left: 0px;
 
@@ -79,6 +83,7 @@ export default {
 
 	width: 100%;
 	height: 100%;
+
 	background: rgba(0, 0, 0, 0.39);
 
 	transition: all 0.3s;
@@ -90,13 +95,17 @@ export default {
 }
 
 .modal-container {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
 	padding: 20px;
 	box-sizing: border-box;
 
 	background: #fff;
 	border-radius: 10px;
 	width: calc(100dvw - 60px);
-	max-width: 600px;
+	max-width: 900px;
+	max-height: 100%;
 
 	transition: all 0.3s;
 	transform: scale(0.7);
@@ -153,9 +162,39 @@ export default {
 	fill: rgb(0, 0, 0);
 }
 
+.modal-img {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	height: 275px;
+}
+
 .modal-body {
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
+	max-height: 500px;
+	overflow: auto;
 }
+
+/* Скролбар блока с контентом. */
+.modal-body::-webkit-scrollbar {
+	width: 20px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+	background-color: rgb(255, 255, 255);
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+	background-color: rgb(220, 220, 220);
+	border-left: 10px;
+	border-color: rgb(255, 255, 255);
+	border-style: solid;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+	background-color: rgb(230, 230, 230);
+	cursor: all-scroll;
+}
+/* Конец. */
 </style>
