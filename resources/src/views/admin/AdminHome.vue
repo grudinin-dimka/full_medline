@@ -166,6 +166,9 @@
 				<icon-save :width="28" :height="28" @click="saveSlidesChanges" />
 			</template>
 		</block-title>
+
+		<LoaderChild></LoaderChild>
+		
 		<div class="slider">
 			<div
 				v-for="slide in slides"
@@ -320,6 +323,8 @@
 <script>
 import axios from "axios";
 
+import LoaderChild from "../../components/includes/LoaderChild.vue";
+
 import Modal from "../../components/includes/admin/AdminModal.vue";
 import InfoBar from "../../components/ui/admin/InfoBar.vue";
 
@@ -343,6 +348,7 @@ import IconSave from "../../components/icons/IconSave.vue";
 export default {
 	components: {
 		axios,
+		LoaderChild,
 		Modal,
 		InfoBar,
 		Block,

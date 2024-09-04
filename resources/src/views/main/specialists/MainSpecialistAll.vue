@@ -50,7 +50,7 @@ export default {
 		},
 	},
 	mounted() {
-		// Получение массива слайдов с сервера
+		// Получение массива докторов с сервера
 		axios({
 			method: "post",
 			url: `${this.$store.state.axios.urlApi}` + `get-doctors`,
