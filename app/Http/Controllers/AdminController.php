@@ -19,61 +19,64 @@ use App\Models\Doctor;
 
 class AdminController extends Controller
 {
-  /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-  /* |              СЛАЙДЕР              |*/
-  /* |___________________________________|*/
-  /* _____________________________________*/
-  /* 1.      Сохранение, удаление         */
-  /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+  /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+  /* |                    СЛАЙДЕР                        |*/
+  /* |___________________________________________________|*/
+  /* _____________________________________________________*/
+  /* 1. Сохранение, удаление                              */
+  /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
   // Сохранение содержимого всех слайдов
   public function saveSlidesChanges(Request $request) {
-    // /* Изменение содержимого слайдов */
-    // foreach ($request->slides as $key => $value) {
-    //   if ($value['delete'] === true) {
-    //     $slide = Slide::where('order', $value['order'])->first();
-    //     $slide->delete();
-    //   } else if ($value['create'] === true){
-    //     $slideCreate = Slide::create([
-    //       'name' => $value['name'],
-    //       'link' => $value['link'],
-    //       'filename' => $value['filename'],
-    //       'hide' => $value['hide'],
-    //       'order' => $value['order'],
-    //     ]);
-    //   } else {
-    //     $slide = Slide::where('order', $value['order'])->first();
-    //     $slideUpdate = $slide->update([
-    //       'name' => $value['name'],
-    //       'link' => $value['link'],
-    //       'filename' => $value['filename'],
-    //       'hide' => $value['hide'],
-    //       'order' => $value['order'],
-    //     ]);  
-    //   };
-    // };
-
-    $slides = Slide::all()->SortBy('order');
-    // var_dump(count($slides));
-    // var_dump($slides[5]);
-
-    foreach ($slides as $slideKey => $slideValue) {
-      var_dump($slideValue['order']);
+    /* Изменение содержимого слайдов */
+    foreach ($request->slides as $key => $value) {
+      if ($value['delete'] === true) {
+        $slide = Slide::where('order', $value['order'])->first();
+        $slide->delete();
+      } else if ($value['create'] === true){
+        $slideCreate = Slide::create([
+          'name' => $value['name'],
+          'link' => $value['link'],
+          'filename' => $value['filename'],
+          'hide' => $value['hide'],
+          'order' => $value['order'],
+        ]);
+      } else {
+        $slide = Slide::where('order', $value['order'])->first();
+        $slideUpdate = $slide->update([
+          'name' => $value['name'],
+          'link' => $value['link'],
+          'filename' => $value['filename'],
+          'hide' => $value['hide'],
+          'order' => $value['order'],
+        ]);  
+      };
     };
 
-    // /* Удаление неиспользуемых файлов */
-    // $files = Storage::allFiles('public');
-    // foreach ($files as $fileKey => $fileValue) {
-    //   $fileUses = false;
-    //   foreach ($slides as $slideKey => $slideValue) {
-    //     if ($slideValue->filename == substr($fileValue, 7)) {
-    //       $fileUses = true;
-    //     };
-    //   };
+    // Сортировка слайдов по порядку от наименьшего до большого
+    $slides = Slide::all()->SortBy('order');
 
-    //   if (!$fileUses) {
-    //     Storage::delete($fileValue);
-    //   }
-    // };
+    // Обновление порядковых номеров
+    $count = 0;
+    foreach ($slides as $slideKey => $slideValue) {
+      $count++;
+      $slideValue->order = $count;
+      $slideValue->save();
+    };
+
+    /* Удаление неиспользуемых файлов */
+    $files = Storage::allFiles('public');
+    foreach ($files as $fileKey => $fileValue) {
+      $fileUses = false;
+      foreach ($slides as $slideKey => $slideValue) {
+        if ($slideValue->filename == substr($fileValue, 7)) {
+          $fileUses = true;
+        };
+      };
+
+      if (!$fileUses) {
+        Storage::delete($fileValue);
+      }
+    };
   } 
   // Загрузка файла на сервер 
   public function uploadFile(Request $request) {
@@ -87,12 +90,12 @@ class AdminController extends Controller
     return Storage::url(substr($path, 3));
 	} 
 
-  /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-  /* |               ФУТЕР               |*/
-  /* |___________________________________|*/
-  /* _____________________________________*/
-  /* 1.       Сохранение, очистка         */
-  /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+  /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+  /* |                     ФУТЕР                         |*/
+  /* |___________________________________________________|*/
+  /* _____________________________________________________*/
+  /* 1. Сохранение, удаление                              */
+  /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
   // Сохранение футера 
   public function saveFooter(Request $request) {
     $footer = Footer::find(1);
