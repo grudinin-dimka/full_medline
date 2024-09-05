@@ -165,7 +165,8 @@ export default {
 .modal-img {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
-	height: 275px;
+	gap: 20px;
+	min-height: 300px;
 }
 
 .modal-body {

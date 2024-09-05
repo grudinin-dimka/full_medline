@@ -314,17 +314,11 @@ export default {
 </script>
 
 <style scoped>
-.modal-body-img {
-	background-size: contain;
-	background-position: center center;
-	background-repeat: no-repeat;
-	padding: 5px;
-	border-radius: 10px;
-}
-
 .modal-img-input {
+	flex-grow: 1;
 	box-sizing: border-box;
 	outline: none;
+	max-width: 400px;
 
 	padding: 10px;
 	border: 2px solid var(--input-border-color-inactive);
@@ -337,12 +331,22 @@ export default {
 }
 
 .modal-img-input::file-selector-button {
+	flex-grow: 1;
 	cursor: pointer;
 	background-color: var(--button-default-color);
 	border: 0px;
 	border-radius: 5px;
 	color: white;
 	padding: 5px;
+}
+
+.modal-body-img {
+	flex: 1 0 400px;
+	background-size: contain;
+	background-position: center center;
+	background-repeat: no-repeat;
+	padding: 5px;
+	border-radius: 10px;
 }
 
 .modal-body-inputs {

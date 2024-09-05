@@ -121,7 +121,7 @@
 						!currentSlide.data.create.body &
 						!currentSlide.data.delete.body
 					"
-					@click.prevent="deleteSlide"
+					@click.prevent="markDeleteSlide"
 				>
 					Удалить
 				</ButtonRemove>
@@ -133,12 +133,12 @@
 				</ButtonDefault>
 				<ButtonDefault
 					v-if="currentSlide.data.delete.body"
-					@click.prevent="deleteSlide"
+					@click.prevent="markDeleteSlide"
 				>
 					Восстановить
 				</ButtonDefault>
 			</BlockButtons>
-			<BlockButtons v-if="modal.type == 'add'">
+			<BlockButtons v-if="modal.type == 'create'">
 				<ButtonDefault @click.prevent="createSlide">
 					Добавить
 				</ButtonDefault>
@@ -207,7 +207,7 @@
 			</div>
 		</div>
 		<BlockButtons>
-			<ButtonDefault @click="openSlide(null, 'add')">
+			<ButtonDefault @click="openSlide(null, 'create')">
 				Добавить
 			</ButtonDefault>
 		</BlockButtons>
@@ -231,7 +231,7 @@
 			<element-input-label>
 				Заголовок <span v-if="footer.title.edited">(Изменено)</span>
 			</element-input-label>
-			<div class="block-textarea">				
+			<div class="block-textarea">
 				<textarea
 					rows="4"
 					placeholder="Заголовок"
@@ -624,7 +624,7 @@ export default {
 
 					// Открытие модального окна
 					this.openModal(type);
-				} else if (type == "add") {
+				} else if (type == "create") {
 					for (let key in this.currentSlide.data) {
 						this.currentSlide.data[key].body = "";
 					}
@@ -812,6 +812,22 @@ export default {
 				this.$store.commit("debuggerState", debbugStory);
 			}
 		},
+		// Пометка на удаление выбранного слайда
+		markDeleteSlide() {
+			/* Получение текущего объекта из массива this.slides */
+			let resultSlideCurrent = this.slides.filter(
+				(slide) => slide.order === this.currentSlide.data.order.body
+			);
+			let filteredSlideCurrent = resultSlideCurrent[0];
+
+			if (filteredSlideCurrent.delete) {
+				filteredSlideCurrent.delete = false;
+			} else {
+				filteredSlideCurrent.delete = true;
+			}
+
+			this.closeSlide();
+		},
 		// Обновление данных слайда по данным из модального окна
 		updateSlide() {
 			try {
@@ -885,22 +901,6 @@ export default {
 				this.$store.commit("debuggerState", debbugStory);
 			}
 		},
-		// Удаление выбранного слайда
-		deleteSlide() {
-			/* Получение текущего объекта из массива this.slides */
-			let resultSlideCurrent = this.slides.filter(
-				(slide) => slide.order === this.currentSlide.data.order.body
-			);
-			let filteredSlideCurrent = resultSlideCurrent[0];
-
-			if (filteredSlideCurrent.delete) {
-				filteredSlideCurrent.delete = false;
-			} else {
-				filteredSlideCurrent.delete = true;
-			}
-
-			this.closeSlide();
-		},
 		// Сохранение изменений в базе данных
 		saveSlidesChanges() {
 			let dataSlides = [];
@@ -934,8 +934,34 @@ export default {
 					this.$store.commit("debuggerState", debbugStory);
 
 					/* Обновление свойства create в массиве слайдов */
+					for (let index in this.slides) {
+						if (this.slides[index].create) {
+							this.slides[index].create = false;
+						}
+					}
+
+					// Получения нового массива слайдов, помеченных на удаление
+					let res = this.slides.filter((slide) => {
+						if (slide.delete == true) {
+							return Object.assign({}, slide);
+						}
+					});
+
+					// Повторять, пока не будут удалены все слайды, помеченные на удаление
+					while (res.length > 0) {
+						this.slides.splice(this.slides.indexOf(res[0]), 1);
+						res = this.slides.filter((slide) => {
+							if (slide.delete == true) {
+								return Object.assign({}, slide);
+							}
+						});
+					}
+
+					// Обновление свойства order в массиве слайдов
+					let count = 0;
 					for (let slide in this.slides) {
-						this.slides[slide].create = false;
+						count++;
+						this.slides[slide].order = count;
 					}
 				})
 				.catch((error) => {
@@ -1098,6 +1124,7 @@ export default {
 .modal-img-input {
 	box-sizing: border-box;
 	outline: none;
+	max-width: 400px;
 
 	padding: 10px;
 	border: 2px solid var(--input-border-color-inactive);
@@ -1110,6 +1137,7 @@ export default {
 }
 
 .modal-img-input::file-selector-button {
+	flex-grow: 1;
 	cursor: pointer;
 	background-color: var(--button-default-color);
 	border: 0px;
@@ -1119,7 +1147,7 @@ export default {
 }
 
 .modal-body-img {
-	height: 275px;
+	width: 300px;
 	background-size: contain;
 	background-position: center center;
 	background-repeat: no-repeat;
