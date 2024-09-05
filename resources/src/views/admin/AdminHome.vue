@@ -800,6 +800,7 @@ export default {
 				this.currentSlide.file = this.$refs.fileUpload.files[0];
 				let formData = new FormData();
 				formData.append("image", this.currentSlide.file);
+				formData.append("filename", this.currentSlide.file.name);
 
 				axios({
 					method: "post",
@@ -811,27 +812,28 @@ export default {
 					data: formData,
 				})
 					.then((response) => {
-						let debbugStory = {
-							title: "Успешно!",
-							body: "Картинка успешно загружена.",
-							type: "Completed",
-						};
+						console.log(response.data);
+						// let debbugStory = {
+						// 	title: "Успешно!",
+						// 	body: "Картинка успешно загружена.",
+						// 	type: "Completed",
+						// };
 
-						this.slides.push({
-							name: this.$refs.inputName.value,
-							link: this.$refs.inputLink.value,
-							path: response.data,
-							filename: response.data.substring(9, response.data.length),
-							hide: false,
-							order: 1 + this.slides[this.slides.length - 1].order,
-							create: true,
-							delete: false,
-						});
+						// this.slides.push({
+						// 	name: this.$refs.inputName.value,
+						// 	link: this.$refs.inputLink.value,
+						// 	path: response.data,
+						// 	filename: response.data.substring(9, response.data.length),
+						// 	hide: false,
+						// 	order: 1 + this.slides[this.slides.length - 1].order,
+						// 	create: true,
+						// 	delete: false,
+						// });
 					})
 					.catch((error) => {
 						console.log(error);
 					});
-				this.closeSlide();
+				// this.closeSlide();
 			} catch (error) {
 				let debbugStory = {
 					title: "Ошибка.",

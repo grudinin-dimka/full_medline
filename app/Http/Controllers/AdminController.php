@@ -52,10 +52,10 @@ class AdminController extends Controller
       };
     };
 
-    // Сортировка слайдов по порядку от наименьшего до большого
+    /* Сортировка слайдов по порядку от наименьшего до наибольшого */
     $slides = Slide::all()->SortBy('order');
 
-    // Обновление порядковых номеров
+    /* Обновление порядковых номеров */
     $count = 0;
     foreach ($slides as $slideKey => $slideValue) {
       $count++;
@@ -63,32 +63,48 @@ class AdminController extends Controller
       $slideValue->save();
     };
 
-    /* Удаление неиспользуемых файлов */
-    $files = Storage::allFiles('public');
-    foreach ($files as $fileKey => $fileValue) {
-      $fileUses = false;
+    /* Получение всех файлов */
+    $filesAll = Storage::files('public');
+
+    /* Объявление массива с префиксом s- */
+    $filesUses = [];
+    foreach ($filesAll as $fileKey => $fileValue) {
+      $fileName = substr($fileValue, 7);
+      // Проверка на наличие префикса
+      if (substr($fileName, 0, 2) == 's-') {
+        array_push($filesUses, $fileName);
+        var_dump("Файл с префиксом: " . $fileName);
+      }
+    };
+
+    foreach ($filesUses as $fileKey => $fileValue) {
+      $useFile = false;
+      // Проверка на использование файла
       foreach ($slides as $slideKey => $slideValue) {
-        if ($slideValue->filename == substr($fileValue, 7)) {
-          $fileUses = true;
+        if ($slideValue->filename == $fileValue) {
+          $useFile = true;
         };
       };
 
-      if (!$fileUses) {
-        Storage::delete($fileValue);
+      // Удаление файла, если не используется
+      if (!$useFile) {
+        Storage::delete('public/' . $fileValue);
       }
+      var_dump($useFile);
     };
   } 
   // Загрузка файла на сервер 
   public function uploadFile(Request $request) {
 		/* Проверка на наличие переменной image с файлом в запросе */  
 		if($request->hasFile('image')) {
-      $path = $request->file('image')->store(
-          './',
-          'public'
+      $path = $request->file('image')->storeAs(
+        './',
+        's-' . $request->filename,
+        'public',
       );
     };
     return Storage::url(substr($path, 3));
-	} 
+  } 
 
   /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
   /* |                     ФУТЕР                         |*/
