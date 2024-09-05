@@ -165,6 +165,8 @@ export default {
 .modal-img {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
+	justify-content: center;
+	align-items: justify;
 	gap: 20px;
 	min-height: 300px;
 }
@@ -198,4 +200,14 @@ export default {
 	cursor: all-scroll;
 }
 /* Конец. */
+
+@media screen and (max-width: 860px) {
+	.modal-img {
+		display: flex;
+		flex-direction: column;
+		justify-content: justify;
+		align-items: justify;
+		min-height: none;
+	}
+}
 </style>

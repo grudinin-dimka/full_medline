@@ -5,33 +5,36 @@
 				<th>
 					<div class="table-th-container">
 						<div class="table-th-name">ID</div>
-						<div class="table-th-filter">
-                     <icon-filter-off :width="22" :height="22"/>
-                  </div>
+						<div 
+							class="table-th-filter"
+							@click="$emit('useFilter', 'id')"
+						>
+							<icon-filter-off :width="22" :height="22" />
+						</div>
 					</div>
 				</th>
 				<th>
 					<div class="table-th-container">
 						<div class="table-th-name">Имя</div>
-						<div class="table-th-filter">
-                     <icon-filter-off :width="22" :height="22"/>
-                  </div>
+						<div
+							class="table-th-filter"
+							@click="$emit('useFilter', 'name')"
+						>
+							<icon-filter-off :width="22" :height="22" />
+						</div>
 					</div>
 				</th>
 				<th>
 					<div class="table-th-container">
 						<div class="table-th-name">Специальность</div>
 						<div class="table-th-filter">
-                     <icon-filter-off :width="22" :height="22"/>
-                  </div>
+							<icon-filter-off :width="22" :height="22" />
+						</div>
 					</div>
 				</th>
 				<th>
 					<div class="table-th-container">
 						<div class="table-th-name">Действия</div>
-						<div class="table-th-filter">
-                     <icon-filter-off :width="22" :height="22"/>
-                  </div>
 					</div>
 				</th>
 			</tr>
@@ -43,8 +46,12 @@
 				<td>{{ doctor.specialization }}</td>
 				<td>
 					<table-container-buttons>
-						<table-button-default @click="$emit('editDoctor', doctor)"> Изменить </table-button-default>
-						<table-button-remove @click="$emit('removeDoctor', doctor)"> Удалить </table-button-remove>
+						<table-button-default @click="$emit('editDoctor', doctor)">
+							Изменить
+						</table-button-default>
+						<table-button-remove @click="$emit('removeDoctor', doctor)">
+							Удалить
+						</table-button-remove>
 					</table-container-buttons>
 				</td>
 			</tr>
@@ -65,8 +72,8 @@ export default {
 		TableButtonDefault,
 		TableButtonRemove,
 		TableContainerButtons,
-      IconFilterOn, 
-      IconFilterOff
+		IconFilterOn,
+		IconFilterOff,
 	},
 	props: {
 		doctors: {
@@ -81,7 +88,7 @@ export default {
 table {
 	border-collapse: collapse;
 
-   animation: show 0.5s ease-out;
+	animation: show 0.5s ease-out;
 }
 
 th,
@@ -94,7 +101,7 @@ th:last-of-type {
 }
 
 th {
-   position: relative;
+	position: relative;
 	font-weight: 400;
 	text-align: left;
 	border: 1px solid #1f9fae;
@@ -115,9 +122,9 @@ td {
 }
 
 .table-th-filter {
-   cursor: pointer;
-   position: absolute;
-   right: 5px;
+	cursor: pointer;
+	position: absolute;
+	right: 5px;
 }
 
 @keyframes show {

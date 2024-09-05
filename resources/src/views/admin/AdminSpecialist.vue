@@ -11,8 +11,16 @@
 				}"
 				ref="modalImg"
 			></div>
+			<div
+				v-if="modal.type == 'create'"
+				class="modal-body-img"
+				:style="{
+					backgroundImage: `url(/default/doctor.png)`,
+				}"
+				ref="modalImg"
+			></div>
 		</template>
-      <template #img-input>
+		<template #img-input>
 			<input
 				class="modal-img-input"
 				type="file"
@@ -119,6 +127,7 @@
 			:doctors="doctors"
 			@editDoctor="editDoctor"
 			@removeDoctor="removeDoctor"
+			@useFilter="filterDoctors"
 		/>
 
 		<block-buttons>
@@ -242,7 +251,7 @@ export default {
 		};
 	},
 	methods: {
-      /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                     ДОКТОРА                       |*/
 		/* |___________________________________________________|*/
 		/* _____________________________________________________*/
@@ -250,14 +259,21 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		// Открытие модального окна с доктором
 		openModal(type) {
-			if (type == "edit") {
-				this.modal.type = "edit";
-				this.modal.title = "Редактирование";
-				this.modal.status = true;
-			} else if (type == "create") {
-				this.modal.type = "create";
-				this.modal.title = "Создание";
-				this.modal.status = true;
+			switch (type) {
+				case "create":
+					{
+						this.modal.type = type;
+						this.modal.title = "Создание";
+						this.modal.status = true;
+					}
+					break;
+				case "edit":
+					{
+						this.modal.type = type;
+						this.modal.title = "Редактирование";
+						this.modal.status = true;
+					}
+					break;
 			}
 			document.body.classList.toggle("modal-open");
 		},
@@ -267,15 +283,46 @@ export default {
 			document.body.classList.toggle("modal-open");
 		},
 		/* _____________________________________________________*/
-		/* 2. Добавление, изменение, удаление                   */
+		/* 2. Фильтрация                                        */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		filterDoctors(type) {
+			this.doctors.filter((doctor) => {
+				switch (type) {
+					case "id":
+						{
+							this.doctors.sort((a, b) => {
+								b - a;
+							});
+							console.log("id");
+						}
+						break;
+					case "name":
+						{
+							this.doctors.sort((a, b) => {
+								a + b;
+							});
+							console.log("name");
+						}
+						break;
+					case "specialization":
+						{
+							this.doctors.sort((a, b) => a - b);
+						}
+						console.log("specialization");
+						break;
+				}
+			});
+		},
+		/* _____________________________________________________*/
+		/* 3. Добавление, изменение, удаление                   */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		// Изменение выбранного доктора
 		addDoctor() {
-         this.currentDoctor.data.create.body = true;
-         for(let key in this.currentDoctor.data) {
-             this.currentDoctor.data[key] = '';
-         };
-         this.openModal("create");
+			this.currentDoctor.data.create.body = true;
+			for (let key in this.currentDoctor.data) {
+				this.currentDoctor.data[key] = "";
+			}
+			this.openModal("create");
 		},
 		// Изменение выбранного доктора
 		editDoctor(doctor) {

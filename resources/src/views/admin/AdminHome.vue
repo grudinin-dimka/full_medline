@@ -1,7 +1,7 @@
 <template>
-	<!----------------------------------------------------------------------->
-	<!----------------------------Модальное окно----------------------------->
-	<!----------------------------------------------------------------------->
+	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
+	<!--|                  МОДАЛЬНОЕ ОКНО                   |-->
+	<!--|___________________________________________________|-->
 	<modal ref="modal" @closeModal="closeSlide" :modal="modal">
 		<template
 			#button-hide
@@ -24,8 +24,8 @@
 				@click="changeSlideHide"
 			/>
 		</template>
-		<template #title v-if="modal.type == 'add'">
-			Добавление нового слайда
+		<template #title v-if="modal.type == 'create'">
+			Создание слайда
 		</template>
 		<template
 			#title
@@ -55,6 +55,14 @@
 				class="modal-body-img"
 				:style="{
 					backgroundImage: `url(${currentSlide.data.path.body})`,
+				}"
+				ref="modalImg"
+			></div>
+			<div
+				v-if="modal.type == 'create'"
+				class="modal-body-img"
+				:style="{
+					backgroundImage: `url(/default/doctor.png)`,
 				}"
 				ref="modalImg"
 			></div>
@@ -140,7 +148,7 @@
 			</BlockButtons>
 			<BlockButtons v-if="modal.type == 'create'">
 				<ButtonDefault @click.prevent="createSlide">
-					Добавить
+					Создать
 				</ButtonDefault>
 			</BlockButtons>
 		</template>
@@ -151,9 +159,9 @@
 		<template #addreas>home</template>
 	</info-bar>
 
-	<!----------------------------------------------------------------------->
-	<!--------------------------------Слайдер-------------------------------->
-	<!----------------------------------------------------------------------->
+	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
+	<!--|                      СЛАЙДЕР                      |-->
+	<!--|___________________________________________________|-->
 	<block>
 		<block-title>
 			<template #title>Слайдер</template>
@@ -213,9 +221,9 @@
 		</BlockButtons>
 	</block>
 
-	<!----------------------------------------------------------------------->
-	<!---------------------------------Футер--------------------------------->
-	<!----------------------------------------------------------------------->
+	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
+	<!--|                       ФУТЕР                       |-->
+	<!--|___________________________________________________|-->
 	<block>
 		<block-title>
 			<template #title>Футер</template>
@@ -569,14 +577,21 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		// Открытие модального окна
 		openModal(type) {
-			if (type == "create") {
-				this.modal.status = true;
-				this.modal.type = "create";
-				this.currentSlide.status = true;
-			} else if (type == "edit") {
-				this.modal.status = true;
-				this.modal.type = "edit";
-				this.currentSlide.status = true;
+			switch (type) {
+				case "create":
+					{
+						this.modal.status = true;
+						this.modal.type = "create";
+						this.currentSlide.status = true;
+					}
+					break;
+				case "edit":
+					{
+						this.modal.status = true;
+						this.modal.type = "edit";
+						this.currentSlide.status = true;
+					}
+					break;
 			}
 			document.body.classList.toggle("modal-open");
 		},
@@ -605,32 +620,39 @@ export default {
 			try {
 				this.$refs.fileUpload.value = "";
 
-				if (type == "edit") {
-					for (let key in selectedSlide) {
-						this.currentSlide.data[key].body = selectedSlide[key];
-					}
-					// Проверка, создан ли слайд или уже имеется
-					if (this.currentSlide.data.create.body === true) {
-						this.modal.slide.create = true;
-					} else {
-						this.modal.slide.create = false;
-					}
-					// Проверка, помечен ли слайд на удаление
-					if (this.currentSlide.data.delete.body === true) {
-						this.modal.slide.delete = true;
-					} else {
-						this.modal.slide.delete = false;
-					}
+				switch (type) {
+					case "create":
+						{
+							for (let key in this.currentSlide.data) {
+								this.currentSlide.data[key].body = "";
+							}
 
-					// Открытие модального окна
-					this.openModal(type);
-				} else if (type == "create") {
-					for (let key in this.currentSlide.data) {
-						this.currentSlide.data[key].body = "";
-					}
+							// Открытие модального окна
+							this.openModal(type);
+						}
+						break;
+					case "edit":
+						{
+							for (let key in selectedSlide) {
+								this.currentSlide.data[key].body = selectedSlide[key];
+							}
+							// Проверка, создан ли слайд или уже имеется
+							if (this.currentSlide.data.create.body === true) {
+								this.modal.slide.create = true;
+							} else {
+								this.modal.slide.create = false;
+							}
+							// Проверка, помечен ли слайд на удаление
+							if (this.currentSlide.data.delete.body === true) {
+								this.modal.slide.delete = true;
+							} else {
+								this.modal.slide.delete = false;
+							}
 
-					// Открытие модального окна
-					this.openModal(type);
+							// Открытие модального окна
+							this.openModal(type);
+						}
+						break;
 				}
 			} catch (error) {
 				let debbugStory = {
@@ -720,30 +742,37 @@ export default {
 				}
 
 				// Изменение порядка
-				if (type === "up") {
-					if (lastSlideStatus) {
-						this.currentSlide.data.order.body = 1;
-						filteredSlideCurrent.order = 1;
-						filteredSlideNext.order = this.slides.length;
-						this.sortSlider();
-					} else {
-						this.currentSlide.data.order.body++;
-						filteredSlideCurrent.order++;
-						filteredSlideNext.order--;
-						this.sortSlider();
-					}
-				} else if (type === "down") {
-					if (firstSlideStatus) {
-						this.currentSlide.data.order.body = this.slides.length;
-						filteredSlideCurrent.order = this.slides.length;
-						filteredSlidePrevious.order = 1;
-						this.sortSlider();
-					} else {
-						this.currentSlide.data.order.body--;
-						filteredSlideCurrent.order--;
-						filteredSlidePrevious.order++;
-						this.sortSlider();
-					}
+				switch (type) {
+					case "up":
+						{
+							if (lastSlideStatus) {
+								this.currentSlide.data.order.body = 1;
+								filteredSlideCurrent.order = 1;
+								filteredSlideNext.order = this.slides.length;
+								this.sortSlider();
+							} else {
+								this.currentSlide.data.order.body++;
+								filteredSlideCurrent.order++;
+								filteredSlideNext.order--;
+								this.sortSlider();
+							}
+						}
+						break;
+					case "down":
+						{
+							if (firstSlideStatus) {
+								this.currentSlide.data.order.body = this.slides.length;
+								filteredSlideCurrent.order = this.slides.length;
+								filteredSlidePrevious.order = 1;
+								this.sortSlider();
+							} else {
+								this.currentSlide.data.order.body--;
+								filteredSlideCurrent.order--;
+								filteredSlidePrevious.order++;
+								this.sortSlider();
+							}
+						}
+						break;
 				}
 			} catch (error) {
 				let debbugStory = {
@@ -1066,6 +1095,8 @@ export default {
 			url: `${this.$store.state.axios.urlApi}` + `get-slides-all`,
 		})
 			.then((response) => {
+				console.log(response.data);
+
 				this.slides = response.data;
 				// Добавление полей "delete" и "create" в каждую строку массива
 				for (let key in this.slides) {
@@ -1136,6 +1167,11 @@ export default {
 	transition: all 0.2s;
 }
 
+.modal-img-input.error {
+	background-color: var(--input-background-color-error);
+	border: 2px solid var(--input-border-color-error);
+}
+
 .modal-img-input::file-selector-button {
 	flex-grow: 1;
 	cursor: pointer;
@@ -1146,8 +1182,13 @@ export default {
 	padding: 5px;
 }
 
+.modal-img-input.error::file-selector-button {
+	background-color: var(--input-border-color-error);
+	border: 2px solid var(--input-border-color-error);
+}
+
 .modal-body-img {
-	width: 300px;
+	width: auto;
 	background-size: contain;
 	background-position: center center;
 	background-repeat: no-repeat;
@@ -1348,6 +1389,15 @@ textarea:focus {
 @media screen and (max-width: 1000px) {
 	.slider {
 		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media screen and (max-width: 860px) {
+	.modal-img-input {
+		max-width: 100%;
+	}
+	.modal-body-img {
+		height: 300px;
 	}
 }
 
