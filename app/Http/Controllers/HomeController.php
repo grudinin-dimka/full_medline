@@ -13,7 +13,7 @@ use Illuminate\Validation\ValidationException;
 use App\Models\User;
 use App\Models\Slide;
 use App\Models\Footer;
-use App\Models\Doctor;
+use App\Models\Specialist;
 
 use Illuminate\Support\Facades\Storage;
 
@@ -63,36 +63,38 @@ class HomeController extends Controller
     return $data;
   } 
   /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-  /* |                    ДОКТОРА                        |*/
+  /* |                  СПЕЦИАЛИСТЫ                      |*/
   /* |___________________________________________________|*/
   /* _____________________________________________________*/
   /* 1. Получение данных                                  */
   /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
   // Вывод всех докторов 
-  public function getDoctors(Request $request) {
-    $doctors = Doctor::all();
+  public function getSpecialists(Request $request) {
+    $specialists = Specialist::all();
     
-    foreach ($doctors as $key => $value) {
-      $stringTransliterate = Transliterator::create('Any-Latin; Latin-ASCII')->transliterate($doctors[$key]->name);
+    foreach ($specialists as $key => $value) {
+      $stringTransliterate = Transliterator::create('Any-Latin; Latin-ASCII')->transliterate($specialists[$key]->name);
       $stringUnderCase = strtolower($stringTransliterate);
       $stringReplace = str_replace(" ", "-", $stringUnderCase);
 
-      $doctors[$key]->url = $stringReplace;
+      $specialists[$key]->url = $stringReplace;
+      $specialists[$key]->path = Storage::url('specialists/' . $value->filename);      
     };
 
-    return $doctors;
+    return $specialists;
   }
   // Вывод конкретного доктора
-  public function getDoctorProfile(Request $request) {
-    $doctor = Doctor::all();
+  public function getSpecialistProfile(Request $request) {
+    $specialists = Specialist::all();
 
-    foreach ($doctor as $key => $value) {
-      $stringTransliterate = Transliterator::create('Any-Latin; Latin-ASCII')->transliterate($doctor[$key]->name);
+    foreach ($specialists as $key => $value) {
+      $stringTransliterate = Transliterator::create('Any-Latin; Latin-ASCII')->transliterate($specialists[$key]->name);
       $stringUnderCase = strtolower($stringTransliterate);
       $stringReplace = str_replace(" ", "-", $stringUnderCase);
 
       if ($request->url == $stringReplace) {
-        return $doctor[$key];
+        $specialists[$key]->path= Storage::url('specialists/' . $specialists[$key]->filename);
+        return $specialists[$key];
       };
     };
   }

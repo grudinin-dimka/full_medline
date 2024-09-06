@@ -7,9 +7,9 @@
 
 	<loader-child :isLoading="isLoading" />
 
-	<filters v-if="isDoctor"></filters>
-	<block v-if="isDoctor">
-		<doctors-list :doctors="doctors"/>
+	<filters v-if="isSpecialist"></filters>
+	<block v-if="isSpecialist">
+		<specialists-list :specialists="specialists"/>
 	</block>
 </template>
 
@@ -20,7 +20,7 @@ import Filters from "../../../components/ui/main/Filters.vue";
 import { RouterLink } from "vue-router";
 import axios from "axios";
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
-import DoctorsList from "./MainSpecialistsAllList.vue";
+import SpecialistsList from "./MainSpecialistsAllList.vue";
 
 export default {
 	components: {
@@ -30,13 +30,13 @@ export default {
 		RouterLink,
 		axios,
 		LoaderChild,
-		DoctorsList,
+		SpecialistsList,
 	},
 	data() {
 		return {
-			doctors: [],
+			specialists: [],
 			isLoading: true,
-			isDoctor: false,
+			isSpecialist: false,
 		};
 	},
 	methods: {
@@ -53,14 +53,14 @@ export default {
 		// Получение массива докторов с сервера
 		axios({
 			method: "post",
-			url: `${this.$store.state.axios.urlApi}` + `get-doctors`,
+			url: `${this.$store.state.axios.urlApi}` + `get-specialists`,
 		})
 			.then((response) => {
 				this.isLoading = false;
 				setTimeout(() => {
-					this.isDoctor = true;					
+					this.isSpecialist = true;					
 				}, 500)
-				this.doctors = response.data;
+				this.specialists = response.data;
 			})
 			.catch((error) => {
 				let debbugStory = {

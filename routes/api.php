@@ -16,13 +16,13 @@ Route::post('/create', [LoginController::class, 'createUser']);
 Route::post('/get-slides-all', [HomeController::class, 'getSlidesAll']);
 Route::post('/get-slides-not-hide', [HomeController::class, 'getSlidesNotHide']);
 Route::post('/get-footer', [HomeController::class, 'getFooter']);
-Route::post('/get-doctors', [HomeController::class, 'getDoctors']);
-Route::post('/get-doctor-profile', [HomeController::class, 'getDoctorProfile']);
+Route::post('/get-specialists', [HomeController::class, 'getSpecialists']);
+Route::post('/get-specialist-profile', [HomeController::class, 'getSpecialistProfile']);
 
 // Функционал администратора
 Route::post('/save-footer', [AdminController::class, 'saveFooter'])->middleware('auth:sanctum');
 Route::post('/clear-footer', [AdminController::class, 'clearFooter'])->middleware('auth:sanctum');
-Route::post('/save-slides-changes', [AdminController::class, 'saveSlidesChanges']);
+Route::post('/save-slides-changes', [AdminController::class, 'saveSlidesChanges'])->middleware('auth:sanctum');
 Route::post('/upload-file', [AdminController::class, 'uploadFile'])->middleware('auth:sanctum');
 
 

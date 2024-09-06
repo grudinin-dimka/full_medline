@@ -7,7 +7,7 @@
 				v-if="modal.type == 'edit'"
 				class="modal-body-img"
 				:style="{
-					backgroundImage: `url(${currentDoctor.data.img})`,
+					backgroundImage: `url(${currentDoctor.data.filename})`,
 				}"
 				ref="modalImg"
 			></div>
@@ -236,7 +236,7 @@ export default {
 						body: "",
 						edited: false,
 					},
-					img: {
+					filename: {
 						body: "",
 					},
 					create: {

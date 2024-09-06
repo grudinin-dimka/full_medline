@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('doctors', function (Blueprint $table) {
+        Schema::create('specialists', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
             $table->string('specialization')->nullable();
@@ -19,38 +19,38 @@ return new class extends Migration
             $table->text('education')->nullable();
             $table->text('advancedTraining')->nullable();
             $table->text('certificates')->nullable();
-            $table->text('img')->nullable();
+            $table->text('filename')->nullable();
             $table->timestamps();
         });
 
-        DB::table('doctors')->insert([
+        DB::table('specialists')->insert([
             "name" => "Иванов Иван Иванович",
             "specialization" => "Терапевт",
             "startWorkAge" => date("c"),
             "education" => "Высшее",
             "advancedTraining" => "Терапевт",
             "certificates" => "Сертификат",
-            "img" => "/storage/HKK2mLj6iM8WK2z9hkBMCI7YQ1IzBxDI8MYTp8dk.png"
+            "filename" => "doctor.png"
         ]);
 
-        DB::table('doctors')->insert([
+        DB::table('specialists')->insert([
             "name" => "Ёжиков Ёжик Ёжикович",
             "specialization" => "Эндокринолог",
             "startWorkAge" => date("c"),
             "education" => "Высшее",
             "advancedTraining" => "Терапевт",
             "certificates" => "Сертификат",
-            "img" => "/storage/HKK2mLj6iM8WK2z9hkBMCI7YQ1IzBxDI8MYTp8dk.png"
+            "filename" => "doctor.png"
         ]);
 
-        DB::table('doctors')->insert([
+        DB::table('specialists')->insert([
             "name" => "Васьков Василий Васильевич",
             "specialization" => "Эндокринолог",
             "startWorkAge" => date("c"),
             "education" => "Высшее",
             "advancedTraining" => "Терапевт",
             "certificates" => "Сертификат",
-            "img" => "/storage/HKK2mLj6iM8WK2z9hkBMCI7YQ1IzBxDI8MYTp8dk.png"
+            "filename" => "doctor.png"
         ]);
     }
 
@@ -59,6 +59,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('doctors');
+        Schema::dropIfExists('specialists');
     }
 };

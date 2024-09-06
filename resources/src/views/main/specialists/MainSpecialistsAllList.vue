@@ -1,33 +1,33 @@
 <template>
-	<div class="doctor" v-for="doctor in doctors" :key="doctor.id">
-		<img :src="doctor.img" />
-		<div class="doctor-body">
-			<div class="doctor-body-options">
-				<div class="doctor-body-options-title">{{ doctor.name }}</div>
-				<div class="doctor-body-options-other">
-					<div class="doctor-body-options-other-block">
+	<div class="specialist" v-for="specialist in specialists" :key="specialist.id">
+		<img :src="specialist.path" />
+		<div class="specialist-body">
+			<div class="specialist-body-options">
+				<div class="specialist-body-options-title">{{ specialist.name }}</div>
+				<div class="specialist-body-options-other">
+					<div class="specialist-body-options-other-block">
 						<div>Специальность:</div>
-						<div>{{ doctor.specialization }}</div>
+						<div>{{ specialist.specialization }}</div>
 					</div>
-					<div class="doctor-body-options-other-block">
+					<div class="specialist-body-options-other-block">
 						<div>Стаж:</div>
-						<div>{{ doctor.startWorkAge }}</div>
+						<div>{{ specialist.startWorkAge }}</div>
 					</div>
-					<div class="doctor-body-options-other-block">
+					<div class="specialist-body-options-other-block">
 						<div>Образование:</div>
 						<div>
-							{{ doctor.education }}
+							{{ specialist.education }}
 						</div>
 					</div>
-					<div class="doctor-body-options-other-block">
+					<div class="specialist-body-options-other-block">
 						<div>Сертификаты:</div>
 						<div>
-							{{ doctor.certificates }}
+							{{ specialist.certificates }}
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="doctor-body-link" @click="openDoctorProfile(doctor)">
+			<div class="specialist-body-link" @click="openspecialistProfile(specialist)">
 				Подробнее
 			</div>
 		</div>
@@ -38,20 +38,20 @@
 export default {
 	components: {},
 	props: {
-		doctors: {
+		specialists: {
 			type: Array,
 			default: () => [],
 			Required: true,
 		},
 	},
 	methods: {
-		openDoctorProfile(doctor) {
+		openspecialistProfile(specialist) {
 			window.scrollTo({
 				top: 0,
 				left: 0,
 				behavior: "smooth",
 			});
-			this.$router.push("/specialists/" + doctor.url);
+			this.$router.push("/specialists/" + specialist.url);
 		},
 	},
 };
@@ -68,7 +68,7 @@ export default {
 	transform: translateX(30px);
 }
 
-.doctor {
+.specialist {
 	box-sizing: border-box;
 	display: flex;
 	justify-content: center;
@@ -84,7 +84,7 @@ export default {
 	transition: all 0.2s;
 }
 
-.doctor > img {
+.specialist > img {
 	width: 230px;
 	border-radius: 15px;
 	background-size: contain;
@@ -93,49 +93,49 @@ export default {
 	height: 100%;
 }
 
-.doctor-body {
+.specialist-body {
 	flex: 1 0 0px;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
 }
 
-.doctor-body-options {
+.specialist-body-options {
 	display: flex;
 	flex-direction: column;
 	gap: 7px;
 }
 
-.doctor-body-options-title {
+.specialist-body-options-title {
 	font-size: 24px;
 }
 
-.doctor-body-options-other {
+.specialist-body-options-other {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
 }
 
-.doctor-body-options-other-block {
+.specialist-body-options-other-block {
 	display: grid;
 	grid-template-columns: 150px 1fr;
 }
 
-.doctor-body-options-other-block > div {
+.specialist-body-options-other-block > div {
 	font-size: 16px;
 }
 
-.doctor-body-price {
+.specialist-body-price {
 	font-size: 20px;
 	text-align: right;
 }
 
-.doctor-body-advanced {
+.specialist-body-advanced {
 	display: flex;
 	justify-content: space-between;
 }
 
-.doctor-body-link {
+.specialist-body-link {
 	margin-top: 10px;
 	font-size: 16px;
 	color: var(--primary-color);
@@ -155,13 +155,13 @@ export default {
 }
 
 @media screen and (max-width: 980px) {
-	.doctor {
+	.specialist {
 		width: 100%;
 	}
 }
 
 @media screen and (max-width: 775px) {
-	.doctor {
+	.specialist {
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;

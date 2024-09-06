@@ -8,39 +8,39 @@
 			<load-text :isLoading="isLoading">
 				Загрузка...
 			</load-text>
-			<span class="doctor-name" v-if="isDoctor">{{ doctor.name }}</span>
+			<span class="specialist-name" v-if="isSpecialist">{{ specialist.name }}</span>
 		</router-link>
 	</info-bar>
 
 	<loader-child :isLoading="isLoading" />
 
-	<block v-if="isDoctor">
-		<div class="container-doctor-profile">
-			<img :src="`/storage/HKK2mLj6iM8WK2z9hkBMCI7YQ1IzBxDI8MYTp8dk.png`" />
-			<div class="doctor-profile">
-				<div class="doctor-profile-head">
-					<div class="doctor-profile-head-title">
-						<span>{{ doctor.name }}</span>
+	<block v-if="isSpecialist">
+		<div class="container-specialist-profile">
+			<img :src="specialist.path" />
+			<div class="specialist-profile">
+				<div class="specialist-profile-head">
+					<div class="specialist-profile-head-title">
+						<span>{{ specialist.name }}</span>
 					</div>
-					<div class="doctor-profile-head-item">
+					<div class="specialist-profile-head-item">
 						<span>Образование:</span>
-						<span>{{ doctor.education }}</span>
+						<span>{{ specialist.education }}</span>
 					</div>
-					<div class="doctor-profile-head-item">
+					<div class="specialist-profile-head-item">
 						<span>Специальность:</span>
-						<span>{{ doctor.specialization }}</span>
+						<span>{{ specialist.specialization }}</span>
 					</div>
-					<div class="doctor-profile-head-item">
+					<div class="specialist-profile-head-item">
 						<span>Сертификаты:</span>
-						<span>{{ doctor.certificates }}</span>
+						<span>{{ specialist.certificates }}</span>
 					</div>
-					<div class="doctor-profile-head-item">
+					<div class="specialist-profile-head-item">
 						<span>Врачебный стаж:</span>
-						<span>{{ doctor.startWorkAge }}</span>
+						<span>{{ specialist.startWorkAge }}</span>
 					</div>
 				</div>
-				<div class="doctor-profile-body">
-					<div class="doctor-profile-body-title">
+				<div class="specialist-profile-body">
+					<div class="specialist-profile-body-title">
 						<span>Ключевые компетенции:</span>
 					</div>
 					<ul>
@@ -93,25 +93,25 @@ export default {
 	data() {
 		return {
 			isLoading: true,
-			isDoctor: false,
-			doctor: {},
+			isSpecialist: false,
+			specialist: {},
 		};
 	},
 	mounted() {
 		// Получение массива слайдов с сервера
 		axios({
 			method: "post",
-			url: `${this.$store.state.axios.urlApi}` + `get-doctor-profile`,
+			url: `${this.$store.state.axios.urlApi}` + `get-specialist-profile`,
 			data: {
 				url: this.$route.params.name,
 			},
 		})
 			.then((response) => {
-				this.doctor = response.data;
+				this.specialist = response.data;
 
 				this.isLoading = false;
 				setTimeout(() => {
-					this.isDoctor = true;
+					this.isSpecialist = true;
 				}, 500);
 			})
 			.catch((error) => {
@@ -127,11 +127,11 @@ export default {
 </script>
 
 <style scoped>
-.doctor-name {
+.specialist-name {
 	animation: show 0.5s linear;
 }
 
-.container-doctor-profile {
+.container-specialist-profile {
 	margin: 0px 30px;
 	display: flex;
 	gap: 20px;
@@ -140,7 +140,7 @@ export default {
 	animation: transform 0.5s ease-out;
 }
 
-.container-doctor-profile > img {
+.container-specialist-profile > img {
 	width: 350px;
 	border-radius: 15px;
 	background-size: contain;
@@ -149,44 +149,44 @@ export default {
 	height: 100%;
 }
 
-.doctor-profile {
+.specialist-profile {
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
 }
 
-.doctor-profile-head {
+.specialist-profile-head {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
 }
 
-.doctor-profile-head-title {
+.specialist-profile-head-title {
 	font-size: 24px;
 }
 
-.doctor-profile-head-item {
+.specialist-profile-head-item {
 	display: grid;
 	font-size: 16px;
 	grid-template-columns: 200px 1fr;
 }
 
-.doctor-profile-body {
+.specialist-profile-body {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
 }
 
-.doctor-profile-body-title {
+.specialist-profile-body-title {
 	font-size: 20px;
 }
 
-.doctor-profile-body > ul {
+.specialist-profile-body > ul {
 	margin: 0px;
 	padding-left: 20px;
 }
 
-.doctor-profile-body > ul > li:not(:last-child) {
+.specialist-profile-body > ul > li:not(:last-child) {
 	margin-bottom: 10px;
 }
 
@@ -211,7 +211,7 @@ export default {
 }
 
 @media screen and (max-width: 780px) {
-	.container-doctor-profile {
+	.container-specialist-profile {
 		justify-content: center;
 		align-items: center;
 		flex-direction: column;
