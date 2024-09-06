@@ -29,7 +29,8 @@ class HomeController extends Controller
   public function getSlidesAll(Request $request) {
     $slides = Slide::all();
     foreach ($slides as $key => $value) {
-      $slides[$key]->path = Storage::url($value->filename);
+      // Добавление нового поля path, в котором хранится путь к изображению
+      $slides[$key]->path = Storage::url('slides/' . $value->filename);
     };
     return $slides;
   } 
@@ -37,7 +38,7 @@ class HomeController extends Controller
   public function getSlidesNotHide(Request $request) {
     $slides = Slide::where('hide', false)->get();
     foreach ($slides as $key => $value) {
-      $slides[$key]->path = Storage::url($value->filename);
+      $slides[$key]->path = Storage::url('slides/' . $value->filename);
     };
     return $slides;
   }

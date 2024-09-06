@@ -62,7 +62,7 @@
 				v-if="modal.type == 'create'"
 				class="modal-body-img"
 				:style="{
-					backgroundImage: `url(/default/doctor.png)`,
+					backgroundImage: `url(/storage/default/doctor.png)`,
 				}"
 				ref="modalImg"
 			></div>
@@ -800,7 +800,7 @@ export default {
 				this.currentSlide.file = this.$refs.fileUpload.files[0];
 				let formData = new FormData();
 				formData.append("image", this.currentSlide.file);
-				formData.append("filename", this.currentSlide.file.name);
+				formData.append("type", "slide");
 
 				axios({
 					method: "post",
@@ -812,28 +812,49 @@ export default {
 					data: formData,
 				})
 					.then((response) => {
-						console.log(response.data);
-						// let debbugStory = {
-						// 	title: "Успешно!",
-						// 	body: "Картинка успешно загружена.",
-						// 	type: "Completed",
-						// };
+						if (!response.data) {
+							let debbugStory = {
+								title: "Ошибка.",
+								body: "Файл не прошел проверку.",
+								type: "Error",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+						} else {
+							try {
+								this.slides.push({
+									name: this.$refs.inputName.value,
+									link: this.$refs.inputLink.value,
+									path: response.data,
+									filename: response.data.replace(
+										"/storage/slides/",
+										""
+									),
+									hide: false,
+									order: 1 + this.slides[this.slides.length - 1].order,
+									create: true,
+									delete: false,
+								});
+								this.closeSlide();
 
-						// this.slides.push({
-						// 	name: this.$refs.inputName.value,
-						// 	link: this.$refs.inputLink.value,
-						// 	path: response.data,
-						// 	filename: response.data.substring(9, response.data.length),
-						// 	hide: false,
-						// 	order: 1 + this.slides[this.slides.length - 1].order,
-						// 	create: true,
-						// 	delete: false,
-						// });
+								let debbugStory = {
+									title: "Успешно!",
+									body: "Создан новый слайд.",
+									type: "Completed",
+								};
+								this.$store.commit("debuggerState", debbugStory);
+							} catch (error) {
+								let debbugStory = {
+									title: "Ошибка.",
+									body: "Не удалость создать новый слайд.",
+									type: "Error",
+								};
+								this.$store.commit("debuggerState", debbugStory);
+							}
+						}
 					})
 					.catch((error) => {
 						console.log(error);
 					});
-				// this.closeSlide();
 			} catch (error) {
 				let debbugStory = {
 					title: "Ошибка.",
@@ -896,6 +917,7 @@ export default {
 				this.currentSlide.file = this.$refs.fileUpload.files[0];
 				let formData = new FormData();
 				formData.append("image", this.currentSlide.file);
+				formData.append("type", "slide");
 
 				axios({
 					method: "post",
@@ -914,9 +936,9 @@ export default {
 						};
 						this.currentSlide.data.path.body = response.data;
 						filteredSlideCurrent.path = response.data;
-						filteredSlideCurrent.filename = response.data.substring(
-							9,
-							response.data.length
+						filteredSlideCurrent.filename = response.data.replace(
+							"/storage/slides/",
+							""
 						);
 					})
 					.catch((error) => {
@@ -1097,8 +1119,6 @@ export default {
 			url: `${this.$store.state.axios.urlApi}` + `get-slides-all`,
 		})
 			.then((response) => {
-				console.log(response.data);
-
 				this.slides = response.data;
 				// Добавление полей "delete" и "create" в каждую строку массива
 				for (let key in this.slides) {

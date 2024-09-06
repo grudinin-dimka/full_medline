@@ -12,6 +12,8 @@ Use Illuminate\Http\UploadedFile;
 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\Rules\File;
+
 use App\Models\User;
 use App\Models\Slide;
 use App\Models\Footer;
@@ -52,7 +54,7 @@ class AdminController extends Controller
       };
     };
 
-    /* Сортировка слайдов по порядку от наименьшего до наибольшого */
+    // /* Сортировка слайдов по порядку от наименьшего до наибольшого */
     $slides = Slide::all()->SortBy('order');
 
     /* Обновление порядковых номеров */
@@ -64,46 +66,54 @@ class AdminController extends Controller
     };
 
     /* Получение всех файлов */
-    $filesAll = Storage::files('public');
+    $filesSlides = Storage::files('public/slides');
 
-    /* Объявление массива с префиксом s- */
-    $filesUses = [];
-    foreach ($filesAll as $fileKey => $fileValue) {
-      $fileName = substr($fileValue, 7);
-      // Проверка на наличие префикса
-      if (substr($fileName, 0, 2) == 's-') {
-        array_push($filesUses, $fileName);
-        var_dump("Файл с префиксом: " . $fileName);
-      }
-    };
-
-    foreach ($filesUses as $fileKey => $fileValue) {
+    foreach ($filesSlides as $fileKey => $fileValue) {
       $useFile = false;
       // Проверка на использование файла
       foreach ($slides as $slideKey => $slideValue) {
-        if ($slideValue->filename == $fileValue) {
+        // Обрезание значения $fileValue до названия файла
+        $str = str_replace('public/slides/', '', $fileValue);
+        // Проверка значения названия файла на совпадение
+        if ($slideValue->filename == $str) {
           $useFile = true;
         };
       };
 
       // Удаление файла, если не используется
       if (!$useFile) {
-        Storage::delete('public/' . $fileValue);
-      }
-      var_dump($useFile);
+        Storage::delete($fileValue);
+      };
     };
+
+    return true;
   } 
   // Загрузка файла на сервер 
   public function uploadFile(Request $request) {
 		/* Проверка на наличие переменной image с файлом в запросе */  
 		if($request->hasFile('image')) {
-      $path = $request->file('image')->storeAs(
-        './',
-        's-' . $request->filename,
-        'public',
-      );
+      $validated = validator($request->all(), [
+        'image' => [
+          'required',
+          File::types('png')->max(10 * 1024),
+        ],
+      ]);
+      if ($validated->fails()) return false;
+
+      switch ($request->type) {
+        case 'slide':
+          $path = $request->file('image')->store(
+            'public/slides'
+          );
+          break;
+        case 'doctor':
+          $path = $request->file('image')->store(
+            'public/doctor'
+          );
+          break;
+      }
     };
-    return Storage::url(substr($path, 3));
+    return Storage::url($path);
   } 
 
   /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/

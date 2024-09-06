@@ -39,7 +39,7 @@ export default {};
 <style scoped>
 .debugger {
   position: fixed;
-  z-index: 500;
+  z-index: 600;
   top: 20px;
   right: 20px;
 
