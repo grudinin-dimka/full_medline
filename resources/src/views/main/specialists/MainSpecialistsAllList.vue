@@ -1,9 +1,15 @@
 <template>
-	<div class="specialist" v-for="specialist in specialists" :key="specialist.id">
+	<div
+		class="specialist"
+		v-for="specialist in specialists"
+		:key="specialist.id"
+	>
 		<img :src="specialist.path" />
 		<div class="specialist-body">
 			<div class="specialist-body-options">
-				<div class="specialist-body-options-title">{{ specialist.name }}</div>
+				<div class="specialist-body-options-title">
+					{{ specialist.name }}
+				</div>
 				<div class="specialist-body-options-other">
 					<div class="specialist-body-options-other-block">
 						<div>Специальность:</div>
@@ -27,7 +33,10 @@
 					</div>
 				</div>
 			</div>
-			<div class="specialist-body-link" @click="openspecialistProfile(specialist)">
+			<div
+				class="specialist-body-link"
+				@click="openspecialistProfile(specialist)"
+			>
 				Подробнее
 			</div>
 		</div>
@@ -78,9 +87,9 @@ export default {
 	border-radius: 20px;
 	padding: 20px;
 
-	width: 900px;
+	width: 1000px;
 
-   animation: show 0.5s ease-out;
+	animation: show 0.5s ease-out;
 	transition: all 0.2s;
 }
 
@@ -144,17 +153,17 @@ export default {
 }
 
 @keyframes show {
-   0% {
-      opacity: 0;
-      transform: translateY(30px);
-   }
-   100% {
-      opacity: 1;
-      transform: translateY(0);
-   }
+	0% {
+		opacity: 0;
+		transform: translateY(30px);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
 
-@media screen and (max-width: 980px) {
+@media screen and (max-width: 1080px) {
 	.specialist {
 		width: 100%;
 	}
@@ -165,6 +174,17 @@ export default {
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
+	}
+}
+
+@media screen and (max-width: 440px) {
+	.specialist-body-options-other {
+		display: none;
+	}
+
+	.specialist > img {
+		width: 100%;
+		max-width: 230px;
 	}
 }
 </style>

@@ -5,10 +5,10 @@
 		<router-link to="/specialists">Специалисты</router-link>
 		<span class="link-arrow"> / </span>
 		<router-link :to="`/specialists/${$route.params.name}`">
-			<load-text :isLoading="isLoading">
-				Загрузка...
-			</load-text>
-			<span class="specialist-name" v-if="isSpecialist">{{ specialist.name }}</span>
+			<load-text :isLoading="isLoading"> Загрузка... </load-text>
+			<span class="specialist-name" v-if="isSpecialist">{{
+				specialist.name
+			}}</span>
 		</router-link>
 	</info-bar>
 
@@ -23,12 +23,16 @@
 						<span>{{ specialist.name }}</span>
 					</div>
 					<div class="specialist-profile-head-item">
+						<span>Специальность:</span>
+						<span>{{ specialist.specialization }}</span>
+					</div>
+					<div class="specialist-profile-head-item">
 						<span>Образование:</span>
 						<span>{{ specialist.education }}</span>
 					</div>
 					<div class="specialist-profile-head-item">
-						<span>Специальность:</span>
-						<span>{{ specialist.specialization }}</span>
+						<span>Повышение квалификации:</span>
+						<span>{{ specialist.advancedTraining }}</span>
 					</div>
 					<div class="specialist-profile-head-item">
 						<span>Сертификаты:</span>
@@ -135,7 +139,7 @@ export default {
 	margin: 0px 30px;
 	display: flex;
 	gap: 20px;
-	max-width: 900px;
+	max-width: 1000px;
 
 	animation: transform 0.5s ease-out;
 }
@@ -168,7 +172,7 @@ export default {
 .specialist-profile-head-item {
 	display: grid;
 	font-size: 16px;
-	grid-template-columns: 200px 1fr;
+	grid-template-columns: 250px 1fr;
 }
 
 .specialist-profile-body {
@@ -210,11 +214,32 @@ export default {
 	}
 }
 
-@media screen and (max-width: 780px) {
+@media screen and (max-width: 990px) {
 	.container-specialist-profile {
 		justify-content: center;
 		align-items: center;
 		flex-direction: column;
+	}
+}
+
+@media screen and (max-width: 460px) {
+	.container-specialist-profile {
+		margin: 0px 0px;
+		display: flex;
+		gap: 20px;
+		max-width: 1000px;
+
+		animation: transform 0.5s ease-out;
+	}
+
+	.container-specialist-profile > img {
+		width: 100%;
+		max-width: 300px;
+	}
+
+	.specialist-profile-head-item {
+		font-size: 16px;
+		grid-template-columns: 1fr 1fr;
 	}
 }
 </style>
