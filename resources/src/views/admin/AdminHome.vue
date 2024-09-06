@@ -1120,6 +1120,7 @@ export default {
 		})
 			.then((response) => {
 				this.slides = response.data;
+
 				// Добавление полей "delete" и "create" в каждую строку массива
 				for (let key in this.slides) {
 					this.slides[key].delete = false;

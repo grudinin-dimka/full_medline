@@ -7,7 +7,7 @@
 				v-if="modal.type == 'edit'"
 				class="modal-body-img"
 				:style="{
-					backgroundImage: `url(${currentSpecialist.data.path})`,
+					backgroundImage: `url(${currentSpecialist.data.path.body})`,
 				}"
 				ref="modalImg"
 			></div>
@@ -32,66 +32,100 @@
 			<div class="modal-body-inputs">
 				<!-- Имя доктора -->
 				<article>
-					<element-input-label> Имя доктора </element-input-label>
+					<element-input-label>
+						Имя доктора*
+						<span v-if="currentSpecialist.data.name.edited">
+							(Изменено)
+						</span>
+					</element-input-label>
 					<input
 						type="text"
 						ref="inputName"
 						placeholder="Имя"
-						v-model="currentSpecialist.data.name"
+						v-model="currentSpecialist.data.name.body"
+						@input="currentSpecialist.data.name.edited = true"
 					/>
 				</article>
 				<!-- Специализация -->
 				<article>
-					<element-input-label> Специализация </element-input-label>
+					<element-input-label>
+						Специализация*
+						<span v-if="currentSpecialist.data.specialization.edited">
+							(Изменено)
+						</span>
+					</element-input-label>
 					<input
 						type="text"
 						ref="inputSpecialization"
 						placeholder="Имя"
-						v-model="currentSpecialist.data.specialization"
+						v-model="currentSpecialist.data.specialization.body"
+						@input="currentSpecialist.data.specialization.edited = true"
 					/>
 				</article>
 				<!-- Дата начала работы -->
 				<article>
-					<element-input-label> Дата начала работы </element-input-label>
+					<element-input-label>
+						Дата начала работы*
+						<span v-if="currentSpecialist.data.startWorkAge.edited">
+							(Изменено)
+						</span>
+					</element-input-label>
 					<input
 						type="date"
 						ref="inputStartWorkAge"
 						placeholder="Имя"
-						v-model="currentSpecialist.data.startWorkAge"
+						v-model="currentSpecialist.data.startWorkAge.body"
+						@input="currentSpecialist.data.startWorkAge.edited = true"
 					/>
 				</article>
 				<!-- Обучение -->
 				<article>
-					<element-input-label> Обучение </element-input-label>
+					<element-input-label>
+						Обучение*
+						<span v-if="currentSpecialist.data.education.edited">
+							(Изменено)
+						</span>
+					</element-input-label>
 					<textarea
 						rows="4"
 						ref="inputEducation"
 						placeholder="Имя"
-						v-model="currentSpecialist.data.education"
+						v-model="currentSpecialist.data.education.body"
+						@input="currentSpecialist.data.education.edited = true"
 					>
 					</textarea>
 				</article>
 				<!-- Повышение квалификации -->
 				<article>
 					<element-input-label>
-						Повышение квалификации
+						Повышение квалификации*
+						<span v-if="currentSpecialist.data.advancedTraining.edited">
+							(Изменено)
+						</span>
 					</element-input-label>
 					<textarea
 						rows="4"
 						ref="inputEducation"
 						placeholder="Имя"
-						v-model="currentSpecialist.data.advancedTraining"
+						v-model="currentSpecialist.data.advancedTraining.body"
+						@input="currentSpecialist.data.advancedTraining.edited = true"
 					>
 					</textarea>
 				</article>
 				<!-- Сертификаты -->
 				<article>
-					<element-input-label> Сертификаты </element-input-label>
+					<element-input-label>
+						Сертификаты*
+						<span v-if="currentSpecialist.data.certificates.edited">
+							(Изменено)
+						</span>
+					</element-input-label>
 					<textarea
 						rows="4"
 						ref="inputStartWorkAge"
 						placeholder="Имя"
-						v-model="currentSpecialist.data.certificates"
+						v-model="currentSpecialist.data.certificates.body"
+						@input="currentSpecialist.data.certificates.edited = true"
 					>
 					</textarea>
 				</article>
@@ -195,7 +229,23 @@ export default {
 						status: false,
 						value: null,
 					},
-					link: {
+					specialization: {
+						status: false,
+						value: null,
+					},
+					startWorkAge: {
+						status: false,
+						value: null,
+					},
+					education: {
+						status: false,
+						value: null,
+					},
+					advancedTraining: {
+						status: false,
+						value: null,
+					},
+					certificates: {
 						status: false,
 						value: null,
 					},
@@ -210,7 +260,7 @@ export default {
 						edited: false,
 					},
 					name: {
-						body: "",
+						body: "asdsada",
 						edited: false,
 					},
 					specialization: {
@@ -234,6 +284,12 @@ export default {
 						edited: false,
 					},
 					filename: {
+						body: "",
+					},
+					hide: {
+						body: false,
+					},
+					path: {
 						body: "",
 					},
 					create: {
@@ -278,6 +334,75 @@ export default {
 		closeModal() {
 			this.modal.status = false;
 			document.body.classList.toggle("modal-open");
+
+			this.clearModalInputsEdited();
+		},
+		/* _____________________________________________________*/
+		/* 2. Работа с полями ввода модального окна             */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		// Проверка поля имени
+		checkModalName() {
+			if (this.currentSpecialist.data.name.body === "") {
+				this.currentSpecialist.errors.name.status = true;
+				this.currentSpecialist.errors.name.value =
+					"Поле не может быть пустым";
+				return false;
+			}
+
+			this.currentSlide.errors.name.status = false;
+			this.currentSlide.errors.name.value = "";
+			return true;
+		},
+		checkSliderFile() {
+			/* Присваивание данных поля ввода файла пользователем в переменную */
+			this.currentSlide.file = this.$refs.fileUpload.files[0];
+
+			/* Проверка на загрузку файла пользователем */
+			if (!this.currentSlide.file) {
+				this.currentSlide.errors.file.status = true;
+				this.currentSlide.errors.file.value = "Поле не может быть пустым";
+				return false;
+			}
+
+			/* Проверка на тип загруженного файла */
+			if (this.currentSlide.file.type !== "image/png") {
+				this.currentSlide.errors.file.value = "Недопустимый тип файла.";
+				this.currentSlide.errors.file.status = true;
+				return false;
+			}
+
+			this.currentSlide.errors.file.status = false;
+			this.currentSlide.errors.file.value = "";
+			return true;
+		},
+		// Проверка всех полей
+		checkModalInputs(name, link, file) {
+			let errors = 0;
+
+			if (name) {
+				if (!this.checkSliderName()) errors++;
+			}
+			if (link) {
+				if (!this.checkSliderLink()) errors++;
+			}
+			if (file) {
+				if (!this.checkSliderFile()) errors++;
+			}
+
+			if (errors !== 0) return false;
+			else return true;
+		},
+		// Очистка состояния редактирования
+		clearModalInputsEdited() {
+			for (let key in this.currentSpecialist.data) {
+				this.currentSpecialist.data[key].edited = false;
+			}
+		},
+		// Очистка состояния редактирования
+		clearModalInputsErrors() {
+			for (let key in this.currentSpecialist.errors) {
+				this.currentSlide.errors[key].status = false;
+			}
 		},
 		/* _____________________________________________________*/
 		/* 2. Фильтрация                                        */
@@ -324,20 +449,31 @@ export default {
 		// Изменение выбранного доктора
 		editSpecialist(specialist) {
 			for (let key in specialist) {
-				this.currentSpecialist.data[key] = specialist[key];
+				this.currentSpecialist.data[key].body = specialist[key];
 			}
+
 			this.openModal("edit");
 		},
 		// Удаление выбранного доктора
 		removeSpecialist(specialist) {
 			console.log(specialist);
 		},
-		// Изменение выбранного доктора
+		// Обновление данных выбранного доктора после редактирования в массиве this.specialists
 		updateSpecialist() {
-			console.log(this.currentSpecialist);
-			// for (let key in specialist) {
-			// 	this.currentSpecialist.data[key] = specialist[key];
-			// }
+			console.log('Обновление данных.');
+
+			/* Получение текущего объекта из массива this.specialists */
+			let resultSpecialistCurrent = this.specialists.filter((specialist) => {
+				if (specialist.id === this.currentSpecialist.data.id.body) {
+					return specialist;
+				}
+			});
+			let filteredSpecialistCurrent = resultSpecialistCurrent[0];
+
+			/* Изменение выбранного доктора в массиве this.specialists */
+			for (let key in filteredSpecialistCurrent) {
+				filteredSpecialistCurrent[key] = this.currentSpecialist.data[key].body;
+			}
 			this.closeModal();
 		},
 	},
@@ -349,6 +485,11 @@ export default {
 		})
 			.then((response) => {
 				this.specialists = response.data;
+
+				// Удаление свойства url
+				for (let key in this.specialists) {
+					delete this.specialists[key].url;
+				}
 
 				this.loading.loader.specialists = false;
 				setTimeout(() => {
