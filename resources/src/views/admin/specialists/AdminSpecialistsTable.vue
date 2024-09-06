@@ -34,22 +34,35 @@
 				</th>
 				<th>
 					<div class="table-th-container">
+						<div class="table-th-name">Скрыть</div>
+						<div class="table-th-filter">
+							<icon-filter-off :width="22" :height="22" />
+						</div>
+					</div>
+				</th>
+				<th>
+					<div class="table-th-container">
 						<div class="table-th-name">Действия</div>
 					</div>
 				</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr v-for="doctor in doctors">
-				<td>{{ doctor.id }}</td>
-				<td>{{ doctor.name }}</td>
-				<td>{{ doctor.specialization }}</td>
+			<tr v-for="specialist in specialists">
+				<td>{{ specialist.id }}</td>
+				<td>{{ specialist.name }}</td>
+				<td>{{ specialist.specialization }}</td>
+				<td>
+					<div class="table-td-checkbox">
+						<input type="checkbox" :id="`checkbox-spec-${specialist.id}`" :value="specialist.hide">
+					</div>
+				</td>
 				<td>
 					<table-container-buttons>
-						<table-button-default @click="$emit('editDoctor', doctor)">
+						<table-button-default @click="$emit('editSpecialist', specialist)">
 							Изменить
 						</table-button-default>
-						<table-button-remove @click="$emit('removeDoctor', doctor)">
+						<table-button-remove @click="$emit('removeSpecialist', specialist)">
 							Удалить
 						</table-button-remove>
 					</table-container-buttons>
@@ -60,12 +73,12 @@
 </template>
 
 <script>
-import TableButtonDefault from "./TableButtonDefault.vue";
-import TableButtonRemove from "./TableButtonRemove.vue";
-import TableContainerButtons from "./TableContainerButtons.vue";
+import TableButtonDefault from "../../../components/ui/admin/TableButtonDefault.vue";
+import TableButtonRemove from "../../../components/ui/admin/TableButtonRemove.vue";
+import TableContainerButtons from "../../../components/ui/admin/TableContainerButtons.vue";
 
-import IconFilterOn from "../../icons/IconFilterOn.vue";
-import IconFilterOff from "../../icons/IconFilterOff.vue";
+import IconFilterOn from "../../../components/icons/IconFilterOn.vue";
+import IconFilterOff from "../../../components/icons/IconFilterOff.vue";
 
 export default {
 	components: {
@@ -76,7 +89,7 @@ export default {
 		IconFilterOff,
 	},
 	props: {
-		doctors: {
+		specialists: {
 			type: Array,
 			required: true,
 		},
@@ -125,6 +138,24 @@ td {
 	cursor: pointer;
 	position: absolute;
 	right: 5px;
+}
+
+.table-td-checkbox {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%
+}
+
+input[type="checkbox"] {
+	accent-color: var(--primary-color);
+	width: 20px;
+	height: 20px;
+}
+
+input[type="checkbox"]:checked + label {
+	text-decoration: line-through;
 }
 
 @keyframes show {

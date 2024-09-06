@@ -62,7 +62,7 @@
 				v-if="modal.type == 'create'"
 				class="modal-body-img"
 				:style="{
-					backgroundImage: `url(/storage/default/doctor.png)`,
+					backgroundImage: `url(/storage/default/specialist.png)`,
 				}"
 				ref="modalImg"
 			></div>

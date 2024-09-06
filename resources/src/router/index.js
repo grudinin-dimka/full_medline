@@ -99,7 +99,7 @@ const router = createRouter({
 				{
 					path: "especialists",
 					name: "especialists",
-					component: () => import("../views/admin/AdminSpecialist.vue"),
+					component: () => import("../views/admin/specialists/AdminSpecialists.vue"),
 				},
 				{
 					path: "eprice",

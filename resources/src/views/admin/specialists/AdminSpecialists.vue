@@ -7,7 +7,7 @@
 				v-if="modal.type == 'edit'"
 				class="modal-body-img"
 				:style="{
-					backgroundImage: `url(${currentDoctor.data.filename})`,
+					backgroundImage: `url(${currentSpecialist.data.path})`,
 				}"
 				ref="modalImg"
 			></div>
@@ -15,7 +15,7 @@
 				v-if="modal.type == 'create'"
 				class="modal-body-img"
 				:style="{
-					backgroundImage: `url(/storage/default/doctor.png)`,
+					backgroundImage: `url(/storage/default/specialist.png)`,
 				}"
 				ref="modalImg"
 			></div>
@@ -37,7 +37,7 @@
 						type="text"
 						ref="inputName"
 						placeholder="Имя"
-						v-model="currentDoctor.data.name"
+						v-model="currentSpecialist.data.name"
 					/>
 				</article>
 				<!-- Специализация -->
@@ -47,7 +47,7 @@
 						type="text"
 						ref="inputSpecialization"
 						placeholder="Имя"
-						v-model="currentDoctor.data.specialization"
+						v-model="currentSpecialist.data.specialization"
 					/>
 				</article>
 				<!-- Дата начала работы -->
@@ -57,7 +57,7 @@
 						type="date"
 						ref="inputStartWorkAge"
 						placeholder="Имя"
-						v-model="currentDoctor.data.startWorkAge"
+						v-model="currentSpecialist.data.startWorkAge"
 					/>
 				</article>
 				<!-- Обучение -->
@@ -67,7 +67,7 @@
 						rows="4"
 						ref="inputEducation"
 						placeholder="Имя"
-						v-model="currentDoctor.data.education"
+						v-model="currentSpecialist.data.education"
 					>
 					</textarea>
 				</article>
@@ -80,26 +80,27 @@
 						rows="4"
 						ref="inputEducation"
 						placeholder="Имя"
-						v-model="currentDoctor.data.advancedTraining"
+						v-model="currentSpecialist.data.advancedTraining"
 					>
 					</textarea>
 				</article>
 				<!-- Сертификаты -->
 				<article>
 					<element-input-label> Сертификаты </element-input-label>
-					<input
-						type="text"
+					<textarea
+						rows="4"
 						ref="inputStartWorkAge"
 						placeholder="Имя"
-						v-model="currentDoctor.data.certificates"
-					/>
+						v-model="currentSpecialist.data.certificates"
+					>
+					</textarea>
 				</article>
 			</div>
 		</template>
 		<template #footer>
 			<BlockButtons v-if="modal.type == 'edit'">
 				<ButtonRemove> Удалить </ButtonRemove>
-				<ButtonDefault> Обновить </ButtonDefault>
+				<ButtonDefault @click="updateSpecialist"> Обновить </ButtonDefault>
 			</BlockButtons>
 			<BlockButtons v-if="modal.type == 'create'">
 				<ButtonDefault> Создать </ButtonDefault>
@@ -122,53 +123,49 @@
 
 		<LoaderChild :isLoading="loading.loader.specialists"></LoaderChild>
 
-		<table-container
+		<admin-specialists-table
 			v-if="loading.specialists"
-			:doctors="doctors"
-			@editDoctor="editDoctor"
-			@removeDoctor="removeDoctor"
-			@useFilter="filterDoctors"
+			:specialists="specialists"
+			@editSpecialist="editSpecialist"
+			@removeSpecialist="removeSpecialist"
+			@useFilter="filterspecialists"
 		/>
 
 		<block-buttons>
-			<button-default @click="addDoctor"> Добавить </button-default>
+			<button-default @click="addSpecialist"> Добавить </button-default>
 		</block-buttons>
 	</block>
 </template>
 
 <script>
-import AdminModal from "../../components/includes/admin/AdminModal.vue";
+import AdminModal from "../../../components/includes/admin/AdminModal.vue";
+import InfoBar from "../../../components/ui/admin/InfoBar.vue";
+import LoaderChild from "../../../components/includes/LoaderChild.vue";
 
-import ElementInputLabel from "../../components/ui/admin/ElementInputLabel.vue";
+import ElementInputLabel from "../../../components/ui/admin/ElementInputLabel.vue";
+import Block from "../../../components/ui/admin/Block.vue";
+import BlockTitle from "../../../components/ui/admin/BlockTitle.vue";
+import BlockButtons from "../../../components/ui/admin/BlockButtons.vue";
+import AdminSpecialistsTable from "./AdminSpecialistsTable.vue";
 
-import InfoBar from "../../components/ui/admin/InfoBar.vue";
+import ButtonDefault from "../../../components/ui/admin/ButtonDefault.vue";
+import ButtonRemove from "../../../components/ui/admin/ButtonRemove.vue";
 
-import LoaderChild from "../../components/includes/LoaderChild.vue";
-
-import Block from "../../components/ui/admin/Block.vue";
-import BlockTitle from "../../components/ui/admin/BlockTitle.vue";
-import BlockButtons from "../../components/ui/admin/BlockButtons.vue";
-
-import TableContainer from "../../components/ui/admin/TableContainer.vue";
-
-import ButtonDefault from "../../components/ui/admin/ButtonDefault.vue";
-import ButtonRemove from "../../components/ui/admin/ButtonRemove.vue";
-
-import IconSave from "../../components/icons/IconSave.vue";
+import IconSave from "../../../components/icons/IconSave.vue";
 
 import axios from "axios";
 
 export default {
 	components: {
 		AdminModal,
-		ElementInputLabel,
 		InfoBar,
 		LoaderChild,
+		ElementInputLabel,
 		Block,
 		BlockTitle,
 		BlockButtons,
 		ButtonDefault,
-		TableContainer,
+		AdminSpecialistsTable,
 		ButtonRemove,
 		IconSave,
 		axios,
@@ -190,7 +187,7 @@ export default {
 				},
 				specialists: false,
 			},
-			currentDoctor: {
+			currentSpecialist: {
 				status: false,
 				file: null,
 				errors: {
@@ -247,12 +244,12 @@ export default {
 					},
 				},
 			},
-			doctors: [],
+			specialists: [],
 		};
 	},
 	methods: {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                     ДОКТОРА                       |*/
+		/* |                   СПЕЦИАЛИСТЫ                     |*/
 		/* |___________________________________________________|*/
 		/* _____________________________________________________*/
 		/* 1. Модальное окно                                    */
@@ -285,12 +282,12 @@ export default {
 		/* _____________________________________________________*/
 		/* 2. Фильтрация                                        */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		filterDoctors(type) {
-			this.doctors.filter((doctor) => {
+		filterspecialists(type) {
+			this.specialists.filter((specialist) => {
 				switch (type) {
 					case "id":
 						{
-							this.doctors.sort((a, b) => {
+							this.specialists.sort((a, b) => {
 								b - a;
 							});
 							console.log("id");
@@ -298,7 +295,7 @@ export default {
 						break;
 					case "name":
 						{
-							this.doctors.sort((a, b) => {
+							this.specialists.sort((a, b) => {
 								a + b;
 							});
 							console.log("name");
@@ -306,7 +303,7 @@ export default {
 						break;
 					case "specialization":
 						{
-							this.doctors.sort((a, b) => a - b);
+							this.specialists.sort((a, b) => a - b);
 						}
 						console.log("specialization");
 						break;
@@ -317,31 +314,41 @@ export default {
 		/* 3. Добавление, изменение, удаление                   */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		// Изменение выбранного доктора
-		addDoctor() {
-			this.currentDoctor.data.create.body = true;
-			for (let key in this.currentDoctor.data) {
-				this.currentDoctor.data[key] = "";
+		addSpecialist() {
+			this.currentSpecialist.data.create.body = true;
+			for (let key in this.currentSpecialist.data) {
+				this.currentSpecialist.data[key] = "";
 			}
 			this.openModal("create");
 		},
 		// Изменение выбранного доктора
-		editDoctor(doctor) {
-			for (let key in doctor) {
-				this.currentDoctor.data[key] = doctor[key];
+		editSpecialist(specialist) {
+			for (let key in specialist) {
+				this.currentSpecialist.data[key] = specialist[key];
 			}
 			this.openModal("edit");
 		},
 		// Удаление выбранного доктора
-		removeDoctor(doctor) {},
+		removeSpecialist(specialist) {
+			console.log(specialist);
+		},
+		// Изменение выбранного доктора
+		updateSpecialist() {
+			console.log(this.currentSpecialist);
+			// for (let key in specialist) {
+			// 	this.currentSpecialist.data[key] = specialist[key];
+			// }
+			this.closeModal();
+		},
 	},
 	mounted() {
 		// Получение массива докторов с сервера
 		axios({
 			method: "post",
-			url: `${this.$store.state.axios.urlApi}` + `get-doctors`,
+			url: `${this.$store.state.axios.urlApi}` + `get-specialists`,
 		})
 			.then((response) => {
-				this.doctors = response.data;
+				this.specialists = response.data;
 
 				this.loading.loader.specialists = false;
 				setTimeout(() => {
