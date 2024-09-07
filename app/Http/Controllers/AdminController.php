@@ -29,12 +29,17 @@ class AdminController extends Controller
   /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
   // Сохранение содержимого всех слайдов
   public function saveSlidesChanges(Request $request) {
-    /* Изменение содержимого слайдов */
+    /* Удаление слайдов, подлежащих удалению */
     foreach ($request->slides as $key => $value) {
       if ($value['delete'] === true) {
-        $slide = Slide::where('order', $value['order'])->first();
+        $slide = Slide::find($value['id']);
         $slide->delete();
-      } else if ($value['create'] === true){
+      };
+    };
+
+    /* Добавление новых слайдов */
+    foreach ($request->slides as $key => $value) {
+      if ($value['create'] === true){
         $slideCreate = Slide::create([
           'name' => $value['name'],
           'link' => $value['link'],
@@ -42,8 +47,13 @@ class AdminController extends Controller
           'hide' => $value['hide'],
           'order' => $value['order'],
         ]);
-      } else {
-        $slide = Slide::where('order', $value['order'])->first();
+      };
+    };
+
+    /* Обновление существующих слайдов */
+    foreach ($request->slides as $key => $value) {
+      if ($value['delete'] !== true && $value['create'] !== true) {
+        $slide = Slide::find($value['id']);
         $slideUpdate = $slide->update([
           'name' => $value['name'],
           'link' => $value['link'],
@@ -54,7 +64,7 @@ class AdminController extends Controller
       };
     };
 
-    // /* Сортировка слайдов по порядку от наименьшего до наибольшого */
+    /* Сортировка слайдов по порядку от наименьшего до наибольшого */
     $slides = Slide::all()->SortBy('order');
 
     /* Обновление порядковых номеров */
