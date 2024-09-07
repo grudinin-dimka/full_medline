@@ -44,8 +44,11 @@
 						placeholder="Имя"
 						v-model="currentSpecialist.data.name.body"
 						@input="currentSpecialist.data.name.edited = true"
-						@blur="checkModalName('name', 'text')"
+						@blur="checkModalName"
 					/>
+					<span v-if="currentSpecialist.errors.name.status">
+						{{ currentSpecialist.errors.name.value }}
+					</span>
 				</article>
 				<!-- Специализация -->
 				<article>
@@ -61,7 +64,11 @@
 						placeholder="Имя"
 						v-model="currentSpecialist.data.specialization.body"
 						@input="currentSpecialist.data.specialization.edited = true"
+						@blur="checkModalSpecialization"
 					/>
+					<span v-if="currentSpecialist.errors.specialization.status">
+						{{ currentSpecialist.errors.specialization.value }}
+					</span>
 				</article>
 				<!-- Дата начала работы -->
 				<article>
@@ -163,7 +170,7 @@
 			:specialists="specialists"
 			@editSpecialist="editSpecialist"
 			@removeSpecialist="removeSpecialist"
-			@useFilter="filterspecialists"
+			@useFilter="filterSpecialists"
 			@hideSpecialist="hideSpecialist"
 		/>
 
@@ -342,7 +349,7 @@ export default {
 		/* _____________________________________________________*/
 		/* 2. Работа с полями ввода модального окна             */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		// Проверка содержимого поля ввода 3 типов
+		// Проверка содержимого поля ввода
 		checkModalInput(inputValue, inputType) {
 			switch (inputType) {
 				case "text":
@@ -386,56 +393,45 @@ export default {
 					return undefined;
 			}
 		},
-
 		// Проверка поля имени
-		checkModalName(name, type) {
-			let errorLog = this.checkModalInput(this.currentSpecialist.data[name].body, type);
+		checkModalName() {
+			let errorLog = this.checkModalInput(
+				this.currentSpecialist.data.name.body,
+				"text"
+			);
 
-			if (errorLog.status) { 
-				console.log(errorLog.message);
-			} else {
-				console.log(errorLog.message);				
-			};
+			if (errorLog.status) {
+				this.currentSpecialist.errors.name.value = errorLog.message;
+				this.currentSpecialist.errors.name.status = true;
+			}
 		},
-		checkSliderFile() {
-			/* Присваивание данных поля ввода файла пользователем в переменную */
-			this.currentSlide.file = this.$refs.fileUpload.files[0];
+		// Проверка поля специализации
+		checkModalSpecialization() {
+			let errorLog = this.checkModalInput(
+				this.currentSpecialist.data.specialization.body,
+				"text"
+			);
 
-			/* Проверка на загрузку файла пользователем */
-			if (!this.currentSlide.file) {
-				this.currentSlide.errors.file.status = true;
-				this.currentSlide.errors.file.value = "Поле не может быть пустым";
-				return false;
+			if (errorLog.status) {
+				this.currentSpecialist.errors.specialization.value = errorLog.message;
+				this.currentSpecialist.errors.specialization.status = true;
 			}
-
-			/* Проверка на тип загруженного файла */
-			if (this.currentSlide.file.type !== "image/png") {
-				this.currentSlide.errors.file.value = "Недопустимый тип файла.";
-				this.currentSlide.errors.file.status = true;
-				return false;
-			}
-
-			this.currentSlide.errors.file.status = false;
-			this.currentSlide.errors.file.value = "";
-			return true;
 		},
-		// Проверка всех полей
-		checkModalInputs(name, link, file) {
-			let errors = 0;
+		// Проверка поля специализации
+		checkModalSpecialization() {
+			let errorLog = this.checkModalInput(
+				this.currentSpecialist.data.specialization.body,
+				"text"
+			);
 
-			if (name) {
-				if (!this.checkSliderName()) errors++;
+			if (errorLog.status) {
+				this.currentSpecialist.errors.specialization.value = errorLog.message;
+				this.currentSpecialist.errors.specialization.status = true;
 			}
-			if (link) {
-				if (!this.checkSliderLink()) errors++;
-			}
-			if (file) {
-				if (!this.checkSliderFile()) errors++;
-			}
-
-			if (errors !== 0) return false;
-			else return true;
 		},
+		/* _____________________________________________________*/
+		/* 3. Работа с редактированием полей                    */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		// Очистка состояния редактирования
 		clearModalInputsEdited() {
 			for (let key in this.currentSpecialist.data) {
@@ -449,9 +445,9 @@ export default {
 			}
 		},
 		/* _____________________________________________________*/
-		/* 3. Фильтрация                                        */
+		/* 4. Фильтрация                                        */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		filterspecialists(type) {
+		filterSpecialists(type) {
 			this.specialists.filter((specialist) => {
 				switch (type) {
 					case "id":
@@ -480,7 +476,7 @@ export default {
 			});
 		},
 		/* _____________________________________________________*/
-		/* 3. Добавление, изменение, удаление                   */
+		/* 5. Добавление, изменение, удаление                   */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		// Изменение выбранного доктора
 		addSpecialist() {
