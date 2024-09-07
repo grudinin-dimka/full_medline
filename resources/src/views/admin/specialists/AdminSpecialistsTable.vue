@@ -5,7 +5,7 @@
 				<th>
 					<div class="table-th-container">
 						<div class="table-th-name">ID</div>
-						<div 
+						<div
 							class="table-th-filter"
 							@click="$emit('useFilter', 'id')"
 						>
@@ -54,15 +54,24 @@
 				<td>{{ specialist.specialization }}</td>
 				<td>
 					<div class="table-td-checkbox">
-						<input type="checkbox" :id="`checkbox-spec-${specialist.id}`" :value="specialist.hide">
+						<input
+							type="checkbox"
+							:id="`checkbox-spec-${specialist.id}`"
+							:value="specialist.hide"
+							@input="$emit('hideSpecialist', specialist)"
+						/>
 					</div>
 				</td>
 				<td>
 					<table-container-buttons>
-						<table-button-default @click="$emit('editSpecialist', specialist)">
+						<table-button-default
+							@click="$emit('editSpecialist', specialist)"
+						>
 							Изменить
 						</table-button-default>
-						<table-button-remove @click="$emit('removeSpecialist', specialist)">
+						<table-button-remove
+							@click="$emit('removeSpecialist', specialist)"
+						>
 							Удалить
 						</table-button-remove>
 					</table-container-buttons>
@@ -145,7 +154,7 @@ td {
 	align-items: center;
 	justify-content: center;
 	width: 100%;
-	height: 100%
+	height: 100%;
 }
 
 input[type="checkbox"] {

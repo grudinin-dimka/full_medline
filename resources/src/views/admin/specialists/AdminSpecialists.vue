@@ -44,6 +44,7 @@
 						placeholder="Имя"
 						v-model="currentSpecialist.data.name.body"
 						@input="currentSpecialist.data.name.edited = true"
+						@blur="checkModalName('name', 'text')"
 					/>
 				</article>
 				<!-- Специализация -->
@@ -163,6 +164,7 @@
 			@editSpecialist="editSpecialist"
 			@removeSpecialist="removeSpecialist"
 			@useFilter="filterspecialists"
+			@hideSpecialist="hideSpecialist"
 		/>
 
 		<block-buttons>
@@ -340,18 +342,60 @@ export default {
 		/* _____________________________________________________*/
 		/* 2. Работа с полями ввода модального окна             */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		// Проверка поля имени
-		checkModalName() {
-			if (this.currentSpecialist.data.name.body === "") {
-				this.currentSpecialist.errors.name.status = true;
-				this.currentSpecialist.errors.name.value =
-					"Поле не может быть пустым";
-				return false;
+		// Проверка содержимого поля ввода 3 типов
+		checkModalInput(inputValue, inputType) {
+			switch (inputType) {
+				case "text":
+					/* Проверка на пустое поле */
+					if (!inputValue) {
+						return {
+							status: true,
+							message: "Поле не может быть пустым.",
+						};
+					}
+					/* Проверка на тип данных */
+					if (typeof inputValue !== "string") {
+						return {
+							status: true,
+							message: "Тип данных не соответствует требованиям.",
+						};
+					}
+					return {
+						status: false,
+						message: "Проверка прошла успешно.",
+					};
+				case "date":
+					/* Проверка на пустое поле */
+					if (!inputValue) {
+						return {
+							status: true,
+							message: "Поле не может быть пустым.",
+						};
+					}
+					/* Проверка на тип данных */
+					if (typeof inputValue !== "date") {
+						return {
+							status: true,
+							message: "Тип данных не соответствует требованиям.",
+						};
+					}
+					return false;
+				case "file":
+					return false;
+				default:
+					return undefined;
 			}
+		},
 
-			this.currentSlide.errors.name.status = false;
-			this.currentSlide.errors.name.value = "";
-			return true;
+		// Проверка поля имени
+		checkModalName(name, type) {
+			let errorLog = this.checkModalInput(this.currentSpecialist.data[name].body, type);
+
+			if (errorLog.status) { 
+				console.log(errorLog.message);
+			} else {
+				console.log(errorLog.message);				
+			};
 		},
 		checkSliderFile() {
 			/* Присваивание данных поля ввода файла пользователем в переменную */
@@ -405,7 +449,7 @@ export default {
 			}
 		},
 		/* _____________________________________________________*/
-		/* 2. Фильтрация                                        */
+		/* 3. Фильтрация                                        */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		filterspecialists(type) {
 			this.specialists.filter((specialist) => {
@@ -454,13 +498,23 @@ export default {
 
 			this.openModal("edit");
 		},
+		// Скрытие выбранного доктора
+		hideSpecialist(selectedSpecialist) {
+			let specialistToHide = this.specialists.filter((specialist) => {
+				if (selectedSpecialist.id === specialist.id) {
+					return specialist;
+				}
+			});
+			specialistToHide[0].hidden = true;
+			console.log(this.specialists);
+		},
 		// Удаление выбранного доктора
 		removeSpecialist(specialist) {
 			console.log(specialist);
 		},
 		// Обновление данных выбранного доктора после редактирования в массиве this.specialists
 		updateSpecialist() {
-			console.log('Обновление данных.');
+			console.log("Обновление данных.");
 
 			/* Получение текущего объекта из массива this.specialists */
 			let resultSpecialistCurrent = this.specialists.filter((specialist) => {
@@ -472,7 +526,8 @@ export default {
 
 			/* Изменение выбранного доктора в массиве this.specialists */
 			for (let key in filteredSpecialistCurrent) {
-				filteredSpecialistCurrent[key] = this.currentSpecialist.data[key].body;
+				filteredSpecialistCurrent[key] =
+					this.currentSpecialist.data[key].body;
 			}
 			this.closeModal();
 		},

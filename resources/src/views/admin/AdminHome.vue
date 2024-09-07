@@ -833,14 +833,14 @@ export default {
 									};
 								};
 								// Получение элемент массива с объектом у которого id = maxId
-								let test = this.slides.filter((slide) => {
+								let slideMaxId = this.slides.filter((slide) => {
 									if (slide.id == maxId) {
 										return slide;
 									}
 								});
 
 								this.slides.push({
-									id: 1 + test[0].id,
+									id: 1 + slideMaxId[0].id,
 									name: this.$refs.inputName.value,
 									link: this.$refs.inputLink.value,
 									path: response.data,
@@ -1140,7 +1140,6 @@ export default {
 		})
 			.then((response) => {
 				this.slides = response.data;
-				console.log(this.slides);
 
 				// Добавление полей "delete" и "create" в каждую строку массива
 				for (let key in this.slides) {
