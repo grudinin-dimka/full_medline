@@ -90,7 +90,7 @@
 							v-model="currentSlide.data.name.body"
 							ref="inputName"
 							@input="currentSlide.data.name.edited = true"
-							@blur="checkSliderName"
+							@blur="checkModalInput('name', 'text')"
 							:class="{ error: currentSlide.errors.name.status }"
 							placeholder="Название слайда"
 						/>
@@ -111,7 +111,7 @@
 							v-model="currentSlide.data.link.body"
 							ref="inputLink"
 							@input="currentSlide.data.link.edited = true"
-							@blur="checkSliderLink"
+							@blur="checkModalInput('link', 'text')"
 							:class="{ error: currentSlide.errors.link.status }"
 							placeholder="Ссылка слайда"
 						/>
@@ -501,69 +501,120 @@ export default {
 		/* _____________________________________________________*/
 		/* 1. Работа с полями ввода                             */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		// Проверка введенного значения
+		checkInputText(value) {
+			/* Проверка на пустую строку */
+			if (value == "") {
+				return {
+					status: true,
+					message: "Поле не может быть пустым.",
+				};
+			}
+
+			/* Проверка на соответствие типу string */
+			if (typeof value !== "string") {
+				return {
+					status: true,
+					message: "Тип данных не совпадает.",
+				};
+			}
+
+			return {
+				status: false,
+				message: "Ошибок нет.",
+			};
+		},
 		// Проверка поля имени
-		checkSliderName() {
-			if (this.currentSlide.data.name.body === "") {
-				this.currentSlide.errors.name.status = true;
-				this.currentSlide.errors.name.value = "Поле не может быть пустым";
-				return false;
+		checkModalInput(dataKey, inputType) {
+			let errorLog = {};
+			switch (inputType) {
+				case "text":
+					errorLog = this.checkInputText(
+						this.currentSlide.data[dataKey].body
+					);
+					break;
+				default:
+					break;
 			}
 
-			this.currentSlide.errors.name.status = false;
-			this.currentSlide.errors.name.value = "";
-			return true;
+			if (errorLog.status) {
+				this.currentSlide.errors[dataKey].value = errorLog.message;
+				this.currentSlide.errors[dataKey].status = true;
+
+				return true;
+			} else {
+				this.currentSlide.errors[dataKey].value = "";
+				this.currentSlide.errors[dataKey].status = false;
+
+				return false;
+			}
 		},
-		// Проверка поля ссылки
-		checkSliderLink() {
-			if (this.currentSlide.data.link.body === "") {
-				this.currentSlide.errors.link.status = true;
-				this.currentSlide.errors.link.value = "Поле не может быть пустым";
+		// Проверка всех полей ввода модального окна
+		checkModalInputsAll(inputKeys) {
+			let errorCount = 0;
+			for (let i = 0; i < inputKeys.length; i++) {
+				switch (inputKeys[i]) {
+					// Для поля файл
+					case "file":
+						/* Присваивание данных поля ввода файла пользователем в переменную */
+						let file = this.$refs.fileUpload.files[0];
+						/* Проверка на загрузку файла пользователем */
+						if (!file) {
+							let debbugStory = {
+								title: "Ошибка.",
+								body: "Вы не загрузили изображение специалиста.",
+								type: "Error",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+							errorCount++;
+							this.currentSlide.errors.file.status = true;
+
+							continue;
+						}
+
+						/* Проверка на тип загруженного файла */
+						if (file.type !== "image/png") {
+							let debbugStory = {
+								title: "Ошибка.",
+								body: "Разрешенный формат файла: png.",
+								type: "Error",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+							errorCount++;
+							this.currentSlide.errors.file.status = true;
+
+							continue;
+						}
+
+						/* Проверка на размер загруженного файла */
+						let fileSize = file.size / 1024 / 1024;
+						if (fileSize > 10) {
+							let debbugStory = {
+								title: "Ошибка.",
+								body: "Превышен размер загружаемого файла (не более 10 МБ).",
+								type: "Error",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+							errorCount++;
+							this.currentSlide.errors.file.status = true;
+
+							continue;
+						}
+						break;
+					// Для всех остальных полей
+					default:
+						if (this.checkModalInput(inputKeys[i], "text")) {
+							errorCount++;
+						}
+						break;
+				}
+			}
+
+			if (errorCount > 0) {
+				return true;
+			} else {
 				return false;
 			}
-
-			this.currentSlide.errors.link.status = false;
-			this.currentSlide.errors.link.value = "";
-			return true;
-		},
-		// Проверка поля Файл
-		checkSliderFile() {
-			/* Присваивание данных поля ввода файла пользователем в переменную */
-			this.currentSlide.file = this.$refs.fileUpload.files[0];
-
-			/* Проверка на загрузку файла пользователем */
-			if (!this.currentSlide.file) {
-				this.currentSlide.errors.file.status = true;
-				this.currentSlide.errors.file.value = "Поле не может быть пустым";
-				return false;
-			}
-
-			/* Проверка на тип загруженного файла */
-			if (this.currentSlide.file.type !== "image/png") {
-				this.currentSlide.errors.file.value = "Недопустимый тип файла.";
-				this.currentSlide.errors.file.status = true;
-				return false;
-			}
-
-			this.currentSlide.errors.file.status = false;
-			this.currentSlide.errors.file.value = "";
-			return true;
-		},
-		// Проверка всех полей
-		checkAllInputs(name, link, file) {
-			let errors = 0;
-
-			if (name) {
-				if (!this.checkSliderName()) errors++;
-			}
-			if (link) {
-				if (!this.checkSliderLink()) errors++;
-			}
-			if (file) {
-				if (!this.checkSliderFile()) errors++;
-			}
-
-			if (errors !== 0) return false;
-			else return true;
 		},
 		// Очистка состояния редактирования
 		clearSlideEdited() {
@@ -806,7 +857,8 @@ export default {
 				/* Присваивание данных поля ввода файла пользователем в переменную */
 				this.currentSlide.file = this.$refs.fileUpload.files[0];
 
-				if (!this.checkAllInputs(true, true, true)) {
+				// Проверка на заполненность полей ввода
+				if (this.checkModalInputsAll(["name", "link", "file"])) {
 					return;
 				}
 
@@ -842,15 +894,9 @@ export default {
 										maxId = this.slides[key].id;
 									}
 								}
-								// Получение элемент массива с объектом у которого id = maxId
-								let slideMaxId = this.slides.filter((slide) => {
-									if (slide.id == maxId) {
-										return slide;
-									}
-								});
 
 								this.slides.push({
-									id: 1 + slideMaxId[0].id,
+									id: 1 + maxId,
 									name: this.$refs.inputName.value,
 									link: this.$refs.inputLink.value,
 									path: response.data,
@@ -913,7 +959,8 @@ export default {
 		// Обновление данных слайда по данным из модального окна
 		updateSlide() {
 			try {
-				if (!this.checkAllInputs(true, true, false)) {
+				// Проверка на заполненность полей ввода
+				if (this.checkModalInputsAll(["name", "link"])) {
 					return;
 				}
 

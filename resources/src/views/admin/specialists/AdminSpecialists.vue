@@ -584,13 +584,22 @@ export default {
 			)
 				return;
 
+			// Поиск максимального id
+			let maxId = 0;
+			for (let key in this.specialists) {
+				if (this.specialists[key].id > maxId) {
+					maxId = this.specialists[key].id;
+				}
+			}
+
 			this.specialists.push({
-				name: "test",
-				specialization: "test",
-				startWorkAge: "10.10.2010",
-				education: "test",
-				advancedTraining: "test",
-				certificates: "test",
+				id: 1 + maxId,
+				name: this.currentSpecialist.data.name.body,
+				specialization: this.currentSpecialist.data.specialization.body,
+				startWorkAge: this.currentSpecialist.data.startWorkAge.body,
+				education: this.currentSpecialist.data.education.body,
+				advancedTraining: this.currentSpecialist.data.advancedTraining.body,
+				certificates: this.currentSpecialist.data.certificates.body,
 				hide: false,
 				filename: "vlasov.png",
 			});
