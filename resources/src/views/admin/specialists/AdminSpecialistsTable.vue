@@ -58,14 +58,14 @@
 							type="checkbox"
 							:id="`checkbox-spec-${specialist.id}`"
 							:value="specialist.hide"
-							@input="$emit('hideSpecialist', specialist)"
+							@input="$emit('touchHideSpecialist', specialist)"
 						/>
 					</div>
 				</td>
 				<td>
 					<table-container-buttons>
 						<table-button-default
-							@click="$emit('editSpecialist', specialist)"
+							@click="$emit('touchEditSpecialist', 'edit', specialist)"
 						>
 							Изменить
 						</table-button-default>

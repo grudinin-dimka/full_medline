@@ -830,8 +830,8 @@ export default {
 								for (let key in this.slides) {
 									if (this.slides[key].id > maxId) {
 										maxId = this.slides[key].id;
-									};
-								};
+									}
+								}
 								// Получение элемент массива с объектом у которого id = maxId
 								let slideMaxId = this.slides.filter((slide) => {
 									if (slide.id == maxId) {
@@ -1151,7 +1151,7 @@ export default {
 				this.loading.loader.slider = false;
 				setTimeout(() => {
 					this.loading.slider = true;
-				}, 500);
+				}, 515);
 			})
 			.catch((error) => {
 				let debbugStory = {

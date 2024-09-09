@@ -43,12 +43,13 @@
 						ref="inputName"
 						placeholder="Имя"
 						v-model="currentSpecialist.data.name.body"
+						:class="{ error: currentSpecialist.errors.name.status }"
 						@input="currentSpecialist.data.name.edited = true"
-						@blur="checkModalName"
+						@blur="checkModalInput('name')"
 					/>
-					<span v-if="currentSpecialist.errors.name.status">
+					<span-error v-if="currentSpecialist.errors.name.status">
 						{{ currentSpecialist.errors.name.value }}
-					</span>
+					</span-error>
 				</article>
 				<!-- Специализация -->
 				<article>
@@ -63,12 +64,17 @@
 						ref="inputSpecialization"
 						placeholder="Имя"
 						v-model="currentSpecialist.data.specialization.body"
+						:class="{
+							error: currentSpecialist.errors.specialization.status,
+						}"
 						@input="currentSpecialist.data.specialization.edited = true"
-						@blur="checkModalSpecialization"
+						@blur="checkModalInput('specialization')"
 					/>
-					<span v-if="currentSpecialist.errors.specialization.status">
+					<span-error
+						v-if="currentSpecialist.errors.specialization.status"
+					>
 						{{ currentSpecialist.errors.specialization.value }}
-					</span>
+					</span-error>
 				</article>
 				<!-- Дата начала работы -->
 				<article>
@@ -83,8 +89,15 @@
 						ref="inputStartWorkAge"
 						placeholder="Имя"
 						v-model="currentSpecialist.data.startWorkAge.body"
+						:class="{
+							error: currentSpecialist.errors.startWorkAge.status,
+						}"
 						@input="currentSpecialist.data.startWorkAge.edited = true"
+						@blur="checkModalInput('startWorkAge')"
 					/>
+					<span-error v-if="currentSpecialist.errors.startWorkAge.status">
+						{{ currentSpecialist.errors.startWorkAge.value }}
+					</span-error>
 				</article>
 				<!-- Обучение -->
 				<article>
@@ -99,9 +112,14 @@
 						ref="inputEducation"
 						placeholder="Имя"
 						v-model="currentSpecialist.data.education.body"
+						:class="{ error: currentSpecialist.errors.education.status }"
 						@input="currentSpecialist.data.education.edited = true"
+						@blur="checkModalInput('education')"
 					>
 					</textarea>
+					<span-error v-if="currentSpecialist.errors.education.status">
+						{{ currentSpecialist.errors.education.value }}
+					</span-error>
 				</article>
 				<!-- Повышение квалификации -->
 				<article>
@@ -116,9 +134,18 @@
 						ref="inputEducation"
 						placeholder="Имя"
 						v-model="currentSpecialist.data.advancedTraining.body"
+						:class="{
+							error: currentSpecialist.errors.advancedTraining.status,
+						}"
 						@input="currentSpecialist.data.advancedTraining.edited = true"
+						@blur="checkModalInput('advancedTraining')"
 					>
 					</textarea>
+					<span-error
+						v-if="currentSpecialist.errors.advancedTraining.status"
+					>
+						{{ currentSpecialist.errors.advancedTraining.value }}
+					</span-error>
 				</article>
 				<!-- Сертификаты -->
 				<article>
@@ -133,9 +160,16 @@
 						ref="inputStartWorkAge"
 						placeholder="Имя"
 						v-model="currentSpecialist.data.certificates.body"
+						:class="{
+							error: currentSpecialist.errors.certificates.status,
+						}"
 						@input="currentSpecialist.data.certificates.edited = true"
+						@blur="checkModalInput('certificates')"
 					>
 					</textarea>
+					<span-error v-if="currentSpecialist.errors.certificates.status">
+						{{ currentSpecialist.errors.certificates.value }}
+					</span-error>
 				</article>
 			</div>
 		</template>
@@ -145,7 +179,7 @@
 				<ButtonDefault @click="updateSpecialist"> Обновить </ButtonDefault>
 			</BlockButtons>
 			<BlockButtons v-if="modal.type == 'create'">
-				<ButtonDefault> Создать </ButtonDefault>
+				<ButtonDefault @click="addSpecialist"> Создать </ButtonDefault>
 			</BlockButtons>
 		</template>
 	</admin-modal>
@@ -168,14 +202,16 @@
 		<admin-specialists-table
 			v-if="loading.specialists"
 			:specialists="specialists"
-			@editSpecialist="editSpecialist"
+			@touchEditSpecialist="openModal"
+			@touchHideSpecialist="hideSpecialist"
 			@removeSpecialist="removeSpecialist"
 			@useFilter="filterSpecialists"
-			@hideSpecialist="hideSpecialist"
 		/>
 
 		<block-buttons>
-			<button-default @click="addSpecialist"> Добавить </button-default>
+			<button-default @click="openModal('create', null)">
+				Добавить
+			</button-default>
 		</block-buttons>
 	</block>
 </template>
@@ -190,6 +226,7 @@ import Block from "../../../components/ui/admin/Block.vue";
 import BlockTitle from "../../../components/ui/admin/BlockTitle.vue";
 import BlockButtons from "../../../components/ui/admin/BlockButtons.vue";
 import AdminSpecialistsTable from "./AdminSpecialistsTable.vue";
+import SpanError from "../../../components/ui/admin/SpanError.vue";
 
 import ButtonDefault from "../../../components/ui/admin/ButtonDefault.vue";
 import ButtonRemove from "../../../components/ui/admin/ButtonRemove.vue";
@@ -209,6 +246,7 @@ export default {
 		BlockButtons,
 		ButtonDefault,
 		AdminSpecialistsTable,
+		SpanError,
 		ButtonRemove,
 		IconSave,
 		axios,
@@ -269,7 +307,7 @@ export default {
 						edited: false,
 					},
 					name: {
-						body: "asdsada",
+						body: "",
 						edited: false,
 					},
 					specialization: {
@@ -320,23 +358,27 @@ export default {
 		/* 1. Модальное окно                                    */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		// Открытие модального окна с доктором
-		openModal(type) {
-			switch (type) {
-				case "create":
-					{
-						this.modal.type = type;
-						this.modal.title = "Создание";
-						this.modal.status = true;
-					}
-					break;
-				case "edit":
-					{
-						this.modal.type = type;
-						this.modal.title = "Редактирование";
-						this.modal.status = true;
-					}
-					break;
+		openModal(type, specialist) {
+			if (type == "create") {
+				this.currentSpecialist.data.create.body = true;
+				this.clearCurrentSpecialistData();
+
+				this.modal.type = type;
+				this.modal.title = "Создание";
+				this.modal.status = true;
 			}
+
+			if (type == "edit") {
+				// Заполнение модального окна данными о специалисте
+				for (let key in specialist) {
+					this.currentSpecialist.data[key].body = specialist[key];
+				}
+
+				this.modal.type = type;
+				this.modal.title = "Редактирование";
+				this.modal.status = true;
+			}
+
 			document.body.classList.toggle("modal-open");
 		},
 		// Закрытие модального окна с доктором
@@ -344,155 +386,106 @@ export default {
 			this.modal.status = false;
 			document.body.classList.toggle("modal-open");
 
-			this.clearModalInputsEdited();
+			this.clearCurrentSpecialistEdited();
+			this.clearCurrentSpecialistErrors();
 		},
 		/* _____________________________________________________*/
 		/* 2. Работа с полями ввода модального окна             */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		// Проверка содержимого поля ввода
-		checkModalInput(inputValue, inputType) {
-			switch (inputType) {
-				case "text":
-					/* Проверка на пустое поле */
-					if (!inputValue) {
-						return {
-							status: true,
-							message: "Поле не может быть пустым.",
-						};
-					}
-					/* Проверка на тип данных */
-					if (typeof inputValue !== "string") {
-						return {
-							status: true,
-							message: "Тип данных не соответствует требованиям.",
-						};
-					}
-					return {
-						status: false,
-						message: "Проверка прошла успешно.",
-					};
-				case "date":
-					/* Проверка на пустое поле */
-					if (!inputValue) {
-						return {
-							status: true,
-							message: "Поле не может быть пустым.",
-						};
-					}
-					/* Проверка на тип данных */
-					if (typeof inputValue !== "date") {
-						return {
-							status: true,
-							message: "Тип данных не соответствует требованиям.",
-						};
-					}
-					return false;
-				case "file":
-					return false;
-				default:
-					return undefined;
+		// Проверка введенного значения
+		checkInputText(value) {
+			if (value == "") {
+				return {
+					status: true,
+					message: "Поле не может быть пустым.",
+				};
 			}
+			console.log(value);
+
+			if (typeof value !== "string") {
+				return {
+					status: true,
+					message: "Тип данных не совпадает.",
+				};
+			}
+			console.log(typeof value);
+
+			return {
+				status: false,
+				message: "Ошибок нет.",
+			};
 		},
 		// Проверка поля имени
-		checkModalName() {
-			let errorLog = this.checkModalInput(
-				this.currentSpecialist.data.name.body,
-				"text"
+		checkModalInput(key) {
+			let errorLog = this.checkInputText(
+				this.currentSpecialist.data[key].body
 			);
 
 			if (errorLog.status) {
-				this.currentSpecialist.errors.name.value = errorLog.message;
-				this.currentSpecialist.errors.name.status = true;
-			}
-		},
-		// Проверка поля специализации
-		checkModalSpecialization() {
-			let errorLog = this.checkModalInput(
-				this.currentSpecialist.data.specialization.body,
-				"text"
-			);
+				this.currentSpecialist.errors[key].value = errorLog.message;
+				this.currentSpecialist.errors[key].status = true;
 
-			if (errorLog.status) {
-				this.currentSpecialist.errors.specialization.value = errorLog.message;
-				this.currentSpecialist.errors.specialization.status = true;
-			}
-		},
-		// Проверка поля специализации
-		checkModalSpecialization() {
-			let errorLog = this.checkModalInput(
-				this.currentSpecialist.data.specialization.body,
-				"text"
-			);
+				return true;
+			} else {
+				this.currentSpecialist.errors[key].value = "";
+				this.currentSpecialist.errors[key].status = false;
 
-			if (errorLog.status) {
-				this.currentSpecialist.errors.specialization.value = errorLog.message;
-				this.currentSpecialist.errors.specialization.status = true;
+				return false;
 			}
 		},
-		/* _____________________________________________________*/
-		/* 3. Работа с редактированием полей                    */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		// Очистка состояния редактирования
-		clearModalInputsEdited() {
+		clearCurrentSpecialistData() {
+			outer: for (let key in this.currentSpecialist.data) {
+				if (key == "hide" || key == "create" || key == "delete") {
+					continue outer;
+				}
+
+				this.currentSpecialist.data[key].body = "";
+			}
+		},
+		// Очистка состояния редактирования
+		clearCurrentSpecialistEdited() {
 			for (let key in this.currentSpecialist.data) {
 				this.currentSpecialist.data[key].edited = false;
 			}
 		},
 		// Очистка состояния редактирования
-		clearModalInputsErrors() {
+		clearCurrentSpecialistErrors() {
 			for (let key in this.currentSpecialist.errors) {
-				this.currentSlide.errors[key].status = false;
+				this.currentSpecialist.errors[key].status = false;
 			}
 		},
 		/* _____________________________________________________*/
-		/* 4. Фильтрация                                        */
+		/* 3. Фильтрация                                        */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		filterSpecialists(type) {
-			this.specialists.filter((specialist) => {
-				switch (type) {
-					case "id":
-						{
-							this.specialists.sort((a, b) => {
-								b - a;
-							});
-							console.log("id");
-						}
-						break;
-					case "name":
-						{
-							this.specialists.sort((a, b) => {
-								a + b;
-							});
-							console.log("name");
-						}
-						break;
-					case "specialization":
-						{
-							this.specialists.sort((a, b) => a - b);
-						}
-						console.log("specialization");
-						break;
-				}
-			});
-		},
-		/* _____________________________________________________*/
-		/* 5. Добавление, изменение, удаление                   */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		// Изменение выбранного доктора
-		addSpecialist() {
-			this.currentSpecialist.data.create.body = true;
-			for (let key in this.currentSpecialist.data) {
-				this.currentSpecialist.data[key] = "";
-			}
-			this.openModal("create");
-		},
-		// Изменение выбранного доктора
-		editSpecialist(specialist) {
-			for (let key in specialist) {
-				this.currentSpecialist.data[key].body = specialist[key];
+			if (type == "id") {
+				this.specialists.sort((a, b) => {
+					b - a;
+				});
+				console.log("id");
 			}
 
-			this.openModal("edit");
+			if (type == "name") {
+				this.specialists.sort((a, b) => {
+					a + b;
+				});
+				console.log("name");
+			}
+
+			if (type == "specialization") {
+				this.specialists.sort((a, b) => {
+					a + b;
+				});
+				console.log("specialization");
+			}
+		},
+		/* _____________________________________________________*/
+		/* 4. Добавление, изменение, удаление                   */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		// Добавление нового доктора к массиву this.specialists
+		addSpecialist() {
+			console.log("Добавление");
 		},
 		// Скрытие выбранного доктора
 		hideSpecialist(selectedSpecialist) {
@@ -510,8 +503,6 @@ export default {
 		},
 		// Обновление данных выбранного доктора после редактирования в массиве this.specialists
 		updateSpecialist() {
-			console.log("Обновление данных.");
-
 			/* Получение текущего объекта из массива this.specialists */
 			let resultSpecialistCurrent = this.specialists.filter((specialist) => {
 				if (specialist.id === this.currentSpecialist.data.id.body) {
@@ -525,7 +516,20 @@ export default {
 				filteredSpecialistCurrent[key] =
 					this.currentSpecialist.data[key].body;
 			}
-			this.closeModal();
+
+			/* Присваивание данных поля ввода файла пользователем в переменную */
+			this.currentSpecialist.file = this.$refs.fileUpload.files[0];
+
+			/* Проверка на загрузку файла пользователем */
+			if (!this.currentSpecialist.file) return this.closeModal();
+
+			/* Проверка на тип загруженного файла */
+			if (this.currentSpecialist.file.type !== "image/png") {
+				this.currentSpecialist.errors.file.value =
+					"Недопустимый тип файла.";
+				this.currentSpecialist.errors.file.status = true;
+				return;
+			}
 		},
 	},
 	mounted() {
@@ -628,6 +632,17 @@ export default {
 	border: 2px solid var(--input-border-color-active);
 }
 
+.modal-body-inputs > article > input.error {
+	background-color: var(--input-background-color-error);
+	border: 2px solid var(--input-border-color-error);
+
+	caret-color: red;
+}
+
+.modal-body-inputs > article > input.error:focus {
+	border: 2px solid var(--input-border-color-error);
+}
+
 .modal-body-inputs > article > textarea {
 	box-sizing: border-box;
 	outline: none;
@@ -647,5 +662,16 @@ export default {
 
 .modal-body-inputs > article > textarea:focus {
 	border: 2px solid var(--input-border-color-active);
+}
+
+.modal-body-inputs > article > textarea.error {
+	background-color: var(--input-background-color-error);
+	border: 2px solid var(--input-border-color-error);
+
+	caret-color: red;
+}
+
+.modal-body-inputs > article > textarea.error:focus {
+	border: 2px solid var(--input-border-color-error);
 }
 </style>
