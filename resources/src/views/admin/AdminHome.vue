@@ -24,8 +24,8 @@
 				@click="changeSlideHide"
 			/>
 		</template>
-		<template #title v-if="modal.type == 'create'">
-			Создание слайда
+		<template #title v-if="modal.style.create || modal.style.delete">
+			{{ modal.title }}
 		</template>
 		<template
 			#title
@@ -399,9 +399,10 @@ export default {
 			},
 			slides: [],
 			modal: {
+				title: "",
 				status: false,
 				type: null,
-				slide: {
+				style: {
 					create: false,
 					delete: false,
 				},
@@ -631,6 +632,9 @@ export default {
 								this.currentSlide.data[key].body = "";
 							}
 
+							this.modal.style.create = true;
+							this.modal.style.delete = false;
+							this.modal.title = "Создание слайда";
 							// Открытие модального окна
 							this.openModal(type);
 						}
@@ -640,17 +644,23 @@ export default {
 							for (let key in selectedSlide) {
 								this.currentSlide.data[key].body = selectedSlide[key];
 							}
+
 							// Проверка, создан ли слайд или уже имеется
 							if (this.currentSlide.data.create.body === true) {
-								this.modal.slide.create = true;
+								this.modal.title = "Создание слайда";
+								this.modal.style.create = true;
 							} else {
-								this.modal.slide.create = false;
+								this.modal.title = "";
+								this.modal.style.create = false;
 							}
+
 							// Проверка, помечен ли слайд на удаление
 							if (this.currentSlide.data.delete.body === true) {
-								this.modal.slide.delete = true;
+								this.modal.title = "Удаление слайда";
+								this.modal.style.delete = true;
 							} else {
-								this.modal.slide.delete = false;
+								this.modal.title = "";
+								this.modal.style.delete = false;
 							}
 
 							// Открытие модального окна
@@ -933,6 +943,7 @@ export default {
 					this.currentSlide.errors.file.status = true;
 					return;
 				}
+
 				/* Загрузка файла */
 				this.currentSlide.file = this.$refs.fileUpload.files[0];
 				let formData = new FormData();
@@ -949,11 +960,6 @@ export default {
 					data: formData,
 				})
 					.then((response) => {
-						let debbugStory = {
-							title: "Успешно!",
-							body: "Картинка успешно загружена.",
-							type: "Completed",
-						};
 						this.currentSlide.data.path.body = response.data;
 						filteredSlideCurrent.path = response.data;
 						filteredSlideCurrent.filename = response.data.replace(

@@ -49,6 +49,4 @@ body,
 
 body.modal-open {
   overflow: hidden;
-  padding-right: 17px;
-  background-color: #ececec;
 }

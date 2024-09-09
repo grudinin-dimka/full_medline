@@ -26,6 +26,7 @@
 				type="file"
 				ref="fileUpload"
 				placeholder="Файл"
+				:class="{ error: currentSpecialist.errors.file.status }"
 			/>
 		</template>
 		<template #body>
@@ -45,7 +46,7 @@
 						v-model="currentSpecialist.data.name.body"
 						:class="{ error: currentSpecialist.errors.name.status }"
 						@input="currentSpecialist.data.name.edited = true"
-						@blur="checkModalInput('name')"
+						@blur="checkModalInput('name', 'text')"
 					/>
 					<span-error v-if="currentSpecialist.errors.name.status">
 						{{ currentSpecialist.errors.name.value }}
@@ -68,7 +69,7 @@
 							error: currentSpecialist.errors.specialization.status,
 						}"
 						@input="currentSpecialist.data.specialization.edited = true"
-						@blur="checkModalInput('specialization')"
+						@blur="checkModalInput('specialization', 'text')"
 					/>
 					<span-error
 						v-if="currentSpecialist.errors.specialization.status"
@@ -93,7 +94,7 @@
 							error: currentSpecialist.errors.startWorkAge.status,
 						}"
 						@input="currentSpecialist.data.startWorkAge.edited = true"
-						@blur="checkModalInput('startWorkAge')"
+						@blur="checkModalInput('startWorkAge', 'text')"
 					/>
 					<span-error v-if="currentSpecialist.errors.startWorkAge.status">
 						{{ currentSpecialist.errors.startWorkAge.value }}
@@ -114,7 +115,7 @@
 						v-model="currentSpecialist.data.education.body"
 						:class="{ error: currentSpecialist.errors.education.status }"
 						@input="currentSpecialist.data.education.edited = true"
-						@blur="checkModalInput('education')"
+						@blur="checkModalInput('education', 'text')"
 					>
 					</textarea>
 					<span-error v-if="currentSpecialist.errors.education.status">
@@ -138,7 +139,7 @@
 							error: currentSpecialist.errors.advancedTraining.status,
 						}"
 						@input="currentSpecialist.data.advancedTraining.edited = true"
-						@blur="checkModalInput('advancedTraining')"
+						@blur="checkModalInput('advancedTraining', 'text')"
 					>
 					</textarea>
 					<span-error
@@ -164,7 +165,7 @@
 							error: currentSpecialist.errors.certificates.status,
 						}"
 						@input="currentSpecialist.data.certificates.edited = true"
-						@blur="checkModalInput('certificates')"
+						@blur="checkModalInput('certificates', 'text')"
 					>
 					</textarea>
 					<span-error v-if="currentSpecialist.errors.certificates.status">
@@ -257,7 +258,7 @@ export default {
 				title: "",
 				status: false,
 				type: null,
-				slide: {
+				style: {
 					create: false,
 					delete: false,
 				},
@@ -359,26 +360,37 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		// Открытие модального окна с доктором
 		openModal(type, specialist) {
-			if (type == "create") {
-				this.currentSpecialist.data.create.body = true;
-				this.clearCurrentSpecialistData();
+			switch (type) {
+				case "create":
+					this.currentSpecialist.data.create.body = true;
+					this.clearCurrentSpecialistData();
 
-				this.modal.type = type;
-				this.modal.title = "Создание";
-				this.modal.status = true;
+					this.modal.type = type;
+					this.modal.title = "Создание";
+					this.modal.status = true;
+					break;
+				case "edit":
+					this.clearCurrentSpecialistData();
+
+					// Заполнение модального окна данными о специалисте
+					for (let key in specialist) {
+						this.currentSpecialist.data[key].body = specialist[key];
+					}
+
+					this.modal.type = type;
+					this.modal.title = "Редактирование";
+					this.modal.status = true;
+					break;
+				default:
+					let debbugStory = {
+						title: "Ошибка.",
+						body: "Низвестный тип открытия модального окна.",
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+
+					break;
 			}
-
-			if (type == "edit") {
-				// Заполнение модального окна данными о специалисте
-				for (let key in specialist) {
-					this.currentSpecialist.data[key].body = specialist[key];
-				}
-
-				this.modal.type = type;
-				this.modal.title = "Редактирование";
-				this.modal.status = true;
-			}
-
 			document.body.classList.toggle("modal-open");
 		},
 		// Закрытие модального окна с доктором
@@ -394,21 +406,21 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		// Проверка введенного значения
 		checkInputText(value) {
+			/* Проверка на пустую строку */
 			if (value == "") {
 				return {
 					status: true,
 					message: "Поле не может быть пустым.",
 				};
 			}
-			console.log(value);
 
+			/* Проверка на соответствие типу string */
 			if (typeof value !== "string") {
 				return {
 					status: true,
 					message: "Тип данных не совпадает.",
 				};
 			}
-			console.log(typeof value);
 
 			return {
 				status: false,
@@ -416,20 +428,94 @@ export default {
 			};
 		},
 		// Проверка поля имени
-		checkModalInput(key) {
-			let errorLog = this.checkInputText(
-				this.currentSpecialist.data[key].body
-			);
+		checkModalInput(dataKey, inputType) {
+			let errorLog = {};
+			switch (inputType) {
+				case "text":
+					errorLog = this.checkInputText(
+						this.currentSpecialist.data[dataKey].body
+					);
+					break;
+				default:
+					break;
+			}
 
 			if (errorLog.status) {
-				this.currentSpecialist.errors[key].value = errorLog.message;
-				this.currentSpecialist.errors[key].status = true;
+				this.currentSpecialist.errors[dataKey].value = errorLog.message;
+				this.currentSpecialist.errors[dataKey].status = true;
 
 				return true;
 			} else {
-				this.currentSpecialist.errors[key].value = "";
-				this.currentSpecialist.errors[key].status = false;
+				this.currentSpecialist.errors[dataKey].value = "";
+				this.currentSpecialist.errors[dataKey].status = false;
 
+				return false;
+			}
+		},
+		// Проверка всех полей ввода модального окна
+		checkModalInputsAll(inputKeys) {
+			let errorCount = 0;
+			for (let i = 0; i < inputKeys.length; i++) {
+				switch (inputKeys[i]) {
+					// Для поля файл
+					case "file":
+						/* Присваивание данных поля ввода файла пользователем в переменную */
+						let file = this.$refs.fileUpload.files[0];
+						/* Проверка на загрузку файла пользователем */
+						if (!file) {
+							let debbugStory = {
+								title: "Ошибка.",
+								body: "Вы не загрузили изображение специалиста.",
+								type: "Error",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+							errorCount++;
+							this.currentSpecialist.errors.file.status = true;
+
+							continue;
+						}
+
+						/* Проверка на тип загруженного файла */
+						if (file.type !== "image/png") {
+							let debbugStory = {
+								title: "Ошибка.",
+								body: "Разрешенный формат файла: png.",
+								type: "Error",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+							errorCount++;
+							this.currentSpecialist.errors.file.status = true;
+
+							continue;
+						}
+
+						/* Проверка на размер загруженного файла */
+						let fileSize = file.size / 1024 / 1024;
+						if (fileSize > 10) {
+							let debbugStory = {
+								title: "Ошибка.",
+								body: "Превышен размер загружаемого файла (не более 10 МБ).",
+								type: "Error",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+							errorCount++;
+							this.currentSpecialist.errors.file.status = true;
+
+							continue;
+						}
+						break;
+					// Для всех остальных полей
+					default:
+						if (this.checkModalInput(inputKeys[i], "text")) {
+							errorCount++;
+						}
+						break;
+				}
+			}
+
+			if (errorCount > 0) {
+				return true;
+			} else {
 				return false;
 			}
 		},
@@ -485,7 +571,29 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		// Добавление нового доктора к массиву this.specialists
 		addSpecialist() {
-			console.log("Добавление");
+			if (
+				this.checkModalInputsAll([
+					"name",
+					"specialization",
+					"startWorkAge",
+					"education",
+					"advancedTraining",
+					"certificates",
+					"file",
+				])
+			)
+				return;
+
+			this.specialists.push({
+				name: "test",
+				specialization: "test",
+				startWorkAge: "10.10.2010",
+				education: "test",
+				advancedTraining: "test",
+				certificates: "test",
+				hide: false,
+				filename: "vlasov.png",
+			});
 		},
 		// Скрытие выбранного доктора
 		hideSpecialist(selectedSpecialist) {
@@ -503,6 +611,20 @@ export default {
 		},
 		// Обновление данных выбранного доктора после редактирования в массиве this.specialists
 		updateSpecialist() {
+			// Проверка на заполненность полей ввода
+			if (
+				this.checkModalInputsAll([
+					"name",
+					"specialization",
+					"startWorkAge",
+					"education",
+					"advancedTraining",
+					"certificates",
+				])
+			) {
+				return;
+			}
+
 			/* Получение текущего объекта из массива this.specialists */
 			let resultSpecialistCurrent = this.specialists.filter((specialist) => {
 				if (specialist.id === this.currentSpecialist.data.id.body) {
@@ -525,11 +647,60 @@ export default {
 
 			/* Проверка на тип загруженного файла */
 			if (this.currentSpecialist.file.type !== "image/png") {
-				this.currentSpecialist.errors.file.value =
-					"Недопустимый тип файла.";
-				this.currentSpecialist.errors.file.status = true;
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Разрешенный формат файла: png.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
 				return;
 			}
+
+			/* Проверка на размер загруженного файла */
+			let fileSize = this.currentSpecialist.file.size / 1024 / 1024;
+			if (fileSize > 10) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Превышен размер загружаемого файла (не более 10 МБ).",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+				return;
+			}
+
+			/* Загрузка файла */
+			let formData = new FormData();
+			formData.append("image", this.currentSpecialist.file);
+			formData.append("type", "specialist");
+
+			axios({
+				method: "post",
+				url: `${this.$store.state.axios.urlApi}` + `upload-file`,
+				headers: {
+					"Content-Type": "multipart/form-data",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: formData,
+			})
+				.then((response) => {
+					console.log(response.data);
+					this.currentSpecialist.data.path.body = response.data;
+					filteredSpecialistCurrent.path = response.data;
+					filteredSpecialistCurrent.filename = response.data.replace(
+						"/storage/specialists/",
+						""
+					);
+				})
+				.catch((error) => {
+					let debbugStory = {
+						title: "Ошибка.",
+						body: "Произошла ошибка при загрузке файла.",
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+					return;
+				});
+			this.closeModal();
 		},
 	},
 	mounted() {
@@ -580,6 +751,13 @@ export default {
 	transition: all 0.2s;
 }
 
+.modal-img-input.error {
+	background-color: var(--input-background-color-error);
+	border: 2px solid var(--input-border-color-error);
+
+	caret-color: red;
+}
+
 .modal-img-input::file-selector-button {
 	flex-grow: 1;
 	cursor: pointer;
@@ -588,6 +766,13 @@ export default {
 	border-radius: 5px;
 	color: white;
 	padding: 5px;
+}
+
+.modal-img-input.error::file-selector-button {
+	background-color: var(--input-border-color-error);
+	border: 2px solid var(--input-border-color-error);
+
+	caret-color: red;
 }
 
 .modal-body-img {

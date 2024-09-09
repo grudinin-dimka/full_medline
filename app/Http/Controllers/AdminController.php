@@ -116,9 +116,9 @@ class AdminController extends Controller
             'public/slides'
           );
           break;
-        case 'doctor':
+        case 'specialist':
           $path = $request->file('image')->store(
-            'public/doctor'
+            'public/specialists'
           );
           break;
       }

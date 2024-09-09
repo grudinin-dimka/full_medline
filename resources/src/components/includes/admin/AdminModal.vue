@@ -3,8 +3,8 @@
 		class="modal"
 		:class="{
 			active: modal.status,
-			create: modal.slide.create,
-			delete: modal.slide.delete,
+			create: modal.style.create,
+			delete: modal.style.delete,
 		}"
 		@click.self="closeModal()"
 	>
