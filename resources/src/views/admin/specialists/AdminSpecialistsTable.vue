@@ -5,10 +5,7 @@
 				<th>
 					<div class="table-th-container">
 						<div class="table-th-name">ID</div>
-						<div
-							class="table-th-filter"
-							@click="$emit('useFilter', 'id')"
-						>
+						<div class="table-th-filter" @click="$emit('useFilter', 'id')">
 							<icon-filter-off :width="22" :height="22" />
 						</div>
 					</div>
@@ -16,10 +13,7 @@
 				<th>
 					<div class="table-th-container">
 						<div class="table-th-name">Имя</div>
-						<div
-							class="table-th-filter"
-							@click="$emit('useFilter', 'name')"
-						>
+						<div class="table-th-filter" @click="$emit('useFilter', 'name')">
 							<icon-filter-off :width="22" :height="22" />
 						</div>
 					</div>
@@ -49,10 +43,16 @@
 		</thead>
 		<tbody>
 			<tr v-for="specialist in specialists">
-				<td>{{ specialist.id }}</td>
-				<td>{{ specialist.name }}</td>
-				<td>{{ specialist.specialization }}</td>
-				<td>
+				<td :class="{ create: specialist.create, delete: specialist.delete }">
+					{{ specialist.id }}
+				</td>
+				<td :class="{ create: specialist.create, delete: specialist.delete }">
+					{{ specialist.name }}
+				</td>
+				<td :class="{ create: specialist.create, delete: specialist.delete }">
+					{{ specialist.specialization }}
+				</td>
+				<td :class="{ create: specialist.create, delete: specialist.delete }">
 					<div class="table-td-checkbox">
 						<input
 							type="checkbox"
@@ -62,15 +62,24 @@
 						/>
 					</div>
 				</td>
-				<td>
+				<td :class="{ create: specialist.create, delete: specialist.delete }">
 					<table-container-buttons>
 						<table-button-default
 							@click="$emit('touchEditSpecialist', 'edit', specialist)"
+							:disabled="specialist.delete"
 						>
 							Изменить
 						</table-button-default>
+						<table-button-default
+							v-if="specialist.delete"
+							@click="$emit('touchRemoveSpecialist', specialist)"
+						>
+							Восстановить
+						</table-button-default>
 						<table-button-remove
-							@click="$emit('removeSpecialist', specialist)"
+							v-if="!specialist.delete"
+							@click="$emit('touchRemoveSpecialist', specialist)"
+							:disabled="specialist.create"
 						>
 							Удалить
 						</table-button-remove>
@@ -118,8 +127,25 @@ td {
 	padding: 10px;
 }
 
-th:last-of-type {
-	width: 100px;
+th:nth-of-type(1) {
+	width: 50px;
+	min-width: 50px;
+}
+
+th:nth-of-type(2) {
+	min-width: 300px;
+}
+
+th:nth-of-type(3) {
+	min-width: 150px;
+}
+
+th:nth-of-type(4) {
+	min-width: 100px;
+}
+
+th:nth-of-type(5) {
+	min-width: 150px;
 }
 
 th {
@@ -135,6 +161,18 @@ td {
 	text-align: left;
 	border: 1px solid #1f9fae;
 	background-color: #d2f2f5;
+}
+
+td.create {
+	text-align: left;
+	border: 1px solid #3cae1f;
+	background-color: #d7f5d2;
+}
+
+td.delete {
+	text-align: left;
+	border: 1px solid #ae1f1f;
+	background-color: #f5d2d2;
 }
 
 .table-th-container {
@@ -173,6 +211,13 @@ input[type="checkbox"]:checked + label {
 	}
 	to {
 		opacity: 1;
+	}
+}
+
+@media screen and (max-width: 1350px) {
+	table {
+		display: block;
+		overflow-x: scroll;
 	}
 }
 </style>

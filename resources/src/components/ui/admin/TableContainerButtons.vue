@@ -13,7 +13,10 @@ export default {
 
 <style scoped>
 .table-container-buttons {
+   min-width: 150px;
    display: flex;
    gap: 10px;
+   justify-content: justify;
+   flex-wrap: wrap;
 }
 </style>

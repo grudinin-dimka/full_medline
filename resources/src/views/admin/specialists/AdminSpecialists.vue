@@ -160,7 +160,6 @@
 		</template>
 		<template #footer>
 			<BlockButtons v-if="modal.type == 'edit'">
-				<ButtonRemove> Удалить </ButtonRemove>
 				<ButtonDefault @click="updateSpecialist"> Обновить </ButtonDefault>
 			</BlockButtons>
 			<BlockButtons v-if="modal.type == 'create'">
@@ -189,7 +188,7 @@
 			:specialists="specialists"
 			@touchEditSpecialist="openModal"
 			@touchHideSpecialist="hideSpecialist"
-			@removeSpecialist="removeSpecialist"
+			@touchRemoveSpecialist="removeSpecialist"
 			@useFilter="filterSpecialists"
 		/>
 
@@ -342,7 +341,6 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		// Открытие модального окна с доктором
 		openModal(type, specialist) {
-			console.log(specialist);
 			switch (type) {
 				case "create":
 					this.currentSpecialist.data.create.body = true;
@@ -353,6 +351,12 @@ export default {
 					this.modal.status = true;
 					break;
 				case "edit":
+					if (specialist.create) {
+						this.modal.style.create = true;						
+					} else {
+						this.modal.style.create = false;						
+					}
+
 					this.clearCurrentSpecialistData();
 
 					// Заполнение модального окна данными о специалисте
@@ -363,6 +367,7 @@ export default {
 					this.modal.type = type;
 					this.modal.title = "Редактирование";
 					this.modal.status = true;
+
 					break;
 				default:
 					let debbugStory = {
@@ -606,6 +611,8 @@ export default {
 						filename: response.data.replace("/storage/specialists/", ""),
 						path: response.data,
 						hide: false,
+						create: true,
+						delete: false,
 					});
 				})
 				.catch((error) => {
@@ -627,12 +634,21 @@ export default {
 					return specialist;
 				}
 			});
-			specialistToHide[0].hidden = true;
-			console.log(this.specialists);
+			specialistToHide[0].hide = true;
 		},
 		// Удаление выбранного доктора
-		removeSpecialist(specialist) {
-			console.log(specialist);
+		removeSpecialist(selectedSpecialist) {
+			let specialistToDelete = this.specialists.filter((specialist) => {
+				if (specialist.id === selectedSpecialist.id) {
+					return specialist;
+				}
+			});
+
+			if (specialistToDelete[0].delete == true) {
+				specialistToDelete[0].delete = false;
+			} else {
+				specialistToDelete[0].delete = true;
+			}
 		},
 		// Обновление данных выбранного доктора после редактирования в массиве this.specialists
 		updateSpecialist() {
@@ -709,7 +725,6 @@ export default {
 				data: formData,
 			})
 				.then((response) => {
-					console.log(response.data);
 					this.currentSpecialist.data.path.body = response.data;
 					filteredSpecialistCurrent.path = response.data;
 					filteredSpecialistCurrent.filename = response.data.replace(
@@ -740,6 +755,8 @@ export default {
 
 				// Удаление свойства url
 				for (let key in this.specialists) {
+					this.specialists[key].create = false;
+					this.specialists[key].delete = false;
 					delete this.specialists[key].url;
 				}
 

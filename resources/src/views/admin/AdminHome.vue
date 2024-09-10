@@ -60,6 +60,7 @@
 				ref="fileUpload"
 				:class="{ error: currentSlide.errors.file.status }"
 				placeholder="Файл"
+				:disabled="currentSlide.data.delete.body"
 			/>
 		</template>
 		<template #body>
@@ -79,6 +80,7 @@
 							@blur="checkModalInput('name', 'text')"
 							:class="{ error: currentSlide.errors.name.status }"
 							placeholder="Название слайда"
+							:disabled="currentSlide.data.delete.body"
 						/>
 					</article>
 					<span v-if="currentSlide.errors.name.status">
@@ -100,6 +102,7 @@
 							@blur="checkModalInput('link', 'text')"
 							:class="{ error: currentSlide.errors.link.status }"
 							placeholder="Ссылка слайда"
+							:disabled="currentSlide.data.delete.body"
 						/>
 					</article>
 					<span v-if="currentSlide.errors.link.status">
