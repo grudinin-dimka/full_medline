@@ -40,7 +40,7 @@
 					<input
 						type="text"
 						ref="inputName"
-						placeholder="Имя"
+						placeholder="введите фио"
 						v-model="currentSpecialist.data.name.body"
 						:class="{ error: currentSpecialist.errors.name.status }"
 						@input="currentSpecialist.data.name.edited = true"
@@ -59,7 +59,7 @@
 					<input
 						type="text"
 						ref="inputSpecialization"
-						placeholder="Имя"
+						placeholder="введите специализацию"
 						v-model="currentSpecialist.data.specialization.body"
 						:class="{
 							error: currentSpecialist.errors.specialization.status,
@@ -80,7 +80,7 @@
 					<input
 						type="date"
 						ref="inputStartWorkAge"
-						placeholder="Имя"
+						placeholder="введите дату"
 						v-model="currentSpecialist.data.startWorkAge.body"
 						:class="{
 							error: currentSpecialist.errors.startWorkAge.status,
@@ -92,18 +92,42 @@
 						{{ currentSpecialist.errors.startWorkAge.value }}
 					</span-error>
 				</article>
-				<!-- Обучение -->
+				<!-- Повышение квалификации -->
 				<article>
 					<element-input-label>
-						Обучение*
-						<span v-if="currentSpecialist.data.education.edited"> (Изменено) </span>
+						Узкопрофильная специализация*
+						<span v-if="currentSpecialist.data.specializationAdvanced.edited"> (Изменено) </span>
 					</element-input-label>
 					<textarea
 						rows="4"
 						ref="inputEducation"
-						placeholder="Имя"
+						placeholder="введите специализацию"
+						v-model="currentSpecialist.data.specializationAdvanced.body"
+						:class="{
+							error: currentSpecialist.errors.specializationAdvanced.status,
+						}"
+						@input="currentSpecialist.data.specializationAdvanced.edited = true"
+						@blur="checkModalInput('specializationAdvanced', 'text')"
+					>
+					</textarea>
+					<span-error v-if="currentSpecialist.errors.specializationAdvanced.status">
+						{{ currentSpecialist.errors.specializationAdvanced.value }}
+					</span-error>
+				</article>
+				<!-- Сертификаты -->
+				<article>
+					<element-input-label>
+						Обучение и квалифиция*
+						<span v-if="currentSpecialist.data.education.edited"> (Изменено) </span>
+					</element-input-label>
+					<textarea
+						rows="4"
+						ref="inputStartWorkAge"
+						placeholder="введите обучение и квалифицию"
 						v-model="currentSpecialist.data.education.body"
-						:class="{ error: currentSpecialist.errors.education.status }"
+						:class="{
+							error: currentSpecialist.errors.education.status,
+						}"
 						@input="currentSpecialist.data.education.edited = true"
 						@blur="checkModalInput('education', 'text')"
 					>
@@ -112,48 +136,25 @@
 						{{ currentSpecialist.errors.education.value }}
 					</span-error>
 				</article>
-				<!-- Повышение квалификации -->
+				<!-- Ссылка на продокторов -->
 				<article>
 					<element-input-label>
-						Повышение квалификации*
-						<span v-if="currentSpecialist.data.advancedTraining.edited"> (Изменено) </span>
+						Ссылка на продокторов*
+						<span> (Изменено) </span>
 					</element-input-label>
-					<textarea
-						rows="4"
-						ref="inputEducation"
-						placeholder="Имя"
-						v-model="currentSpecialist.data.advancedTraining.body"
+					<input
+						type="text"
+						ref="inputLink"
+						placeholder="введите ссылку"
+						v-model="currentSpecialist.data.link.body"
 						:class="{
-							error: currentSpecialist.errors.advancedTraining.status,
+							error: currentSpecialist.errors.link.status,
 						}"
-						@input="currentSpecialist.data.advancedTraining.edited = true"
-						@blur="checkModalInput('advancedTraining', 'text')"
-					>
-					</textarea>
-					<span-error v-if="currentSpecialist.errors.advancedTraining.status">
-						{{ currentSpecialist.errors.advancedTraining.value }}
-					</span-error>
-				</article>
-				<!-- Сертификаты -->
-				<article>
-					<element-input-label>
-						Сертификаты*
-						<span v-if="currentSpecialist.data.certificates.edited"> (Изменено) </span>
-					</element-input-label>
-					<textarea
-						rows="4"
-						ref="inputStartWorkAge"
-						placeholder="Имя"
-						v-model="currentSpecialist.data.certificates.body"
-						:class="{
-							error: currentSpecialist.errors.certificates.status,
-						}"
-						@input="currentSpecialist.data.certificates.edited = true"
-						@blur="checkModalInput('certificates', 'text')"
-					>
-					</textarea>
-					<span-error v-if="currentSpecialist.errors.certificates.status">
-						{{ currentSpecialist.errors.certificates.value }}
+						@input="currentSpecialist.data.link.edited = true"
+						@blur="checkModalInput('link', 'text')"
+					/>
+					<span-error v-if="currentSpecialist.errors.link.status">
+						{{ currentSpecialist.errors.link.value }}
 					</span-error>
 				</article>
 			</div>
@@ -270,13 +271,13 @@ export default {
 						status: false,
 						value: null,
 					},
-					advancedTraining: {
+					specializationAdvanced: {
 						status: false,
 						value: null,
 					},
-					certificates: {
+					link: {
 						status: false,
-						value: null,
+						value: null,						
 					},
 					file: {
 						status: false,
@@ -304,13 +305,13 @@ export default {
 						body: "",
 						edited: false,
 					},
-					advancedTraining: {
+					specializationAdvanced: {
 						body: "",
 						edited: false,
 					},
-					certificates: {
+					link: {
 						body: "",
-						edited: false,
+						edited: false,						
 					},
 					filename: {
 						body: "",
@@ -360,6 +361,8 @@ export default {
 					this.clearCurrentSpecialistData();
 
 					// Заполнение модального окна данными о специалисте
+
+					console.log(specialist);
 					for (let key in specialist) {
 						this.currentSpecialist.data[key].body = specialist[key];
 					}
@@ -489,6 +492,8 @@ export default {
 
 							continue;
 						}
+
+						this.currentSpecialist.errors.file.status = false;
 						break;
 					// Для всех остальных полей
 					default:
@@ -538,7 +543,7 @@ export default {
 			switch (column) {
 				case "id":
 					if (type == "default") {
-						this.specialists.sort(function (a, b) {
+						this.specialists.sort((a, b) => {
 							if (a.id > b.id) {
 								return 1;
 							}
@@ -552,16 +557,32 @@ export default {
 					}
 
 					if (type == "reverse") {
+						this.specialists.sort((a, b) => {
+							if (a.id < b.id) {
+								return 1;
+							}
+							if (a.id > b.id) {
+								return -1;
+							}
+							// a должно быть равным b
+							return 0;
+						});
 						console.log("column = " + column + ", type = " + type);
 					}
 					break;
 				case "name":
 					if (type == "default") {
-						this.specialists.sort(function (a, b) {
-							if (a.name > b.name) {
+						this.specialists.sort((a, b) => {
+							let aName = a.name.toLowerCase();
+							let bName = b.name.toLowerCase();
+
+							let aNameFirstLetter = aName[0].charCodeAt(0);
+							let bNameFirstLetter = bName[0].charCodeAt(0);
+
+							if (aNameFirstLetter > bNameFirstLetter) {
 								return 1;
 							}
-							if (a.name < b.name) {
+							if (aNameFirstLetter < bNameFirstLetter) {
 								return -1;
 							}
 							// a должно быть равным b
@@ -571,13 +592,30 @@ export default {
 					}
 
 					if (type == "reverse") {
+						this.specialists.sort((a, b) => {
+							let aName = a.name.toLowerCase();
+							let bName = b.name.toLowerCase();
+
+							let aNameFirstLetter = aName[0].charCodeAt(0);
+							let bNameFirstLetter = bName[0].charCodeAt(0);
+
+							if (aNameFirstLetter < bNameFirstLetter) {
+								return 1;
+							}
+							if (aNameFirstLetter > bNameFirstLetter) {
+								return -1;
+							}
+							// a должно быть равным b
+							return 0;
+						});
+
 						console.log("column = " + column + ", type = " + type);
 					}
 
 					break;
 				case "hide":
 					if (type == "default") {
-						this.specialists.sort(function (a, b) {
+						this.specialists.sort((a, b) => {
 							if (a.hide > b.hide) {
 								return 1;
 							}
@@ -591,6 +629,16 @@ export default {
 					}
 
 					if (type == "reverse") {
+						this.specialists.sort((a, b) => {
+							if (a.hide < b.hide) {
+								return 1;
+							}
+							if (a.hide > b.hide) {
+								return -1;
+							}
+							// a должно быть равным b
+							return 0;
+						});
 						console.log("column = " + column + ", type = " + type);
 					}
 					break;
@@ -611,8 +659,8 @@ export default {
 					"specialization",
 					"startWorkAge",
 					"education",
-					"advancedTraining",
-					"certificates",
+					"specializationAdvanced",
+					"link",
 					"file",
 				])
 			)
@@ -649,9 +697,9 @@ export default {
 						name: this.currentSpecialist.data.name.body,
 						specialization: this.currentSpecialist.data.specialization.body,
 						startWorkAge: this.currentSpecialist.data.startWorkAge.body,
+						specializationAdvanced: this.currentSpecialist.data.specializationAdvanced.body,
 						education: this.currentSpecialist.data.education.body,
-						advancedTraining: this.currentSpecialist.data.advancedTraining.body,
-						certificates: this.currentSpecialist.data.certificates.body,
+						link: this.currentSpecialist.data.link.body,
 						filename: response.data.replace("/storage/specialists/", ""),
 						path: response.data,
 						hide: false,
@@ -707,8 +755,8 @@ export default {
 					"specialization",
 					"startWorkAge",
 					"education",
-					"advancedTraining",
-					"certificates",
+					"specializationAdvanced",
+					"link",
 				])
 			) {
 				return;

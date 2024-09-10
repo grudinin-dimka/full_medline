@@ -16,9 +16,9 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('specialization')->nullable();
             $table->date('startWorkAge')->nullable()->default(date('c'));
+            $table->text('specializationAdvanced')->nullable();
             $table->text('education')->nullable();
-            $table->text('advancedTraining')->nullable();
-            $table->text('certificates')->nullable();
+            $table->text('link')->nullable();
             $table->boolean('hide')->default(false);
             $table->text('filename')->nullable();
             $table->timestamps();
@@ -28,9 +28,9 @@ return new class extends Migration
             "name" => "Власов Павел Александрович",
             "specialization" => "Главный врач, кардиолог.",
             "startWorkAge" => date("c"),
+            "specializationAdvanced" => "На уточнении.",
             "education" => "Уральский государственный медицинский университет, 2006 г.",
-            "advancedTraining" => "На уточнении.",
-            "certificates" => "«кардиология», «терапия», «организация здравоохранения и общественное здоровье».",
+            "link" => "www.vlasov.ru",
             "hide" => false,
             "filename" => "vlasov.png"
         ]);
@@ -39,9 +39,9 @@ return new class extends Migration
             "name" => "Кузовникова Тамара Георгиевна",
             "specialization" => "Терапевт.",
             "startWorkAge" => date("c"),
+            "specializationAdvanced" => "На уточнении.",
             "education" => "Амурская государственная медицинская академия, 1985 г.",
-            "advancedTraining" => "На уточнении.",
-            "certificates" => "«Терапия»",
+            "link" => "www.kuzovnikova.ru",
             "hide" => false,
             "filename" => "kuzovnikova.png"
         ]);
@@ -50,11 +50,11 @@ return new class extends Migration
             "name" => "Лукьянов Сергей Анатольевич",
             "specialization" => "Хирург-эндокринолог, онколог, детский онколог.",
             "startWorkAge" => date("c"),
-            "education" => "Южно-Уральский государственный медицинский университет, 2004 г.",
-            "advancedTraining" => "На уточнении.",
-            "certificates" => "«хирургия», «лапароскопическая хирургия», «онкология», «ультразвуковая диагностика».",
+            "specializationAdvanced" => "На уточнении.",
+            "education" => "Амурская государственная медицинская академия, 1985 г.",
+            "link" => "www.kuzovnikova.ru",
             "hide" => false,
-            "filename" => "lukyanov.png"
+            "filename" => "kuzovnikova.png"
         ]);
     }
 

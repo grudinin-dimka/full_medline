@@ -14,7 +14,14 @@
 						</div>
 						<div
 							class="table-th-filter"
-							v-if="filters.id.status"
+							v-if="filters.id.status && filters.id.type === 'default'"
+							@click="useFilter('id', 'reverse')"
+						>
+							<icon-filter-on :width="22" :height="22" />
+						</div>
+						<div
+							class="table-th-filter"
+							v-if="filters.id.status && filters.id.type === 'reverse'"
 							@click="useFilter('id', 'default')"
 						>
 							<icon-filter-on :width="22" :height="22" />
@@ -33,7 +40,14 @@
 						</div>
 						<div
 							class="table-th-filter"
-							v-if="filters.name.status"
+							v-if="filters.name.status && filters.name.type === 'default'"
+							@click="useFilter('name', 'reverse')"
+						>
+							<icon-filter-on :width="22" :height="22" />
+						</div>
+						<div
+							class="table-th-filter"
+							v-if="filters.name.status && filters.name.type === 'reverse'"
 							@click="useFilter('name', 'default')"
 						>
 							<icon-filter-on :width="22" :height="22" />
@@ -71,7 +85,14 @@
 						</div>
 						<div
 							class="table-th-filter"
-							v-if="filters.hide.status"
+							v-if="filters.hide.status && filters.hide.type === 'default'"
+							@click="useFilter('hide', 'reverse')"
+						>
+							<icon-filter-on :width="22" :height="22" />
+						</div>
+						<div
+							class="table-th-filter"
+							v-if="filters.hide.status && filters.hide.type === 'reverse'"
 							@click="useFilter('hide', 'default')"
 						>
 							<icon-filter-on :width="22" :height="22" />
@@ -174,7 +195,7 @@ export default {
 		return {
 			filters: {
 				id: {
-					status: false,
+					status: true,
 					type: "default",
 				},
 				name: {
@@ -195,6 +216,7 @@ export default {
 	methods: {
 		useFilter(column, type) {
 			this.filters[column].status = true;
+			this.filters[column].type = type;
 
 			for (let key in this.filters) {
 				if (key !== column) {
