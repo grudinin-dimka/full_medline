@@ -29,10 +29,10 @@ export default {
 <style scoped>
    svg {
       cursor: pointer;
-      fill: rgb(150, 150, 150);
+      fill: #90cad1;
    }
 
    svg:hover {
-      fill: black;
+      fill: #3fbecd;
    }
 </style>

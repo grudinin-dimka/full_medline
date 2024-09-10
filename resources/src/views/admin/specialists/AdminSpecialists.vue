@@ -678,7 +678,11 @@ export default {
 					return specialist;
 				}
 			});
-			specialistToHide[0].hide = true;
+			if (specialistToHide[0].hide === true) {
+				specialistToHide[0].hide = false;
+			} else {
+				specialistToHide[0].hide = true;
+			}
 		},
 		// Удаление выбранного доктора
 		removeSpecialist(selectedSpecialist) {

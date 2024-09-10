@@ -98,18 +98,18 @@
 				</td>
 				<td :class="{ create: specialist.create, delete: specialist.delete }">
 					<div class="table-td-checkbox">
-						<icon-visible
+						<icon-visible-table
 							:width="36"
 							:height="36"
 							v-if="!specialist.hide"
 							@click="$emit('touchHideSpecialist', specialist)"
-						></icon-visible>
-						<icon-hide
+						></icon-visible-table>
+						<icon-hide-table
 							:width="36"
 							:height="36"
 							v-if="specialist.hide"
 							@click="$emit('touchHideSpecialist', specialist)"
-						></icon-hide>
+						></icon-hide-table>
 					</div>
 				</td>
 				<td :class="{ create: specialist.create, delete: specialist.delete }">
@@ -151,6 +151,9 @@ import IconFilterOff from "../../../components/icons/IconFilterOff.vue";
 import IconVisible from "../../../components/icons/IconVisible.vue";
 import IconHide from "../../../components/icons/IconHide.vue";
 
+import IconVisibleTable from "../../../components/icons/IconVisibleTable.vue";
+import IconHideTable from "../../../components/icons/IconHideTable.vue";
+
 export default {
 	components: {
 		TableButtonDefault,
@@ -158,8 +161,8 @@ export default {
 		TableContainerButtons,
 		IconFilterOn,
 		IconFilterOff,
-		IconVisible,
-		IconHide,
+		IconVisibleTable,
+		IconHideTable,
 	},
 	props: {
 		specialists: {
