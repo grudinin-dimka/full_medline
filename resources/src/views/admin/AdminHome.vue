@@ -6,9 +6,7 @@
 		<template
 			#button-hide
 			v-if="
-				(modal.type == 'edit') &
-				!currentSlide.data.delete.body &
-				!currentSlide.data.create.body
+				(modal.type == 'edit') & !currentSlide.data.delete.body & !currentSlide.data.create.body
 			"
 		>
 			<IconHide
@@ -30,24 +28,12 @@
 		<template
 			#title
 			v-if="
-				(modal.type == 'edit') &
-				!currentSlide.data.delete.body &
-				!currentSlide.data.create.body
+				(modal.type == 'edit') & !currentSlide.data.delete.body & !currentSlide.data.create.body
 			"
 		>
-			<icon-arrow
-				:width="16"
-				:height="16"
-				:rotate="-90"
-				@click="changeSlideOrder('down')"
-			/>
+			<icon-arrow :width="16" :height="16" :rotate="-90" @click="changeSlideOrder('down')" />
 			#{{ currentSlide.data.order.body }}
-			<icon-arrow
-				:width="16"
-				:height="16"
-				:rotate="90"
-				@click="changeSlideOrder('up')"
-			/>
+			<icon-arrow :width="16" :height="16" :rotate="90" @click="changeSlideOrder('up')" />
 		</template>
 		<template #img>
 			<div
@@ -125,31 +111,20 @@
 		<template #footer>
 			<BlockButtons v-if="modal.type == 'edit'">
 				<ButtonRemove
-					v-if="
-						!currentSlide.data.create.body &
-						!currentSlide.data.delete.body
-					"
+					v-if="!currentSlide.data.create.body & !currentSlide.data.delete.body"
 					@click.prevent="markDeleteSlide"
 				>
 					Удалить
 				</ButtonRemove>
-				<ButtonDefault
-					v-if="!currentSlide.data.delete.body"
-					@click.prevent="updateSlide"
-				>
+				<ButtonDefault v-if="!currentSlide.data.delete.body" @click.prevent="updateSlide">
 					Обновить
 				</ButtonDefault>
-				<ButtonDefault
-					v-if="currentSlide.data.delete.body"
-					@click.prevent="markDeleteSlide"
-				>
+				<ButtonDefault v-if="currentSlide.data.delete.body" @click.prevent="markDeleteSlide">
 					Восстановить
 				</ButtonDefault>
 			</BlockButtons>
 			<BlockButtons v-if="modal.type == 'create'">
-				<ButtonDefault @click.prevent="createSlide">
-					Создать
-				</ButtonDefault>
+				<ButtonDefault @click.prevent="createSlide"> Создать </ButtonDefault>
 			</BlockButtons>
 		</template>
 	</modal>
@@ -215,9 +190,7 @@
 			</div>
 		</div>
 		<BlockButtons>
-			<ButtonDefault @click="openSlide(null, 'create')">
-				Добавить
-			</ButtonDefault>
+			<ButtonDefault @click="openSlide(null, 'create')"> Добавить </ButtonDefault>
 		</BlockButtons>
 	</block>
 
@@ -247,18 +220,12 @@
 					@input="controlSymbols('title')"
 				>
 				</textarea>
-				<span
-					>{{ footer.title.symbolsCount }}/{{
-						footer.title.symbolsCountMax
-					}}</span
-				>
+				<span>{{ footer.title.symbolsCount }}/{{ footer.title.symbolsCountMax }}</span>
 			</div>
 			<!-- Дополнение к заголовку -->
 			<element-input-label>
 				Дополнение к заголовку
-				<span v-if="footer.titleDesc.edited"
-					>(Изменено)</span
-				></element-input-label
+				<span v-if="footer.titleDesc.edited">(Изменено)</span></element-input-label
 			>
 			<div class="block-textarea">
 				<textarea
@@ -268,11 +235,7 @@
 					@input="controlSymbols('titleDesc')"
 				>
 				</textarea>
-				<span
-					>{{ footer.titleDesc.symbolsCount }}/{{
-						footer.titleDesc.symbolsCountMax
-					}}</span
-				>
+				<span>{{ footer.titleDesc.symbolsCount }}/{{ footer.titleDesc.symbolsCountMax }}</span>
 			</div>
 			<!-- Лицензия -->
 			<element-input-label>
@@ -307,17 +270,13 @@
 				>
 				</textarea>
 				<span
-					>{{ footer.licenseDesc.symbolsCount }}/{{
-						footer.licenseDesc.symbolsCountMax
-					}}</span
+					>{{ footer.licenseDesc.symbolsCount }}/{{ footer.licenseDesc.symbolsCountMax }}</span
 				>
 			</div>
 			<!-- Подвал -->
 			<element-input-label>
 				Подвал
-				<span v-if="footer.footer.edited"
-					>(Изменено)</span
-				></element-input-label
+				<span v-if="footer.footer.edited">(Изменено)</span></element-input-label
 			>
 			<div class="block-textarea">
 				<textarea
@@ -327,11 +286,7 @@
 					@input="controlSymbols('footer')"
 				>
 				</textarea>
-				<span>
-					{{ footer.footer.symbolsCount }}/{{
-						footer.footer.symbolsCountMax
-					}}
-				</span>
+				<span> {{ footer.footer.symbolsCount }}/{{ footer.footer.symbolsCountMax }} </span>
 			</div>
 		</div>
 	</block>
@@ -529,9 +484,7 @@ export default {
 			let errorLog = {};
 			switch (inputType) {
 				case "text":
-					errorLog = this.checkInputText(
-						this.currentSlide.data[dataKey].body
-					);
+					errorLog = this.checkInputText(this.currentSlide.data[dataKey].body);
 					break;
 				default:
 					break;
@@ -773,8 +726,7 @@ export default {
 					filteredSlidePrevious = resultSlidePrevious[0];
 				} else {
 					resultSlidePrevious = this.slides.filter(
-						(slide) =>
-							slide.order === this.currentSlide.data.order.body - 1
+						(slide) => slide.order === this.currentSlide.data.order.body - 1
 					);
 					filteredSlidePrevious = resultSlidePrevious[0];
 				}
@@ -787,21 +739,17 @@ export default {
 				let filteredSlideCurrent = resultSlideCurrent[0];
 
 				// Проверка на то, является ли текущий слайд последним
-				let lastSlideStatus =
-					this.currentSlide.data.order.body == this.slides.length;
+				let lastSlideStatus = this.currentSlide.data.order.body == this.slides.length;
 
 				/* Объявление переменных следующего слайда */
 				let resultSlideNext = [null];
 				let filteredSlideNext = [null];
 				if (lastSlideStatus) {
-					resultSlideNext = this.slides.filter(
-						(slide) => slide.order === 1
-					);
+					resultSlideNext = this.slides.filter((slide) => slide.order === 1);
 					filteredSlideNext = resultSlideNext[0];
 				} else {
 					resultSlideNext = this.slides.filter(
-						(slide) =>
-							slide.order === this.currentSlide.data.order.body + 1
+						(slide) => slide.order === this.currentSlide.data.order.body + 1
 					);
 					filteredSlideNext = resultSlideNext[0];
 				}
@@ -900,10 +848,7 @@ export default {
 									name: this.$refs.inputName.value,
 									link: this.$refs.inputLink.value,
 									path: response.data,
-									filename: response.data.replace(
-										"/storage/slides/",
-										""
-									),
+									filename: response.data.replace("/storage/slides/", ""),
 									hide: false,
 									order: 1 + this.slides[this.slides.length - 1].order,
 									create: true,
@@ -1009,10 +954,7 @@ export default {
 					.then((response) => {
 						this.currentSlide.data.path.body = response.data;
 						filteredSlideCurrent.path = response.data;
-						filteredSlideCurrent.filename = response.data.replace(
-							"/storage/slides/",
-							""
-						);
+						filteredSlideCurrent.filename = response.data.replace("/storage/slides/", "");
 					})
 					.catch((error) => {
 						console.log(error);
@@ -1131,10 +1073,7 @@ export default {
 			this.footer[`${obj}`].edited = true;
 
 			// Проверка поля на максимальное количество символов
-			if (
-				this.footer[`${obj}`].body.length >=
-				this.footer[`${obj}`].symbolsCountMax
-			) {
+			if (this.footer[`${obj}`].body.length >= this.footer[`${obj}`].symbolsCountMax) {
 				// Если больше, то обрезаем
 				this.footer[`${obj}`].body = this.footer[`${obj}`].body.slice(
 					0,

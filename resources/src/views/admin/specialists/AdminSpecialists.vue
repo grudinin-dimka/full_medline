@@ -35,9 +35,7 @@
 				<article>
 					<element-input-label>
 						Имя доктора*
-						<span v-if="currentSpecialist.data.name.edited">
-							(Изменено)
-						</span>
+						<span v-if="currentSpecialist.data.name.edited"> (Изменено) </span>
 					</element-input-label>
 					<input
 						type="text"
@@ -56,9 +54,7 @@
 				<article>
 					<element-input-label>
 						Специализация*
-						<span v-if="currentSpecialist.data.specialization.edited">
-							(Изменено)
-						</span>
+						<span v-if="currentSpecialist.data.specialization.edited"> (Изменено) </span>
 					</element-input-label>
 					<input
 						type="text"
@@ -71,9 +67,7 @@
 						@input="currentSpecialist.data.specialization.edited = true"
 						@blur="checkModalInput('specialization', 'text')"
 					/>
-					<span-error
-						v-if="currentSpecialist.errors.specialization.status"
-					>
+					<span-error v-if="currentSpecialist.errors.specialization.status">
 						{{ currentSpecialist.errors.specialization.value }}
 					</span-error>
 				</article>
@@ -81,9 +75,7 @@
 				<article>
 					<element-input-label>
 						Дата начала работы*
-						<span v-if="currentSpecialist.data.startWorkAge.edited">
-							(Изменено)
-						</span>
+						<span v-if="currentSpecialist.data.startWorkAge.edited"> (Изменено) </span>
 					</element-input-label>
 					<input
 						type="date"
@@ -104,9 +96,7 @@
 				<article>
 					<element-input-label>
 						Обучение*
-						<span v-if="currentSpecialist.data.education.edited">
-							(Изменено)
-						</span>
+						<span v-if="currentSpecialist.data.education.edited"> (Изменено) </span>
 					</element-input-label>
 					<textarea
 						rows="4"
@@ -126,9 +116,7 @@
 				<article>
 					<element-input-label>
 						Повышение квалификации*
-						<span v-if="currentSpecialist.data.advancedTraining.edited">
-							(Изменено)
-						</span>
+						<span v-if="currentSpecialist.data.advancedTraining.edited"> (Изменено) </span>
 					</element-input-label>
 					<textarea
 						rows="4"
@@ -142,9 +130,7 @@
 						@blur="checkModalInput('advancedTraining', 'text')"
 					>
 					</textarea>
-					<span-error
-						v-if="currentSpecialist.errors.advancedTraining.status"
-					>
+					<span-error v-if="currentSpecialist.errors.advancedTraining.status">
 						{{ currentSpecialist.errors.advancedTraining.value }}
 					</span-error>
 				</article>
@@ -152,9 +138,7 @@
 				<article>
 					<element-input-label>
 						Сертификаты*
-						<span v-if="currentSpecialist.data.certificates.edited">
-							(Изменено)
-						</span>
+						<span v-if="currentSpecialist.data.certificates.edited"> (Изменено) </span>
 					</element-input-label>
 					<textarea
 						rows="4"
@@ -210,9 +194,7 @@
 		/>
 
 		<block-buttons>
-			<button-default @click="openModal('create', null)">
-				Добавить
-			</button-default>
+			<button-default @click="openModal('create', null)"> Добавить </button-default>
 		</block-buttons>
 	</block>
 </template>
@@ -360,6 +342,7 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		// Открытие модального окна с доктором
 		openModal(type, specialist) {
+			console.log(specialist);
 			switch (type) {
 				case "create":
 					this.currentSpecialist.data.create.body = true;
@@ -432,9 +415,7 @@ export default {
 			let errorLog = {};
 			switch (inputType) {
 				case "text":
-					errorLog = this.checkInputText(
-						this.currentSpecialist.data[dataKey].body
-					);
+					errorLog = this.checkInputText(this.currentSpecialist.data[dataKey].body);
 					break;
 				default:
 					break;
@@ -528,6 +509,10 @@ export default {
 
 				this.currentSpecialist.data[key].body = "";
 			}
+
+			// Очистка полей ввода файла
+			this.currentSpecialist.file = "";
+			this.$refs.fileUpload.value = "";
 		},
 		// Очистка состояния редактирования
 		clearCurrentSpecialistEdited() {
@@ -592,17 +577,48 @@ export default {
 				}
 			}
 
-			this.specialists.push({
-				id: 1 + maxId,
-				name: this.currentSpecialist.data.name.body,
-				specialization: this.currentSpecialist.data.specialization.body,
-				startWorkAge: this.currentSpecialist.data.startWorkAge.body,
-				education: this.currentSpecialist.data.education.body,
-				advancedTraining: this.currentSpecialist.data.advancedTraining.body,
-				certificates: this.currentSpecialist.data.certificates.body,
-				hide: false,
-				filename: "vlasov.png",
-			});
+			/* Присваивание данных поля ввода файла пользователем в переменную */
+			this.currentSpecialist.file = this.$refs.fileUpload.files[0];
+
+			/* Загрузка файла */
+			let formData = new FormData();
+			formData.append("image", this.currentSpecialist.file);
+			formData.append("type", "specialist");
+
+			axios({
+				method: "post",
+				url: `${this.$store.state.axios.urlApi}` + `upload-file`,
+				headers: {
+					"Content-Type": "multipart/form-data",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: formData,
+			})
+				.then((response) => {
+					this.specialists.push({
+						id: 1 + maxId,
+						name: this.currentSpecialist.data.name.body,
+						specialization: this.currentSpecialist.data.specialization.body,
+						startWorkAge: this.currentSpecialist.data.startWorkAge.body,
+						education: this.currentSpecialist.data.education.body,
+						advancedTraining: this.currentSpecialist.data.advancedTraining.body,
+						certificates: this.currentSpecialist.data.certificates.body,
+						filename: response.data.replace("/storage/specialists/", ""),
+						path: response.data,
+						hide: false,
+					});
+				})
+				.catch((error) => {
+					let debbugStory = {
+						title: "Ошибка.",
+						body: "Произошла ошибка при загрузке файла.",
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+					return;
+				});
+
+			this.closeModal();
 		},
 		// Скрытие выбранного доктора
 		hideSpecialist(selectedSpecialist) {
@@ -644,8 +660,7 @@ export default {
 
 			/* Изменение выбранного доктора в массиве this.specialists */
 			for (let key in filteredSpecialistCurrent) {
-				filteredSpecialistCurrent[key] =
-					this.currentSpecialist.data[key].body;
+				filteredSpecialistCurrent[key] = this.currentSpecialist.data[key].body;
 			}
 
 			/* Присваивание данных поля ввода файла пользователем в переменную */
@@ -662,6 +677,7 @@ export default {
 					type: "Error",
 				};
 				this.$store.commit("debuggerState", debbugStory);
+				this.currentSpecialist.errors.file.status = true;
 				return;
 			}
 
@@ -674,6 +690,7 @@ export default {
 					type: "Error",
 				};
 				this.$store.commit("debuggerState", debbugStory);
+				this.currentSpecialist.errors.file.status = true;
 				return;
 			}
 
