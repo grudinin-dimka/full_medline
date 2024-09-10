@@ -34,7 +34,7 @@
 				<!-- Имя доктора -->
 				<article>
 					<element-input-label>
-						Имя доктора*
+						ФИО доктора*
 						<span v-if="currentSpecialist.data.name.edited"> (Изменено) </span>
 					</element-input-label>
 					<input
@@ -177,7 +177,7 @@
 		<block-title>
 			<template #title>Список врачей</template>
 			<template #buttons>
-				<icon-save :width="28" :height="28" @click="" />
+				<icon-save :width="28" :height="28" @click="saveSpecialistChanges" />
 			</template>
 		</block-title>
 
@@ -352,9 +352,9 @@ export default {
 					break;
 				case "edit":
 					if (specialist.create) {
-						this.modal.style.create = true;						
+						this.modal.style.create = true;
 					} else {
-						this.modal.style.create = false;						
+						this.modal.style.create = false;
 					}
 
 					this.clearCurrentSpecialistData();
@@ -534,26 +534,70 @@ export default {
 		/* _____________________________________________________*/
 		/* 3. Фильтрация                                        */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		filterSpecialists(type) {
-			if (type == "id") {
-				this.specialists.sort((a, b) => {
-					b - a;
-				});
-				console.log("id");
-			}
+		filterSpecialists(column, type) {
+			switch (column) {
+				case "id":
+					if (type == "default") {
+						this.specialists.sort(function (a, b) {
+							if (a.id > b.id) {
+								return 1;
+							}
+							if (a.id < b.id) {
+								return -1;
+							}
+							// a должно быть равным b
+							return 0;
+						});
+						console.log("column = " + column + ", type = " + type);
+					}
 
-			if (type == "name") {
-				this.specialists.sort((a, b) => {
-					a + b;
-				});
-				console.log("name");
-			}
+					if (type == "reverse") {
+						console.log("column = " + column + ", type = " + type);
+					}
+					break;
+				case "name":
+					if (type == "default") {
+						this.specialists.sort(function (a, b) {
+							if (a.name > b.name) {
+								return 1;
+							}
+							if (a.name < b.name) {
+								return -1;
+							}
+							// a должно быть равным b
+							return 0;
+						});
+						console.log("column = " + column + ", type = " + type);
+					}
 
-			if (type == "specialization") {
-				this.specialists.sort((a, b) => {
-					a + b;
-				});
-				console.log("specialization");
+					if (type == "reverse") {
+						console.log("column = " + column + ", type = " + type);
+					}
+
+					break;
+				case "hide":
+					if (type == "default") {
+						this.specialists.sort(function (a, b) {
+							if (a.hide > b.hide) {
+								return 1;
+							}
+							if (a.hide < b.hide) {
+								return -1;
+							}
+							// a должно быть равным b
+							return 0;
+						});
+						console.log("column = " + column + ", type = " + type);
+					}
+
+					if (type == "reverse") {
+						console.log("column = " + column + ", type = " + type);
+					}
+					break;
+				case "specialization":
+					break;
+				default:
+					break;
 			}
 		},
 		/* _____________________________________________________*/
@@ -742,6 +786,12 @@ export default {
 					return;
 				});
 			this.closeModal();
+		},
+		/* _____________________________________________________*/
+		/* 5. Сохранение                                        */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		saveSpecialistChanges() {
+			console.log(this.specialists);
 		},
 	},
 	mounted() {

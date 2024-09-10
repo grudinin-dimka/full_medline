@@ -5,32 +5,76 @@
 				<th>
 					<div class="table-th-container">
 						<div class="table-th-name">ID</div>
-						<div class="table-th-filter" @click="$emit('useFilter', 'id')">
+						<div
+							class="table-th-filter"
+							v-if="!filters.id.status"
+							@click="useFilter('id', 'default')"
+						>
 							<icon-filter-off :width="22" :height="22" />
+						</div>
+						<div
+							class="table-th-filter"
+							v-if="filters.id.status"
+							@click="useFilter('id', 'default')"
+						>
+							<icon-filter-on :width="22" :height="22" />
 						</div>
 					</div>
 				</th>
 				<th>
 					<div class="table-th-container">
 						<div class="table-th-name">Имя</div>
-						<div class="table-th-filter" @click="$emit('useFilter', 'name')">
+						<div
+							class="table-th-filter"
+							v-if="!filters.name.status"
+							@click="useFilter('name', 'default')"
+						>
 							<icon-filter-off :width="22" :height="22" />
+						</div>
+						<div
+							class="table-th-filter"
+							v-if="filters.name.status"
+							@click="useFilter('name', 'default')"
+						>
+							<icon-filter-on :width="22" :height="22" />
 						</div>
 					</div>
 				</th>
 				<th>
 					<div class="table-th-container">
 						<div class="table-th-name">Специальность</div>
-						<div class="table-th-filter">
+						<div
+							class="table-th-filter"
+							v-if="!filters.specialization.status"
+							@click="useFilter('specialization', 'default')"
+						>
 							<icon-filter-off :width="22" :height="22" />
+						</div>
+						<div
+							class="table-th-filter"
+							v-if="filters.specialization.status"
+							@click="useFilter('specialization', 'default')"
+						>
+							<icon-filter-on :width="22" :height="22" />
 						</div>
 					</div>
 				</th>
 				<th>
 					<div class="table-th-container">
 						<div class="table-th-name">Скрыть</div>
-						<div class="table-th-filter">
+						<div
+							class="table-th-filter"
+							v-if="!filters.hide.status"
+							@click="useFilter('hide', 'default')"
+						>
 							<icon-filter-off :width="22" :height="22" />
+						</div>
+						<div
+							class="table-th-filter"
+							v-if="filters.hide.status"
+							@click="useFilter('hide', 'default')"
+						>
+							<icon-filter-on :width="22" :height="22" />
 						</div>
 					</div>
 				</th>
@@ -54,12 +98,18 @@
 				</td>
 				<td :class="{ create: specialist.create, delete: specialist.delete }">
 					<div class="table-td-checkbox">
-						<input
-							type="checkbox"
-							:id="`checkbox-spec-${specialist.id}`"
-							:value="specialist.hide"
-							@input="$emit('touchHideSpecialist', specialist)"
-						/>
+						<icon-visible
+							:width="36"
+							:height="36"
+							v-if="!specialist.hide"
+							@click="$emit('touchHideSpecialist', specialist)"
+						></icon-visible>
+						<icon-hide
+							:width="36"
+							:height="36"
+							v-if="specialist.hide"
+							@click="$emit('touchHideSpecialist', specialist)"
+						></icon-hide>
 					</div>
 				</td>
 				<td :class="{ create: specialist.create, delete: specialist.delete }">
@@ -98,6 +148,9 @@ import TableContainerButtons from "../../../components/ui/admin/TableContainerBu
 import IconFilterOn from "../../../components/icons/IconFilterOn.vue";
 import IconFilterOff from "../../../components/icons/IconFilterOff.vue";
 
+import IconVisible from "../../../components/icons/IconVisible.vue";
+import IconHide from "../../../components/icons/IconHide.vue";
+
 export default {
 	components: {
 		TableButtonDefault,
@@ -105,11 +158,48 @@ export default {
 		TableContainerButtons,
 		IconFilterOn,
 		IconFilterOff,
+		IconVisible,
+		IconHide,
 	},
 	props: {
 		specialists: {
 			type: Array,
 			required: true,
+		},
+	},
+	data() {
+		return {
+			filters: {
+				id: {
+					status: false,
+					type: "default",
+				},
+				name: {
+					status: false,
+					type: "default",
+				},
+				specialization: {
+					status: false,
+					type: "default",
+				},
+				hide: {
+					status: false,
+					type: "default",
+				},
+			},
+		};
+	},
+	methods: {
+		useFilter(column, type) {
+			this.filters[column].status = true;
+
+			for (let key in this.filters) {
+				if (key !== column) {
+					this.filters[key].status = false;
+				}
+			}
+
+			this.$emit("useFilter", column, type);
 		},
 	},
 };
