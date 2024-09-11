@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('specialization')->nullable();
             $table->date('startWorkAge')->nullable()->default(date('c'));
-            $table->text('specializationAdvanced')->nullable();
             $table->text('education')->nullable();
             $table->text('link')->nullable();
             $table->boolean('hide')->default(false);
@@ -28,7 +27,6 @@ return new class extends Migration
             "name" => "Власов Павел Александрович",
             "specialization" => "Главный врач, кардиолог.",
             "startWorkAge" => date("c"),
-            "specializationAdvanced" => "На уточнении.",
             "education" => "Уральский государственный медицинский университет, 2006 г.",
             "link" => "www.vlasov.ru",
             "hide" => false,
@@ -39,7 +37,6 @@ return new class extends Migration
             "name" => "Кузовникова Тамара Георгиевна",
             "specialization" => "Терапевт.",
             "startWorkAge" => date("c"),
-            "specializationAdvanced" => "На уточнении.",
             "education" => "Амурская государственная медицинская академия, 1985 г.",
             "link" => "www.kuzovnikova.ru",
             "hide" => false,
@@ -50,7 +47,6 @@ return new class extends Migration
             "name" => "Лукьянов Сергей Анатольевич",
             "specialization" => "Хирург-эндокринолог, онколог, детский онколог.",
             "startWorkAge" => date("c"),
-            "specializationAdvanced" => "На уточнении.",
             "education" => "Амурская государственная медицинская академия, 1985 г.",
             "link" => "www.kuzovnikova.ru",
             "hide" => false,

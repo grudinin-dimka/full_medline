@@ -12,7 +12,7 @@
 				</div>
 				<div class="specialist-body-options-other">
 					<div class="specialist-body-options-other-block">
-						<div>Специальность:</div>
+						<div>Специализация:</div>
 						<div>{{ specialist.specialization }}</div>
 					</div>
 					<div class="specialist-body-options-other-block">
@@ -20,15 +20,15 @@
 						<div>{{ specialist.startWorkAge }}</div>
 					</div>
 					<div class="specialist-body-options-other-block">
-						<div>Образование:</div>
+						<div>Обучение и квалифиция:</div>
 						<div>
 							{{ specialist.education }}
 						</div>
 					</div>
 					<div class="specialist-body-options-other-block">
-						<div>Сертификаты:</div>
+						<div>Ссылка:</div>
 						<div>
-							{{ specialist.certificates }}
+							{{ specialist.link }}
 						</div>
 					</div>
 				</div>

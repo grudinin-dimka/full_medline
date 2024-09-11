@@ -71,6 +71,28 @@
 						{{ currentSpecialist.errors.specialization.value }}
 					</span-error>
 				</article>
+				<!-- Специализации (тест) -->
+				<article>
+					<element-input-label> Специализации </element-input-label>
+					<div class="specializations">
+						<div class="item">
+							<div class="title">Врач</div>
+							<div class="close">X</div>
+						</div>
+						<div class="item">
+							<div class="title">Врач</div>
+							<div class="close">X</div>
+						</div>
+						<div class="item">
+							<div class="title">Врач</div>
+							<div class="close">X</div>
+						</div>
+						<div class="item">
+							<div class="title">Добавить</div>
+							<div class="close">+</div>
+						</div>
+					</div>
+				</article>
 				<!-- Дата начала работы -->
 				<article>
 					<element-input-label>
@@ -92,31 +114,7 @@
 						{{ currentSpecialist.errors.startWorkAge.value }}
 					</span-error>
 				</article>
-				<!-- Повышение квалификации -->
-				<article>
-					<element-input-label>
-						Узкопрофильная специализация*
-						<span v-if="currentSpecialist.data.specializationAdvanced.edited">
-							(Изменено)
-						</span>
-					</element-input-label>
-					<textarea
-						rows="4"
-						ref="inputEducation"
-						placeholder="введите специализацию"
-						v-model="currentSpecialist.data.specializationAdvanced.body"
-						:class="{
-							error: currentSpecialist.errors.specializationAdvanced.status,
-						}"
-						@input="currentSpecialist.data.specializationAdvanced.edited = true"
-						@blur="checkModalInput('specializationAdvanced', 'text')"
-					>
-					</textarea>
-					<span-error v-if="currentSpecialist.errors.specializationAdvanced.status">
-						{{ currentSpecialist.errors.specializationAdvanced.value }}
-					</span-error>
-				</article>
-				<!-- Сертификаты -->
+				<!-- Обучение и квалификация -->
 				<article>
 					<element-input-label>
 						Обучение и квалифиция*
@@ -273,10 +271,6 @@ export default {
 						status: false,
 						value: null,
 					},
-					specializationAdvanced: {
-						status: false,
-						value: null,
-					},
 					link: {
 						status: false,
 						value: null,
@@ -304,10 +298,6 @@ export default {
 						edited: false,
 					},
 					education: {
-						body: "",
-						edited: false,
-					},
-					specializationAdvanced: {
 						body: "",
 						edited: false,
 					},
@@ -652,7 +642,6 @@ export default {
 					"specialization",
 					"startWorkAge",
 					"education",
-					"specializationAdvanced",
 					"link",
 					"file",
 				])
@@ -690,7 +679,6 @@ export default {
 						name: this.currentSpecialist.data.name.body,
 						specialization: this.currentSpecialist.data.specialization.body,
 						startWorkAge: this.currentSpecialist.data.startWorkAge.body,
-						specializationAdvanced: this.currentSpecialist.data.specializationAdvanced.body,
 						education: this.currentSpecialist.data.education.body,
 						link: this.currentSpecialist.data.link.body,
 						filename: response.data.replace("/storage/specialists/", ""),
@@ -748,7 +736,6 @@ export default {
 					"specialization",
 					"startWorkAge",
 					"education",
-					"specializationAdvanced",
 					"link",
 				])
 			) {
@@ -1063,5 +1050,45 @@ export default {
 
 .modal-body-inputs > article > textarea.error:focus {
 	border: 2px solid var(--input-border-color-error);
+}
+
+.specializations {
+	display: inline-flex;
+	flex-wrap: wrap;
+	padding: 10px 0px;
+	border-radius: 10px;
+	gap: 10px;
+}
+
+.specializations > .item {
+	cursor: pointer;
+	display: inline-flex;
+	gap: 5px;
+	background-color: #3fbecd;
+	padding: 5px 10px;
+	border-radius: 5px;	
+	color: white;
+
+	transition: all 0.2s;
+}
+
+.specializations > .item:hover {
+	background-color: rgb(73, 200, 215);
+}
+
+.specializations > .item:last-child {
+	background-color: #ffffff;
+	color: #000000;
+	border: 2px solid #d7d7d7;
+}
+
+.specializations > .item:last-child {
+	background-color: #ffffff;
+	color: #000000;
+	border: 2px solid #d7d7d7;
+}
+
+.specializations > .item:last-child:hover {
+	border: 2px solid rgb(73, 200, 215);
 }
 </style>
