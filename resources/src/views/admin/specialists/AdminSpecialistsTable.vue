@@ -24,7 +24,7 @@
 							v-if="filters.id.status && filters.id.type === 'reverse'"
 							@click="useFilter('id', 'default')"
 						>
-							<icon-filter-on :width="22" :height="22" />
+							<icon-filter-on-reverse :width="22" :height="22" />
 						</div>
 					</div>
 				</th>
@@ -50,7 +50,7 @@
 							v-if="filters.name.status && filters.name.type === 'reverse'"
 							@click="useFilter('name', 'default')"
 						>
-							<icon-filter-on :width="22" :height="22" />
+							<icon-filter-on-reverse :width="22" :height="22" />
 						</div>
 					</div>
 				</th>
@@ -95,7 +95,7 @@
 							v-if="filters.hide.status && filters.hide.type === 'reverse'"
 							@click="useFilter('hide', 'default')"
 						>
-							<icon-filter-on :width="22" :height="22" />
+							<icon-filter-on-reverse :width="22" :height="22" />
 						</div>
 					</div>
 				</th>
@@ -167,6 +167,7 @@ import TableButtonRemove from "../../../components/ui/admin/TableButtonRemove.vu
 import TableContainerButtons from "../../../components/ui/admin/TableContainerButtons.vue";
 
 import IconFilterOn from "../../../components/icons/IconFilterOn.vue";
+import IconFilterOnReverse from "../../../components/icons/IconFilterOnReverse.vue";
 import IconFilterOff from "../../../components/icons/IconFilterOff.vue";
 
 import IconVisible from "../../../components/icons/IconVisible.vue";
@@ -181,6 +182,7 @@ export default {
 		TableButtonRemove,
 		TableContainerButtons,
 		IconFilterOn,
+		IconFilterOnReverse,
 		IconFilterOff,
 		IconVisibleTable,
 		IconHideTable,
