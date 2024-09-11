@@ -17,7 +17,7 @@ use Illuminate\Validation\Rules\File;
 use App\Models\User;
 use App\Models\Slide;
 use App\Models\Footer;
-use App\Models\Doctor;
+use App\Models\Specialist;
 
 class AdminController extends Controller
 {
@@ -28,103 +28,142 @@ class AdminController extends Controller
   /* 1. Сохранение, удаление                              */
   /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
   // Сохранение содержимого всех слайдов
-  public function saveSlidesChanges(Request $request) {
-    /* Удаление слайдов, подлежащих удалению */
-    foreach ($request->slides as $key => $value) {
-      if ($value['delete'] === true) {
-        $slide = Slide::find($value['id']);
-        $slide->delete();
+   public function saveSlidesChanges(Request $request) {
+      /* Удаление слайдов, подлежащих удалению */
+      foreach ($request->slides as $key => $value) {
+         if ($value['delete'] === true) {
+         $slide = Slide::find($value['id']);
+         $slide->delete();
+         };
       };
-    };
 
-    /* Добавление новых слайдов */
-    foreach ($request->slides as $key => $value) {
-      if ($value['create'] === true){
-        $slideCreate = Slide::create([
-          'name' => $value['name'],
-          'link' => $value['link'],
-          'filename' => $value['filename'],
-          'hide' => $value['hide'],
-          'order' => $value['order'],
-        ]);
+      /* Добавление новых слайдов */
+      foreach ($request->slides as $key => $value) {
+         if ($value['create'] === true){
+         $slideCreate = Slide::create([
+            'name' => $value['name'],
+            'link' => $value['link'],
+            'filename' => $value['filename'],
+            'hide' => $value['hide'],
+            'order' => $value['order'],
+         ]);
+         };
       };
-    };
 
-    /* Обновление существующих слайдов */
-    foreach ($request->slides as $key => $value) {
-      if ($value['delete'] !== true && $value['create'] !== true) {
-        $slide = Slide::find($value['id']);
-        $slideUpdate = $slide->update([
-          'name' => $value['name'],
-          'link' => $value['link'],
-          'filename' => $value['filename'],
-          'hide' => $value['hide'],
-          'order' => $value['order'],
-        ]);  
+      /* Обновление существующих слайдов */
+      foreach ($request->slides as $key => $value) {
+         if ($value['delete'] !== true && $value['create'] !== true) {
+         $slide = Slide::find($value['id']);
+         $slideUpdate = $slide->update([
+            'name' => $value['name'],
+            'link' => $value['link'],
+            'filename' => $value['filename'],
+            'hide' => $value['hide'],
+            'order' => $value['order'],
+         ]);  
+         };
       };
-    };
 
-    /* Сортировка слайдов по порядку от наименьшего до наибольшого */
-    $slides = Slide::all()->SortBy('order');
+      /* Сортировка слайдов по порядку от наименьшего до наибольшого */
+      $slides = Slide::all()->SortBy('order');
 
-    /* Обновление порядковых номеров */
-    $count = 0;
-    foreach ($slides as $slideKey => $slideValue) {
-      $count++;
-      $slideValue->order = $count;
-      $slideValue->save();
-    };
-
-    /* Получение всех файлов */
-    $filesSlides = Storage::files('public/slides');
-
-    foreach ($filesSlides as $fileKey => $fileValue) {
-      $useFile = false;
-      // Проверка на использование файла
+      /* Обновление порядковых номеров */
+      $count = 0;
       foreach ($slides as $slideKey => $slideValue) {
-        // Обрезание значения $fileValue до названия файла
-        $str = str_replace('public/slides/', '', $fileValue);
-        // Проверка значения названия файла на совпадение
-        if ($slideValue->filename == $str) {
-          $useFile = true;
-        };
+         $count++;
+         $slideValue->order = $count;
+         $slideValue->save();
       };
 
-      // Удаление файла, если не используется
-      if (!$useFile) {
-        Storage::delete($fileValue);
-      };
-    };
+      /* Получение всех файлов */
+      $filesSlides = Storage::files('public/slides');
 
-    return true;
-  } 
+      foreach ($filesSlides as $fileKey => $fileValue) {
+         $useFile = false;
+         // Проверка на использование файла
+         foreach ($slides as $slideKey => $slideValue) {
+         // Обрезание значения $fileValue до названия файла
+         $str = str_replace('public/slides/', '', $fileValue);
+         // Проверка значения названия файла на совпадение
+         if ($slideValue->filename == $str) {
+            $useFile = true;
+         };
+         };
+
+         // Удаление файла, если не используется
+         if (!$useFile) {
+         Storage::delete($fileValue);
+         };
+      };
+
+      return true;
+   } 
+  /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+  /* |                  СПЕЦИАЛИСТЫ                      |*/
+  /* |___________________________________________________|*/
+  /* _____________________________________________________*/
+  /* 1. Сохранение, удаление                              */
+  /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+  // Сохранение специалистов 
+   public function saveSpecialistsChanges(Request $request) {
+      /* Удаление специалистов, подлежащих удалению */
+      foreach ($request->specialists as $key => $value) {
+         if ($value['delete'] === true) {
+            var_dump('id: ' . $value['id']);
+            $specialist = Specialist::find($value['id']);
+            $specialist->delete();
+         };
+      };
+      
+      /* Добавление новых специалистов */
+      foreach ($request->specialists as $key => $value) {
+         if ($value["create"] === true){
+            $specialistCreate = Specialist::create([
+               "name" => $value['name'],
+               "specialization" => $value['specialization'],
+               "startWorkAge" => $value['startWorkAge'],
+               "specializationAdvanced" => $value['specializationAdvanced'],
+               "education" => $value['education'],
+               "link" => $value['link'],
+               "hide" => $value['hide'],
+               "filename" => $value['filename']   
+            ]);
+         };
+      };
+
+      return true;
+   }
+  /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+  /* |                     ОБЩИЕ                         |*/
+  /* |___________________________________________________|*/
   // Загрузка файла на сервер 
-  public function uploadFile(Request $request) {
+   public function uploadFile(Request $request) {
 		/* Проверка на наличие переменной image с файлом в запросе */  
 		if($request->hasFile('image')) {
-      $validated = validator($request->all(), [
-        'image' => [
-          'required',
-          File::types('png')->max(10 * 1024),
-        ],
-      ]);
-      if ($validated->fails()) return false;
+         $validated = validator($request->all(), [
+            'image' => [
+               'required',
+               File::types('png')->max(10 * 1024),
+            ],
+         ]);
+         if ($validated->fails()) return false;
 
-      switch ($request->type) {
-        case 'slide':
-          $path = $request->file('image')->store(
-            'public/slides'
-          );
-          break;
-        case 'specialist':
-          $path = $request->file('image')->store(
-            'public/specialists'
-          );
-          break;
-      }
-    };
-    return Storage::url($path);
-  } 
+         switch ($request->type) {
+         case 'slide':
+            $path = $request->file('image')->store(
+               'public/slides'
+            );
+            break;
+         case 'specialist':
+            $path = $request->file('image')->store(
+               'public/specialists'
+            );
+            break;
+         }
+      };
+      
+      return Storage::url($path);
+   } 
 
   /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
   /* |                     ФУТЕР                         |*/
@@ -133,35 +172,35 @@ class AdminController extends Controller
   /* 1. Сохранение, удаление                              */
   /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
   // Сохранение футера 
-  public function saveFooter(Request $request) {
-    $footer = Footer::find(1);
-    $footerUpdate = $footer->update([
-      'title' => $request->title,
-      'titleDesc' => $request->titleDesc,
-      'license' => $request->license,
-      'licenseDesc' => $request->licenseDesc,
-      'footer' => $request->footer,
-    ]);
-    
-    /* Проверка обновления футера */
-    if ($footerUpdate) {
-      return true;
-    } else {
-      return false;
-    };
-  }
+   public function saveFooter(Request $request) {
+      $footer = Footer::find(1);
+      $footerUpdate = $footer->update([
+         'title' => $request->title,
+         'titleDesc' => $request->titleDesc,
+         'license' => $request->license,
+         'licenseDesc' => $request->licenseDesc,
+         'footer' => $request->footer,
+      ]);
+      
+      /* Проверка обновления футера */
+      if ($footerUpdate) {
+         return true;
+      } else {
+         return false;
+      };
+   }
 
   // Очистка футера 
-  public function clearFooter(Request $request) {
-    $footer = Footer::find(1);
-    $footer->update([
-      'title' => '',
-      'titleDesc' => '',
-      'license' => '',
-      'licenseDesc' => '',
-      'footer' => '',
-    ]);
-    
-    return 'Футер очищен.';
-  } 
+   public function clearFooter(Request $request) {
+      $footer = Footer::find(1);
+      $footer->update([
+         'title' => '',
+         'titleDesc' => '',
+         'license' => '',
+         'licenseDesc' => '',
+         'footer' => '',
+      ]);
+      
+      return 'Футер очищен.';
+   } 
 }

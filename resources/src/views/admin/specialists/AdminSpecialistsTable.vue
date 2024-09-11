@@ -136,21 +136,26 @@
 				<td :class="{ create: specialist.create, delete: specialist.delete }">
 					<table-container-buttons>
 						<table-button-default
+							v-if="!specialist.delete"
 							@click="$emit('touchEditSpecialist', 'edit', specialist)"
-							:disabled="specialist.delete"
 						>
 							Изменить
 						</table-button-default>
+						<table-button-disabled v-if="specialist.delete"> Изменить </table-button-disabled>
 						<table-button-default
 							v-if="specialist.delete"
 							@click="$emit('touchRemoveSpecialist', specialist)"
 						>
 							Восстановить
 						</table-button-default>
+						<table-button-disabled
+							v-if="!specialist.delete && specialist.create"
+						>
+							Удалить
+						</table-button-disabled>
 						<table-button-remove
-							v-if="!specialist.delete"
+							v-if="!specialist.delete && !specialist.create"
 							@click="$emit('touchRemoveSpecialist', specialist)"
-							:disabled="specialist.create"
 						>
 							Удалить
 						</table-button-remove>
@@ -164,14 +169,12 @@
 <script>
 import TableButtonDefault from "../../../components/ui/admin/TableButtonDefault.vue";
 import TableButtonRemove from "../../../components/ui/admin/TableButtonRemove.vue";
+import TableButtonDisabled from "../../../components/ui/admin/TableButtonDisabled.vue";
 import TableContainerButtons from "../../../components/ui/admin/TableContainerButtons.vue";
 
 import IconFilterOn from "../../../components/icons/IconFilterOn.vue";
 import IconFilterOnReverse from "../../../components/icons/IconFilterOnReverse.vue";
 import IconFilterOff from "../../../components/icons/IconFilterOff.vue";
-
-import IconVisible from "../../../components/icons/IconVisible.vue";
-import IconHide from "../../../components/icons/IconHide.vue";
 
 import IconVisibleTable from "../../../components/icons/IconVisibleTable.vue";
 import IconHideTable from "../../../components/icons/IconHideTable.vue";
@@ -180,6 +183,7 @@ export default {
 	components: {
 		TableButtonDefault,
 		TableButtonRemove,
+		TableButtonDisabled,
 		TableContainerButtons,
 		IconFilterOn,
 		IconFilterOnReverse,
@@ -242,6 +246,7 @@ table {
 th,
 td {
 	padding: 10px;
+	transition: all 0.2s;
 }
 
 th:nth-of-type(1) {

@@ -96,7 +96,9 @@
 				<article>
 					<element-input-label>
 						Узкопрофильная специализация*
-						<span v-if="currentSpecialist.data.specializationAdvanced.edited"> (Изменено) </span>
+						<span v-if="currentSpecialist.data.specializationAdvanced.edited">
+							(Изменено)
+						</span>
 					</element-input-label>
 					<textarea
 						rows="4"
@@ -277,7 +279,7 @@ export default {
 					},
 					link: {
 						status: false,
-						value: null,						
+						value: null,
 					},
 					file: {
 						status: false,
@@ -311,7 +313,7 @@ export default {
 					},
 					link: {
 						body: "",
-						edited: false,						
+						edited: false,
 					},
 					filename: {
 						body: "",
@@ -361,8 +363,6 @@ export default {
 					this.clearCurrentSpecialistData();
 
 					// Заполнение модального окна данными о специалисте
-
-					console.log(specialist);
 					for (let key in specialist) {
 						this.currentSpecialist.data[key].body = specialist[key];
 					}
@@ -553,7 +553,6 @@ export default {
 							// a должно быть равным b
 							return 0;
 						});
-						console.log("column = " + column + ", type = " + type);
 					}
 
 					if (type == "reverse") {
@@ -567,7 +566,6 @@ export default {
 							// a должно быть равным b
 							return 0;
 						});
-						console.log("column = " + column + ", type = " + type);
 					}
 					break;
 				case "name":
@@ -588,7 +586,6 @@ export default {
 							// a должно быть равным b
 							return 0;
 						});
-						console.log("column = " + column + ", type = " + type);
 					}
 
 					if (type == "reverse") {
@@ -608,8 +605,6 @@ export default {
 							// a должно быть равным b
 							return 0;
 						});
-
-						console.log("column = " + column + ", type = " + type);
 					}
 
 					break;
@@ -625,7 +620,6 @@ export default {
 							// a должно быть равным b
 							return 0;
 						});
-						console.log("column = " + column + ", type = " + type);
 					}
 
 					if (type == "reverse") {
@@ -639,7 +633,6 @@ export default {
 							// a должно быть равным b
 							return 0;
 						});
-						console.log("column = " + column + ", type = " + type);
 					}
 					break;
 				case "specialization":
@@ -843,7 +836,74 @@ export default {
 		/* 5. Сохранение                                        */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		saveSpecialistChanges() {
-			console.log(this.specialists);
+			let specialists = [];
+
+			// Заполнение нового массива данными из массива this.specialists
+			for (let index = 0; index < this.specialists.length; index++) {
+				specialists.push(Object.assign({}, this.specialists[index]));
+			}
+
+			// Сортировка массива по id
+			specialists.sort((a, b) => {
+				if (a.id < b.id) return -1;
+				if (a.id > b.id) return 1;
+				return 0;
+			});
+
+			// Получение массива докторов с сервера
+			axios({
+				method: "post",
+				headers: {
+					Accept: "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: {
+					specialists: specialists,
+				},
+				url: `${this.$store.state.axios.urlApi}` + `save-specialists-changes`,
+			})
+				.then((response) => {
+					/* Обновление свойства create в массиве слайдов */
+					for (let index in this.specialists) {
+						if (this.specialists[index].create) {
+							this.specialists[index].create = false;
+						}
+					}
+
+					// Получения нового массива слайдов, помеченных на удаление
+					let specialistsStatusDelete = this.specialists.filter((specialist) => {
+						if (specialist.delete == true) {
+							return Object.assign({}, specialist);
+						}
+					});
+
+					// Повторять, пока не будут удалены все слайды, помеченные на удаление
+					while (specialistsStatusDelete.length > 0) {
+						this.specialists.splice(this.specialists.indexOf(specialistsStatusDelete[0]), 1);
+
+						specialistsStatusDelete = this.specialists.filter((specialist) => {
+							if (specialist.delete == true) {
+								return Object.assign({}, specialist);
+							}
+						});
+					}
+
+					let debbugStory = {
+						title: "Успешно!",
+						body: "Данные о специалистах обновлены в базе данных.",
+						type: "Completed",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+				})
+				.catch((error) => {
+					let debbugStory = {
+						title: "Ошибка.",
+						body: "Произошла ошибка при сохранении изменений.",
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+					return;
+				});
 		},
 	},
 	mounted() {

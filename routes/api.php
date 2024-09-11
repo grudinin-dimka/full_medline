@@ -23,6 +23,7 @@ Route::post('/get-specialist-profile', [HomeController::class, 'getSpecialistPro
 Route::post('/save-footer', [AdminController::class, 'saveFooter'])->middleware('auth:sanctum');
 Route::post('/clear-footer', [AdminController::class, 'clearFooter'])->middleware('auth:sanctum');
 Route::post('/save-slides-changes', [AdminController::class, 'saveSlidesChanges'])->middleware('auth:sanctum');
+Route::post('/save-specialists-changes', [AdminController::class, 'saveSpecialistsChanges'])->middleware('auth:sanctum');
 Route::post('/upload-file', [AdminController::class, 'uploadFile'])->middleware('auth:sanctum');
 
 

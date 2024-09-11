@@ -9,7 +9,7 @@ class Specialist extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
     protected $table = 'specialists';
+    protected $guarded = [];
     protected $hidden = ['created_at', 'updated_at'];
 }
