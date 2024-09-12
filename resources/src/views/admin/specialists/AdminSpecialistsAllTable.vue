@@ -136,8 +136,9 @@
 				<td :class="{ create: specialist.create, delete: specialist.delete }">
 					<table-container-buttons>
 						<table-button-default
-							v-if="!specialist.delete"
-							@click="$emit('touchEditSpecialist', 'edit', specialist)"
+							@click="
+								$router.push({ name: 'especialist-profile', params: { id: specialist.id } })
+							"
 						>
 							Редактировать
 						</table-button-default>
@@ -161,6 +162,8 @@ import IconFilterOff from "../../../components/icons/IconFilterOff.vue";
 import IconVisibleTable from "../../../components/icons/IconVisibleTable.vue";
 import IconHideTable from "../../../components/icons/IconHideTable.vue";
 
+import { RouterLink } from "vue-router";
+
 export default {
 	components: {
 		TableButtonDefault,
@@ -172,6 +175,7 @@ export default {
 		IconFilterOff,
 		IconVisibleTable,
 		IconHideTable,
+		RouterLink,
 	},
 	props: {
 		specialists: {

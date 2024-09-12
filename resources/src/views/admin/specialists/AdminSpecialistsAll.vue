@@ -64,10 +64,38 @@ export default {
             {
                id: 1,
                name: "Иванов Иван Иванович",
-               specialization: "Ортопед",
+               specialization: "Везде и нигде",
                hide: false,
                delete: false,
-            }
+            },
+            {
+               id: 2,
+               name: "Ёжиков Ёжик Ёжикович",
+               specialization: "Лесной зверёк",
+               hide: false,
+               delete: false,
+            },
+            {
+               id: 3,
+               name: "Слонов Слон Слонович",
+               specialization: "Большой и добрый",
+               hide: true,
+               delete: false,
+            },
+            {
+               id: 4,
+               name: "Лисов Лис Лисович",
+               specialization: "Самый хитрый",
+               hide: true,
+               delete: false,
+            },
+            {
+               id: 5,
+               name: "Медведов Медвед Медведович",
+               specialization: "Гроза леса",
+               hide: false,
+               delete: false,
+            },
          ]
       };
 	},
