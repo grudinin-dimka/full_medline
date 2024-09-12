@@ -1,4 +1,9 @@
 <template>
+	<info-bar>
+		<template v-slot:title>Специалисты</template>
+		<template v-slot:addreas>specialists</template>
+	</info-bar>
+
 	<block>
 		<block-title>
 			<template #title>Список врачей</template>
@@ -16,6 +21,8 @@
 </template>
 
 <script>
+import InfoBar from "../../../components/ui/admin/InfoBar.vue";
+
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
 
 import ElementInputLabel from "../../../components/ui/admin/ElementInputLabel.vue";
@@ -36,6 +43,7 @@ import { RouterView, RouterLink } from "vue-router";
 
 export default {
 	components: {
+      InfoBar,
       LoaderChild,
       ElementInputLabel,
       Block,

@@ -139,26 +139,8 @@
 							v-if="!specialist.delete"
 							@click="$emit('touchEditSpecialist', 'edit', specialist)"
 						>
-							Изменить
+							Редактировать
 						</table-button-default>
-						<table-button-disabled v-if="specialist.delete"> Изменить </table-button-disabled>
-						<table-button-default
-							v-if="specialist.delete"
-							@click="$emit('touchRemoveSpecialist', specialist)"
-						>
-							Восстановить
-						</table-button-default>
-						<table-button-disabled
-							v-if="!specialist.delete && specialist.create"
-						>
-							Удалить
-						</table-button-disabled>
-						<table-button-remove
-							v-if="!specialist.delete && !specialist.create"
-							@click="$emit('touchRemoveSpecialist', specialist)"
-						>
-							Удалить
-						</table-button-remove>
 					</table-container-buttons>
 				</td>
 			</tr>
@@ -264,10 +246,6 @@ th:nth-of-type(3) {
 
 th:nth-of-type(4) {
 	min-width: 100px;
-}
-
-th:nth-of-type(5) {
-	min-width: 150px;
 }
 
 th {

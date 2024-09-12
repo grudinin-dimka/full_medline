@@ -1,21 +1,14 @@
 <template>
-	<info-bar>
-		<template v-slot:title>Специалисты</template>
-		<template v-slot:addreas>specialists</template>
-	</info-bar>
-
 	<router-view />
 </template>
 
 <script>
-import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
 
 import { RouterView, RouterLink } from "vue-router";
 
 export default {
 	components: {
-		InfoBar,
 		LoaderChild,
 		RouterView,
 		RouterLink,

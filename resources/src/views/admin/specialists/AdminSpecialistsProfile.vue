@@ -1,13 +1,73 @@
 <template>
-   <div>
-      Profile
-   </div>
+	<info-bar>
+		<template v-slot:title>Специалисты</template>
+		<template v-slot:addreas>specialists/{{ $route.params.id }}</template>
+	</info-bar>
+
+	<block>
+		<block-title>
+			<template #title>Редактирование</template>
+			<template #buttons>
+				<icon-save :width="28" :height="28" />
+			</template>
+		</block-title>
+
+		<block-buttons>
+			<button-default> Добавить </button-default>
+		</block-buttons>
+	</block>
 </template>
 
 <script>
+import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 
+import LoaderChild from "../../../components/includes/LoaderChild.vue";
+
+import ElementInputLabel from "../../../components/ui/admin/ElementInputLabel.vue";
+import Block from "../../../components/ui/admin/Block.vue";
+import BlockTitle from "../../../components/ui/admin/BlockTitle.vue";
+import BlockButtons from "../../../components/ui/admin/BlockButtons.vue";
+import SpanError from "../../../components/ui/admin/SpanError.vue";
+
+import ButtonDefault from "../../../components/ui/admin/ButtonDefault.vue";
+import ButtonRemove from "../../../components/ui/admin/ButtonRemove.vue";
+
+import IconSave from "../../../components/icons/IconSave.vue";
+
+import axios from "axios";
+
+import { RouterView, RouterLink } from "vue-router";
+
+export default {
+	components: {
+		InfoBar,
+		LoaderChild,
+		ElementInputLabel,
+		Block,
+		BlockTitle,
+		BlockButtons,
+		SpanError,
+		ButtonDefault,
+		ButtonRemove,
+		IconSave,
+		axios,
+		RouterView,
+		RouterLink,
+	},
+	data() {
+		return {
+			specialists: [
+				{
+					id: 1,
+					name: "Иванов Иван Иванович",
+					specialization: "Ортопед",
+					hide: false,
+					delete: false,
+				},
+			],
+		};
+	},
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
