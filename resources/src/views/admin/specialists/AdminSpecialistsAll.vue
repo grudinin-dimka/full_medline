@@ -8,14 +8,14 @@
 		<block-title>
 			<template #title>Список врачей</template>
 			<template #buttons>
-				<icon-save :width="28" :height="28"/>
+				<icon-save :width="28" :height="28" />
 			</template>
 		</block-title>
 
 		<admin-specialists-table :specialists="specialists" />
 
 		<block-buttons>
-			<button-default> Добавить </button-default>
+			<button-default @click="$router.push('especialists/new')"> Добавить </button-default>
 		</block-buttons>
 	</block>
 </template>
@@ -43,61 +43,77 @@ import { RouterView, RouterLink } from "vue-router";
 
 export default {
 	components: {
-      InfoBar,
-      LoaderChild,
-      ElementInputLabel,
-      Block,
-      BlockTitle, 
-      BlockButtons,
-      AdminSpecialistsTable,
-      SpanError,
-      ButtonDefault,
-      ButtonRemove,
-      IconSave,
-      axios,
-      RouterView,
-      RouterLink,
-   },
+		InfoBar,
+		LoaderChild,
+		ElementInputLabel,
+		Block,
+		BlockTitle,
+		BlockButtons,
+		AdminSpecialistsTable,
+		SpanError,
+		ButtonDefault,
+		ButtonRemove,
+		IconSave,
+		axios,
+		RouterView,
+		RouterLink,
+	},
 	data() {
 		return {
-         specialists: [
-            {
-               id: 1,
-               name: "Иванов Иван Иванович",
-               specialization: "Везде и нигде",
-               hide: false,
-               delete: false,
-            },
-            {
-               id: 2,
-               name: "Ёжиков Ёжик Ёжикович",
-               specialization: "Лесной зверёк",
-               hide: false,
-               delete: false,
-            },
-            {
-               id: 3,
-               name: "Слонов Слон Слонович",
-               specialization: "Большой и добрый",
-               hide: true,
-               delete: false,
-            },
-            {
-               id: 4,
-               name: "Лисов Лис Лисович",
-               specialization: "Самый хитрый",
-               hide: true,
-               delete: false,
-            },
-            {
-               id: 5,
-               name: "Медведов Медвед Медведович",
-               specialization: "Гроза леса",
-               hide: false,
-               delete: false,
-            },
-         ]
-      };
+			specialists: [
+				{
+					id: 1,
+					name: "Иванов Иван Иванович",
+					specialization: "Везде и нигде",
+					hide: false,
+					delete: false,
+				},
+				{
+					id: 2,
+					name: "Ёжиков Ёжик Ёжикович",
+					specialization: "Лесной зверёк",
+					hide: false,
+					delete: false,
+				},
+				{
+					id: 3,
+					name: "Слонов Слон Слонович",
+					specialization: "Большой и добрый",
+					hide: true,
+					delete: false,
+				},
+				{
+					id: 4,
+					name: "Лисов Лис Лисович",
+					specialization: "Самый хитрый",
+					hide: true,
+					delete: false,
+				},
+				{
+					id: 5,
+					name: "Медведов Медвед Медведович",
+					specialization: "Гроза леса",
+					hide: false,
+					delete: false,
+				},
+			],
+		};
+	},
+	mounted() {
+		// Получение массива докторов с сервера
+		// axios({
+		// 	method: "post",
+		// 	headers: {
+		// 		Accept: "application/json",
+		// 	},
+		// 	url: `${this.$store.state.axios.urlApi}` + `save-specialists-changes`,
+		// })
+		// 	.then((response) => {
+      //       console.log(response);
+		// 	})
+		// 	.catch((error) => {
+      //       console.log(error);
+      //    });
 	},
 };
 </script>

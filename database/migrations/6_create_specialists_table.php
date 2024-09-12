@@ -13,43 +13,46 @@ return new class extends Migration
     {
         Schema::create('specialists', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
-            $table->string('specialization')->nullable();
-            $table->date('startWorkAge')->nullable()->default(date('c'));
-            $table->text('education')->nullable();
-            $table->text('link')->nullable();
+            $table->string('family', 300)->nullable();
+            $table->string('name', 300)->nullable();
+            $table->string('surname', 300)->nullable();
+            $table->date('startWorkAge')->nullable();
+            $table->string('startWorkCity', 300)->nullable();
+            $table->boolean('adultDoctor')->nullable();
+            $table->boolean('childrenDoctor')->nullable();
             $table->boolean('hide')->default(false);
-            $table->text('filename')->nullable();
+            $table->string('filename')->nullable();
             $table->timestamps();
         });
 
         DB::table('specialists')->insert([
-            "name" => "Власов Павел Александрович",
-            "specialization" => "Главный врач, кардиолог.",
-            "startWorkAge" => date("c"),
-            "education" => "Уральский государственный медицинский университет, 2006 г.",
-            "link" => "www.vlasov.ru",
-            "hide" => false,
+            "family" => "Власов",
+            "name" => "Павел",
+            "surname" => "Александрович",
+            "startWorkAge" => date('c'),
+            "startWorkCity" => "Москва",
+            "adultDoctor" => true,
+            "childrenDoctor" => false,
             "filename" => "vlasov.png"
         ]);
-
         DB::table('specialists')->insert([
-            "name" => "Кузовникова Тамара Георгиевна",
-            "specialization" => "Терапевт.",
-            "startWorkAge" => date("c"),
-            "education" => "Амурская государственная медицинская академия, 1985 г.",
-            "link" => "www.kuzovnikova.ru",
-            "hide" => false,
-            "filename" => "kuzovnikova.png"
+            "family" => "Дымшакова",
+            "name" => "Наталья",
+            "surname" => "Юрьевна",
+            "startWorkAge" => date('c'),
+            "startWorkCity" => "Москва",
+            "adultDoctor" => true,
+            "childrenDoctor" => false,
+            "filename" => "dimshakova.png"
         ]);
-
         DB::table('specialists')->insert([
-            "name" => "Лукьянов Сергей Анатольевич",
-            "specialization" => "Хирург-эндокринолог, онколог, детский онколог.",
-            "startWorkAge" => date("c"),
-            "education" => "Амурская государственная медицинская академия, 1985 г.",
-            "link" => "www.kuzovnikova.ru",
-            "hide" => false,
+            "family" => "Кузовникова",
+            "name" => "Тамара",
+            "surname" => "Георгиевна",
+            "startWorkAge" => date('c'),
+            "startWorkCity" => "Москва",
+            "adultDoctor" => true,
+            "childrenDoctor" => false,
             "filename" => "kuzovnikova.png"
         ]);
     }

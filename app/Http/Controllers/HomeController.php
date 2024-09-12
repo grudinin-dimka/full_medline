@@ -74,23 +74,14 @@ class HomeController extends Controller
    // Вывод всех докторов 
    public function getSpecialists(Request $request) {
       $specialists = Specialist::all();
-
-      // $specializations = Specialization::all();
-      // $specialistSpecialization = SpecialistSpecialization::all();
-
       foreach ($specialists as $key => $value) {
-         $stringTransliterate = Transliterator::create('Any-Latin; Latin-ASCII')->transliterate($specialists[$key]->name);
-         $stringUnderCase = strtolower($stringTransliterate);
-         $stringReplace = str_replace(" ", "-", $stringUnderCase);
-
-         $specialists[$key]->url = $stringReplace;
+         $specialists[$key]->url = makeUrl($specialists[$key]->name);
          $specialists[$key]->path = Storage::url('specialists/' . $value->filename);      
       };
 
       return $specialists;
-
-      // return $specialistSpecialization;
    }
+
    // Вывод конкретного доктора
    public function getSpecialistProfile(Request $request) {
       $specialists = Specialist::all();
@@ -108,4 +99,11 @@ class HomeController extends Controller
    }
 };
 
+function makeUrl($url) {
+   $stringTransliterate = Transliterator::create('Any-Latin; Latin-ASCII')->transliterate($url);
+   $stringUnderCase = strtolower($stringTransliterate);
+   $stringReplace = str_replace(" ", "-", $stringUnderCase);
+
+   return $stringReplace;
+}
 
