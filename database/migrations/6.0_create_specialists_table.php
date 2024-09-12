@@ -11,6 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
+        /* ____________________________________________________*/
+        /* 1. Основная таблица                                 */
+        /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+        // 1) id - Идентификатор
+        // 2) family - фамилия
+        // 3) name - имя
+        // 4) surname - отчество
+        // 5) startWorkAge - дата начала каръеры
+        // 6) startWorkCity - город начала каръеры
+        // 7) adultDoctor - взрослый доктор (да / нет)
+        // 8) childrenDoctor - детский доктор (да / нет)
+        // 9) hide - статус скрытия на сайте
+        // 10) filename - название прикреплённого файла
         Schema::create('specialists', function (Blueprint $table) {
             $table->id();
             $table->string('family', 300)->nullable();
