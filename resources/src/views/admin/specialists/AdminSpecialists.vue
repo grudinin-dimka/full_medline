@@ -1,329 +1,24 @@
 <template>
-	<!-- Модальное окно -->
-	<admin-modal @closeModal="closeModal" :modal="modal">
-		<template #title>{{ modal.title }}</template>
-		<template #img>
-			<div
-				v-if="modal.type == 'edit'"
-				class="modal-body-img"
-				:style="{
-					backgroundImage: `url(${currentSpecialist.data.path.body})`,
-				}"
-				ref="modalImg"
-			></div>
-			<div
-				v-if="modal.type == 'create'"
-				class="modal-body-img"
-				:style="{
-					backgroundImage: `url(/storage/default/specialist.png)`,
-				}"
-				ref="modalImg"
-			></div>
-		</template>
-		<template #img-input>
-			<input
-				class="modal-img-input"
-				type="file"
-				ref="fileUpload"
-				placeholder="Файл"
-				:class="{ error: currentSpecialist.errors.file.status }"
-			/>
-		</template>
-		<template #body>
-			<div class="modal-body-inputs">
-				<!-- Имя доктора -->
-				<article>
-					<element-input-label>
-						ФИО доктора*
-						<span v-if="currentSpecialist.data.name.edited"> (Изменено) </span>
-					</element-input-label>
-					<input
-						type="text"
-						ref="inputName"
-						placeholder="введите фио"
-						v-model="currentSpecialist.data.name.body"
-						:class="{ error: currentSpecialist.errors.name.status }"
-						@input="currentSpecialist.data.name.edited = true"
-						@blur="checkModalInput('name', 'text')"
-					/>
-					<span-error v-if="currentSpecialist.errors.name.status">
-						{{ currentSpecialist.errors.name.value }}
-					</span-error>
-				</article>
-				<!-- Специализация -->
-				<article>
-					<element-input-label>
-						Специализация*
-						<span v-if="currentSpecialist.data.specialization.edited"> (Изменено) </span>
-					</element-input-label>
-					<input
-						type="text"
-						ref="inputSpecialization"
-						placeholder="введите специализацию"
-						v-model="currentSpecialist.data.specialization.body"
-						:class="{
-							error: currentSpecialist.errors.specialization.status,
-						}"
-						@input="currentSpecialist.data.specialization.edited = true"
-						@blur="checkModalInput('specialization', 'text')"
-					/>
-					<span-error v-if="currentSpecialist.errors.specialization.status">
-						{{ currentSpecialist.errors.specialization.value }}
-					</span-error>
-				</article>
-				<!-- Специализации (тест) -->
-				<article>
-					<element-input-label> Специализации </element-input-label>
-					<div class="specializations">
-						<div class="item">
-							<div class="title">Врач</div>
-							<div class="close">X</div>
-						</div>
-						<div class="item">
-							<div class="title">Врач</div>
-							<div class="close">X</div>
-						</div>
-						<div class="item">
-							<div class="title">Врач</div>
-							<div class="close">X</div>
-						</div>
-						<div class="item">
-							<div class="title">Добавить</div>
-							<div class="close">+</div>
-						</div>
-					</div>
-				</article>
-				<!-- Дата начала работы -->
-				<article>
-					<element-input-label>
-						Дата начала работы*
-						<span v-if="currentSpecialist.data.startWorkAge.edited"> (Изменено) </span>
-					</element-input-label>
-					<input
-						type="date"
-						ref="inputStartWorkAge"
-						placeholder="введите дату"
-						v-model="currentSpecialist.data.startWorkAge.body"
-						:class="{
-							error: currentSpecialist.errors.startWorkAge.status,
-						}"
-						@input="currentSpecialist.data.startWorkAge.edited = true"
-						@blur="checkModalInput('startWorkAge', 'text')"
-					/>
-					<span-error v-if="currentSpecialist.errors.startWorkAge.status">
-						{{ currentSpecialist.errors.startWorkAge.value }}
-					</span-error>
-				</article>
-				<!-- Обучение и квалификация -->
-				<article>
-					<element-input-label>
-						Обучение и квалифиция*
-						<span v-if="currentSpecialist.data.education.edited"> (Изменено) </span>
-					</element-input-label>
-					<textarea
-						rows="4"
-						ref="inputStartWorkAge"
-						placeholder="введите обучение и квалифицию"
-						v-model="currentSpecialist.data.education.body"
-						:class="{
-							error: currentSpecialist.errors.education.status,
-						}"
-						@input="currentSpecialist.data.education.edited = true"
-						@blur="checkModalInput('education', 'text')"
-					>
-					</textarea>
-					<span-error v-if="currentSpecialist.errors.education.status">
-						{{ currentSpecialist.errors.education.value }}
-					</span-error>
-				</article>
-				<!-- Ссылка на продокторов -->
-				<article>
-					<element-input-label>
-						Ссылка на продокторов*
-						<span> (Изменено) </span>
-					</element-input-label>
-					<input
-						type="text"
-						ref="inputLink"
-						placeholder="введите ссылку"
-						v-model="currentSpecialist.data.link.body"
-						:class="{
-							error: currentSpecialist.errors.link.status,
-						}"
-						@input="currentSpecialist.data.link.edited = true"
-						@blur="checkModalInput('link', 'text')"
-					/>
-					<span-error v-if="currentSpecialist.errors.link.status">
-						{{ currentSpecialist.errors.link.value }}
-					</span-error>
-				</article>
-			</div>
-		</template>
-		<template #footer>
-			<BlockButtons v-if="modal.type == 'edit'">
-				<ButtonDefault @click="updateSpecialist"> Обновить </ButtonDefault>
-			</BlockButtons>
-			<BlockButtons v-if="modal.type == 'create'">
-				<ButtonDefault @click="addSpecialist"> Создать </ButtonDefault>
-			</BlockButtons>
-		</template>
-	</admin-modal>
-
 	<info-bar>
 		<template v-slot:title>Специалисты</template>
 		<template v-slot:addreas>specialists</template>
 	</info-bar>
 
-	<block>
-		<block-title>
-			<template #title>Список врачей</template>
-			<template #buttons>
-				<icon-save :width="28" :height="28" @click="saveSpecialistChanges" />
-			</template>
-		</block-title>
-
-		<LoaderChild :isLoading="loading.loader.specialists"></LoaderChild>
-
-		<admin-specialists-table
-			v-if="loading.specialists"
-			:specialists="specialists"
-			@touchEditSpecialist="openModal"
-			@touchHideSpecialist="hideSpecialist"
-			@touchRemoveSpecialist="removeSpecialist"
-			@useFilter="filterSpecialists"
-		/>
-
-		<block-buttons>
-			<button-default @click="openModal('create', null)"> Добавить </button-default>
-		</block-buttons>
-	</block>
+	<router-view />
 </template>
 
 <script>
-import AdminModal from "../../../components/includes/admin/AdminModal.vue";
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
 
-import ElementInputLabel from "../../../components/ui/admin/ElementInputLabel.vue";
-import Block from "../../../components/ui/admin/Block.vue";
-import BlockTitle from "../../../components/ui/admin/BlockTitle.vue";
-import BlockButtons from "../../../components/ui/admin/BlockButtons.vue";
-import AdminSpecialistsTable from "./AdminSpecialistsTable.vue";
-import SpanError from "../../../components/ui/admin/SpanError.vue";
-
-import ButtonDefault from "../../../components/ui/admin/ButtonDefault.vue";
-import ButtonRemove from "../../../components/ui/admin/ButtonRemove.vue";
-
-import IconSave from "../../../components/icons/IconSave.vue";
-
-import axios from "axios";
+import { RouterView, RouterLink } from "vue-router";
 
 export default {
 	components: {
-		AdminModal,
 		InfoBar,
 		LoaderChild,
-		ElementInputLabel,
-		Block,
-		BlockTitle,
-		BlockButtons,
-		ButtonDefault,
-		AdminSpecialistsTable,
-		SpanError,
-		ButtonRemove,
-		IconSave,
-		axios,
-	},
-	data() {
-		return {
-			modal: {
-				title: "",
-				status: false,
-				type: null,
-				style: {
-					create: false,
-					delete: false,
-				},
-			},
-			loading: {
-				loader: {
-					specialists: true,
-				},
-				specialists: false,
-			},
-			currentSpecialist: {
-				status: false,
-				file: null,
-				errors: {
-					name: {
-						status: false,
-						value: null,
-					},
-					specialization: {
-						status: false,
-						value: null,
-					},
-					startWorkAge: {
-						status: false,
-						value: null,
-					},
-					education: {
-						status: false,
-						value: null,
-					},
-					link: {
-						status: false,
-						value: null,
-					},
-					file: {
-						status: false,
-						value: null,
-					},
-				},
-				data: {
-					id: {
-						body: "",
-						edited: false,
-					},
-					name: {
-						body: "",
-						edited: false,
-					},
-					specialization: {
-						body: "",
-						edited: false,
-					},
-					startWorkAge: {
-						body: "",
-						edited: false,
-					},
-					education: {
-						body: "",
-						edited: false,
-					},
-					link: {
-						body: "",
-						edited: false,
-					},
-					filename: {
-						body: "",
-					},
-					hide: {
-						body: false,
-					},
-					path: {
-						body: "",
-					},
-					create: {
-						body: false,
-					},
-					delete: {
-						body: false,
-					},
-				},
-			},
-			specialists: [],
-		};
+		RouterView,
+		RouterLink,
 	},
 	methods: {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -893,36 +588,6 @@ export default {
 				});
 		},
 	},
-	mounted() {
-		// Получение массива докторов с сервера
-		axios({
-			method: "post",
-			url: `${this.$store.state.axios.urlApi}` + `get-specialists`,
-		})
-			.then((response) => {
-				this.specialists = response.data;
-
-				// Удаление свойства url
-				for (let key in this.specialists) {
-					this.specialists[key].create = false;
-					this.specialists[key].delete = false;
-					delete this.specialists[key].url;
-				}
-
-				this.loading.loader.specialists = false;
-				setTimeout(() => {
-					this.loading.specialists = true;
-				}, 515);
-			})
-			.catch((error) => {
-				let debbugStory = {
-					title: "Ошибка.",
-					body: "Произошла ошибка при получении данных о слайдере.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
-			});
-	},
 };
 </script>
 
@@ -1066,7 +731,7 @@ export default {
 	gap: 5px;
 	background-color: #3fbecd;
 	padding: 5px 10px;
-	border-radius: 5px;	
+	border-radius: 5px;
 	color: white;
 
 	transition: all 0.2s;

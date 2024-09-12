@@ -31,14 +31,12 @@ const router = createRouter({
 						{
 							path: "",
 							name: "all",
-							component: () =>
-								import("../views/main/specialists/MainSpecialistAll.vue"),
+							component: () => import("../views/main/specialists/MainSpecialistAll.vue"),
 						},
 						{
 							path: ":name",
 							name: "doctorname",
-							component: () =>
-								import("../views/main/specialists/MainSpecialistProfile.vue"),
+							component: () => import("../views/main/specialists/MainSpecialistProfile.vue"),
 						},
 					],
 				},
@@ -100,6 +98,18 @@ const router = createRouter({
 					path: "especialists",
 					name: "especialists",
 					component: () => import("../views/admin/specialists/AdminSpecialists.vue"),
+					children: [
+						{
+							path: "",
+							name: "especialist-all",
+							component: () => import("../views/admin/specialists/AdminSpecialistsAll.vue"),
+						},
+						{
+							path: ":id",
+							name: "especialist-profile",
+							component: () => import("../views/admin/specialists/AdminSpecialistsProfile.vue"),
+						},
+					],
 				},
 				{
 					path: "eprice",
