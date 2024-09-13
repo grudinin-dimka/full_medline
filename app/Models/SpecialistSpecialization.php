@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class SpecialistSpecialization extends Model
 {
-    use HasFactory;
+   use HasFactory;
 
-    protected $table = 'specialist_specializations';
-    protected $guarded = [];
-    protected $hidden = ['created_at', 'updated_at'];
+   protected $table = 'specialist_specializations';
+   protected $guarded = [];
+   protected $hidden = ['created_at', 'updated_at'];
 }

@@ -11,15 +11,12 @@ return new class extends Migration
     */
    public function up(): void
    {
-      /* 3.1. Клиники, где принимают специалисты             */
+      /* 5.1. Образования, которые получил специалист        */
       /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-      // 1) id - Идентификатор
-      // 2) id_specialist - ссылка на специалиста
-      // 3) id_clinic - ссылка на клинику
-      Schema::create('specialist_clinics', function (Blueprint $table) {
+      Schema::create('specialist_works', function (Blueprint $table) {
          $table->id();
          $table->unsignedBigInteger('id_specialist')->references('id')->on('specialists')->onDelete('cascade');
-         $table->unsignedBigInteger('id_clinic')->references('id')->on('clinics')->onDelete('cascade');
+         $table->unsignedBigInteger('id_work')->references('id')->on('works')->onDelete('cascade');
          $table->timestamps();
       });
    }
@@ -29,6 +26,6 @@ return new class extends Migration
     */
    public function down(): void
    {
-      Schema::dropIfExists('specialist_clinics');
+      Schema::dropIfExists('specialist_works');
    }
 };
