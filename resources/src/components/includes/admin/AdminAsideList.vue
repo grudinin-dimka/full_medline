@@ -1,6 +1,6 @@
 <template>
-   <a @click.prevent v-for="link in links" :key="link.id" :href="link.link" @click="insertPage(link.link)">
-      {{ link.name }}
+   <a @click.prevent v-for="link in links" :key="link.id" :href="link.link" @click="insertPage(link.name)">
+      {{ link.title }}
    </a>
 </template>
 
@@ -10,13 +10,7 @@ let linkActive = null;
 
 export default {
    mounted() {
-      // Добавление стиля активное ссылке, получаемой из локального хранилища
-      linkActive = document.querySelector(`[href='${localStorage.getItem('linkActive')}']`);
-      linkActive.classList.add('active');
 
-      // Добавление стиля активной ссылке, получаемой из локального хранилища
-      localStorage.setItem('linkPrevios', localStorage.getItem('linkActive'));
-      linkPrev = linkActive;
    },
    props: {
       links: {
@@ -25,23 +19,10 @@ export default {
       },
    },
    methods: {
-      insertPage(link) {
-         // Удаление стиля прошлой активной ссылки
-         linkPrev.classList.remove('active');
-
-         // Добавление стиля активной ссылке
-         linkActive = document.querySelector(`[href='${link}']`);
-         linkActive.classList.add('active');
-
-         localStorage.setItem('linkPrevios', localStorage.getItem('linkActive'));
-         localStorage.setItem('linkActive', link);
-
-         // Обновление предыдущей активной ссылки
-         linkPrev = linkActive;
-
+      insertPage(value) {
          this.$store.state.burger.status = false;
 
-         this.$router.push(link);
+         this.$router.push({ name: `${value}` });
          window.scrollTo({
 				top: 0,
 				left: 0,
@@ -68,6 +49,10 @@ a {
 }
 
 a.active {
+   background-color: rgba(255, 255, 255, 0.15);
+}
+
+a:active {
    background-color: rgba(255, 255, 255, 0.15);
 }
 

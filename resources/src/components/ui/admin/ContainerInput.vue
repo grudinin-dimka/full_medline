@@ -6,10 +6,9 @@
 
 <script setup></script>
 
-<style scoped>
+<style>
 .container-inputs {
-   display: flex;
-   flex-direction: column;
-   gap: 5px;
+   display: grid;
+   gap: 10px;
 }
 </style>

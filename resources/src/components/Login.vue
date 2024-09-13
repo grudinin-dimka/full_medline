@@ -147,11 +147,11 @@ export default {
                   axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
 
                   // Вводим первоначальные данные активной ссылки
-                  localStorage.setItem('linkActive', 'ehome');
-                  localStorage.setItem('linkPrevios', 'ehome');
+                  localStorage.setItem('linkActiveName', 'ehome');
+                  localStorage.setItem('linkPreviosName', 'ehome');
 
                   // Перевод на страницу админки
-                  this.$router.push("/admin/ehome");
+                  this.$router.push({name: "ehome"});
 
                   // Очистка ошибок
                   this.errors.name.status = false;

@@ -1146,7 +1146,7 @@ export default {
 				this.loading.loader.slider = false;
 				setTimeout(() => {
 					this.loading.slider = true;
-				}, 515);
+				}, 501);
 			})
 			.catch((error) => {
 				let debbugStory = {
@@ -1175,7 +1175,7 @@ export default {
 				this.loading.loader.footer = false;
 				setTimeout(() => {
 					this.loading.footer = true;
-				}, 500);
+				}, 501);
 			})
 			.catch((error) => {
 				let debbugStory = {
@@ -1323,7 +1323,7 @@ textarea:focus {
 	grid-template-columns: repeat(4, 1fr);
 	gap: 20px;
 
-	animation: show 0.5s ease-out;
+	animation: show-height 2s ease-out;
 }
 
 .slider-block {

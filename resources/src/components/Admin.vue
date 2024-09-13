@@ -52,7 +52,7 @@ export default {
 					this.loader.other = true;
 				})
 				.catch((error) => {
-					this.$router.push("/login");
+					this.$router.push({ name: 'login' });
 					localStorage.removeItem("token");
 					return;
 				});

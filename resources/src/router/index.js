@@ -81,9 +81,14 @@ const router = createRouter({
 		// Роутер для админки
 		{
 			path: "/admin",
-			name: "Admin",
+			name: "admin",
 			component: Admin,
 			children: [
+				{
+					path: "",
+					name: "admin-default",
+					redirect: { name: "ehome" },
+				},
 				{
 					path: "ehome",
 					name: "ehome",
@@ -98,6 +103,7 @@ const router = createRouter({
 					path: "especialists",
 					name: "especialists",
 					component: () => import("../views/admin/specialists/AdminSpecialists.vue"),
+					redirect: { name: "especialist-all" },
 					children: [
 						{
 							path: "",
@@ -107,7 +113,8 @@ const router = createRouter({
 						{
 							path: ":id",
 							name: "especialist-profile",
-							component: () => import("../views/admin/specialists/AdminSpecialistsProfile.vue"),
+							component: () =>
+								import("../views/admin/specialists/AdminSpecialistsProfile.vue"),
 						},
 					],
 				},
@@ -121,7 +128,7 @@ const router = createRouter({
 		// Роутер для не найденных страниц
 		{
 			path: "/:pathMatch(.*)*",
-			name: "NotFound",
+			name: "not-found",
 			component: NotFound,
 		},
 	],
