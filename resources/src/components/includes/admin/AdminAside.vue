@@ -2,16 +2,30 @@
 	<aside :class="{ active: $store.state.burger.status }">
 		<div class="aside-body">
 			<div class="item">
-				<a :class="{ active : links.home.status }" class="item-title" href="#" @click.prevent="this.$router.push({ name: 'ehome' })"> Главная </a>
+				<a
+					:class="{ active: links.home.status }"
+					class="item-title"
+					href="#"
+					@click.prevent="this.$router.push({ name: 'ehome' })"
+				>
+					Главная
+				</a>
 			</div>
 			<div class="item">
-				<a class="item-title" href="#" @click.prevent="this.$router.push({ name: 'about-us' })"> О нас </a>
+				<a class="item-title" href="#" @click.prevent="this.$router.push({ name: 'about-us' })">
+					О нас
+				</a>
 			</div>
 			<div class="item">
-				<a class="item-title" :class="{ active : links.specialists.status }" href="#" @click.prevent="insertPage('specialists', 'all')">
+				<a
+					class="item-title"
+					:class="{ active: links.specialists.status }"
+					href="#"
+					@click.prevent="openListSpecialists"
+				>
 					Специалисты
 				</a>
-				<div class="item-list" ref="especialists">
+				<div class="item-list" ref="especialists" :class="{ active: links.specialists.status }">
 					<a href="#" @click.prevent="insertPage('specialists', 'all')"> Список </a>
 					<a href="#" @click.prevent="insertPage('specialists', 'specializations')">
 						Специализации
@@ -26,7 +40,9 @@
 					</a>
 				</div>
 			</div>
-			<a class="item-title" href="#" @click.prevent="this.$router.push({ name: 'eprice' })"> Прайс </a>
+			<a class="item-title" href="#" @click.prevent="this.$router.push({ name: 'eprice' })">
+				Прайс
+			</a>
 		</div>
 		<div class="aside-footer">
 			<button class="btn-close" @click="logoutUser">Выйти</button>
@@ -48,17 +64,17 @@ export default {
 			links: {
 				home: {
 					name: "ehome",
-               status: false,
+					status: false,
 					list: null,
 				},
 				about: {
 					name: "about-us",
-               status: false,
+					status: false,
 					list: null,
 				},
 				specialists: {
 					name: "specialists",
-               status: false,
+					status: false,
 					list: {
 						all: false,
 						specialization: false,
@@ -70,13 +86,16 @@ export default {
 				},
 				price: {
 					name: "eprice",
-               status: false,
+					status: false,
 					list: null,
 				},
 			},
 		};
 	},
 	methods: {
+		openListSpecialists() {
+			this.links.specialists.status = !this.links.specialists.status;
+		},
 		insertPage(nameTitle, nameList) {
 			// this.$refs.especialists.classList.toggle("active");
 
@@ -152,19 +171,20 @@ aside.active {
 	flex-direction: column;
 }
 
-.aside-footer {
-	padding: 20px;
-	box-sizing: border-box;
-	display: flex;
-	flex-direction: column;
-	gap: 5px;
+.item-title.active:hover {
+	background-color: rgba(255, 255, 255, 0.3);
 }
 
-.aside-footer button {
-	cursor: pointer;
+.item-title.active {
+	background-color: rgba(255, 255, 255, 0.15);
+	border-radius: 10px 10px 0px 0px;
 }
 
 .item-list {
+	display: none;
+}
+
+.item-list.active {
 	display: block;
 	display: flex;
 	flex-direction: column;
@@ -181,6 +201,18 @@ aside.active {
 
 .item-list > a:hover {
 	background-color: rgba(255, 255, 255, 0.3);
+}
+
+.aside-footer {
+	padding: 20px;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+.aside-footer button {
+	cursor: pointer;
 }
 
 .btn-close {
@@ -214,10 +246,6 @@ a {
 	color: white;
 
 	transition: all 0.15s ease-in-out;
-}
-
-a.active {
-	background-color: rgba(255, 255, 255, 0.15);
 }
 
 a:active {
