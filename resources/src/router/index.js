@@ -96,7 +96,7 @@ const router = createRouter({
 				},
 				{
 					path: "eabout",
-					name: "about-us",
+					name: "eabout",
 					component: () => import("../views/admin/AdminAboutUs.vue"),
 				},
 				{
@@ -107,7 +107,7 @@ const router = createRouter({
 					children: [
 						{
 							path: "",
-							name: "especialist-all",
+							name: "especialists-all",
 							component: () => import("../views/admin/specialists/AdminSpecialistsAll.vue"),
 						},
 						{
@@ -115,6 +115,11 @@ const router = createRouter({
 							name: "especialist-profile",
 							component: () =>
 								import("../views/admin/specialists/AdminSpecialistsProfile.vue"),
+						},
+						{
+							path: "specializations",
+							name: "especialists-specializations",
+							component: () => import("../views/admin/specialists/AdminSpecialistsSpecializations.vue"),
 						},
 					],
 				},

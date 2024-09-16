@@ -24,16 +24,6 @@ section {
 
 	box-shadow: 0px 4px 10px -10px rgba(0, 0, 0, 0.99);
 
-	animation: show 0.5s ease-out;
 	transition: all 0.5s;
-}
-
-@keyframes show {
-	from {
-		transform: translateY(50px);
-	}
-	to {
-		transform: translateY(0px);
-	}
 }
 </style>

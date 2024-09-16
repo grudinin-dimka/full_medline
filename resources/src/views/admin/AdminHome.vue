@@ -148,7 +148,7 @@
 			</template>
 		</block-title>
 
-		<LoaderChild :isLoading="loading.loader.slider"></LoaderChild>
+		<LoaderChild :isLoading="loading.loader.slider" :minHeight="100"/>
 
 		<div class="slider" v-if="loading.slider">
 			<div
@@ -208,7 +208,7 @@
 			</template>
 		</block-title>
 
-		<LoaderChild :isLoading="loading.loader.footer"></LoaderChild>
+		<LoaderChild :isLoading="loading.loader.footer" :minHeight="200"/>
 
 		<div class="footer-container" v-if="loading.footer">
 			<!-- Заголовок -->
@@ -1144,9 +1144,7 @@ export default {
 				this.sortSlider();
 
 				this.loading.loader.slider = false;
-				setTimeout(() => {
-					this.loading.slider = true;
-				}, 501);
+				this.loading.slider = true;
 			})
 			.catch((error) => {
 				let debbugStory = {
@@ -1173,9 +1171,7 @@ export default {
 				}
 
 				this.loading.loader.footer = false;
-				setTimeout(() => {
-					this.loading.footer = true;
-				}, 501);
+				this.loading.footer = true;
 			})
 			.catch((error) => {
 				let debbugStory = {

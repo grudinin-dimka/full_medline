@@ -6,43 +6,36 @@
 					:class="{ active: links.home.status }"
 					class="item-title"
 					href="#"
-					@click.prevent="this.$router.push({ name: 'ehome' })"
+					@click.prevent="insertPage('ehome')"
 				>
 					Главная
 				</a>
 			</div>
 			<div class="item">
-				<a class="item-title" href="#" @click.prevent="this.$router.push({ name: 'about-us' })">
-					О нас
-				</a>
+				<a class="item-title" href="#" @click.prevent="insertPage('eabout')"> О нас </a>
 			</div>
 			<div class="item">
 				<a
 					class="item-title"
 					:class="{ active: links.specialists.status }"
 					href="#"
-					@click.prevent="openListSpecialists"
+					@click.prevent="openListEspecialists"
 				>
+					<IconArrowWhite :width="20" :height="20" :rotate="180" class="item-arrow" />
 					Специалисты
 				</a>
 				<div class="item-list" ref="especialists" :class="{ active: links.specialists.status }">
-					<a href="#" @click.prevent="insertPage('specialists', 'all')"> Список </a>
-					<a href="#" @click.prevent="insertPage('specialists', 'specializations')">
+					<a href="#" @click.prevent="insertSubPage('especialists-all')"> Список </a>
+					<a href="#" @click.prevent="insertSubPage('especialists-specializations')">
 						Специализации
 					</a>
-					<a href="#" @click.prevent="insertPage('specialists', 'clinics')"> Клиники </a>
-					<a href="#" @click.prevent="insertPage('specialists', 'educations')">
-						Образование
-					</a>
-					<a href="#" @click.prevent="insertPage('specialists', 'works')"> Места работы </a>
-					<a href="#" @click.prevent="insertPage('specialists', 'certificates')">
-						Сертификаты
-					</a>
+					<a href="#" @click.prevent="insertSubPage('specialists-clinics')"> Клиники </a>
+					<a href="#" @click.prevent="insertSubPage('specialists-educations')"> Образование </a>
+					<a href="#" @click.prevent="insertSubPage('specialists-works')"> Места работы </a>
+					<a href="#" @click.prevent="insertSubPage('specialists-certificates')"> Сертификаты </a>
 				</div>
 			</div>
-			<a class="item-title" href="#" @click.prevent="this.$router.push({ name: 'eprice' })">
-				Прайс
-			</a>
+			<a class="item-title" href="#" @click.prevent="insertPage('eprice')"> Прайс </a>
 		</div>
 		<div class="aside-footer">
 			<button class="btn-close" @click="logoutUser">Выйти</button>
@@ -52,12 +45,13 @@
 
 <script>
 import axios from "axios";
-import AdminAsideList from "./AdminAsideList.vue";
+
+import IconArrowWhite from "../../icons/IconArrowWhite.vue";
 
 export default {
 	components: {
 		axios,
-		AdminAsideList,
+		IconArrowWhite,
 	},
 	data() {
 		return {
@@ -93,22 +87,45 @@ export default {
 		};
 	},
 	methods: {
-		openListSpecialists() {
+		// Открыть список специалистов
+		openListEspecialists() {
 			this.links.specialists.status = !this.links.specialists.status;
+
+			for (let key in this.links) {
+				if (key != "specialists") {
+					this.links[key].status = false;
+				}
+			}
 		},
-		insertPage(nameTitle, nameList) {
-			// this.$refs.especialists.classList.toggle("active");
+		insertPage(page) {
+			for (let key in this.links) {
+				this.links[key].status = false;
+			}
 
-			console.log(title, list);
+			this.$router.push({ name: `${page}` });
 
-			// this.$store.state.burger.status = false;
+			// смена статуса закрытия бургера
+			this.$store.state.burger.status = false;
 
-			// this.$router.push({ name: `${value}` });
-			// window.scrollTo({
-			// 	top: 0,
-			// 	left: 0,
-			// 	behavior: "instant",
-			// });
+			// скролл к верху
+			window.scrollTo({
+				top: 0,
+				left: 0,
+				behavior: "instant",
+			});
+		},
+		insertSubPage(subPage) {
+			this.$router.push({ name: `${subPage}` });
+
+			// смена статуса закрытия бургера
+			this.$store.state.burger.status = false;
+
+			// скролл к верху
+			window.scrollTo({
+				top: 0,
+				left: 0,
+				behavior: "instant",
+			});
 		},
 		// Выход из аккаунта
 		logoutUser() {
@@ -166,6 +183,7 @@ aside.active {
 }
 
 .aside-body > .item {
+	position: relative;
 	box-sizing: border-box;
 	display: flex;
 	flex-direction: column;
@@ -178,6 +196,17 @@ aside.active {
 .item-title.active {
 	background-color: rgba(255, 255, 255, 0.15);
 	border-radius: 10px 10px 0px 0px;
+}
+
+.item-arrow {
+	position: absolute;
+	right: 15px;
+	top: 23px;
+}
+
+.item-arrow:hover + .item-list > a {
+	border-radius: 0px;
+	background-color: rgba(255, 255, 255, 0.15);
 }
 
 .item-list {
@@ -245,7 +274,7 @@ a {
 
 	color: white;
 
-	transition: all 0.15s ease-in-out;
+	transition: hover 0.15s ease-in-out;
 }
 
 a:active {

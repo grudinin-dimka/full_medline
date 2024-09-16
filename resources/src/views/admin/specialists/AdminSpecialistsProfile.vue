@@ -12,26 +12,25 @@
 				<icon-save :width="28" :height="28" />
 			</template>
 		</block-title>
-		<div class="test-container">
+		<div class="container-profile">
 			<div
+				class="profile-image"
 				:style="{
 					backgroundImage: `url(/storage/slides/lesnikova.png)`,
-					height: '300px',
-					width: '300px',
-					backgroundSize: 'cover',
-					backgroundPosition: 'center',
-					backgroundRepeat: 'no-repeat',
 				}"
 			></div>
+			<input class="profile-file" type="file" placeholder="введите фамилию" autocomplete="off" />
 		</div>
 		<container-input>
-			<container-input-three>
+			<container-input-three :fieldset="true">
+				<template #legend>Ф.И.О.</template>
 				<template #title-one>Фамилия</template>
 				<template #input-one>
 					<input
 						type="text"
 						v-model="spesialist.profile.family.body"
 						placeholder="введите фамилию"
+						autocomplete="off"
 					/>
 				</template>
 				<template #title-two>Имя</template>
@@ -40,6 +39,7 @@
 						type="text"
 						v-model="spesialist.profile.name.body"
 						placeholder="введите имя"
+						autocomplete="off"
 					/>
 				</template>
 				<template #title-three>Отчество</template>
@@ -48,10 +48,12 @@
 						type="text"
 						v-model="spesialist.profile.surname.body"
 						placeholder="введите отчество"
+						autocomplete="off"
 					/>
 				</template>
 			</container-input-three>
-			<container-input-two>
+			<container-input-two :fieldset="true">
+				<template #legend>Первая работа</template>
 				<template #title-one>Начало первой работы</template>
 				<template #input-one>
 					<input type="date" v-model="spesialist.profile.startWorkAge.body" />
@@ -62,20 +64,22 @@
 						type="text"
 						v-model="spesialist.profile.startWorkCity.body"
 						placeholder="введите название города"
+						autocomplete="off"
 					/>
 				</template>
 			</container-input-two>
-			<container-input-two>
-				<template #title-one>Взрослый врач</template>
+			<container-input-two :fieldset="true">
+				<template #legend>Приём врача</template>
+				<template #title-one>У взрослых</template>
 				<template #input-one>
 					<select v-model="spesialist.profile.adultDoctor.body">
 						<option value="false">Нет</option>
 						<option value="true">Да</option>
 					</select>
 				</template>
-				<template #title-two>Детский врач</template>
+				<template #title-two>У детей</template>
 				<template #input-two>
-					<select v-model="spesialist.profile.childrenDoctor.body">
+					<select v-model="spesialist.profile.childrenDoctor.body" autocomplete="off">
 						<option value="false">Нет</option>
 						<option value="true">Да</option>
 					</select>
@@ -256,4 +260,48 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.container-profile {
+	display: flex;
+	gap: 20px;
+	justify-content: space-evenly;
+}
+
+.profile-image {
+	height: 400px;
+	width: 340px;
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	border: 2px solid var(--input-border-color-inactive);
+	border-radius: 10px;
+}
+
+.profile-file {
+	box-sizing: border-box;
+	outline: none;
+
+	padding: 10px;
+	border: 2px solid var(--input-border-color-inactive);
+	border-radius: 10px;
+
+	font-size: 20px;
+	caret-color: var(--input-border-color-active);
+
+	transition: all 0.2s;
+}
+
+.profile-file::file-selector-button {
+	flex-grow: 1;
+	cursor: pointer;
+	background-color: var(--button-default-color);
+	border: 0px;
+	border-radius: 5px;
+	color: white;
+	padding: 5px;
+}
+
+.profile-file:focus {
+	border: 2px solid var(--input-border-color-active);
+}
+</style>

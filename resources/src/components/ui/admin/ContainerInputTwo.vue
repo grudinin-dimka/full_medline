@@ -1,5 +1,23 @@
 <template>
-	<div class="container-inputs-two">
+	<fieldset class="container-inputs-two" v-if="fieldset">
+		<legend>
+			<slot name="legend"></slot>
+		</legend>
+		<div class="item">
+			<label>
+				<slot name="title-one"></slot>
+			</label>
+			<slot name="input-one"></slot>
+		</div>
+		<div class="item">
+			<label>
+				<slot name="title-two"></slot>
+			</label>
+			<slot name="input-two"></slot>
+		</div>
+	</fieldset>
+
+	<div class="container-inputs-two" v-else>
 		<div class="item">
 			<label>
 				<slot name="title-one"></slot>
@@ -15,9 +33,30 @@
 	</div>
 </template>
 
-<script setup></script>
+<script>
+export default {
+	props: {
+		fieldset: {
+			type: Boolean,
+			default: false,
+		}
+	},
+};
+</script>
 
 <style>
+fieldset.container-inputs-two {
+	border: 2px solid var(--input-border-color-inactive);
+	border-radius: 10px;
+	padding: 10px;
+	transition: all 0.2s;
+	background-color: #f1feff;
+}
+
+fieldset.container-inputs-two:focus-within {
+	border: 2px solid var(--input-border-color-active);
+}
+
 .container-inputs-two {
 	display: grid;
    grid-template-columns: 1fr 1fr;
@@ -53,7 +92,9 @@
 	transition: all 0.2s;
 }
 
-.container-inputs-two > .item > input:focus {
+.container-inputs-two > .item > input:focus,
+.container-inputs-two > .item > select:focus
+{
 	border: 2px solid var(--input-border-color-active);
 }
 </style>
