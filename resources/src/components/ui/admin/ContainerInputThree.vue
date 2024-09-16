@@ -74,12 +74,13 @@ legend {
 }
 
 .container-inputs-three {
-	display: grid;
-	grid-template-columns: 1fr 1fr 1fr;
+	display: flex;
+	flex-wrap: wrap;
 	gap: 10px;
 }
 
 .container-inputs-three > .item {
+	flex: 1 0 350px;
 	display: flex;
 	flex-direction: column;
 	gap: 5px;

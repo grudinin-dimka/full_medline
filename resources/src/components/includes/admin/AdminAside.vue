@@ -29,10 +29,10 @@
 					<a href="#" @click.prevent="insertSubPage('especialists-specializations')">
 						Специализации
 					</a>
-					<a href="#" @click.prevent="insertSubPage('specialists-clinics')"> Клиники </a>
-					<a href="#" @click.prevent="insertSubPage('specialists-educations')"> Образование </a>
-					<a href="#" @click.prevent="insertSubPage('specialists-works')"> Места работы </a>
-					<a href="#" @click.prevent="insertSubPage('specialists-certificates')"> Сертификаты </a>
+					<a href="#" @click.prevent="insertSubPage('especialists-clinics')"> Клиники </a>
+					<a href="#" @click.prevent="insertSubPage('especialists-educations')"> Образование </a>
+					<a href="#" @click.prevent="insertSubPage('especialists-works')"> Места работы </a>
+					<a href="#" @click.prevent="insertSubPage('especialists-certificates')"> Сертификаты </a>
 				</div>
 			</div>
 			<a class="item-title" href="#" @click.prevent="insertPage('eprice')"> Прайс </a>

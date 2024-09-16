@@ -1318,8 +1318,6 @@ textarea:focus {
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
 	gap: 20px;
-
-	animation: show-height 2s ease-out;
 }
 
 .slider-block {
@@ -1386,20 +1384,6 @@ textarea:focus {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-end;
-}
-
-.footer-container {
-	animation: show 0.5s ease-out;
-}
-
-@keyframes show {
-	from {
-		opacity: 0.5;
-	}
-
-	to {
-		opacity: 1;
-	}
 }
 
 @media screen and (max-width: 1900px) {

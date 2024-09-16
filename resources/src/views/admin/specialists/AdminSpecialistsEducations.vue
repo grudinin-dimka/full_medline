@@ -6,14 +6,14 @@
 
 	<block-once>
 		<block-title>
-			<template #title>Специализации</template>
+			<template #title>Образование</template>
 			<template #buttons>
 				<icon-save :width="28" :height="28" />
 			</template>
 		</block-title>
 
 		<block-buttons>
-			<button-default> Добавить </button-default>
+			<button-default @click=""> Добавить </button-default>
 		</block-buttons>
 	</block-once>
 </template>

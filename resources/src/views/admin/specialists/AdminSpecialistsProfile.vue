@@ -13,71 +13,78 @@
 			</template>
 		</block-title>
 		<div class="container-profile">
-			<div
-				class="profile-image"
-				:style="{
-					backgroundImage: `url(/storage/slides/lesnikova.png)`,
-				}"
-			></div>
-			<input class="profile-file" type="file" placeholder="введите фамилию" autocomplete="off" />
+			<img :src="`/storage/slides/lesnikova.png`" class="profile-image" alt="" />
+			<div class="profile-info">
+				<ContainerInputOnce>
+					<template #title>ФОТО ВРАЧА</template>
+					<template #input>
+						<input
+							class="profile-file"
+							type="file"
+							placeholder="Введите фамилию"
+							autocomplete="off"
+						/>
+					</template>
+				</ContainerInputOnce>
+				<container-input-three :fieldset="true">
+					<template #legend>Ф.И.О.</template>
+					<template #title-one>ФАМИЛИЯ</template>
+					<template #input-one>
+						<input
+							type="text"
+							v-model="spesialist.profile.family.body"
+							placeholder="Введите фамилию"
+							autocomplete="off"
+						/>
+					</template>
+					<template #title-two>ИМЯ</template>
+					<template #input-two>
+						<input
+							type="text"
+							v-model="spesialist.profile.name.body"
+							placeholder="Введите имя"
+							autocomplete="off"
+						/>
+					</template>
+					<template #title-three>ОТЧЕСТВО</template>
+					<template #input-three>
+						<input
+							type="text"
+							v-model="spesialist.profile.surname.body"
+							placeholder="Введите отчество"
+							autocomplete="off"
+						/>
+					</template>
+				</container-input-three>
+			</div>
 		</div>
 		<container-input>
-			<container-input-three :fieldset="true">
-				<template #legend>Ф.И.О.</template>
-				<template #title-one>Фамилия</template>
-				<template #input-one>
-					<input
-						type="text"
-						v-model="spesialist.profile.family.body"
-						placeholder="введите фамилию"
-						autocomplete="off"
-					/>
-				</template>
-				<template #title-two>Имя</template>
-				<template #input-two>
-					<input
-						type="text"
-						v-model="spesialist.profile.name.body"
-						placeholder="введите имя"
-						autocomplete="off"
-					/>
-				</template>
-				<template #title-three>Отчество</template>
-				<template #input-three>
-					<input
-						type="text"
-						v-model="spesialist.profile.surname.body"
-						placeholder="введите отчество"
-						autocomplete="off"
-					/>
-				</template>
-			</container-input-three>
 			<container-input-two :fieldset="true">
-				<template #legend>Первая работа</template>
-				<template #title-one>Начало первой работы</template>
+				<template #legend>ПЕРВАЯ РАБОТА</template>
+				<template #title-one>НАЧАЛО ПЕРВОЙ РАБОТЫ</template>
 				<template #input-one>
 					<input type="date" v-model="spesialist.profile.startWorkAge.body" />
 				</template>
-				<template #title-two>Город первой работы</template>
+				<template #title-two>ГОРОД ПЕРВОЙ РАБОТЫ</template>
 				<template #input-two>
 					<input
 						type="text"
 						v-model="spesialist.profile.startWorkCity.body"
-						placeholder="введите название города"
+						placeholder="Введите название города"
 						autocomplete="off"
 					/>
 				</template>
 			</container-input-two>
 			<container-input-two :fieldset="true">
-				<template #legend>Приём врача</template>
-				<template #title-one>У взрослых</template>
+				<template #legend>ПРИЁМ ВРАЧА</template>
+				<template #title-one>У ВЗРОСЛЫХ</template>
 				<template #input-one>
 					<select v-model="spesialist.profile.adultDoctor.body">
 						<option value="false">Нет</option>
 						<option value="true">Да</option>
 					</select>
 				</template>
-				<template #title-two>У детей</template>
+				<template #title-two>У ДЕТЕЙ</template>
 				<template #input-two>
 					<select v-model="spesialist.profile.childrenDoctor.body" autocomplete="off">
 						<option value="false">Нет</option>
@@ -91,7 +98,26 @@
 			<button-default> Добавить </button-default>
 		</block-buttons>
 	</block-once>
+	<!-- Сертификаты -->
+	<block-once>
+		<block-title>
+			<template #title>Сертификаты</template>
+			<template #buttons>
+				<icon-save :width="28" :height="28" />
+			</template>
+		</block-title>
 
+		<div class="profile-specializations">
+			<div class="item">г. Шадринск, ул. Комсомольская, 16</div>
+			<div class="item">г. Шадринск, ул. Карла Либкнехта, 10</div>
+		</div>
+
+		<block-buttons>
+			<button-default> Добавить </button-default>
+		</block-buttons>
+	</block-once>
+
+	<!-- Специализации и клиники -->
 	<block-two>
 		<template #title-one>
 			<block-title>
@@ -132,45 +158,44 @@
 			</block-buttons>
 		</template>
 	</block-two>
+	<!-- Специализации и клиники -->
+	<block-two>
+		<template #title-one>
+			<block-title>
+				<template #title> Образование </template>
+				<template #buttons>
+					<icon-save :width="28" :height="28" />
+				</template>
+			</block-title>
+		</template>
+		<template #body-one>
+			<div class="profile-specializations">
+				<div class="item">г. Шадринск, ул. Комсомольская, 16</div>
+				<div class="item">г. Шадринск, ул. Карла Либкнехта, 10</div>
+			</div>
 
-	<block-once>
-		<block-title>
-			<template #title>Образование</template>
-			<template #buttons>
-				<icon-save :width="28" :height="28" />
-			</template>
-		</block-title>
+			<block-buttons>
+				<button-default> Добавить </button-default>
+			</block-buttons>
+		</template>
+		<template #title-two>
+			<block-title>
+				<template #title> Места работы </template>
+				<template #buttons>
+					<icon-save :width="28" :height="28" />
+				</template>
+			</block-title>
+		</template>
+		<template #body-two>
+			<div class="profile-clinics">
+				<div class="item">р. п. Каргаполье, ул. Мира, 5г</div>
+			</div>
 
-		<block-buttons>
-			<button-default> Добавить </button-default>
-		</block-buttons>
-	</block-once>
-
-	<block-once>
-		<block-title>
-			<template #title>Место работы</template>
-			<template #buttons>
-				<icon-save :width="28" :height="28" />
-			</template>
-		</block-title>
-
-		<block-buttons>
-			<button-default> Добавить </button-default>
-		</block-buttons>
-	</block-once>
-
-	<block-once>
-		<block-title>
-			<template #title>Сертификаты</template>
-			<template #buttons>
-				<icon-save :width="28" :height="28" />
-			</template>
-		</block-title>
-
-		<block-buttons v-if="$route.params.id === 'new'">
-			<button-default> Добавить </button-default>
-		</block-buttons>
-	</block-once>
+			<block-buttons>
+				<button-default> Добавить </button-default>
+			</block-buttons>
+		</template>
+	</block-two>
 </template>
 
 <script>
@@ -279,18 +304,24 @@ export default {
 
 <style scoped>
 .container-profile {
-	display: flex;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
 	gap: 20px;
-	justify-content: space-evenly;
 }
 
 .profile-image {
-	height: 400px;
-	width: 340px;
-	background-size: cover;
-	background-position: center;
-	background-repeat: no-repeat;
+	align-self: center;
+	justify-self: center;
+	flex: 1 0 340px;
+	max-width: 340px;
 	border-radius: 10px;
+}
+
+.profile-info {
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
 }
 
 .profile-file {

@@ -121,6 +121,16 @@ const router = createRouter({
 							name: "especialists-specializations",
 							component: () => import("../views/admin/specialists/AdminSpecialistsSpecializations.vue"),
 						},
+						{
+							path: "clinics",
+							name: "especialists-clinics",
+							component: () => import("../views/admin/specialists/AdminSpecialistsClinics.vue"),
+						},
+						{
+							path: "educations",
+							name: "especialists-educations",
+							component: () => import("../views/admin/specialists/AdminSpecialistsEducations.vue"),
+						},
 					],
 				},
 				{

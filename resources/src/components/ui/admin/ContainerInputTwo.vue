@@ -58,13 +58,14 @@ fieldset.container-inputs-two:focus-within {
 }
 
 .container-inputs-two {
-	display: grid;
-   grid-template-columns: 1fr 1fr;
+	display: flex;
+	flex-wrap: wrap;
    gap: 10px;
 }
 
 .container-inputs-two > .item {
-   display: flex;
+	flex: 1 0 350px;
+	display: flex;
    flex-direction: column;
    gap: 5px;
 }

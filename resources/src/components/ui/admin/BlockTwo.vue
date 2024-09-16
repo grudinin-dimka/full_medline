@@ -36,7 +36,7 @@ export default {};
 
 	background-color: white;
 	height: auto;
-	border-radius: 10px;
+	border-radius: 15px;
 	padding: 20px;
 
 	max-width: 100%;
