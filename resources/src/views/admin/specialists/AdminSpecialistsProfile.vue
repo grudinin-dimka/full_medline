@@ -5,7 +5,7 @@
 	</info-bar>
 
 	<!-- Основные данные врача -->
-	<block>
+	<block-once>
 		<block-title>
 			<template #title>Профиль</template>
 			<template #buttons>
@@ -90,35 +90,50 @@
 		<block-buttons v-if="$route.params.id === 'new'">
 			<button-default> Добавить </button-default>
 		</block-buttons>
-	</block>
+	</block-once>
 
-	<block>
-		<block-title>
-			<template #title>Специализации</template>
-			<template #buttons>
-				<icon-save :width="28" :height="28" />
-			</template>
-		</block-title>
+	<block-two>
+		<template #title-one>
+			<block-title>
+				<template #title> Специализации </template>
+				<template #buttons>
+					<icon-save :width="28" :height="28" />
+				</template>
+			</block-title>
+		</template>
+		<template #body-one>
+			<div class="profile-specializations">
+				<div class="item">г. Шадринск, ул. Комсомольская, 16</div>
+				<div class="item">г. Шадринск, ул. Карла Либкнехта, 10</div>
+			</div>
 
-		<block-buttons>
-			<button-default> Добавить </button-default>
-		</block-buttons>
-	</block>
+			<block-buttons>
+				<button-default> Добавить </button-default>
+			</block-buttons>
+		</template>
+		<template #title-two>
+			<block-title>
+				<template #title> Клиники </template>
+				<template #buttons>
+					<icon-save :width="28" :height="28" />
+				</template>
+			</block-title>
+		</template>
+		<template #body-two>
+			<div class="profile-clinics">
+				<div class="item">г. Шадринск, ул. Комсомольская, 16</div>
+				<div class="item">г. Шадринск, ул. Карла Либкнехта, 10</div>
+				<div class="item">г. Шадринск, ул. Октябрьская, 3</div>
+				<div class="item">р. п. Каргаполье, ул. Мира, 5г</div>
+			</div>
 
-	<block>
-		<block-title>
-			<template #title>Клиники</template>
-			<template #buttons>
-				<icon-save :width="28" :height="28" />
-			</template>
-		</block-title>
+			<block-buttons>
+				<button-default> Добавить </button-default>
+			</block-buttons>
+		</template>
+	</block-two>
 
-		<block-buttons>
-			<button-default> Добавить </button-default>
-		</block-buttons>
-	</block>
-
-	<block>
+	<block-once>
 		<block-title>
 			<template #title>Образование</template>
 			<template #buttons>
@@ -129,9 +144,9 @@
 		<block-buttons>
 			<button-default> Добавить </button-default>
 		</block-buttons>
-	</block>
+	</block-once>
 
-	<block>
+	<block-once>
 		<block-title>
 			<template #title>Место работы</template>
 			<template #buttons>
@@ -142,9 +157,9 @@
 		<block-buttons>
 			<button-default> Добавить </button-default>
 		</block-buttons>
-	</block>
+	</block-once>
 
-	<block>
+	<block-once>
 		<block-title>
 			<template #title>Сертификаты</template>
 			<template #buttons>
@@ -155,7 +170,7 @@
 		<block-buttons v-if="$route.params.id === 'new'">
 			<button-default> Добавить </button-default>
 		</block-buttons>
-	</block>
+	</block-once>
 </template>
 
 <script>
@@ -164,7 +179,8 @@ import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
 
 import ElementInputLabel from "../../../components/ui/admin/ElementInputLabel.vue";
-import Block from "../../../components/ui/admin/Block.vue";
+import BlockOnce from "../../../components/ui/admin/BlockOnce.vue";
+import BlockTwo from "../../../components/ui/admin/BlockTwo.vue";
 import BlockTitle from "../../../components/ui/admin/BlockTitle.vue";
 import BlockButtons from "../../../components/ui/admin/BlockButtons.vue";
 import SpanError from "../../../components/ui/admin/SpanError.vue";
@@ -188,7 +204,8 @@ export default {
 		InfoBar,
 		LoaderChild,
 		ElementInputLabel,
-		Block,
+		BlockOnce,
+		BlockTwo,
 		BlockTitle,
 		BlockButtons,
 		SpanError,
@@ -273,7 +290,6 @@ export default {
 	background-size: cover;
 	background-position: center;
 	background-repeat: no-repeat;
-	border: 2px solid var(--input-border-color-inactive);
 	border-radius: 10px;
 }
 
@@ -302,6 +318,28 @@ export default {
 }
 
 .profile-file:focus {
+	border: 2px solid var(--input-border-color-active);
+}
+
+.profile-clinics,
+.profile-specializations {
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.profile-clinics > .item,
+.profile-specializations > .item {
+	cursor: pointer;
+	border: 2px solid var(--input-border-color-inactive);
+	border-radius: 10px;
+	padding: 10px;
+	transition: all 0.2s;
+}
+
+.profile-clinics > .item:hover,
+.profile-specializations > .item:hover {
 	border: 2px solid var(--input-border-color-active);
 }
 </style>

@@ -1,15 +1,15 @@
 <template>
-	<section>
+	<div class="block-once">
 		<slot></slot>
-	</section>
+	</div>
 </template>
 
 <script>
 export default {};
 </script>
 
-<style scoped>
-section {
+<style>
+.block-once {
 	display: flex;
 	flex-direction: column;
 	gap: 20px;

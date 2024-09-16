@@ -62,7 +62,7 @@ fieldset.container-inputs-three {
 	border-radius: 10px;
 	padding: 10px;
 	transition: all 0.2s;
-	background-color: #f1feff;
+	background-color: rgb(255, 255, 255);
 }
 
 fieldset.container-inputs-three:focus-within {

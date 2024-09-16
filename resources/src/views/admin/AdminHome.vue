@@ -140,7 +140,7 @@
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                      СЛАЙДЕР                      |-->
 	<!--|___________________________________________________|-->
-	<block>
+	<block-once>
 		<block-title>
 			<template #title>Слайдер</template>
 			<template #buttons>
@@ -148,7 +148,7 @@
 			</template>
 		</block-title>
 
-		<LoaderChild :isLoading="loading.loader.slider" :minHeight="100"/>
+		<LoaderChild :isLoading="loading.loader.slider" :minHeight="100" />
 
 		<div class="slider" v-if="loading.slider">
 			<div
@@ -195,12 +195,12 @@
 		<BlockButtons>
 			<ButtonDefault @click="openSlide(null, 'create')"> Добавить </ButtonDefault>
 		</BlockButtons>
-	</block>
+	</block-once>
 
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                       ФУТЕР                       |-->
 	<!--|___________________________________________________|-->
-	<block>
+	<block-once>
 		<block-title>
 			<template #title>Футер</template>
 			<template #buttons>
@@ -208,7 +208,7 @@
 			</template>
 		</block-title>
 
-		<LoaderChild :isLoading="loading.loader.footer" :minHeight="200"/>
+		<LoaderChild :isLoading="loading.loader.footer" :minHeight="200" />
 
 		<div class="footer-container" v-if="loading.footer">
 			<!-- Заголовок -->
@@ -292,7 +292,7 @@
 				<span> {{ footer.footer.symbolsCount }}/{{ footer.footer.symbolsCountMax }} </span>
 			</div>
 		</div>
-	</block>
+	</block-once>
 </template>
 
 <script>
@@ -306,7 +306,7 @@ import Modal from "../../components/includes/admin/AdminModal.vue";
 import InfoBar from "../../components/ui/admin/InfoBar.vue";
 
 import BlockTitle from "../../components/ui/admin/BlockTitle.vue";
-import Block from "../../components/ui/admin/Block.vue";
+import BlockOnce from "../../components/ui/admin/BlockOnce.vue";
 import BlockButtons from "../../components/ui/admin/BlockButtons.vue";
 
 import ButtonDefault from "../../components/ui/admin/ButtonDefault.vue";
@@ -328,7 +328,7 @@ export default {
 		LoaderChild,
 		Modal,
 		InfoBar,
-		Block,
+		BlockOnce,
 		BlockTitle,
 		BlockButtons,
 		ButtonDefault,

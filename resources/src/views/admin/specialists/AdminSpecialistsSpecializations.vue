@@ -4,7 +4,7 @@
 		<template v-slot:addreas>specialists</template>
 	</info-bar>
 
-	<block>
+	<block-once>
 		<block-title>
 			<template #title>Специализации</template>
 			<template #buttons>
@@ -15,7 +15,7 @@
 		<block-buttons>
 			<button-default @click="$router.push('especialists/new')"> Добавить </button-default>
 		</block-buttons>
-	</block>
+	</block-once>
 </template>
 
 <script>
@@ -24,7 +24,7 @@ import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
 
 import ElementInputLabel from "../../../components/ui/admin/ElementInputLabel.vue";
-import Block from "../../../components/ui/admin/Block.vue";
+import BlockOnce from "../../../components/ui/admin/BlockOnce.vue";
 import BlockTitle from "../../../components/ui/admin/BlockTitle.vue";
 import BlockButtons from "../../../components/ui/admin/BlockButtons.vue";
 
@@ -38,7 +38,7 @@ export default {
 		InfoBar,
 		LoaderChild,
 		ElementInputLabel,
-		Block,
+		BlockOnce,
 		BlockTitle,
 		BlockButtons,
 		ButtonDefault,
