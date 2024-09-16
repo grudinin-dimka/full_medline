@@ -93,23 +93,35 @@
 				</template>
 			</container-input-two>
 		</container-input>
-
-		<block-buttons v-if="$route.params.id === 'new'">
-			<button-default> Добавить </button-default>
-		</block-buttons>
 	</block-once>
 	<!-- Сертификаты -->
 	<block-once>
 		<block-title>
-			<template #title>Сертификаты</template>
+			<template #title> Сертификаты </template>
 			<template #buttons>
 				<icon-save :width="28" :height="28" />
 			</template>
 		</block-title>
 
 		<div class="profile-specializations">
-			<div class="item">г. Шадринск, ул. Комсомольская, 16</div>
-			<div class="item">г. Шадринск, ул. Карла Либкнехта, 10</div>
+			<div class="item">
+				<div class="item-title">г. Шадринск, ул. Карла Либкнехта, 10</div>
+				<div class="item-close">
+					<icon-close :width="26" :height="26"/>
+				</div>
+			</div>
+			<div class="item">
+				<div class="item-title">г. Шадринск, ул. Карла Либкнехта, 10</div>
+				<div class="item-close">
+					<icon-close :width="26" :height="26"/>
+				</div>
+			</div>
+			<div class="item">
+				<div class="item-title">г. Шадринск, ул. Карла Либкнехта, 10</div>
+				<div class="item-close">
+					<icon-close :width="26" :height="26"/>
+				</div>
+			</div>
 		</div>
 
 		<block-buttons>
@@ -129,8 +141,18 @@
 		</template>
 		<template #body-one>
 			<div class="profile-specializations">
-				<div class="item">г. Шадринск, ул. Комсомольская, 16</div>
-				<div class="item">г. Шадринск, ул. Карла Либкнехта, 10</div>
+				<div class="item">
+					<div class="item-title">г. Шадринск, ул. Карла Либкнехта, 10</div>
+					<div class="item-close">
+						<icon-close :width="26" :height="26"/>
+					</div>
+				</div>
+				<div class="item">
+					<div class="item-title">г. Шадринск, ул. Карла Либкнехта, 10</div>
+					<div class="item-close">
+						<icon-close :width="26" :height="26"/>
+					</div>
+				</div>
 			</div>
 
 			<block-buttons>
@@ -147,10 +169,12 @@
 		</template>
 		<template #body-two>
 			<div class="profile-clinics">
-				<div class="item">г. Шадринск, ул. Комсомольская, 16</div>
-				<div class="item">г. Шадринск, ул. Карла Либкнехта, 10</div>
-				<div class="item">г. Шадринск, ул. Октябрьская, 3</div>
-				<div class="item">р. п. Каргаполье, ул. Мира, 5г</div>
+				<div class="item">
+					<div class="item-title">г. Шадринск, ул. Карла Либкнехта, 10</div>
+					<div class="item-close">
+						<icon-close :width="26" :height="26"/>
+					</div>
+				</div>
 			</div>
 
 			<block-buttons>
@@ -170,8 +194,18 @@
 		</template>
 		<template #body-one>
 			<div class="profile-specializations">
-				<div class="item">г. Шадринск, ул. Комсомольская, 16</div>
-				<div class="item">г. Шадринск, ул. Карла Либкнехта, 10</div>
+				<div class="item">
+					<div class="item-title">г. Шадринск, ул. Карла Либкнехта, 10</div>
+					<div class="item-close">
+						<icon-close :width="26" :height="26"/>
+					</div>
+				</div>
+				<div class="item">
+					<div class="item-title">г. Шадринск, ул. Карла Либкнехта, 10</div>
+					<div class="item-close">
+						<icon-close :width="26" :height="26"/>
+					</div>
+				</div>
 			</div>
 
 			<block-buttons>
@@ -188,7 +222,24 @@
 		</template>
 		<template #body-two>
 			<div class="profile-clinics">
-				<div class="item">р. п. Каргаполье, ул. Мира, 5г</div>
+				<div class="item">
+					<div class="item-title">г. Шадринск, ул. Карла Либкнехта, 10</div>
+					<div class="item-close">
+						<icon-close :width="26" :height="26"/>
+					</div>
+				</div>
+				<div class="item">
+					<div class="item-title">г. Шадринск, ул. Карла Либкнехта, 10</div>
+					<div class="item-close">
+						<icon-close :width="26" :height="26"/>
+					</div>
+				</div>
+				<div class="item">
+					<div class="item-title">г. Шадринск, ул. Карла Либкнехта, 10</div>
+					<div class="item-close">
+						<icon-close :width="26" :height="26"/>
+					</div>
+				</div>
 			</div>
 
 			<block-buttons>
@@ -209,6 +260,11 @@ import BlockTwo from "../../../components/ui/admin/BlockTwo.vue";
 import BlockTitle from "../../../components/ui/admin/BlockTitle.vue";
 import BlockButtons from "../../../components/ui/admin/BlockButtons.vue";
 import SpanError from "../../../components/ui/admin/SpanError.vue";
+
+import TableButtonDefault from "../../../components/ui/admin/TableButtonDefault.vue";
+import TableButtonRemove from "../../../components/ui/admin/TableButtonRemove.vue";
+
+import IconClose from "../../../components/icons/IconClose.vue";
 
 import ContainerInput from "../../../components/ui/admin/ContainerInput.vue";
 import ContainerInputOnce from "../../../components/ui/admin/ContainerInputOnce.vue";
@@ -233,11 +289,14 @@ export default {
 		BlockTwo,
 		BlockTitle,
 		BlockButtons,
+		IconClose,
 		SpanError,
 		ContainerInput,
 		ContainerInputOnce,
 		ContainerInputTwo,
 		ContainerInputThree,
+		TableButtonDefault,
+		TableButtonRemove,
 		ButtonDefault,
 		ButtonRemove,
 		IconSave,
@@ -362,15 +421,14 @@ export default {
 
 .profile-clinics > .item,
 .profile-specializations > .item {
-	cursor: pointer;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: center;
+
 	border: 2px solid var(--input-border-color-inactive);
 	border-radius: 10px;
 	padding: 10px;
 	transition: all 0.2s;
-}
-
-.profile-clinics > .item:hover,
-.profile-specializations > .item:hover {
-	border: 2px solid var(--input-border-color-active);
 }
 </style>
