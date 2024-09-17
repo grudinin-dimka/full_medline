@@ -148,7 +148,38 @@
 			</template>
 		</block-title>
 
-		<LoaderChild :isLoading="loading.loader.slider" :minHeight="100" />
+		<div class="slider" v-if="loading.loader.slider">
+			<div class="slider-block slider-load">
+				<div
+					v-bind:style="{
+						'background-image': `url(/storage/default/specialist.png)`,
+						height: '275px',
+						'background-size': 'contain	',
+						'background-position': 'center center',
+						'background-repeat': 'no-repeat',
+					}"
+				></div>
+				<div class="slider-block-id">#0</div>
+				<div class="slider-block-info">
+					<article>
+						<SlideUserCard />
+						<label>
+							Иванов Иван Иванович
+						</label>
+					</article>
+					<article>
+						<SlideLink />
+						<label>
+							https://vrach.ru
+						</label>
+					</article>
+					<article>
+						<SlidePath />
+						<label> default/specialist.png </label>
+					</article>
+				</div>
+			</div>
+		</div>
 
 		<div class="slider" v-if="loading.slider">
 			<div
@@ -208,9 +239,7 @@
 			</template>
 		</block-title>
 
-		<LoaderChild :isLoading="loading.loader.footer" :minHeight="200" />
-
-		<div class="footer-container" v-if="loading.footer">
+		<div class="footer-container">
 			<!-- Заголовок -->
 			<element-input-label>
 				Заголовок <span v-if="footer.title.edited">(Изменено)</span>
@@ -219,6 +248,7 @@
 				<textarea
 					rows="4"
 					placeholder="Заголовок"
+					:class="{ 'textarea-load': loading.loader.footer }"
 					v-model="footer.title.body"
 					@input="controlSymbols('title')"
 				>
@@ -234,6 +264,7 @@
 				<textarea
 					rows="10"
 					placeholder="Заголовок"
+					:class="{ 'textarea-load': loading.loader.footer }"
 					v-model="footer.titleDesc.body"
 					@input="controlSymbols('titleDesc')"
 				>
@@ -249,6 +280,7 @@
 				<textarea
 					rows="4"
 					placeholder="Заголовок"
+					:class="{ 'textarea-load': loading.loader.footer }"
 					v-model="footer.license.body"
 					@input="controlSymbols('license')"
 				>
@@ -268,6 +300,7 @@
 				<textarea
 					rows="10"
 					placeholder="Основной текст"
+					:class="{ 'textarea-load': loading.loader.footer }"
 					v-model="footer.licenseDesc.body"
 					@input="controlSymbols('licenseDesc')"
 				>
@@ -285,6 +318,7 @@
 				<textarea
 					rows="10"
 					placeholder="Подвал"
+					:class="{ 'textarea-load': loading.loader.footer }"
 					v-model="footer.footer.body"
 					@input="controlSymbols('footer')"
 				>

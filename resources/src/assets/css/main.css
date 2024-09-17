@@ -1,52 +1,115 @@
-@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
 
 * {
-  font-family: "Rubik", sans-serif;
-} 
+	font-family: "Rubik", sans-serif;
+}
 
 :root {
-  /* Основные цвета */
-  --primary-color: #00ABBD;
-  --create-background-color: rgb(243, 255, 240);
-  --create-border-color: #aaf281;
-  --delete-background-color: rgb(255, 240, 240);
-  --delete-border-color: #f28181;
+	/* Основные цвета */
+	--primary-color: #00abbd;
+	--create-background-color: rgb(243, 255, 240);
+	--create-border-color: #aaf281;
+	--delete-background-color: rgb(255, 240, 240);
+	--delete-border-color: #f28181;
 
-  /* Кнопки */
-  --button-default-color: var(--primary-color);
-  --button-default-color-hover: #26b8c7;
-  --button-remove-color: #cd3f3f;
-  --button-remove-color-hover: #d74949;
+	/* Кнопки */
+	--button-default-color: var(--primary-color);
+	--button-default-color-hover: #26b8c7;
+	--button-remove-color: #cd3f3f;
+	--button-remove-color-hover: #d74949;
 
-  /* Поля ввода какой-либо информации */
-  --input-border-color-inactive: #cccccc;
-  --input-border-color-active: var(--primary-color);
-  --input-border-color-error: #ff9b9b;
-  --input-background-color-error: #fff4f4;
+	/* Поля ввода какой-либо информации */
+	--input-border-color-inactive: #cccccc;
+	--input-border-color-active: var(--primary-color);
+	--input-border-color-error: #ff9b9b;
+	--input-background-color-error: #fff4f4;
 
-  /* Капча */
-  --captcha-background-color: #dcdcdc;
+	/* Капча */
+	--captcha-background-color: #dcdcdc;
 
-  /* svg */
-  --svg-icon-arrow-fill: rgba(0, 171, 189, 0.5);
-  --svg-icon-arrow-fill-hover: var(--primary-color);
+	/* svg */
+	--svg-icon-arrow-fill: rgba(0, 171, 189, 0.5);
+	--svg-icon-arrow-fill-hover: var(--primary-color);
 
-  /* Блоки с выводом ошибок */
-  --span-color-error: #ff5b5b;
+	/* Блоки с выводом ошибок */
+	--span-color-error: #ff5b5b;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  background-color: #ffffff;
+	margin: 0;
+	padding: 0;
+	background-color: #ffffff;
 }
 
-html, 
+html,
 body,
 #app {
-  min-height: 100dvh;
+	min-height: 100dvh;
 }
 
 body.modal-open {
-  overflow: hidden;
+	overflow: hidden;
+}
+
+.input-load {
+	background-image: linear-gradient(
+		-100deg,
+		transparent,
+		rgba(187, 187, 187, 0.5) 0%,
+		transparent 80%
+	);
+	background-repeat: no-repeat;
+	background-size: 75px 100px, 100px 100px, 125px 20px, 260px 20px, 260px 20px;
+	background-position: -50% 0, 0 0, 120px 0, 120px 40px, 120px 80px, 120px 120px;
+	box-sizing: border-box;
+	animation: animloader 1.5s linear infinite;
+}
+
+.item-load {
+	background-image: linear-gradient(
+		-100deg,
+		transparent,
+		rgba(187, 187, 187, 0.5) 0%,
+		transparent 80%
+	);
+	background-repeat: no-repeat;
+	background-size: 75px 100px, 100px 100px, 125px 20px, 260px 20px, 260px 20px;
+	background-position: -50% 0, 0 0, 120px 0, 120px 40px, 120px 80px, 120px 120px;
+	box-sizing: border-box;
+	animation: animloader 1.5s linear infinite;
+}
+
+.textarea-load {
+	background-image: linear-gradient(
+		-100deg,
+		transparent,
+		rgba(187, 187, 187, 0.5) 0%,
+		transparent 80%
+	);
+	background-repeat: no-repeat;
+	background-size: 200px;
+	box-sizing: border-box;
+	animation: animloader 1.5s linear infinite;
+}
+
+.slider-load {
+	background-image: linear-gradient(
+		-100deg,
+		transparent,
+		rgba(187, 187, 187, 0.5) 0%,
+		transparent 40%
+	);
+	background-repeat: no-repeat;
+	background-size: 200px;
+	box-sizing: border-box;
+	animation: animloader 1.5s linear infinite;
+}
+
+@keyframes animloader {
+	0% {
+		background-position: 0% 0, 0 0, 120px 0, 120px 40px, 120px 80px, 120px 120px;
+	}
+	100% {
+		background-position: 100% 0, 0 0, 120px 0, 120px 40px, 120px 80px, 120px 120px;
+	}
 }

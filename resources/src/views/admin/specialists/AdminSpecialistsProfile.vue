@@ -15,63 +15,83 @@
 		<div class="container-profile">
 			<img :src="`/storage/slides/lesnikova.png`" class="profile-image" alt="" />
 			<div class="profile-info">
-				<ContainerInputOnce>
-					<template #title>ФОТО ВРАЧА</template>
-					<template #input>
+				<container-input-two :fieldset="true">
+					<template #legend>АВАТАР И ССЫЛКА</template>
+					<template #title-one>ФОТО ВРАЧА</template>
+					<template #input-one>
 						<input
+							:class="{ 'input-load': loading.loader }"
 							class="profile-file"
 							type="file"
-							placeholder="Введите фамилию"
 							autocomplete="off"
 						/>
 					</template>
-				</ContainerInputOnce>
+					<template #title-two>ССЫЛКА НА ПРОДОКТОРОВ</template>
+					<template #input-two>
+						<input
+							:class="{ 'input-load': loading.loader }"
+							type="text"
+							placeholder="Введите ссылку"
+							autocomplete="off"
+							v-model="spesialist.profile.link.body"
+						/>
+					</template>
+				</container-input-two>
 				<container-input-three :fieldset="true">
 					<template #legend>Ф.И.О.</template>
 					<template #title-one>ФАМИЛИЯ</template>
 					<template #input-one>
 						<input
+							:class="{ 'input-load': loading.loader }"
 							type="text"
-							v-model="spesialist.profile.family.body"
 							placeholder="Введите фамилию"
 							autocomplete="off"
+							v-model="spesialist.profile.family.body"
 						/>
 					</template>
 					<template #title-two>ИМЯ</template>
 					<template #input-two>
 						<input
+							:class="{ 'input-load': loading.loader }"
 							type="text"
-							v-model="spesialist.profile.name.body"
 							placeholder="Введите имя"
 							autocomplete="off"
+							v-model="spesialist.profile.name.body"
 						/>
 					</template>
 					<template #title-three>ОТЧЕСТВО</template>
 					<template #input-three>
 						<input
+							:class="{ 'input-load': loading.loader }"
 							type="text"
-							v-model="spesialist.profile.surname.body"
 							placeholder="Введите отчество"
 							autocomplete="off"
+							v-model="spesialist.profile.surname.body"
 						/>
 					</template>
 				</container-input-three>
 			</div>
 		</div>
+		<!-- Первая работа -->
 		<container-input>
 			<container-input-two :fieldset="true">
 				<template #legend>ПЕРВАЯ РАБОТА</template>
 				<template #title-one>НАЧАЛО ПЕРВОЙ РАБОТЫ</template>
 				<template #input-one>
-					<input type="date" v-model="spesialist.profile.startWorkAge.body" />
+					<input
+						type="date"
+						:class="{ 'input-load': loading.loader }"
+						v-model="spesialist.profile.startWorkAge.body"
+					/>
 				</template>
 				<template #title-two>ГОРОД ПЕРВОЙ РАБОТЫ</template>
 				<template #input-two>
 					<input
+						:class="{ 'input-load': loading.loader }"
 						type="text"
-						v-model="spesialist.profile.startWorkCity.body"
 						placeholder="Введите название города"
 						autocomplete="off"
+						v-model="spesialist.profile.startWorkCity.body"
 					/>
 				</template>
 			</container-input-two>
@@ -79,14 +99,21 @@
 				<template #legend>ПРИЁМ ВРАЧА</template>
 				<template #title-one>У ВЗРОСЛЫХ</template>
 				<template #input-one>
-					<select v-model="spesialist.profile.adultDoctor.body">
+					<select
+						v-model="spesialist.profile.adultDoctor.body"
+						:class="{ 'input-load': loading.loader }"
+					>
 						<option value="false">Нет</option>
 						<option value="true">Да</option>
 					</select>
 				</template>
 				<template #title-two>У ДЕТЕЙ</template>
 				<template #input-two>
-					<select v-model="spesialist.profile.childrenDoctor.body" autocomplete="off">
+					<select
+						v-model="spesialist.profile.childrenDoctor.body"
+						autocomplete="off"
+						:class="{ 'input-load': loading.loader }"
+					>
 						<option value="false">Нет</option>
 						<option value="true">Да</option>
 					</select>
@@ -103,23 +130,23 @@
 			</template>
 		</block-title>
 
-		<div class="profile-specializations">
-			<div class="item">
-				<div class="item-title">г. Шадринск, ул. Карла Либкнехта, 10</div>
+		<div class="profile-list">
+			<!-- Если сертификаты не выбраны -->
+			<div class="item-empty" v-if="spesialist.certificates.length == 0 && !loading.loader">
+				<div class="item-title">Пока тут ничего нет...</div>
+			</div>
+			<!-- Пока идёт загрузка -->
+			<div class="item" v-if="loading.loader" :class="{ 'item-load': loading.loader }">
+				<div class="item-title"></div>
 				<div class="item-close">
-					<icon-close :width="26" :height="26"/>
+					<icon-close :width="26" :height="26" />
 				</div>
 			</div>
-			<div class="item">
-				<div class="item-title">г. Шадринск, ул. Карла Либкнехта, 10</div>
-				<div class="item-close">
-					<icon-close :width="26" :height="26"/>
-				</div>
-			</div>
-			<div class="item">
-				<div class="item-title">г. Шадринск, ул. Карла Либкнехта, 10</div>
-				<div class="item-close">
-					<icon-close :width="26" :height="26"/>
+			<!-- Если специализации выбраны -->
+			<div class="item" v-for="certificate in spesialist.certificates" :key="certificate.id">
+				<div class="item-title">{{ certificate.name }}</div>
+				<div class="item-close" @click="removeArrValue('certificates', certificate)">
+					<icon-close :width="26" :height="26" />
 				</div>
 			</div>
 		</div>
@@ -140,17 +167,30 @@
 			</block-title>
 		</template>
 		<template #body-one>
-			<div class="profile-specializations">
-				<div class="item">
-					<div class="item-title">г. Шадринск, ул. Карла Либкнехта, 10</div>
+			<div class="profile-list">
+				<!-- Если специализации не выбраны -->
+				<div
+					class="item-empty"
+					v-if="spesialist.specializations.length == 0 && !loading.loader"
+				>
+					<div class="item-title">Пока тут ничего нет...</div>
+				</div>
+				<!-- Пока идёт загрузка -->
+				<div class="item" v-if="loading.loader" :class="{ 'item-load': loading.loader }">
+					<div class="item-title"></div>
 					<div class="item-close">
-						<icon-close :width="26" :height="26"/>
+						<icon-close :width="26" :height="26" />
 					</div>
 				</div>
-				<div class="item">
-					<div class="item-title">г. Шадринск, ул. Карла Либкнехта, 10</div>
-					<div class="item-close">
-						<icon-close :width="26" :height="26"/>
+				<!-- Если специализации выбраны -->
+				<div
+					class="item"
+					v-for="specialization in spesialist.specializations"
+					:key="specialization.id"
+				>
+					<div class="item-title">{{ specialization.name }}</div>
+					<div class="item-close" @click="removeArrValue('specializations', specialization)">
+						<icon-close :width="26" :height="26" />
 					</div>
 				</div>
 			</div>
@@ -168,11 +208,23 @@
 			</block-title>
 		</template>
 		<template #body-two>
-			<div class="profile-clinics">
-				<div class="item">
-					<div class="item-title">г. Шадринск, ул. Карла Либкнехта, 10</div>
+			<div class="profile-list">
+				<!-- Если клиники не выбраны -->
+				<div class="item-empty" v-if="spesialist.clinics.length == 0 && !loading.loader">
+					<div class="item-title">Пока тут ничего нет...</div>
+				</div>
+				<!-- Пока идёт загрузка -->
+				<div class="item" v-if="loading.loader" :class="{ 'item-load': loading.loader }">
+					<div class="item-title"></div>
 					<div class="item-close">
-						<icon-close :width="26" :height="26"/>
+						<icon-close :width="26" :height="26" />
+					</div>
+				</div>
+				<!-- Если клиники выбраны -->
+				<div class="item" v-for="clinic in spesialist.clinics" :key="clinic.id">
+					<div class="item-title">{{ clinic.name }}</div>
+					<div class="item-close" @click="removeArrValue('clinics', clinic)">
+						<icon-close :width="26" :height="26" />
 					</div>
 				</div>
 			</div>
@@ -193,17 +245,23 @@
 			</block-title>
 		</template>
 		<template #body-one>
-			<div class="profile-specializations">
-				<div class="item">
-					<div class="item-title">г. Шадринск, ул. Карла Либкнехта, 10</div>
+			<div class="profile-list">
+				<!-- Если образования не выбраны -->
+				<div class="item-empty" v-if="spesialist.educations.length == 0 && !loading.loader">
+					<div class="item-title">Пока тут ничего нет...</div>
+				</div>
+				<!-- Пока идёт загрузка -->
+				<div class="item" v-if="loading.loader" :class="{ 'item-load': loading.loader }">
+					<div class="item-title"></div>
 					<div class="item-close">
-						<icon-close :width="26" :height="26"/>
+						<icon-close :width="26" :height="26" />
 					</div>
 				</div>
-				<div class="item">
-					<div class="item-title">г. Шадринск, ул. Карла Либкнехта, 10</div>
-					<div class="item-close">
-						<icon-close :width="26" :height="26"/>
+				<!-- Если образования выбраны -->
+				<div class="item" v-for="education in spesialist.educations" :key="education.id">
+					<div class="item-title">{{ education.name }}</div>
+					<div class="item-close" @click="removeArrValue('educations', education)">
+						<icon-close :width="26" :height="26" />
 					</div>
 				</div>
 			</div>
@@ -221,23 +279,23 @@
 			</block-title>
 		</template>
 		<template #body-two>
-			<div class="profile-clinics">
-				<div class="item">
-					<div class="item-title">г. Шадринск, ул. Карла Либкнехта, 10</div>
+			<div class="profile-list">
+				<!-- Если образования не выбраны -->
+				<div class="item-empty" v-if="spesialist.works.length == 0 && !loading.loader">
+					<div class="item-title">Пока тут ничего нет...</div>
+				</div>
+				<!-- Пока идёт загрузка -->
+				<div class="item" v-if="loading.loader" :class="{ 'item-load': loading.loader }">
+					<div class="item-title"></div>
 					<div class="item-close">
-						<icon-close :width="26" :height="26"/>
+						<icon-close :width="26" :height="26" />
 					</div>
 				</div>
-				<div class="item">
-					<div class="item-title">г. Шадринск, ул. Карла Либкнехта, 10</div>
-					<div class="item-close">
-						<icon-close :width="26" :height="26"/>
-					</div>
-				</div>
-				<div class="item">
-					<div class="item-title">г. Шадринск, ул. Карла Либкнехта, 10</div>
-					<div class="item-close">
-						<icon-close :width="26" :height="26"/>
+				<!-- Если образования выбраны -->
+				<div class="item" v-for="work in spesialist.works" :key="work.id">
+					<div class="item-title">{{ work.name }}</div>
+					<div class="item-close" @click="removeArrValue('works', work)">
+						<icon-close :width="26" :height="26" />
 					</div>
 				</div>
 			</div>
@@ -306,9 +364,17 @@ export default {
 	},
 	data() {
 		return {
+			loading: {
+				loader: true,
+			},
 			spesialist: {
 				profile: {
 					id: 1,
+					file: "",
+					link: {
+						body: "",
+						edited: false,
+					},
 					family: {
 						body: "",
 						edited: false,
@@ -346,17 +412,34 @@ export default {
 						edited: false,
 					},
 				},
+				certificates: [],
+				specializations: [],
+				clinics: [],
+				educations: [],
+				works: [],
 			},
-			specialists: [
-				{
-					id: 1,
-					name: "Иванов Иван Иванович",
-					specialization: "Ортопед",
-					hide: false,
-					delete: false,
-				},
-			],
 		};
+	},
+	methods: {
+		// Метод удаления значения из массива
+		removeArrValue(array, value) {
+			this.spesialist[array] = this.spesialist[array].filter((item) => {
+				if (item.id !== value.id) {
+					return item;
+				}
+			});
+		},
+	},
+	mounted() {
+		// axios
+		// 	.get(`${this.$store.state.axios.urlApi}get-specialist-profile`)
+		// 	.then((response) => {
+		// 		this.spesialist = response.data;
+		// 	})
+		// 	.catch((error) => {
+		// 		console.log(error);
+		// 	});
+		// .finally(() => (this.loading.loader = false));
 	},
 };
 </script>
@@ -372,7 +455,7 @@ export default {
 	align-self: center;
 	justify-self: center;
 	flex: 1 0 340px;
-	max-width: 340px;
+	max-width: 450px;
 	border-radius: 10px;
 }
 
@@ -411,24 +494,30 @@ export default {
 	border: 2px solid var(--input-border-color-active);
 }
 
-.profile-clinics,
-.profile-specializations {
+.profile-list {
 	flex-grow: 1;
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
 }
 
-.profile-clinics > .item,
-.profile-specializations > .item {
+.profile-list > .item {
 	display: flex;
-	flex-wrap: wrap;
 	justify-content: space-between;
 	align-items: center;
+	gap: 10px;
 
 	border: 2px solid var(--input-border-color-inactive);
 	border-radius: 10px;
 	padding: 10px;
 	transition: all 0.2s;
+}
+
+.profile-list > .item-empty {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	color: #bcbcbc;
 }
 </style>

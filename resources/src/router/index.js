@@ -5,7 +5,7 @@ import Admin from "../components/Admin.vue";
 import NotFound from "../components/NotFound.vue";
 
 const router = createRouter({
-	history: createWebHistory(import.meta.env.BASE_URL),
+	history: createWebHistory(import.meta.env.VITE_BASE_URL || "/"),
 	routes: [
 		// Роутер для главной страницы
 		{
@@ -119,27 +119,32 @@ const router = createRouter({
 						{
 							path: "specializations",
 							name: "especialists-specializations",
-							component: () => import("../views/admin/specialists/AdminSpecialistsSpecializations.vue"),
+							component: () =>
+								import("../views/admin/specialists/AdminSpecialistsSpecializations.vue"),
 						},
 						{
 							path: "clinics",
 							name: "especialists-clinics",
-							component: () => import("../views/admin/specialists/AdminSpecialistsClinics.vue"),
+							component: () =>
+								import("../views/admin/specialists/AdminSpecialistsClinics.vue"),
 						},
 						{
 							path: "educations",
 							name: "especialists-educations",
-							component: () => import("../views/admin/specialists/AdminSpecialistsEducations.vue"),
+							component: () =>
+								import("../views/admin/specialists/AdminSpecialistsEducations.vue"),
 						},
 						{
 							path: "works",
 							name: "especialists-works",
-							component: () => import("../views/admin/specialists/AdminSpecialistsWorks.vue"),
+							component: () =>
+								import("../views/admin/specialists/AdminSpecialistsWorks.vue"),
 						},
 						{
 							path: "certificates",
 							name: "especialists-certificates",
-							component: () => import("../views/admin/specialists/AdminSpecialistsCertificates.vue"),
+							component: () =>
+								import("../views/admin/specialists/AdminSpecialistsCertificates.vue"),
 						},
 					],
 				},
