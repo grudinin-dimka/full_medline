@@ -16,6 +16,7 @@ use App\Models\Footer;
 use App\Models\Specialist;
 use App\Models\Specialization;
 use App\Models\SpecialistSpecialization;
+use App\Models\Clinic;
 
 
 use Illuminate\Support\Facades\Storage;
@@ -126,6 +127,16 @@ class HomeController extends Controller
 
       // $SpecialistSpecializations = SpecialistSpecialization::where('id_specialist', 1)->get();
       return $specialistsShort;
+   }
+   // Вывод всех специализаций
+   public function getSpecializationsAll(Request $request) {
+      $specializations = Specialization::all();
+      return $specializations;
+   }
+   // Вывод всех специализаций
+   public function getClinicsAll(Request $request) {
+      $clinics = Clinic::all();
+      return $clinics;
    }
 };
 

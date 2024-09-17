@@ -12,7 +12,7 @@
 			</template>
 		</block-title>
 
-		<admin-specialists-table :array="specializations" @useFilter="filterSpecializations" />
+		<admin-specialists-table :array="clinics" @useFilter="filterSpecializations" />
 
 		<block-buttons>
 			<button-default> Добавить </button-default>
@@ -37,6 +37,8 @@ import ButtonRemove from "../../../components/ui/admin/ButtonRemove.vue";
 
 import IconSave from "../../../components/icons/IconSave.vue";
 
+import axios from "axios";
+
 export default {
 	components: {
 		InfoBar,
@@ -49,10 +51,11 @@ export default {
 		ButtonDefault,
 		ButtonRemove,
 		IconSave,
+		axios,
 	},
 	data() {
 		return {
-			specializations: [
+			clinics: [
 				{
 					id: 1,
 					name: "г. Шадринск, ул. Комсомольская, 16",
@@ -149,6 +152,21 @@ export default {
 					break;
 			}
 		},
+	},
+	mounted() {
+		axios({
+			method: "post",
+			headers: {
+				Accept: "application/json",
+			},
+			url: `${this.$store.state.axios.urlApi}` + `get-clinics-all`,
+		})
+			.then((response) => {
+				this.clinics = response.data;
+			})
+			.catch((error) => {
+				console.log(error);
+			});
 	},
 };
 </script>

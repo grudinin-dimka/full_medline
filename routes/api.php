@@ -21,6 +21,9 @@ Route::post('/get-specialist-profile', [HomeController::class, 'getSpecialistPro
 Route::post('/get-specialist-all', [HomeController::class, 'getSpecialistAll']);
 Route::post('/get-specialists-short', [HomeController::class, 'getSpecialistsShort']);
 
+Route::post('/get-specializations-all', [HomeController::class, 'getSpecializationsAll']);
+Route::post('/get-clinics-all', [HomeController::class, 'getClinicsAll']);
+
 // Функционал администратора
 Route::post('/save-footer', [AdminController::class, 'saveFooter'])->middleware('auth:sanctum');
 Route::post('/clear-footer', [AdminController::class, 'clearFooter'])->middleware('auth:sanctum');

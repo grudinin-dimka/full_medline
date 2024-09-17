@@ -149,7 +149,7 @@
 		</block-title>
 
 		<div class="slider" v-if="loading.loader.slider">
-			<div class="slider-block slider-load">
+			<div class="slider-block loader-pulse">
 				<div
 					v-bind:style="{
 						'background-image': `url(/storage/default/specialist.png)`,
@@ -248,7 +248,7 @@
 				<textarea
 					rows="4"
 					placeholder="Заголовок"
-					:class="{ 'textarea-load': loading.loader.footer }"
+					:class="{ 'loader-pulse': loading.loader.footer }"
 					v-model="footer.title.body"
 					@input="controlSymbols('title')"
 				>
@@ -264,7 +264,7 @@
 				<textarea
 					rows="10"
 					placeholder="Заголовок"
-					:class="{ 'textarea-load': loading.loader.footer }"
+					:class="{ 'loader-pulse': loading.loader.footer }"
 					v-model="footer.titleDesc.body"
 					@input="controlSymbols('titleDesc')"
 				>
@@ -280,7 +280,7 @@
 				<textarea
 					rows="4"
 					placeholder="Заголовок"
-					:class="{ 'textarea-load': loading.loader.footer }"
+					:class="{ 'loader-pulse': loading.loader.footer }"
 					v-model="footer.license.body"
 					@input="controlSymbols('license')"
 				>
@@ -300,7 +300,7 @@
 				<textarea
 					rows="10"
 					placeholder="Основной текст"
-					:class="{ 'textarea-load': loading.loader.footer }"
+					:class="{ 'loader-pulse': loading.loader.footer }"
 					v-model="footer.licenseDesc.body"
 					@input="controlSymbols('licenseDesc')"
 				>
@@ -318,7 +318,7 @@
 				<textarea
 					rows="10"
 					placeholder="Подвал"
-					:class="{ 'textarea-load': loading.loader.footer }"
+					:class="{ 'loader-pulse': loading.loader.footer }"
 					v-model="footer.footer.body"
 					@input="controlSymbols('footer')"
 				>

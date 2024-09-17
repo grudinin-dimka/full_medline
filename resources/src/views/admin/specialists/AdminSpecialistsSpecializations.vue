@@ -37,6 +37,8 @@ import ButtonRemove from "../../../components/ui/admin/ButtonRemove.vue";
 
 import IconSave from "../../../components/icons/IconSave.vue";
 
+import axios from "axios";
+
 export default {
 	components: {
 		InfoBar,
@@ -49,23 +51,11 @@ export default {
 		ButtonDefault,
 		ButtonRemove,
 		IconSave,
+		axios,
 	},
 	data() {
 		return {
-			specializations: [
-				{
-					id: 1,
-					name: "Терапевт",
-				},
-				{
-					id: 2,
-					name: "Хирург",
-				},
-				{
-					id: 3,
-					name: "Офтальмолог",
-				},
-			],
+			specializations: [],
 		};
 	},
 	methods: {
@@ -145,6 +135,21 @@ export default {
 					break;
 			}
 		},
+	},
+	mounted() {
+		axios({
+			method: "post",
+			headers: {
+				Accept: "application/json",
+			},
+			url: `${this.$store.state.axios.urlApi}` + `get-specializations-all`,
+		})
+			.then((response) => {
+				this.specializations = response.data;
+			})
+			.catch((error) => {
+				console.log(error);
+			});
 	},
 };
 </script>
