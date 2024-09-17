@@ -13,7 +13,7 @@
 			</template>
 		</block-title>
 		<div class="container-profile">
-			<div class="profile-image-loader" v-if="loading.loader">Идёт загрузка...</div>
+			<div class="profile-image-loader loader-pulse" v-if="loading.loader">Идёт загрузка...</div>
 			<img
 				:src="`/storage/slides/lesnikova.png`"
 				class="profile-image"
@@ -26,7 +26,7 @@
 					<template #title-one>ФОТО ВРАЧА</template>
 					<template #input-one>
 						<input
-							:class="{ 'input-load': loading.loader }"
+							:class="{ 'loader-pulse': loading.loader }"
 							class="profile-file"
 							type="file"
 							autocomplete="off"
@@ -35,7 +35,7 @@
 					<template #title-two>ССЫЛКА НА ПРОДОКТОРОВ</template>
 					<template #input-two>
 						<input
-							:class="{ 'input-load': loading.loader }"
+							:class="{ 'loader-pulse': loading.loader }"
 							type="text"
 							placeholder="Введите ссылку"
 							autocomplete="off"
@@ -48,7 +48,7 @@
 					<template #title-one>ФАМИЛИЯ</template>
 					<template #input-one>
 						<input
-							:class="{ 'input-load': loading.loader }"
+							:class="{ 'loader-pulse': loading.loader }"
 							type="text"
 							placeholder="Введите фамилию"
 							autocomplete="off"
@@ -58,7 +58,7 @@
 					<template #title-two>ИМЯ</template>
 					<template #input-two>
 						<input
-							:class="{ 'input-load': loading.loader }"
+							:class="{ 'loader-pulse': loading.loader }"
 							type="text"
 							placeholder="Введите имя"
 							autocomplete="off"
@@ -68,7 +68,7 @@
 					<template #title-three>ОТЧЕСТВО</template>
 					<template #input-three>
 						<input
-							:class="{ 'input-load': loading.loader }"
+							:class="{ 'loader-pulse': loading.loader }"
 							type="text"
 							placeholder="Введите отчество"
 							autocomplete="off"
@@ -86,14 +86,14 @@
 				<template #input-one>
 					<input
 						type="date"
-						:class="{ 'input-load': loading.loader }"
+						:class="{ 'loader-pulse': loading.loader }"
 						v-model="spesialist.profile.startWorkAge.body"
 					/>
 				</template>
 				<template #title-two>ГОРОД ПЕРВОЙ РАБОТЫ</template>
 				<template #input-two>
 					<input
-						:class="{ 'input-load': loading.loader }"
+						:class="{ 'loader-pulse': loading.loader }"
 						type="text"
 						placeholder="Введите название города"
 						autocomplete="off"
@@ -107,7 +107,7 @@
 				<template #input-one>
 					<select
 						v-model="spesialist.profile.adultDoctor.body"
-						:class="{ 'input-load': loading.loader }"
+						:class="{ 'loader-pulse': loading.loader }"
 					>
 						<option value="0">Нет</option>
 						<option value="1">Да</option>
@@ -118,7 +118,7 @@
 					<select
 						v-model="spesialist.profile.childrenDoctor.body"
 						autocomplete="off"
-						:class="{ 'input-load': loading.loader }"
+						:class="{ 'loader-pulse': loading.loader }"
 					>
 						<option value="0">Нет</option>
 						<option value="1">Да</option>
@@ -142,7 +142,7 @@
 				<div class="item-title">Пока тут ничего нет...</div>
 			</div>
 			<!-- Пока идёт загрузка -->
-			<div class="item" v-if="loading.loader" :class="{ 'item-load': loading.loader }">
+			<div class="item" v-if="loading.loader" :class="{ 'loader-pulse': loading.loader }">
 				<div class="item-title"></div>
 				<div class="item-close">
 					<icon-close :width="26" :height="26" />
@@ -182,7 +182,7 @@
 					<div class="item-title">Пока тут ничего нет...</div>
 				</div>
 				<!-- Пока идёт загрузка -->
-				<div class="item" v-if="loading.loader" :class="{ 'item-load': loading.loader }">
+				<div class="item" v-if="loading.loader" :class="{ 'loader-pulse': loading.loader }">
 					<div class="item-title"></div>
 					<div class="item-close">
 						<icon-close :width="26" :height="26" />
@@ -220,7 +220,7 @@
 					<div class="item-title">Пока тут ничего нет...</div>
 				</div>
 				<!-- Пока идёт загрузка -->
-				<div class="item" v-if="loading.loader" :class="{ 'item-load': loading.loader }">
+				<div class="item" v-if="loading.loader" :class="{ 'loader-pulse': loading.loader }">
 					<div class="item-title"></div>
 					<div class="item-close">
 						<icon-close :width="26" :height="26" />
@@ -257,7 +257,7 @@
 					<div class="item-title">Пока тут ничего нет...</div>
 				</div>
 				<!-- Пока идёт загрузка -->
-				<div class="item" v-if="loading.loader" :class="{ 'item-load': loading.loader }">
+				<div class="item" v-if="loading.loader" :class="{ 'loader-pulse': loading.loader }">
 					<div class="item-title"></div>
 					<div class="item-close">
 						<icon-close :width="26" :height="26" />
@@ -291,7 +291,7 @@
 					<div class="item-title">Пока тут ничего нет...</div>
 				</div>
 				<!-- Пока идёт загрузка -->
-				<div class="item" v-if="loading.loader" :class="{ 'item-load': loading.loader }">
+				<div class="item" v-if="loading.loader" :class="{ 'loader-pulse': loading.loader }">
 					<div class="item-title"></div>
 					<div class="item-close">
 						<icon-close :width="26" :height="26" />
@@ -478,6 +478,7 @@ export default {
 	align-items: center;
 	font-size: 20px;
 	color: #bcbcbc;
+	border-radius: 15px;
 }
 
 .profile-image {

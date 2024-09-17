@@ -12,7 +12,7 @@
 			</template>
 		</block-title>
 
-		<AdminSpecialistsTable :array="specializations"/>
+		<admin-specialists-table :array="specializations" @useFilter="filterSpecializations" />
 
 		<block-buttons>
 			<button-default> Добавить </button-default>
@@ -67,6 +67,84 @@ export default {
 				},
 			],
 		};
+	},
+	methods: {
+		/* _____________________________________________________*/
+		/* ?. Фильтрация                                        */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		filterSpecializations(column, type) {
+			switch (column) {
+				case "id":
+					if (type == "default") {
+						this.specializations.sort((a, b) => {
+							if (a.id > b.id) {
+								return 1;
+							}
+							if (a.id < b.id) {
+								return -1;
+							}
+							// a должно быть равным b
+							return 0;
+						});
+					}
+
+					if (type == "reverse") {
+						this.specializations.sort((a, b) => {
+							if (a.id < b.id) {
+								return 1;
+							}
+							if (a.id > b.id) {
+								return -1;
+							}
+							// a должно быть равным b
+							return 0;
+						});
+					}
+					break;
+				case "name":
+					if (type == "default") {
+						this.specializations.sort((a, b) => {
+							let aName = a.name.toLowerCase();
+							let bName = b.name.toLowerCase();
+
+							let aNameFirstLetter = aName[0].charCodeAt(0);
+							let bNameFirstLetter = bName[0].charCodeAt(0);
+
+							if (aNameFirstLetter > bNameFirstLetter) {
+								return 1;
+							}
+							if (aNameFirstLetter < bNameFirstLetter) {
+								return -1;
+							}
+							// a должно быть равным b
+							return 0;
+						});
+					}
+
+					if (type == "reverse") {
+						this.specializations.sort((a, b) => {
+							let aName = a.name.toLowerCase();
+							let bName = b.name.toLowerCase();
+
+							let aNameFirstLetter = aName[0].charCodeAt(0);
+							let bNameFirstLetter = bName[0].charCodeAt(0);
+
+							if (aNameFirstLetter < bNameFirstLetter) {
+								return 1;
+							}
+							if (aNameFirstLetter > bNameFirstLetter) {
+								return -1;
+							}
+							// a должно быть равным b
+							return 0;
+						});
+					}
+
+					break;
+				default:
+					break;
+			}
+		},
 	},
 };
 </script>

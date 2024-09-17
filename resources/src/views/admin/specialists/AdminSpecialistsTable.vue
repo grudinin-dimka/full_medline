@@ -17,14 +17,14 @@
 							v-if="filters.id.status && filters.id.type === 'default'"
 							@click="useFilter('id', 'reverse')"
 						>
-							<icon-filter-on :width="22" :height="22" />
+							<icon-filter-on-reverse :width="22" :height="22" />
 						</div>
 						<div
 							class="table-th-filter"
 							v-if="filters.id.status && filters.id.type === 'reverse'"
 							@click="useFilter('id', 'default')"
 						>
-							<icon-filter-on-reverse :width="22" :height="22" />
+							<icon-filter-on :width="22" :height="22" />
 						</div>
 					</div>
 				</th>
@@ -43,14 +43,14 @@
 							v-if="filters.name.status && filters.name.type === 'default'"
 							@click="useFilter('name', 'reverse')"
 						>
-							<icon-filter-on :width="22" :height="22" />
+							<icon-filter-on-reverse :width="22" :height="22" />
 						</div>
 						<div
 							class="table-th-filter"
 							v-if="filters.name.status && filters.name.type === 'reverse'"
 							@click="useFilter('name', 'default')"
 						>
-							<icon-filter-on-reverse :width="22" :height="22" />
+							<icon-filter-on :width="22" :height="22" />
 						</div>
 					</div>
 				</th>

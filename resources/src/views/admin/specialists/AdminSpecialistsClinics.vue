@@ -12,8 +12,10 @@
 			</template>
 		</block-title>
 
+		<admin-specialists-table :array="specializations" @useFilter="filterSpecializations" />
+
 		<block-buttons>
-			<button-default @click=""> Добавить </button-default>
+			<button-default> Добавить </button-default>
 		</block-buttons>
 	</block-once>
 </template>
@@ -28,6 +30,8 @@ import BlockOnce from "../../../components/ui/admin/BlockOnce.vue";
 import BlockTitle from "../../../components/ui/admin/BlockTitle.vue";
 import BlockButtons from "../../../components/ui/admin/BlockButtons.vue";
 
+import AdminSpecialistsTable from "./AdminSpecialistsTable.vue";
+
 import ButtonDefault from "../../../components/ui/admin/ButtonDefault.vue";
 import ButtonRemove from "../../../components/ui/admin/ButtonRemove.vue";
 
@@ -38,6 +42,7 @@ export default {
 		InfoBar,
 		LoaderChild,
 		ElementInputLabel,
+		AdminSpecialistsTable,
 		BlockOnce,
 		BlockTitle,
 		BlockButtons,
@@ -46,7 +51,104 @@ export default {
 		IconSave,
 	},
 	data() {
-		return {};
+		return {
+			specializations: [
+				{
+					id: 1,
+					name: "г. Шадринск, ул. Комсомольская, 16",
+				},
+				{
+					id: 2,
+					name: "г. Шадринск, ул. Карла Либкнехта, 10",
+				},
+				{
+					id: 3,
+					name: "г. Шадринск, ул. Октябрьская, 3",
+				},
+				{
+					id: 4,
+					name: "р. п. Каргаполье, ул. Мира, 5г",
+				},
+			],
+		};
+	},
+	methods: {
+		/* _____________________________________________________*/
+		/* ?. Фильтрация                                        */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		filterSpecializations(column, type) {
+			switch (column) {
+				case "id":
+					if (type == "default") {
+						this.specializations.sort((a, b) => {
+							if (a.id > b.id) {
+								return 1;
+							}
+							if (a.id < b.id) {
+								return -1;
+							}
+							// a должно быть равным b
+							return 0;
+						});
+					}
+
+					if (type == "reverse") {
+						this.specializations.sort((a, b) => {
+							if (a.id < b.id) {
+								return 1;
+							}
+							if (a.id > b.id) {
+								return -1;
+							}
+							// a должно быть равным b
+							return 0;
+						});
+					}
+					break;
+				case "name":
+					if (type == "default") {
+						this.specializations.sort((a, b) => {
+							let aName = a.name.toLowerCase();
+							let bName = b.name.toLowerCase();
+
+							let aNameFirstLetter = aName[0].charCodeAt(0);
+							let bNameFirstLetter = bName[0].charCodeAt(0);
+
+							if (aNameFirstLetter > bNameFirstLetter) {
+								return 1;
+							}
+							if (aNameFirstLetter < bNameFirstLetter) {
+								return -1;
+							}
+							// a должно быть равным b
+							return 0;
+						});
+					}
+
+					if (type == "reverse") {
+						this.specializations.sort((a, b) => {
+							let aName = a.name.toLowerCase();
+							let bName = b.name.toLowerCase();
+
+							let aNameFirstLetter = aName[0].charCodeAt(0);
+							let bNameFirstLetter = bName[0].charCodeAt(0);
+
+							if (aNameFirstLetter < bNameFirstLetter) {
+								return 1;
+							}
+							if (aNameFirstLetter > bNameFirstLetter) {
+								return -1;
+							}
+							// a должно быть равным b
+							return 0;
+						});
+					}
+
+					break;
+				default:
+					break;
+			}
+		},
 	},
 };
 </script>

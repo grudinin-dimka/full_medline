@@ -47,7 +47,7 @@ export default {
 <style>
 fieldset.container-inputs-two {
 	border: 2px solid var(--input-border-color-inactive);
-	border-radius: 10px;
+	border-radius: 15px;
 	padding: 10px;
 	transition: all 0.2s;
 	background-color: rgb(255, 255, 255);
