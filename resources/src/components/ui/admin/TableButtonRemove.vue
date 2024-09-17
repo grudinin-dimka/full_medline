@@ -17,9 +17,9 @@ export default {
 
 <style scoped>
 button {
-	flex: 1 0 130px;
+	flex: 1 0 120px;
 	cursor: pointer;
-   min-width: 150px;
+   min-width: 120px;
 
 	padding: 7.5px 0px;
 	border: 0px solid black;

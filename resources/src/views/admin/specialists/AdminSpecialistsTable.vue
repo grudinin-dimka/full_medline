@@ -56,98 +56,25 @@
 				</th>
 				<th>
 					<div class="table-th-container">
-						<div class="table-th-name">Специальность</div>
-						<div
-							class="table-th-filter"
-							v-if="!filters.specialization.status"
-							@click="useFilter('specialization', 'default')"
-						>
-							<icon-filter-off :width="22" :height="22" />
-						</div>
-						<div
-							class="table-th-filter"
-							v-if="filters.specialization.status"
-							@click="useFilter('specialization', 'default')"
-						>
-							<icon-filter-on :width="22" :height="22" />
-						</div>
-					</div>
-				</th>
-				<th>
-					<div class="table-th-container">
-						<div class="table-th-name">Скрыть</div>
-						<div
-							class="table-th-filter"
-							v-if="!filters.hide.status"
-							@click="useFilter('hide', 'default')"
-						>
-							<icon-filter-off :width="22" :height="22" />
-						</div>
-						<div
-							class="table-th-filter"
-							v-if="filters.hide.status && filters.hide.type === 'default'"
-							@click="useFilter('hide', 'reverse')"
-						>
-							<icon-filter-on :width="22" :height="22" />
-						</div>
-						<div
-							class="table-th-filter"
-							v-if="filters.hide.status && filters.hide.type === 'reverse'"
-							@click="useFilter('hide', 'default')"
-						>
-							<icon-filter-on-reverse :width="22" :height="22" />
-						</div>
-					</div>
-				</th>
-				<th>
-					<div class="table-th-container">
 						<div class="table-th-name">Действия</div>
 					</div>
 				</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr v-if="specialists.length == 0">
+			<tr v-if="array.length == 0">
 				<td colspan="5" class="table-td-empty">Ничего нету...</td>
 			</tr>
-			<tr v-else v-for="specialist in specialists">
-				<td :class="{ create: specialist.create, delete: specialist.delete }">
-					{{ specialist.id }}
+			<tr v-else v-for="value in array">
+				<td>
+					{{ value.id }}
 				</td>
-				<td :class="{ create: specialist.create, delete: specialist.delete }">
-					{{ specialist.family + " " + specialist.name + " " + specialist.surname }}
+				<td>
+					{{ value.name }}
 				</td>
-				<td :class="{ create: specialist.create, delete: specialist.delete }">
-					{{ specialist.specializations }}
-					<span class="table-td-empty" v-if="specialist.specializations.length == 0"
-						>Ничего не выбрано...</span
-					>
-				</td>
-				<td :class="{ create: specialist.create, delete: specialist.delete }">
-					<div class="table-td-checkbox">
-						<icon-visible-table
-							:width="36"
-							:height="36"
-							v-if="!specialist.hide"
-							@click="$emit('touchHideSpecialist', specialist)"
-						></icon-visible-table>
-						<icon-hide-table
-							:width="36"
-							:height="36"
-							v-if="specialist.hide"
-							@click="$emit('touchHideSpecialist', specialist)"
-						></icon-hide-table>
-					</div>
-				</td>
-				<td :class="{ create: specialist.create, delete: specialist.delete }">
+				<td>
 					<table-container-buttons>
-						<table-button-default
-							@click="
-								$router.push({ name: 'especialist-profile', params: { id: specialist.id } })
-							"
-						>
-							Изменить
-						</table-button-default>
+						<table-button-default @click=""> Изменить </table-button-default>
 						<table-button-remove @click=""> Удалить </table-button-remove>
 					</table-container-buttons>
 				</td>
@@ -185,7 +112,7 @@ export default {
 		RouterLink,
 	},
 	props: {
-		specialists: {
+		array: {
 			type: Array,
 			required: true,
 		},
@@ -198,14 +125,6 @@ export default {
 					type: "default",
 				},
 				name: {
-					status: false,
-					type: "default",
-				},
-				specialization: {
-					status: false,
-					type: "default",
-				},
-				hide: {
 					status: false,
 					type: "default",
 				},
@@ -241,22 +160,13 @@ td {
 	height: 30px;
 }
 
-th:nth-of-type(1) {
+th:first-of-type {
 	width: 50px;
 	min-width: 50px;
 }
 
-th:nth-of-type(2) {
-	min-width: 300px;
-}
-
-th:nth-of-type(3) {
-	min-width: 150px;
-}
-
-th:last-child {
+th:last-of-type {
 	width: 300px;
-	min-width: 100px;
 }
 
 th {

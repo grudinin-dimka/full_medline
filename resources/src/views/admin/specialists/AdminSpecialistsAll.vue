@@ -8,11 +8,11 @@
 		<block-title>
 			<template #title>Список врачей</template>
 			<template #buttons>
-				<icon-save :width="28" :height="28" />
+				<icon-save :width="28" :height="28" @click="saveSpecialistHides" />
 			</template>
 		</block-title>
 
-		<admin-specialists-table :specialists="specialists" />
+		<admin-specialists-table :specialists="specialists" @touchHideSpecialist="hideSpecialist"/>
 
 		<block-buttons>
 			<button-default @click="$router.push('especialists/new')"> Добавить </button-default>
@@ -60,60 +60,73 @@ export default {
 	},
 	data() {
 		return {
-			specialists: [
-				{
-					id: 1,
-					name: "Иванов Иван Иванович",
-					specialization: "Везде и нигде",
-					hide: false,
-					delete: false,
-				},
-				{
-					id: 2,
-					name: "Ёжиков Ёжик Ёжикович",
-					specialization: "Лесной зверёк",
-					hide: false,
-					delete: false,
-				},
-				{
-					id: 3,
-					name: "Слонов Слон Слонович",
-					specialization: "Большой и добрый",
-					hide: true,
-					delete: false,
-				},
-				{
-					id: 4,
-					name: "Лисов Лис Лисович",
-					specialization: "Самый хитрый",
-					hide: true,
-					delete: false,
-				},
-				{
-					id: 5,
-					name: "Медведов Медвед Медведович",
-					specialization: "Гроза леса",
-					hide: false,
-					delete: false,
-				},
-			],
+			loading: {
+				loader: true,
+			},
+			specialists: [],
 		};
+	},
+	methods: {
+		// Скрытие выбранного доктора
+		hideSpecialist(selectedSpecialist) {
+			let specialistToHide = this.specialists.filter((specialist) => {
+				if (selectedSpecialist.id === specialist.id) {
+					return specialist;
+				}
+			});
+
+			specialistToHide[0].hide = !specialistToHide[0].hide;
+		},
+		// Скрытие выбранного доктора
+		saveSpecialistHides() {
+			// Получение массива докторов с сервера
+			axios({
+				method: "post",
+				headers: {
+					Accept: "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: {
+					specialists: this.specialists,
+				},
+				url: `${this.$store.state.axios.urlApi}` + `save-specialists-hides`,
+			})
+				.then((response) => {
+					let debbugStory = {
+						title: "Успешно!",
+						body: "Данные о специалистах обновлены в базе данных.",
+						type: "Completed",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+				})
+				.catch((error) => {
+					let debbugStory = {
+						title: "Ошибка.",
+						body: "Произошла ошибка при сохранении изменений.",
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+					return;
+				});
+		},
 	},
 	mounted() {
 		// Получение массива докторов с сервера
-		// axios({
-		// 	method: "post",
-		// 	headers: {
-		// 		Accept: "application/json",
-		// 	},
-		// 	url: `${this.$store.state.axios.urlApi}` + `save-specialists-changes`,
-		// })
-		// 	.then((response) => {
-      //       console.log(response);
-		// 	})
-		// 	.catch((error) => {
-      //       console.log(error);
-      //    });
+		axios({
+			method: "post",
+			headers: {
+				Accept: "application/json",
+			},
+			url: `${this.$store.state.axios.urlApi}` + `get-specialists-short`,
+		})
+			.then((response) => {
+				this.specialists = response.data;
+
+				this.loading.loader = false;
+			})
+			.catch((error) => {
+				console.log(error);
+			});
 	},
 };
 </script>

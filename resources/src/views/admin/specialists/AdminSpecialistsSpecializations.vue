@@ -12,6 +12,8 @@
 			</template>
 		</block-title>
 
+		<AdminSpecialistsTable :array="specializations"/>
+
 		<block-buttons>
 			<button-default> Добавить </button-default>
 		</block-buttons>
@@ -28,6 +30,8 @@ import BlockOnce from "../../../components/ui/admin/BlockOnce.vue";
 import BlockTitle from "../../../components/ui/admin/BlockTitle.vue";
 import BlockButtons from "../../../components/ui/admin/BlockButtons.vue";
 
+import AdminSpecialistsTable from "./AdminSpecialistsTable.vue";
+
 import ButtonDefault from "../../../components/ui/admin/ButtonDefault.vue";
 import ButtonRemove from "../../../components/ui/admin/ButtonRemove.vue";
 
@@ -38,6 +42,7 @@ export default {
 		InfoBar,
 		LoaderChild,
 		ElementInputLabel,
+		AdminSpecialistsTable,
 		BlockOnce,
 		BlockTitle,
 		BlockButtons,
@@ -46,7 +51,22 @@ export default {
 		IconSave,
 	},
 	data() {
-		return {};
+		return {
+			specializations: [
+				{
+					id: 1,
+					name: "Терапевт",
+				},
+				{
+					id: 2,
+					name: "Хирург",
+				},
+				{
+					id: 3,
+					name: "Офтальмолог",
+				},
+			],
+		};
 	},
 };
 </script>

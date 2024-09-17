@@ -133,6 +133,16 @@ class AdminController extends Controller
 
       return true;
    }
+  // Сохранение специалистов 
+   public function saveSpecialistsHides(Request $request) {
+      foreach ($request->specialists as $key => $value) {
+         $specialist = Specialist::find($value['id']);
+         $specialist->hide = $value['hide'];
+         $specialist->save();
+      }
+
+      return true;
+   }
   /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
   /* |                     ОБЩИЕ                         |*/
   /* |___________________________________________________|*/

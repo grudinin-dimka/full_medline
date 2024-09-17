@@ -13,7 +13,13 @@
 			</template>
 		</block-title>
 		<div class="container-profile">
-			<img :src="`/storage/slides/lesnikova.png`" class="profile-image" alt="" />
+			<div class="profile-image-loader" v-if="loading.loader">Идёт загрузка...</div>
+			<img
+				:src="`/storage/slides/lesnikova.png`"
+				class="profile-image"
+				alt=""
+				v-if="!loading.loader"
+			/>
 			<div class="profile-info">
 				<container-input-two :fieldset="true">
 					<template #legend>АВАТАР И ССЫЛКА</template>
@@ -103,8 +109,8 @@
 						v-model="spesialist.profile.adultDoctor.body"
 						:class="{ 'input-load': loading.loader }"
 					>
-						<option value="false">Нет</option>
-						<option value="true">Да</option>
+						<option value="0">Нет</option>
+						<option value="1">Да</option>
 					</select>
 				</template>
 				<template #title-two>У ДЕТЕЙ</template>
@@ -114,8 +120,8 @@
 						autocomplete="off"
 						:class="{ 'input-load': loading.loader }"
 					>
-						<option value="false">Нет</option>
-						<option value="true">Да</option>
+						<option value="0">Нет</option>
+						<option value="1">Да</option>
 					</select>
 				</template>
 			</container-input-two>
@@ -369,8 +375,11 @@ export default {
 			},
 			spesialist: {
 				profile: {
-					id: 1,
 					file: "",
+					id: {
+						body: "",
+						edited: false,
+					},
 					link: {
 						body: "",
 						edited: false,
@@ -431,15 +440,27 @@ export default {
 		},
 	},
 	mounted() {
-		// axios
-		// 	.get(`${this.$store.state.axios.urlApi}get-specialist-profile`)
-		// 	.then((response) => {
-		// 		this.spesialist = response.data;
-		// 	})
-		// 	.catch((error) => {
-		// 		console.log(error);
-		// 	});
-		// .finally(() => (this.loading.loader = false));
+		axios({
+			method: "post",
+			headers: {
+				Accept: "application/json",
+			},
+			url: `${this.$store.state.axios.urlApi}` + `get-specialist-all`,
+			data: {
+				id: this.$route.params.id,
+			},
+		})
+			.then((response) => {
+				for (let key in response.data) {
+					this.spesialist.profile[key].body = response.data[key];
+				}
+			})
+			.catch((error) => {
+				console.log(error);
+			})
+			.finally(() => {
+				this.loading.loader = false;
+			});
 	},
 };
 </script>
@@ -449,6 +470,14 @@ export default {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	gap: 20px;
+}
+
+.profile-image-loader {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 20px;
+	color: #bcbcbc;
 }
 
 .profile-image {

@@ -97,6 +97,36 @@ class HomeController extends Controller
          };
       };
    }
+
+   public function getSpecialistAll(Request $request) {
+      $specialist = Specialist::where('id', $request->id)->first();
+
+      return $specialist;
+   }
+
+   // Вывод сокращенной информации о врачах 
+   public function getSpecialistsShort(Request $request) {
+      $specialistsShort = Specialist::select('id', 'family', 'name', 'surname', 'hide')->get();
+      
+      foreach ($specialistsShort as $key => $value) {
+         $specializations = SpecialistSpecialization::where('id_specialist', $value->id)->get();
+         
+         $specializationsNames = "";
+         // Перебор специализаций врача
+         foreach ($specializations as $key => $valueSpecialization) {
+            // Получение названия специализации
+            $specializationsNamesOnce = Specialization::where('id', $valueSpecialization->id_specialization)->get();
+            
+            $specializationsNames .= $specializationsNamesOnce[0]->name . ", ";
+         };
+         $specializationsNames = substr($specializationsNames, 0, -2);
+
+         $value->specializations = $specializationsNames;
+      };
+
+      // $SpecialistSpecializations = SpecialistSpecialization::where('id_specialist', 1)->get();
+      return $specialistsShort;
+   }
 };
 
 function makeUrl($url) {
