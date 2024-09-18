@@ -14,7 +14,7 @@
 
 		<loader-child
 			:isLoading="loading.loader"
-			:minHeight="300"
+			:minHeight="200"
 			@loaderChildAfterLeave="loaderChildAfterLeave"
 		/>
 

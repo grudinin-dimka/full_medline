@@ -12,30 +12,19 @@
 				<icon-save :width="28" :height="28" />
 			</template>
 		</block-title>
-		<div class="container-profile">
-			<div class="profile-image-loader" v-if="loading.loader">Идёт загрузка...</div>
-			<img
-				:src="`${spesialist.profile.path.body}`"
-				class="profile-image"
-				alt=""
-				v-if="!loading.loader"
-			/>
+
+		<div class="container-profile" v-show="loading.profile">
+			<img :src="`${spesialist.profile.path.body}`" class="profile-image" alt="" />
 			<div class="profile-info">
 				<container-input-two :fieldset="true">
 					<template #legend>АВАТАР И ССЫЛКА</template>
 					<template #title-one>ФОТО ВРАЧА</template>
 					<template #input-one>
-						<input
-							:class="{ 'loader-pulse': loading.loader }"
-							class="profile-file"
-							type="file"
-							autocomplete="off"
-						/>
+						<input class="profile-file" type="file" autocomplete="off" />
 					</template>
 					<template #title-two>ССЫЛКА НА ПРОДОКТОРОВ</template>
 					<template #input-two>
 						<input
-							:class="{ 'loader-pulse': loading.loader }"
 							type="text"
 							placeholder="Введите ссылку"
 							autocomplete="off"
@@ -48,7 +37,6 @@
 					<template #title-one>ФАМИЛИЯ</template>
 					<template #input-one>
 						<input
-							:class="{ 'loader-pulse': loading.loader }"
 							type="text"
 							placeholder="Введите фамилию"
 							autocomplete="off"
@@ -58,7 +46,6 @@
 					<template #title-two>ИМЯ</template>
 					<template #input-two>
 						<input
-							:class="{ 'loader-pulse': loading.loader }"
 							type="text"
 							placeholder="Введите имя"
 							autocomplete="off"
@@ -68,7 +55,6 @@
 					<template #title-three>ОТЧЕСТВО</template>
 					<template #input-three>
 						<input
-							:class="{ 'loader-pulse': loading.loader }"
 							type="text"
 							placeholder="Введите отчество"
 							autocomplete="off"
@@ -78,54 +64,51 @@
 				</container-input-three>
 			</div>
 		</div>
-		<!-- Первая работа -->
-		<container-input>
-			<container-input-two :fieldset="true">
-				<template #legend>ПЕРВАЯ РАБОТА</template>
-				<template #title-one>НАЧАЛО ПЕРВОЙ РАБОТЫ</template>
-				<template #input-one>
-					<input
-						type="date"
-						:class="{ 'loader-pulse': loading.loader }"
-						v-model="spesialist.profile.startWorkAge.body"
-					/>
-				</template>
-				<template #title-two>ГОРОД ПЕРВОЙ РАБОТЫ</template>
-				<template #input-two>
-					<input
-						:class="{ 'loader-pulse': loading.loader }"
-						type="text"
-						placeholder="Введите название города"
-						autocomplete="off"
-						v-model="spesialist.profile.startWorkCity.body"
-					/>
-				</template>
-			</container-input-two>
-			<container-input-two :fieldset="true">
-				<template #legend>ПРИЁМ ВРАЧА</template>
-				<template #title-one>У ВЗРОСЛЫХ</template>
-				<template #input-one>
-					<select
-						v-model="spesialist.profile.adultDoctor.body"
-						:class="{ 'loader-pulse': loading.loader }"
-					>
-						<option value="0">Нет</option>
-						<option value="1">Да</option>
-					</select>
-				</template>
-				<template #title-two>У ДЕТЕЙ</template>
-				<template #input-two>
-					<select
-						v-model="spesialist.profile.childrenDoctor.body"
-						autocomplete="off"
-						:class="{ 'loader-pulse': loading.loader }"
-					>
-						<option value="0">Нет</option>
-						<option value="1">Да</option>
-					</select>
-				</template>
-			</container-input-two>
-		</container-input>
+		<!-- Первая работа и статус приёма -->
+		<div class="container-profile-other" v-show="loading.profile">
+			<container-input v-if="loading.profile">
+				<container-input-two :fieldset="true">
+					<template #legend>ПЕРВАЯ РАБОТА</template>
+					<template #title-one>НАЧАЛО ПЕРВОЙ РАБОТЫ</template>
+					<template #input-one>
+						<input type="date" v-model="spesialist.profile.startWorkAge.body" />
+					</template>
+					<template #title-two>ГОРОД ПЕРВОЙ РАБОТЫ</template>
+					<template #input-two>
+						<input
+							type="text"
+							placeholder="Введите название города"
+							autocomplete="off"
+							v-model="spesialist.profile.startWorkCity.body"
+						/>
+					</template>
+				</container-input-two>
+				<container-input-two :fieldset="true">
+					<template #legend>ПРИЁМ ВРАЧА</template>
+					<template #title-one>У ВЗРОСЛЫХ</template>
+					<template #input-one>
+						<select v-model="spesialist.profile.adultDoctor.body">
+							<option value="0">Нет</option>
+							<option value="1">Да</option>
+						</select>
+					</template>
+					<template #title-two>У ДЕТЕЙ</template>
+					<template #input-two>
+						<select v-model="spesialist.profile.childrenDoctor.body" autocomplete="off">
+							<option value="0">Нет</option>
+							<option value="1">Да</option>
+						</select>
+					</template>
+				</container-input-two>
+			</container-input>
+		</div>
+
+		<!-- Загрузчик профиля -->
+		<loader-child
+			:isLoading="loading.loader.profile"
+			:minHeight="600"
+			@loaderChildAfterLeave="loaderChildAfterLeave"
+		/>
 	</block-once>
 	<!-- Сертификаты -->
 	<block-once>
@@ -136,17 +119,10 @@
 			</template>
 		</block-title>
 
-		<div class="profile-list">
+		<div class="profile-list" v-show="loading.certificates">
 			<!-- Если сертификаты не выбраны -->
 			<div class="item-empty" v-if="spesialist.certificates.length == 0 && !loading.loader">
 				<div class="item-title">Пока тут ничего нет...</div>
-			</div>
-			<!-- Пока идёт загрузка -->
-			<div class="item" v-if="loading.loader" :class="{ 'loader-pulse': loading.loader }">
-				<div class="item-title"></div>
-				<div class="item-close">
-					<icon-close :width="26" :height="26" />
-				</div>
 			</div>
 			<!-- Если специализации выбраны -->
 			<div class="item" v-for="certificate in spesialist.certificates" :key="certificate.id">
@@ -156,6 +132,13 @@
 				</div>
 			</div>
 		</div>
+
+		<!-- Загрузчик профиля -->
+		<loader-child
+			:isLoading="loading.loader.clinics"
+			:minHeight="100"
+			@loaderChildAfterLeave="loaderChildAfterLeave"
+		/>
 
 		<block-buttons>
 			<button-default> Добавить </button-default>
@@ -173,7 +156,7 @@
 			</block-title>
 		</template>
 		<template #body-one>
-			<div class="profile-list">
+			<div class="profile-list" v-show="loading.specializations">
 				<!-- Если специализации не выбраны -->
 				<div
 					class="item-empty"
@@ -201,6 +184,13 @@
 				</div>
 			</div>
 
+			<!-- Загрузчик специализаций -->
+			<loader-child
+				:isLoading="loading.loader.specializations"
+				:minHeight="100"
+				@loaderChildAfterLeave="loaderChildAfterLeave"
+			/>
+
 			<block-buttons>
 				<button-default> Добавить </button-default>
 			</block-buttons>
@@ -214,7 +204,7 @@
 			</block-title>
 		</template>
 		<template #body-two>
-			<div class="profile-list">
+			<div class="profile-list" v-show="loading.clinics">
 				<!-- Если клиники не выбраны -->
 				<div class="item-empty" v-if="spesialist.clinics.length == 0 && !loading.loader">
 					<div class="item-title">Пока тут ничего нет...</div>
@@ -235,6 +225,13 @@
 				</div>
 			</div>
 
+			<!-- Загрузчик клиник -->
+			<loader-child
+				:isLoading="loading.loader.clinics"
+				:minHeight="100"
+				@loaderChildAfterLeave="loaderChildAfterLeave"
+			/>
+
 			<block-buttons>
 				<button-default> Добавить </button-default>
 			</block-buttons>
@@ -251,7 +248,7 @@
 			</block-title>
 		</template>
 		<template #body-one>
-			<div class="profile-list">
+			<div class="profile-list" v-show="loading.educations">
 				<!-- Если образования не выбраны -->
 				<div class="item-empty" v-if="spesialist.educations.length == 0 && !loading.loader">
 					<div class="item-title">Пока тут ничего нет...</div>
@@ -272,6 +269,13 @@
 				</div>
 			</div>
 
+			<!-- Загрузчик образований -->
+			<loader-child
+				:isLoading="loading.loader.educations"
+				:minHeight="100"
+				@loaderChildAfterLeave="loaderChildAfterLeave"
+			/>
+
 			<block-buttons>
 				<button-default> Добавить </button-default>
 			</block-buttons>
@@ -285,7 +289,7 @@
 			</block-title>
 		</template>
 		<template #body-two>
-			<div class="profile-list">
+			<div class="profile-list" v-show="loading.works">
 				<!-- Если образования не выбраны -->
 				<div class="item-empty" v-if="spesialist.works.length == 0 && !loading.loader">
 					<div class="item-title">Пока тут ничего нет...</div>
@@ -305,6 +309,13 @@
 					</div>
 				</div>
 			</div>
+
+			<!-- Загрузчик мест работы -->
+			<loader-child
+				:isLoading="loading.loader.works"
+				:minHeight="100"
+				@loaderChildAfterLeave="loaderChildAfterLeave"
+			/>
 
 			<block-buttons>
 				<button-default> Добавить </button-default>
@@ -371,7 +382,20 @@ export default {
 	data() {
 		return {
 			loading: {
-				loader: true,
+				loader: {
+					profile: true,
+					certificates: true,
+					specializations: true,
+					clinics: true,
+					educations: true,
+					works: true,
+				},
+				profile: false,
+				certificates: false,
+				specializations: false,
+				clinics: false,
+				educations: false,
+				works: false,
 			},
 			spesialist: {
 				profile: {
@@ -434,6 +458,18 @@ export default {
 		};
 	},
 	methods: {
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                   Загрузчик                       |*/
+		/* |___________________________________________________|*/
+		/* После скрытия элементы */
+		loaderChildAfterLeave() {
+			if (!this.loading.loader.profile) {
+				this.loading.profile = true;
+			}
+		},
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                    Профиль                        |*/
+		/* |___________________________________________________|*/
 		// Метод удаления значения из массива
 		removeArrValue(array, value) {
 			this.spesialist[array] = this.spesialist[array].filter((item) => {
@@ -463,7 +499,7 @@ export default {
 				console.log(error);
 			})
 			.finally(() => {
-				this.loading.loader = false;
+				this.loading.loader.profile = false;
 			});
 	},
 };
@@ -474,6 +510,12 @@ export default {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	gap: 20px;
+
+	animation: show 0.5s ease-in-out;
+}
+
+.container-profile-other {
+	animation: show 0.5s ease-in-out;
 }
 
 .profile-image-loader {
@@ -533,6 +575,8 @@ export default {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
+
+	animation: show 0.5s ease-in-out;
 }
 
 .profile-list > .item {

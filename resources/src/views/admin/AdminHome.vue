@@ -148,13 +148,6 @@
 			</template>
 		</block-title>
 
-		<!-- Загрузка слайдов -->
-		<loader-child
-			:isLoading="loading.loader.slider"
-			:minHeight="300"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
-		/>
-
 		<div class="slider" v-show="loading.slider">
 			<div
 				v-for="slide in slides"
@@ -197,6 +190,14 @@
 				</div>
 			</div>
 		</div>
+
+		<!-- Загрузка слайдов -->
+		<loader-child
+			:isLoading="loading.loader.slider"
+			:minHeight="300"
+			@loaderChildAfterLeave="loaderChildAfterLeave"
+		/>
+
 		<BlockButtons>
 			<ButtonDefault @click="openSlide(null, 'create')"> Добавить </ButtonDefault>
 		</BlockButtons>
@@ -212,13 +213,6 @@
 				<icon-save :width="28" :height="28" @click="saveFooterChanges" />
 			</template>
 		</block-title>
-
-		<!-- Загрузка футера -->
-		<loader-child
-			:isLoading="loading.loader.footer"
-			:minHeight="300"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
-		/>
 
 		<div class="footer-container" v-show="loading.footer">
 			<!-- Заголовок -->
@@ -302,6 +296,13 @@
 				<span> {{ footer.footer.symbolsCount }}/{{ footer.footer.symbolsCountMax }} </span>
 			</div>
 		</div>
+
+		<!-- Загрузка футера -->
+		<loader-child
+			:isLoading="loading.loader.footer"
+			:minHeight="300"
+			@loaderChildAfterLeave="loaderChildAfterLeave"
+		/>
 	</block-once>
 </template>
 

@@ -12,16 +12,18 @@
 			</template>
 		</block-title>
 
-		<loader-child
-			:isLoading="loading.loader"
-			:minHeight="300"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
-		/>
-
+		<!-- Таблица -->
 		<admin-specialists-table
 			v-show="loading.table"
 			:array="clinics"
 			@useFilter="filterSpecializations"
+		/>
+
+		<!-- Загрузчик -->
+		<loader-child
+			:isLoading="loading.loader"
+			:minHeight="200"
+			@loaderChildAfterLeave="loaderChildAfterLeave"
 		/>
 
 		<block-buttons>
