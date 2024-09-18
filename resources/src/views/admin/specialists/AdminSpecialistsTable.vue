@@ -151,6 +151,7 @@ export default {
 <style scoped>
 table {
 	border-collapse: collapse;
+	animation: show 0.5s ease-in-out;
 }
 
 th,
@@ -233,15 +234,6 @@ input[type="checkbox"] {
 
 input[type="checkbox"]:checked + label {
 	text-decoration: line-through;
-}
-
-@keyframes show {
-	0% {
-		opacity: 0;
-	}
-	100% {
-		opacity: 1;
-	}
 }
 
 @media screen and (max-width: 1350px) {

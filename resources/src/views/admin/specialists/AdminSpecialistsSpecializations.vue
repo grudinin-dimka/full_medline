@@ -12,7 +12,17 @@
 			</template>
 		</block-title>
 
-		<admin-specialists-table :array="specializations" @useFilter="filterSpecializations" />
+		<loader-child
+			:isLoading="loading.loader"
+			:minHeight="300"
+			@loaderChildAfterLeave="loaderChildAfterLeave"
+		/>
+
+		<admin-specialists-table
+			v-show="loading.table"
+			:array="specializations"
+			@useFilter="filterSpecializations"
+		/>
 
 		<block-buttons>
 			<button-default> Добавить </button-default>
@@ -55,10 +65,22 @@ export default {
 	},
 	data() {
 		return {
+			loading: {
+				loader: true,
+				table: false,
+			},
 			specializations: [],
 		};
 	},
 	methods: {
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                   Загрузчик                       |*/
+		/* |___________________________________________________|*/
+		/* После скрытия элементы */
+		loaderChildAfterLeave() {
+			this.loading.table = true;
+		},
+
 		/* _____________________________________________________*/
 		/* ?. Фильтрация                                        */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
@@ -146,6 +168,7 @@ export default {
 		})
 			.then((response) => {
 				this.specializations = response.data;
+				this.loading.loader = false;
 			})
 			.catch((error) => {
 				console.log(error);

@@ -12,7 +12,17 @@
 			</template>
 		</block-title>
 
-		<admin-specialists-table :array="clinics" @useFilter="filterSpecializations" />
+		<loader-child
+			:isLoading="loading.loader"
+			:minHeight="300"
+			@loaderChildAfterLeave="loaderChildAfterLeave"
+		/>
+
+		<admin-specialists-table
+			v-show="loading.table"
+			:array="clinics"
+			@useFilter="filterSpecializations"
+		/>
 
 		<block-buttons>
 			<button-default> Добавить </button-default>
@@ -55,27 +65,22 @@ export default {
 	},
 	data() {
 		return {
-			clinics: [
-				{
-					id: 1,
-					name: "г. Шадринск, ул. Комсомольская, 16",
-				},
-				{
-					id: 2,
-					name: "г. Шадринск, ул. Карла Либкнехта, 10",
-				},
-				{
-					id: 3,
-					name: "г. Шадринск, ул. Октябрьская, 3",
-				},
-				{
-					id: 4,
-					name: "р. п. Каргаполье, ул. Мира, 5г",
-				},
-			],
+			loading: {
+				loader: true,
+				table: false,
+			},
+			clinics: [],
 		};
 	},
 	methods: {
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                   Загрузчик                       |*/
+		/* |___________________________________________________|*/
+		/* После скрытия элементы */
+		loaderChildAfterLeave() {
+			this.loading.table = true;
+		},
+
 		/* _____________________________________________________*/
 		/* ?. Фильтрация                                        */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
@@ -163,6 +168,7 @@ export default {
 		})
 			.then((response) => {
 				this.clinics = response.data;
+				this.loading.loader = false;
 			})
 			.catch((error) => {
 				console.log(error);

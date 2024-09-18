@@ -1,13 +1,18 @@
 <template>
-	<div
-		v-if="isLoading"
-		class="container-loader"
-		:style="{
-			minHeight: `${minHeight}px`,
-		}"
+	<transition
+		@after-enter="$emit('loaderChildAfterEnter')"
+		@after-leave="$emit('loaderChildAfterLeave')"
 	>
-		<span class="loader"></span>
-	</div>
+		<div
+			v-show="isLoading"
+			class="container-loader"
+			:style="{
+				minHeight: `${minHeight}px`,
+			}"
+		>
+			<span class="loader"></span>
+		</div>
+	</transition>
 </template>
 
 <script>
@@ -26,6 +31,29 @@ export default {
 </script>
 
 <style scoped>
+.v-enter-active {
+	animation: swirlAdded 1s;
+	transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+	opacity: 0;
+}
+
+@keyframes swirlAdded {
+	from {
+		opacity: 0;
+		rotate: 0;
+		scale: 0.1;
+	}
+	to {
+		opacity: 1;
+		rotate: 360deg;
+		scale: 1;
+	}
+}
+
 .container-loader {
 	display: flex;
 	justify-content: center;

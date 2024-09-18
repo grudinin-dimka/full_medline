@@ -12,7 +12,18 @@
 			</template>
 		</block-title>
 
-		<admin-specialists-table :specialists="specialists" @touchHideSpecialist="hideSpecialist"/>
+		<loader-child
+			:isLoading="loading.loader"
+			:minHeight="300"
+			@loaderChildAfterLeave="loaderChildAfterLeave"
+		/>
+
+		<admin-specialists-table
+			v-show="loading.table"
+			:specialists="specialists"
+			@touchHideSpecialist="hideSpecialist"
+			@useFilter="filterSpecialists"
+		/>
 
 		<block-buttons>
 			<button-default @click="$router.push('especialists/new')"> Добавить </button-default>
@@ -62,11 +73,169 @@ export default {
 		return {
 			loading: {
 				loader: true,
+				table: false,
 			},
 			specialists: [],
 		};
 	},
 	methods: {
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                   Загрузчик                       |*/
+		/* |___________________________________________________|*/
+		/* После скрытия элементы */
+		loaderChildAfterLeave() {
+			this.loading.table = true;
+		},
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                  Специалисты                      |*/
+		/* |___________________________________________________|*/
+		/* _____________________________________________________*/
+		/* 1. Фильтрация                                        */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		filterSpecialists(column, type) {
+			switch (column) {
+				case "id":
+					if (type == "default") {
+						this.specialists.sort((a, b) => {
+							if (a.id > b.id) {
+								return 1;
+							}
+							if (a.id < b.id) {
+								return -1;
+							}
+							// a должно быть равным b
+							return 0;
+						});
+					}
+
+					if (type == "reverse") {
+						this.specialists.sort((a, b) => {
+							if (a.id < b.id) {
+								return 1;
+							}
+							if (a.id > b.id) {
+								return -1;
+							}
+							// a должно быть равным b
+							return 0;
+						});
+					}
+					break;
+				case "name":
+					if (type == "default") {
+						this.specialists.sort((a, b) => {
+							let aName = a.name.toLowerCase();
+							let bName = b.name.toLowerCase();
+
+							let aNameFirstLetter = aName[0].charCodeAt(0);
+							let bNameFirstLetter = bName[0].charCodeAt(0);
+
+							if (aNameFirstLetter > bNameFirstLetter) {
+								return 1;
+							}
+							if (aNameFirstLetter < bNameFirstLetter) {
+								return -1;
+							}
+							// a должно быть равным b
+							return 0;
+						});
+					}
+
+					if (type == "reverse") {
+						this.specialists.sort((a, b) => {
+							let aName = a.name.toLowerCase();
+							let bName = b.name.toLowerCase();
+
+							let aNameFirstLetter = aName[0].charCodeAt(0);
+							let bNameFirstLetter = bName[0].charCodeAt(0);
+
+							if (aNameFirstLetter < bNameFirstLetter) {
+								return 1;
+							}
+							if (aNameFirstLetter > bNameFirstLetter) {
+								return -1;
+							}
+							// a должно быть равным b
+							return 0;
+						});
+					}
+
+					break;
+				case "specialization":
+					if (type == "default") {
+						this.specialists.sort((a, b) => {
+							let aName = a.specializations.toLowerCase();
+							let bName = b.specializations.toLowerCase();
+
+							let aNameFirstLetter = aName.charCodeAt(0);
+							let bNameFirstLetter = bName.charCodeAt(0);
+
+							if (aNameFirstLetter > bNameFirstLetter) {
+								return 1;
+							}
+							if (aNameFirstLetter < bNameFirstLetter) {
+								return -1;
+							}
+							// a должно быть равным b
+							return 0;
+						});
+					}
+
+					if (type == "reverse") {
+						this.specialists.sort((a, b) => {
+							let aName = a.specializations.toLowerCase();
+							let bName = b.specializations.toLowerCase();
+
+							let aNameFirstLetter = aName.charCodeAt(0);
+							let bNameFirstLetter = bName.charCodeAt(0);
+
+							if (aNameFirstLetter < bNameFirstLetter) {
+								return 1;
+							}
+							if (aNameFirstLetter > bNameFirstLetter) {
+								return -1;
+							}
+							// a должно быть равным b
+							return 0;
+						});
+					}
+
+					break;
+				case "hide":
+					if (type == "default") {
+						this.specialists.sort((a, b) => {
+							if (a.hide < b.hide) {
+								return 1;
+							}
+							if (a.hide > b.hide) {
+								return -1;
+							}
+							// a должно быть равным b
+							return 0;
+						});
+					}
+
+					if (type == "reverse") {
+						this.specialists.sort((a, b) => {
+							if (a.hide > b.hide) {
+								return 1;
+							}
+							if (a.hide < b.hide) {
+								return -1;
+							}
+							// a должно быть равным b
+							return 0;
+						});
+					}
+
+					break;
+				default:
+					break;
+			}
+		},
+		/* _____________________________________________________*/
+		/* 2. Сохранение, обновление, удаление                  */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		// Скрытие выбранного доктора
 		hideSpecialist(selectedSpecialist) {
 			let specialistToHide = this.specialists.filter((specialist) => {
@@ -120,6 +289,7 @@ export default {
 			url: `${this.$store.state.axios.urlApi}` + `get-specialists-short`,
 		})
 			.then((response) => {
+				console.log(response.data);
 				this.specialists = response.data;
 
 				this.loading.loader = false;

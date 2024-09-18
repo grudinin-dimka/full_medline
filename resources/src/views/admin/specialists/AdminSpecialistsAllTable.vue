@@ -66,10 +66,21 @@
 						</div>
 						<div
 							class="table-th-filter"
-							v-if="filters.specialization.status"
-							@click="useFilter('specialization', 'default')"
+							v-if="
+								filters.specialization.status && filters.specialization.type === 'default'
+							"
+							@click="useFilter('specialization', 'reverse')"
 						>
 							<icon-filter-on :width="22" :height="22" />
+						</div>
+						<div
+							class="table-th-filter"
+							v-if="
+								filters.specialization.status && filters.specialization.type === 'reverse'
+							"
+							@click="useFilter('specialization', 'default')"
+						>
+							<icon-filter-on-reverse :width="22" :height="22" />
 						</div>
 					</div>
 				</th>
@@ -88,14 +99,14 @@
 							v-if="filters.hide.status && filters.hide.type === 'default'"
 							@click="useFilter('hide', 'reverse')"
 						>
-							<icon-filter-on :width="22" :height="22" />
+							<icon-filter-on-reverse :width="22" :height="22" />
 						</div>
 						<div
 							class="table-th-filter"
 							v-if="filters.hide.status && filters.hide.type === 'reverse'"
 							@click="useFilter('hide', 'default')"
 						>
-							<icon-filter-on-reverse :width="22" :height="22" />
+							<icon-filter-on :width="22" :height="22" />
 						</div>
 					</div>
 				</th>
@@ -232,6 +243,7 @@ export default {
 <style scoped>
 table {
 	border-collapse: collapse;
+	animation: show 0.5s ease-in-out;
 }
 
 th,

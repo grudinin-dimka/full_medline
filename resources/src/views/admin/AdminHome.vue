@@ -148,40 +148,14 @@
 			</template>
 		</block-title>
 
-		<div class="slider" v-if="loading.loader.slider">
-			<div class="slider-block loader-pulse">
-				<div
-					v-bind:style="{
-						'background-image': `url(/storage/default/specialist.png)`,
-						height: '275px',
-						'background-size': 'contain	',
-						'background-position': 'center center',
-						'background-repeat': 'no-repeat',
-					}"
-				></div>
-				<div class="slider-block-id">#0</div>
-				<div class="slider-block-info">
-					<article>
-						<SlideUserCard />
-						<label>
-							Иванов Иван Иванович
-						</label>
-					</article>
-					<article>
-						<SlideLink />
-						<label>
-							https://vrach.ru
-						</label>
-					</article>
-					<article>
-						<SlidePath />
-						<label> default/specialist.png </label>
-					</article>
-				</div>
-			</div>
-		</div>
+		<!-- Загрузка слайдов -->
+		<loader-child
+			:isLoading="loading.loader.slider"
+			:minHeight="300"
+			@loaderChildAfterLeave="loaderChildAfterLeave"
+		/>
 
-		<div class="slider" v-if="loading.slider">
+		<div class="slider" v-show="loading.slider">
 			<div
 				v-for="slide in slides"
 				:key="slide.id"
@@ -239,7 +213,14 @@
 			</template>
 		</block-title>
 
-		<div class="footer-container">
+		<!-- Загрузка футера -->
+		<loader-child
+			:isLoading="loading.loader.footer"
+			:minHeight="300"
+			@loaderChildAfterLeave="loaderChildAfterLeave"
+		/>
+
+		<div class="footer-container" v-show="loading.footer">
 			<!-- Заголовок -->
 			<element-input-label>
 				Заголовок <span v-if="footer.title.edited">(Изменено)</span>
@@ -248,7 +229,6 @@
 				<textarea
 					rows="4"
 					placeholder="Заголовок"
-					:class="{ 'loader-pulse': loading.loader.footer }"
 					v-model="footer.title.body"
 					@input="controlSymbols('title')"
 				>
@@ -264,7 +244,6 @@
 				<textarea
 					rows="10"
 					placeholder="Заголовок"
-					:class="{ 'loader-pulse': loading.loader.footer }"
 					v-model="footer.titleDesc.body"
 					@input="controlSymbols('titleDesc')"
 				>
@@ -280,7 +259,6 @@
 				<textarea
 					rows="4"
 					placeholder="Заголовок"
-					:class="{ 'loader-pulse': loading.loader.footer }"
 					v-model="footer.license.body"
 					@input="controlSymbols('license')"
 				>
@@ -300,7 +278,6 @@
 				<textarea
 					rows="10"
 					placeholder="Основной текст"
-					:class="{ 'loader-pulse': loading.loader.footer }"
 					v-model="footer.licenseDesc.body"
 					@input="controlSymbols('licenseDesc')"
 				>
@@ -318,7 +295,6 @@
 				<textarea
 					rows="10"
 					placeholder="Подвал"
-					:class="{ 'loader-pulse': loading.loader.footer }"
 					v-model="footer.footer.body"
 					@input="controlSymbols('footer')"
 				>
@@ -487,6 +463,20 @@ export default {
 		};
 	},
 	methods: {
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                   Загрузчик                       |*/
+		/* |___________________________________________________|*/
+		/* После скрытия элементы */
+		loaderChildAfterLeave() {
+			if (!this.loading.loader.slider) {
+				this.loading.slider = true;
+			}
+			if (!this.loading.loader.footer) {
+				this.loading.footer = true;
+			}
+			// if (this.loading.loader.slider && this.loading.loader.footer) {
+			// }
+		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                    СЛАЙДЕР                        |*/
 		/* |___________________________________________________|*/
@@ -1178,7 +1168,6 @@ export default {
 				this.sortSlider();
 
 				this.loading.loader.slider = false;
-				this.loading.slider = true;
 			})
 			.catch((error) => {
 				let debbugStory = {
@@ -1205,7 +1194,6 @@ export default {
 				}
 
 				this.loading.loader.footer = false;
-				this.loading.footer = true;
 			})
 			.catch((error) => {
 				let debbugStory = {
@@ -1352,6 +1340,7 @@ textarea:focus {
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
 	gap: 20px;
+	animation: show 0.5s ease-in-out;
 }
 
 .slider-block {
@@ -1418,6 +1407,10 @@ textarea:focus {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-end;
+}
+
+.footer-container {
+	animation: show 0.5s ease-in-out;
 }
 
 @media screen and (max-width: 1900px) {
