@@ -27,6 +27,23 @@ return new class extends Migration
          $table->string('name', 1000);
          $table->timestamps();
       });
+
+      DB::table('works')->insert(
+         [
+             "startWork" => date('c'),
+             "endWork" => date('c'),
+             "organization" => "ООО 'Медицинский центр'",
+             "name" => "Что-то там"
+         ]
+      );
+      DB::table('works')->insert(
+         [
+             "startWork" => date('c'),
+             "endWork" => date('c'),
+             "organization" => "ООО 'Медицинский центр'",
+             "name" => "Что-то там"
+         ]
+     );
    }
 
    /**

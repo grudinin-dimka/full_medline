@@ -28,7 +28,7 @@ export default {};
 }
 
 .block-two > .item {
-   flex: 1 0 350px;
+	flex: 1 0 350px;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;

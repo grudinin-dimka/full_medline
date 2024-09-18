@@ -2,9 +2,9 @@
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                  МОДАЛЬНОЕ ОКНО                   |-->
 	<!--|___________________________________________________|-->
-	<modal ref="modal" @closeModal="closeSlide" :modal="modal">
+	<modal ref="modal" @touchCloseModal="closeSlide" :modal="modal">
 		<template
-			#button-hide
+			#buttonHide
 			v-if="
 				(modal.type == 'edit') & !currentSlide.data.delete.body & !currentSlide.data.create.body
 			"
@@ -374,6 +374,16 @@ export default {
 				style: {
 					create: false,
 					delete: false,
+				},
+				modules: {
+					title: true,
+					buttons: {
+						hide: true,
+						close: true,
+					},
+					images: true,
+					body: true,
+					footer: true,
 				},
 			},
 			currentSlide: {

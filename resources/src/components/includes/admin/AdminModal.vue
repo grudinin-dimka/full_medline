@@ -6,19 +6,23 @@
 			create: modal.style.create,
 			delete: modal.style.delete,
 		}"
-		@click.self="closeModal()"
+		@click.self="$emit('touchCloseModal')"
 	>
 		<div class="modal-container">
 			<!-- Верхняя часть окна -->
 			<div class="modal-head">
 				<!-- Заголовок -->
 				<div class="modal-head-title">
-					<slot name="title"></slot>
+					<slot name="title" v-if="modal.modules.title"></slot>
 				</div>
 				<!-- Кнопки -->
 				<div class="modal-head-buttons">
-					<slot name="button-hide"></slot>
-					<button class="button-close" @click="closeModal">
+					<slot name="buttonHide" v-if="modal.modules.buttons.hide"></slot>
+					<button
+						class="button-close"
+						v-if="modal.modules.buttons.close"
+						@click="$emit('touchCloseModal')"
+					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							height="26px"
@@ -33,16 +37,16 @@
 					</button>
 				</div>
 			</div>
-			<div class="modal-img">
+			<div class="modal-img" v-if="modal.modules.images">
 				<slot name="img"></slot>
 				<slot name="img-input"></slot>
 			</div>
 			<!-- Тело окна -->
-			<div class="modal-body">
+			<div class="modal-body" v-if="modal.modules.body">
 				<slot name="body"></slot>
 			</div>
 			<!-- Нижняя часть окна -->
-			<slot name="footer">
+			<slot name="footer" v-if="modal.modules.footer">
 				<slot name="footer"></slot>
 			</slot>
 		</div>
@@ -58,11 +62,6 @@ export default {
 			return {
 				status: false,
 			};
-		},
-	},
-	methods: {
-		closeModal() {
-			this.$emit("closeModal");
 		},
 	},
 };

@@ -44,6 +44,22 @@ return new class extends Migration
                 "home" => "16",
             ]
         );
+        DB::table('clinics')->insert(
+            [
+                "name" => "г. Шадринск, ул. Карла Либкнехта, 10",
+                "city" => "Шадринск",
+                "street" => "Карла Либкнехта",
+                "home" => "10",
+            ]
+        );
+        DB::table('clinics')->insert(
+            [
+                "name" => "г. Шадринск, ул. Октябрьская, 3",
+                "city" => "Шадринск",
+                "street" => "Октябрьская",
+                "home" => "3",
+            ]
+        );
     }
 
     /**

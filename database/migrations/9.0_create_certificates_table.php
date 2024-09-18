@@ -21,10 +21,25 @@ return new class extends Migration
       Schema::create('certificates', function (Blueprint $table) {
          $table->id();
          $table->string('organization', 1000);
-         $table->date('date')->default(date('c'));
+         $table->date('endEducation')->default(date('c'));
          $table->string('name', 1000);
          $table->timestamps();
       });
+      
+      DB::table('certificates')->insert(
+         [
+             "organization" => "Какой-то центр сертификации",
+             "endEducation" => date("Y-m-d"),
+             "name" => "Ультразвуковая дигностика",
+         ]
+      );
+      DB::table('certificates')->insert(
+         [
+             "organization" => "Какой-то центр сертификации",
+             "endEducation" => date("Y-m-d"),
+             "name" => "Узи брюшной полости",
+         ]
+      );
    }
 
    /**

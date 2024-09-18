@@ -16,7 +16,7 @@
 		<admin-specialists-table
 			v-show="loading.table"
 			:array="clinics"
-			@useFilter="filterSpecializations"
+			@useFilter="filterClinics"
 		/>
 
 		<!-- Загрузчик -->
@@ -26,9 +26,9 @@
 			@loaderChildAfterLeave="loaderChildAfterLeave"
 		/>
 
-		<block-buttons>
+		<!-- <block-buttons>
 			<button-default> Добавить </button-default>
-		</block-buttons>
+		</block-buttons> -->
 	</block-once>
 </template>
 
@@ -86,11 +86,11 @@ export default {
 		/* _____________________________________________________*/
 		/* ?. Фильтрация                                        */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		filterSpecializations(column, type) {
+		filterClinics(column, type) {
 			switch (column) {
 				case "id":
 					if (type == "default") {
-						this.specializations.sort((a, b) => {
+						this.clinics.sort((a, b) => {
 							if (a.id > b.id) {
 								return 1;
 							}
@@ -103,7 +103,7 @@ export default {
 					}
 
 					if (type == "reverse") {
-						this.specializations.sort((a, b) => {
+						this.clinics.sort((a, b) => {
 							if (a.id < b.id) {
 								return 1;
 							}
@@ -117,7 +117,7 @@ export default {
 					break;
 				case "name":
 					if (type == "default") {
-						this.specializations.sort((a, b) => {
+						this.clinics.sort((a, b) => {
 							let aName = a.name.toLowerCase();
 							let bName = b.name.toLowerCase();
 
@@ -136,7 +136,7 @@ export default {
 					}
 
 					if (type == "reverse") {
-						this.specializations.sort((a, b) => {
+						this.clinics.sort((a, b) => {
 							let aName = a.name.toLowerCase();
 							let bName = b.name.toLowerCase();
 

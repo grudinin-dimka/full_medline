@@ -23,6 +23,7 @@ Route::post('/get-specialists-short', [HomeController::class, 'getSpecialistsSho
 
 Route::post('/get-specializations-all', [HomeController::class, 'getSpecializationsAll']);
 Route::post('/get-clinics-all', [HomeController::class, 'getClinicsAll']);
+Route::post('/get-educations-all', [HomeController::class, 'getEducationsAll']);
 
 // Функционал администратора
 Route::post('/save-footer', [AdminController::class, 'saveFooter'])->middleware('auth:sanctum');

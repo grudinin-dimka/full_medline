@@ -12,9 +12,9 @@
 			</template>
 		</block-title>
 
-		<block-buttons>
+		<!-- <block-buttons>
 			<button-default @click=""> Добавить </button-default>
-		</block-buttons>
+		</block-buttons> -->
 	</block-once>
 </template>
 

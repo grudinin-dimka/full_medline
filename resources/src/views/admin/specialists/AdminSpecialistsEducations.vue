@@ -12,9 +12,23 @@
 			</template>
 		</block-title>
 
-		<block-buttons>
+		<!-- Таблица -->
+		<admin-specialists-table
+			v-show="loading.table"
+			:array="educations"
+			@useFilter="filterEducations"
+		/>
+
+		<!-- Загрузчик -->
+		<loader-child
+			:isLoading="loading.loader"
+			:minHeight="200"
+			@loaderChildAfterLeave="loaderChildAfterLeave"
+		/>
+
+		<!-- <block-buttons>
 			<button-default @click=""> Добавить </button-default>
-		</block-buttons>
+		</block-buttons> -->
 	</block-once>
 </template>
 
@@ -28,10 +42,14 @@ import BlockOnce from "../../../components/ui/admin/BlockOnce.vue";
 import BlockTitle from "../../../components/ui/admin/BlockTitle.vue";
 import BlockButtons from "../../../components/ui/admin/BlockButtons.vue";
 
+import AdminSpecialistsTable from "./AdminSpecialistsTable.vue";
+
 import ButtonDefault from "../../../components/ui/admin/ButtonDefault.vue";
 import ButtonRemove from "../../../components/ui/admin/ButtonRemove.vue";
 
 import IconSave from "../../../components/icons/IconSave.vue";
+
+import axios from "axios";
 
 export default {
 	components: {
@@ -41,12 +59,123 @@ export default {
 		BlockOnce,
 		BlockTitle,
 		BlockButtons,
+		AdminSpecialistsTable,
 		ButtonDefault,
 		ButtonRemove,
 		IconSave,
+		axios,
 	},
 	data() {
-		return {};
+		return {
+			loading: {
+				loader: true,
+				table: false,
+			},
+			educations: [],
+		};
+	},
+	methods: {
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                   Загрузчик                       |*/
+		/* |___________________________________________________|*/
+		/* После скрытия элементы */
+		loaderChildAfterLeave() {
+			this.loading.table = true;
+		},
+
+		/* _____________________________________________________*/
+		/* ?. Фильтрация                                        */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		filterEducations(column, type) {
+			switch (column) {
+				case "id":
+					if (type == "default") {
+						this.educations.sort((a, b) => {
+							if (a.id > b.id) {
+								return 1;
+							}
+							if (a.id < b.id) {
+								return -1;
+							}
+							// a должно быть равным b
+							return 0;
+						});
+					}
+
+					if (type == "reverse") {
+						this.educations.sort((a, b) => {
+							if (a.id < b.id) {
+								return 1;
+							}
+							if (a.id > b.id) {
+								return -1;
+							}
+							// a должно быть равным b
+							return 0;
+						});
+					}
+					break;
+				case "name":
+					if (type == "default") {
+						this.educations.sort((a, b) => {
+							let aName = a.name.toLowerCase();
+							let bName = b.name.toLowerCase();
+
+							let aNameFirstLetter = aName[0].charCodeAt(0);
+							let bNameFirstLetter = bName[0].charCodeAt(0);
+
+							if (aNameFirstLetter > bNameFirstLetter) {
+								return 1;
+							}
+							if (aNameFirstLetter < bNameFirstLetter) {
+								return -1;
+							}
+							// a должно быть равным b
+							return 0;
+						});
+					}
+
+					if (type == "reverse") {
+						this.educations.sort((a, b) => {
+							let aName = a.name.toLowerCase();
+							let bName = b.name.toLowerCase();
+
+							let aNameFirstLetter = aName[0].charCodeAt(0);
+							let bNameFirstLetter = bName[0].charCodeAt(0);
+
+							if (aNameFirstLetter < bNameFirstLetter) {
+								return 1;
+							}
+							if (aNameFirstLetter > bNameFirstLetter) {
+								return -1;
+							}
+							// a должно быть равным b
+							return 0;
+						});
+					}
+
+					break;
+				default:
+					break;
+			}
+		},
+	},
+	mounted() {
+		axios({
+			method: "post",
+			headers: {
+				Accept: "application/json",
+			},
+			url: `${this.$store.state.axios.urlApi}` + `get-educations-all`,
+		})
+			.then((response) => {
+				console.log(response.data);
+				this.educations = response.data;
+				this.loading.loader = false;
+			})
+			.catch((error) => {
+				console.log(error);
+			});
 	},
 };
 </script>

@@ -74,7 +74,7 @@
 				</td>
 				<td>
 					<table-container-buttons>
-						<table-button-default @click=""> Изменить </table-button-default>
+						<table-button-default @click="$emit('touchEditArrValue', value)"> Изменить </table-button-default>
 						<table-button-remove @click="$emit('touchRemoveArrValue', value.id)">
 							Удалить
 						</table-button-remove>

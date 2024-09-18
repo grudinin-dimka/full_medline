@@ -1,4 +1,19 @@
 <template>
+	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
+	<!--|                  МОДАЛЬНОЕ ОКНО                   |-->
+	<!--|___________________________________________________|-->
+	<admin-modal ref="modal" @touchCloseModal="closeModal" :modal="modal">
+		<template #title> Заголовок </template>
+		<template #body>
+			<div>Тело модального окна</div>
+		</template>
+		<template #footer>
+			<BlockButtons>
+				<ButtonDefault> Обновить </ButtonDefault>
+			</BlockButtons>
+		</template>
+	</admin-modal>
+
 	<info-bar>
 		<template v-slot:title>Специалисты</template>
 		<template v-slot:addreas>specialists</template>
@@ -16,6 +31,7 @@
 			v-show="loading.table"
 			:array="specializations"
 			@useFilter="filterSpecializations"
+			@touchEditArrValue="editSpecialization"
 			@touchRemoveArrValue="removeSpecialization"
 		/>
 
@@ -25,13 +41,15 @@
 			@loaderChildAfterLeave="loaderChildAfterLeave"
 		/>
 
-		<block-buttons>
+		<!-- <block-buttons>
 			<button-default> Добавить </button-default>
-		</block-buttons>
+		</block-buttons> -->
 	</block-once>
 </template>
 
 <script>
+import AdminModal from "../../../components/includes/admin/AdminModal.vue";
+
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
@@ -52,6 +70,7 @@ import axios from "axios";
 
 export default {
 	components: {
+		AdminModal,
 		InfoBar,
 		LoaderChild,
 		ElementInputLabel,
@@ -66,9 +85,38 @@ export default {
 	},
 	data() {
 		return {
+			modal: {
+				title: "",
+				status: false,
+				type: null,
+				style: {
+					create: false,
+					delete: false,
+				},
+				modules: {
+					title: true,
+					buttons: {
+						hide: false,
+						close: true,
+					},
+					images: false,
+					body: true,
+					footer: true,
+				},
+			},
 			loading: {
 				loader: true,
 				table: false,
+			},
+			currentSpecialization: {
+				id: {
+					body: "",
+					edited: false,
+				},
+				name: {
+					body: "",
+					edited: false,
+				},
 			},
 			specializations: [],
 		};
@@ -81,7 +129,17 @@ export default {
 		loaderChildAfterLeave() {
 			this.loading.table = true;
 		},
-
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                 Модальное окно                    |*/
+		/* |___________________________________________________|*/
+		/* Открытие */
+		openModal() {
+			this.modal.status = true;
+		},
+		/* Закрытие */
+		closeModal() {
+			this.modal.status = false;
+		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                 Специализации                     |*/
 		/* |___________________________________________________|*/
@@ -162,7 +220,15 @@ export default {
 			}
 		},
 		/* _____________________________________________________*/
-		/* 2. Сохранение, обновление и удаление                 */
+		/* 2. Основные действия                                 */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		editSpecialization(selectedSpecialization) {
+			this.openModal();
+
+			console.log(selectedSpecialization);
+		},
+		/* _____________________________________________________*/
+		/* 3. Сохранение, обновление и удаление                 */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Пометка на удаление */
 		removeSpecialization(id) {

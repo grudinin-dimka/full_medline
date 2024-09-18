@@ -17,7 +17,7 @@ use App\Models\Specialist;
 use App\Models\Specialization;
 use App\Models\SpecialistSpecialization;
 use App\Models\Clinic;
-
+use App\Models\Education;
 
 use Illuminate\Support\Facades\Storage;
 
@@ -82,7 +82,6 @@ class HomeController extends Controller
 
       return $specialists;
    }
-
    // Вывод конкретного доктора
    public function getSpecialistProfile(Request $request) {
       $specialists = Specialist::all();
@@ -98,14 +97,13 @@ class HomeController extends Controller
          };
       };
    }
-
+   // Вывод полной информации о враче
    public function getSpecialistAll(Request $request) {
       $specialist = Specialist::where('id', $request->id)->first();
       $specialist->path = Storage::url('specialists/' . $specialist->filename);
 
       return $specialist;
    }
-
    // Вывод сокращенной информации о врачах 
    public function getSpecialistsShort(Request $request) {
       $specialistsShort = Specialist::select('id', 'family', 'name', 'surname', 'hide')->get();
@@ -139,6 +137,12 @@ class HomeController extends Controller
       $clinics = Clinic::all();
       return $clinics;
    }
+   // Вывод всех специализаций
+   public function getEducationsAll(Request $request) {
+      $educations = Education::all();
+      return $educations;
+   }
+
 };
 
 function makeUrl($url) {

@@ -161,7 +161,7 @@
 								$router.push({ name: 'especialist-profile', params: { id: specialist.id } })
 							"
 						>
-							Изменить
+							Профиль
 						</table-button-default>
 						<table-button-remove @click="$emit('touchRemoveSpecialist', specialist.id)">
 							Удалить

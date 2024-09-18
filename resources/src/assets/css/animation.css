@@ -1,0 +1,44 @@
+@keyframes animloader {
+	0% {
+		background-position: 0% 0, 0 0, 120px 0, 120px 40px, 120px 80px, 120px 120px;
+	}
+	100% {
+		background-position: 100% 0, 0 0, 120px 0, 120px 40px, 120px 80px, 120px 120px;
+	}
+}
+
+@keyframes pulse {
+	from {
+		background-color: rgba(0, 0, 0, 0);
+	}
+	to {
+		background-color: rgba(0, 0, 0, 0.1);
+	}
+}
+
+@keyframes show {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes top-to-bottom-50 {
+	0% {
+		transform: translateY(-50px);
+	}
+	100% {
+		transform: translateY(0);
+	}
+}
+
+@keyframes bottom-to-top-30 {
+	0% {
+		transform: translateY(30px);
+	}
+	100% {
+		transform: translateY(0);
+	}
+}
