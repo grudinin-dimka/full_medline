@@ -21,6 +21,23 @@ return new class extends Migration
             $table->string('name', 300);
             $table->timestamps();
         });
+
+        DB::table('specializations')->insert(
+            ["name" => "Хирург"],
+        );
+        DB::table('specializations')->insert(
+            ["name" => "Терапевт"],
+        );
+        DB::table('specializations')->insert(
+            ["name" => "Акушер"],
+        );
+        DB::table('specializations')->insert(
+            ["name" => "Аллерголог"],
+            ["name" => "Кардиолог"],        
+        );
+        DB::table('specializations')->insert(
+            ["name" => "Кардиолог"],        
+        );
     }
 
     /**

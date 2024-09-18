@@ -75,7 +75,7 @@ const router = createRouter({
 		// Роутер для логина
 		{
 			path: "/login",
-			name: "Login",
+			name: "login",
 			component: Login,
 		},
 		// Роутер для админки

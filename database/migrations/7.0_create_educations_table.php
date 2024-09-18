@@ -27,6 +27,15 @@ return new class extends Migration
          $table->unsignedBigInteger('id_specialization')->references('id')->on('specializations')->onDelete('cascade');
          $table->timestamps();
       });
+
+      DB::table('educations')->insert(
+         [
+             "organization" => "Российский национальный исследовательский медицинский университет имени Н. И. Пирогова",
+             "date" => date("Y-m-d"),
+             "name" => "Образование на получение специализации 'Терапевт'",
+             "id_specialization" => 2
+         ]
+     );
    }
 
    /**

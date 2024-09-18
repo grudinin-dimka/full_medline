@@ -22,7 +22,8 @@
 			v-show="loading.table"
 			:specialists="specialists"
 			@touchHideSpecialist="hideSpecialist"
-			@useFilter="filterSpecialists"
+			@touchUseFilter="filterSpecialists"
+			@touchRemoveSpecialist="removeSpecialist"
 		/>
 
 		<block-buttons>
@@ -246,6 +247,16 @@ export default {
 
 			specialistToHide[0].hide = !specialistToHide[0].hide;
 		},
+		// Удаление выбранного доктора
+		removeSpecialist(id) {
+			let specialistToDelete = this.specialists.filter((specialist) => {
+				if (specialist.id === id) {
+					return specialist;
+				}
+			});
+
+			specialistToDelete[0].delete = !specialistToDelete[0].delete;
+		},
 		// Скрытие выбранного доктора
 		saveSpecialistHides() {
 			// Получение массива докторов с сервера
@@ -289,7 +300,6 @@ export default {
 			url: `${this.$store.state.axios.urlApi}` + `get-specialists-short`,
 		})
 			.then((response) => {
-				console.log(response.data);
 				this.specialists = response.data;
 
 				this.loading.loader = false;

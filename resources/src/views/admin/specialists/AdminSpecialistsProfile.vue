@@ -13,9 +13,9 @@
 			</template>
 		</block-title>
 		<div class="container-profile">
-			<div class="profile-image-loader loader-pulse" v-if="loading.loader">Идёт загрузка...</div>
+			<div class="profile-image-loader" v-if="loading.loader">Идёт загрузка...</div>
 			<img
-				:src="`/storage/slides/lesnikova.png`"
+				:src="`${spesialist.profile.path.body}`"
 				class="profile-image"
 				alt=""
 				v-if="!loading.loader"
@@ -417,6 +417,10 @@ export default {
 						edited: false,
 					},
 					filename: {
+						body: "",
+						edited: false,
+					},
+					path: {
 						body: "",
 						edited: false,
 					},

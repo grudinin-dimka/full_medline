@@ -121,20 +121,24 @@
 			<tr v-if="specialists.length == 0">
 				<td colspan="5" class="table-td-empty">Ничего нету...</td>
 			</tr>
-			<tr v-else v-for="specialist in specialists">
-				<td :class="{ create: specialist.create, delete: specialist.delete }">
+			<tr
+				v-else
+				v-for="specialist in specialists"
+				:class="{ create: specialist.create, delete: specialist.delete }"
+			>
+				<td>
 					{{ specialist.id }}
 				</td>
-				<td :class="{ create: specialist.create, delete: specialist.delete }">
+				<td>
 					{{ specialist.family + " " + specialist.name + " " + specialist.surname }}
 				</td>
-				<td :class="{ create: specialist.create, delete: specialist.delete }">
+				<td>
 					{{ specialist.specializations }}
 					<span class="table-td-empty" v-if="specialist.specializations.length == 0"
 						>Ничего не выбрано...</span
 					>
 				</td>
-				<td :class="{ create: specialist.create, delete: specialist.delete }">
+				<td>
 					<div class="table-td-checkbox">
 						<icon-visible-table
 							:width="36"
@@ -150,7 +154,7 @@
 						></icon-hide-table>
 					</div>
 				</td>
-				<td :class="{ create: specialist.create, delete: specialist.delete }">
+				<td>
 					<table-container-buttons>
 						<table-button-default
 							@click="
@@ -159,7 +163,9 @@
 						>
 							Изменить
 						</table-button-default>
-						<table-button-remove @click=""> Удалить </table-button-remove>
+						<table-button-remove @click="$emit('touchRemoveSpecialist', specialist.id)">
+							Удалить
+						</table-button-remove>
 					</table-container-buttons>
 				</td>
 			</tr>
@@ -234,7 +240,7 @@ export default {
 				}
 			}
 
-			this.$emit("useFilter", column, type);
+			this.$emit("touchUseFilter", column, type);
 		},
 	},
 };
@@ -286,13 +292,13 @@ td {
 	background-color: #d2f2f5;
 }
 
-td.create {
+tr.create > td {
 	text-align: left;
 	border: 1px solid #3cae1f;
 	background-color: #d7f5d2;
 }
 
-td.delete {
+tr.delete > td {
 	text-align: left;
 	border: 1px solid #ae1f1f;
 	background-color: #f5d2d2;
@@ -324,7 +330,7 @@ td.table-td-empty {
 }
 
 span.table-td-empty {
-	color: #90cad1;
+	color: rgba(0, 0, 0, 0.3);
 }
 
 input[type="checkbox"] {

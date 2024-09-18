@@ -65,7 +65,7 @@
 			<tr v-if="array.length == 0">
 				<td colspan="5" class="table-td-empty">Ничего нету...</td>
 			</tr>
-			<tr v-else v-for="value in array">
+			<tr v-else v-for="value in array" :class="{ create: value.create, delete: value.delete }">
 				<td>
 					{{ value.id }}
 				</td>
@@ -75,7 +75,9 @@
 				<td>
 					<table-container-buttons>
 						<table-button-default @click=""> Изменить </table-button-default>
-						<table-button-remove @click=""> Удалить </table-button-remove>
+						<table-button-remove @click="$emit('touchRemoveArrValue', value.id)">
+							Удалить
+						</table-button-remove>
 					</table-container-buttons>
 				</td>
 			</tr>
@@ -185,13 +187,13 @@ td {
 	background-color: #d2f2f5;
 }
 
-td.create {
+tr.create > td {
 	text-align: left;
 	border: 1px solid #3cae1f;
 	background-color: #d7f5d2;
 }
 
-td.delete {
+tr.delete > td {
 	text-align: left;
 	border: 1px solid #ae1f1f;
 	background-color: #f5d2d2;

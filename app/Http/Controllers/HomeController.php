@@ -101,6 +101,7 @@ class HomeController extends Controller
 
    public function getSpecialistAll(Request $request) {
       $specialist = Specialist::where('id', $request->id)->first();
+      $specialist->path = Storage::url('specialists/' . $specialist->filename);
 
       return $specialist;
    }

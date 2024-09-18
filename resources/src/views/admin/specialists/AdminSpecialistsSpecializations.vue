@@ -22,6 +22,7 @@
 			v-show="loading.table"
 			:array="specializations"
 			@useFilter="filterSpecializations"
+			@touchRemoveArrValue="removeSpecialization"
 		/>
 
 		<block-buttons>
@@ -81,8 +82,11 @@ export default {
 			this.loading.table = true;
 		},
 
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                 Специализации                     |*/
+		/* |___________________________________________________|*/
 		/* _____________________________________________________*/
-		/* ?. Фильтрация                                        */
+		/* 1. Фильтрация                                        */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		filterSpecializations(column, type) {
 			switch (column) {
@@ -157,6 +161,19 @@ export default {
 					break;
 			}
 		},
+		/* _____________________________________________________*/
+		/* 2. Сохранение, обновление и удаление                 */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* Пометка на удаление */
+		removeSpecialization(id) {
+			let specializationToDelete = this.specializations.filter((specialization) => {
+				if (specialization.id === id) {
+					return specialization;
+				}
+			});
+
+			specializationToDelete[0].delete = !specializationToDelete[0].delete;
+		},
 	},
 	mounted() {
 		axios({
@@ -168,6 +185,11 @@ export default {
 		})
 			.then((response) => {
 				this.specializations = response.data;
+
+				for (let key in this.specializations) {
+					this.specializations[key].delete = false;
+				}
+
 				this.loading.loader = false;
 			})
 			.catch((error) => {

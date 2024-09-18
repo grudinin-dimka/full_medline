@@ -28,13 +28,22 @@ return new class extends Migration
             $table->string('name', 500);
             $table->string('city', 500);
             $table->string('street', 500);
-            $table->unsignedInteger('home');
-            $table->unsignedInteger('index');
-            $table->float('geoWidth');
-            $table->float('geoLongitude');
-            $table->string('other');
-            $table->timestamps();
+            $table->string('home', 30);
+            $table->unsignedInteger('index')->nullable()->default(000000);
+            $table->float('geoWidth')->nullable();
+            $table->float('geoLongitude')->nullable();
+            $table->string('other')->nullable();
+            $table->timestamps(); 
         });
+
+        DB::table('clinics')->insert(
+            [
+                "name" => "г. Шадринск, ул. Комсомольская, 16",
+                "city" => "Шадринск",
+                "street" => "Комсомольская",
+                "home" => "16",
+            ]
+        );
     }
 
     /**
