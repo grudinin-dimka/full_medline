@@ -65,13 +65,12 @@
 		</template>
 		<template #body>
 			<div class="modal-body-inputs">
-				<div class="modal-body-inputs-block">
-					<element-input-label>
-						Название*
-						<span v-if="currentSlide.data.name.edited"> (Изменено) </span>
-					</element-input-label>
-					<article>
-						<SlideUserCard :height="50" :width="50" />
+				<!-- Название -->
+				<ContainerInputOnce>
+					<template #title>
+						Название* <span v-if="currentSlide.data.name.edited"> (Изменено) </span>
+					</template>
+					<template #input>
 						<input
 							type="text"
 							v-model="currentSlide.data.name.body"
@@ -82,18 +81,20 @@
 							placeholder="Название слайда"
 							:disabled="currentSlide.data.delete.body"
 						/>
-					</article>
-					<span v-if="currentSlide.errors.name.status">
-						{{ currentSlide.errors.name.value }}
-					</span>
-				</div>
-				<div class="modal-body-inputs-block">
-					<element-input-label>
+					</template>
+					<template #error>
+						<span class="error" v-if="currentSlide.errors.name.status">
+							{{ currentSlide.errors.name.value }}
+						</span>
+					</template>
+				</ContainerInputOnce>
+				<!-- Ссылка -->
+				<ContainerInputOnce>
+					<template #title>
 						Ссылка*
 						<span v-if="currentSlide.data.link.edited">(Изменено)</span>
-					</element-input-label>
-					<article>
-						<SlideLink :height="50" :width="50" />
+					</template>
+					<template #input>
 						<input
 							type="text"
 							v-model="currentSlide.data.link.body"
@@ -104,11 +105,13 @@
 							placeholder="Ссылка слайда"
 							:disabled="currentSlide.data.delete.body"
 						/>
-					</article>
-					<span v-if="currentSlide.errors.link.status">
-						{{ currentSlide.errors.link.value }}
-					</span>
-				</div>
+					</template>
+					<template #error>
+						<span class="error" v-if="currentSlide.errors.link.status">
+							{{ currentSlide.errors.link.value }}
+						</span>
+					</template>
+				</ContainerInputOnce>
 			</div>
 		</template>
 		<template #footer>
@@ -316,6 +319,8 @@ import LoaderChild from "../../components/includes/LoaderChild.vue";
 import Modal from "../../components/includes/admin/AdminModal.vue";
 import InfoBar from "../../components/ui/admin/InfoBar.vue";
 
+import ContainerInputOnce from "../../components/ui/admin/ContainerInputOnce.vue";
+
 import BlockTitle from "../../components/ui/admin/BlockTitle.vue";
 import BlockOnce from "../../components/ui/admin/BlockOnce.vue";
 import BlockButtons from "../../components/ui/admin/BlockButtons.vue";
@@ -339,6 +344,7 @@ export default {
 		LoaderChild,
 		Modal,
 		InfoBar,
+		ContainerInputOnce,
 		BlockOnce,
 		BlockTitle,
 		BlockButtons,
@@ -1281,19 +1287,15 @@ export default {
 	gap: 5px;
 }
 
-.modal-body-inputs-block > article {
-	display: flex;
-	justify-content: justify;
-	gap: 10px;
-}
-
-.modal-body-inputs-block > article > input {
+.modal-body-inputs-block > article > input::file-selector-button {
 	box-sizing: border-box;
 	outline: none;
-
-	padding: 10px;
-	border: 2px solid var(--input-border-color-inactive);
-	border-radius: 10px;
+	cursor: pointer;
+	background-color: var(--button-default-color);
+	border: 0px;
+	border-radius: 5px;
+	color: white;
+	padding: 5px;
 
 	width: 100%;
 	height: 58px;
@@ -1304,32 +1306,8 @@ export default {
 	transition: all 0.2s;
 }
 
-.modal-body-inputs-block > article > input::file-selector-button {
-	cursor: pointer;
-	background-color: var(--button-default-color);
-	border: 0px;
-	border-radius: 5px;
-	color: white;
-	padding: 5px;
-}
-
 .modal-body-inputs-block > article > input::file-selector-button:hover {
 	background-color: var(--button-default-color-hover);
-}
-
-.modal-body-inputs-block > article > input:focus {
-	border: 2px solid var(--input-border-color-active);
-}
-
-.modal-body-inputs-block > article > input.error {
-	background-color: var(--input-background-color-error);
-	border: 2px solid var(--input-border-color-error);
-
-	caret-color: red;
-}
-
-.modal-body-inputs-block > span {
-	color: var(--span-color-error);
 }
 
 textarea {

@@ -82,11 +82,14 @@
 						</table-button-default>
 						<TableButtonDisabled v-else> Изменить </TableButtonDisabled>
 						<table-button-remove
-							v-if="!value.delete"
+							v-if="!value.delete && !value.create"
 							@click="$emit('touchRemoveArrValue', value.id)"
 						>
 							Удалить
 						</table-button-remove>
+						<TableButtonDisabled v-if="value.create">
+							Удалить
+						</TableButtonDisabled>
 						<table-button-default
 							v-if="value.delete"
 							@click="$emit('touchRemoveArrValue', value.id)"
