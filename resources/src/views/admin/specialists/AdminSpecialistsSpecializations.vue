@@ -5,7 +5,17 @@
 	<admin-modal ref="modal" @touchCloseModal="closeModal" :modal="modal">
 		<template #title> Заголовок </template>
 		<template #body>
-			<div>Тело модального окна</div>
+			<ContainerInputOnce>
+				<template #title> Название </template>
+				<template #input>
+					<input
+						type="text"
+						ref="inputName"
+						placeholder="Название слайда"
+						v-model="currentSpecialization.name.body"
+					/>
+				</template>
+			</ContainerInputOnce>
 		</template>
 		<template #footer>
 			<BlockButtons>
@@ -59,6 +69,8 @@ import BlockOnce from "../../../components/ui/admin/BlockOnce.vue";
 import BlockTitle from "../../../components/ui/admin/BlockTitle.vue";
 import BlockButtons from "../../../components/ui/admin/BlockButtons.vue";
 
+import ContainerInputOnce from "../../../components/ui/admin/ContainerInputOnce.vue";
+
 import AdminSpecialistsTable from "./AdminSpecialistsTable.vue";
 
 import ButtonDefault from "../../../components/ui/admin/ButtonDefault.vue";
@@ -74,6 +86,7 @@ export default {
 		InfoBar,
 		LoaderChild,
 		ElementInputLabel,
+		ContainerInputOnce,
 		AdminSpecialistsTable,
 		BlockOnce,
 		BlockTitle,
@@ -223,9 +236,11 @@ export default {
 		/* 2. Основные действия                                 */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		editSpecialization(selectedSpecialization) {
-			this.openModal();
+			for (let key in this.currentSpecialization) {
+				this.currentSpecialization[key].body = selectedSpecialization[key];
+			}
 
-			console.log(selectedSpecialization);
+			this.openModal();
 		},
 		/* _____________________________________________________*/
 		/* 3. Сохранение, обновление и удаление                 */

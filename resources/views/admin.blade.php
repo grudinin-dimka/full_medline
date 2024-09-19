@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Blade | Admin</title>
+        <link rel="shortcut icon" href="{{ asset('favicon.png') }}" type="image/png" size="100x100">
         <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     </head>
     <body>

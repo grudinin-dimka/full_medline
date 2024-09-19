@@ -674,6 +674,7 @@ export default {
 								this.currentSlide.data[key].body = "";
 							}
 
+							this.currentSlide.data.delete.body = false;
 							this.modal.style.create = true;
 							this.modal.style.delete = false;
 							this.modal.title = "Создание слайда";
@@ -1224,6 +1225,7 @@ export default {
 	outline: none;
 	max-width: 400px;
 
+	background-color: white;
 	padding: 10px;
 	border: 2px solid var(--input-border-color-inactive);
 	border-radius: 10px;
@@ -1232,6 +1234,10 @@ export default {
 	caret-color: var(--input-border-color-active);
 
 	transition: all 0.2s;
+}
+
+.modal-img-input:disabled {
+	background-color: #faf0f0;
 }
 
 .modal-img-input.error {

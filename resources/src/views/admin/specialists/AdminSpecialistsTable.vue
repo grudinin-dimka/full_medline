@@ -74,10 +74,25 @@
 				</td>
 				<td>
 					<table-container-buttons>
-						<table-button-default @click="$emit('touchEditArrValue', value)"> Изменить </table-button-default>
-						<table-button-remove @click="$emit('touchRemoveArrValue', value.id)">
+						<table-button-default
+							@click="$emit('touchEditArrValue', value)"
+							v-if="!value.delete"
+						>
+							Изменить
+						</table-button-default>
+						<TableButtonDisabled v-else> Изменить </TableButtonDisabled>
+						<table-button-remove
+							v-if="!value.delete"
+							@click="$emit('touchRemoveArrValue', value.id)"
+						>
 							Удалить
 						</table-button-remove>
+						<table-button-default
+							v-if="value.delete"
+							@click="$emit('touchRemoveArrValue', value.id)"
+						>
+							Вернуть
+						</table-button-default>
 					</table-container-buttons>
 				</td>
 			</tr>
@@ -86,6 +101,7 @@
 </template>
 
 <script>
+import TableButtonClaim from "../../../components/ui/admin/TableButtonClaim.vue";
 import TableButtonDefault from "../../../components/ui/admin/TableButtonDefault.vue";
 import TableButtonRemove from "../../../components/ui/admin/TableButtonRemove.vue";
 import TableButtonDisabled from "../../../components/ui/admin/TableButtonDisabled.vue";
@@ -102,6 +118,7 @@ import { RouterLink } from "vue-router";
 
 export default {
 	components: {
+		TableButtonClaim,
 		TableButtonDefault,
 		TableButtonRemove,
 		TableButtonDisabled,

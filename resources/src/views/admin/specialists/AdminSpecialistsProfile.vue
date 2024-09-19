@@ -598,4 +598,14 @@ export default {
 	height: 100%;
 	color: #bcbcbc;
 }
+
+@media screen and (max-width: 1400px) {
+	.container-profile {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		align-items: center;
+		gap: 20px;
+	}
+}
 </style>

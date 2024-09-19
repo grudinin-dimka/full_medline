@@ -16,16 +16,19 @@ const router = createRouter({
 				{
 					path: "",
 					name: "home",
+					meta: { title: "Главная" },
 					component: () => import("../views/main/MainHome.vue"),
 				},
 				{
 					path: "about",
 					name: "about",
+					meta: { title: "О нас" },
 					component: () => import("../views/main/MainAbout.vue"),
 				},
 				{
 					path: "specialists",
 					name: "specialist",
+					meta: { title: "Специалисты" },
 					component: () => import("../views/main/MainSpecialists.vue"),
 					children: [
 						{
@@ -43,31 +46,37 @@ const router = createRouter({
 				{
 					path: "prices",
 					name: "prices",
+					meta: { title: "Цены" },
 					component: () => import("../views/main/MainPrices.vue"),
 				},
 				{
 					path: "directions",
 					name: "directions",
+					meta: { title: "Направления" },
 					component: () => import("../views/main/MainDirection.vue"),
 				},
 				{
 					path: "diagnostics",
 					name: "diagnostics",
+					meta: { title: "Дигностика" },
 					component: () => import("../views/main/MainDiagnostics.vue"),
 				},
 				{
 					path: "licenses",
 					name: "licenses",
+					meta: { title: "Лицензии" },
 					component: () => import("../views/main/MainLicense.vue"),
 				},
 				{
 					path: "videos",
 					name: "videos",
+					meta: { title: "Видео" },
 					component: () => import("../views/main/MainVideos.vue"),
 				},
 				{
 					path: "contacts",
 					name: "contacts",
+					meta: { title: "Контакты" },
 					component: () => import("../views/main/MainContacts.vue"),
 				},
 			],
@@ -76,6 +85,7 @@ const router = createRouter({
 		{
 			path: "/login",
 			name: "login",
+			meta: { title: "Вход в систему" },
 			component: Login,
 		},
 		// Роутер для админки
@@ -92,16 +102,19 @@ const router = createRouter({
 				{
 					path: "ehome",
 					name: "ehome",
+					meta: { title: "(e) Главная" },
 					component: () => import("../views/admin/AdminHome.vue"),
 				},
 				{
 					path: "eabout",
 					name: "eabout",
+					meta: { title: "(e) О нас" },
 					component: () => import("../views/admin/AdminAboutUs.vue"),
 				},
 				{
 					path: "especialists",
 					name: "especialists",
+					meta: { title: "(e) Специалисты" },
 					component: () => import("../views/admin/specialists/AdminSpecialists.vue"),
 					redirect: { name: "especialist-all" },
 					children: [
@@ -151,6 +164,7 @@ const router = createRouter({
 				{
 					path: "eprice",
 					name: "eprice",
+					meta: { title: "(e) Цены" },
 					component: () => import("../views/admin/AdminPrice.vue"),
 				},
 			],
@@ -162,6 +176,11 @@ const router = createRouter({
 			component: NotFound,
 		},
 	],
+});
+
+router.beforeEach((to, from, next) => {
+	document.title = `${to.meta.title}`;
+	next();
 });
 
 export default router;

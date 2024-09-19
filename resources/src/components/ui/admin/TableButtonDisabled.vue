@@ -9,10 +9,9 @@
 
 <style scoped>
 button {
+	flex: 1 0 120px;
 	cursor:not-allowed;
-   box-sizing: border-box;
-	flex: 1 0 130px;
-   min-width: 150px;
+   min-width: 120px;
 
 	padding: 7.5px 0px;
 	border: 0px solid black;
