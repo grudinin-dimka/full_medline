@@ -14,6 +14,9 @@ export default {};
 	flex-direction: column;
 	gap: 20px;
 
+	overflow: hidden;
+	box-sizing: border-box;
+
 	background-color: white;
 	height: auto;
 	border-radius: 15px;

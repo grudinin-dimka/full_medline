@@ -470,7 +470,7 @@ export default {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                    Профиль                        |*/
 		/* |___________________________________________________|*/
-		// Метод удаления значения из массива
+		/* Метод удаления значения из массива */
 		removeArrValue(array, value) {
 			this.spesialist[array] = this.spesialist[array].filter((item) => {
 				if (item.id !== value.id) {
@@ -511,11 +511,11 @@ export default {
 	grid-template-columns: 1fr 1fr;
 	gap: 20px;
 
-	animation: show 0.5s ease-in-out;
+	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 .container-profile-other {
-	animation: show 0.5s ease-in-out;
+	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 .profile-image-loader {
@@ -576,7 +576,7 @@ export default {
 	flex-direction: column;
 	gap: 10px;
 
-	animation: show 0.5s ease-in-out;
+	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 .profile-list > .item {

@@ -1039,18 +1039,14 @@ export default {
 				},
 			})
 				.then((response) => {
-					let debbugStory = {
-						title: "Успешно!",
-						body: "Данные о слайдах обновлены в базе данных.",
-						type: "Completed",
-					};
-					this.$store.commit("debuggerState", debbugStory);
-
-					/* Обновление свойства create в массиве слайдов */
-					for (let index in this.slides) {
-						if (this.slides[index].create) {
-							this.slides[index].create = false;
-						}
+					// Обновление id добавленных элементов на данные из бд
+					for (let key in response.data) {
+						let slide = this.slides.filter((slide) => {
+							if (slide.id === response.data[key].old) {
+								return slide;
+							}
+						});
+						slide[0].id = response.data[key].new;
 					}
 
 					// Получения нового массива слайдов, помеченных на удаление
@@ -1060,14 +1056,22 @@ export default {
 						}
 					});
 
-					// Повторять, пока не будут удалены все слайды, помеченные на удаление
+					// Повторять, пока не будут удалены все элементы, помеченные на удаление
 					while (res.length > 0) {
+						/* Получение индекса элемента, помеченного на удаление из массива специалистов */
 						this.slides.splice(this.slides.indexOf(res[0]), 1);
+						/* Обновление списка с элементами, помеченными на удаление */
 						res = this.slides.filter((slide) => {
 							if (slide.delete == true) {
 								return Object.assign({}, slide);
 							}
 						});
+					}
+
+					// Сброс флагов добавления и удаления
+					for (let index in this.slides) {
+						this.slides[index].create = false;
+						this.slides[index].delete = false;
 					}
 
 					// Обновление свойства order в массиве слайдов
@@ -1076,6 +1080,13 @@ export default {
 						count++;
 						this.slides[slide].order = count;
 					}
+
+					let debbugStory = {
+						title: "Успешно!",
+						body: "Данные о слайдах обновлены в базе данных.",
+						type: "Completed",
+					};
+					this.$store.commit("debuggerState", debbugStory);
 				})
 				.catch((error) => {
 					let debbugStory = {
@@ -1335,7 +1346,7 @@ textarea:focus {
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
 	gap: 20px;
-	animation: show 0.5s ease-in-out;
+	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 .slider-block {
@@ -1405,7 +1416,7 @@ textarea:focus {
 }
 
 .footer-container {
-	animation: show 0.5s ease-in-out;
+	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 @media screen and (max-width: 1900px) {

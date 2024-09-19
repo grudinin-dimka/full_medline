@@ -26,9 +26,9 @@
 			@loaderChildAfterLeave="loaderChildAfterLeave"
 		/>
 
-		<!-- <block-buttons>
+		<block-buttons>
 			<button-default> Добавить </button-default>
-		</block-buttons> -->
+		</block-buttons>
 	</block-once>
 </template>
 

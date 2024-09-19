@@ -26,9 +26,9 @@
 			@loaderChildAfterLeave="loaderChildAfterLeave"
 		/>
 
-		<!-- <block-buttons>
+		<block-buttons>
 			<button-default @click=""> Добавить </button-default>
-		</block-buttons> -->
+		</block-buttons>
 	</block-once>
 </template>
 
@@ -169,7 +169,6 @@ export default {
 			url: `${this.$store.state.axios.urlApi}` + `get-educations-all`,
 		})
 			.then((response) => {
-				console.log(response.data);
 				this.educations = response.data;
 				this.loading.loader = false;
 			})

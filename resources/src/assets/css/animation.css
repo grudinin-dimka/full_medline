@@ -25,6 +25,28 @@
 	}
 }
 
+@keyframes show-bottom-to-top-15 {
+	0% {
+		opacity: 0;
+		transform: translateY(15px);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes show-bottom-to-top-30 {
+	0% {
+		opacity: 0.3;
+		transform: translateY(30px);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
 @keyframes top-to-bottom-50 {
 	0% {
 		transform: translateY(-50px);

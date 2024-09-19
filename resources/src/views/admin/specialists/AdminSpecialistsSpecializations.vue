@@ -13,16 +13,19 @@
 					<input
 						type="text"
 						ref="inputName"
-						placeholder="Название слайда"
+						placeholder="Название специализации"
 						v-model="currentSpecialization.data.name.body"
 						:class="{
 							error: currentSpecialization.errors.name.status,
 						}"
 						@input="currentSpecialization.data.name.edited = true"
+						@blur="checkModalInput('name', 'text')"
 					/>
 				</template>
 				<template #error>
-					<span class="error" v-if="currentSpecialization.errors.name.status">Ошибка</span>
+					<span class="error" v-if="currentSpecialization.errors.name.status">
+						{{ this.currentSpecialization.errors.name.body }}
+					</span>
 				</template>
 			</ContainerInputOnce>
 		</template>
@@ -47,7 +50,7 @@
 		<block-title>
 			<template #title>Специализации</template>
 			<template #buttons>
-				<icon-save :width="28" :height="28" />
+				<icon-save :width="28" :height="28" @click="saveSpecializationsChanges" />
 			</template>
 		</block-title>
 
@@ -179,6 +182,9 @@ export default {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                 Модальное окно                    |*/
 		/* |___________________________________________________|*/
+		/* _____________________________________________________*/
+		/* 1. Основные действия                                 */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Открытие */
 		openModal(type) {
 			switch (type) {
@@ -190,6 +196,7 @@ export default {
 						this.modal.style.delete = false;
 						this.clearCurrentSpecializationData();
 					}
+					document.body.classList.toggle("modal-open");
 					break;
 				case "edit":
 					{
@@ -202,10 +209,16 @@ export default {
 						this.modal.status = true;
 						this.modal.style.delete = false;
 					}
+					document.body.classList.toggle("modal-open");
 					break;
 				default:
 					{
-						console.log("Неизвестный тип");
+						let debbugStory = {
+							title: "Ошибка.",
+							body: "Низвестный тип открытия модального окна.",
+							type: "Error",
+						};
+						this.$store.commit("debuggerState", debbugStory);
 					}
 					break;
 			}
@@ -213,6 +226,7 @@ export default {
 		/* Закрытие */
 		closeModal() {
 			this.modal.status = false;
+			document.body.classList.toggle("modal-open");
 		},
 		/* _____________________________________________________*/
 		/* 2. Работа с полями ввода модального окна             */
@@ -252,12 +266,12 @@ export default {
 			}
 
 			if (errorLog.status) {
-				this.currentSpecialization.errors[dataKey].value = errorLog.message;
+				this.currentSpecialization.errors[dataKey].body = errorLog.message;
 				this.currentSpecialization.errors[dataKey].status = true;
 
 				return true;
 			} else {
-				this.currentSpecialization.errors[dataKey].value = "";
+				this.currentSpecialization.errors[dataKey].body = "";
 				this.currentSpecialization.errors[dataKey].status = false;
 
 				return false;
@@ -291,7 +305,7 @@ export default {
 		clearCurrentSpecializationData() {
 			for (let key in this.currentSpecialization.data) {
 				this.currentSpecialization.data[key].body = "";
-				this.currentSpecialization.data[key].editer = false;
+				this.currentSpecialization.data[key].edited = false;
 			}
 		},
 		/* Очистка ошибок */
@@ -386,6 +400,8 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Открытие специализации для редактирования */
 		editSpecialization(selectedSpecialization) {
+			this.clearCurrentSpecializationData();
+
 			for (let key in this.currentSpecialization.data) {
 				this.currentSpecialization.data[key].body = selectedSpecialization[key];
 			}
@@ -400,6 +416,8 @@ export default {
 		/* 3. Сохранение, обновление и удаление                 */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		addSpecialization() {
+			if (this.checkModalInputsAll(["name"])) return;
+
 			// Поиск максимального id
 			let maxId = 0;
 			for (let key in this.specializations) {
@@ -429,6 +447,8 @@ export default {
 		},
 		/* Обновление содержимого */
 		updateSpecialization() {
+			if (this.checkModalInputsAll(["name"])) return;
+
 			let specializationToUpdate = this.specializations.filter((specialization) => {
 				if (specialization.id === this.currentSpecialization.data.id.body) {
 					return specialization;
@@ -437,6 +457,89 @@ export default {
 
 			specializationToUpdate[0].name = this.currentSpecialization.data.name.body;
 			this.closeModal();
+		},
+		/* Сохранение изменений на сервере */
+		saveSpecializationsChanges() {
+			let newArray = [];
+
+			for (let key in this.specializations) {
+				newArray.push(Object.assign({}, this.specializations[key]));
+			}
+
+			newArray.sort((a, b) => {
+				if (a.id > b.id) {
+					return 1;
+				} else if (a.id < b.id) {
+					return -1;
+				} else {
+					return 0;
+				}
+			});
+
+			axios({
+				method: "post",
+				url: `${this.$store.state.axios.urlApi}` + `save-specializations-changes`,
+				headers: {
+					Accept: "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: {
+					specializations: newArray,
+				},
+			})
+				.then((response) => {
+					// Обновление id добавленных элементов на данные из бд
+					for (let key in response.data) {
+						let specialization = this.specializations.filter((specialization) => {
+							if (specialization.id === response.data[key].old) {
+								return specialization;
+							}
+						});
+						specialization[0].id = response.data[key].new;
+					}
+
+					// Получения нового массива специалистов, помеченных на удаление
+					let res = this.specializations.filter((specialization) => {
+						if (specialization.delete == true) {
+							return Object.assign({}, specialization);
+						}
+					});
+
+					// Повторять, пока не будут удалены все элементы, помеченные на удаление
+					while (res.length > 0) {
+						/* Получение индекса элемента, помеченного на удаление из массива специалистов */
+						this.specializations.splice(this.specializations.indexOf(res[0]), 1);
+						/* Обновление списка с элементами, помеченными на удаление */ 
+						res = this.specializations.filter((specialization) => {
+							if (specialization.delete == true) {
+								return Object.assign({}, specialization);
+							}
+						});
+					}
+
+					// Сброс флагов добавления и удаления
+					for (let key in this.specializations) {
+						this.specializations[key].create = false;
+						this.specializations[key].delete = false;
+					}
+
+					let debbugStory = {
+						title: "Успешно!",
+						body: "Данные о специализациях сохранились.",
+						type: "Completed",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+				})
+				.catch((error) => {
+					console.log(error.response);
+
+					let debbugStory = {
+						title: "Ошибка.",
+						body: "Данные о специализациях почему-то не сохранились.",
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+				});
 		},
 	},
 	mounted() {

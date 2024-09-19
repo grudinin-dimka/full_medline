@@ -66,9 +66,10 @@
 				<td colspan="5" class="table-td-empty">Ничего нету...</td>
 			</tr>
 			<tr v-else v-for="value in array" :class="{ create: value.create, delete: value.delete }">
-				<td>
+				<td v-if="!value.create">
 					{{ value.id }}
 				</td>
+				<td v-else>?</td>
 				<td>
 					{{ value.name }}
 				</td>
@@ -87,9 +88,7 @@
 						>
 							Удалить
 						</table-button-remove>
-						<TableButtonDisabled v-if="value.create">
-							Удалить
-						</TableButtonDisabled>
+						<TableButtonDisabled v-if="value.create"> Удалить </TableButtonDisabled>
 						<table-button-default
 							v-if="value.delete"
 							@click="$emit('touchRemoveArrValue', value.id)"
@@ -173,7 +172,7 @@ export default {
 <style scoped>
 table {
 	border-collapse: collapse;
-	animation: show 0.5s ease-in-out;
+	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 th,
@@ -183,28 +182,9 @@ td {
 	height: 30px;
 }
 
-th:first-of-type {
-	width: 50px;
-	min-width: 50px;
-}
-
-th:last-of-type {
-	width: 300px;
-}
-
-th {
-	position: relative;
-	font-weight: 400;
-	text-align: left;
-	border: 1px solid #1f9fae;
-	background-color: #3fbecd;
-	color: white;
-}
-
-td {
-	text-align: left;
-	border: 1px solid #1f9fae;
+tr {
 	background-color: #d2f2f5;
+	transition: all 0.2s;
 }
 
 tr.create > td {
@@ -217,6 +197,59 @@ tr.delete > td {
 	text-align: left;
 	border: 1px solid #ae1f1f;
 	background-color: #f5d2d2;
+}
+
+tr > th {
+	position: relative;
+	font-weight: 400;
+	text-align: left;
+	border: 1px solid #3fbecd;
+	background-color: #3fbecd;
+	color: white;
+}
+
+tr > th:first-of-type {
+	width: 50px;
+	min-width: 50px;
+}
+
+tr > th:nth-of-type(2) {
+	width: 100%;
+	min-width: 500px;
+}
+
+tr > th:last-of-type {
+	width: 300px;
+	min-width: 300px;
+}
+
+tr > td {
+	text-align: left;
+	border: 1px solid #3fbecd;
+}
+
+tr > td:first-of-type {
+	text-align: center;
+}
+
+tr:hover > td {
+	background-color: rgba(255, 255, 255, 0.3);
+}
+
+tr.delete {
+	background-color: #f5d2d2;
+}
+
+tr.delete:hover > td {
+	background-color: rgba(255, 255, 255, 0.3);
+}
+
+tr.create {
+	background-color: #d7f5d2;
+}
+
+tr.create:hover > td {
+	background-color: rgba(255, 255, 255, 0.3);
 }
 
 .table-th-container {
@@ -258,7 +291,7 @@ input[type="checkbox"]:checked + label {
 	text-decoration: line-through;
 }
 
-@media screen and (max-width: 1350px) {
+@media screen and (max-width: 1300px) {
 	table {
 		display: block;
 		overflow-x: scroll;

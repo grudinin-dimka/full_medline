@@ -249,7 +249,7 @@ export default {
 <style scoped>
 table {
 	border-collapse: collapse;
-	animation: show 0.5s ease-in-out;
+	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 th,
@@ -257,6 +257,53 @@ td {
 	padding: 10px;
 	transition: all 0.2s;
 	height: 30px;
+}
+
+tr {
+	background-color: #d2f2f5;
+	transition: all 0.2s;
+}
+
+tr.create > td {
+	text-align: left;
+	border: 1px solid #3cae1f;
+	background-color: #d7f5d2;
+}
+
+tr.delete > td {
+	text-align: left;
+	border: 1px solid #ae1f1f;
+	background-color: #f5d2d2;
+}
+
+tr > th {
+	position: relative;
+	font-weight: 400;
+	text-align: left;
+	border: 1px solid #3fbecd;
+	background-color: #3fbecd;
+	color: white;
+}
+
+tr > td {
+	text-align: left;
+	border: 1px solid #3fbecd;
+}
+
+tr:hover > td {
+	background-color: rgba(255, 255, 255, 0.3);
+}
+
+tr.delete {
+	background-color: #f5d2d2;
+}
+
+tr.delete:hover > td {
+	background-color: rgba(255, 255, 255, 0.3);
+}
+
+tr.delete:hover > td {
+	background-color: rgba(255, 255, 255, 0.3);
 }
 
 th:nth-of-type(1) {
@@ -275,33 +322,6 @@ th:nth-of-type(3) {
 th:last-child {
 	width: 300px;
 	min-width: 100px;
-}
-
-th {
-	position: relative;
-	font-weight: 400;
-	text-align: left;
-	border: 1px solid #1f9fae;
-	background-color: #3fbecd;
-	color: white;
-}
-
-td {
-	text-align: left;
-	border: 1px solid #1f9fae;
-	background-color: #d2f2f5;
-}
-
-tr.create > td {
-	text-align: left;
-	border: 1px solid #3cae1f;
-	background-color: #d7f5d2;
-}
-
-tr.delete > td {
-	text-align: left;
-	border: 1px solid #ae1f1f;
-	background-color: #f5d2d2;
 }
 
 .table-th-container {
