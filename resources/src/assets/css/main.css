@@ -3,7 +3,6 @@
 /* Импорт стилей */
 @import url("./animation.css");
 
-
 * {
 	font-family: "Rubik", sans-serif;
 }
@@ -29,6 +28,7 @@
 	--input-border-color-active: var(--primary-color);
 	--input-border-color-error: #ff9b9b;
 	--input-background-color-error: #fff4f4;
+	--input-placeholder-color: rgb(180, 180, 180);
 
 	/* Капча */
 	--captcha-background-color: #dcdcdc;
@@ -54,7 +54,13 @@ body,
 }
 
 body.modal-open {
+	padding-right: 17.5px;
+	background-color: #ececec;
 	overflow: hidden;
+}
+
+body.modal-open > #app > header > .user {
+	margin-right: 17.5px;
 }
 
 .loader-pulse {
@@ -101,3 +107,13 @@ body.modal-open {
 	animation: animloader 1.5s linear infinite;
 }
 
+@media screen and (max-width: 600px) {
+	body.modal-open {
+		padding-right: 0px;
+		background-color: white;
+	}
+
+	body.modal-open > #app > header > .user {
+		margin-right: 0px;
+	}
+}

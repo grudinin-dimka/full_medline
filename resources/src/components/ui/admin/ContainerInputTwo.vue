@@ -101,6 +101,10 @@ fieldset.container-inputs-two:focus-within {
 	transition: all 0.2s;
 }
 
+.container-inputs-two > .item > input::placeholder {
+	color: var(--input-placeholder-color);
+}
+
 .container-inputs-two > .item > input:focus,
 .container-inputs-two > .item > select:focus {
 	border: 2px solid var(--input-border-color-active);

@@ -30,7 +30,7 @@
 				</th>
 				<th>
 					<div class="table-th-container">
-						<div class="table-th-name">Имя</div>
+						<div class="table-th-name">Название</div>
 						<div
 							class="table-th-filter"
 							v-if="!filters.name.status"

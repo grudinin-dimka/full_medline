@@ -501,7 +501,7 @@ export default {
 		// Проверка введенного значения
 		checkInputText(value) {
 			/* Проверка на пустую строку */
-			if (value == "") {
+			if (value == "" || value == null) {
 				return {
 					status: true,
 					message: "Поле не может быть пустым.",

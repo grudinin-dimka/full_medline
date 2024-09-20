@@ -3,7 +3,7 @@
 	<!--|                  МОДАЛЬНОЕ ОКНО                   |-->
 	<!--|___________________________________________________|-->
 	<admin-modal ref="modal" @touchCloseModal="closeModal" :modal="modal">
-		<template #title> 
+		<template #title>
 			<span v-if="modal.type == 'create'">Специализация (Создание)</span>
 			<span v-if="modal.type == 'edit'">Специализация (редактирование)</span>
 		</template>
@@ -49,6 +49,9 @@
 		<template v-slot:addreas>specialists</template>
 	</info-bar>
 
+	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
+	<!--|                   СПЕЦИАЛИЗАЦИИ                   |-->
+	<!--|___________________________________________________|-->
 	<block-once>
 		<block-title>
 			<template #title>Специализации</template>
@@ -197,7 +200,7 @@ export default {
 						this.modal.status = true;
 						this.modal.style.create = true;
 						this.modal.style.delete = false;
-						this.clearCurrentSpecializationData();
+						this.clearModalData();
 					}
 					document.body.classList.toggle("modal-open");
 					break;
@@ -237,7 +240,7 @@ export default {
 		// Проверка введенного значения
 		checkInputText(value) {
 			/* Проверка на пустую строку */
-			if (value == "") {
+			if (value == "" || value == null) {
 				return {
 					status: true,
 					message: "Поле не может быть пустым.",
@@ -305,14 +308,14 @@ export default {
 			}
 		},
 		/* Очистка содержимого модального окна */
-		clearCurrentSpecializationData() {
+		clearModalData() {
 			for (let key in this.currentSpecialization.data) {
 				this.currentSpecialization.data[key].body = "";
 				this.currentSpecialization.data[key].edited = false;
 			}
 		},
-		/* Очистка ошибок */
-		clearCurrentSpecializationErrors() {
+		/* Очистка ошибок модального окна */
+		clearModalErrors() {
 			for (let key in this.currentSpecialization.errors) {
 				this.currentSpecialization.errors[key].body = "";
 				this.currentSpecialization.errors[key].status = false;
@@ -403,7 +406,7 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Открытие специализации для редактирования */
 		editSpecialization(selectedSpecialization) {
-			this.clearCurrentSpecializationData();
+			this.clearModalData();
 
 			for (let key in this.currentSpecialization.data) {
 				this.currentSpecialization.data[key].body = selectedSpecialization[key];
@@ -512,7 +515,7 @@ export default {
 					while (res.length > 0) {
 						/* Получение индекса элемента, помеченного на удаление из массива специалистов */
 						this.specializations.splice(this.specializations.indexOf(res[0]), 1);
-						/* Обновление списка с элементами, помеченными на удаление */ 
+						/* Обновление списка с элементами, помеченными на удаление */
 						res = this.specializations.filter((specialization) => {
 							if (specialization.delete == true) {
 								return Object.assign({}, specialization);

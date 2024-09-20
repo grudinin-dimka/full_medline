@@ -107,7 +107,7 @@ export default {
 	max-width: 1000px;
 	max-height: 100%;
 
-	transition: all 0.3s;
+	transition: transform 0.3s;
 	transform: scale(0.7);
 }
 
@@ -116,13 +116,13 @@ export default {
 }
 
 .modal.create .modal-container {
-	background-color: var(--create-background-color);
-	border: 3px solid var(--create-border-color);
+	background-color: #d7f5d2;
+	border: 1px solid #3cae1f;
 }
 
 .modal.delete .modal-container {
-	background-color: var(--delete-background-color);
-	border: 2px solid var(--delete-border-color);
+	background-color: #f5d2d2;
+	border: 1px solid #b93a3a;
 }
 
 .modal-head {

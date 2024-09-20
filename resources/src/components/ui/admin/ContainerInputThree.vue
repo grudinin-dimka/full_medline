@@ -51,7 +51,7 @@ export default {
 		fieldset: {
 			type: Boolean,
 			default: false,
-		}
+		},
 	},
 };
 </script>
@@ -110,5 +110,9 @@ legend {
 
 .container-inputs-three > .item > input:focus {
 	border: 2px solid var(--input-border-color-active);
+}
+
+.container-inputs-three > .item > input::placeholder {
+	color: var(--input-placeholder-color);
 }
 </style>

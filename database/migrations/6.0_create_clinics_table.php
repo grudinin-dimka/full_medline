@@ -29,10 +29,10 @@ return new class extends Migration
             $table->string('city', 500);
             $table->string('street', 500);
             $table->string('home', 30);
-            $table->unsignedInteger('index')->nullable()->default(000000);
-            $table->float('geoWidth')->nullable();
-            $table->float('geoLongitude')->nullable();
-            $table->string('other')->nullable();
+            $table->unsignedInteger('index')->default(000000);
+            $table->float('geoWidth');
+            $table->float('geoLongitude');
+            $table->string('other')->nullable()->default('');
             $table->timestamps(); 
         });
 
@@ -42,6 +42,9 @@ return new class extends Migration
                 "city" => "Шадринск",
                 "street" => "Комсомольская",
                 "home" => "16",
+                "index" => "641870",
+                "geoWidth" => 56.082351,
+                "geoLongitude" => 63.631975,
             ]
         );
         DB::table('clinics')->insert(
@@ -50,6 +53,9 @@ return new class extends Migration
                 "city" => "Шадринск",
                 "street" => "Карла Либкнехта",
                 "home" => "10",
+                "index" => "641870",
+                "geoWidth" => 56.079427,
+                "geoLongitude" => 63.624617,
             ]
         );
         DB::table('clinics')->insert(
@@ -58,6 +64,10 @@ return new class extends Migration
                 "city" => "Шадринск",
                 "street" => "Октябрьская",
                 "home" => "3",
+
+                "index" => "641882",
+                "geoWidth" => 56.079829,
+                "geoLongitude" => 63.607307,
             ]
         );
     }

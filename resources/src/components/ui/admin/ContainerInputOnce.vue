@@ -49,6 +49,11 @@
 	caret-color: red;
 }
 
+.container-inputs-once > input::placeholder {
+	color: var(--input-placeholder-color);
+}
+
+
 span.error {
 	color: var(--span-color-error);
 }
