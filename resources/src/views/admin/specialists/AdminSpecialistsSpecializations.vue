@@ -3,7 +3,10 @@
 	<!--|                  МОДАЛЬНОЕ ОКНО                   |-->
 	<!--|___________________________________________________|-->
 	<admin-modal ref="modal" @touchCloseModal="closeModal" :modal="modal">
-		<template #title> Заголовок </template>
+		<template #title> 
+			<span v-if="modal.type == 'create'">Специализация (Создание)</span>
+			<span v-if="modal.type == 'edit'">Специализация (редактирование)</span>
+		</template>
 		<template #body>
 			<ContainerInputOnce>
 				<template #title>

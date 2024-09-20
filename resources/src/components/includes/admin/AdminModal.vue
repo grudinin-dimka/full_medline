@@ -98,12 +98,13 @@ export default {
 	flex-direction: column;
 	gap: 20px;
 	padding: 20px;
+	margin: 30px;
 	box-sizing: border-box;
 
 	background: #fff;
 	border-radius: 10px;
-	width: calc(100dvw - 60px);
-	max-width: 900px;
+	width: 100%;
+	max-width: 1000px;
 	max-height: 100%;
 
 	transition: all 0.3s;
@@ -173,8 +174,7 @@ export default {
 .modal-body {
 	display: flex;
 	flex-direction: column;
-	gap: 20px;
-	max-height: 500px;
+	gap: 10px;
 	overflow: auto;
 }
 
@@ -233,6 +233,19 @@ export default {
 	cursor: all-scroll;
 }
 
+@media screen and (max-width: 1000px) {
+	.modal-container {
+		margin: 20px;
+	}
+}
+
+@media screen and (max-width: 960px) {
+	.modal-container {
+		min-width: 0px;
+		width: 100%;
+	}
+}
+
 @media screen and (max-width: 860px) {
 	.modal-img {
 		display: flex;
@@ -240,6 +253,19 @@ export default {
 		justify-content: justify;
 		align-items: justify;
 		min-height: none;
+	}
+}
+
+@media screen and (max-width: 500px) {
+	.modal-body {
+		height: 100%;
+	}
+
+	.modal-container {
+		justify-content: space-between;
+		margin: 0px;
+		height: 100%;
+		border-radius: 0px;
 	}
 }
 </style>

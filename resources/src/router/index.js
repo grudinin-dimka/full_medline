@@ -93,6 +93,7 @@ const router = createRouter({
 			path: "/admin",
 			name: "admin",
 			component: Admin,
+			redirect: { name: "admin-default" },
 			children: [
 				{
 					path: "",

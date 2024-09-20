@@ -1,4 +1,105 @@
 <template>
+	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
+	<!--|                  МОДАЛЬНОЕ ОКНО                   |-->
+	<!--|___________________________________________________|-->
+	<admin-modal ref="modal" @touchCloseModal="" :modal="modal">
+		<template #title> Клиника (редактирование) </template>
+		<template #body>
+			<container-input>
+				<!-- Название и другое -->
+				<container-input-two :fieldset="true">
+					<template #legend>НАЗВАНИЕ И ДРУГОЕ</template>
+					<!-- Город -->
+					<template #title-one> Название <span v-if="false">(Изменено)</span> </template>
+					<template #input-one>
+						<input type="text" ref="inputName" placeholder="Введите название" />
+					</template>
+					<template #error-one>
+						<span class="error" v-if="false"> Ошибка </span>
+					</template>
+					<!-- Долгота -->
+					<template #title-two> ДРУГОЕ <span v-if="false">(Изменено)</span> </template>
+					<template #input-two>
+						<input type="text" placeholder="Введите другое" />
+					</template>
+					<template #error-two>
+						<span class="error" v-if="false"> Ошибка </span>
+					</template>
+				</container-input-two>
+
+
+				<!-- Город и улица -->
+				<container-input-two :fieldset="true">
+					<template #legend>ГОРОД И УЛИЦА</template>
+					<!-- Город -->
+					<template #title-one> ГОРОД <span v-if="false">(Изменено)</span> </template>
+					<template #input-one>
+						<input type="text" placeholder="Введите город" />
+					</template>
+					<template #error-one>
+						<span class="error" v-if="false"> Ошибка </span>
+					</template>
+					<!-- Долгота -->
+					<template #title-two> УЛИЦА <span v-if="false">(Изменено)</span> </template>
+					<template #input-two>
+						<input type="text" placeholder="Введите улицу" />
+					</template>
+					<template #error-two>
+						<span class="error" v-if="false"> Ошибка </span>
+					</template>
+				</container-input-two>
+
+				<!-- Дом и индекс -->
+				<container-input-two :fieldset="true">
+					<template #legend>ДОМ И ИНДЕКС</template>
+					<!-- Ширина -->
+					<template #title-one> ДОМ <span v-if="false">(Изменено)</span> </template>
+					<template #input-one>
+						<input type="text" placeholder="Введите дом" />
+					</template>
+					<template #error-one>
+						<span class="error" v-if="false"> Ошибка </span>
+					</template>
+					<!-- Долгота -->
+					<template #title-two> ИНДЕКС <span v-if="false">(Изменено)</span> </template>
+					<template #input-two>
+						<input type="tel" v-mask="'######'" placeholder="______"/>
+					</template>
+					<template #error-two>
+						<span class="error" v-if="false"> Ошибка </span>
+					</template>
+				</container-input-two>
+
+				<!-- Географические координаты -->
+				<container-input-two :fieldset="true">
+					<template #legend>ГЕОГРАФИЧЕСКИЕ КООРДИНАТЫ</template>
+					<!-- Ширина -->
+					<template #title-one> ШИРИНА <span v-if="false">(Изменено)</span> </template>
+					<template #input-one>
+						<input type="number" ref="inputName" placeholder="Введите индекс" />
+					</template>
+					<template #error-one>
+						<span class="error" v-if="false"> Ошибка </span>
+					</template>
+					<!-- Долгота -->
+					<template #title-two> ДОЛГОТА <span v-if="false">(Изменено)</span> </template>
+					<template #input-two>
+						<input type="number" ref="inputName" placeholder="Введите индекс" />
+					</template>
+					<template #error-two>
+						<span class="error" v-if="false"> Ошибка </span>
+					</template>
+				</container-input-two>
+			</container-input>
+		</template>
+		<template #footer>
+			<BlockButtons>
+				<ButtonDefault> Создать </ButtonDefault>
+				<ButtonDefault> Обновить </ButtonDefault>
+			</BlockButtons>
+		</template>
+	</admin-modal>
+
 	<info-bar>
 		<template v-slot:title>Специалисты</template>
 		<template v-slot:addreas>specialists</template>
@@ -13,11 +114,7 @@
 		</block-title>
 
 		<!-- Таблица -->
-		<admin-specialists-table
-			v-show="loading.table"
-			:array="clinics"
-			@useFilter="filterClinics"
-		/>
+		<admin-specialists-table v-show="loading.table" :array="clinics" @useFilter="filterClinics" />
 
 		<!-- Загрузчик -->
 		<loader-child
@@ -33,6 +130,8 @@
 </template>
 
 <script>
+import AdminModal from "../../../components/includes/admin/AdminModal.vue";
+
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
@@ -41,6 +140,11 @@ import ElementInputLabel from "../../../components/ui/admin/ElementInputLabel.vu
 import BlockOnce from "../../../components/ui/admin/BlockOnce.vue";
 import BlockTitle from "../../../components/ui/admin/BlockTitle.vue";
 import BlockButtons from "../../../components/ui/admin/BlockButtons.vue";
+
+import ContainerInput from "../../../components/ui/admin/ContainerInput.vue";
+import ContainerInputOnce from "../../../components/ui/admin/ContainerInputOnce.vue";
+import ContainerInputTwo from "../../../components/ui/admin/ContainerInputTwo.vue";
+import ContainerInputThree from "../../../components/ui/admin/ContainerInputThree.vue";
 
 import AdminSpecialistsTable from "./AdminSpecialistsTable.vue";
 
@@ -53,13 +157,18 @@ import axios from "axios";
 
 export default {
 	components: {
+		AdminModal,
 		InfoBar,
 		LoaderChild,
 		ElementInputLabel,
-		AdminSpecialistsTable,
 		BlockOnce,
 		BlockTitle,
 		BlockButtons,
+		ContainerInput,
+		ContainerInputOnce,
+		ContainerInputTwo,
+		ContainerInputThree,
+		AdminSpecialistsTable,
 		ButtonDefault,
 		ButtonRemove,
 		IconSave,
@@ -67,6 +176,25 @@ export default {
 	},
 	data() {
 		return {
+			modal: {
+				title: "",
+				status: true,
+				type: null,
+				style: {
+					create: false,
+					delete: false,
+				},
+				modules: {
+					title: true,
+					buttons: {
+						hide: false,
+						close: true,
+					},
+					images: false,
+					body: true,
+					footer: true,
+				},
+			},
 			loading: {
 				loader: true,
 				table: false,

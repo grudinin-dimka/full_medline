@@ -64,55 +64,53 @@
 			/>
 		</template>
 		<template #body>
-			<div class="modal-body-inputs">
-				<!-- Название -->
-				<ContainerInputOnce>
-					<template #title>
-						Название* <span v-if="currentSlide.data.name.edited"> (Изменено) </span>
-					</template>
-					<template #input>
-						<input
-							type="text"
-							v-model="currentSlide.data.name.body"
-							ref="inputName"
-							@input="currentSlide.data.name.edited = true"
-							@blur="checkModalInput('name', 'text')"
-							:class="{ error: currentSlide.errors.name.status }"
-							placeholder="Название слайда"
-							:disabled="currentSlide.data.delete.body"
-						/>
-					</template>
-					<template #error>
-						<span class="error" v-if="currentSlide.errors.name.status">
-							{{ currentSlide.errors.name.value }}
-						</span>
-					</template>
-				</ContainerInputOnce>
-				<!-- Ссылка -->
-				<ContainerInputOnce>
-					<template #title>
-						Ссылка*
-						<span v-if="currentSlide.data.link.edited">(Изменено)</span>
-					</template>
-					<template #input>
-						<input
-							type="text"
-							v-model="currentSlide.data.link.body"
-							ref="inputLink"
-							@input="currentSlide.data.link.edited = true"
-							@blur="checkModalInput('link', 'text')"
-							:class="{ error: currentSlide.errors.link.status }"
-							placeholder="Ссылка слайда"
-							:disabled="currentSlide.data.delete.body"
-						/>
-					</template>
-					<template #error>
-						<span class="error" v-if="currentSlide.errors.link.status">
-							{{ currentSlide.errors.link.value }}
-						</span>
-					</template>
-				</ContainerInputOnce>
-			</div>
+			<!-- Название -->
+			<ContainerInputOnce>
+				<template #title>
+					Название* <span v-if="currentSlide.data.name.edited"> (Изменено) </span>
+				</template>
+				<template #input>
+					<input
+						type="text"
+						v-model="currentSlide.data.name.body"
+						ref="inputName"
+						@input="currentSlide.data.name.edited = true"
+						@blur="checkModalInput('name', 'text')"
+						:class="{ error: currentSlide.errors.name.status }"
+						placeholder="Название слайда"
+						:disabled="currentSlide.data.delete.body"
+					/>
+				</template>
+				<template #error>
+					<span class="error" v-if="currentSlide.errors.name.status">
+						{{ currentSlide.errors.name.value }}
+					</span>
+				</template>
+			</ContainerInputOnce>
+			<!-- Ссылка -->
+			<ContainerInputOnce>
+				<template #title>
+					Ссылка*
+					<span v-if="currentSlide.data.link.edited">(Изменено)</span>
+				</template>
+				<template #input>
+					<input
+						type="text"
+						v-model="currentSlide.data.link.body"
+						ref="inputLink"
+						@input="currentSlide.data.link.edited = true"
+						@blur="checkModalInput('link', 'text')"
+						:class="{ error: currentSlide.errors.link.status }"
+						placeholder="Ссылка слайда"
+						:disabled="currentSlide.data.delete.body"
+					/>
+				</template>
+				<template #error>
+					<span class="error" v-if="currentSlide.errors.link.status">
+						{{ currentSlide.errors.link.value }}
+					</span>
+				</template>
+			</ContainerInputOnce>
 		</template>
 		<template #footer>
 			<BlockButtons v-if="modal.type == 'edit'">
