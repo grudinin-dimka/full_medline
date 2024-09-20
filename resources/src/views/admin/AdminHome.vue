@@ -67,7 +67,7 @@
 			<!-- Название -->
 			<ContainerInputOnce>
 				<template #title>
-					Название* <span v-if="currentSlide.data.name.edited"> (Изменено) </span>
+					НАЗВАНИЕ* <span v-if="currentSlide.data.name.edited"> (ИЗМЕНЕНО) </span>
 				</template>
 				<template #input>
 					<input
@@ -90,8 +90,8 @@
 			<!-- Ссылка -->
 			<ContainerInputOnce>
 				<template #title>
-					Ссылка*
-					<span v-if="currentSlide.data.link.edited">(Изменено)</span>
+					ССЫЛКА*
+					<span v-if="currentSlide.data.link.edited">(ИЗМЕНЕНО)</span>
 				</template>
 				<template #input>
 					<input
@@ -143,7 +143,7 @@
 	<!--|___________________________________________________|-->
 	<block-once>
 		<block-title>
-			<template #title>Слайдер</template>
+			<template #title>СЛАЙДЕР</template>
 			<template #buttons>
 				<icon-save :width="28" :height="28" @click="saveSlidesChanges" />
 			</template>
@@ -209,7 +209,7 @@
 	<!--|___________________________________________________|-->
 	<block-once>
 		<block-title>
-			<template #title>Футер</template>
+			<template #title>ФУТЕР</template>
 			<template #buttons>
 				<icon-save :width="28" :height="28" @click="saveFooterChanges" />
 			</template>
@@ -218,7 +218,7 @@
 		<div class="footer-container" v-show="loading.footer">
 			<!-- Заголовок -->
 			<element-input-label>
-				Заголовок <span v-if="footer.title.edited">(Изменено)</span>
+				ЗАГОЛОВОК <span v-if="footer.title.edited">(ИЗМЕНЕНО)</span>
 			</element-input-label>
 			<div class="block-textarea">
 				<textarea
@@ -232,8 +232,8 @@
 			</div>
 			<!-- Дополнение к заголовку -->
 			<element-input-label>
-				Дополнение к заголовку
-				<span v-if="footer.titleDesc.edited">(Изменено)</span></element-input-label
+				ДОПОЛНЕНИЕ К ЗАГОЛОВКУ
+				<span v-if="footer.titleDesc.edited">(ИЗМЕНЕНО)</span></element-input-label
 			>
 			<div class="block-textarea">
 				<textarea
@@ -247,8 +247,8 @@
 			</div>
 			<!-- Лицензия -->
 			<element-input-label>
-				Лицензия
-				<span v-if="footer.license.edited">(Изменено)</span>
+				ЛИЦЕНЗИЯ
+				<span v-if="footer.license.edited">(ИЗМЕНЕНО)</span>
 			</element-input-label>
 			<div class="block-textarea">
 				<textarea
@@ -266,8 +266,8 @@
 			</div>
 			<!-- Основной текст -->
 			<element-input-label>
-				Основной текст
-				<span v-if="footer.licenseDesc.edited"> (Изменено) </span>
+				ОСНОВНОЙ ТЕКСТ
+				<span v-if="footer.licenseDesc.edited"> (ИЗМЕНЕНО) </span>
 			</element-input-label>
 			<div class="block-textarea">
 				<textarea
@@ -283,8 +283,8 @@
 			</div>
 			<!-- Подвал -->
 			<element-input-label>
-				Подвал
-				<span v-if="footer.footer.edited">(Изменено)</span></element-input-label
+				ПОДВАЛ
+				<span v-if="footer.footer.edited">(ИЗМЕНЕНО)</span></element-input-label
 			>
 			<div class="block-textarea">
 				<textarea

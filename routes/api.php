@@ -5,12 +5,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
-
-// Работа с пользователями
-Route::post('/login', [LoginController::class, 'loginUser']);
-Route::post('/check-token', [LoginController::class, 'checkToken'])->middleware('auth:sanctum');
-Route::post('/logout', [LoginController::class, 'logoutUser'])->middleware('auth:sanctum');
-Route::post('/create', [LoginController::class, 'createUser']);
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 /* |                  ОБЩИЕ ФУНКЦИИ                    |*/
 /* |___________________________________________________|*/
@@ -39,6 +33,12 @@ Route::post('/get-educations-all', [HomeController::class, 'getEducationsAll']);
 /* _____________________________________________________*/
 /* Общие                                                */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+/* Работа с пользователями */
+Route::post('/login', [LoginController::class, 'loginUser']);
+Route::post('/check-token', [LoginController::class, 'checkToken'])->middleware('auth:sanctum');
+Route::post('/logout', [LoginController::class, 'logoutUser'])->middleware('auth:sanctum');
+Route::post('/create', [LoginController::class, 'createUser']);
+/* Загрузка фото на сервер */
 Route::post('/upload-file', [AdminController::class, 'uploadFile'])->middleware('auth:sanctum');
 /* _____________________________________________________*/
 /* 1. Главная                                           */
@@ -53,6 +53,10 @@ Route::post('/save-specialists-hides', [AdminController::class, 'saveSpecialists
 /* 3. Специализации                                     */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 Route::post('/save-specializations-changes', [AdminController::class, 'saveSpecializationsChanges'])->middleware('auth:sanctum');
+/* _____________________________________________________*/
+/* 4. Клиники                                           */
+/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+Route::post('/save-clinics-changes', [AdminController::class, 'saveClinicsChanges'])->middleware('auth:sanctum');
 
 
 

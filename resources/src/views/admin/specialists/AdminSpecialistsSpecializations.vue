@@ -10,7 +10,7 @@
 		<template #body>
 			<ContainerInputOnce>
 				<template #title>
-					Название* <span v-if="currentSpecialization.data.name.edited">(Изменено)</span>
+					НАЗВАНИЕ* <span v-if="currentSpecialization.data.name.edited">(ИЗМЕНЕНО)</span>
 				</template>
 				<template #input>
 					<input

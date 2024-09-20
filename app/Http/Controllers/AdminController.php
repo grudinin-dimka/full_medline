@@ -19,6 +19,7 @@ use App\Models\Slide;
 use App\Models\Footer;
 use App\Models\Specialist;
 use App\Models\Specialization;
+use App\Models\Clinic;
 
 class AdminController extends Controller
 {
@@ -94,14 +95,14 @@ class AdminController extends Controller
       /* Обновление существующих слайдов */
       foreach ($request->slides as $key => $value) {
          if ($value['delete'] !== true && $value['create'] !== true) {
-         $slide = Slide::find($value['id']);
-         $slideUpdate = $slide->update([
-            'name' => $value['name'],
-            'link' => $value['link'],
-            'filename' => $value['filename'],
-            'hide' => $value['hide'],
-            'order' => $value['order'],
-         ]);  
+            $slide = Slide::find($value['id']);
+            $slideUpdate = $slide->update([
+               'name' => $value['name'],
+               'link' => $value['link'],
+               'filename' => $value['filename'],
+               'hide' => $value['hide'],
+               'order' => $value['order'],
+            ]);  
          };
       };
 
@@ -213,6 +214,57 @@ class AdminController extends Controller
                'old' => $value['id'], 
                /* Новый id */
                'new' => $specializationCreate->id
+            ];            
+         };       
+      }
+
+      // Обновление данных 
+      foreach ($request->specializations as $key => $value) {
+         if ($value["delete"] !== true && $value['create'] !== true){
+            $specialization = Specialization::find($value['id']);
+            $specializationUpdate = $specialization->update([
+               'name' => $value['name'],
+            ]);     
+         }         
+      }
+
+      return $arrayID;
+   }
+   /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+   /* |                    КЛИНИКИ                        |*/
+   /* |___________________________________________________|*/
+   /* _____________________________________________________*/
+   /* 1. Сохранение, удаление                              */
+   /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+   public function saveClinicsChanges(Request $request) {
+      // Удаление помеченных
+      foreach ($request->clinics as $key => $value) {
+         if ($value["delete"] === true){
+            $clinic = Clinic::find($value['id']);
+            $clinic->delete();
+         }         
+      }
+
+      $arrayID = [];
+      // Добавление новых
+      foreach ($request->clinics as $key => $value) {
+         if ($value["create"] === true) {
+            $clinicToCreate = Clinic::create([
+               "name" => $value['name'],
+               "city" => $value['city'],
+               "street" => $value['street'],
+               "home" => $value['home'],
+               "index" => $value['index'],
+               "geoWidth" => $value['geoWidth'],
+               "geoLongitude" => $value['geoLongitude'],
+            ]);
+
+            // Запись нового объекта в массив
+            $arrayID[] = (object) [
+               /* Прошлый id */
+               'old' => $value['id'], 
+               /* Новый id */
+               'new' => $clinicToCreate->id
             ];            
          };       
       }

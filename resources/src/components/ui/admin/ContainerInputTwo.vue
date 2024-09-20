@@ -55,11 +55,11 @@ legend {
 
 fieldset.container-inputs-two {
 	margin-top: 5px;
-	border: 2px solid var(--input-border-color-inactive);
+	border: 2px solid rgba(0, 0, 0, 0.2);
 	border-radius: 15px;
 	padding: 10px;
 	transition: all 0.2s;
-	background-color: rgb(255, 255, 255);
+	background-color: rgba(255, 255, 255, 0.5);
 }
 
 fieldset.container-inputs-two:focus-within {
@@ -105,9 +105,12 @@ fieldset.container-inputs-two:focus-within {
 	color: var(--input-placeholder-color);
 }
 
-.container-inputs-two > .item > input:focus,
-.container-inputs-two > .item > select:focus {
-	border: 2px solid var(--input-border-color-active);
+.container-inputs-two > .item > input.error,
+.container-inputs-two > .item > select.error {
+	background-color: var(--input-background-color-error);
+	border: 2px solid var(--input-border-color-error);
+
+	caret-color: red;
 }
 
 @media screen and (max-width: 450px) {

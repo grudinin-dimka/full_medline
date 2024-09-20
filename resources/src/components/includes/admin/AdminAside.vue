@@ -8,11 +8,11 @@
 					href="#"
 					@click.prevent="insertPage('ehome')"
 				>
-					Главная
+					ГЛАВНАЯ
 				</a>
 			</div>
 			<div class="item">
-				<a class="item-title" href="#" @click.prevent="insertPage('eabout')"> О нас </a>
+				<a class="item-title" href="#" @click.prevent="insertPage('eabout')"> О НАС </a>
 			</div>
 			<div class="item">
 				<a
@@ -22,20 +22,20 @@
 					@click.prevent="openListEspecialists"
 				>
 					<IconArrowWhite :width="20" :height="20" :rotate="180" class="item-arrow" />
-					Специалисты
+					СПЕЦИАЛИСТЫ
 				</a>
 				<div class="item-list" ref="especialists" :class="{ active: links.specialists.status }">
-					<a href="#" @click.prevent="insertSubPage('especialists-all')"> Список </a>
+					<a href="#" @click.prevent="insertSubPage('especialists-all')"> СПИСОК </a>
 					<a href="#" @click.prevent="insertSubPage('especialists-specializations')">
-						Специализации
+						СПЕЦИАЛИЗАЦИИ
 					</a>
-					<a href="#" @click.prevent="insertSubPage('especialists-clinics')"> Клиники </a>
-					<a href="#" @click.prevent="insertSubPage('especialists-educations')"> Образование </a>
-					<a href="#" @click.prevent="insertSubPage('especialists-works')"> Места работы </a>
-					<a href="#" @click.prevent="insertSubPage('especialists-certificates')"> Сертификаты </a>
+					<a href="#" @click.prevent="insertSubPage('especialists-clinics')"> КЛИНИКИ </a>
+					<a href="#" @click.prevent="insertSubPage('especialists-educations')"> ОБРАЗОВАНИЕ </a>
+					<a href="#" @click.prevent="insertSubPage('especialists-works')"> МЕСТА РАБОТЫ </a>
+					<a href="#" @click.prevent="insertSubPage('especialists-certificates')"> СЕРТИФИКАТЫ </a>
 				</div>
 			</div>
-			<a class="item-title" href="#" @click.prevent="insertPage('eprice')"> Прайс </a>
+			<a class="item-title" href="#" @click.prevent="insertPage('eprice')"> ЦЕНЫ </a>
 		</div>
 		<div class="aside-footer">
 			<button class="btn-close" @click="logoutUser">Выйти</button>

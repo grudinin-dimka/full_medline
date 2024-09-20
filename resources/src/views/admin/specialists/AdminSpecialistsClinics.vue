@@ -2,7 +2,7 @@
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                  МОДАЛЬНОЕ ОКНО                   |-->
 	<!--|___________________________________________________|-->
-	<admin-modal ref="modal" @touchCloseModal="" :modal="modal">
+	<admin-modal ref="modal" @touchCloseModal="closeModal" :modal="modal">
 		<template #title> Клиника (редактирование) </template>
 		<template #body>
 			<container-input>
@@ -10,13 +10,17 @@
 				<container-input-two :fieldset="true">
 					<template #legend>НАЗВАНИЕ И ДРУГОЕ</template>
 					<!-- НАЗВАНИЕ -->
-					<template #title-one> НАЗВАНИЕ* <span v-if="false">(Изменено)</span> </template>
+					<template #title-one>
+						НАЗВАНИЕ* <span v-if="currentClinic.data.name.edited">(ИЗМЕНЕНО)</span>
+					</template>
 					<template #input-one>
 						<input
 							type="text"
 							placeholder="Введите название"
 							autocomplete="off"
+							:class="{ error: currentClinic.errors.name.status }"
 							v-model="currentClinic.data.name.body"
+							@input="currentClinic.data.name.edited = true"
 							@blur="checkModalInput('name', 'text')"
 						/>
 					</template>
@@ -26,14 +30,16 @@
 						</span>
 					</template>
 					<!-- ДРУГОЕ -->
-					<template #title-two> ДРУГОЕ* <span v-if="false">(Изменено)</span> </template>
+					<template #title-two>
+						ДРУГОЕ <span v-if="currentClinic.data.other.edited">(ИЗМЕНЕНО)</span>
+					</template>
 					<template #input-two>
 						<input
 							type="text"
 							placeholder="Введите другое"
 							autocomplete="off"
 							v-model="currentClinic.data.other.body"
-							@blur="checkModalInput('other', 'text')"
+							@input="currentClinic.data.other.edited = true"
 						/>
 					</template>
 					<template #error-two>
@@ -47,14 +53,18 @@
 				<container-input-two :fieldset="true">
 					<template #legend>ГОРОД И УЛИЦА</template>
 					<!-- Город -->
-					<template #title-one> ГОРОД* <span v-if="false">(Изменено)</span> </template>
+					<template #title-one>
+						ГОРОД* <span v-if="currentClinic.data.city.edited">(ИЗМЕНЕНО)</span>
+					</template>
 					<template #input-one>
 						<input
 							type="text"
 							placeholder="Введите город"
 							autocomplete="off"
+							:class="{ error: currentClinic.errors.city.status }"
 							v-model="currentClinic.data.city.body"
 							@blur="checkModalInput('city', 'text')"
+							@input="currentClinic.data.city.edited = true"
 						/>
 					</template>
 					<template #error-one>
@@ -63,14 +73,18 @@
 						</span>
 					</template>
 					<!-- УЛИЦА -->
-					<template #title-two> УЛИЦА* <span v-if="false">(Изменено)</span> </template>
+					<template #title-two>
+						УЛИЦА* <span v-if="currentClinic.data.street.edited">(ИЗМЕНЕНО)</span>
+					</template>
 					<template #input-two>
 						<input
 							type="text"
 							placeholder="Введите улицу"
 							autocomplete="off"
+							:class="{ error: currentClinic.errors.street.status }"
 							v-model="currentClinic.data.street.body"
 							@blur="checkModalInput('street', 'text')"
+							@input="currentClinic.data.street.edited = true"
 						/>
 					</template>
 					<template #error-two>
@@ -84,14 +98,18 @@
 				<container-input-two :fieldset="true">
 					<template #legend>ДОМ И ИНДЕКС</template>
 					<!-- ДОМ -->
-					<template #title-one> ДОМ* <span v-if="false">(Изменено)</span> </template>
+					<template #title-one>
+						ДОМ* <span v-if="currentClinic.data.home.edited">(ИЗМЕНЕНО)</span>
+					</template>
 					<template #input-one>
 						<input
 							type="text"
 							placeholder="Введите дом"
 							autocomplete="off"
+							:class="{ error: currentClinic.errors.home.status }"
 							v-model="currentClinic.data.home.body"
 							@blur="checkModalInput('home', 'text')"
+							@input="currentClinic.data.home.edited = true"
 						/>
 					</template>
 					<template #error-one>
@@ -100,15 +118,19 @@
 						</span>
 					</template>
 					<!-- ИНДЕКС -->
-					<template #title-two> ИНДЕКС* <span v-if="false">(Изменено)</span> </template>
+					<template #title-two>
+						ИНДЕКС* <span v-if="currentClinic.data.index.edited">(ИЗМЕНЕНО)</span>
+					</template>
 					<template #input-two>
 						<input
 							type="tel"
 							v-mask="'######'"
 							placeholder="______"
 							autocomplete="off"
+							:class="{ error: currentClinic.errors.index.status }"
 							v-model="currentClinic.data.index.body"
 							@blur="checkModalInput('index', 'number')"
+							@input="currentClinic.data.index.edited = true"
 						/>
 					</template>
 					<template #error-two>
@@ -122,14 +144,19 @@
 				<container-input-two :fieldset="true">
 					<template #legend>ГЕОГРАФИЧЕСКИЕ КООРДИНАТЫ</template>
 					<!-- Ширина -->
-					<template #title-one> ШИРИНА* <span v-if="false">(Изменено)</span> </template>
+					<template #title-one>
+						ШИРИНА* <span v-if="currentClinic.data.geoWidth.edited">(ИЗМЕНЕНО)</span>
+					</template>
 					<template #input-one>
 						<input
-							type="number"
-							placeholder="Введите ширину"
+							type="tel"
 							autocomplete="off"
+							placeholder="00.000000"
+							v-mask="'##.######'"
+							:class="{ error: currentClinic.errors.geoWidth.status }"
 							v-model="currentClinic.data.geoWidth.body"
 							@blur="checkModalInput('geoWidth', 'number')"
+							@input="currentClinic.data.geoWidth.edited = true"
 						/>
 					</template>
 					<template #error-one>
@@ -138,14 +165,19 @@
 						</span>
 					</template>
 					<!-- Долгота -->
-					<template #title-two> ДОЛГОТА* <span v-if="false">(Изменено)</span> </template>
+					<template #title-two>
+						ДОЛГОТА* <span v-if="currentClinic.data.geoLongitude.edited">(ИЗМЕНЕНО)</span>
+					</template>
 					<template #input-two>
 						<input
-							type="number"
-							placeholder="Введите долготу"
+							type="tel"
 							autocomplete="off"
+							placeholder="00.000000"
+							v-mask="'##.######'"
+							:class="{ error: currentClinic.errors.geoLongitude.status }"
 							v-model="currentClinic.data.geoLongitude.body"
 							@blur="checkModalInput('geoLongitude', 'number')"
+							@input="currentClinic.data.geoLongitude.edited = true"
 						/>
 					</template>
 					<template #error-two>
@@ -158,8 +190,12 @@
 		</template>
 		<template #footer>
 			<BlockButtons>
-				<ButtonDefault v-if="false"> Создать </ButtonDefault>
-				<ButtonDefault v-if="true"> Обновить </ButtonDefault>
+				<ButtonDefault v-if="modal.type == 'create'" @click="addClinic">
+					Создать
+				</ButtonDefault>
+				<ButtonDefault v-if="modal.type == 'edit'" @click="updateClinic">
+					Обновить
+				</ButtonDefault>
 			</BlockButtons>
 		</template>
 	</admin-modal>
@@ -173,7 +209,7 @@
 		<block-title>
 			<template #title>Клиники</template>
 			<template #buttons>
-				<icon-save :width="28" :height="28" />
+				<icon-save :width="28" :height="28" @click="saveClinicsChanges" />
 			</template>
 		</block-title>
 
@@ -194,7 +230,7 @@
 		/>
 
 		<block-buttons>
-			<button-default> Добавить </button-default>
+			<button-default @click="createClinic"> Добавить </button-default>
 		</block-buttons>
 	</block-once>
 </template>
@@ -384,26 +420,28 @@ export default {
 		openModal(type) {
 			switch (type) {
 				case "create":
-					{
-						this.modal.type = "create";
-						this.modal.status = true;
-						this.modal.style.create = true;
-						this.modal.style.delete = false;
-						// this.clearModalData();
-					}
+					this.clearModalErrors();
+
+					this.modal.type = "create";
+					this.modal.status = true;
+					this.modal.style.create = true;
+					this.modal.style.delete = false;
+					this.clearModalData();
+
 					document.body.classList.toggle("modal-open");
 					break;
 				case "edit":
-					{
-						this.modal.type = "edit";
-						// if (this.currentSpecialization.data.create.body) {
-						// 	this.modal.style.create = true;
-						// } else {
-						// 	this.modal.style.create = false;
-						// }
-						this.modal.status = true;
-						this.modal.style.delete = false;
+					this.clearModalErrors();
+
+					this.modal.type = "edit";
+					if (this.currentClinic.data.create.body) {
+						this.modal.style.create = true;
+					} else {
+						this.modal.style.create = false;
 					}
+					this.modal.status = true;
+					this.modal.style.delete = false;
+
 					document.body.classList.toggle("modal-open");
 					break;
 				default:
@@ -459,8 +497,9 @@ export default {
 				};
 			}
 
-			/* Проверка на соответствие типу string */
-			if (typeof value !== "number") {
+			/* Проверка на соответствие типу Number */
+			if (!Number(value)) {
+				console.log(value, typeof value);
 				return {
 					status: true,
 					message: "Тип данных не совпадает.",
@@ -503,9 +542,23 @@ export default {
 			let errorCount = 0;
 			for (let i = 0; i < inputKeys.length; i++) {
 				switch (inputKeys[i]) {
-					// Для поля файл
-					case "file":
-						console.log("Функция в разработке");
+					// Для индекса
+					case "index":
+						if (this.checkModalInput(inputKeys[i], "number")) {
+							errorCount++;
+						}
+						break;
+					// Для числовых полей
+					case "geoWidth":
+						if (this.checkModalInput(inputKeys[i], "number")) {
+							errorCount++;
+						}
+						break;
+					// Для числовых полей
+					case "geoLongitude":
+						if (this.checkModalInput(inputKeys[i], "number")) {
+							errorCount++;
+						}
 						break;
 					// Для всех остальных полей
 					default:
@@ -644,6 +697,152 @@ export default {
 			});
 
 			clinicToDelete[0].delete = !clinicToDelete[0].delete;
+		},
+		/* Обновление элемента */
+		updateClinic() {
+			if (
+				this.checkModalInputsAll([
+					"name",
+					"city",
+					"street",
+					"home",
+					"index",
+					"geoWidth",
+					"geoLongitude",
+				])
+			)
+				return;
+
+			let clinicToUpdate = this.clinics.filter((clinic) => {
+				if (clinic.id === this.currentClinic.data.id.body) {
+					return clinic;
+				}
+			});
+
+			for (let key in this.currentClinic.data) {
+				clinicToUpdate[0][key] = this.currentClinic.data[key].body;
+			}
+
+			this.closeModal();
+		},
+		/* Добавление элемента в массив */
+		addClinic() {
+			if (
+				this.checkModalInputsAll([
+					"name",
+					"city",
+					"street",
+					"home",
+					"index",
+					"geoWidth",
+					"geoLongitude",
+				])
+			)
+				return;
+
+			// Поиск максимального id
+			let maxId = 0;
+			for (let key in this.clinics) {
+				if (this.clinics[key].id > maxId) {
+					maxId = this.clinics[key].id;
+				}
+			}
+
+			this.clinics.push({
+				id: maxId + 1,
+				name: this.currentClinic.data.name.body,
+				city: this.currentClinic.data.city.body,
+				street: this.currentClinic.data.street.body,
+				home: this.currentClinic.data.home.body,
+				index: this.currentClinic.data.index.body,
+				geoWidth: this.currentClinic.data.geoWidth.body,
+				geoLongitude: this.currentClinic.data.geoLongitude.body,
+				create: true,
+				delete: false,
+			});
+
+			this.closeModal();
+		},
+		/* Сохранение изменений на сервере */
+		saveClinicsChanges() {
+			let newArray = [];
+
+			for (let key in this.clinics) {
+				newArray.push(Object.assign({}, this.clinics[key]));
+			}
+
+			newArray.sort((a, b) => {
+				if (a.id > b.id) {
+					return 1;
+				} else if (a.id < b.id) {
+					return -1;
+				} else {
+					return 0;
+				}
+			});
+
+			axios({
+				method: "post",
+				url: `${this.$store.state.axios.urlApi}` + `save-clinics-changes`,
+				headers: {
+					Accept: "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: {
+					clinics: newArray,
+				},
+			})
+				.then((response) => {
+					// Обновление id добавленных элементов на данные из бд
+					for (let key in response.data) {
+						let clinic = this.clinics.filter((clinic) => {
+							if (clinic.id === response.data[key].old) {
+								return clinic;
+							}
+						});
+						clinic[0].id = response.data[key].new;
+					}
+
+					// Получения нового массива клиник, помеченных на удаление
+					let res = this.clinics.filter((clinic) => {
+						if (clinic.delete == true) {
+							return Object.assign({}, clinic);
+						}
+					});
+
+					// Повторять, пока не будут удалены все элементы, помеченные на удаление
+					while (res.length > 0) {
+						/* Получение индекса элемента, помеченного на удаление из массива специалистов */
+						this.clinics.splice(this.clinics.indexOf(res[0]), 1);
+						/* Обновление списка с элементами, помеченными на удаление */
+						res = this.clinics.filter((clinic) => {
+							if (clinic.delete == true) {
+								return Object.assign({}, clinic);
+							}
+						});
+					}
+
+					// Сброс флагов добавления и удаления
+					for (let key in this.clinics) {
+						this.clinics[key].create = false;
+						this.clinics[key].delete = false;
+					}
+
+					let debbugStory = {
+						title: "Успешно!",
+						body: "Данные о специализациях сохранились.",
+						type: "Completed",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+				})
+				.catch((error) => {
+					let debbugStory = {
+						title: "Ошибка.",
+						body: "Данные о специализациях почему-то не сохранились.",
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+				});
 		},
 	},
 	mounted() {
