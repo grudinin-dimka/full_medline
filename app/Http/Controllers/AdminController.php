@@ -20,6 +20,7 @@ use App\Models\Footer;
 use App\Models\Specialist;
 use App\Models\Specialization;
 use App\Models\Clinic;
+use App\Models\Education;
 
 class AdminController extends Controller
 {
@@ -55,14 +56,14 @@ class AdminController extends Controller
       return Storage::url($path);
    } 
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-   /* |                    СЛАЙДЕР                        |*/
+   /* |                    ГЛАВНАЯ                        |*/
    /* |___________________________________________________|*/
    /* _____________________________________________________*/
-   /* 1. Сохранение, удаление                              */
+   /* 1. Слайдер                                           */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-   // Сохранение содержимого всех слайдов
-      public function saveSlidesChanges(Request $request) {
-      /* Удаление слайдов, подлежащих удалению */
+   /* Сохранение содержимого всех слайдов */
+   public function saveSlidesChanges(Request $request) {
+      // Удаление слайдов, подлежащих удалению
       foreach ($request->slides as $key => $value) {
          if ($value['delete'] === true) {
          $slide = Slide::find($value['id']);
@@ -71,7 +72,7 @@ class AdminController extends Controller
       };
 
       $arrayID = [];
-      /* Добавление новых слайдов */
+      // Добавление новых слайдов
       foreach ($request->slides as $key => $value) {
          if ($value['create'] === true){
             $slideCreate = Slide::create([
@@ -82,17 +83,17 @@ class AdminController extends Controller
                'order' => $value['order'],
             ]);
 
-            // Запись нового объекта в массив
+            /* Запись нового объекта в массив */
             $arrayID[] = (object) [
-               /* Прошлый id */
+               // Прошлый id
                'old' => $value['id'], 
-               /* Новый id */
+               // Новый id
                'new' => $slideCreate->id
             ];
          };
       };
 
-      /* Обновление существующих слайдов */
+      // Обновление существующих слайдов
       foreach ($request->slides as $key => $value) {
          if ($value['delete'] !== true && $value['create'] !== true) {
             $slide = Slide::find($value['id']);
@@ -106,10 +107,10 @@ class AdminController extends Controller
          };
       };
 
-      /* Сортировка слайдов по порядку от наименьшего до наибольшого */
+      // Сортировка слайдов по порядку от наименьшего до наибольшого
       $slides = Slide::all()->SortBy('order');
 
-      /* Обновление порядковых номеров */
+      // Обновление порядковых номеров
       $count = 0;
       foreach ($slides as $slideKey => $slideValue) {
          $count++;
@@ -117,22 +118,22 @@ class AdminController extends Controller
          $slideValue->save();
       };
 
-      /* Получение всех файлов */
+      // Получение всех файлов
       $filesSlides = Storage::files('public/slides');
 
       foreach ($filesSlides as $fileKey => $fileValue) {
          $useFile = false;
-         // Проверка на использование файла
+         /* Проверка на использование файла */
          foreach ($slides as $slideKey => $slideValue) {
-         // Обрезание значения $fileValue до названия файла
+         /* Обрезание значения $fileValue до названия файла */
          $str = str_replace('public/slides/', '', $fileValue);
-         // Проверка значения названия файла на совпадение
+         /* Проверка значения названия файла на совпадение */
          if ($slideValue->filename == $str) {
             $useFile = true;
          };
          };
 
-         // Удаление файла, если не используется
+         /* Удаление файла, если не используется */
          if (!$useFile) {
          Storage::delete($fileValue);
          };
@@ -140,15 +141,36 @@ class AdminController extends Controller
 
       return $arrayID;
    } 
-  /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-  /* |                  СПЕЦИАЛИСТЫ                      |*/
-  /* |___________________________________________________|*/
-  /* _____________________________________________________*/
-  /* 1. Сохранение, удаление                              */
-  /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-  // Сохранение специалистов 
+   /* _____________________________________________________*/
+   /* 2. Футер                                             */
+   /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+   /* Сохранение футера */ 
+   public function saveFooter(Request $request) {
+      $footer = Footer::find(1);
+      $footerUpdate = $footer->update([
+         'title' => $request->title,
+         'titleDesc' => $request->titleDesc,
+         'license' => $request->license,
+         'licenseDesc' => $request->licenseDesc,
+         'footer' => $request->footer,
+      ]);
+      
+      // Проверка обновления футера
+      if ($footerUpdate) {
+         return true;
+      } else {
+         return false;
+      };
+   }
+   /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+   /* |                  СПЕЦИАЛИСТЫ                      |*/
+   /* |___________________________________________________|*/
+   /* _____________________________________________________*/
+   /* 1. Врачи                                             */
+   /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+   /* Сохранение специалистов */ 
    public function saveSpecialistsChanges(Request $request) {
-      /* Удаление специалистов, подлежащих удалению */
+      // Удаление специалистов, подлежащих удалению
       foreach ($request->specialists as $key => $value) {
          if ($value['delete'] === true) {
             var_dump('id: ' . $value['id']);
@@ -157,7 +179,7 @@ class AdminController extends Controller
          };
       };
       
-      /* Добавление новых специалистов */
+      // Добавление новых специалистов
       foreach ($request->specialists as $key => $value) {
          if ($value["create"] === true){
             $specialistCreate = Specialist::create([
@@ -175,7 +197,7 @@ class AdminController extends Controller
 
       return true;
    }
-  // Сохранение специалистов 
+   /* Сохранение специалистов */ 
    public function saveSpecialistsHides(Request $request) {
       foreach ($request->specialists as $key => $value) {
          $specialist = Specialist::find($value['id']);
@@ -185,12 +207,10 @@ class AdminController extends Controller
 
       return true;
    }
-   /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-   /* |                 СПЕЦИАЛИЗАЦИИ                     |*/
-   /* |___________________________________________________|*/
    /* _____________________________________________________*/
-   /* 1. Сохранение, удаление                              */
+   /* 2. Специализации                                     */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+   /* Сохранение изменений специализаций */
    public function saveSpecializationsChanges(Request $request) {
       // Удаление помеченных
       foreach ($request->specializations as $key => $value) {
@@ -208,11 +228,11 @@ class AdminController extends Controller
                "name" => $value['name'],
             ]);
 
-            // Запись нового объекта в массив
+            /* Запись нового объекта в массив */
             $arrayID[] = (object) [
-               /* Прошлый id */
+               // Прошлый id
                'old' => $value['id'], 
-               /* Новый id */
+               // Новый id
                'new' => $specializationCreate->id
             ];            
          };       
@@ -227,14 +247,13 @@ class AdminController extends Controller
             ]);     
          }         
       }
+      
       return $arrayID;
    }
-   /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-   /* |                    КЛИНИКИ                        |*/
-   /* |___________________________________________________|*/
    /* _____________________________________________________*/
-   /* 1. Сохранение, удаление                              */
+   /* 3. Клиники                                           */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+   /* Сохранение изменений клиник */
    public function saveClinicsChanges(Request $request) {
       // Удаление помеченных
       foreach ($request->clinics as $key => $value) {
@@ -258,40 +277,81 @@ class AdminController extends Controller
                "geoLongitude" => $value['geoLongitude'],
             ]);
 
-            // Запись нового объекта в массив
+            /* Запись нового объекта в массив */
             $arrayID[] = (object) [
-               /* Прошлый id */
+               // Прошлый id
                'old' => $value['id'], 
-               /* Новый id */
+               // Новый id
                'new' => $clinicToCreate->id
             ];            
          };       
       }
+
+      // Обновление данных 
+      foreach ($request->clinics as $key => $value) {
+         if ($value["delete"] !== true && $value['create'] !== true){
+            $clinic = Clinic::find($value['id']);
+            $clinicUpdate = $clinic->update([
+               "name" => $value['name'],
+               "city" => $value['city'],
+               "street" => $value['street'],
+               "home" => $value['home'],
+               "index" => $value['index'],
+               "geoWidth" => $value['geoWidth'],
+               "geoLongitude" => $value['geoLongitude'],
+            ]);     
+         }         
+      }
+
       return $arrayID;
    }
+   /* _____________________________________________________*/
+   /* 4. Образования                                       */
+   /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+   /* Сохранение изменений образований */
+   public function saveEducationsChanges(Request $request) {
+      // Удаление помеченных
+      foreach ($request->educations as $key => $value) {
+         if ($value["delete"] === true){
+            $education = Education::find($value['id']);
+            $education->delete();
+         }         
+      }
 
-  /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-  /* |                     ФУТЕР                         |*/
-  /* |___________________________________________________|*/
-  /* _____________________________________________________*/
-  /* 1. Сохранение, удаление                              */
-  /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-  // Сохранение футера 
-   public function saveFooter(Request $request) {
-      $footer = Footer::find(1);
-      $footerUpdate = $footer->update([
-         'title' => $request->title,
-         'titleDesc' => $request->titleDesc,
-         'license' => $request->license,
-         'licenseDesc' => $request->licenseDesc,
-         'footer' => $request->footer,
-      ]);
-      
-      /* Проверка обновления футера */
-      if ($footerUpdate) {
-         return true;
-      } else {
-         return false;
-      };
+      $arrayID = [];
+      // Добавление новых
+      foreach ($request->educations as $key => $value) {
+         if ($value["create"] === true) {
+            $educationToCreate = Education::create([
+               "name" => $value['name'],
+               "organization" => $value['organization'],
+               "date" => $value['date'],
+               "id_specialization" => $value['id_specialization'],
+            ]);
+
+            /* Запись нового объекта в массив */
+            $arrayID[] = (object) [
+               // Прошлый id
+               'old' => $value['id'], 
+               // Новый id
+               'new' => $educationToCreate->id
+            ];            
+         };       
+      }
+
+      // Обновление данных 
+      foreach ($request->educations as $key => $value) {
+         if ($value["delete"] !== true && $value['create'] !== true){
+            $education = Education::find($value['id']);
+            $educationUpdate = $education->update([
+               "name" => $value['name'],
+               "organization" => $value['organization'],
+               "date" => $value['date'],
+               "id_specialization" => $value['id_specialization'],
+            ]);     
+         }         
+      }
+
+      return $arrayID;      
    }
 }

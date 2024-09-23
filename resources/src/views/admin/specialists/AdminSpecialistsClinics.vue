@@ -428,7 +428,7 @@ export default {
 					this.modal.style.delete = false;
 					this.clearModalData();
 
-					document.body.classList.toggle("modal-open");
+					document.body.classList.add("modal-open");
 					break;
 				case "edit":
 					this.clearModalErrors();
@@ -442,7 +442,7 @@ export default {
 					this.modal.status = true;
 					this.modal.style.delete = false;
 
-					document.body.classList.toggle("modal-open");
+					document.body.classList.add("modal-open");
 					break;
 				default:
 					{
@@ -459,7 +459,7 @@ export default {
 		/* Закрытие */
 		closeModal() {
 			this.modal.status = false;
-			document.body.classList.toggle("modal-open");
+			document.body.classList.remove("modal-open");
 		},
 		/* _____________________________________________________*/
 		/* 2. Работа с полями ввода модального окна             */
@@ -713,17 +713,26 @@ export default {
 			)
 				return;
 
-			let clinicToUpdate = this.clinics.filter((clinic) => {
-				if (clinic.id === this.currentClinic.data.id.body) {
-					return clinic;
+			try {
+				let clinicToUpdate = this.clinics.filter((clinic) => {
+					if (clinic.id === this.currentClinic.data.id.body) {
+						return clinic;
+					}
+				});
+
+				for (let key in this.currentClinic.data) {
+					clinicToUpdate[0][key] = this.currentClinic.data[key].body;
 				}
-			});
 
-			for (let key in this.currentClinic.data) {
-				clinicToUpdate[0][key] = this.currentClinic.data[key].body;
+				this.closeModal();
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "При обновлении что-то пошло не так.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
 			}
-
-			this.closeModal();
 		},
 		/* Добавление элемента в массив */
 		addClinic() {
@@ -740,28 +749,37 @@ export default {
 			)
 				return;
 
-			// Поиск максимального id
-			let maxId = 0;
-			for (let key in this.clinics) {
-				if (this.clinics[key].id > maxId) {
-					maxId = this.clinics[key].id;
+			try {
+				// Поиск максимального id
+				let maxId = 0;
+				for (let key in this.clinics) {
+					if (this.clinics[key].id > maxId) {
+						maxId = this.clinics[key].id;
+					}
 				}
+
+				this.clinics.push({
+					id: maxId + 1,
+					name: this.currentClinic.data.name.body,
+					city: this.currentClinic.data.city.body,
+					street: this.currentClinic.data.street.body,
+					home: this.currentClinic.data.home.body,
+					index: this.currentClinic.data.index.body,
+					geoWidth: this.currentClinic.data.geoWidth.body,
+					geoLongitude: this.currentClinic.data.geoLongitude.body,
+					create: true,
+					delete: false,
+				});
+
+				this.closeModal();
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "При добавлении что-то пошло не так.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
 			}
-
-			this.clinics.push({
-				id: maxId + 1,
-				name: this.currentClinic.data.name.body,
-				city: this.currentClinic.data.city.body,
-				street: this.currentClinic.data.street.body,
-				home: this.currentClinic.data.home.body,
-				index: this.currentClinic.data.index.body,
-				geoWidth: this.currentClinic.data.geoWidth.body,
-				geoLongitude: this.currentClinic.data.geoLongitude.body,
-				create: true,
-				delete: false,
-			});
-
-			this.closeModal();
 		},
 		/* Сохранение изменений на сервере */
 		saveClinicsChanges() {
@@ -793,47 +811,56 @@ export default {
 				},
 			})
 				.then((response) => {
-					// Обновление id добавленных элементов на данные из бд
-					for (let key in response.data) {
-						let clinic = this.clinics.filter((clinic) => {
-							if (clinic.id === response.data[key].old) {
-								return clinic;
-							}
-						});
-						clinic[0].id = response.data[key].new;
-					}
-
-					// Получения нового массива клиник, помеченных на удаление
-					let res = this.clinics.filter((clinic) => {
-						if (clinic.delete == true) {
-							return Object.assign({}, clinic);
+					try {
+						// Обновление id добавленных элементов на данные из бд
+						for (let key in response.data) {
+							let clinic = this.clinics.filter((clinic) => {
+								if (clinic.id === response.data[key].old) {
+									return clinic;
+								}
+							});
+							clinic[0].id = response.data[key].new;
 						}
-					});
 
-					// Повторять, пока не будут удалены все элементы, помеченные на удаление
-					while (res.length > 0) {
-						/* Получение индекса элемента, помеченного на удаление из массива специалистов */
-						this.clinics.splice(this.clinics.indexOf(res[0]), 1);
-						/* Обновление списка с элементами, помеченными на удаление */
-						res = this.clinics.filter((clinic) => {
+						// Получения нового массива клиник, помеченных на удаление
+						let res = this.clinics.filter((clinic) => {
 							if (clinic.delete == true) {
 								return Object.assign({}, clinic);
 							}
 						});
-					}
 
-					// Сброс флагов добавления и удаления
-					for (let key in this.clinics) {
-						this.clinics[key].create = false;
-						this.clinics[key].delete = false;
-					}
+						// Повторять, пока не будут удалены все элементы, помеченные на удаление
+						while (res.length > 0) {
+							/* Получение индекса элемента, помеченного на удаление из массива специалистов */
+							this.clinics.splice(this.clinics.indexOf(res[0]), 1);
+							/* Обновление списка с элементами, помеченными на удаление */
+							res = this.clinics.filter((clinic) => {
+								if (clinic.delete == true) {
+									return Object.assign({}, clinic);
+								}
+							});
+						}
 
-					let debbugStory = {
-						title: "Успешно!",
-						body: "Данные о специализациях сохранились.",
-						type: "Completed",
-					};
-					this.$store.commit("debuggerState", debbugStory);
+						// Сброс флагов добавления и удаления
+						for (let key in this.clinics) {
+							this.clinics[key].create = false;
+							this.clinics[key].delete = false;
+						}
+
+						let debbugStory = {
+							title: "Успешно!",
+							body: "Данные о специализациях сохранились.",
+							type: "Completed",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					} catch (error) {
+						let debbugStory = {
+							title: "Ошибка.",
+							body: "После сохранения что-то пошло не так.",
+							type: "Error",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					}
 				})
 				.catch((error) => {
 					let debbugStory = {

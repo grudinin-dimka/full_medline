@@ -489,8 +489,6 @@ export default {
 			if (!this.loading.loader.footer) {
 				this.loading.footer = true;
 			}
-			// if (this.loading.loader.slider && this.loading.loader.footer) {
-			// }
 		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                    СЛАЙДЕР                        |*/
@@ -681,7 +679,7 @@ export default {
 							this.currentSlide.data.delete.body = false;
 							this.modal.style.create = true;
 							this.modal.style.delete = false;
-							this.modal.title = "Создание слайда";
+							this.modal.title = "СЛАЙД (СОЗДАНИЕ)";
 							// Открытие модального окна
 							this.openModal(type);
 						}
@@ -694,7 +692,7 @@ export default {
 
 							// Проверка, создан ли слайд или уже имеется
 							if (this.currentSlide.data.create.body === true) {
-								this.modal.title = "Создание слайда";
+								this.modal.title = "СЛАЙД (СОЗДАНИЕ)";
 								this.modal.style.create = true;
 							} else {
 								this.modal.title = "";
@@ -703,7 +701,7 @@ export default {
 
 							// Проверка, помечен ли слайд на удаление
 							if (this.currentSlide.data.delete.body === true) {
-								this.modal.title = "Удаление слайда";
+								this.modal.title = "СЛАЙД (УДАЛЕНИЕ)";
 								this.modal.style.delete = true;
 							} else {
 								this.modal.title = "";
@@ -1366,13 +1364,21 @@ textarea:focus {
 }
 
 .slider-block.create {
+	border: 2px solid var(--create-border-color);
+}
+
+.slider-block.create:hover {
 	background-color: var(--create-background-color);
 	border: 2px solid var(--create-border-color);
 }
 
 .slider-block.delete {
-	background-color: var(--delete-background-color);
-	border: 2px solid var(--delete-border-color);
+	border: 2px solid #ec7b7b;
+}
+
+.slider-block.delete:hover {
+	border: 2px solid #f79999;
+	background-color: rgb(255, 240, 240);
 }
 
 .slider-block:hover {
@@ -1404,6 +1410,7 @@ textarea:focus {
 }
 
 .slider-block-info > article > label {
+	cursor: pointer;
 	word-break: break-all;
 }
 

@@ -3,7 +3,10 @@
 	<!--|                  МОДАЛЬНОЕ ОКНО                   |-->
 	<!--|___________________________________________________|-->
 	<admin-modal ref="modal" @touchCloseModal="closeModal" :modal="modal">
-		<template #title> Образование (редактирование) </template>
+		<template #title>
+			<span v-if="modal.type == 'create'">ОБРАЗОВАНИЕ (СОЗДАНИЕ)</span>
+			<span v-if="modal.type == 'edit'">ОБРАЗОВАНИЕ (РЕДАКТИРОВАНИЕ)</span>
+		</template>
 		<template #body>
 			<container-input>
 				<!-- Название -->
@@ -14,12 +17,15 @@
 							type="text"
 							placeholder="Введите название"
 							autocomplete="off"
-							:class="{ error: false }"
+							:class="{ error: currentEducation.errors.name.status }"
 							v-model="currentEducation.data.name.body"
+							@blur="checkModalInput('name', 'text')"
 						/>
 					</template>
 					<template #error>
-						<span class="error" v-if="false"> Ошибка </span>
+						<span class="error" v-if="currentEducation.errors.name.status">
+							{{ currentEducation.errors.name.body }}
+						</span>
 					</template>
 				</container-input-once>
 				<!-- Организация -->
@@ -30,29 +36,17 @@
 							rows="4"
 							placeholder="Введите организацию"
 							autocomplete="off"
-							:class="{ error: false }"
+							:class="{ error: currentEducation.errors.organization.status }"
 							v-model="currentEducation.data.organization.body"
+							@blur="checkModalInput('organization', 'text')"
 						></textarea>
 					</template>
 					<template #error>
-						<span class="error" v-if="false"> Ошибка </span>
+						<span class="error" v-if="currentEducation.errors.organization.status">
+							{{ currentEducation.errors.organization.body }}
+						</span>
 					</template>
 				</container-textarea-once>
-				<container-input-once>
-					<template #title>ОРГАНИЗАЦИЯ*</template>
-					<template #input>
-						<input
-							type="text"
-							placeholder="Введите организацию"
-							autocomplete="off"
-							:class="{ error: false }"
-							v-model="currentEducation.data.organization.body"
-						/>
-					</template>
-					<template #error>
-						<span class="error" v-if="false"> Ошибка </span>
-					</template>
-				</container-input-once>
 				<!-- Дата получения образования -->
 				<container-input-once>
 					<template #title>ДАТА ПОЛУЧЕНИЯ*</template>
@@ -61,35 +55,48 @@
 							type="date"
 							placeholder="Введите организацию"
 							autocomplete="off"
-							:class="{ error: false }"
+							:class="{ error: currentEducation.errors.date.status }"
 							v-model="currentEducation.data.date.body"
+							@blur="checkModalInput('date', 'text')"
 						/>
 					</template>
 					<template #error>
-						<span class="error" v-if="false"> Ошибка </span>
+						<span class="error" v-if="currentEducation.errors.date.status">
+							{{ currentEducation.errors.date.body }}
+						</span>
 					</template>
 				</container-input-once>
 				<!-- Выбор специализации -->
 				<container-select-once>
 					<template #title>СПЕЦИАЛИЗАЦИЯ*</template>
 					<template #select>
-						<select v-model="currentEducation.data.specialization.body">
-							<option value="null">Ничего не выбрано...</option>
+						<select
+							v-model="currentEducation.data.id_specialization.body"
+							:class="{ error: currentEducation.errors.id_specialization.status }"
+							@blur="checkModalInput('id_specialization', 'select')"
+						>
+							<option value="">Ничего не выбрано...</option>
 							<option :value="specialization.id" v-for="specialization in specializations">
 								{{ specialization.name }}
 							</option>
 						</select>
 					</template>
 					<template #error>
-						<span class="error" v-if="false"> Ошибка </span>
+						<span class="error" v-if="currentEducation.errors.id_specialization.status">
+							{{ currentEducation.errors.id_specialization.body }}
+						</span>
 					</template>
 				</container-select-once>
 			</container-input>
 		</template>
 		<template #footer>
 			<BlockButtons>
-				<ButtonDefault v-if="modal.type == 'create'" @click=""> Создать </ButtonDefault>
-				<ButtonDefault v-if="modal.type == 'edit'" @click=""> Обновить </ButtonDefault>
+				<ButtonDefault v-if="modal.type == 'create'" @click="addEducation">
+					Создать
+				</ButtonDefault>
+				<ButtonDefault v-if="modal.type == 'edit'" @click="updateEducation">
+					Обновить
+				</ButtonDefault>
 			</BlockButtons>
 		</template>
 	</admin-modal>
@@ -103,7 +110,7 @@
 		<block-title>
 			<template #title>Образование</template>
 			<template #buttons>
-				<icon-save :width="28" :height="28" />
+				<icon-save :width="28" :height="28" @click="saveEducationsChanges" />
 			</template>
 		</block-title>
 
@@ -124,7 +131,7 @@
 		/>
 
 		<block-buttons>
-			<button-default @click=""> Добавить </button-default>
+			<button-default @click="createEducation"> Добавить </button-default>
 		</block-buttons>
 	</block-once>
 </template>
@@ -221,7 +228,7 @@ export default {
 						body: null,
 						status: false,
 					},
-					specialization: {
+					id_specialization: {
 						body: null,
 						status: false,
 					},
@@ -251,7 +258,7 @@ export default {
 						body: null,
 						edited: false,
 					},
-					specialization: {
+					id_specialization: {
 						body: null,
 						edited: false,
 					},
@@ -304,21 +311,21 @@ export default {
 					this.modal.style.delete = false;
 					this.clearModalData();
 
-					document.body.classList.toggle("modal-open");
+					document.body.classList.add("modal-open");
 					break;
 				case "edit":
 					this.clearModalErrors();
 
 					this.modal.type = "edit";
-					// if (this.currentClinic.data.create.body) {
-					// 	this.modal.style.create = true;
-					// } else {
-					// 	this.modal.style.create = false;
-					// }
+					if (this.currentEducation.data.create.body) {
+						this.modal.style.create = true;
+					} else {
+						this.modal.style.create = false;
+					}
 					this.modal.status = true;
 					this.modal.style.delete = false;
 
-					document.body.classList.toggle("modal-open");
+					document.body.classList.add("modal-open");
 					break;
 				default:
 					{
@@ -335,11 +342,141 @@ export default {
 		/* Закрытие */
 		closeModal() {
 			this.modal.status = false;
-			document.body.classList.toggle("modal-open");
+			document.body.classList.remove("modal-open");
 		},
 		/* _____________________________________________________*/
 		/* 2. Работа с полями ввода модального окна             */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		// Проверка введенного текстового значения
+		checkInputText(value) {
+			/* Проверка на пустую строку */
+			if (value == "" || value == null) {
+				return {
+					status: true,
+					message: "Поле не может быть пустым.",
+				};
+			}
+
+			/* Проверка на соответствие типу string */
+			if (typeof value != "string") {
+				return {
+					status: true,
+					message: "Тип данных не совпадает.",
+				};
+			}
+
+			return {
+				status: false,
+				message: "Ошибок нет.",
+			};
+		},
+		// Проверка введенного текстового значения
+		checkInputNumber(value) {
+			/* Проверка на пустую строку */
+			if (value == "" || value == null) {
+				return {
+					status: true,
+					message: "Поле не может быть пустым.",
+				};
+			}
+
+			/* Проверка на соответствие типу Number */
+			if (!Number(value)) {
+				console.log(value, typeof value);
+				return {
+					status: true,
+					message: "Тип данных не совпадает.",
+				};
+			}
+
+			return {
+				status: false,
+				message: "Ошибок нет.",
+			};
+		},
+		checkSelect(value) {
+			/* Проверка на пустую строку */
+			if (value == "" || value == "null") {
+				return {
+					status: true,
+					message: "Поле не может быть пустым.",
+				};
+			}
+
+			/* Проверка на наличие в массиве со специализациями */
+			let valueInSpecializations = this.specializations.find((element, index, array) => {
+				if (element.id == value) {
+					return true;
+				}
+			});
+
+			if (valueInSpecializations) {
+				return {
+					status: false,
+					message: "Ошибок нет.",
+				};
+			} else {
+				return {
+					status: true,
+					message: "Такого значения нет в специализациях.",
+				};
+			}
+		},
+		// Проверка поля имени
+		checkModalInput(dataKey, inputType) {
+			let errorLog = {};
+			switch (inputType) {
+				case "text":
+					errorLog = this.checkInputText(this.currentEducation.data[dataKey].body);
+					break;
+				case "number":
+					errorLog = this.checkInputNumber(this.currentEducation.data[dataKey].body);
+					break;
+				case "select":
+					errorLog = this.checkSelect(this.currentEducation.data[dataKey].body);
+					break;
+				default:
+					break;
+			}
+
+			if (errorLog.status) {
+				this.currentEducation.errors[dataKey].body = errorLog.message;
+				this.currentEducation.errors[dataKey].status = true;
+
+				return true;
+			} else {
+				this.currentEducation.errors[dataKey].body = "";
+				this.currentEducation.errors[dataKey].status = false;
+
+				return false;
+			}
+		},
+		// Проверка всех полей ввода модального окна
+		checkModalInputsAll(inputKeys) {
+			let errorCount = 0;
+			for (let i = 0; i < inputKeys.length; i++) {
+				switch (inputKeys[i]) {
+					// Для индекса
+					case "id_specialization":
+						if (this.checkModalInput(inputKeys[i], "select")) {
+							errorCount++;
+						}
+						break;
+					// Для всех остальных полей
+					default:
+						if (this.checkModalInput(inputKeys[i], "text")) {
+							errorCount++;
+						}
+						break;
+				}
+			}
+
+			if (errorCount > 0) {
+				return true;
+			} else {
+				return false;
+			}
+		},
 		/* Очистка содержимого модального окна */
 		clearModalData() {
 			for (let key in this.currentEducation.data) {
@@ -443,7 +580,6 @@ export default {
 			for (let key in this.currentEducation.data) {
 				this.currentEducation.data[key].body = selectedEducation[key];
 			}
-			this.currentEducation.data.specialization.body = selectedEducation["id_specialization"];
 
 			this.openModal("edit");
 		},
@@ -454,6 +590,40 @@ export default {
 		/* _____________________________________________________*/
 		/* 3. Сохранение, обновление и удаление                 */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* Добавление образования */
+		addEducation() {
+			if (this.checkModalInputsAll(["name", "organization", "date", "id_specialization"]))
+				return;
+
+			try {
+				// Поиск максимального id
+				let maxId = 0;
+				for (let key in this.educations) {
+					if (this.educations[key].id > maxId) {
+						maxId = this.educations[key].id;
+					}
+				}
+
+				this.educations.push({
+					id: maxId + 1,
+					name: this.currentEducation.data.name.body,
+					organization: this.currentEducation.data.organization.body,
+					date: this.currentEducation.data.date.body,
+					id_specialization: this.currentEducation.data.id_specialization.body,
+					create: true,
+					delete: false,
+				});
+
+				this.closeModal();
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "При добавлении что-то пошло не так.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
 		/* Пометка на удаление */
 		removeEducation(id) {
 			let educationToDelete = this.educations.filter((education) => {
@@ -463,6 +633,112 @@ export default {
 			});
 
 			educationToDelete[0].delete = !educationToDelete[0].delete;
+		},
+		updateEducation() {
+			if (this.checkModalInputsAll(["name", "organization", "date", "id_specialization"]))
+				return;
+
+			try {
+				let educationToUpdate = this.educations.filter((education) => {
+					if (education.id === this.currentEducation.data.id.body) {
+						return education;
+					}
+				});
+
+				for (let key in this.currentEducation.data) {
+					educationToUpdate[0][key] = this.currentEducation.data[key].body;
+				}
+
+				this.closeModal();
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "При обновлении что-то пошло не так.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
+		/* Сохранение изменений на сервере */
+		saveEducationsChanges() {
+			let newArray = [];
+
+			for (let key in this.educations) {
+				newArray.push(Object.assign({}, this.educations[key]));
+			}
+
+			newArray.sort((a, b) => {
+				if (a.id > b.id) {
+					return 1;
+				} else if (a.id < b.id) {
+					return -1;
+				} else {
+					return 0;
+				}
+			});
+
+			axios({
+				method: "post",
+				url: `${this.$store.state.axios.urlApi}` + `save-educations-changes`,
+				headers: {
+					Accept: "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: {
+					educations: newArray,
+				},
+			})
+				.then((response) => {
+					// Обновление id добавленных элементов на данные из бд
+					for (let key in response.data) {
+						let education = this.educations.filter((education) => {
+							if (education.id === response.data[key].old) {
+								return education;
+							}
+						});
+						education[0].id = response.data[key].new;
+					}
+
+					// Получения нового массива специалистов, помеченных на удаление
+					let res = this.educations.filter((education) => {
+						if (education.delete == true) {
+							return Object.assign({}, education);
+						}
+					});
+
+					// Повторять, пока не будут удалены все элементы, помеченные на удаление
+					while (res.length > 0) {
+						/* Получение индекса элемента, помеченного на удаление из массива специалистов */
+						this.educations.splice(this.educations.indexOf(res[0]), 1);
+						/* Обновление списка с элементами, помеченными на удаление */
+						res = this.educations.filter((education) => {
+							if (education.delete == true) {
+								return Object.assign({}, education);
+							}
+						});
+					}
+
+					// Сброс флагов добавления и удаления
+					for (let key in this.educations) {
+						this.educations[key].create = false;
+						this.educations[key].delete = false;
+					}
+
+					let debbugStory = {
+						title: "Успешно!",
+						body: "Данные о специализациях сохранились.",
+						type: "Completed",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+				})
+				.catch((error) => {
+					let debbugStory = {
+						title: "Ошибка.",
+						body: "Данные о специализациях почему-то не сохранились.",
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+				});
 		},
 	},
 	mounted() {
@@ -474,7 +750,6 @@ export default {
 			url: `${this.$store.state.axios.urlApi}` + `get-educations-all`,
 		})
 			.then((response) => {
-				console.log(response.data);
 				this.educations = response.data.educations;
 				this.specializations = response.data.spezializations;
 				this.loading.loader = false;

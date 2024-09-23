@@ -12,9 +12,19 @@
 			</template>
 		</block-title>
 
-		<!-- <block-buttons>
+		<!-- Таблица -->
+		<admin-specialists-table v-show="loading.table" :array="works" />
+
+		<!-- Загрузчик -->
+		<loader-child
+			:isLoading="loading.loader"
+			:minHeight="200"
+			@loaderChildAfterLeave="loaderChildAfterLeave"
+		/>
+
+		<block-buttons>
 			<button-default @click=""> Добавить </button-default>
-		</block-buttons> -->
+		</block-buttons>
 	</block-once>
 </template>
 
@@ -27,6 +37,8 @@ import ElementInputLabel from "../../../components/ui/admin/ElementInputLabel.vu
 import BlockOnce from "../../../components/ui/admin/BlockOnce.vue";
 import BlockTitle from "../../../components/ui/admin/BlockTitle.vue";
 import BlockButtons from "../../../components/ui/admin/BlockButtons.vue";
+
+import AdminSpecialistsTable from "./AdminSpecialistsTable.vue";
 
 import ButtonDefault from "../../../components/ui/admin/ButtonDefault.vue";
 import ButtonRemove from "../../../components/ui/admin/ButtonRemove.vue";
@@ -41,12 +53,69 @@ export default {
 		BlockOnce,
 		BlockTitle,
 		BlockButtons,
+		AdminSpecialistsTable,
 		ButtonDefault,
 		ButtonRemove,
 		IconSave,
 	},
 	data() {
-		return {};
+		return {
+			modal: {
+				title: "",
+				status: false,
+				type: null,
+				style: {
+					create: false,
+					delete: false,
+				},
+				modules: {
+					title: true,
+					buttons: {
+						hide: false,
+						close: true,
+					},
+					images: false,
+					body: true,
+					footer: true,
+				},
+			},
+			loading: {
+				loader: true,
+				table: false,
+			},
+			works: [],
+		};
+	},
+	methods: {
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                   Загрузчик                       |*/
+		/* |___________________________________________________|*/
+		/* После скрытия элементы */
+		loaderChildAfterLeave() {
+			this.loading.table = true;
+		},
+	},
+	mounted() {
+		// axios({
+		// 	method: "post",
+		// 	headers: {
+		// 		Accept: "application/json",
+		// 	},
+		// 	url: `${this.$store.state.axios.urlApi}` + `get-specializations-all`,
+		// })
+		// 	.then((response) => {
+		// 		this.specializations = response.data;
+
+		// 		for (let key in this.specializations) {
+		// 			this.specializations[key].create = false;
+		// 			this.specializations[key].delete = false;
+		// 		}
+
+		// 		this.loading.loader = false;
+		// 	})
+		// 	.catch((error) => {
+		// 		console.log(error);
+		// 	});
 	},
 };
 </script>

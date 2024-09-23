@@ -18,6 +18,7 @@ use App\Models\Specialization;
 use App\Models\SpecialistSpecialization;
 use App\Models\Clinic;
 use App\Models\Education;
+use App\Models\Work;
 
 use Illuminate\Support\Facades\Storage;
 
@@ -70,9 +71,9 @@ class HomeController extends Controller
    /* |                  СПЕЦИАЛИСТЫ                      |*/
    /* |___________________________________________________|*/
    /* _____________________________________________________*/
-   /* 1. Получение данных                                  */
+   /* 1. Врачи                                             */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-   // Вывод всех докторов 
+   /* Вывод всех докторов */ 
    public function getSpecialists(Request $request) {
       $specialists = Specialist::all();
       foreach ($specialists as $key => $value) {
@@ -82,7 +83,7 @@ class HomeController extends Controller
 
       return $specialists;
    }
-   // Вывод конкретного доктора
+   /* Вывод конкретного доктора */
    public function getSpecialistProfile(Request $request) {
       $specialists = Specialist::all();
 
@@ -97,14 +98,14 @@ class HomeController extends Controller
          };
       };
    }
-   // Вывод полной информации о враче
+   /* Вывод полной информации о враче */
    public function getSpecialistAll(Request $request) {
       $specialist = Specialist::where('id', $request->id)->first();
       $specialist->path = Storage::url('specialists/' . $specialist->filename);
 
       return $specialist;
    }
-   // Вывод сокращенной информации о врачах 
+   /* Вывод сокращенной информации о врачах */ 
    public function getSpecialistsShort(Request $request) {
       $specialistsShort = Specialist::select('id', 'family', 'name', 'surname', 'hide')->get();
       
@@ -127,17 +128,26 @@ class HomeController extends Controller
       // $SpecialistSpecializations = SpecialistSpecialization::where('id_specialist', 1)->get();
       return $specialistsShort;
    }
-   // Вывод всех специализаций
+   /* _____________________________________________________*/
+   /* 2. Специализации                                     */
+   /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+   /* Вывод данных из таблицы "специализации" */
    public function getSpecializationsAll(Request $request) {
       $specializations = Specialization::all();
       return $specializations;
    }
-   // Вывод всех специализаций
+   /* _____________________________________________________*/
+   /* 3. Клиники                                           */
+   /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+   /* Вывод данных из таблицы "клиники" */
    public function getClinicsAll(Request $request) {
       $clinics = Clinic::all();
       return $clinics;
    }
-   // Вывод всех специализаций
+   /* _____________________________________________________*/
+   /* 4. Образования                                       */
+   /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+   /* Вывод данных из таблицы "образование" */
    public function getEducationsAll(Request $request) {
       $educations = Education::all();
       $specializations = Specialization::all();
@@ -147,7 +157,14 @@ class HomeController extends Controller
          "spezializations" => $specializations,
       ]);
    }
-
+   /* _____________________________________________________*/
+   /* 5. Работы                                            */
+   /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+   /* Вывод данных из таблицы "работы" */
+   public function getWorksAll(Request $request) {
+      $works = Work::all();
+      return $clinics;
+   }
 };
 
 function makeUrl($url) {

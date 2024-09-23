@@ -31,32 +31,31 @@ Route::post('/get-educations-all', [HomeController::class, 'getEducationsAll']);
 /* |                  АДМИНИСТРАТОР                    |*/
 /* |___________________________________________________|*/
 /* _____________________________________________________*/
-/* Общие                                                */
+/* 0. Общие                                             */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-/* Работа с пользователями */
 Route::post('/login', [LoginController::class, 'loginUser']);
 Route::post('/check-token', [LoginController::class, 'checkToken'])->middleware('auth:sanctum');
 Route::post('/logout', [LoginController::class, 'logoutUser'])->middleware('auth:sanctum');
 Route::post('/create', [LoginController::class, 'createUser']);
-/* Загрузка фото на сервер */
 Route::post('/upload-file', [AdminController::class, 'uploadFile'])->middleware('auth:sanctum');
 /* _____________________________________________________*/
 /* 1. Главная                                           */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-Route::post('/save-footer', [AdminController::class, 'saveFooter'])->middleware('auth:sanctum');
+/* 1.1. Слайдер                                         */
 Route::post('/save-slides-changes', [AdminController::class, 'saveSlidesChanges'])->middleware('auth:sanctum');
+/* 1.2. Футер                                           */
+Route::post('/save-footer', [AdminController::class, 'saveFooter'])->middleware('auth:sanctum');
 /* _____________________________________________________*/
 /* 2. Специалисты                                       */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+/* 2.1. Врачи                                           */
 Route::post('/save-specialists-hides', [AdminController::class, 'saveSpecialistsHides'])->middleware('auth:sanctum');
-/* _____________________________________________________*/
-/* 3. Специализации                                     */
-/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+/* 2.2. Специализации                                   */
 Route::post('/save-specializations-changes', [AdminController::class, 'saveSpecializationsChanges'])->middleware('auth:sanctum');
-/* _____________________________________________________*/
-/* 4. Клиники                                           */
-/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+/* 2.3. Клиники                                         */
 Route::post('/save-clinics-changes', [AdminController::class, 'saveClinicsChanges'])->middleware('auth:sanctum');
+/* 2.4. Образования                                     */
+Route::post('/save-educations-changes', [AdminController::class, 'saveEducationsChanges'])->middleware('auth:sanctum');
 
 
 
