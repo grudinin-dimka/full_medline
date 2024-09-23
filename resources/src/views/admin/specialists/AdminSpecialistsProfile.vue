@@ -341,10 +341,10 @@ import TableButtonRemove from "../../../components/ui/admin/TableButtonRemove.vu
 
 import IconClose from "../../../components/icons/IconClose.vue";
 
-import ContainerInput from "../../../components/ui/admin/ContainerInput.vue";
-import ContainerInputOnce from "../../../components/ui/admin/ContainerInputOnce.vue";
-import ContainerInputTwo from "../../../components/ui/admin/ContainerInputTwo.vue";
-import ContainerInputThree from "../../../components/ui/admin/ContainerInputThree.vue";
+import ContainerInput from "../../../components/ui/admin/containers/ContainerInput.vue";
+import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
+import ContainerInputTwo from "../../../components/ui/admin/containers/input/ContainerInputTwo.vue";
+import ContainerInputThree from "../../../components/ui/admin/containers/input/ContainerInputThree.vue";
 
 import ButtonDefault from "../../../components/ui/admin/ButtonDefault.vue";
 import ButtonRemove from "../../../components/ui/admin/ButtonRemove.vue";

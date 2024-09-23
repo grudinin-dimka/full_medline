@@ -92,7 +92,7 @@ import BlockOnce from "../../../components/ui/admin/BlockOnce.vue";
 import BlockTitle from "../../../components/ui/admin/BlockTitle.vue";
 import BlockButtons from "../../../components/ui/admin/BlockButtons.vue";
 
-import ContainerInputOnce from "../../../components/ui/admin/ContainerInputOnce.vue";
+import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
 
 import AdminSpecialistsTable from "./AdminSpecialistsTable.vue";
 

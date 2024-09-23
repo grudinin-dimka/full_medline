@@ -15,6 +15,7 @@
 							placeholder="Введите название"
 							autocomplete="off"
 							:class="{ error: false }"
+							v-model="currentEducation.data.name.body"
 						/>
 					</template>
 					<template #error>
@@ -30,6 +31,7 @@
 							placeholder="Введите организацию"
 							autocomplete="off"
 							:class="{ error: false }"
+							v-model="currentEducation.data.organization.body"
 						/>
 					</template>
 					<template #error>
@@ -45,6 +47,7 @@
 							placeholder="Введите организацию"
 							autocomplete="off"
 							:class="{ error: false }"
+							v-model="currentEducation.data.date.body"
 						/>
 					</template>
 					<template #error>
@@ -55,9 +58,9 @@
 				<container-select-once>
 					<template #title>СПЕЦИАЛИЗАЦИЯ*</template>
 					<template #select>
-						<select>
+						<select v-model="currentEducation.data.specialization.body">
 							<option value="null">Ничего не выбрано...</option>
-							<option v-for="specialization in specializations" :value="specialization.id">
+							<option :value="specialization.id" v-for="specialization in specializations">
 								{{ specialization.name }}
 							</option>
 						</select>
@@ -123,11 +126,11 @@ import BlockOnce from "../../../components/ui/admin/BlockOnce.vue";
 import BlockTitle from "../../../components/ui/admin/BlockTitle.vue";
 import BlockButtons from "../../../components/ui/admin/BlockButtons.vue";
 
-import ContainerInput from "../../../components/ui/admin/ContainerInput.vue";
-import ContainerInputOnce from "../../../components/ui/admin/ContainerInputOnce.vue";
-import ContainerInputTwo from "../../../components/ui/admin/ContainerInputTwo.vue";
-import ContainerInputThree from "../../../components/ui/admin/ContainerInputThree.vue";
-import ContainerSelectOnce from "../../../components/ui/admin/ContainerSelectOnce.vue";
+import ContainerInput from "../../../components/ui/admin/containers/ContainerInput.vue";
+import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
+import ContainerInputTwo from "../../../components/ui/admin/containers/input/ContainerInputTwo.vue";
+import ContainerInputThree from "../../../components/ui/admin/containers/input/ContainerInputThree.vue";
+import ContainerSelectOnce from "../../../components/ui/admin/containers/select/ContainerSelectOnce.vue";
 
 import AdminSpecialistsTable from "./AdminSpecialistsTable.vue";
 
@@ -183,6 +186,68 @@ export default {
 				loader: true,
 				table: false,
 			},
+			currentEducation: {
+				errors: {
+					id: {
+						body: null,
+						status: false,
+					},
+					name: {
+						body: null,
+						status: false,
+					},
+					organization: {
+						body: null,
+						status: false,
+					},
+					date: {
+						body: null,
+						status: false,
+					},
+					specialization: {
+						body: null,
+						status: false,
+					},
+					create: {
+						body: false,
+						status: false,
+					},
+					delete: {
+						body: false,
+						status: false,
+					},
+				},
+				data: {
+					id: {
+						body: null,
+						edited: false,
+					},
+					name: {
+						body: null,
+						edited: false,
+					},
+					organization: {
+						body: null,
+						edited: false,
+					},
+					date: {
+						body: null,
+						edited: false,
+					},
+					specialization: {
+						body: null,
+						edited: false,
+					},
+					create: {
+						body: false,
+						edited: false,
+					},
+					delete: {
+						body: false,
+						edited: false,
+					},
+				},
+			},
 			educations: [],
 			specializations: [
 				{
@@ -220,12 +285,12 @@ export default {
 					this.modal.status = true;
 					this.modal.style.create = true;
 					this.modal.style.delete = false;
-					// this.clearModalData();
+					this.clearModalData();
 
 					document.body.classList.toggle("modal-open");
 					break;
 				case "edit":
-					// this.clearModalErrors();
+					this.clearModalErrors();
 
 					this.modal.type = "edit";
 					// if (this.currentClinic.data.create.body) {
@@ -254,6 +319,23 @@ export default {
 		closeModal() {
 			this.modal.status = false;
 			document.body.classList.toggle("modal-open");
+		},
+		/* _____________________________________________________*/
+		/* 2. Работа с полями ввода модального окна             */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* Очистка содержимого модального окна */
+		clearModalData() {
+			for (let key in this.currentEducation.data) {
+				this.currentEducation.data[key].body = "";
+				this.currentEducation.data[key].edited = false;
+			}
+		},
+		/* Очистка ошибок */
+		clearModalErrors() {
+			for (let key in this.currentEducation.errors) {
+				this.currentEducation.errors[key].body = "";
+				this.currentEducation.errors[key].status = false;
+			}
 		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                   ОБРАЗОВАНИЕ                     |*/
@@ -338,12 +420,13 @@ export default {
 		/* 2. Основные действия                                 */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Открытие специализации для редактирования */
-		editEducation(selectedClinic) {
-			// this.clearModalData();
+		editEducation(selectedEducation) {
+			this.clearModalData();
 
-			// for (let key in this.currentClinic.data) {
-			// 	this.currentClinic.data[key].body = selectedClinic[key];
-			// }
+			for (let key in this.currentEducation.data) {
+				this.currentEducation.data[key].body = selectedEducation[key];
+			}
+			this.currentEducation.data.specialization.body = selectedEducation["id_specialization"];
 
 			this.openModal("edit");
 		},

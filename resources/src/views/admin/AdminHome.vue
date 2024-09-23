@@ -317,7 +317,7 @@ import LoaderChild from "../../components/includes/LoaderChild.vue";
 import Modal from "../../components/includes/admin/AdminModal.vue";
 import InfoBar from "../../components/ui/admin/InfoBar.vue";
 
-import ContainerInputOnce from "../../components/ui/admin/ContainerInputOnce.vue";
+import ContainerInputOnce from "../../components/ui/admin/containers/input/ContainerInputOnce.vue";
 
 import BlockTitle from "../../components/ui/admin/BlockTitle.vue";
 import BlockOnce from "../../components/ui/admin/BlockOnce.vue";
