@@ -1,5 +1,5 @@
 <template>
-	<div class="block-once">
+	<div class="block-once" ref="blockOnce">
 		<slot></slot>
 	</div>
 </template>
