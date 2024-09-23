@@ -37,6 +37,7 @@ export default {
 
 .container-select-once > .item > label {
 	font-size: 18px;
+	color: var(--primary-color);
 }
 
 .container-select-once > .item > select {

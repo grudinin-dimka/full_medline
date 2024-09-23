@@ -70,10 +70,6 @@ fieldset.container-input-three:focus-within {
 	border: 2px solid var(--input-border-color-active);
 }
 
-legend {
-	font-size: 18px;
-}
-
 .container-input-three {
 	display: flex;
 	flex-wrap: wrap;

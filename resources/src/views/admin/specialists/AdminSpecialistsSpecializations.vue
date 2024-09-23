@@ -4,13 +4,16 @@
 	<!--|___________________________________________________|-->
 	<admin-modal ref="modal" @touchCloseModal="closeModal" :modal="modal">
 		<template #title>
-			<span v-if="modal.type == 'create'">СПЕЦИАЛИЗАЦИЯ (СОЗДАНИЕ)</span>
+			<span class="create" v-if="modal.type == 'create'">
+				СПЕЦИАЛИЗАЦИЯ (СОЗДАНИЕ)
+			</span>
 			<span v-if="modal.type == 'edit'">СПЕЦИАЛИЗАЦИЯ (РЕДАКТИРОВАНИЕ)</span>
 		</template>
 		<template #body>
 			<ContainerInputOnce>
 				<template #title>
-					НАЗВАНИЕ* <span v-if="currentSpecialization.data.name.edited">(ИЗМЕНЕНО)</span>
+					<span :class="{ create: modal.type == 'create' }">НАЗВАНИЕ*</span>
+					<span v-if="currentSpecialization.data.name.edited">(ИЗМЕНЕНО)</span>
 				</template>
 				<template #input>
 					<input
@@ -19,6 +22,7 @@
 						placeholder="Название специализации"
 						v-model="currentSpecialization.data.name.body"
 						:class="{
+							create: modal.style.create,
 							error: currentSpecialization.errors.name.status,
 						}"
 						@input="currentSpecialization.data.name.edited = true"

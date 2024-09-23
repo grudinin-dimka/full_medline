@@ -135,10 +135,17 @@ export default {
 	display: flex;
 	align-items: center;
 	gap: 5px;
-	color: #00abbd;
 	font-size: 22px;
 	margin: 0px;
 	padding: 0px;
+}
+
+.modal-head-title > span {
+	color: #00abbd;
+}
+
+.modal-head-title span.create {
+	color: #ffffff;
 }
 
 .modal-head-buttons {

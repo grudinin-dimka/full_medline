@@ -49,8 +49,9 @@ export default {
 </script>
 
 <style>
-legend {
+fieldset > legend {
 	font-size: 18px;
+	color: var(--primary-color);
 }
 
 fieldset.container-input-two {

@@ -19,6 +19,7 @@
 
 .container-textarea-once > label {
 	font-size: 18px;
+	color: var(--primary-color);
 }
 
 .container-textarea-once > textarea {

@@ -19,6 +19,12 @@
 
 .container-input-once > label {
 	font-size: 18px;
+	color: var(--primary-color);
+}
+
+.container-input-once > label > span.create {
+	font-size: 18px;
+	color: #44a533;
 }
 
 .container-input-once > input {
