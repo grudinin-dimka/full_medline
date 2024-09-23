@@ -5,28 +5,34 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
+
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-/* |                  ОБЩИЕ ФУНКЦИИ                    |*/
+/* |              ПОЛУЧЕНИЕ ДАННЫХ ИЗ БД               |*/
 /* |___________________________________________________|*/
 /* _____________________________________________________*/
 /* 1. Главная                                           */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+/* 1.1. Слайдер                                         */
 Route::post('/get-slides-all', [HomeController::class, 'getSlidesAll']);
+/* 1.2. Слайдер (без статуса скрытия)                   */
 Route::post('/get-slides-not-hide', [HomeController::class, 'getSlidesNotHide']);
+/* 1.3. Футер                                           */
 Route::post('/get-footer', [HomeController::class, 'getFooter']);
 /* _____________________________________________________*/
 /* 2. Специалисты                                       */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+/* 2.1. Врачи                                           */
 Route::post('/get-specialists', [HomeController::class, 'getSpecialists']);
 Route::post('/get-specialist-profile', [HomeController::class, 'getSpecialistProfile']);
 Route::post('/get-specialist-all', [HomeController::class, 'getSpecialistAll']);
 Route::post('/get-specialists-short', [HomeController::class, 'getSpecialistsShort']);
-/* _____________________________________________________*/
-/* 3. Специализации                                     */
-/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+/* 2.2. Специализации                                   */
 Route::post('/get-specializations-all', [HomeController::class, 'getSpecializationsAll']);
+/* 2.3. Клиники                                         */
 Route::post('/get-clinics-all', [HomeController::class, 'getClinicsAll']);
+/* 2.4. Образования                                     */
 Route::post('/get-educations-all', [HomeController::class, 'getEducationsAll']);
+
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 /* |                  АДМИНИСТРАТОР                    |*/
 /* |___________________________________________________|*/
