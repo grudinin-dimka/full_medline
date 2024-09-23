@@ -140,7 +140,12 @@ class HomeController extends Controller
    // Вывод всех специализаций
    public function getEducationsAll(Request $request) {
       $educations = Education::all();
-      return $educations;
+      $specializations = Specialization::all();
+
+      return response()->json([
+         "educations" => $educations,
+         "spezializations" => $specializations,
+      ]);
    }
 
 };

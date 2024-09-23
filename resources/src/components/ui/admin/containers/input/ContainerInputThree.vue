@@ -1,5 +1,5 @@
 <template>
-	<fieldset class="container-inputs-three" v-if="fieldset">
+	<fieldset class="container-input-three" v-if="fieldset">
 		<legend>
 			<slot name="legend"></slot>
 		</legend>
@@ -23,7 +23,7 @@
 		</div>
 	</fieldset>
 
-	<div class="container-inputs-three" v-else>
+	<div class="container-input-three" v-else>
 		<div class="item">
 			<label>
 				<slot name="title-one"></slot>
@@ -57,7 +57,7 @@ export default {
 </script>
 
 <style>
-fieldset.container-inputs-three {
+fieldset.container-input-three {
 	margin-top: 5px;
 	border: 2px solid var(--input-border-color-inactive);
 	border-radius: 15px;
@@ -66,7 +66,7 @@ fieldset.container-inputs-three {
 	background-color: rgb(255, 255, 255);
 }
 
-fieldset.container-inputs-three:focus-within {
+fieldset.container-input-three:focus-within {
 	border: 2px solid var(--input-border-color-active);
 }
 
@@ -74,24 +74,24 @@ legend {
 	font-size: 18px;
 }
 
-.container-inputs-three {
+.container-input-three {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 10px;
 }
 
-.container-inputs-three > .item {
+.container-input-three > .item {
 	flex: 1 0 350px;
 	display: flex;
 	flex-direction: column;
 	gap: 5px;
 }
 
-.container-inputs-three > .item > label {
+.container-input-three > .item > label {
 	font-size: 18px;
 }
 
-.container-inputs-three > .item > input {
+.container-input-three > .item > input {
 	box-sizing: border-box;
 	outline: none;
 
@@ -108,11 +108,11 @@ legend {
 	transition: all 0.2s;
 }
 
-.container-inputs-three > .item > input:focus {
+.container-input-three > .item > input:focus {
 	border: 2px solid var(--input-border-color-active);
 }
 
-.container-inputs-three > .item > input::placeholder {
+.container-input-three > .item > input::placeholder {
 	color: var(--input-placeholder-color);
 }
 </style>

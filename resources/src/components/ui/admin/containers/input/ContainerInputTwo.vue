@@ -1,5 +1,5 @@
 <template>
-	<fieldset class="container-inputs-two" v-if="fieldset">
+	<fieldset class="container-input-two" v-if="fieldset">
 		<legend>
 			<slot name="legend"></slot>
 		</legend>
@@ -19,7 +19,7 @@
 		</div>
 	</fieldset>
 
-	<div class="container-inputs-two" v-else>
+	<div class="container-input-two" v-else>
 		<div class="item">
 			<label>
 				<slot name="title-one"></slot>
@@ -53,7 +53,7 @@ legend {
 	font-size: 18px;
 }
 
-fieldset.container-inputs-two {
+fieldset.container-input-two {
 	margin-top: 5px;
 	border: 2px solid rgba(0, 0, 0, 0.2);
 	border-radius: 15px;
@@ -62,29 +62,29 @@ fieldset.container-inputs-two {
 	background-color: rgba(255, 255, 255, 0.5);
 }
 
-fieldset.container-inputs-two:focus-within {
+fieldset.container-input-two:focus-within {
 	border: 2px solid var(--input-border-color-active);
 }
 
-.container-inputs-two {
+.container-input-two {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 10px;
 }
 
-.container-inputs-two > .item {
+.container-input-two > .item {
 	flex: 1 0 350px;
 	display: flex;
 	flex-direction: column;
 	gap: 5px;
 }
 
-.container-inputs-two > .item > label {
+.container-input-two > .item > label {
 	font-size: 18px;
 }
 
-.container-inputs-two > .item > input,
-.container-inputs-two > .item > select {
+.container-input-two > .item > input,
+.container-input-two > .item > select {
 	box-sizing: border-box;
 	outline: none;
 
@@ -101,12 +101,12 @@ fieldset.container-inputs-two:focus-within {
 	transition: all 0.2s;
 }
 
-.container-inputs-two > .item > input::placeholder {
+.container-input-two > .item > input::placeholder {
 	color: var(--input-placeholder-color);
 }
 
-.container-inputs-two > .item > input.error,
-.container-inputs-two > .item > select.error {
+.container-input-two > .item > input.error,
+.container-input-two > .item > select.error {
 	background-color: var(--input-background-color-error);
 	border: 2px solid var(--input-border-color-error);
 
@@ -114,7 +114,7 @@ fieldset.container-inputs-two:focus-within {
 }
 
 @media screen and (max-width: 450px) {
-	.container-inputs-two > .item {
+	.container-input-two > .item {
 		flex: 1 0 200px;
 	}
 }

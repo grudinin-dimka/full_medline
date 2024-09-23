@@ -1,9 +1,9 @@
 <template>
-	<div class="container-input-once">
+	<div class="container-textarea-once">
 		<label>
 			<slot name="title"></slot>
 		</label>
-		<slot name="input"></slot>
+		<slot name="textarea"></slot>
 		<slot name="error"></slot>
 	</div>
 </template>
@@ -11,26 +11,26 @@
 <script setup></script>
 
 <style>
-.container-input-once {
+.container-textarea-once {
 	display: flex;
 	flex-direction: column;
 	gap: 5px;
 }
 
-.container-input-once > label {
+.container-textarea-once > label {
 	font-size: 18px;
 }
 
-.container-input-once > input {
+.container-textarea-once > textarea {
 	box-sizing: border-box;
 	outline: none;
+   resize: none;
 
 	padding: 10px;
 	border: 2px solid var(--input-border-color-inactive);
 	border-radius: 10px;
 
 	width: 100%;
-	height: 58px;
 
 	font-size: 20px;
 	caret-color: var(--input-border-color-active);
@@ -38,18 +38,18 @@
 	transition: all 0.2s;
 }
 
-.container-input-once > input:focus {
+.container-textarea-once > textarea:focus {
 	border: 2px solid var(--input-border-color-active);
 }
 
-.container-input-once > input.error {
+.container-textarea-once > textarea.error {
 	background-color: var(--input-background-color-error);
 	border: 2px solid var(--input-border-color-error);
 
 	caret-color: red;
 }
 
-.container-input-once > input::placeholder {
+.container-textarea-once > textarea::placeholder {
 	color: var(--input-placeholder-color);
 }
 

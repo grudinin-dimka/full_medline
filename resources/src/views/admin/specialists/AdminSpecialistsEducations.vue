@@ -23,6 +23,21 @@
 					</template>
 				</container-input-once>
 				<!-- Организация -->
+				<container-textarea-once>
+					<template #title>ОРГАНИЗАЦИЯ*</template>
+					<template #textarea>
+						<textarea
+							rows="4"
+							placeholder="Введите организацию"
+							autocomplete="off"
+							:class="{ error: false }"
+							v-model="currentEducation.data.organization.body"
+						></textarea>
+					</template>
+					<template #error>
+						<span class="error" v-if="false"> Ошибка </span>
+					</template>
+				</container-textarea-once>
 				<container-input-once>
 					<template #title>ОРГАНИЗАЦИЯ*</template>
 					<template #input>
@@ -131,6 +146,7 @@ import ContainerInputOnce from "../../../components/ui/admin/containers/input/Co
 import ContainerInputTwo from "../../../components/ui/admin/containers/input/ContainerInputTwo.vue";
 import ContainerInputThree from "../../../components/ui/admin/containers/input/ContainerInputThree.vue";
 import ContainerSelectOnce from "../../../components/ui/admin/containers/select/ContainerSelectOnce.vue";
+import ContainerTextareaOnce from "../../../components/ui/admin/containers/textarea/ContainerTextareaOnce.vue";
 
 import AdminSpecialistsTable from "./AdminSpecialistsTable.vue";
 
@@ -155,6 +171,7 @@ export default {
 		ContainerInputTwo,
 		ContainerInputThree,
 		ContainerSelectOnce,
+		ContainerTextareaOnce,
 		AdminSpecialistsTable,
 		ButtonDefault,
 		ButtonRemove,
@@ -457,15 +474,15 @@ export default {
 			url: `${this.$store.state.axios.urlApi}` + `get-educations-all`,
 		})
 			.then((response) => {
-				this.educations = response.data;
+				console.log(response.data);
+				this.educations = response.data.educations;
+				this.specializations = response.data.spezializations;
 				this.loading.loader = false;
 
 				for (let key in this.educations) {
 					this.educations[key].create = false;
 					this.educations[key].delete = false;
 				}
-
-				console.log(this.educations);
 			})
 			.catch((error) => {
 				console.log(error);

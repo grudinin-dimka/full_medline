@@ -227,7 +227,6 @@ class AdminController extends Controller
             ]);     
          }         
       }
-
       return $arrayID;
    }
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -295,18 +294,4 @@ class AdminController extends Controller
          return false;
       };
    }
-
-  // Очистка футера 
-   public function clearFooter(Request $request) {
-      $footer = Footer::find(1);
-      $footer->update([
-         'title' => '',
-         'titleDesc' => '',
-         'license' => '',
-         'licenseDesc' => '',
-         'footer' => '',
-      ]);
-      
-      return 'Футер очищен.';
-   } 
 }
