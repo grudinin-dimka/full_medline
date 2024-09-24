@@ -330,10 +330,10 @@ import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
 
 import ElementInputLabel from "../../../components/ui/admin/elements/ElementInputLabel.vue";
-import BlockOnce from "../../../components/ui/admin/BlockOnce.vue";
-import BlockTwo from "../../../components/ui/admin/BlockTwo.vue";
-import BlockTitle from "../../../components/ui/admin/BlockTitle.vue";
-import BlockButtons from "../../../components/ui/admin/BlockButtons.vue";
+import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
+import BlockTwo from "../../../components/ui/admin/blocks/BlockTwo.vue";
+import BlockTitle from "../../../components/ui/admin/blocks/BlockTitle.vue";
+import BlockButtons from "../../../components/ui/admin/blocks/BlockButtons.vue";
 import SpanError from "../../../components/ui/admin/SpanError.vue";
 
 import TableButtonDefault from "../../../components/ui/admin/tables/TableButtonDefault.vue";

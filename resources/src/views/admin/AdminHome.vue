@@ -321,9 +321,9 @@ import InfoBar from "../../components/ui/admin/InfoBar.vue";
 
 import ContainerInputOnce from "../../components/ui/admin/containers/input/ContainerInputOnce.vue";
 
-import BlockTitle from "../../components/ui/admin/BlockTitle.vue";
-import BlockOnce from "../../components/ui/admin/BlockOnce.vue";
-import BlockButtons from "../../components/ui/admin/BlockButtons.vue";
+import BlockTitle from "../../components/ui/admin/blocks/BlockTitle.vue";
+import BlockOnce from "../../components/ui/admin/blocks/BlockOnce.vue";
+import BlockButtons from "../../components/ui/admin/blocks/BlockButtons.vue";
 
 import ButtonDefault from "../../components/ui/admin/buttons/ButtonDefault.vue";
 import ButtonRemove from "../../components/ui/admin/buttons/ButtonRemove.vue";

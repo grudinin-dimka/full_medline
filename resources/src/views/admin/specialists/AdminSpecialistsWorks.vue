@@ -69,7 +69,7 @@
 				<!-- Начало работы -->
 				<template #title-one>
 					<span :class="{ create: modal.type == 'create' }">ДАТА НАЧАЛА*</span>
-					<span  v-if="currentWork.data.startWork.edited"> (ИЗМЕНЕНО)</span>
+					<span v-if="currentWork.data.startWork.edited"> (ИЗМЕНЕНО)</span>
 				</template>
 				<template #input-one>
 					<input
@@ -165,9 +165,9 @@ import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
 
 import ElementInputLabel from "../../../components/ui/admin/elements/ElementInputLabel.vue";
-import BlockOnce from "../../../components/ui/admin/BlockOnce.vue";
-import BlockTitle from "../../../components/ui/admin/BlockTitle.vue";
-import BlockButtons from "../../../components/ui/admin/BlockButtons.vue";
+import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
+import BlockTitle from "../../../components/ui/admin/blocks/BlockTitle.vue";
+import BlockButtons from "../../../components/ui/admin/blocks/BlockButtons.vue";
 
 import AdminSpecialistsTable from "./AdminSpecialistsTable.vue";
 
