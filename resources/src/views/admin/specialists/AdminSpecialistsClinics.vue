@@ -200,14 +200,12 @@
 			</container-input>
 		</template>
 		<template #footer>
-			<BlockButtons>
-				<ButtonDefault v-if="modal.type == 'create'" @click="addClinic">
-					Создать
-				</ButtonDefault>
-				<ButtonDefault v-if="modal.type == 'edit'" @click="updateClinic">
+			<block-buttons>
+				<button-claim v-if="modal.type == 'create'" @click="addClinic"> Создать </button-claim>
+				<button-default v-if="modal.type == 'edit'" @click="updateClinic">
 					Обновить
-				</ButtonDefault>
-			</BlockButtons>
+				</button-default>
+			</block-buttons>
 		</template>
 	</admin-modal>
 
@@ -267,6 +265,7 @@ import AdminSpecialistsTable from "./AdminSpecialistsTable.vue";
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
+import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 
 import IconSave from "../../../components/icons/IconSave.vue";
 
@@ -288,6 +287,7 @@ export default {
 		AdminSpecialistsTable,
 		ButtonDefault,
 		ButtonRemove,
+		ButtonClaim,
 		IconSave,
 		axios,
 	},
@@ -607,6 +607,9 @@ export default {
 		/* 1. Фильтрация                                        */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		filterClinics(column, type) {
+			// Объявляем объект Intl.Collator, который обеспечивает сравнение строк с учётом языка.
+			const collator = new Intl.Collator("ru");
+
 			switch (column) {
 				case "id":
 					if (type == "default") {
@@ -638,39 +641,13 @@ export default {
 				case "name":
 					if (type == "default") {
 						this.clinics.sort((a, b) => {
-							let aName = a.name.toLowerCase();
-							let bName = b.name.toLowerCase();
-
-							let aNameFirstLetter = aName[0].charCodeAt(0);
-							let bNameFirstLetter = bName[0].charCodeAt(0);
-
-							if (aNameFirstLetter > bNameFirstLetter) {
-								return 1;
-							}
-							if (aNameFirstLetter < bNameFirstLetter) {
-								return -1;
-							}
-							// a должно быть равным b
-							return 0;
+							return collator.compare(a.name, b.name);
 						});
 					}
 
 					if (type == "reverse") {
-						this.clinics.sort((a, b) => {
-							let aName = a.name.toLowerCase();
-							let bName = b.name.toLowerCase();
-
-							let aNameFirstLetter = aName[0].charCodeAt(0);
-							let bNameFirstLetter = bName[0].charCodeAt(0);
-
-							if (aNameFirstLetter < bNameFirstLetter) {
-								return 1;
-							}
-							if (aNameFirstLetter > bNameFirstLetter) {
-								return -1;
-							}
-							// a должно быть равным b
-							return 0;
+						this.clinics.reverse((a, b) => {
+							return collator.compare(a.name, b.name);
 						});
 					}
 
@@ -860,7 +837,7 @@ export default {
 
 						let debbugStory = {
 							title: "Успешно!",
-							body: "Данные о специализациях сохранились.",
+							body: "Данные сохранились.",
 							type: "Completed",
 						};
 						this.$store.commit("debuggerState", debbugStory);
@@ -876,7 +853,7 @@ export default {
 				.catch((error) => {
 					let debbugStory = {
 						title: "Ошибка.",
-						body: "Данные о специализациях почему-то не сохранились.",
+						body: "Данные почему-то не сохранились...",
 						type: "Error",
 					};
 					this.$store.commit("debuggerState", debbugStory);

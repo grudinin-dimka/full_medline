@@ -21,6 +21,7 @@ use App\Models\Specialist;
 use App\Models\Specialization;
 use App\Models\Clinic;
 use App\Models\Education;
+use App\Models\Work;
 
 class AdminController extends Controller
 {
@@ -353,5 +354,39 @@ class AdminController extends Controller
       }
 
       return $arrayID;      
+   }
+   /* _____________________________________________________*/
+   /* 5. Образования                                       */
+   /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+   /* Сохранение изменений работ */
+   public function saveWorkChanges(Request $request) {
+      // Удаление помеченных
+      foreach ($request->works as $key => $value) {
+         if ($value["delete"] === true){
+            $work = Work::find($value['id']);
+            $work->delete();
+         }         
+      }
+
+      $arrayID = [];
+      // Добавление новых
+      foreach ($request->works as $key => $value) {
+         if ($value["create"] === true) {
+            $workToCreate = Work::create([
+               "startWork" => $value['startWork'],
+               "endWork" => $value['endWork'],
+               "organization" => $value['organization'],
+               "name" => $value['name'],
+            ]);
+
+            /* Запись нового объекта в массив */
+            $arrayID[] = (object) [
+               // Прошлый id
+               'old' => $value['id'], 
+               // Новый id
+               'new' => $workToCreate->id
+            ];            
+         };       
+      }
    }
 }

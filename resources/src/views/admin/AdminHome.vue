@@ -115,23 +115,23 @@
 			</ContainerInputOnce>
 		</template>
 		<template #footer>
-			<BlockButtons v-if="modal.type == 'edit'">
-				<ButtonRemove
+			<block-buttons v-if="modal.type == 'edit'">
+				<button-remove
 					v-if="!currentSlide.data.create.body & !currentSlide.data.delete.body"
 					@click.prevent="markDeleteSlide"
 				>
 					Удалить
-				</ButtonRemove>
-				<ButtonDefault v-if="!currentSlide.data.delete.body" @click.prevent="updateSlide">
+				</button-remove>
+				<button-default v-if="!currentSlide.data.delete.body" @click.prevent="updateSlide">
 					Обновить
-				</ButtonDefault>
-				<ButtonDefault v-if="currentSlide.data.delete.body" @click.prevent="markDeleteSlide">
+				</button-default>
+				<button-default v-if="currentSlide.data.delete.body" @click.prevent="markDeleteSlide">
 					Восстановить
-				</ButtonDefault>
-			</BlockButtons>
-			<BlockButtons v-if="modal.type == 'create'">
-				<ButtonDefault @click.prevent="createSlide"> Создать </ButtonDefault>
-			</BlockButtons>
+				</button-default>
+			</block-buttons>
+			<block-buttons v-if="modal.type == 'create'">
+				<button-claim @click.prevent="createSlide"> Создать </button-claim>
+			</block-buttons>
 		</template>
 	</modal>
 
@@ -327,6 +327,7 @@ import BlockButtons from "../../components/ui/admin/blocks/BlockButtons.vue";
 
 import ButtonDefault from "../../components/ui/admin/buttons/ButtonDefault.vue";
 import ButtonRemove from "../../components/ui/admin/buttons/ButtonRemove.vue";
+import ButtonClaim from "../../components/ui/admin/buttons/ButtonClaim.vue";
 
 import SlideUserCard from "../../components/icons/SlideUserCard.vue";
 import SlideLink from "../../components/icons/SlideLink.vue";
@@ -350,6 +351,7 @@ export default {
 		BlockButtons,
 		ButtonDefault,
 		ButtonRemove,
+		ButtonClaim,
 		SlideUserCard,
 		SlideLink,
 		SlidePath,

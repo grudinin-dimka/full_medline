@@ -26,8 +26,8 @@
 	--button-default-color-hover: #26b8c7;
 	--button-remove-color: #cd3f3f;
 	--button-remove-color-hover: #d74949;
-	--button-claim-color: #3fcd41;
-	--button-claim-color-hover: rgb(73, 215, 75);
+	--button-claim-color: #00bd48;
+	--button-claim-color-hover: rgb(10, 199, 82);
 
 	/* Поля ввода какой-либо информации */
 	--input-border-color-inactive: #cccccc;

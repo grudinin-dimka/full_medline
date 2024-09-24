@@ -125,14 +125,14 @@
 			</container-input>
 		</template>
 		<template #footer>
-			<BlockButtons>
-				<ButtonDefault v-if="modal.type == 'create'" @click="addEducation">
+			<block-buttons>
+				<button-claim v-if="modal.type == 'create'" @click="addEducation">
 					Создать
-				</ButtonDefault>
-				<ButtonDefault v-if="modal.type == 'edit'" @click="updateEducation">
+				</button-claim>
+				<button-default v-if="modal.type == 'edit'" @click="updateEducation">
 					Обновить
-				</ButtonDefault>
-			</BlockButtons>
+				</button-default>
+			</block-buttons>
 		</template>
 	</admin-modal>
 
@@ -194,6 +194,7 @@ import AdminSpecialistsTable from "./AdminSpecialistsTable.vue";
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
+import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 
 import IconSave from "../../../components/icons/IconSave.vue";
 
@@ -217,6 +218,7 @@ export default {
 		AdminSpecialistsTable,
 		ButtonDefault,
 		ButtonRemove,
+		ButtonClaim,
 		IconSave,
 		axios,
 	},
@@ -533,6 +535,9 @@ export default {
 		/* 1. Фильтрация                                        */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		filterEducations(column, type) {
+			// Объявляем объект Intl.Collator, который обеспечивает сравнение строк с учётом языка.
+			const collator = new Intl.Collator("ru");
+
 			switch (column) {
 				case "id":
 					if (type == "default") {
@@ -564,39 +569,13 @@ export default {
 				case "name":
 					if (type == "default") {
 						this.educations.sort((a, b) => {
-							let aName = a.name.toLowerCase();
-							let bName = b.name.toLowerCase();
-
-							let aNameFirstLetter = aName[0].charCodeAt(0);
-							let bNameFirstLetter = bName[0].charCodeAt(0);
-
-							if (aNameFirstLetter > bNameFirstLetter) {
-								return 1;
-							}
-							if (aNameFirstLetter < bNameFirstLetter) {
-								return -1;
-							}
-							// a должно быть равным b
-							return 0;
+							return collator.compare(a.name, b.name);
 						});
 					}
 
 					if (type == "reverse") {
-						this.educations.sort((a, b) => {
-							let aName = a.name.toLowerCase();
-							let bName = b.name.toLowerCase();
-
-							let aNameFirstLetter = aName[0].charCodeAt(0);
-							let bNameFirstLetter = bName[0].charCodeAt(0);
-
-							if (aNameFirstLetter < bNameFirstLetter) {
-								return 1;
-							}
-							if (aNameFirstLetter > bNameFirstLetter) {
-								return -1;
-							}
-							// a должно быть равным b
-							return 0;
+						this.educations.reverse((a, b) => {
+							return collator.compare(a.name, b.name);
 						});
 					}
 
@@ -724,52 +703,61 @@ export default {
 				},
 			})
 				.then((response) => {
-					// Обновление id добавленных элементов на данные из бд
-					for (let key in response.data) {
-						let education = this.educations.filter((education) => {
-							if (education.id === response.data[key].old) {
-								return education;
-							}
-						});
-						education[0].id = response.data[key].new;
-					}
-
-					// Получения нового массива специалистов, помеченных на удаление
-					let res = this.educations.filter((education) => {
-						if (education.delete == true) {
-							return Object.assign({}, education);
+					try {
+						// Обновление id добавленных элементов на данные из бд
+						for (let key in response.data) {
+							let education = this.educations.filter((education) => {
+								if (education.id === response.data[key].old) {
+									return education;
+								}
+							});
+							education[0].id = response.data[key].new;
 						}
-					});
 
-					// Повторять, пока не будут удалены все элементы, помеченные на удаление
-					while (res.length > 0) {
-						/* Получение индекса элемента, помеченного на удаление из массива специалистов */
-						this.educations.splice(this.educations.indexOf(res[0]), 1);
-						/* Обновление списка с элементами, помеченными на удаление */
-						res = this.educations.filter((education) => {
+						// Получения нового массива специалистов, помеченных на удаление
+						let res = this.educations.filter((education) => {
 							if (education.delete == true) {
 								return Object.assign({}, education);
 							}
 						});
-					}
 
-					// Сброс флагов добавления и удаления
-					for (let key in this.educations) {
-						this.educations[key].create = false;
-						this.educations[key].delete = false;
-					}
+						// Повторять, пока не будут удалены все элементы, помеченные на удаление
+						while (res.length > 0) {
+							/* Получение индекса элемента, помеченного на удаление из массива специалистов */
+							this.educations.splice(this.educations.indexOf(res[0]), 1);
+							/* Обновление списка с элементами, помеченными на удаление */
+							res = this.educations.filter((education) => {
+								if (education.delete == true) {
+									return Object.assign({}, education);
+								}
+							});
+						}
 
-					let debbugStory = {
-						title: "Успешно!",
-						body: "Данные о специализациях сохранились.",
-						type: "Completed",
-					};
-					this.$store.commit("debuggerState", debbugStory);
+						// Сброс флагов добавления и удаления
+						for (let key in this.educations) {
+							this.educations[key].create = false;
+							this.educations[key].delete = false;
+						}
+
+						let debbugStory = {
+							title: "Успешно!",
+							body: "Данные сохранились.",
+							type: "Completed",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					} catch (error) {
+						let debbugStory = {
+							title: "Ошибка.",
+							body: "После сохранения что-то пошло не так.",
+							type: "Error",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					}
 				})
 				.catch((error) => {
 					let debbugStory = {
 						title: "Ошибка.",
-						body: "Данные о специализациях почему-то не сохранились.",
+						body: "Данные почему-то не сохранились...",
 						type: "Error",
 					};
 					this.$store.commit("debuggerState", debbugStory);

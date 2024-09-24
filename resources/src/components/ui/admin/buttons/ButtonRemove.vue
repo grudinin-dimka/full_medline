@@ -1,5 +1,5 @@
 <template>
-  <button>
+  <button class="remove">
     <slot></slot>
   </button>
 </template>
@@ -10,8 +10,8 @@ export default {
 }
 </script>
 
-<style scoped>
-  button {
+<style>
+  button.remove {
     cursor: pointer;
 
     padding: 15px 30px;
@@ -24,7 +24,7 @@ export default {
     background-color: var(--button-remove-color)
   }
 
-  button:hover {
+  button.remove:hover {
     background-color: var(--button-remove-color-hover);
   }
 </style>

@@ -4,7 +4,8 @@
 	<!--|___________________________________________________|-->
 	<admin-modal ref="modal" @touchCloseModal="closeModal" :modal="modal">
 		<template #title>
-			<span>СПЕЦИАЛИЗАЦИЯ (РЕДАКТИРОВАНИЕ)</span>
+			<span v-if="modal.type == 'create'">МЕСТО РАБОТЫ (СОЗДАНИЕ)</span>
+			<span v-if="modal.type == 'edit'">МЕСТО РАБОТЫ (РЕДАКТИРОВАНИЕ)</span>
 		</template>
 		<template #body>
 			<!-- Название -->
@@ -111,7 +112,7 @@
 		</template>
 		<template #footer>
 			<BlockButtons>
-				<ButtonDefault @click="" v-if="modal.type == 'create'"> Создать </ButtonDefault>
+				<button-claim @click="addWork" v-if="modal.type == 'create'"> Создать </button-claim>
 				<ButtonDefault @click="updateWork" v-if="modal.type == 'edit'">
 					Обновить
 				</ButtonDefault>
@@ -131,7 +132,7 @@
 		<block-title>
 			<template #title>Места работы</template>
 			<template #buttons>
-				<icon-save :width="28" :height="28" />
+				<icon-save :width="28" :height="28" @click="saveWorksChanges" />
 			</template>
 		</block-title>
 
@@ -180,6 +181,7 @@ import ContainerTextareaOnce from "../../../components/ui/admin/containers/texta
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
+import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 
 import IconSave from "../../../components/icons/IconSave.vue";
 
@@ -203,6 +205,7 @@ export default {
 		AdminSpecialistsTable,
 		ButtonDefault,
 		ButtonRemove,
+		ButtonClaim,
 		IconSave,
 		axios,
 	},
@@ -357,6 +360,9 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Фильтрация по столбцу */
 		filterWorks(column, type) {
+			// Объявляем объект Intl.Collator, который обеспечивает сравнение строк с учётом языка.
+			const collator = new Intl.Collator("ru");
+
 			switch (column) {
 				case "id":
 					if (type == "default") {
@@ -388,39 +394,13 @@ export default {
 				case "name":
 					if (type == "default") {
 						this.works.sort((a, b) => {
-							let aName = a.name.toLowerCase();
-							let bName = b.name.toLowerCase();
-
-							let aNameFirstLetter = aName[0].charCodeAt(0);
-							let bNameFirstLetter = bName[0].charCodeAt(0);
-
-							if (aNameFirstLetter > bNameFirstLetter) {
-								return 1;
-							}
-							if (aNameFirstLetter < bNameFirstLetter) {
-								return -1;
-							}
-							// a должно быть равным b
-							return 0;
+							return collator.compare(a.name, b.name);
 						});
 					}
 
 					if (type == "reverse") {
-						this.works.sort((a, b) => {
-							let aName = a.name.toLowerCase();
-							let bName = b.name.toLowerCase();
-
-							let aNameFirstLetter = aName[0].charCodeAt(0);
-							let bNameFirstLetter = bName[0].charCodeAt(0);
-
-							if (aNameFirstLetter < bNameFirstLetter) {
-								return 1;
-							}
-							if (aNameFirstLetter > bNameFirstLetter) {
-								return -1;
-							}
-							// a должно быть равным b
-							return 0;
+						this.works.reverse((a, b) => {
+							return collator.compare(a.name, b.name);
 						});
 					}
 
@@ -596,6 +576,39 @@ export default {
 		/* _____________________________________________________*/
 		/* 3. Сохранение, обновление и удаление                 */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* Добавление работы */
+		addWork() {
+			if (this.checkModalInputsAll(["startWork", "endWork", "organization", "name"])) return;
+
+			try {
+				// Поиск максимального id
+				let maxId = 0;
+				for (let key in this.works) {
+					if (this.works[key].id > maxId) {
+						maxId = this.works[key].id;
+					}
+				}
+
+				this.works.push({
+					id: maxId + 1,
+					name: this.currentWork.data.name.body,
+					organization: this.currentWork.data.organization.body,
+					startWork: this.currentWork.data.startWork.body,
+					endWork: this.currentWork.data.endWork.body,
+					create: true,
+					delete: false,
+				});
+
+				this.closeModal();
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "При добавлении что-то пошло не так.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
 		/* Обновление данных */
 		updateWork() {
 			if (this.checkModalInputsAll(["startWork", "endWork", "organization", "name"])) return;
@@ -630,6 +643,96 @@ export default {
 			});
 
 			workToDelete[0].delete = !workToDelete[0].delete;
+		},
+		/* Сохранение изменений на сервере */
+		saveWorksChanges() {
+			let newArray = [];
+
+			for (let key in this.works) {
+				newArray.push(Object.assign({}, this.works[key]));
+			}
+
+			newArray.sort((a, b) => {
+				if (a.id > b.id) {
+					return 1;
+				} else if (a.id < b.id) {
+					return -1;
+				} else {
+					return 0;
+				}
+			});
+
+			axios({
+				method: "post",
+				url: `${this.$store.state.axios.urlApi}` + `save-works-changes`,
+				headers: {
+					Accept: "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: {
+					works: newArray,
+				},
+			})
+				.then((response) => {
+					try {
+						// Обновление id добавленных элементов на данные из бд
+						for (let key in response.data) {
+							let work = this.works.filter((work) => {
+								if (work.id === response.data[key].old) {
+									return work;
+								}
+							});
+							work[0].id = response.data[key].new;
+						}
+
+						// Получения нового массива, с данными помеченными на удаление
+						let res = this.works.filter((work) => {
+							if (work.delete == true) {
+								return Object.assign({}, work);
+							}
+						});
+
+						// Повторять, пока не будут удалены все элементы, помеченные на удаление
+						while (res.length > 0) {
+							/* Получение индекса элемента, помеченного на удаление из массива специалистов */
+							this.works.splice(this.works.indexOf(res[0]), 1);
+							/* Обновление списка с элементами, помеченными на удаление */
+							res = this.works.filter((work) => {
+								if (work.delete == true) {
+									return Object.assign({}, work);
+								}
+							});
+						}
+
+						// Сброс флагов добавления и удаления
+						for (let key in this.works) {
+							this.works[key].create = false;
+							this.works[key].delete = false;
+						}
+
+						let debbugStory = {
+							title: "Успешно!",
+							body: "Данные сохранились.",
+							type: "Completed",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					} catch (error) {
+						let debbugStory = {
+							title: "Ошибка.",
+							body: "После сохранения что-то пошло не так.",
+							type: "Error",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					}
+				})
+				.catch((error) => {
+					let debbugStory = {
+						title: "Ошибка.",
+						body: "Данные почему-то не сохранились.",
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+				});
 		},
 	},
 	mounted() {

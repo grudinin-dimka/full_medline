@@ -34,6 +34,8 @@ Route::post('/get-clinics-all', [HomeController::class, 'getClinicsAll']);
 Route::post('/get-educations-all', [HomeController::class, 'getEducationsAll']);
 /* 2.5. Прошлые работы                                  */
 Route::post('/get-works-all', [HomeController::class, 'getWorksAll']);
+/* 2.6. Сертификаты                                     */
+Route::post('/get-certificates-all', [HomeController::class, 'getCertificatesAll']);
 
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 /* |                  АДМИНИСТРАТОР                    |*/
@@ -64,6 +66,8 @@ Route::post('/save-specializations-changes', [AdminController::class, 'saveSpeci
 Route::post('/save-clinics-changes', [AdminController::class, 'saveClinicsChanges'])->middleware('auth:sanctum');
 /* 2.4. Образования                                     */
 Route::post('/save-educations-changes', [AdminController::class, 'saveEducationsChanges'])->middleware('auth:sanctum');
+/* 2.5. Прошлые работы                                  */
+Route::post('/save-works-changes', [AdminController::class, 'saveWorkChanges'])->middleware('auth:sanctum');
 
 
 

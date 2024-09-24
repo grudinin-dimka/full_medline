@@ -19,6 +19,7 @@ use App\Models\SpecialistSpecialization;
 use App\Models\Clinic;
 use App\Models\Education;
 use App\Models\Work;
+use App\Models\Certificate;
 
 use Illuminate\Support\Facades\Storage;
 
@@ -164,6 +165,14 @@ class HomeController extends Controller
    public function getWorksAll(Request $request) {
       $works = Work::all();
       return $works;
+   }
+   /* _____________________________________________________*/
+   /* 6. Работы                                            */
+   /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+   /* Вывод данных из таблицы "работы" */
+   public function getCertificatesAll(Request $request) {
+      $certificate = Certificate::all();
+      return $certificate;
    }
 };
 
