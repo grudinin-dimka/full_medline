@@ -163,7 +163,7 @@ class HomeController extends Controller
    /* Вывод данных из таблицы "работы" */
    public function getWorksAll(Request $request) {
       $works = Work::all();
-      return $clinics;
+      return $works;
    }
 };
 

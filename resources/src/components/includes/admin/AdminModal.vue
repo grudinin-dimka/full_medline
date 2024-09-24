@@ -131,6 +131,18 @@ export default {
 	margin-bottom: 10px;
 }
 
+.modal > .modal-container > .modal-head > .modal-head-title {
+	color: var(--primary-color);
+}
+
+.modal.create > .modal-container > .modal-head > .modal-head-title {
+	color: #44a533;
+}
+
+.modal.delete > .modal-container > .modal-head > .modal-head-title {
+	color: #a53333;
+}
+
 .modal-head-title {
 	display: flex;
 	align-items: center;
@@ -138,14 +150,6 @@ export default {
 	font-size: 22px;
 	margin: 0px;
 	padding: 0px;
-}
-
-.modal-head-title > span {
-	color: #00abbd;
-}
-
-.modal-head-title span.create {
-	color: #ffffff;
 }
 
 .modal-head-buttons {

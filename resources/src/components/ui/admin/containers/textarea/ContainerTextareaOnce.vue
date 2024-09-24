@@ -17,9 +17,14 @@
 	gap: 5px;
 }
 
-.container-textarea-once > label {
+.container-textarea-once > label > span {
 	font-size: 18px;
 	color: var(--primary-color);
+}
+
+.container-textarea-once > label > span.create {
+	font-size: 18px;
+	color: #44a533;
 }
 
 .container-textarea-once > textarea {

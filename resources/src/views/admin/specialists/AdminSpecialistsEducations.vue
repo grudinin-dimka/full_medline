@@ -11,7 +11,15 @@
 			<container-input>
 				<!-- Название -->
 				<container-input-once>
-					<template #title>НАЗВАНИЕ*</template>
+					<template #title>
+						<span :class="{ create: modal.type == 'create' }">НАЗВАНИЕ*</span>
+						<span
+							:class="{ create: modal.type == 'create' }"
+							v-if="currentEducation.data.name.edited"
+						>
+							(ИЗМЕНЕНО)
+						</span>
+					</template>
 					<template #input>
 						<input
 							type="text"
@@ -20,6 +28,7 @@
 							:class="{ error: currentEducation.errors.name.status }"
 							v-model="currentEducation.data.name.body"
 							@blur="checkModalInput('name', 'text')"
+							@input="currentEducation.data.name.edited = true"
 						/>
 					</template>
 					<template #error>
@@ -30,7 +39,15 @@
 				</container-input-once>
 				<!-- Организация -->
 				<container-textarea-once>
-					<template #title>ОРГАНИЗАЦИЯ*</template>
+					<template #title>
+						<span :class="{ create: modal.type == 'create' }">ОРГАНИЗАЦИЯ*</span>
+						<span
+							:class="{ create: modal.type == 'create' }"
+							v-if="currentEducation.data.organization.edited"
+						>
+							(ИЗМЕНЕНО)
+						</span>
+					</template>
 					<template #textarea>
 						<textarea
 							rows="4"
@@ -39,6 +56,7 @@
 							:class="{ error: currentEducation.errors.organization.status }"
 							v-model="currentEducation.data.organization.body"
 							@blur="checkModalInput('organization', 'text')"
+							@input="currentEducation.data.organization.edited = true"
 						></textarea>
 					</template>
 					<template #error>
@@ -49,7 +67,15 @@
 				</container-textarea-once>
 				<!-- Дата получения образования -->
 				<container-input-once>
-					<template #title>ДАТА ПОЛУЧЕНИЯ*</template>
+					<template #title>
+						<span :class="{ create: modal.type == 'create' }">ДАТА ПОЛУЧЕНИЯ*</span>
+						<span
+							:class="{ create: modal.type == 'create' }"
+							v-if="currentEducation.data.date.edited"
+						>
+							(ИЗМЕНЕНО)</span
+						>
+					</template>
 					<template #input>
 						<input
 							type="date"
@@ -58,6 +84,7 @@
 							:class="{ error: currentEducation.errors.date.status }"
 							v-model="currentEducation.data.date.body"
 							@blur="checkModalInput('date', 'text')"
+							@input="currentEducation.data.date.edited = true"
 						/>
 					</template>
 					<template #error>
@@ -68,12 +95,21 @@
 				</container-input-once>
 				<!-- Выбор специализации -->
 				<container-select-once>
-					<template #title>СПЕЦИАЛИЗАЦИЯ*</template>
+					<template #title>
+						<span :class="{ create: modal.type == 'create' }">СПЕЦИАЛИЗАЦИЯ*</span>
+						<span
+							:class="{ create: modal.type == 'create' }"
+							v-if="currentEducation.data.id_specialization.edited"
+						>
+							(ИЗМЕНЕНО)</span
+						>
+					</template>
 					<template #select>
 						<select
 							v-model="currentEducation.data.id_specialization.body"
 							:class="{ error: currentEducation.errors.id_specialization.status }"
 							@blur="checkModalInput('id_specialization', 'select')"
+							@input="currentEducation.data.id_specialization.edited = true"
 						>
 							<option value="">Ничего не выбрано...</option>
 							<option :value="specialization.id" v-for="specialization in specializations">

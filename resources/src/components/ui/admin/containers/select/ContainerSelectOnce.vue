@@ -1,12 +1,10 @@
 <template>
 	<div class="container-select-once">
-		<div class="item">
-			<label>
-				<slot name="title"></slot>
-			</label>
-			<slot name="select"></slot>
-			<slot name="error"></slot>
-		</div>
+		<label>
+			<slot name="title"></slot>
+		</label>
+		<slot name="select"></slot>
+		<slot name="error"></slot>
 	</div>
 </template>
 
@@ -23,24 +21,23 @@ export default {
 
 <style>
 .container-select-once {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 10px;
-}
-
-.container-select-once > .item {
 	flex: 1 0 350px;
 	display: flex;
 	flex-direction: column;
 	gap: 5px;
 }
 
-.container-select-once > .item > label {
+.container-select-once > label > span {
 	font-size: 18px;
 	color: var(--primary-color);
 }
 
-.container-select-once > .item > select {
+.container-select-once > label > span.create {
+	font-size: 18px;
+	color: #44a533;
+}
+
+.container-select-once > select {
 	box-sizing: border-box;
 	outline: none;
 
@@ -57,11 +54,11 @@ export default {
 	transition: all 0.2s;
 }
 
-.container-select-once > .item > option::placeholder {
+.container-select-once > option::placeholder {
 	color: var(--input-placeholder-color);
 }
 
-.container-select-once > .item > select.error {
+.container-select-once > select.error {
 	background-color: var(--input-background-color-error);
 	border: 2px solid var(--input-border-color-error);
 
@@ -69,7 +66,7 @@ export default {
 }
 
 @media screen and (max-width: 450px) {
-	.container-select-once > .item {
+	.container-select-once {
 		flex: 1 0 200px;
 	}
 }

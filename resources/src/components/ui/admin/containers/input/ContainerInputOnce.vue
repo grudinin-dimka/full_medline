@@ -17,14 +17,17 @@
 	gap: 5px;
 }
 
-.container-input-once > label {
+.container-input-once > label > span {
 	font-size: 18px;
 	color: var(--primary-color);
 }
 
 .container-input-once > label > span.create {
-	font-size: 18px;
 	color: #44a533;
+}
+
+.container-input-once > label > span.delete {
+	color: #a53333;
 }
 
 .container-input-once > input {
@@ -58,7 +61,6 @@
 .container-input-once > input::placeholder {
 	color: var(--input-placeholder-color);
 }
-
 
 span.error {
 	color: var(--span-color-error);

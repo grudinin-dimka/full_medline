@@ -54,6 +54,16 @@ fieldset > legend {
 	color: var(--primary-color);
 }
 
+fieldset > legend > span {
+	font-size: 18px;
+	color: var(--primary-color);
+}
+
+fieldset > legend > span.create {
+	font-size: 18px;
+	color: #44a533;
+}
+
 fieldset.container-input-two {
 	margin-top: 5px;
 	border: 2px solid rgba(0, 0, 0, 0.2);

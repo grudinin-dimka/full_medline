@@ -4,16 +4,19 @@
 	<!--|___________________________________________________|-->
 	<admin-modal ref="modal" @touchCloseModal="closeModal" :modal="modal">
 		<template #title>
-			<span class="create" v-if="modal.type == 'create'">
-				СПЕЦИАЛИЗАЦИЯ (СОЗДАНИЕ)
-			</span>
+			<span class="create" v-if="modal.type == 'create'"> СПЕЦИАЛИЗАЦИЯ (СОЗДАНИЕ) </span>
 			<span v-if="modal.type == 'edit'">СПЕЦИАЛИЗАЦИЯ (РЕДАКТИРОВАНИЕ)</span>
 		</template>
 		<template #body>
 			<ContainerInputOnce>
 				<template #title>
 					<span :class="{ create: modal.type == 'create' }">НАЗВАНИЕ*</span>
-					<span v-if="currentSpecialization.data.name.edited">(ИЗМЕНЕНО)</span>
+					<span
+						:class="{ create: modal.type == 'create' }"
+						v-if="currentSpecialization.data.name.edited"
+					>
+						(ИЗМЕНЕНО)
+					</span>
 				</template>
 				<template #input>
 					<input
@@ -48,14 +51,14 @@
 		</template>
 	</admin-modal>
 
+	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
+	<!--|                   СПЕЦИАЛИЗАЦИИ                   |-->
+	<!--|___________________________________________________|-->
 	<info-bar>
 		<template v-slot:title>Специалисты</template>
 		<template v-slot:addreas>specialists</template>
 	</info-bar>
 
-	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
-	<!--|                   СПЕЦИАЛИЗАЦИИ                   |-->
-	<!--|___________________________________________________|-->
 	<block-once>
 		<block-title>
 			<template #title>Специализации</template>

@@ -3,15 +3,20 @@
 	<!--|                  МОДАЛЬНОЕ ОКНО                   |-->
 	<!--|___________________________________________________|-->
 	<admin-modal ref="modal" @touchCloseModal="closeModal" :modal="modal">
-		<template #title> Клиника (редактирование) </template>
+		<template #title>
+			<span v-if="modal.type == 'create'" class="create">КЛИНИКА (СОЗДАНИЕ)*</span>
+			<span v-if="modal.type == 'edit'">КЛИНИКА (РЕДАКТИРОВАНИЕ)</span>
+		</template>
 		<template #body>
 			<container-input>
 				<!-- Название и другое -->
 				<container-input-two :fieldset="true">
-					<template #legend>НАЗВАНИЕ И ДРУГОЕ</template>
+					<template #legend>
+						<span :class="{ create: modal.type == 'create' }">НАЗВАНИЕ И ДРУГОЕ</span>
+					</template>
 					<!-- НАЗВАНИЕ -->
 					<template #title-one>
-						НАЗВАНИЕ* <span v-if="currentClinic.data.name.edited">(ИЗМЕНЕНО)</span>
+						НАЗВАНИЕ*<span v-if="currentClinic.data.name.edited">(ИЗМЕНЕНО)</span>
 					</template>
 					<template #input-one>
 						<input
@@ -51,7 +56,9 @@
 
 				<!-- Город и улица -->
 				<container-input-two :fieldset="true">
-					<template #legend>ГОРОД И УЛИЦА</template>
+					<template #legend>
+						<span :class="{ create: modal.type == 'create' }">ГОРОД И УЛИЦА</span>
+					</template>
 					<!-- Город -->
 					<template #title-one>
 						ГОРОД* <span v-if="currentClinic.data.city.edited">(ИЗМЕНЕНО)</span>
@@ -96,7 +103,9 @@
 
 				<!-- Дом и индекс -->
 				<container-input-two :fieldset="true">
-					<template #legend>ДОМ И ИНДЕКС</template>
+					<template #legend>
+						<span :class="{ create: modal.type == 'create' }">ДОМ И ИНДЕКС</span>
+					</template>
 					<!-- ДОМ -->
 					<template #title-one>
 						ДОМ* <span v-if="currentClinic.data.home.edited">(ИЗМЕНЕНО)</span>
@@ -142,7 +151,9 @@
 
 				<!-- Географические координаты -->
 				<container-input-two :fieldset="true">
-					<template #legend>ГЕОГРАФИЧЕСКИЕ КООРДИНАТЫ</template>
+					<template #legend>
+						<span :class="{ create: modal.type == 'create' }">ГЕОГРАФИЧЕСКИЕ КООРДИНАТЫ</span>	
+					</template>
 					<!-- Ширина -->
 					<template #title-one>
 						ШИРИНА* <span v-if="currentClinic.data.geoWidth.edited">(ИЗМЕНЕНО)</span>

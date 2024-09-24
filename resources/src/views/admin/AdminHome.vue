@@ -23,7 +23,8 @@
 			/>
 		</template>
 		<template #title v-if="modal.style.create || modal.style.delete">
-			{{ modal.title }}
+			<span v-if="modal.style.create">СЛАЙД (СОЗДАНИЕ)</span>
+			<span v-if="modal.style.delete">СЛАЙД (УДАЛЕНИЕ)</span>
 		</template>
 		<template
 			#title
@@ -67,7 +68,8 @@
 			<!-- Название -->
 			<ContainerInputOnce>
 				<template #title>
-					НАЗВАНИЕ* <span v-if="currentSlide.data.name.edited"> (ИЗМЕНЕНО) </span>
+					<span :class="{ create: modal.type == 'create' }">НАЗВАНИЕ*</span>
+					<span v-if="currentSlide.data.name.edited"> (ИЗМЕНЕНО) </span>
 				</template>
 				<template #input>
 					<input
@@ -90,7 +92,7 @@
 			<!-- Ссылка -->
 			<ContainerInputOnce>
 				<template #title>
-					ССЫЛКА*
+					<span :class="{ create: modal.type == 'create' }">ССЫЛКА*</span>
 					<span v-if="currentSlide.data.link.edited">(ИЗМЕНЕНО)</span>
 				</template>
 				<template #input>
@@ -679,7 +681,6 @@ export default {
 							this.currentSlide.data.delete.body = false;
 							this.modal.style.create = true;
 							this.modal.style.delete = false;
-							this.modal.title = "СЛАЙД (СОЗДАНИЕ)";
 							// Открытие модального окна
 							this.openModal(type);
 						}
@@ -692,7 +693,6 @@ export default {
 
 							// Проверка, создан ли слайд или уже имеется
 							if (this.currentSlide.data.create.body === true) {
-								this.modal.title = "СЛАЙД (СОЗДАНИЕ)";
 								this.modal.style.create = true;
 							} else {
 								this.modal.title = "";
