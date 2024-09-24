@@ -103,11 +103,11 @@
 </template>
 
 <script>
-import TableButtonClaim from "../../../components/ui/admin/TableButtonClaim.vue";
-import TableButtonDefault from "../../../components/ui/admin/TableButtonDefault.vue";
-import TableButtonRemove from "../../../components/ui/admin/TableButtonRemove.vue";
-import TableButtonDisabled from "../../../components/ui/admin/TableButtonDisabled.vue";
-import TableContainerButtons from "../../../components/ui/admin/TableContainerButtons.vue";
+import TableButtonClaim from "../../../components/ui/admin/tables/TableButtonClaim.vue";
+import TableButtonDefault from "../../../components/ui/admin/tables/TableButtonDefault.vue";
+import TableButtonRemove from "../../../components/ui/admin/tables/TableButtonRemove.vue";
+import TableButtonDisabled from "../../../components/ui/admin/tables/TableButtonDisabled.vue";
+import TableContainerButtons from "../../../components/ui/admin/tables/TableContainerButtons.vue";
 
 import IconFilterOn from "../../../components/icons/IconFilterOn.vue";
 import IconFilterOnReverse from "../../../components/icons/IconFilterOnReverse.vue";

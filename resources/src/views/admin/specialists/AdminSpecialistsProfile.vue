@@ -329,15 +329,15 @@ import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
 
-import ElementInputLabel from "../../../components/ui/admin/ElementInputLabel.vue";
+import ElementInputLabel from "../../../components/ui/admin/elements/ElementInputLabel.vue";
 import BlockOnce from "../../../components/ui/admin/BlockOnce.vue";
 import BlockTwo from "../../../components/ui/admin/BlockTwo.vue";
 import BlockTitle from "../../../components/ui/admin/BlockTitle.vue";
 import BlockButtons from "../../../components/ui/admin/BlockButtons.vue";
 import SpanError from "../../../components/ui/admin/SpanError.vue";
 
-import TableButtonDefault from "../../../components/ui/admin/TableButtonDefault.vue";
-import TableButtonRemove from "../../../components/ui/admin/TableButtonRemove.vue";
+import TableButtonDefault from "../../../components/ui/admin/tables/TableButtonDefault.vue";
+import TableButtonRemove from "../../../components/ui/admin/tables/TableButtonRemove.vue";
 
 import IconClose from "../../../components/icons/IconClose.vue";
 
@@ -346,8 +346,8 @@ import ContainerInputOnce from "../../../components/ui/admin/containers/input/Co
 import ContainerInputTwo from "../../../components/ui/admin/containers/input/ContainerInputTwo.vue";
 import ContainerInputThree from "../../../components/ui/admin/containers/input/ContainerInputThree.vue";
 
-import ButtonDefault from "../../../components/ui/admin/ButtonDefault.vue";
-import ButtonRemove from "../../../components/ui/admin/ButtonRemove.vue";
+import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
+import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
 
 import IconSave from "../../../components/icons/IconSave.vue";
 

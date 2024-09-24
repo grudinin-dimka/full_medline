@@ -54,6 +54,10 @@ export default {
 	transition: all 0.2s;
 }
 
+.container-select-once > select:focus {
+	border: 2px solid var(--input-border-color-active);
+}
+
 .container-select-once > option::placeholder {
 	color: var(--input-placeholder-color);
 }

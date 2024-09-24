@@ -31,7 +31,7 @@ import { RouterLink, RouterView } from "vue-router";
 import axios from "axios";
 
 import Logo from "./icons/logo.vue";
-import ButtonDefault from "./ui/admin/ButtonDefault.vue";
+import ButtonDefault from "./ui/admin/buttons/ButtonDefault.vue";
 
 export default {
    beforeCreate() {

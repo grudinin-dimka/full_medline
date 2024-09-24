@@ -11,7 +11,12 @@
 			<ContainerInputOnce>
 				<template #title>
 					<span :class="{ create: modal.type == 'create' }">НАЗВАНИЕ*</span>
-					<span v-if="currentWork.data.name.edited"> (ИЗМЕНЕНО)</span>
+					<span
+						:class="{ create: modal.type == 'create' }"
+						v-if="currentWork.data.name.edited"
+					>
+						(ИЗМЕНЕНО)
+					</span>
 				</template>
 				<template #input>
 					<input
@@ -33,7 +38,12 @@
 			<ContainerTextareaOnce>
 				<template #title>
 					<span :class="{ create: modal.type == 'create' }">ОРГАНИЗАЦИЯ*</span>
-					<span v-if="currentWork.data.organization.edited"> (ИЗМЕНЕНО)</span>
+					<span
+						:class="{ create: modal.type == 'create' }"
+						v-if="currentWork.data.organization.edited"
+					>
+						(ИЗМЕНЕНО)
+					</span>
 				</template>
 				<template #textarea>
 					<textarea
@@ -56,10 +66,10 @@
 				<template #legend>
 					<span :class="{ create: modal.type == 'create' }">НАЧАЛО И ОКОНЧАНИЕ РАБОТЫ</span>
 				</template>
-				<!-- Город -->
+				<!-- Начало работы -->
 				<template #title-one>
 					<span :class="{ create: modal.type == 'create' }">ДАТА НАЧАЛА*</span>
-					<span v-if="currentWork.data.startWork.edited"> (ИЗМЕНЕНО)</span>
+					<span  v-if="currentWork.data.startWork.edited"> (ИЗМЕНЕНО)</span>
 				</template>
 				<template #input-one>
 					<input
@@ -76,7 +86,7 @@
 						{{ currentWork.errors.startWork.body }}
 					</span>
 				</template>
-				<!-- УЛИЦА -->
+				<!-- Конец работы -->
 				<template #title-two>
 					<span :class="{ create: modal.type == 'create' }">ДАТА ОКОНЧАНИЯ*</span>
 					<span v-if="currentWork.data.endWork.edited"> (ИЗМЕНЕНО)</span>
@@ -119,7 +129,7 @@
 
 	<block-once>
 		<block-title>
-			<template #title>МЕСТА РАБОТЫ</template>
+			<template #title>Места работы</template>
 			<template #buttons>
 				<icon-save :width="28" :height="28" />
 			</template>
@@ -142,7 +152,7 @@
 		/>
 
 		<block-buttons>
-			<button-default @click=""> Добавить </button-default>
+			<button-default @click="createWork"> Добавить </button-default>
 		</block-buttons>
 	</block-once>
 </template>
@@ -154,7 +164,7 @@ import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
 
-import ElementInputLabel from "../../../components/ui/admin/ElementInputLabel.vue";
+import ElementInputLabel from "../../../components/ui/admin/elements/ElementInputLabel.vue";
 import BlockOnce from "../../../components/ui/admin/BlockOnce.vue";
 import BlockTitle from "../../../components/ui/admin/BlockTitle.vue";
 import BlockButtons from "../../../components/ui/admin/BlockButtons.vue";
@@ -168,8 +178,8 @@ import ContainerInputThree from "../../../components/ui/admin/containers/input/C
 import ContainerSelectOnce from "../../../components/ui/admin/containers/select/ContainerSelectOnce.vue";
 import ContainerTextareaOnce from "../../../components/ui/admin/containers/textarea/ContainerTextareaOnce.vue";
 
-import ButtonDefault from "../../../components/ui/admin/ButtonDefault.vue";
-import ButtonRemove from "../../../components/ui/admin/ButtonRemove.vue";
+import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
+import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
 
 import IconSave from "../../../components/icons/IconSave.vue";
 

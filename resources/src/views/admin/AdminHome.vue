@@ -312,7 +312,7 @@
 <script>
 import axios from "axios";
 
-import ElementInputLabel from "../../components/ui/admin/ElementInputLabel.vue";
+import ElementInputLabel from "../../components/ui/admin/elements/ElementInputLabel.vue";
 
 import LoaderChild from "../../components/includes/LoaderChild.vue";
 
@@ -325,8 +325,8 @@ import BlockTitle from "../../components/ui/admin/BlockTitle.vue";
 import BlockOnce from "../../components/ui/admin/BlockOnce.vue";
 import BlockButtons from "../../components/ui/admin/BlockButtons.vue";
 
-import ButtonDefault from "../../components/ui/admin/ButtonDefault.vue";
-import ButtonRemove from "../../components/ui/admin/ButtonRemove.vue";
+import ButtonDefault from "../../components/ui/admin/buttons/ButtonDefault.vue";
+import ButtonRemove from "../../components/ui/admin/buttons/ButtonRemove.vue";
 
 import SlideUserCard from "../../components/icons/SlideUserCard.vue";
 import SlideLink from "../../components/icons/SlideLink.vue";

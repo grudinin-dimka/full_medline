@@ -109,7 +109,6 @@
 							v-model="currentEducation.data.id_specialization.body"
 							:class="{ error: currentEducation.errors.id_specialization.status }"
 							@blur="checkModalInput('id_specialization', 'select')"
-							@input="currentEducation.data.id_specialization.edited = true"
 						>
 							<option value="">Ничего не выбрано...</option>
 							<option :value="specialization.id" v-for="specialization in specializations">
@@ -179,7 +178,7 @@ import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
 
-import ElementInputLabel from "../../../components/ui/admin/ElementInputLabel.vue";
+import ElementInputLabel from "../../../components/ui/admin/elements/ElementInputLabel.vue";
 import BlockOnce from "../../../components/ui/admin/BlockOnce.vue";
 import BlockTitle from "../../../components/ui/admin/BlockTitle.vue";
 import BlockButtons from "../../../components/ui/admin/BlockButtons.vue";
@@ -193,8 +192,8 @@ import ContainerTextareaOnce from "../../../components/ui/admin/containers/texta
 
 import AdminSpecialistsTable from "./AdminSpecialistsTable.vue";
 
-import ButtonDefault from "../../../components/ui/admin/ButtonDefault.vue";
-import ButtonRemove from "../../../components/ui/admin/ButtonRemove.vue";
+import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
+import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
 
 import IconSave from "../../../components/icons/IconSave.vue";
 
