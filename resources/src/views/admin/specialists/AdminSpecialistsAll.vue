@@ -8,7 +8,7 @@
 		<block-title>
 			<template #title>Список врачей</template>
 			<template #buttons>
-				<icon-save :width="28" :height="28" @click="saveSpecialistHides" />
+				<icon-save :width="28" :height="28" @click="saveSpecialistChanges" />
 			</template>
 		</block-title>
 
@@ -94,6 +94,9 @@ export default {
 		/* 1. Фильтрация                                        */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		filterSpecialists(column, type) {
+			// Объявляем объект Intl.Collator, который обеспечивает сравнение строк с учётом языка.
+			const collator = new Intl.Collator("ru");
+
 			switch (column) {
 				case "id":
 					if (type == "default") {
@@ -125,39 +128,19 @@ export default {
 				case "name":
 					if (type == "default") {
 						this.specialists.sort((a, b) => {
-							let aName = a.name.toLowerCase();
-							let bName = b.name.toLowerCase();
+							let aFullName = a.family + " " + a.name + " " + a.surname;
+							let bFullName = b.family + " " + b.name + " " + b.surname;
 
-							let aNameFirstLetter = aName[0].charCodeAt(0);
-							let bNameFirstLetter = bName[0].charCodeAt(0);
-
-							if (aNameFirstLetter > bNameFirstLetter) {
-								return 1;
-							}
-							if (aNameFirstLetter < bNameFirstLetter) {
-								return -1;
-							}
-							// a должно быть равным b
-							return 0;
+							return collator.compare(aFullName, bFullName);
 						});
 					}
 
 					if (type == "reverse") {
-						this.specialists.sort((a, b) => {
-							let aName = a.name.toLowerCase();
-							let bName = b.name.toLowerCase();
+						this.specialists.reverse((a, b) => {
+							let aFullName = a.family + " " + a.name + " " + a.surname;
+							let bFullName = b.family + " " + b.name + " " + b.surname;
 
-							let aNameFirstLetter = aName[0].charCodeAt(0);
-							let bNameFirstLetter = bName[0].charCodeAt(0);
-
-							if (aNameFirstLetter < bNameFirstLetter) {
-								return 1;
-							}
-							if (aNameFirstLetter > bNameFirstLetter) {
-								return -1;
-							}
-							// a должно быть равным b
-							return 0;
+							return collator.compare(aFullName, bFullName);
 						});
 					}
 
@@ -165,39 +148,13 @@ export default {
 				case "specialization":
 					if (type == "default") {
 						this.specialists.sort((a, b) => {
-							let aName = a.specializations.toLowerCase();
-							let bName = b.specializations.toLowerCase();
-
-							let aNameFirstLetter = aName.charCodeAt(0);
-							let bNameFirstLetter = bName.charCodeAt(0);
-
-							if (aNameFirstLetter > bNameFirstLetter) {
-								return 1;
-							}
-							if (aNameFirstLetter < bNameFirstLetter) {
-								return -1;
-							}
-							// a должно быть равным b
-							return 0;
+							return collator.compare(a.specializations, b.specializations);
 						});
 					}
 
 					if (type == "reverse") {
-						this.specialists.sort((a, b) => {
-							let aName = a.specializations.toLowerCase();
-							let bName = b.specializations.toLowerCase();
-
-							let aNameFirstLetter = aName.charCodeAt(0);
-							let bNameFirstLetter = bName.charCodeAt(0);
-
-							if (aNameFirstLetter < bNameFirstLetter) {
-								return 1;
-							}
-							if (aNameFirstLetter > bNameFirstLetter) {
-								return -1;
-							}
-							// a должно быть равным b
-							return 0;
+						this.specialists.reverse((a, b) => {
+							return collator.compare(a.specializations, b.specializations);
 						});
 					}
 
@@ -205,10 +162,10 @@ export default {
 				case "hide":
 					if (type == "default") {
 						this.specialists.sort((a, b) => {
-							if (a.hide < b.hide) {
+							if (a.hide > b.hide) {
 								return 1;
 							}
-							if (a.hide > b.hide) {
+							if (a.hide < b.hide) {
 								return -1;
 							}
 							// a должно быть равным b
@@ -218,10 +175,10 @@ export default {
 
 					if (type == "reverse") {
 						this.specialists.sort((a, b) => {
-							if (a.hide > b.hide) {
+							if (a.hide < b.hide) {
 								return 1;
 							}
-							if (a.hide < b.hide) {
+							if (a.hide > b.hide) {
 								return -1;
 							}
 							// a должно быть равным b
@@ -258,31 +215,75 @@ export default {
 			specialistToDelete[0].delete = !specialistToDelete[0].delete;
 		},
 		// Скрытие выбранного доктора
-		saveSpecialistHides() {
+		saveSpecialistChanges() {
+			let newArray = [];
+
+			for (let key in this.specialists) {
+				newArray.push(Object.assign({}, this.specialists[key]));
+			}
+
+			newArray.sort((a, b) => {
+				if (a.id > b.id) {
+					return 1;
+				} else if (a.id < b.id) {
+					return -1;
+				} else {
+					return 0;
+				}
+			});
+
 			// Получение массива докторов с сервера
 			axios({
 				method: "post",
+				url: `${this.$store.state.axios.urlApi}` + `save-specialists-changes`,
 				headers: {
 					Accept: "application/json",
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: {
-					specialists: this.specialists,
+					specialists: newArray,
 				},
-				url: `${this.$store.state.axios.urlApi}` + `save-specialists-hides`,
 			})
 				.then((response) => {
-					let debbugStory = {
-						title: "Успешно!",
-						body: "Данные о специалистах обновлены в базе данных.",
-						type: "Completed",
-					};
-					this.$store.commit("debuggerState", debbugStory);
+					try {
+						// Получения нового массива, с данными помеченными на удаление
+						let res = this.specialists.filter((item) => {
+							if (item.delete == true) {
+								return Object.assign({}, item);
+							}
+						});
+
+						// Повторять, пока не будут удалены все элементы, помеченные на удаление
+						while (res.length > 0) {
+							/* Получение индекса элемента, помеченного на удаление из массива специалистов */
+							this.specialists.splice(this.specialists.indexOf(res[0]), 1);
+							/* Обновление списка с элементами, помеченными на удаление */
+							res = this.specialists.filter((item) => {
+								if (item.delete == true) {
+									return Object.assign({}, item);
+								}
+							});
+						}
+
+						let debbugStory = {
+							title: "Успешно!",
+							body: "Данные сохранились.",
+							type: "Completed",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					} catch (error) {
+						let debbugStory = {
+							title: "Ошибка.",
+							body: "После сохранения что-то пошло не так.",
+							type: "Error",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					}
 				})
 				.catch((error) => {
 					let debbugStory = {
 						title: "Ошибка.",
-						body: "Произошла ошибка при сохранении изменений.",
+						body: "Данные почему-то не сохранились.",
 						type: "Error",
 					};
 					this.$store.commit("debuggerState", debbugStory);
@@ -301,6 +302,10 @@ export default {
 		})
 			.then((response) => {
 				this.specialists = response.data;
+
+				for (let key in this.specialists) {
+					this.specialists[key].delete = false;
+				}
 
 				this.loading.loader = false;
 			})

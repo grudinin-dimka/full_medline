@@ -58,7 +58,7 @@ Route::post('/save-footer', [AdminController::class, 'saveFooter'])->middleware(
 /* 2. Специалисты                                       */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 /* 2.1. Врачи                                           */
-Route::post('/save-specialists-hides', [AdminController::class, 'saveSpecialistsHides'])->middleware('auth:sanctum');
+Route::post('/save-specialists-changes', [AdminController::class, 'saveSpecialistsChanges'])->middleware('auth:sanctum');
 /* 2.2. Специализации                                   */
 Route::post('/save-specializations-changes', [AdminController::class, 'saveSpecializationsChanges'])->middleware('auth:sanctum');
 /* 2.3. Клиники                                         */

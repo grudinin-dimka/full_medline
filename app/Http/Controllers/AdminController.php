@@ -172,42 +172,23 @@ class AdminController extends Controller
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
    /* Сохранение специалистов */ 
    public function saveSpecialistsChanges(Request $request) {
-      // Удаление специалистов, подлежащих удалению
+      // Удаление помеченных
       foreach ($request->specialists as $key => $value) {
          if ($value['delete'] === true) {
-            var_dump('id: ' . $value['id']);
             $specialist = Specialist::find($value['id']);
             $specialist->delete();
          };
-      };
-      
-      // Добавление новых специалистов
+      };      
+
+      // Обновление данных
       foreach ($request->specialists as $key => $value) {
-         if ($value["create"] === true){
-            $specialistCreate = Specialist::create([
-               "name" => $value['name'],
-               "specialization" => $value['specialization'],
-               "startWorkAge" => $value['startWorkAge'],
-               "specializationAdvanced" => $value['specializationAdvanced'],
-               "education" => $value['education'],
-               "link" => $value['link'],
-               "hide" => $value['hide'],
-               "filename" => $value['filename']   
+         if ($value['delete'] !== true) {
+            $specialist = Specialist::find($value['id']);
+            $specialist->update([
+               'hide' => $value['hide'],
             ]);
          };
-      };
-
-      return true;
-   }
-   /* Сохранение специалистов */ 
-   public function saveSpecialistsHides(Request $request) {
-      foreach ($request->specialists as $key => $value) {
-         $specialist = Specialist::find($value['id']);
-         $specialist->hide = $value['hide'];
-         $specialist->save();
-      }
-
-      return true;
+      };      
    }
    /* _____________________________________________________*/
    /* 2. Специализации                                     */
@@ -436,6 +417,18 @@ class AdminController extends Controller
                'new' => $certificateToCreate->id
             ];            
          };       
+      }
+
+      // Обновление данных 
+      foreach ($request->certificates as $key => $value) {
+         if ($value["delete"] !== true && $value['create'] !== true){
+            $certificate = Certificate::find($value['id']);
+            $certificateUpdate = $certificate->update([
+               "organization" => $value['organization'],
+               "endEducation" => $value['endEducation'],
+               "name" => $value['name'],
+            ]);     
+         }         
       }
 
       return $arrayID;      
