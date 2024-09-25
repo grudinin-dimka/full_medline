@@ -585,8 +585,8 @@ export default {
 		saveCertificatesChanges() {
 			let newArray = [];
 
-			for (let key in this.works) {
-				newArray.push(Object.assign({}, this.works[key]));
+			for (let key in this.certificates) {
+				newArray.push(Object.assign({}, this.certificates[key]));
 			}
 
 			newArray.sort((a, b) => {
@@ -611,7 +611,7 @@ export default {
 				},
 			})
 				.then((response) => {
-					// try {
+					try {
 						// Обновление id добавленных элементов на данные из бд
 						for (let key in response.data) {
 							let сertificate = this.certificates.filter((item) => {
@@ -653,14 +653,14 @@ export default {
 							type: "Completed",
 						};
 						this.$store.commit("debuggerState", debbugStory);
-					// } catch (error) {
-					// 	let debbugStory = {
-					// 		title: "Ошибка.",
-					// 		body: "После сохранения что-то пошло не так.",
-					// 		type: "Error",
-					// 	};
-					// 	this.$store.commit("debuggerState", debbugStory);
-					// }
+					} catch (error) {
+						let debbugStory = {
+							title: "Ошибка.",
+							body: "После сохранения что-то пошло не так.",
+							type: "Error",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					}
 				})
 				.catch((error) => {
 					let debbugStory = {

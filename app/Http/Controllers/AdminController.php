@@ -403,7 +403,6 @@ class AdminController extends Controller
          }         
       }
       
-
       return $arrayID;      
    }   
    /* _____________________________________________________*/
@@ -438,5 +437,7 @@ class AdminController extends Controller
             ];            
          };       
       }
+
+      return $arrayID;      
    }
 }
