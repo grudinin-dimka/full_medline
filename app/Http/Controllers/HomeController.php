@@ -17,9 +17,13 @@ use App\Models\Specialist;
 use App\Models\Specialization;
 use App\Models\SpecialistSpecialization;
 use App\Models\Clinic;
+use App\Models\SpecialistClinic;
 use App\Models\Education;
+use App\Models\SpecialistEducation;
 use App\Models\Work;
+use App\Models\SpecialistWork;
 use App\Models\Certificate;
+use App\Models\SpecialistCertificate;
 
 use Illuminate\Support\Facades\Storage;
 
@@ -99,13 +103,6 @@ class HomeController extends Controller
          };
       };
    }
-   /* Вывод полной информации о враче */
-   public function getSpecialistAll(Request $request) {
-      $specialist = Specialist::where('id', $request->id)->first();
-      $specialist->path = Storage::url('specialists/' . $specialist->filename);
-
-      return $specialist;
-   }
    /* Вывод сокращенной информации о врачах */ 
    public function getSpecialistsShort(Request $request) {
       $specialistsShort = Specialist::select('id', 'family', 'name', 'surname', 'hide')->get();
@@ -128,6 +125,31 @@ class HomeController extends Controller
 
       // $SpecialistSpecializations = SpecialistSpecialization::where('id_specialist', 1)->get();
       return $specialistsShort;
+   }
+   /* Вывод полной информации о враче */
+   public function getSpecialistAll(Request $request) {
+      $specialist = Specialist::where('id', $request->id)->first();
+      $specialist->path = Storage::url('specialists/' . $specialist->filename);
+
+      return response()->json([
+         "specialist" => (object) [
+            "profile" => $specialist,
+            "connections" => (object) [
+               "specializations" => SpecialistSpecialization::where('id_specialist', $request->id)->get(),
+               "certificates" => SpecialistCertificate::where('id_specialist', $request->id)->get(),
+               "clinics" => SpecialistClinic::where('id_specialist', $request->id)->get(),
+               "educations" => SpecialistEducation::where('id_specialist', $request->id)->get(),
+               "works" => SpecialistWork::where('id_specialist', $request->id)->get(),                  
+            ],
+         ],
+         "sections" => (object) [
+            "specializations" => Specialization::all(),
+            "certificates" => Certificate::all(),
+            "clinics" => Clinic::all(),
+            "educations" => Education::all(),
+            "works" => Work::all(),
+         ],
+      ]);
    }
    /* _____________________________________________________*/
    /* 2. Специализации                                     */
