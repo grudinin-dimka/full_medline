@@ -702,9 +702,9 @@ export default {
 				return;
 
 			try {
-				let clinicToUpdate = this.clinics.filter((clinic) => {
-					if (clinic.id === this.currentClinic.data.id.body) {
-						return clinic;
+				let clinicToUpdate = this.clinics.filter((item) => {
+					if (item.id === this.currentClinic.data.id.body) {
+						return item;
 					}
 				});
 
@@ -802,18 +802,18 @@ export default {
 					try {
 						// Обновление id добавленных элементов на данные из бд
 						for (let key in response.data) {
-							let clinic = this.clinics.filter((clinic) => {
-								if (clinic.id === response.data[key].old) {
-									return clinic;
+							let clinic = this.clinics.filter((item) => {
+								if (item.id === response.data[key].old) {
+									return item;
 								}
 							});
 							clinic[0].id = response.data[key].new;
 						}
 
 						// Получения нового массива клиник, помеченных на удаление
-						let res = this.clinics.filter((clinic) => {
-							if (clinic.delete == true) {
-								return Object.assign({}, clinic);
+						let res = this.clinics.filter((item) => {
+							if (item.delete == true) {
+								return Object.assign({}, item);
 							}
 						});
 
@@ -822,9 +822,9 @@ export default {
 							/* Получение индекса элемента, помеченного на удаление из массива специалистов */
 							this.clinics.splice(this.clinics.indexOf(res[0]), 1);
 							/* Обновление списка с элементами, помеченными на удаление */
-							res = this.clinics.filter((clinic) => {
-								if (clinic.delete == true) {
-									return Object.assign({}, clinic);
+							res = this.clinics.filter((item) => {
+								if (item.delete == true) {
+									return Object.assign({}, item);
 								}
 							});
 						}

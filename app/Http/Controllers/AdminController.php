@@ -22,6 +22,7 @@ use App\Models\Specialization;
 use App\Models\Clinic;
 use App\Models\Education;
 use App\Models\Work;
+use App\Models\Certificate;
 
 class AdminController extends Controller
 {
@@ -356,7 +357,7 @@ class AdminController extends Controller
       return $arrayID;      
    }
    /* _____________________________________________________*/
-   /* 5. Образования                                       */
+   /* 5. Прошлые работы                                    */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
    /* Сохранение изменений работ */
    public function saveWorkChanges(Request $request) {
@@ -385,6 +386,55 @@ class AdminController extends Controller
                'old' => $value['id'], 
                // Новый id
                'new' => $workToCreate->id
+            ];            
+         };       
+      }
+
+      // Обновление данных 
+      foreach ($request->works as $key => $value) {
+         if ($value["delete"] !== true && $value['create'] !== true){
+            $work = Work::find($value['id']);
+            $workUpdate = $work->update([
+               "startWork" => $value['startWork'],
+               "endWork" => $value['endWork'],
+               "organization" => $value['organization'],
+               "name" => $value['name'],
+            ]);     
+         }         
+      }
+      
+
+      return $arrayID;      
+   }   
+   /* _____________________________________________________*/
+   /* 6. Сертификаты                                       */
+   /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+   /* Сохранение изменений сертификатов */
+   public function saveCertificatesChanges(Request $request) {
+      // Удаление помеченных
+      foreach ($request->certificates as $key => $value) {
+         if ($value["delete"] === true){
+            $certificate = Certificate::find($value['id']);
+            $certificate->delete();
+         }         
+      }
+
+      $arrayID = [];
+      // Добавление новых
+      foreach ($request->certificates as $key => $value) {
+         if ($value["create"] === true) {
+            $certificateToCreate = Certificate::create([
+               "organization" => $value['organization'],
+               "endEducation" => $value['endEducation'],
+               "name" => $value['name'],
+            ]);
+
+            /* Запись нового объекта в массив */
+            $arrayID[] = (object) [
+               // Прошлый id
+               'old' => $value['id'], 
+               // Новый id
+               'new' => $certificateToCreate->id
             ];            
          };       
       }

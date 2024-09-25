@@ -352,63 +352,6 @@ export default {
 			this.modal.status = false;
 			document.body.classList.remove("modal-open");
 		},
-		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                 Специализации                     |*/
-		/* |___________________________________________________|*/
-		/* _____________________________________________________*/
-		/* 1. Фильтрация                                        */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		/* Фильтрация по столбцу */
-		filterWorks(column, type) {
-			// Объявляем объект Intl.Collator, который обеспечивает сравнение строк с учётом языка.
-			const collator = new Intl.Collator("ru");
-
-			switch (column) {
-				case "id":
-					if (type == "default") {
-						this.works.sort((a, b) => {
-							if (a.id > b.id) {
-								return 1;
-							}
-							if (a.id < b.id) {
-								return -1;
-							}
-							// a должно быть равным b
-							return 0;
-						});
-					}
-
-					if (type == "reverse") {
-						this.works.sort((a, b) => {
-							if (a.id < b.id) {
-								return 1;
-							}
-							if (a.id > b.id) {
-								return -1;
-							}
-							// a должно быть равным b
-							return 0;
-						});
-					}
-					break;
-				case "name":
-					if (type == "default") {
-						this.works.sort((a, b) => {
-							return collator.compare(a.name, b.name);
-						});
-					}
-
-					if (type == "reverse") {
-						this.works.reverse((a, b) => {
-							return collator.compare(a.name, b.name);
-						});
-					}
-
-					break;
-				default:
-					break;
-			}
-		},
 		/* _____________________________________________________*/
 		/* 2. Работа с полями ввода модального окна             */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
@@ -459,34 +402,6 @@ export default {
 				message: "Ошибок нет.",
 			};
 		},
-		checkSelect(value) {
-			/* Проверка на пустую строку */
-			if (value == "" || value == "null") {
-				return {
-					status: true,
-					message: "Поле не может быть пустым.",
-				};
-			}
-
-			/* Проверка на наличие в массиве со специализациями */
-			let valueInSpecializations = this.specializations.find((element, index, array) => {
-				if (element.id == value) {
-					return true;
-				}
-			});
-
-			if (valueInSpecializations) {
-				return {
-					status: false,
-					message: "Ошибок нет.",
-				};
-			} else {
-				return {
-					status: true,
-					message: "Такого значения нет в специализациях.",
-				};
-			}
-		},
 		// Проверка поля имени
 		checkModalInput(dataKey, inputType) {
 			let errorLog = {};
@@ -496,9 +411,6 @@ export default {
 					break;
 				case "number":
 					errorLog = this.checkInputNumber(this.currentWork.data[dataKey].body);
-					break;
-				case "select":
-					errorLog = this.checkSelect(this.currentWork.data[dataKey].body);
 					break;
 				default:
 					break;
@@ -554,6 +466,63 @@ export default {
 			for (let key in this.currentWork.errors) {
 				this.currentWork.errors[key].body = "";
 				this.currentWork.errors[key].status = false;
+			}
+		},
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                 Специализации                     |*/
+		/* |___________________________________________________|*/
+		/* _____________________________________________________*/
+		/* 1. Фильтрация                                        */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* Фильтрация по столбцу */
+		filterWorks(column, type) {
+			// Объявляем объект Intl.Collator, который обеспечивает сравнение строк с учётом языка.
+			const collator = new Intl.Collator("ru");
+
+			switch (column) {
+				case "id":
+					if (type == "default") {
+						this.works.sort((a, b) => {
+							if (a.id > b.id) {
+								return 1;
+							}
+							if (a.id < b.id) {
+								return -1;
+							}
+							// a должно быть равным b
+							return 0;
+						});
+					}
+
+					if (type == "reverse") {
+						this.works.sort((a, b) => {
+							if (a.id < b.id) {
+								return 1;
+							}
+							if (a.id > b.id) {
+								return -1;
+							}
+							// a должно быть равным b
+							return 0;
+						});
+					}
+					break;
+				case "name":
+					if (type == "default") {
+						this.works.sort((a, b) => {
+							return collator.compare(a.name, b.name);
+						});
+					}
+
+					if (type == "reverse") {
+						this.works.reverse((a, b) => {
+							return collator.compare(a.name, b.name);
+						});
+					}
+
+					break;
+				default:
+					break;
 			}
 		},
 		/* _____________________________________________________*/
@@ -677,9 +646,9 @@ export default {
 					try {
 						// Обновление id добавленных элементов на данные из бд
 						for (let key in response.data) {
-							let work = this.works.filter((work) => {
-								if (work.id === response.data[key].old) {
-									return work;
+							let work = this.works.filter((item) => {
+								if (item.id === response.data[key].old) {
+									return item;
 								}
 							});
 							work[0].id = response.data[key].new;
@@ -697,9 +666,9 @@ export default {
 							/* Получение индекса элемента, помеченного на удаление из массива специалистов */
 							this.works.splice(this.works.indexOf(res[0]), 1);
 							/* Обновление списка с элементами, помеченными на удаление */
-							res = this.works.filter((work) => {
-								if (work.delete == true) {
-									return Object.assign({}, work);
+							res = this.works.filter((item) => {
+								if (item.delete == true) {
+									return Object.assign({}, item);
 								}
 							});
 						}

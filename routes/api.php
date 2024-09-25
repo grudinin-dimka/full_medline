@@ -68,6 +68,8 @@ Route::post('/save-clinics-changes', [AdminController::class, 'saveClinicsChange
 Route::post('/save-educations-changes', [AdminController::class, 'saveEducationsChanges'])->middleware('auth:sanctum');
 /* 2.5. Прошлые работы                                  */
 Route::post('/save-works-changes', [AdminController::class, 'saveWorkChanges'])->middleware('auth:sanctum');
+/* 2.5. Прошлые работы                                  */
+Route::post('/save-certificates-changes', [AdminController::class, 'saveCertificatesChanges'])->middleware('auth:sanctum');
 
 
 

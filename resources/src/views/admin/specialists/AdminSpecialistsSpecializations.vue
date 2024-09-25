@@ -438,9 +438,9 @@ export default {
 		},
 		/* Пометка на удаление */
 		removeSpecialization(id) {
-			let specializationToDelete = this.specializations.filter((specialization) => {
-				if (specialization.id === id) {
-					return specialization;
+			let specializationToDelete = this.specializations.filter((item) => {
+				if (item.id === id) {
+					return item;
 				}
 			});
 
@@ -450,9 +450,9 @@ export default {
 		updateSpecialization() {
 			if (this.checkModalInputsAll(["name"])) return;
 			try {
-				let specializationToUpdate = this.specializations.filter((specialization) => {
-					if (specialization.id === this.currentSpecialization.data.id.body) {
-						return specialization;
+				let specializationToUpdate = this.specializations.filter((item) => {
+					if (item.id === this.currentSpecialization.data.id.body) {
+						return item;
 					}
 				});
 
@@ -500,18 +500,18 @@ export default {
 					try {
 						// Обновление id добавленных элементов на данные из бд
 						for (let key in response.data) {
-							let specialization = this.specializations.filter((specialization) => {
-								if (specialization.id === response.data[key].old) {
-									return specialization;
+							let specialization = this.specializations.filter((item) => {
+								if (item.id === response.data[key].old) {
+									return item;
 								}
 							});
 							specialization[0].id = response.data[key].new;
 						}
 
 						// Получения нового массива специалистов, помеченных на удаление
-						let res = this.specializations.filter((specialization) => {
-							if (specialization.delete == true) {
-								return Object.assign({}, specialization);
+						let res = this.specializations.filter((item) => {
+							if (item.delete == true) {
+								return Object.assign({}, item);
 							}
 						});
 
@@ -520,9 +520,9 @@ export default {
 							/* Получение индекса элемента, помеченного на удаление из массива специалистов */
 							this.specializations.splice(this.specializations.indexOf(res[0]), 1);
 							/* Обновление списка с элементами, помеченными на удаление */
-							res = this.specializations.filter((specialization) => {
-								if (specialization.delete == true) {
-									return Object.assign({}, specialization);
+							res = this.specializations.filter((item) => {
+								if (item.delete == true) {
+									return Object.assign({}, item);
 								}
 							});
 						}

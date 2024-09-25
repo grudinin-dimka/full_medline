@@ -706,18 +706,18 @@ export default {
 					try {
 						// Обновление id добавленных элементов на данные из бд
 						for (let key in response.data) {
-							let education = this.educations.filter((education) => {
-								if (education.id === response.data[key].old) {
-									return education;
+							let education = this.educations.filter((item) => {
+								if (item.id === response.data[key].old) {
+									return item;
 								}
 							});
 							education[0].id = response.data[key].new;
 						}
 
 						// Получения нового массива специалистов, помеченных на удаление
-						let res = this.educations.filter((education) => {
-							if (education.delete == true) {
-								return Object.assign({}, education);
+						let res = this.educations.filter((item) => {
+							if (item.delete == true) {
+								return Object.assign({}, item);
 							}
 						});
 
@@ -726,9 +726,9 @@ export default {
 							/* Получение индекса элемента, помеченного на удаление из массива специалистов */
 							this.educations.splice(this.educations.indexOf(res[0]), 1);
 							/* Обновление списка с элементами, помеченными на удаление */
-							res = this.educations.filter((education) => {
-								if (education.delete == true) {
-									return Object.assign({}, education);
+							res = this.educations.filter((item) => {
+								if (item.delete == true) {
+									return Object.assign({}, item);
 								}
 							});
 						}
