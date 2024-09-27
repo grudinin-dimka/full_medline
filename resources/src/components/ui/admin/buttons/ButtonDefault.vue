@@ -1,30 +1,28 @@
 <template>
-  <button>
-    <slot></slot>
-  </button>
+	<button class="default">
+		<slot></slot>
+	</button>
 </template>
 
 <script>
-export default {
-  
-}
+export default {};
 </script>
 
 <style>
-  button {
-    cursor: pointer;
+button.default {
+	cursor: pointer;
 
-    padding: 15px 30px;
-    border: 0px solid black;
-    border-radius: 10px;
+	padding: 15px 30px;
+	border: 0px solid black;
+	border-radius: 10px;
 
-    font-size: 20px;
-    color: white;
-    
-    background-color: var(--button-default-color);
-  }
+	font-size: 20px;
+	color: white;
 
-  button:hover {
-    background-color: var(--button-default-color-hover);
-  }
+	background-color: var(--button-default-color);
+}
+
+button.default:hover {
+	background-color: var(--button-default-color-hover);
+}
 </style>

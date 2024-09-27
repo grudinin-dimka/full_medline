@@ -55,47 +55,56 @@ body {
 
 /* Скролбар блока со стандартным стилем*/
 /* Define the scrollbar style */
-body::-webkit-scrollbar {
+body::-webkit-scrollbar,
+table::-webkit-scrollbar {
 	width: 17.5px;
+	height: 17.5px;
 }
 
 /* Define the thumb style */
-body::-webkit-scrollbar-thumb {
+body::-webkit-scrollbar-thumb,
+table::-webkit-scrollbar-thumb {
 	background-color: rgb(255, 255, 255);
 	border: 1px solid rgb(200, 200, 200);
 }
 
-body::-webkit-scrollbar-thumb:hover {
+body::-webkit-scrollbar-thumb:hover,
+table::-webkit-scrollbar-thumb:hover {
 	background-color: rgb(245, 245, 245);
 }
 
 /* Define the track style */
-body::-webkit-scrollbar-track {
+body::-webkit-scrollbar-track,
+table::-webkit-scrollbar-track {
 	border: 1px solid rgb(200, 200, 200);
 	background-color: rgb(225, 225, 225);
 }
 
 /* Style the beginning section of the scrollbar track */
-body::-webkit-scrollbar-track-piece:vertical:start {
+body::-webkit-scrollbar-track-piece:vertical:start,
+table::-webkit-scrollbar-track-piece:vertical:start {
 	border: 1px solid rgb(200, 200, 200);
 	background-color: rgb(215, 215, 215);
 }
 
 /* Style the end section of the scrollbar track */
-body::-webkit-scrollbar-track-piece:vertical:end {
+body::-webkit-scrollbar-track-piece:vertical:end,
+table::-webkit-scrollbar-track-piece:vertical:end {
 	border: 1px solid rgb(200, 200, 200);
 	background-color: rgb(215, 215, 215);
 }
 
 /* Define the button style */
-body::-webkit-scrollbar-button:vertical {
+body::-webkit-scrollbar-button:vertical,
+table::-webkit-scrollbar-button:vertical {
 	background-color: #ffffff;
 	background-repeat: no-repeat;
 	background-size: 50%;
 	background-position: center;
 }
 
-body::-webkit-scrollbar-button:vertical:decrement {
+body::-webkit-scrollbar-button:vertical:decrement,
+table::-webkit-scrollbar-button:vertical:decrement {
 	border-left: 1px;
 	border-top: 1px;
 	border-right: 1px;
@@ -103,10 +112,12 @@ body::-webkit-scrollbar-button:vertical:decrement {
 	border-style: solid;
 	border-color: rgb(200, 200, 200);
 
-	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' fill='%23000000' viewBox='0 0 256 256'%3E%3Cpath d='M213.66,165.66a8,8,0,0,1-11.32,0L128,91.31,53.66,165.66a8,8,0,0,1-11.32-11.32l80-80a8,8,0,0,1,11.32,0l80,80A8,8,0,0,1,213.66,165.66Z'%3E%3C/path%3E%3C/svg%3E");
+	background-image: url("../svg/arrow-up.svg");
+	background-size: 15px;
 }
 
-body::-webkit-scrollbar-button:vertical:increment {
+body::-webkit-scrollbar-button:vertical:increment,
+table::-webkit-scrollbar-button:vertical:increment {
 	border-left: 1px;
 	border-top: 0px;
 	border-right: 1px;
@@ -114,11 +125,48 @@ body::-webkit-scrollbar-button:vertical:increment {
 	border-style: solid;
 	border-color: rgb(200, 200, 200);
 
-	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' fill='%23000000' viewBox='0 0 256 256'%3E%3Cpath d='M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z'%3E%3C/path%3E%3C/svg%3E");
+	background-image: url("../svg/arrow-down.svg");
+	background-size: 15px;
+}
+
+/* Горизонтальный скроллбар */
+body::-webkit-scrollbar-button:horizontal,
+table::-webkit-scrollbar-button:horizontal {
+	background-color: #ffffff;
+	background-repeat: no-repeat;
+	background-size: 50%;
+	background-position: center;
+}
+
+body::-webkit-scrollbar-button:horizontal:decrement,
+table::-webkit-scrollbar-button:horizontal:decrement {
+	border-left: 1px;
+	border-top: 1px;
+	border-right: 0px;
+	border-bottom: 1px;
+	border-style: solid;
+	border-color: rgb(200, 200, 200);
+
+	background-image: url("../svg/arrow-left.svg");
+	background-size: 15px;
+}
+
+body::-webkit-scrollbar-button:horizontal:increment,
+table::-webkit-scrollbar-button:horizontal:increment {
+	border-left: 0px;
+	border-top: 1px;
+	border-right: 1px;
+	border-bottom: 1px;
+	border-style: solid;
+	border-color: rgb(200, 200, 200);
+
+	background-image: url("../svg/keyboard-arrow.svg");
+	background-size: 15px;
 }
 
 /* Define the button style when being hovered over */
-body::-webkit-scrollbar-button:hover {
+body::-webkit-scrollbar-button:hover,
+table::-webkit-scrollbar-button:hover {
 	background-color: rgb(245, 245, 245);
 }
 

@@ -4,7 +4,10 @@
 			<slot name="title"></slot>
 		</label>
 		<slot name="textarea"></slot>
-		<slot name="error"></slot>
+		<div class="error-counter">
+			<slot name="error"></slot>
+			<slot name="counter"></slot>
+		</div>
 	</div>
 </template>
 
@@ -30,7 +33,7 @@
 .container-textarea-once > textarea {
 	box-sizing: border-box;
 	outline: none;
-   resize: none;
+	resize: none;
 
 	padding: 10px;
 	border: 2px solid var(--input-border-color-inactive);
@@ -59,8 +62,15 @@
 	color: var(--input-placeholder-color);
 }
 
-
 span.error {
 	color: var(--span-color-error);
+}
+
+.error-counter {
+	display: flex;
+}
+
+.error-counter > span.counter {
+	margin-left: auto;
 }
 </style>

@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['https://medline.local/build'],
+    'allowed_origins' => ['https://medline.local/'],
 
     'allowed_origins_patterns' => [],
 

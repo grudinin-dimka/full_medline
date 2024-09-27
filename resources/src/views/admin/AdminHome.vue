@@ -218,86 +218,131 @@
 		</block-title>
 
 		<div class="footer-container" v-show="loading.footer">
-			<!-- Заголовок -->
-			<element-input-label>
-				ЗАГОЛОВОК <span v-if="footer.title.edited">(ИЗМЕНЕНО)</span>
-			</element-input-label>
-			<div class="block-textarea">
-				<textarea
-					rows="4"
-					placeholder="Заголовок"
-					v-model="footer.title.body"
-					@input="controlSymbols('title')"
-				>
-				</textarea>
-				<span>{{ footer.title.symbolsCount }}/{{ footer.title.symbolsCountMax }}</span>
-			</div>
-			<!-- Дополнение к заголовку -->
-			<element-input-label>
-				ДОПОЛНЕНИЕ К ЗАГОЛОВКУ
-				<span v-if="footer.titleDesc.edited">(ИЗМЕНЕНО)</span></element-input-label
-			>
-			<div class="block-textarea">
-				<textarea
-					rows="10"
-					placeholder="Заголовок"
-					v-model="footer.titleDesc.body"
-					@input="controlSymbols('titleDesc')"
-				>
-				</textarea>
-				<span>{{ footer.titleDesc.symbolsCount }}/{{ footer.titleDesc.symbolsCountMax }}</span>
-			</div>
-			<!-- Лицензия -->
-			<element-input-label>
-				ЛИЦЕНЗИЯ
-				<span v-if="footer.license.edited">(ИЗМЕНЕНО)</span>
-			</element-input-label>
-			<div class="block-textarea">
-				<textarea
-					rows="4"
-					placeholder="Заголовок"
-					v-model="footer.license.body"
-					@input="controlSymbols('license')"
-				>
-				</textarea>
-				<span>
-					{{ footer.license.symbolsCount }}
-					/
-					{{ footer.license.symbolsCountMax }}
-				</span>
-			</div>
-			<!-- Основной текст -->
-			<element-input-label>
-				ОСНОВНОЙ ТЕКСТ
-				<span v-if="footer.licenseDesc.edited"> (ИЗМЕНЕНО) </span>
-			</element-input-label>
-			<div class="block-textarea">
-				<textarea
-					rows="10"
-					placeholder="Основной текст"
-					v-model="footer.licenseDesc.body"
-					@input="controlSymbols('licenseDesc')"
-				>
-				</textarea>
-				<span
-					>{{ footer.licenseDesc.symbolsCount }}/{{ footer.licenseDesc.symbolsCountMax }}</span
-				>
-			</div>
-			<!-- Подвал -->
-			<element-input-label>
-				ПОДВАЛ
-				<span v-if="footer.footer.edited">(ИЗМЕНЕНО)</span></element-input-label
-			>
-			<div class="block-textarea">
-				<textarea
-					rows="10"
-					placeholder="Подвал"
-					v-model="footer.footer.body"
-					@input="controlSymbols('footer')"
-				>
-				</textarea>
-				<span> {{ footer.footer.symbolsCount }}/{{ footer.footer.symbolsCountMax }} </span>
-			</div>
+			<containerInput>
+				<!-- Заголовок -->
+				<div class="block-textarea">
+					<container-textarea-once>
+						<template #title>
+							<span>ЗАГОЛОВОК</span>
+							<span v-if="footer.title.edited"> (ИЗМЕНЕНО)</span>
+						</template>
+						<template #textarea>
+							<textarea
+								rows="4"
+								placeholder="Введите заголовок"
+								autocomplete="off"
+								:class="{ error: false }"
+								v-model="footer.title.body"
+								@input="controlSymbols('title')"
+							></textarea>
+						</template>
+						<template #error>
+							<span class="error" v-if="false"> Ошибка </span>
+						</template>
+					</container-textarea-once>
+					<span>{{ footer.title.symbolsCount }}/{{ footer.title.symbolsCountMax }}</span>
+				</div>
+				<!-- Дополнение к заголовку -->
+				<div class="block-textarea">
+					<container-textarea-once>
+						<template #title>
+							<span>ДОПОЛНЕНИЕ К ЗАГОЛОВКУ</span>
+							<span v-if="footer.titleDesc.edited"> (ИЗМЕНЕНО)</span>
+						</template>
+						<template #textarea>
+							<textarea
+								rows="10"
+								placeholder="Введите дополнение"
+								autocomplete="off"
+								:class="{ error: false }"
+								v-model="footer.titleDesc.body"
+								@input="controlSymbols('titleDesc')"
+							></textarea>
+						</template>
+						<template #error>
+							<span class="error" v-if="false"> Ошибка </span>
+						</template>
+					</container-textarea-once>
+					<span
+						>{{ footer.titleDesc.symbolsCount }}/{{ footer.titleDesc.symbolsCountMax }}</span
+					>
+				</div>
+				<!-- Лицензия -->
+				<div class="block-textarea">
+					<container-textarea-once>
+						<template #title>
+							<span>ЛИЦЕНЗИЯ</span>
+							<span v-if="footer.license.edited"> (ИЗМЕНЕНО)</span>
+						</template>
+						<template #textarea>
+							<textarea
+								rows="4"
+								placeholder="Введите лицензию"
+								autocomplete="off"
+								:class="{ error: false }"
+								v-model="footer.license.body"
+								@input="controlSymbols('license')"
+							></textarea>
+						</template>
+						<template #error>
+							<span class="error" v-if="false"> Ошибка </span>
+						</template>
+					</container-textarea-once>
+					<span>{{ footer.license.symbolsCount }}/{{ footer.license.symbolsCountMax }}</span>
+				</div>
+				<!-- Лицензия -->
+				<div class="block-textarea">
+					<container-textarea-once>
+						<template #title>
+							<span>ОСНОВНОЙ ТЕКСТ</span>
+							<span v-if="footer.licenseDesc.edited"> (ИЗМЕНЕНО)</span>
+						</template>
+						<template #textarea>
+							<textarea
+								rows="10"
+								placeholder="Введите основной текст"
+								autocomplete="off"
+								:class="{ error: false }"
+								v-model="footer.licenseDesc.body"
+								@input="controlSymbols('licenseDesc')"
+							></textarea>
+						</template>
+						<template #error>
+							<span class="error" v-if="false"> Ошибка </span>
+						</template>
+					</container-textarea-once>
+					<span
+						>{{ footer.licenseDesc.symbolsCount }}/{{
+							footer.licenseDesc.symbolsCountMax
+						}}</span
+					>
+				</div>
+				<!-- Лицензия -->
+				<div class="block-textarea">
+					<container-textarea-once>
+						<template #title>
+							<span>ПОДВАЛ</span>
+							<span v-if="footer.footer.edited"> (ИЗМЕНЕНО)</span>
+						</template>
+						<template #textarea>
+							<textarea
+								rows="10"
+								placeholder="Введите подвал"
+								autocomplete="off"
+								:class="{ error: false }"
+								v-model="footer.footer.body"
+								@input="controlSymbols('footer')"
+							></textarea>
+						</template>
+						<template #error>
+							<span class="error" v-if="false"> Ошибка </span>
+						</template>
+						<template #counter>
+							<span class="counter">{{ footer.footer.symbolsCount }}/{{ footer.footer.symbolsCountMax }}</span>
+						</template>
+					</container-textarea-once>
+				</div>
+			</containerInput>
 		</div>
 
 		<!-- Загрузка футера -->
@@ -319,7 +364,9 @@ import LoaderChild from "../../components/includes/LoaderChild.vue";
 import Modal from "../../components/includes/admin/AdminModal.vue";
 import InfoBar from "../../components/ui/admin/InfoBar.vue";
 
+import ContainerInput from "../../components/ui/admin/containers/ContainerInput.vue";
 import ContainerInputOnce from "../../components/ui/admin/containers/input/ContainerInputOnce.vue";
+import ContainerTextareaOnce from "../../components/ui/admin/containers/textarea/ContainerTextareaOnce.vue";
 
 import BlockTitle from "../../components/ui/admin/blocks/BlockTitle.vue";
 import BlockOnce from "../../components/ui/admin/blocks/BlockOnce.vue";
@@ -345,7 +392,9 @@ export default {
 		LoaderChild,
 		Modal,
 		InfoBar,
+		ContainerInput,
 		ContainerInputOnce,
+		ContainerTextareaOnce,
 		BlockOnce,
 		BlockTitle,
 		BlockButtons,
@@ -1416,10 +1465,16 @@ textarea:focus {
 	word-break: break-all;
 }
 
-.block-textarea span {
+.block-textarea {
+	position: relative;
 	display: flex;
 	flex-direction: column;
-	align-items: flex-end;
+}
+
+.block-textarea > span {
+	position: absolute;
+	right: 0px;
+	bottom: -20px;
 }
 
 .footer-container {

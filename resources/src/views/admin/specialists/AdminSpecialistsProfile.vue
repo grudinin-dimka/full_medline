@@ -1,4 +1,38 @@
 <template>
+	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
+	<!--|            МОДАЛЬНОЕ ОКНО (СЕРТИФИКАТЫ)           |-->
+	<!--|___________________________________________________|-->
+	<admin-modal ref="modal" @touchCloseModal="closeModal" :modal="modal">
+		<template #title>
+			<span class="create" v-if="modal.type == 'create'"> СПЕЦИАЛИЗАЦИЯ (СОЗДАНИЕ) </span>
+			<span v-if="modal.type == 'edit'">СЕРТИФИКАТЫ</span>
+		</template>
+		<template #body>
+			<div class="certificates-list">
+				<div class="item">
+					<div>Название</div>
+					<div>Организация</div>
+				</div>
+			</div>
+			<div class="certificates-list">
+				<div class="item" v-for="certificate in sections.certificates" :key="certificate.id">
+					<input type="checkbox" :id="certificate.id" :value="certificate.id" />
+					<div>{{ certificate.name }}</div>
+					<div>{{ certificate.organization }}</div>
+				</div>
+			</div>
+		</template>
+		<template #footer>
+			<block-buttons>
+				<button-claim @click="" v-if="modal.type == 'create'"> Создать </button-claim>
+				<button-default @click="" v-if="modal.type == 'edit'"> Обновить </button-default>
+			</block-buttons>
+		</template>
+	</admin-modal>
+
+	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
+	<!--|                   СПЕЦИАЛИСТЫ                     |-->
+	<!--|___________________________________________________|-->
 	<info-bar>
 		<template v-slot:title>Специалисты</template>
 		<template v-slot:addreas>specialists/{{ $route.params.id }}</template>
@@ -13,7 +47,7 @@
 			</template>
 		</block-title>
 
-		<div class="container-profile" v-show="loading.profile">
+		<div class="container-profile" v-show="loading.sections.profile">
 			<img :src="`${spesialist.profile.path.body}`" class="profile-image" alt="" />
 			<div class="profile-info">
 				<container-input-two :fieldset="true">
@@ -65,8 +99,8 @@
 			</div>
 		</div>
 		<!-- Первая работа и статус приёма -->
-		<div class="container-profile-other" v-show="loading.profile">
-			<container-input v-if="loading.profile">
+		<div class="container-profile-other" v-show="loading.sections.profile">
+			<container-input>
 				<container-input-two :fieldset="true">
 					<template #legend>ПЕРВАЯ РАБОТА</template>
 					<template #title-one>НАЧАЛО ПЕРВОЙ РАБОТЫ</template>
@@ -110,6 +144,7 @@
 			@loaderChildAfterLeave="loaderChildAfterLeave"
 		/>
 	</block-once>
+
 	<!-- Сертификаты -->
 	<block-once>
 		<block-title>
@@ -119,14 +154,19 @@
 			</template>
 		</block-title>
 
-		<div class="profile-list" v-show="loading.certificates">
+		<div class="profile-list" v-show="loading.sections.certificates">
 			<!-- Если сертификаты не выбраны -->
-			<div class="item-empty" v-if="spesialist.certificates.length == 0 && !loading.loader">
+			<div class="item-empty" v-if="spesialist.connections.certificates.length == 0">
 				<div class="item-title">Пока тут ничего нет...</div>
 			</div>
 			<!-- Если специализации выбраны -->
-			<div class="item" v-for="certificate in spesialist.certificates" :key="certificate.id">
-				<div class="item-title">{{ certificate.name }}</div>
+			<div
+				class="item"
+				v-else
+				v-for="certificate in spesialist.connections.certificates"
+				:key="certificate.id"
+			>
+				<div class="item-title">{{ sections.certificates[certificate.id].name }}</div>
 				<div class="item-close" @click="removeArrValue('certificates', certificate)">
 					<icon-close :width="26" :height="26" />
 				</div>
@@ -141,7 +181,7 @@
 		/>
 
 		<block-buttons>
-			<button-default> Добавить </button-default>
+			<button-default @click="addCertificate"> Добавить </button-default>
 		</block-buttons>
 	</block-once>
 
@@ -156,28 +196,19 @@
 			</block-title>
 		</template>
 		<template #body-one>
-			<div class="profile-list" v-show="loading.specializations">
+			<div class="profile-list" v-show="loading.sections.specializations">
 				<!-- Если специализации не выбраны -->
-				<div
-					class="item-empty"
-					v-if="spesialist.specializations.length == 0 && !loading.loader"
-				>
+				<div class="item-empty" v-if="spesialist.connections.specializations.length == 0">
 					<div class="item-title">Пока тут ничего нет...</div>
-				</div>
-				<!-- Пока идёт загрузка -->
-				<div class="item" v-if="loading.loader" :class="{ 'loader-pulse': loading.loader }">
-					<div class="item-title"></div>
-					<div class="item-close">
-						<icon-close :width="26" :height="26" />
-					</div>
 				</div>
 				<!-- Если специализации выбраны -->
 				<div
 					class="item"
-					v-for="specialization in spesialist.specializations"
+					v-else
+					v-for="specialization in spesialist.connections.specializations"
 					:key="specialization.id"
 				>
-					<div class="item-title">{{ specialization.name }}</div>
+					<div class="item-title">{{ sections.specializations[specialization.id].name }}</div>
 					<div class="item-close" @click="removeArrValue('specializations', specialization)">
 						<icon-close :width="26" :height="26" />
 					</div>
@@ -204,21 +235,19 @@
 			</block-title>
 		</template>
 		<template #body-two>
-			<div class="profile-list" v-show="loading.clinics">
+			<div class="profile-list" v-show="loading.sections.clinics">
 				<!-- Если клиники не выбраны -->
-				<div class="item-empty" v-if="spesialist.clinics.length == 0 && !loading.loader">
+				<div class="item-empty" v-if="spesialist.connections.clinics.length == 0">
 					<div class="item-title">Пока тут ничего нет...</div>
 				</div>
-				<!-- Пока идёт загрузка -->
-				<div class="item" v-if="loading.loader" :class="{ 'loader-pulse': loading.loader }">
-					<div class="item-title"></div>
-					<div class="item-close">
-						<icon-close :width="26" :height="26" />
-					</div>
-				</div>
 				<!-- Если клиники выбраны -->
-				<div class="item" v-for="clinic in spesialist.clinics" :key="clinic.id">
-					<div class="item-title">{{ clinic.name }}</div>
+				<div
+					class="item"
+					v-else
+					v-for="clinic in spesialist.connections.clinics"
+					:key="clinic.id"
+				>
+					<div class="item-title">{{ sections.clinics[clinic.id].name }}</div>
 					<div class="item-close" @click="removeArrValue('clinics', clinic)">
 						<icon-close :width="26" :height="26" />
 					</div>
@@ -237,7 +266,7 @@
 			</block-buttons>
 		</template>
 	</block-two>
-	<!-- Специализации и клиники -->
+	<!-- Образование и места работы -->
 	<block-two>
 		<template #title-one>
 			<block-title>
@@ -248,21 +277,19 @@
 			</block-title>
 		</template>
 		<template #body-one>
-			<div class="profile-list" v-show="loading.educations">
+			<div class="profile-list" v-show="loading.sections.educations">
 				<!-- Если образования не выбраны -->
-				<div class="item-empty" v-if="spesialist.educations.length == 0 && !loading.loader">
+				<div class="item-empty" v-if="spesialist.connections.educations.length == 0">
 					<div class="item-title">Пока тут ничего нет...</div>
 				</div>
-				<!-- Пока идёт загрузка -->
-				<div class="item" v-if="loading.loader" :class="{ 'loader-pulse': loading.loader }">
-					<div class="item-title"></div>
-					<div class="item-close">
-						<icon-close :width="26" :height="26" />
-					</div>
-				</div>
 				<!-- Если образования выбраны -->
-				<div class="item" v-for="education in spesialist.educations" :key="education.id">
-					<div class="item-title">{{ education.name }}</div>
+				<div
+					class="item"
+					v-else
+					v-for="education in spesialist.connections.educations"
+					:key="education.id"
+				>
+					<div class="item-title">{{ sections.educations[education.id].name }}</div>
 					<div class="item-close" @click="removeArrValue('educations', education)">
 						<icon-close :width="26" :height="26" />
 					</div>
@@ -289,21 +316,14 @@
 			</block-title>
 		</template>
 		<template #body-two>
-			<div class="profile-list" v-show="loading.works">
+			<div class="profile-list" v-show="loading.sections.works">
 				<!-- Если образования не выбраны -->
-				<div class="item-empty" v-if="spesialist.works.length == 0 && !loading.loader">
+				<div class="item-empty" v-if="spesialist.connections.works.length == 0">
 					<div class="item-title">Пока тут ничего нет...</div>
 				</div>
-				<!-- Пока идёт загрузка -->
-				<div class="item" v-if="loading.loader" :class="{ 'loader-pulse': loading.loader }">
-					<div class="item-title"></div>
-					<div class="item-close">
-						<icon-close :width="26" :height="26" />
-					</div>
-				</div>
 				<!-- Если образования выбраны -->
-				<div class="item" v-for="work in spesialist.works" :key="work.id">
-					<div class="item-title">{{ work.name }}</div>
+				<div class="item" v-else v-for="work in spesialist.connections.works" :key="work.id">
+					<div class="item-title">{{ sections.works[work.id].name }}</div>
 					<div class="item-close" @click="removeArrValue('works', work)">
 						<icon-close :width="26" :height="26" />
 					</div>
@@ -325,6 +345,8 @@
 </template>
 
 <script>
+import AdminModal from "../../../components/includes/admin/AdminModal.vue";
+
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
@@ -348,6 +370,7 @@ import ContainerInputThree from "../../../components/ui/admin/containers/input/C
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
+import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 
 import IconSave from "../../../components/icons/IconSave.vue";
 
@@ -357,6 +380,7 @@ import { RouterView, RouterLink } from "vue-router";
 
 export default {
 	components: {
+		AdminModal,
 		InfoBar,
 		LoaderChild,
 		ElementInputLabel,
@@ -374,6 +398,7 @@ export default {
 		TableButtonRemove,
 		ButtonDefault,
 		ButtonRemove,
+		ButtonClaim,
 		IconSave,
 		axios,
 		RouterView,
@@ -381,6 +406,25 @@ export default {
 	},
 	data() {
 		return {
+			modal: {
+				title: "",
+				status: false,
+				type: null,
+				style: {
+					create: false,
+					delete: false,
+				},
+				modules: {
+					title: true,
+					buttons: {
+						hide: false,
+						close: true,
+					},
+					images: false,
+					body: true,
+					footer: true,
+				},
+			},
 			loading: {
 				loader: {
 					profile: true,
@@ -390,12 +434,14 @@ export default {
 					educations: true,
 					works: true,
 				},
-				profile: false,
-				certificates: false,
-				specializations: false,
-				clinics: false,
-				educations: false,
-				works: false,
+				sections: {
+					profile: false,
+					certificates: false,
+					specializations: false,
+					clinics: false,
+					educations: false,
+					works: false,
+				},
 			},
 			spesialist: {
 				profile: {
@@ -449,6 +495,15 @@ export default {
 						edited: false,
 					},
 				},
+				connections: {
+					certificates: [],
+					specializations: [],
+					clinics: [],
+					educations: [],
+					works: [],
+				},
+			},
+			sections: {
 				certificates: [],
 				specializations: [],
 				clinics: [],
@@ -464,15 +519,97 @@ export default {
 		/* После скрытия элементы */
 		loaderChildAfterLeave() {
 			if (!this.loading.loader.profile) {
-				this.loading.profile = true;
+				for (let key in this.loading.sections) {
+					this.loading.sections[key] = true;
+				}
 			}
 		},
+
+		getCertificateName(id) {
+			let certificate = this.sections.certificates.filter((item) => {
+				if (item.id == id) {
+					return item;
+				}
+			});
+
+			// console.log(id);
+			// console.log(certificate);
+		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                    Профиль                        |*/
+		/* |                 Модальное окно                    |*/
 		/* |___________________________________________________|*/
+		/* _____________________________________________________*/
+		/* 1. Основные действия                                 */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* Открытие */
+		openModal(type) {
+			switch (type) {
+				case "create":
+					{
+						this.modal.type = "create";
+						this.modal.status = true;
+						this.modal.style.create = true;
+						this.modal.style.delete = false;
+						this.clearModalData();
+					}
+					document.body.classList.add("modal-open");
+					break;
+				case "edit":
+					{
+						this.modal.type = "edit";
+						// if (this.currentSpecialization.data.create.body) {
+						// 	this.modal.style.create = true;
+						// } else {
+						// 	this.modal.style.create = false;
+						// }
+						this.modal.status = true;
+						this.modal.style.delete = false;
+					}
+					document.body.classList.add("modal-open");
+					break;
+				default:
+					{
+						let debbugStory = {
+							title: "Ошибка.",
+							body: "Низвестный тип открытия модального окна.",
+							type: "Error",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					}
+					break;
+			}
+		},
+		/* Закрытие */
+		closeModal() {
+			this.modal.status = false;
+			document.body.classList.remove("modal-open");
+		},
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                    ПРОФИЛЬ                        |*/
+		/* |___________________________________________________|*/
+		/* _____________________________________________________*/
+		/* 1. Основные действия                                 */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* Открытие специализации для редактирования */
+		addCertificate(selectedSpecialization) {
+			// this.clearModalData();
+
+			// for (let key in this.currentSpecialization.data) {
+			// 	this.currentSpecialization.data[key].body = selectedSpecialization[key];
+			// }
+
+			this.openModal("edit");
+		},
+		/* Открытие специализации для создания */
+		createSpecialization() {
+			this.openModal("create");
+		},
+		/* _____________________________________________________*/
+		/* 2. Сохранение, обновление и удаление                 */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Метод удаления значения из массива */
 		removeArrValue(array, value) {
-			this.spesialist[array] = this.spesialist[array].filter((item) => {
+			this.spesialist.connections[array] = this.spesialist.connections[array].filter((item) => {
 				if (item.id !== value.id) {
 					return item;
 				}
@@ -491,21 +628,50 @@ export default {
 			},
 		})
 			.then((response) => {
-				for (let key in response.data) {
-					this.spesialist.profile[key].body = response.data[key];
+				for (let key in response.data.specialist.profile) {
+					this.spesialist.profile[key].body = response.data.specialist.profile[key];
+				}
+
+				for (let key in response.data.specialist.connections) {
+					this.spesialist.connections[key] = response.data.specialist.connections[key];
+				}
+
+				for (let key in response.data.sections) {
+					this.sections[key] = response.data.sections[key];
 				}
 			})
 			.catch((error) => {
 				console.log(error);
 			})
 			.finally(() => {
-				this.loading.loader.profile = false;
+				for (let key in this.loading.loader) {
+					this.loading.loader[key] = false;
+				}
 			});
 	},
 };
 </script>
 
 <style scoped>
+.certificates-list {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.certificates-list > .item {
+	display: grid;
+	grid-template-columns: 30px 1fr 1fr;
+	gap: 10px;
+	border: 2px solid var(--input-border-color-inactive);
+	padding: 10px;
+	border-radius: 10px;
+}
+
+.certificates-list > .item > label {
+	font-size: 18px;
+}
+
 .container-profile {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
