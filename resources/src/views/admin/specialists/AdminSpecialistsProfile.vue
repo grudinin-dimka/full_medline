@@ -21,7 +21,9 @@
 					:key="specialization.id"
 					:class="{ active: cheked.specializations.includes(specialization.id) }"
 				>
-					<div>#{{ index + 1 + pagination.pages.range * (pagination.pages.current - 1) }}</div>
+					<div>
+						#{{ index + 1 + pagination.settings.size * (pagination.pages.current - 1) }}
+					</div>
 					<input
 						type="checkbox"
 						:id="specialization.id"
@@ -34,7 +36,7 @@
 
 			<!-- Пагинация -->
 			<pagination
-				:countPages="getPagesSpecializationsCount"
+				:pages="getPagesSpecializationsCount"
 				:pagination="pagination"
 				@changePage="changePage"
 			/>
@@ -477,10 +479,10 @@ export default {
 			pagination: {
 				pages: {
 					current: 1,
-					range: 5,
+					total: 10,
 				},
-				elements: {
-					range: 10,
+				settings: {
+					size: 5,
 				},
 			},
 			spesialist: {
@@ -563,12 +565,18 @@ export default {
 	},
 	computed: {
 		getPagesSpecializationsCount() {
-			return Math.ceil(this.sections.specializations.length / this.pagination.pages.range);
+			return Math.ceil(this.sections.specializations.length / this.pagination.settings.size);
+		},
+		getSortedCertificates() {
+			return [...this.sections.certificates].splice(
+				(this.pagination.pages.current - 1) * this.pagination.settings.size,
+				this.pagination.settings.size
+			);
 		},
 		getSortedSpecializations() {
 			return [...this.sections.specializations].splice(
-				(this.pagination.pages.current - 1) * this.pagination.elements.range,
-				this.pagination.elements.range
+				(this.pagination.pages.current - 1) * this.pagination.settings.size,
+				this.pagination.settings.size
 			);
 		},
 	},

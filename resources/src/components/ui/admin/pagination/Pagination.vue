@@ -27,7 +27,7 @@
 			</div>
 		</div>
 		<div
-			v-for="page in pagination.pages.range"
+			v-for="page in pages"
 			:key="page"
 			class="item"
 			:class="{ active: page === pagination.pages.current }"
@@ -47,7 +47,7 @@
 					<path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
 				</svg>
 			</div>
-			<div class="item last" @click="$emit('changePage', countPages)">
+			<div class="item last" @click="$emit('changePage', pages)">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					height="22px"
@@ -67,7 +67,7 @@
 <script>
 export default {
 	props: {
-		countPages: {
+		pages: {
 			type: Number,
 			required: true,
 		},
@@ -75,32 +75,6 @@ export default {
 			type: Object,
 			required: true,
 		},
-	},
-	data() {
-		return {
-			pages: [
-				{
-					id: 1,
-					link: 1,
-				},
-				{
-					id: 2,
-					link: 2,
-				},
-				{
-					id: 3,
-					link: 3,
-				},
-				{
-					id: 4,
-					link: 4,
-				},
-				{
-					id: 5,
-					link: 5,
-				},
-			],
-		};
 	},
 };
 </script>
