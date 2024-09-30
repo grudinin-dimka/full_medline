@@ -8,24 +8,68 @@
 			<span v-if="modal.type == 'edit'">СЕРТИФИКАТЫ</span>
 		</template>
 		<template #body>
+			<!-- Список сертификатов -->
 			<div class="certificates-list">
 				<div class="item">
+					<div></div>
+					<div></div>
 					<div>Название</div>
 					<div>Организация</div>
+					<div>Конец обучения</div>
+				</div>
+				<div
+					class="item"
+					v-for="(certificate, index) in sections.certificates"
+					:key="certificate.id"
+					:class="{ active: cheked.certificates.includes(certificate.id) }"
+				>
+					<div>#{{ index + 1 }}</div>
+					<input
+						type="checkbox"
+						:id="certificate.id"
+						:value="certificate.id"
+						v-model="cheked.certificates"
+					/>
+					<label :for="certificate.id">{{ certificate.name }}</label>
+					<label :for="certificate.id">{{ certificate.organization }}</label>
+					<label :for="certificate.id">{{ certificate.endEducation }}</label>
 				</div>
 			</div>
-			<div class="certificates-list">
-				<div class="item" v-for="certificate in sections.certificates" :key="certificate.id">
-					<input type="checkbox" :id="certificate.id" :value="certificate.id" />
-					<div>{{ certificate.name }}</div>
-					<div>{{ certificate.organization }}</div>
+			<!-- Пагинация -->
+			<div class="pagination">
+				<div class="item-previous">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						height="22px"
+						viewBox="0 -960 960 960"
+						width="22px"
+						fill="black"
+					>
+						<path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z" />
+					</svg>
+				</div>
+				<div class="item">1</div>
+				<div class="item">2</div>
+				<div class="item">3</div>
+				<div class="item-next">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						height="22px"
+						viewBox="0 -960 960 960"
+						width="22px"
+						fill="black"
+					>
+						<path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
+					</svg>
 				</div>
 			</div>
 		</template>
 		<template #footer>
 			<block-buttons>
 				<button-claim @click="" v-if="modal.type == 'create'"> Создать </button-claim>
-				<button-default @click="" v-if="modal.type == 'edit'"> Обновить </button-default>
+				<button-default @click="addCertificate" v-if="modal.type == 'edit'">
+					Обновить
+				</button-default>
 			</block-buttons>
 		</template>
 	</admin-modal>
@@ -166,7 +210,9 @@
 				v-for="certificate in spesialist.connections.certificates"
 				:key="certificate.id"
 			>
-				<div class="item-title">{{ sections.certificates[certificate.id].name }}</div>
+				<div class="item-title">
+					{{ getCertificateName(certificate) }}
+				</div>
 				<div class="item-close" @click="removeArrValue('certificates', certificate)">
 					<icon-close :width="26" :height="26" />
 				</div>
@@ -181,7 +227,7 @@
 		/>
 
 		<block-buttons>
-			<button-default @click="addCertificate"> Добавить </button-default>
+			<button-default @click="editCertificate"> Добавить </button-default>
 		</block-buttons>
 	</block-once>
 
@@ -443,6 +489,11 @@ export default {
 					works: false,
 				},
 			},
+			pagination: {
+				page: 1,
+				totalPages: 0,
+				pageSize: 10,
+			},
 			spesialist: {
 				profile: {
 					file: "",
@@ -510,6 +561,15 @@ export default {
 				educations: [],
 				works: [],
 			},
+			cheked: {
+				counter: 0,
+				certificates: [],
+				specializations: [],
+				clinics: [],
+				educations: [],
+				works: [],
+			},
+			test: 0,
 		};
 	},
 	methods: {
@@ -524,16 +584,14 @@ export default {
 				}
 			}
 		},
-
+		/* Получить название сертификата */
 		getCertificateName(id) {
 			let certificate = this.sections.certificates.filter((item) => {
-				if (item.id == id) {
+				if (item.id == id.id_certificate) {
 					return item;
 				}
 			});
-
-			// console.log(id);
-			// console.log(certificate);
+			return certificate[0].name;
 		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                 Модальное окно                    |*/
@@ -591,12 +649,16 @@ export default {
 		/* 1. Основные действия                                 */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Открытие специализации для редактирования */
-		addCertificate(selectedSpecialization) {
-			// this.clearModalData();
+		editCertificate() {
+			// Обнуление выбранных сертификатов
+			this.cheked.certificates = [];
 
-			// for (let key in this.currentSpecialization.data) {
-			// 	this.currentSpecialization.data[key].body = selectedSpecialization[key];
-			// }
+			// Заполнение выбранных сертификатов
+			for (let key in this.spesialist.connections.certificates) {
+				this.cheked.certificates.push(
+					this.spesialist.connections.certificates[key].id_certificate
+				);
+			}
 
 			this.openModal("edit");
 		},
@@ -607,6 +669,43 @@ export default {
 		/* _____________________________________________________*/
 		/* 2. Сохранение, обновление и удаление                 */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* Добавление сертификатов */
+		addCertificate() {
+			// Обнуление сертификатов специалиста
+			this.spesialist.connections.certificates = [];
+
+			let maxId = 0;
+			// Если ничего не выбрано, то оставляем пустой массив,
+			// иначе заполняем массив выбранными сертификатами
+			if (this.cheked.certificates.length !== 0) {
+				this.cheked.certificates.sort((a, b) => {
+					if (a > b) {
+						return 1;
+					} else if (a < b) {
+						return -1;
+					} else {
+						return 0;
+					}
+				});
+
+				for (let key in this.cheked.certificates) {
+					this.spesialist.connections.certificates.push({
+						id: maxId + 1,
+						id_specialist: this.spesialist.profile.id.body,
+						id_certificate: this.cheked.certificates[key],
+					});
+
+					this.spesialist.connections.certificates.filter((item) => {
+						if (item.id > maxId) {
+							maxId = item.id + 1;
+						}
+					});
+				}
+			}
+
+			this.closeModal();
+		},
+
 		/* Метод удаления значения из массива */
 		removeArrValue(array, value) {
 			this.spesialist.connections[array] = this.spesialist.connections[array].filter((item) => {
@@ -661,14 +760,49 @@ export default {
 
 .certificates-list > .item {
 	display: grid;
-	grid-template-columns: 30px 1fr 1fr;
+	grid-template-columns: 20px 30px 1fr 1fr 1fr;
 	gap: 10px;
 	border: 2px solid var(--input-border-color-inactive);
 	padding: 10px;
 	border-radius: 10px;
+
+	transition: all 0.2s;
+}
+
+.certificates-list > .item.active {
+	border: 2px solid var(--input-border-color-active);
+	background-color: #f2feff;
+}
+
+.certificates-list > .item > input[type="checkbox"] {
+	cursor: pointer;
+}
+
+.certificates-list > .item > input[type="checkbox"]:checked {
+	accent-color: #8fe5ee;
+}
+
+.certificates-list > .item:first-of-type {
+	display: grid;
+	grid-template-columns: 20px 30px 1fr 1fr 1fr;
+	gap: 10px;
+	border: 0px;
+	padding: 0px 10px;
+	border-radius: 10px;
 }
 
 .certificates-list > .item > label {
+	cursor: pointer;
+	font-size: 18px;
+}
+
+.pagination {
+	display: flex;
+	gap: 10px;
+	justify-content: center;	
+}
+
+.pagination > .item {
 	font-size: 18px;
 }
 
@@ -772,6 +906,14 @@ export default {
 		justify-content: center;
 		align-items: center;
 		gap: 20px;
+	}
+}
+
+@media screen and (min-width: 1960px) {
+	.profile-image {
+		flex: 1 0 300px;
+		max-width: 300px;
+		border-radius: 10px;
 	}
 }
 </style>

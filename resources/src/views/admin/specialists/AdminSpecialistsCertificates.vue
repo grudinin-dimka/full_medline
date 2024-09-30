@@ -4,14 +4,14 @@
 	<!--|___________________________________________________|-->
 	<admin-modal ref="modal" @touchCloseModal="closeModal" :modal="modal">
 		<template #title>
-			<span v-if="modal.type == 'create'">МЕСТО РАБОТЫ (СОЗДАНИЕ)</span>
-			<span v-if="modal.type == 'edit'">МЕСТО РАБОТЫ (РЕДАКТИРОВАНИЕ)</span>
+			<span v-if="modal.type == 'create'">СЕРТИФИКАТ (СОЗДАНИЕ)</span>
+			<span v-if="modal.type == 'edit'">СЕРТИФИКАТ (РЕДАКТИРОВАНИЕ)</span>
 		</template>
 		<template #body>
 			<!-- Название -->
 			<container-input-once>
 				<template #title>
-					<span :class="{ create: modal.type == 'create' }">ДОЛЖНОСТЬ*</span>
+					<span :class="{ create: modal.type == 'create' }">НАЗВАНИЕ*</span>
 					<span
 						:class="{ create: modal.type == 'create' }"
 						v-if="currentCertificate.data.name.edited"

@@ -110,7 +110,7 @@
 							:class="{ error: currentEducation.errors.id_specialization.status }"
 							@blur="checkModalInput('id_specialization', 'select')"
 						>
-							<option value="">Ничего не выбрано...</option>
+							<option disabled value="">Ничего не выбрано...</option>
 							<option :value="specialization.id" v-for="specialization in specializations">
 								{{ specialization.name }}
 							</option>
