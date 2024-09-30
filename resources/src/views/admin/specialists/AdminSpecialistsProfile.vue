@@ -1,73 +1,48 @@
 <template>
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
-	<!--|            МОДАЛЬНОЕ ОКНО (СЕРТИФИКАТЫ)           |-->
+	<!--|           МОДАЛЬНОЕ ОКНО (СПЕЦИАЛИЗАЦИИ)          |-->
 	<!--|___________________________________________________|-->
 	<admin-modal ref="modal" @touchCloseModal="closeModal" :modal="modal">
 		<template #title>
 			<span class="create" v-if="modal.type == 'create'"> СПЕЦИАЛИЗАЦИЯ (СОЗДАНИЕ) </span>
-			<span v-if="modal.type == 'edit'">СЕРТИФИКАТЫ</span>
+			<span v-if="modal.type == 'edit'">СПЕЦИАЛИЗАЦИИ</span>
 		</template>
 		<template #body>
-			<!-- Список сертификатов -->
-			<div class="certificates-list">
+			<!-- Список специализаций -->
+			<div class="specializations-list">
 				<div class="item">
 					<div></div>
 					<div></div>
 					<div>Название</div>
-					<div>Организация</div>
-					<div>Конец обучения</div>
 				</div>
 				<div
 					class="item"
-					v-for="(certificate, index) in sections.certificates"
-					:key="certificate.id"
-					:class="{ active: cheked.certificates.includes(certificate.id) }"
+					v-for="(specialization, index) in getSortedSpecializations"
+					:key="specialization.id"
+					:class="{ active: cheked.specializations.includes(specialization.id) }"
 				>
-					<div>#{{ index + 1 }}</div>
+					<div>#{{ index + 1 + pagination.pages.range * (pagination.pages.current - 1) }}</div>
 					<input
 						type="checkbox"
-						:id="certificate.id"
-						:value="certificate.id"
-						v-model="cheked.certificates"
+						:id="specialization.id"
+						:value="specialization.id"
+						v-model="cheked.specializations"
 					/>
-					<label :for="certificate.id">{{ certificate.name }}</label>
-					<label :for="certificate.id">{{ certificate.organization }}</label>
-					<label :for="certificate.id">{{ certificate.endEducation }}</label>
+					<label :for="specialization.id">{{ specialization.name }}</label>
 				</div>
 			</div>
+
 			<!-- Пагинация -->
-			<div class="pagination">
-				<div class="item-previous">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						height="22px"
-						viewBox="0 -960 960 960"
-						width="22px"
-						fill="black"
-					>
-						<path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z" />
-					</svg>
-				</div>
-				<div class="item">1</div>
-				<div class="item">2</div>
-				<div class="item">3</div>
-				<div class="item-next">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						height="22px"
-						viewBox="0 -960 960 960"
-						width="22px"
-						fill="black"
-					>
-						<path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
-					</svg>
-				</div>
-			</div>
+			<pagination
+				:countPages="getPagesSpecializationsCount"
+				:pagination="pagination"
+				@changePage="changePage"
+			/>
 		</template>
 		<template #footer>
 			<block-buttons>
 				<button-claim @click="" v-if="modal.type == 'create'"> Создать </button-claim>
-				<button-default @click="addCertificate" v-if="modal.type == 'edit'">
+				<button-default @click="updateSpecialization" v-if="modal.type == 'edit'">
 					Обновить
 				</button-default>
 			</block-buttons>
@@ -227,7 +202,7 @@
 		/>
 
 		<block-buttons>
-			<button-default @click="editCertificate"> Добавить </button-default>
+			<button-default> Добавить </button-default>
 		</block-buttons>
 	</block-once>
 
@@ -254,7 +229,14 @@
 					v-for="specialization in spesialist.connections.specializations"
 					:key="specialization.id"
 				>
-					<div class="item-title">{{ sections.specializations[specialization.id].name }}</div>
+					<!-- <div class="item-title">1</div> -->
+					<div class="item-title">
+						{{
+							sections.specializations.filter(
+								(item) => item.id == specialization.id_specialization
+							)[0].name
+						}}
+					</div>
 					<div class="item-close" @click="removeArrValue('specializations', specialization)">
 						<icon-close :width="26" :height="26" />
 					</div>
@@ -269,7 +251,7 @@
 			/>
 
 			<block-buttons>
-				<button-default> Добавить </button-default>
+				<button-default @click="editSpecialization"> Изменить </button-default>
 			</block-buttons>
 		</template>
 		<template #title-two>
@@ -308,7 +290,7 @@
 			/>
 
 			<block-buttons>
-				<button-default> Добавить </button-default>
+				<button-default> Изменить </button-default>
 			</block-buttons>
 		</template>
 	</block-two>
@@ -414,6 +396,8 @@ import ContainerInputOnce from "../../../components/ui/admin/containers/input/Co
 import ContainerInputTwo from "../../../components/ui/admin/containers/input/ContainerInputTwo.vue";
 import ContainerInputThree from "../../../components/ui/admin/containers/input/ContainerInputThree.vue";
 
+import Pagination from "../../../components/ui/admin/pagination/Pagination.vue";
+
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
 import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
@@ -440,6 +424,7 @@ export default {
 		ContainerInputOnce,
 		ContainerInputTwo,
 		ContainerInputThree,
+		Pagination,
 		TableButtonDefault,
 		TableButtonRemove,
 		ButtonDefault,
@@ -490,9 +475,13 @@ export default {
 				},
 			},
 			pagination: {
-				page: 1,
-				totalPages: 0,
-				pageSize: 10,
+				pages: {
+					current: 1,
+					range: 5,
+				},
+				elements: {
+					range: 10,
+				},
 			},
 			spesialist: {
 				profile: {
@@ -572,6 +561,22 @@ export default {
 			test: 0,
 		};
 	},
+	computed: {
+		getPagesSpecializationsCount() {
+			return Math.ceil(this.sections.specializations.length / this.pagination.pages.range);
+		},
+		getSortedSpecializations() {
+			return [...this.sections.specializations].splice(
+				(this.pagination.pages.current - 1) * this.pagination.elements.range,
+				this.pagination.elements.range
+			);
+		},
+	},
+	watch: {
+		// "pagination.pages.current"(newValue, oldValue) {
+		// 	console.log(newValue, oldValue);
+		// },
+	},
 	methods: {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                   Загрузчик                       |*/
@@ -643,42 +648,49 @@ export default {
 			document.body.classList.remove("modal-open");
 		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                   ПАГИНАТОР                       |*/
+		/* |___________________________________________________|*/
+		/* Изменение текущей страницы */
+		changePage(pageNumber) {
+			// Проверка на превышение количества страниц
+			if (pageNumber > this.getPagesSpecializationsCount) {
+				return;
+			} else if (pageNumber < 1) {
+				return;
+			}
+
+			this.pagination.pages.current = pageNumber;
+		},
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                    ПРОФИЛЬ                        |*/
 		/* |___________________________________________________|*/
 		/* _____________________________________________________*/
-		/* 1. Основные действия                                 */
+		/* 1. Специалиации                                      */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		/* Открытие специализации для редактирования */
-		editCertificate() {
-			// Обнуление выбранных сертификатов
-			this.cheked.certificates = [];
+		/* Открытие списка специализация */
+		editSpecialization() {
+			// Обнуление выбранных специализаций
+			this.cheked.specializations = [];
 
-			// Заполнение выбранных сертификатов
-			for (let key in this.spesialist.connections.certificates) {
-				this.cheked.certificates.push(
-					this.spesialist.connections.certificates[key].id_certificate
+			// Заполнение выбранных специализаций
+			for (let key in this.spesialist.connections.specializations) {
+				this.cheked.specializations.push(
+					this.spesialist.connections.specializations[key].id_specialization
 				);
 			}
 
 			this.openModal("edit");
 		},
-		/* Открытие специализации для создания */
-		createSpecialization() {
-			this.openModal("create");
-		},
-		/* _____________________________________________________*/
-		/* 2. Сохранение, обновление и удаление                 */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		/* Добавление сертификатов */
-		addCertificate() {
+		/* Обновление специализаций */
+		updateSpecialization() {
 			// Обнуление сертификатов специалиста
-			this.spesialist.connections.certificates = [];
+			this.spesialist.connections.specializations = [];
 
 			let maxId = 0;
 			// Если ничего не выбрано, то оставляем пустой массив,
 			// иначе заполняем массив выбранными сертификатами
-			if (this.cheked.certificates.length !== 0) {
-				this.cheked.certificates.sort((a, b) => {
+			if (this.cheked.specializations.length !== 0) {
+				this.cheked.specializations.sort((a, b) => {
 					if (a > b) {
 						return 1;
 					} else if (a < b) {
@@ -688,14 +700,16 @@ export default {
 					}
 				});
 
-				for (let key in this.cheked.certificates) {
-					this.spesialist.connections.certificates.push({
+				/* Заполнение выбранных специализаций в массив */
+				for (let key in this.cheked.specializations) {
+					this.spesialist.connections.specializations.push({
 						id: maxId + 1,
 						id_specialist: this.spesialist.profile.id.body,
-						id_certificate: this.cheked.certificates[key],
+						id_specialization: this.cheked.specializations[key],
 					});
 
-					this.spesialist.connections.certificates.filter((item) => {
+					/* Поиск максимального id */
+					this.spesialist.connections.specializations.filter((item) => {
 						if (item.id > maxId) {
 							maxId = item.id + 1;
 						}
@@ -705,7 +719,9 @@ export default {
 
 			this.closeModal();
 		},
-
+		/* _____________________________________________________*/
+		/* 2. Сохранение, обновление и удаление                 */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Метод удаления значения из массива */
 		removeArrValue(array, value) {
 			this.spesialist.connections[array] = this.spesialist.connections[array].filter((item) => {
@@ -752,15 +768,15 @@ export default {
 </script>
 
 <style scoped>
-.certificates-list {
+.specializations-list {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
 }
 
-.certificates-list > .item {
+.specializations-list > .item {
 	display: grid;
-	grid-template-columns: 20px 30px 1fr 1fr 1fr;
+	grid-template-columns: 20px 30px 1fr;
 	gap: 10px;
 	border: 2px solid var(--input-border-color-inactive);
 	padding: 10px;
@@ -769,40 +785,35 @@ export default {
 	transition: all 0.2s;
 }
 
-.certificates-list > .item.active {
+.specializations-list > .item.active {
 	border: 2px solid var(--input-border-color-active);
 	background-color: #f2feff;
 }
 
-.certificates-list > .item > input[type="checkbox"] {
+.specializations-list > .item > input[type="checkbox"] {
 	cursor: pointer;
 }
 
-.certificates-list > .item > input[type="checkbox"]:checked {
+.specializations-list > .item > input[type="checkbox"]:checked {
 	accent-color: #8fe5ee;
 }
 
-.certificates-list > .item:first-of-type {
+.specializations-list > .item:first-of-type {
 	display: grid;
-	grid-template-columns: 20px 30px 1fr 1fr 1fr;
+	grid-template-columns: 20px 30px 1fr;
 	gap: 10px;
 	border: 0px;
 	padding: 0px 10px;
 	border-radius: 10px;
 }
 
-.certificates-list > .item > label {
+.specializations-list > .item:not(:first-of-type):hover {
+	border: 2px solid var(--input-border-color-active);
+	background-color: #f2feff;
+}
+
+.specializations-list > .item > label {
 	cursor: pointer;
-	font-size: 18px;
-}
-
-.pagination {
-	display: flex;
-	gap: 10px;
-	justify-content: center;	
-}
-
-.pagination > .item {
 	font-size: 18px;
 }
 
@@ -888,6 +899,9 @@ export default {
 	border: 2px solid var(--input-border-color-inactive);
 	border-radius: 10px;
 	padding: 10px;
+
+	font-size: 18px;
+
 	transition: all 0.2s;
 }
 
