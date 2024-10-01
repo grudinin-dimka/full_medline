@@ -1,5 +1,6 @@
 <template>
 	<div class="pagination">
+		<!-- Кнопки пагинации в начале -->
 		<div class="buttons-left">
 			<div class="item first" @click="$emit('changePage', 1)">
 				<svg
@@ -14,45 +15,47 @@
 					/>
 				</svg>
 			</div>
-			<div class="item previous" @click="$emit('changePage', pagination.pages.current - 1)">
+			<div class="item previous" @click="$emit('changePage', settings.pages.current - 1)">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
-					height="22px"
+					height="24px"
 					viewBox="0 -960 960 960"
-					width="22px"
+					width="24px"
 					fill="black"
 				>
 					<path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z" />
 				</svg>
 			</div>
 		</div>
+		<!-- Страницы -->
 		<div
-			v-for="page in pages"
+			v-for="page in getPages"
 			:key="page"
 			class="item"
-			:class="{ active: page === pagination.pages.current }"
-			@click="$emit('changePage', page)"
+			:class="{ active: page.link === settings.pages.current }"
+			@click="$emit('changePage', page.link)"
 		>
-			{{ page }}
+			{{ page.link }}
 		</div>
+		<!-- Кнопки пагинации в конце -->
 		<div class="buttons-right">
-			<div class="item next" @click="$emit('changePage', pagination.pages.current + 1)">
+			<div class="item next" @click="$emit('changePage', settings.pages.current + 1)">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
-					height="22px"
+					height="24px"
 					viewBox="0 -960 960 960"
-					width="22px"
+					width="24px"
 					fill="black"
 				>
 					<path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
 				</svg>
 			</div>
-			<div class="item last" @click="$emit('changePage', pages)">
+			<div class="item last" @click="$emit('changePage', getPagesCount)">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
-					height="22px"
+					height="24px"
 					viewBox="0 -960 960 960"
-					width="22px"
+					width="24px"
 					fill="#e8eaed"
 				>
 					<path
@@ -67,13 +70,60 @@
 <script>
 export default {
 	props: {
-		pages: {
+		settings: {
+			type: Object,
+			required: true,
+		},
+		arrayLength: {
 			type: Number,
 			required: true,
 		},
-		pagination: {
-			type: Object,
-			required: true,
+	},
+	computed: {
+		/* Общее количество страниц */
+		getPagesCount() {
+			return Math.ceil(this.arrayLength / this.settings.elements.range);
+		},
+		/* Получение массива страниц */
+		getPages() {
+			let pages = [];
+
+			// Пагинация, если всего страниц меньше или равно диапазону пагинации
+			if (this.getPagesCount <= this.settings.pages.range) {
+				for (let i = 1; i <= this.getPagesCount; i++) {
+					pages.push({
+						number: i,
+						link: i,
+					});
+				}
+				return pages;
+			} else if (this.getPagesCount > this.settings.pages.range) {
+				// Пагинация, если текущая страница выше диапазона пагинации
+				if (this.settings.pages.current > this.settings.pages.range) {
+					for (
+						let i = this.settings.pages.current + 1 - this.settings.pages.range;
+						i <= this.settings.pages.current;
+						i++
+					) {
+						pages.push({
+							number: i,
+							link: i,
+						});
+					}
+					return pages;
+				}
+
+				// Если текущая страница не выше диапазона пагинации
+				for (let i = 1; i <= this.settings.pages.range; i++) {
+					pages.push({
+						number: i,
+						link: i,
+					});
+				}
+				return pages;
+			} else {
+				console.log("Ничего не получилось.");
+			}
 		},
 	},
 };
@@ -93,12 +143,19 @@ svg:hover {
 	display: flex;
 	gap: 12.5px;
 	justify-content: center;
+	padding: 5px;
 }
 
 .pagination > .item {
 	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
 	color: var(--input-border-color-inactive);
 	font-size: 18px;
+	width: 20px;
+	text-align: center;
 }
 
 .pagination > .item:hover,
@@ -114,5 +171,12 @@ svg:hover {
 .pagination > .buttons-right {
 	display: flex;
 	gap: 0px;
+}
+
+.pagination > .buttons-right > .item,
+.pagination > .buttons-left > .item {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 </style>

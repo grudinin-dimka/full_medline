@@ -2,10 +2,10 @@
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|           МОДАЛЬНОЕ ОКНО (СПЕЦИАЛИЗАЦИИ)          |-->
 	<!--|___________________________________________________|-->
-	<admin-modal ref="modal" @touchCloseModal="closeModal" :modal="modal">
+	<admin-modal @touchCloseModal="closeModal('modalSpecializations')" :modal="modalSpecializations">
 		<template #title>
-			<span class="create" v-if="modal.type == 'create'"> СПЕЦИАЛИЗАЦИЯ (СОЗДАНИЕ) </span>
-			<span v-if="modal.type == 'edit'">СПЕЦИАЛИЗАЦИИ</span>
+			<span class="create" v-if="modalSpecializations.type == 'create'"> СПЕЦИАЛИЗАЦИЯ (СОЗДАНИЕ) </span>
+			<span v-if="modalSpecializations.type == 'edit'">СПЕЦИАЛИЗАЦИИ</span>
 		</template>
 		<template #body>
 			<!-- Список специализаций -->
@@ -22,7 +22,12 @@
 					:class="{ active: cheked.specializations.includes(specialization.id) }"
 				>
 					<div>
-						#{{ index + 1 + pagination.settings.size * (pagination.pages.current - 1) }}
+						#{{
+							index +
+							1 +
+							paginationSpecializations.elements.range *
+								(paginationSpecializations.pages.current - 1)
+						}}
 					</div>
 					<input
 						type="checkbox"
@@ -36,15 +41,72 @@
 
 			<!-- Пагинация -->
 			<pagination
-				:pages="getPagesSpecializationsCount"
-				:pagination="pagination"
+				:arrayLength="sections.specializations.length"
+				:settings="paginationSpecializations"
 				@changePage="changePage"
 			/>
 		</template>
 		<template #footer>
 			<block-buttons>
-				<button-claim @click="" v-if="modal.type == 'create'"> Создать </button-claim>
-				<button-default @click="updateSpecialization" v-if="modal.type == 'edit'">
+				<button-claim @click="" v-if="modalSpecializations.type == 'create'"> Создать </button-claim>
+				<button-default @click="updateSpecialization" v-if="modalSpecializations.type == 'edit'">
+					Обновить
+				</button-default>
+			</block-buttons>
+		</template>
+	</admin-modal>
+
+	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
+	<!--|              МОДАЛЬНОЕ ОКНО (КЛИНИКИ)             |-->
+	<!--|___________________________________________________|-->
+	<admin-modal @touchCloseModal="closeModal" :modal="modalClinics">
+		<template #title>
+			<span class="create" v-if="modalClinics.type == 'create'"> СПЕЦИАЛИЗАЦИЯ (СОЗДАНИЕ) </span>
+			<span v-if="modalClinics.type == 'edit'">КЛИНИКИ</span>
+		</template>
+		<template #body>
+			<!-- Список специализаций -->
+			<div class="clinics-list">
+				<div class="item">
+					<div></div>
+					<div></div>
+					<div>Название</div>
+				</div>
+				<div
+					class="item"
+					v-for="(specialization, index) in getSortedSpecializations"
+					:key="specialization.id"
+					:class="{ active: cheked.specializations.includes(specialization.id) }"
+				>
+					<div>
+						#{{
+							index +
+							1 +
+							paginationSpecializations.elements.range *
+								(paginationSpecializations.pages.current - 1)
+						}}
+					</div>
+					<input
+						type="checkbox"
+						:id="specialization.id"
+						:value="specialization.id"
+						v-model="cheked.clinics"
+					/>
+					<label :for="specialization.id">{{ specialization.name }}</label>
+				</div>
+			</div>
+
+			<!-- Пагинация -->
+			<pagination
+				:arrayLength="sections.specializations.length"
+				:settings="paginationSpecializations"
+				@changePage="changePage"
+			/>
+		</template>
+		<template #footer>
+			<block-buttons>
+				<button-claim @click="" v-if="modalClinics.type == 'create'"> Создать </button-claim>
+				<button-default @click="updateSpecialization" v-if="modalClinics.type == 'edit'">
 					Обновить
 				</button-default>
 			</block-buttons>
@@ -166,48 +228,6 @@
 		/>
 	</block-once>
 
-	<!-- Сертификаты -->
-	<block-once>
-		<block-title>
-			<template #title> Сертификаты </template>
-			<template #buttons>
-				<icon-save :width="28" :height="28" />
-			</template>
-		</block-title>
-
-		<div class="profile-list" v-show="loading.sections.certificates">
-			<!-- Если сертификаты не выбраны -->
-			<div class="item-empty" v-if="spesialist.connections.certificates.length == 0">
-				<div class="item-title">Пока тут ничего нет...</div>
-			</div>
-			<!-- Если специализации выбраны -->
-			<div
-				class="item"
-				v-else
-				v-for="certificate in spesialist.connections.certificates"
-				:key="certificate.id"
-			>
-				<div class="item-title">
-					{{ getCertificateName(certificate) }}
-				</div>
-				<div class="item-close" @click="removeArrValue('certificates', certificate)">
-					<icon-close :width="26" :height="26" />
-				</div>
-			</div>
-		</div>
-
-		<!-- Загрузчик профиля -->
-		<loader-child
-			:isLoading="loading.loader.clinics"
-			:minHeight="100"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
-		/>
-
-		<block-buttons>
-			<button-default> Добавить </button-default>
-		</block-buttons>
-	</block-once>
-
 	<!-- Специализации и клиники -->
 	<block-two>
 		<template #title-one>
@@ -296,6 +316,49 @@
 			</block-buttons>
 		</template>
 	</block-two>
+
+	<!-- Сертификаты -->
+	<block-once>
+		<block-title>
+			<template #title> Сертификаты </template>
+			<template #buttons>
+				<icon-save :width="28" :height="28" />
+			</template>
+		</block-title>
+
+		<div class="profile-list" v-show="loading.sections.certificates">
+			<!-- Если сертификаты не выбраны -->
+			<div class="item-empty" v-if="spesialist.connections.certificates.length == 0">
+				<div class="item-title">Пока тут ничего нет...</div>
+			</div>
+			<!-- Если специализации выбраны -->
+			<div
+				class="item"
+				v-else
+				v-for="certificate in spesialist.connections.certificates"
+				:key="certificate.id"
+			>
+				<div class="item-title">
+					{{ getCertificateName(certificate) }}
+				</div>
+				<div class="item-close" @click="removeArrValue('certificates', certificate)">
+					<icon-close :width="26" :height="26" />
+				</div>
+			</div>
+		</div>
+
+		<!-- Загрузчик профиля -->
+		<loader-child
+			:isLoading="loading.loader.clinics"
+			:minHeight="100"
+			@loaderChildAfterLeave="loaderChildAfterLeave"
+		/>
+
+		<block-buttons>
+			<button-default> Добавить </button-default>
+		</block-buttons>
+	</block-once>
+
 	<!-- Образование и места работы -->
 	<block-two>
 		<template #title-one>
@@ -439,7 +502,26 @@ export default {
 	},
 	data() {
 		return {
-			modal: {
+			modalSpecializations: {
+				title: "",
+				status: false,
+				type: null,
+				style: {
+					create: false,
+					delete: false,
+				},
+				modules: {
+					title: true,
+					buttons: {
+						hide: false,
+						close: true,
+					},
+					images: false,
+					body: true,
+					footer: true,
+				},
+			},
+			modalClinics: {
 				title: "",
 				status: false,
 				type: null,
@@ -476,13 +558,13 @@ export default {
 					works: false,
 				},
 			},
-			pagination: {
+			paginationSpecializations: {
 				pages: {
 					current: 1,
-					total: 10,
+					range: 5,
 				},
-				settings: {
-					size: 5,
+				elements: {
+					range: 5,
 				},
 			},
 			spesialist: {
@@ -554,29 +636,22 @@ export default {
 			},
 			cheked: {
 				counter: 0,
-				certificates: [],
 				specializations: [],
 				clinics: [],
-				educations: [],
-				works: [],
 			},
-			test: 0,
 		};
 	},
 	computed: {
-		getPagesSpecializationsCount() {
-			return Math.ceil(this.sections.specializations.length / this.pagination.settings.size);
-		},
-		getSortedCertificates() {
-			return [...this.sections.certificates].splice(
-				(this.pagination.pages.current - 1) * this.pagination.settings.size,
-				this.pagination.settings.size
+		getPagesSpecializationsTotal() {
+			return Math.ceil(
+				this.sections.specializations.length / this.paginationSpecializations.elements.range
 			);
 		},
 		getSortedSpecializations() {
 			return [...this.sections.specializations].splice(
-				(this.pagination.pages.current - 1) * this.pagination.settings.size,
-				this.pagination.settings.size
+				(this.paginationSpecializations.pages.current - 1) *
+					this.paginationSpecializations.elements.range,
+				this.paginationSpecializations.elements.range
 			);
 		},
 	},
@@ -613,28 +688,23 @@ export default {
 		/* 1. Основные действия                                 */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Открытие */
-		openModal(type) {
+		openModal(type, modalName) {
 			switch (type) {
 				case "create":
 					{
-						this.modal.type = "create";
-						this.modal.status = true;
-						this.modal.style.create = true;
-						this.modal.style.delete = false;
+						this[modalName].type = "create";
+						this[modalName].status = true;
+						this[modalName].style.create = true;
+						this[modalName].style.delete = false;
 						this.clearModalData();
 					}
 					document.body.classList.add("modal-open");
 					break;
 				case "edit":
 					{
-						this.modal.type = "edit";
-						// if (this.currentSpecialization.data.create.body) {
-						// 	this.modal.style.create = true;
-						// } else {
-						// 	this.modal.style.create = false;
-						// }
-						this.modal.status = true;
-						this.modal.style.delete = false;
+						this[modalName].type = "edit";
+						this[modalName].status = true;
+						this[modalName].style.delete = false;
 					}
 					document.body.classList.add("modal-open");
 					break;
@@ -651,8 +721,8 @@ export default {
 			}
 		},
 		/* Закрытие */
-		closeModal() {
-			this.modal.status = false;
+		closeModal(modalName) {
+			this[modalName].status = false;
 			document.body.classList.remove("modal-open");
 		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -661,13 +731,18 @@ export default {
 		/* Изменение текущей страницы */
 		changePage(pageNumber) {
 			// Проверка на превышение количества страниц
-			if (pageNumber > this.getPagesSpecializationsCount) {
+			if (
+				pageNumber >
+				Math.ceil(
+					this.sections.specializations.length / this.paginationSpecializations.elements.range
+				)
+			) {
 				return;
 			} else if (pageNumber < 1) {
 				return;
 			}
 
-			this.pagination.pages.current = pageNumber;
+			this.paginationSpecializations.pages.current = pageNumber;
 		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                    ПРОФИЛЬ                        |*/
@@ -687,7 +762,7 @@ export default {
 				);
 			}
 
-			this.openModal("edit");
+			this.openModal("edit", "modalSpecializations");
 		},
 		/* Обновление специализаций */
 		updateSpecialization() {
@@ -725,7 +800,7 @@ export default {
 				}
 			}
 
-			this.closeModal();
+			this.closeModal("modalSpecializations");
 		},
 		/* _____________________________________________________*/
 		/* 2. Сохранение, обновление и удаление                 */
