@@ -4,7 +4,9 @@
 	<!--|___________________________________________________|-->
 	<admin-modal @touchCloseModal="closeModal('modalSpecializations')" :modal="modalSpecializations">
 		<template #title>
-			<span class="create" v-if="modalSpecializations.type == 'create'"> СПЕЦИАЛИЗАЦИЯ (СОЗДАНИЕ) </span>
+			<span class="create" v-if="modalSpecializations.type == 'create'">
+				СПЕЦИАЛИЗАЦИЯ (СОЗДАНИЕ)
+			</span>
 			<span v-if="modalSpecializations.type == 'edit'">СПЕЦИАЛИЗАЦИИ</span>
 		</template>
 		<template #body>
@@ -31,11 +33,17 @@
 					</div>
 					<input
 						type="checkbox"
-						:id="specialization.id"
+						:id="`spec-${specialization.id}`"
 						:value="specialization.id"
 						v-model="cheked.specializations"
 					/>
-					<label :for="specialization.id">{{ specialization.name }}</label>
+					<label :for="`spec-${specialization.id}`">{{ specialization.name }}</label>
+					<select>
+						<option value="" disabled selected>Не выбрано</option>
+						<option value="Первая">Первая</option>
+						<option value="Вторая">Вторая</option>
+						<option value="Третья">Высшая</option>
+					</select>
 				</div>
 			</div>
 
@@ -43,13 +51,18 @@
 			<pagination
 				:arrayLength="sections.specializations.length"
 				:settings="paginationSpecializations"
-				@changePage="changePage"
+				@changePage="changePageSpecializations"
 			/>
 		</template>
 		<template #footer>
 			<block-buttons>
-				<button-claim @click="" v-if="modalSpecializations.type == 'create'"> Создать </button-claim>
-				<button-default @click="updateSpecialization" v-if="modalSpecializations.type == 'edit'">
+				<button-claim @click="" v-if="modalSpecializations.type == 'create'">
+					Создать
+				</button-claim>
+				<button-default
+					@click="updateSpecialization"
+					v-if="modalSpecializations.type == 'edit'"
+				>
 					Обновить
 				</button-default>
 			</block-buttons>
@@ -59,7 +72,7 @@
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|              МОДАЛЬНОЕ ОКНО (КЛИНИКИ)             |-->
 	<!--|___________________________________________________|-->
-	<admin-modal @touchCloseModal="closeModal" :modal="modalClinics">
+	<admin-modal @touchCloseModal="closeModal('modalClinics')" :modal="modalClinics">
 		<template #title>
 			<span class="create" v-if="modalClinics.type == 'create'"> СПЕЦИАЛИЗАЦИЯ (СОЗДАНИЕ) </span>
 			<span v-if="modalClinics.type == 'edit'">КЛИНИКИ</span>
@@ -71,42 +84,45 @@
 					<div></div>
 					<div></div>
 					<div>Название</div>
+					<div>Адрес</div>
 				</div>
 				<div
 					class="item"
-					v-for="(specialization, index) in getSortedSpecializations"
-					:key="specialization.id"
-					:class="{ active: cheked.specializations.includes(specialization.id) }"
+					v-for="(clinic, index) in getSortedClinics"
+					:key="clinic.id"
+					:class="{ active: cheked.clinics.includes(clinic.id) }"
 				>
 					<div>
 						#{{
 							index +
 							1 +
-							paginationSpecializations.elements.range *
-								(paginationSpecializations.pages.current - 1)
+							paginationClinics.elements.range * (paginationClinics.pages.current - 1)
 						}}
 					</div>
 					<input
 						type="checkbox"
-						:id="specialization.id"
-						:value="specialization.id"
+						:id="`clin-${clinic.id}`"
+						:value="clinic.id"
 						v-model="cheked.clinics"
 					/>
-					<label :for="specialization.id">{{ specialization.name }}</label>
+					<label :for="`clin-${clinic.id}`">{{ clinic.name }}</label>
+					<label :for="`clin-${clinic.id}`">{{
+						`г. ${clinic.city}, ул. ${clinic.street}, д. ${clinic.home}`
+					}}</label>
 				</div>
 			</div>
 
 			<!-- Пагинация -->
 			<pagination
-				:arrayLength="sections.specializations.length"
-				:settings="paginationSpecializations"
-				@changePage="changePage"
+				:arrayLength="sections.clinics.length"
+				:settings="paginationClinics"
+				@changePage="changePageClinics"
 			/>
 		</template>
 		<template #footer>
 			<block-buttons>
 				<button-claim @click="" v-if="modalClinics.type == 'create'"> Создать </button-claim>
-				<button-default @click="updateSpecialization" v-if="modalClinics.type == 'edit'">
+				<button-default @click="updateClinics" v-if="modalClinics.type == 'edit'">
 					Обновить
 				</button-default>
 			</block-buttons>
@@ -234,7 +250,7 @@
 			<block-title>
 				<template #title> Специализации </template>
 				<template #buttons>
-					<icon-save :width="28" :height="28" />
+					<icon-save :width="28" :height="28" @click="saveSpecializationsChanges" />
 				</template>
 			</block-title>
 		</template>
@@ -273,7 +289,7 @@
 			/>
 
 			<block-buttons>
-				<button-default @click="editSpecialization"> Изменить </button-default>
+				<button-default @click="editSpecialization"> Добавить </button-default>
 			</block-buttons>
 		</template>
 		<template #title-two>
@@ -297,7 +313,9 @@
 					v-for="clinic in spesialist.connections.clinics"
 					:key="clinic.id"
 				>
-					<div class="item-title">{{ sections.clinics[clinic.id].name }}</div>
+					<div class="item-title">
+						{{ sections.clinics.filter((item) => item.id == clinic.id_clinic)[0].name }}
+					</div>
 					<div class="item-close" @click="removeArrValue('clinics', clinic)">
 						<icon-close :width="26" :height="26" />
 					</div>
@@ -312,7 +330,7 @@
 			/>
 
 			<block-buttons>
-				<button-default> Изменить </button-default>
+				<button-default @click="editClinics"> Добавить </button-default>
 			</block-buttons>
 		</template>
 	</block-two>
@@ -502,6 +520,7 @@ export default {
 	},
 	data() {
 		return {
+			/* Модальные окна */
 			modalSpecializations: {
 				title: "",
 				status: false,
@@ -540,6 +559,7 @@ export default {
 					footer: true,
 				},
 			},
+			/* Загрузчик */
 			loading: {
 				loader: {
 					profile: true,
@@ -558,16 +578,28 @@ export default {
 					works: false,
 				},
 			},
+			/* Пагинация */
 			paginationSpecializations: {
 				pages: {
 					current: 1,
 					range: 5,
 				},
 				elements: {
-					range: 5,
+					range: 10,
 				},
 			},
+			paginationClinics: {
+				pages: {
+					current: 1,
+					range: 5,
+				},
+				elements: {
+					range: 10,
+				},
+			},
+			/* Специалист */
 			spesialist: {
+				// Основная информация
 				profile: {
 					file: "",
 					id: {
@@ -619,6 +651,7 @@ export default {
 						edited: false,
 					},
 				},
+				// Связи
 				connections: {
 					certificates: [],
 					specializations: [],
@@ -627,6 +660,7 @@ export default {
 					works: [],
 				},
 			},
+			/* Секции */
 			sections: {
 				certificates: [],
 				specializations: [],
@@ -634,6 +668,7 @@ export default {
 				educations: [],
 				works: [],
 			},
+			/* Чекбоксовые массивы */
 			cheked: {
 				counter: 0,
 				specializations: [],
@@ -642,6 +677,9 @@ export default {
 		};
 	},
 	computed: {
+		/* _____________________________________________________*/
+		/* 1. Специалиации                                      */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		getPagesSpecializationsTotal() {
 			return Math.ceil(
 				this.sections.specializations.length / this.paginationSpecializations.elements.range
@@ -652,6 +690,18 @@ export default {
 				(this.paginationSpecializations.pages.current - 1) *
 					this.paginationSpecializations.elements.range,
 				this.paginationSpecializations.elements.range
+			);
+		},
+		/* _____________________________________________________*/
+		/* 2. Клиники                                           */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		getPagesClinicsTotal() {
+			return Math.ceil(this.sections.clinics.length / this.paginationClinics.elements.range);
+		},
+		getSortedClinics() {
+			return [...this.sections.clinics].splice(
+				(this.paginationClinics.pages.current - 1) * this.paginationClinics.elements.range,
+				this.paginationClinics.elements.range
 			);
 		},
 	},
@@ -729,7 +779,7 @@ export default {
 		/* |                   ПАГИНАТОР                       |*/
 		/* |___________________________________________________|*/
 		/* Изменение текущей страницы */
-		changePage(pageNumber) {
+		changePageSpecializations(pageNumber) {
 			// Проверка на превышение количества страниц
 			if (
 				pageNumber >
@@ -744,6 +794,20 @@ export default {
 
 			this.paginationSpecializations.pages.current = pageNumber;
 		},
+		/* Изменение текущей страницы */
+		changePageClinics(pageNumber) {
+			// Проверка на превышение количества страниц
+			if (
+				pageNumber >
+				Math.ceil(this.sections.clinics.length / this.paginationClinics.elements.range)
+			) {
+				return;
+			} else if (pageNumber < 1) {
+				return;
+			}
+
+			this.paginationClinics.pages.current = pageNumber;
+		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                    ПРОФИЛЬ                        |*/
 		/* |___________________________________________________|*/
@@ -756,54 +820,186 @@ export default {
 			this.cheked.specializations = [];
 
 			// Заполнение выбранных специализаций
-			for (let key in this.spesialist.connections.specializations) {
-				this.cheked.specializations.push(
-					this.spesialist.connections.specializations[key].id_specialization
-				);
-			}
+			this.spesialist.connections.specializations.forEach((item) => {
+				this.cheked.specializations.push(item.id_specialization);
+			});
 
 			this.openModal("edit", "modalSpecializations");
 		},
 		/* Обновление специализаций */
 		updateSpecialization() {
-			// Обнуление сертификатов специалиста
-			this.spesialist.connections.specializations = [];
+			try {
+				// Обнуление сертификатов специалиста
+				this.spesialist.connections.specializations = [];
 
-			let maxId = 0;
-			// Если ничего не выбрано, то оставляем пустой массив,
-			// иначе заполняем массив выбранными сертификатами
-			if (this.cheked.specializations.length !== 0) {
-				this.cheked.specializations.sort((a, b) => {
-					if (a > b) {
+				let maxId = 0;
+				// Если ничего не выбрано, то оставляем пустой массив, иначе заполняем массив выбранными значениями
+				if (this.cheked.specializations.length !== 0) {
+					this.cheked.specializations.sort((a, b) => {
+						if (a > b) {
+							return 1;
+						} else if (a < b) {
+							return -1;
+						} else {
+							return 0;
+						}
+					});
+
+					/* Заполнение выбранных специализаций в массив */
+					this.cheked.specializations.forEach((item) => {
+						this.spesialist.connections.specializations.push({
+							id: maxId + 1,
+							id_specialist: this.spesialist.profile.id.body,
+							id_specialization: item,
+						});
+
+						/* Поиск максимального id */
+						this.spesialist.connections.specializations.filter((item) => {
+							if (item.id > maxId) maxId++;
+						});
+					});
+				}
+
+				this.closeModal("modalSpecializations");
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "При обновлении значений произошла ошибка.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
+		/* Сохранение изменений */
+		saveSpecializationsChanges() {
+			try {
+				let newArray = [];
+
+				// Заполнение нового массива
+				this.spesialist.connections.specializations.forEach((item) => {
+					newArray.push(Object.assign({}, item));
+				});
+
+				// Сортировка нового массива
+				newArray.sort((a, b) => {
+					if (a.id > b.id) {
 						return 1;
-					} else if (a < b) {
+					} else if (a.id < b.id) {
 						return -1;
 					} else {
 						return 0;
 					}
 				});
 
-				/* Заполнение выбранных специализаций в массив */
-				for (let key in this.cheked.specializations) {
-					this.spesialist.connections.specializations.push({
-						id: maxId + 1,
-						id_specialist: this.spesialist.profile.id.body,
-						id_specialization: this.cheked.specializations[key],
-					});
+				axios({
+					method: "post",
+					url: `${this.$store.state.axios.urlApi}` + `save-specialist-specializations-changes`,
+					headers: {
+						Accept: "application/json",
+						Authorization: `Bearer ${localStorage.getItem("token")}`,
+					},
+					data: {
+						idSpecialist: this.spesialist.profile.id.body,
+						specialistSpecializations: newArray,
+					},
+				})
+					.then((response) => {
+						console.log(response.data);
 
-					/* Поиск максимального id */
-					this.spesialist.connections.specializations.filter((item) => {
-						if (item.id > maxId) {
-							maxId = item.id + 1;
-						}
+						let debbugStory = {
+							title: "Успешно!",
+							body: "Данные сохранились.",
+							type: "Completed",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					})
+					.catch((error) => {
+						let debbugStory = {
+							title: "Ошибка.",
+							body: "Данные почему-то не сохранились...",
+							type: "Error",
+						};
+						this.$store.commit("debuggerState", debbugStory);
 					});
-				}
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "При сохранении значений произошла ошибка.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
 			}
-
-			this.closeModal("modalSpecializations");
 		},
 		/* _____________________________________________________*/
-		/* 2. Сохранение, обновление и удаление                 */
+		/* 2. Клиники                                           */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* Открытие списка клиник */
+		editClinics() {
+			try {
+				// Обнуление массива
+				this.cheked.clinics = [];
+
+				// Заполнение выбранных специализаций из массива
+				this.spesialist.connections.clinics.forEach((item) => {
+					this.cheked.clinics.push(item.id_clinic);
+				});
+
+				this.openModal("edit", "modalClinics");
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "При открытии списка произошла ошибка.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
+		/* Обновление клиник */
+		updateClinics() {
+			try {
+				// Обнуление сертификатов специалиста
+				this.spesialist.connections.clinics = [];
+
+				let maxId = 0;
+				// Если ничего не выбрано, то оставляем пустой массив, иначе заполняем массив выбранными значениями
+				if (this.cheked.clinics.length !== 0) {
+					this.cheked.clinics.sort((a, b) => {
+						if (a > b) {
+							return 1;
+						} else if (a < b) {
+							return -1;
+						} else {
+							return 0;
+						}
+					});
+
+					/* Заполнение выбранных специализаций в массив */
+					for (let key in this.cheked.clinics) {
+						this.spesialist.connections.clinics.push({
+							id: maxId + 1,
+							id_specialist: this.spesialist.profile.id.body,
+							id_clinic: this.cheked.clinics[key],
+						});
+
+						// Поиск максимального id
+						this.spesialist.connections.clinics.filter((item) => {
+							if (item.id > maxId) maxId++;
+						});
+					}
+				}
+
+				this.closeModal("modalClinics");
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "При обновлении значений произошла ошибка.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
+		/* _____________________________________________________*/
+		/* ?. Общие методы                                         */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Метод удаления значения из массива */
 		removeArrValue(array, value) {
@@ -851,7 +1047,8 @@ export default {
 </script>
 
 <style scoped>
-.specializations-list {
+.specializations-list,
+.clinics-list {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
@@ -859,7 +1056,7 @@ export default {
 
 .specializations-list > .item {
 	display: grid;
-	grid-template-columns: 20px 30px 1fr;
+	grid-template-columns: 20px 30px 1fr 1fr;
 	gap: 10px;
 	border: 2px solid var(--input-border-color-inactive);
 	padding: 10px;
@@ -868,34 +1065,73 @@ export default {
 	transition: all 0.2s;
 }
 
-.specializations-list > .item.active {
+.specializations-list > .item > select {
+	border: 0px;
+	background-color: rgba(0, 0, 0, 0);
+	font-size: 18px;
+	outline: none;
+}
+
+.red {
+	color: red;
+}
+
+.clinics-list > .item {
+	display: grid;
+	grid-template-columns: 20px 30px 1fr 1fr;
+	gap: 10px;
+	border: 2px solid var(--input-border-color-inactive);
+	padding: 10px;
+	border-radius: 10px;
+
+	transition: all 0.2s;
+}
+
+.specializations-list > .item.active,
+.clinics-list > .item.active {
 	border: 2px solid var(--input-border-color-active);
 	background-color: #f2feff;
 }
 
-.specializations-list > .item > input[type="checkbox"] {
+.specializations-list > .item > input[type="checkbox"],
+.clinics-list > .item > input[type="checkbox"] {
 	cursor: pointer;
 }
 
-.specializations-list > .item > input[type="checkbox"]:checked {
+.specializations-list > .item > input[type="checkbox"]:checked,
+.clinics-list > .item > input[type="checkbox"]:checked {
 	accent-color: #8fe5ee;
 }
 
-.specializations-list > .item:first-of-type {
+.specializations-list > .item:first-of-type,
+.clinics-list > .item:first-of-type {
 	display: grid;
-	grid-template-columns: 20px 30px 1fr;
 	gap: 10px;
+
 	border: 0px;
 	padding: 0px 10px;
 	border-radius: 10px;
+
+	font-size: 18px;
+	color: var(--input-border-color-active);
 }
 
-.specializations-list > .item:not(:first-of-type):hover {
+.specializations-list > .item:first-of-type {
+	grid-template-columns: 20px 30px 1fr;
+}
+
+.clinics-list > .item:first-of-type {
+	grid-template-columns: 20px 30px 1fr 1fr;
+}
+
+.specializations-list > .item:not(:first-of-type):hover,
+.clinics-list > .item:not(:first-of-type):hover {
 	border: 2px solid var(--input-border-color-active);
 	background-color: #f2feff;
 }
 
-.specializations-list > .item > label {
+.specializations-list > .item > label,
+.clinics-list > .item > label {
 	cursor: pointer;
 	font-size: 18px;
 }

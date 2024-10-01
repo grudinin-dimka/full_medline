@@ -2,7 +2,7 @@
 	<header>
 		<img src="../../../assets/svg/logo.svg" alt="Медлайн" />
 		<div class="user">
-			<p>Administrator</p>
+			<p>(Надо исправить)</p>
 		</div>
 	</header>
 	<!-- Кнопка "бургер" -->

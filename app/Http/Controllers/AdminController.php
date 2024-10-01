@@ -23,6 +23,7 @@ use App\Models\Clinic;
 use App\Models\Education;
 use App\Models\Work;
 use App\Models\Certificate;
+use App\Models\SpecialistSpecialization;
 
 class AdminController extends Controller
 {
@@ -190,6 +191,27 @@ class AdminController extends Controller
          };
       };      
    }
+   /* Сохранение специализаций специалиста */ 
+   public function saveSpecialistSpecializationsChanges(Request $request) {
+      $specializations = SpecialistSpecialization::where('id_specialist', $request->idSpecialist)->get();
+
+      foreach($request->specialistSpecializations as $specialistSpecializationsKey => $specialistSpecializationsValue) {
+         SpecialistSpecialization::findOrCreate([
+            'id_specialist' => $request->idSpecialist,
+            'id_specialization' => $specialistSpecializationsValue->id_specialization
+         ]);
+
+         // $status = false;
+         
+         // /* Проверка на совпадение */
+         // foreach($specializations as $specializationKey => $specializationValue) {
+         //    if ($specialistSpecializationsValue->id_specialization == $specializationValue->id_specialization) {
+         //       $status = true;
+         //    }
+         // }
+      }
+   }
+
    /* _____________________________________________________*/
    /* 2. Специализации                                     */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
