@@ -21,7 +21,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_specialist')->references('id')->on('specialists')->onDelete('cascade');
             $table->unsignedBigInteger('id_specialization')->references('id')->on('specializations')->onDelete('cascade');
-            $table->string('category', 100);
             $table->timestamps();
         });
 
@@ -29,7 +28,6 @@ return new class extends Migration
             [
                 "id_specialist" => 1,
                 "id_specialization" => 1,
-                "category" => "Первая",
             ]
         );
 
@@ -37,7 +35,6 @@ return new class extends Migration
             [
                 "id_specialist" => 1,
                 "id_specialization" => 2,
-                "category" => "Высшая",
             ]
         );
     }

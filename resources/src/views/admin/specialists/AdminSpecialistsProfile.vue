@@ -1,5 +1,8 @@
 <template>
-	<!-- section[epic=модальное окно] Специализации -->
+	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
+	<!--|                  МОДАЛЬНОЕ ОКНО                   |-->
+	<!--|___________________________________________________|-->
+	<!-- Специализации -->
 	<admin-modal @touchCloseModal="closeModal('modalSpecializations')" :modal="modalSpecializations">
 		<template #title>
 			<span class="create" v-if="modalSpecializations.type == 'create'">
@@ -14,7 +17,6 @@
 					<div></div>
 					<div></div>
 					<div>Название</div>
-					<div>Категория</div>
 				</div>
 				<div
 					class="item"
@@ -37,11 +39,6 @@
 						v-model="cheked.specializations"
 					/>
 					<label :for="`spec-${specialization.id}`">{{ specialization.name }}</label>
-					<select v-model="specialization.category">
-						<option :value="'Первая'">Первая</option>
-						<option :value="'Вторая'">Вторая</option>
-						<option :value="'Высшая'">Высшая</option>
-					</select>
 				</div>
 			</div>
 
@@ -66,8 +63,7 @@
 			</block-buttons>
 		</template>
 	</admin-modal>
-
-	<!-- section[epic=модальное окно] Клиники -->
+	<!-- Клиники -->
 	<admin-modal @touchCloseModal="closeModal('modalClinics')" :modal="modalClinics">
 		<template #title>
 			<span class="create" v-if="modalClinics.type == 'create'"> СПЕЦИАЛИЗАЦИЯ (СОЗДАНИЕ) </span>
@@ -102,12 +98,12 @@
 						v-model="cheked.clinics"
 					/>
 					<label :for="`clin-${clinic.id}`">{{ clinic.name }}</label>
-					<label :for="`clin-${clinic.id}`">{{
-						`г. ${clinic.city}, ул. ${clinic.street}, д. ${clinic.home}`
-					}}</label>
+					<select v-model="clinic.priem">
+						<option :value="0">Нет</option>
+						<option :value="1">Да</option>
+					</select>
 				</div>
 			</div>
-
 			<!-- Пагинация -->
 			<pagination
 				:arrayLength="sections.clinics.length"
@@ -125,12 +121,15 @@
 		</template>
 	</admin-modal>
 
+	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
+	<!--|                   СПЕЦИАЛИСТ                      |-->
+	<!--|___________________________________________________|-->
 	<info-bar>
 		<template v-slot:title>Специалисты</template>
 		<template v-slot:addreas>specialists/{{ $route.params.id }}</template>
 	</info-bar>
 
-	<!-- section[epic=специалисты] Основные данные врача -->
+	<!-- Основные данные врача -->
 	<block-once>
 		<block-title>
 			<template #title>Профиль</template>
@@ -190,9 +189,37 @@
 				</container-input-three>
 			</div>
 		</div>
-		<!-- section[epic=специалисты] Первая работа и статус приёма -->
+
 		<div class="container-profile-other" v-show="loading.sections.profile">
 			<container-input>
+				<container-input-three :fieldset="true">
+					<template #legend>НАУЧНОЕ ОБРАЗОВАНИЕ</template>
+					<template #title-one>КАТЕГОРИЯ</template>
+					<template #input-one>
+						<input
+							type="text"
+							placeholder="Введите категорию"
+							autocomplete="off"
+						/>
+					</template>
+					<template #title-two>СТЕПЕНЬ</template>
+					<template #input-two>
+						<input
+							type="text"
+							placeholder="Введите степень"
+							autocomplete="off"
+						/>
+					</template>
+					<template #title-three>ЗВАНИЕ</template>
+					<template #input-three>
+						<input
+							type="text"
+							placeholder="Введите звание"
+							autocomplete="off"
+						/>
+					</template>
+				</container-input-three>
+				<!-- Первая работа -->
 				<container-input-two :fieldset="true">
 					<template #legend>ПЕРВАЯ РАБОТА</template>
 					<template #title-one>НАЧАЛО ПЕРВОЙ РАБОТЫ</template>
@@ -209,6 +236,7 @@
 						/>
 					</template>
 				</container-input-two>
+				<!-- Статус приёма -->
 				<container-input-two :fieldset="true">
 					<template #legend>ПРИЁМ ВРАЧА</template>
 					<template #title-one>У ВЗРОСЛЫХ</template>
@@ -238,7 +266,7 @@
 	</block-once>
 
 	<block-two>
-		<!-- section[epic=специалисты] Специализации -->	
+		<!-- Специализации -->
 		<template #title-one>
 			<block-title>
 				<template #title>
@@ -259,8 +287,6 @@
 				<template v-else>
 					<div class="item">
 						<div>Название</div>
-						<div>Категория</div>
-						<div></div>
 					</div>
 					<div
 						class="item"
@@ -275,9 +301,7 @@
 								)[0].name
 							}}
 						</div>
-						<div class="item-category">
-							{{ specialization.category ? `${specialization.category}` : "Пусто..." }}
-						</div>
+						<div class="item-priem"></div>
 						<div
 							class="item-close"
 							@click="removeArrValue('specializations', specialization)"
@@ -299,7 +323,7 @@
 				<button-default @click="editSpecialization"> Добавить </button-default>
 			</block-buttons>
 		</template>
-		<!-- section[epic=специалисты] Клиники -->	
+		<!-- Клиники -->
 		<template #title-two>
 			<block-title>
 				<template #title> Клиники ({{ spesialist.connections.clinics.length }}) </template>
@@ -348,7 +372,7 @@
 		</template>
 	</block-two>
 
-	<!-- section[epic=специалисты] Сертификаты -->	
+	<!-- Сертификаты -->
 	<block-once>
 		<block-title>
 			<template #title> Сертификаты </template>
@@ -392,7 +416,7 @@
 
 	<!-- Образование и места работы -->
 	<block-two>
-		<!-- section[epic=специалисты] Образование -->	
+		<!-- Образование -->
 		<template #title-one>
 			<block-title>
 				<template #title> Образование </template>
@@ -432,7 +456,7 @@
 				<button-default> Добавить </button-default>
 			</block-buttons>
 		</template>
-		<!-- section[epic=специалисты] Места работы -->	
+		<!-- Места работы -->
 		<template #title-two>
 			<block-title>
 				<template #title> Места работы </template>
@@ -693,7 +717,12 @@ export default {
 		};
 	},
 	computed: {
-		/* code[epic=computed] Специализации */
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                     ПРОФИЛЬ                       |*/
+		/* |___________________________________________________|*/
+		/* _____________________________________________________*/
+		/* 1. Специализации                                     */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		getPagesSpecializationsTotal() {
 			return Math.ceil(
 				this.sections.specializations.length / this.paginationSpecializations.elements.range
@@ -706,7 +735,9 @@ export default {
 				this.paginationSpecializations.elements.range
 			);
 		},
-		/* code[epic=computed] Клиники */
+		/* _____________________________________________________*/
+		/* 2. Клиники                                           */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		getPagesClinicsTotal() {
 			return Math.ceil(this.sections.clinics.length / this.paginationClinics.elements.range);
 		},
@@ -723,7 +754,9 @@ export default {
 		// },
 	},
 	methods: {
-		/* code[epic=methods/Загрузчик] Загрузчик */
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                   Загрузчик                       |*/
+		/* |___________________________________________________|*/
 		/* После скрытия элементы */
 		loaderChildAfterLeave() {
 			if (!this.loading.loader.profile) {
@@ -741,7 +774,9 @@ export default {
 			});
 			return certificate[0].name;
 		},
-		/* code[epic=methods/модальное окно] 1. Основные действия */
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                 Модальное окно                    |*/
+		/* |___________________________________________________|*/
 		/* _____________________________________________________*/
 		/* 1. Основные действия                                 */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
@@ -783,7 +818,12 @@ export default {
 			this[modalName].status = false;
 			document.body.classList.remove("modal-open");
 		},
-		/* code[epic=methods/пагинация] Основные действия */
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                    ПАГИНАЦИЯ                      |*/
+		/* |___________________________________________________|*/
+		/* _____________________________________________________*/
+		/* 1. Основные действия                                 */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Изменение текущей страницы */
 		changePageSpecializations(pageNumber) {
 			// Проверка на превышение количества страниц
@@ -814,16 +854,21 @@ export default {
 
 			this.paginationClinics.pages.current = pageNumber;
 		},
-		/* code[epic=methods/профиль] Специализации */
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                     ПРОФИЛЬ                       |*/
+		/* |___________________________________________________|*/
+		/* _____________________________________________________*/
+		/* 1. Специализации                                     */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Открытие списка специализация */
 		editSpecialization() {
 			// Обнуление выбранных специализаций
 			this.cheked.specializations = [];
 
 			// Заполнение выбранных специализаций
-			this.spesialist.connections.specializations.forEach((item) => {
-				this.cheked.specializations.push(item.id_specialization);
-			});
+			this.spesialist.connections.specializations.forEach((connSpecilization) =>
+				this.cheked.specializations.push(connSpecilization.id_specialization)
+			);
 
 			this.openModal("edit", "modalSpecializations");
 		},
@@ -850,9 +895,6 @@ export default {
 					this.cheked.specializations.forEach((item) => {
 						this.spesialist.connections.specializations.push({
 							id: maxId + 1,
-							category: this.sections.specializations.find(
-								(itemOther) => itemOther.id == item
-							).category,
 							id_specialist: this.spesialist.profile.id.body,
 							id_specialization: item,
 						});
@@ -934,7 +976,9 @@ export default {
 				this.$store.commit("debuggerState", debbugStory);
 			}
 		},
-		/* code[epic=methods/профиль] Клиники */
+		/* _____________________________________________________*/
+		/* 2. Клиники                                           */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Открытие списка клиник */
 		editClinics() {
 			try {
@@ -942,8 +986,13 @@ export default {
 				this.cheked.clinics = [];
 
 				// Заполнение выбранных специализаций из массива
-				this.spesialist.connections.clinics.forEach((item) => {
-					this.cheked.clinics.push(item.id_clinic);
+				this.spesialist.connections.clinics.forEach((connClinic) => {
+					this.cheked.clinics.push(connClinic.id_clinic);
+
+					/* Заполнение статуса приёма в клиниках в массив */
+					this.sections.clinics.find((clinic) => {
+						return clinic.id == connClinic.id_clinic;
+					}).priem = connClinic.priem;
 				});
 
 				this.openModal("edit", "modalClinics");
@@ -979,6 +1028,9 @@ export default {
 					this.cheked.clinics.forEach((checkClinic) => {
 						this.spesialist.connections.clinics.push({
 							id: maxId + 1,
+							priem: this.sections.clinics.find((clinic) => {
+								return clinic.id == checkClinic;
+							}).priem,
 							id_specialist: this.spesialist.profile.id.body,
 							id_clinic: checkClinic,
 						});
@@ -1000,7 +1052,9 @@ export default {
 				this.$store.commit("debuggerState", debbugStory);
 			}
 		},
-		/* code[epic=methods/профиль] Общие методы */
+		/* _____________________________________________________*/
+		/* ?. Общие методы                                      */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Метод удаления значения из массива */
 		removeArrValue(array, value) {
 			this.spesialist.connections[array] = this.spesialist.connections[array].filter((item) => {
@@ -1034,12 +1088,13 @@ export default {
 					this.sections[key] = response.data.sections[key];
 				}
 
-				this.sections.specializations.forEach((item) => {
-					item.category = "Первая";
+				// Добавление поля "Прием" в клиниках
+				this.sections.clinics.forEach((item) => {
+					item.priem = 0;
 
-					this.spesialist.connections.specializations.forEach((itemOther) => {
-						if (itemOther.id_specialization == item.id) {
-							item.category = itemOther.category;
+					this.spesialist.connections.clinics.forEach((itemOther) => {
+						if (itemOther.id_clinic == item.id) {
+							item.priem = itemOther.priem;
 						}
 					});
 				});
@@ -1064,7 +1119,17 @@ export default {
 	gap: 10px;
 }
 
-.specializations-list > .item,
+.specializations-list > .item {
+	display: grid;
+	grid-template-columns: 20px 30px 1fr;
+	gap: 10px;
+	border: 2px solid var(--input-border-color-inactive);
+	padding: 10px;
+	border-radius: 10px;
+
+	transition: all 0.2s;
+}
+
 .clinics-list > .item {
 	display: grid;
 	grid-template-columns: 20px 30px 1fr 1fr;
@@ -1076,19 +1141,8 @@ export default {
 	transition: all 0.2s;
 }
 
-.specializations-list > .item,
-.clinics-list > .item {
-	display: grid;
-	grid-template-columns: 20px 30px 1fr 1fr;
-	gap: 10px;
-	border: 2px solid var(--input-border-color-inactive);
-	padding: 10px;
-	border-radius: 10px;
-
-	transition: all 0.2s;
-}
-
-.specializations-list > .item > select {
+.specializations-list > .item > select,
+.clinics-list > .item > select {
 	border: 0px;
 	background-color: rgba(0, 0, 0, 0);
 	font-size: 18px;
