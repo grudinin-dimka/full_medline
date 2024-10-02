@@ -38,7 +38,7 @@ return new class extends Migration
 
         DB::table('clinics')->insert(
             [
-                "name" => "г. Шадринск, ул. Комсомольская, 16",
+                "name" => "На Комсомольской",
                 "city" => "Шадринск",
                 "street" => "Комсомольская",
                 "home" => "16",
@@ -49,7 +49,7 @@ return new class extends Migration
         );
         DB::table('clinics')->insert(
             [
-                "name" => "г. Шадринск, ул. Карла Либкнехта, 10",
+                "name" => "На Карла Либкнехта",
                 "city" => "Шадринск",
                 "street" => "Карла Либкнехта",
                 "home" => "10",
@@ -60,7 +60,7 @@ return new class extends Migration
         );
         DB::table('clinics')->insert(
             [
-                "name" => "г. Шадринск, ул. Октябрьская, 3",
+                "name" => "На Октябрьской",
                 "city" => "Шадринск",
                 "street" => "Октябрьская",
                 "home" => "3",

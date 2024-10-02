@@ -1,7 +1,5 @@
 <template>
-	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
-	<!--|           МОДАЛЬНОЕ ОКНО (СПЕЦИАЛИЗАЦИИ)          |-->
-	<!--|___________________________________________________|-->
+	<!-- section[epic=модальное окно] Специализации -->
 	<admin-modal @touchCloseModal="closeModal('modalSpecializations')" :modal="modalSpecializations">
 		<template #title>
 			<span class="create" v-if="modalSpecializations.type == 'create'">
@@ -16,6 +14,7 @@
 					<div></div>
 					<div></div>
 					<div>Название</div>
+					<div>Категория</div>
 				</div>
 				<div
 					class="item"
@@ -38,11 +37,10 @@
 						v-model="cheked.specializations"
 					/>
 					<label :for="`spec-${specialization.id}`">{{ specialization.name }}</label>
-					<select>
-						<option value="" disabled selected>Не выбрано</option>
-						<option value="Первая">Первая</option>
-						<option value="Вторая">Вторая</option>
-						<option value="Третья">Высшая</option>
+					<select v-model="specialization.category">
+						<option :value="'Первая'">Первая</option>
+						<option :value="'Вторая'">Вторая</option>
+						<option :value="'Высшая'">Высшая</option>
 					</select>
 				</div>
 			</div>
@@ -69,9 +67,7 @@
 		</template>
 	</admin-modal>
 
-	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
-	<!--|              МОДАЛЬНОЕ ОКНО (КЛИНИКИ)             |-->
-	<!--|___________________________________________________|-->
+	<!-- section[epic=модальное окно] Клиники -->
 	<admin-modal @touchCloseModal="closeModal('modalClinics')" :modal="modalClinics">
 		<template #title>
 			<span class="create" v-if="modalClinics.type == 'create'"> СПЕЦИАЛИЗАЦИЯ (СОЗДАНИЕ) </span>
@@ -84,7 +80,7 @@
 					<div></div>
 					<div></div>
 					<div>Название</div>
-					<div>Адрес</div>
+					<div>Статус приёма</div>
 				</div>
 				<div
 					class="item"
@@ -129,15 +125,12 @@
 		</template>
 	</admin-modal>
 
-	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
-	<!--|                   СПЕЦИАЛИСТЫ                     |-->
-	<!--|___________________________________________________|-->
 	<info-bar>
 		<template v-slot:title>Специалисты</template>
 		<template v-slot:addreas>specialists/{{ $route.params.id }}</template>
 	</info-bar>
 
-	<!-- Основные данные врача -->
+	<!-- section[epic=специалисты] Основные данные врача -->
 	<block-once>
 		<block-title>
 			<template #title>Профиль</template>
@@ -197,7 +190,7 @@
 				</container-input-three>
 			</div>
 		</div>
-		<!-- Первая работа и статус приёма -->
+		<!-- section[epic=специалисты] Первая работа и статус приёма -->
 		<div class="container-profile-other" v-show="loading.sections.profile">
 			<container-input>
 				<container-input-two :fieldset="true">
@@ -244,11 +237,13 @@
 		/>
 	</block-once>
 
-	<!-- Специализации и клиники -->
 	<block-two>
+		<!-- section[epic=специалисты] Специализации -->	
 		<template #title-one>
 			<block-title>
-				<template #title> Специализации </template>
+				<template #title>
+					Специализации ({{ spesialist.connections.specializations.length }})
+				</template>
 				<template #buttons>
 					<icon-save :width="28" :height="28" @click="saveSpecializationsChanges" />
 				</template>
@@ -261,24 +256,36 @@
 					<div class="item-title">Пока тут ничего нет...</div>
 				</div>
 				<!-- Если специализации выбраны -->
-				<div
-					class="item"
-					v-else
-					v-for="specialization in spesialist.connections.specializations"
-					:key="specialization.id"
-				>
-					<!-- <div class="item-title">1</div> -->
-					<div class="item-title">
-						{{
-							sections.specializations.filter(
-								(item) => item.id == specialization.id_specialization
-							)[0].name
-						}}
+				<template v-else>
+					<div class="item">
+						<div>Название</div>
+						<div>Категория</div>
+						<div></div>
 					</div>
-					<div class="item-close" @click="removeArrValue('specializations', specialization)">
-						<icon-close :width="26" :height="26" />
+					<div
+						class="item"
+						v-for="specialization in spesialist.connections.specializations"
+						:key="specialization.id"
+					>
+						<!-- <div class="item-title">1</div> -->
+						<div class="item-title">
+							{{
+								sections.specializations.filter(
+									(item) => item.id == specialization.id_specialization
+								)[0].name
+							}}
+						</div>
+						<div class="item-category">
+							{{ specialization.category ? `${specialization.category}` : "Пусто..." }}
+						</div>
+						<div
+							class="item-close"
+							@click="removeArrValue('specializations', specialization)"
+						>
+							<icon-close :width="26" :height="26" />
+						</div>
 					</div>
-				</div>
+				</template>
 			</div>
 
 			<!-- Загрузчик специализаций -->
@@ -292,9 +299,10 @@
 				<button-default @click="editSpecialization"> Добавить </button-default>
 			</block-buttons>
 		</template>
+		<!-- section[epic=специалисты] Клиники -->	
 		<template #title-two>
 			<block-title>
-				<template #title> Клиники </template>
+				<template #title> Клиники ({{ spesialist.connections.clinics.length }}) </template>
 				<template #buttons>
 					<icon-save :width="28" :height="28" />
 				</template>
@@ -306,20 +314,25 @@
 				<div class="item-empty" v-if="spesialist.connections.clinics.length == 0">
 					<div class="item-title">Пока тут ничего нет...</div>
 				</div>
-				<!-- Если клиники выбраны -->
-				<div
-					class="item"
-					v-else
-					v-for="clinic in spesialist.connections.clinics"
-					:key="clinic.id"
-				>
-					<div class="item-title">
-						{{ sections.clinics.filter((item) => item.id == clinic.id_clinic)[0].name }}
+				<template v-else>
+					<div class="item">
+						<div>Название</div>
+						<div>Приём</div>
+						<div></div>
 					</div>
-					<div class="item-close" @click="removeArrValue('clinics', clinic)">
-						<icon-close :width="26" :height="26" />
+					<!-- Если клиники выбраны -->
+					<div class="item" v-for="clinic in spesialist.connections.clinics" :key="clinic.id">
+						<div class="item-title">
+							{{ sections.clinics.filter((item) => item.id == clinic.id_clinic)[0].name }}
+						</div>
+						<div class="item-priem">
+							{{ clinic.priem ? `Да` : "Нет" }}
+						</div>
+						<div class="item-close" @click="removeArrValue('clinics', clinic)">
+							<icon-close :width="26" :height="26" />
+						</div>
 					</div>
-				</div>
+				</template>
 			</div>
 
 			<!-- Загрузчик клиник -->
@@ -335,7 +348,7 @@
 		</template>
 	</block-two>
 
-	<!-- Сертификаты -->
+	<!-- section[epic=специалисты] Сертификаты -->	
 	<block-once>
 		<block-title>
 			<template #title> Сертификаты </template>
@@ -379,6 +392,7 @@
 
 	<!-- Образование и места работы -->
 	<block-two>
+		<!-- section[epic=специалисты] Образование -->	
 		<template #title-one>
 			<block-title>
 				<template #title> Образование </template>
@@ -418,6 +432,7 @@
 				<button-default> Добавить </button-default>
 			</block-buttons>
 		</template>
+		<!-- section[epic=специалисты] Места работы -->	
 		<template #title-two>
 			<block-title>
 				<template #title> Места работы </template>
@@ -672,14 +687,13 @@ export default {
 			cheked: {
 				counter: 0,
 				specializations: [],
+				specializationsCategory: [],
 				clinics: [],
 			},
 		};
 	},
 	computed: {
-		/* _____________________________________________________*/
-		/* 1. Специалиации                                      */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* code[epic=computed] Специализации */
 		getPagesSpecializationsTotal() {
 			return Math.ceil(
 				this.sections.specializations.length / this.paginationSpecializations.elements.range
@@ -692,9 +706,7 @@ export default {
 				this.paginationSpecializations.elements.range
 			);
 		},
-		/* _____________________________________________________*/
-		/* 2. Клиники                                           */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* code[epic=computed] Клиники */
 		getPagesClinicsTotal() {
 			return Math.ceil(this.sections.clinics.length / this.paginationClinics.elements.range);
 		},
@@ -711,9 +723,7 @@ export default {
 		// },
 	},
 	methods: {
-		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                   Загрузчик                       |*/
-		/* |___________________________________________________|*/
+		/* code[epic=methods/Загрузчик] Загрузчик */
 		/* После скрытия элементы */
 		loaderChildAfterLeave() {
 			if (!this.loading.loader.profile) {
@@ -731,9 +741,7 @@ export default {
 			});
 			return certificate[0].name;
 		},
-		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                 Модальное окно                    |*/
-		/* |___________________________________________________|*/
+		/* code[epic=methods/модальное окно] 1. Основные действия */
 		/* _____________________________________________________*/
 		/* 1. Основные действия                                 */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
@@ -775,9 +783,7 @@ export default {
 			this[modalName].status = false;
 			document.body.classList.remove("modal-open");
 		},
-		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                   ПАГИНАТОР                       |*/
-		/* |___________________________________________________|*/
+		/* code[epic=methods/пагинация] Основные действия */
 		/* Изменение текущей страницы */
 		changePageSpecializations(pageNumber) {
 			// Проверка на превышение количества страниц
@@ -808,12 +814,7 @@ export default {
 
 			this.paginationClinics.pages.current = pageNumber;
 		},
-		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                    ПРОФИЛЬ                        |*/
-		/* |___________________________________________________|*/
-		/* _____________________________________________________*/
-		/* 1. Специалиации                                      */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* code[epic=methods/профиль] Специализации */
 		/* Открытие списка специализация */
 		editSpecialization() {
 			// Обнуление выбранных специализаций
@@ -849,6 +850,9 @@ export default {
 					this.cheked.specializations.forEach((item) => {
 						this.spesialist.connections.specializations.push({
 							id: maxId + 1,
+							category: this.sections.specializations.find(
+								(itemOther) => itemOther.id == item
+							).category,
 							id_specialist: this.spesialist.profile.id.body,
 							id_specialization: item,
 						});
@@ -930,9 +934,7 @@ export default {
 				this.$store.commit("debuggerState", debbugStory);
 			}
 		},
-		/* _____________________________________________________*/
-		/* 2. Клиники                                           */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* code[epic=methods/профиль] Клиники */
 		/* Открытие списка клиник */
 		editClinics() {
 			try {
@@ -973,19 +975,19 @@ export default {
 						}
 					});
 
-					/* Заполнение выбранных специализаций в массив */
-					for (let key in this.cheked.clinics) {
+					// Заполнение выбранных специализаций в массив
+					this.cheked.clinics.forEach((checkClinic) => {
 						this.spesialist.connections.clinics.push({
 							id: maxId + 1,
 							id_specialist: this.spesialist.profile.id.body,
-							id_clinic: this.cheked.clinics[key],
+							id_clinic: checkClinic,
 						});
 
 						// Поиск максимального id
-						this.spesialist.connections.clinics.filter((item) => {
-							if (item.id > maxId) maxId++;
+						this.spesialist.connections.clinics.filter((connClinic) => {
+							if (connClinic.id > maxId) maxId++;
 						});
-					}
+					});
 				}
 
 				this.closeModal("modalClinics");
@@ -998,9 +1000,7 @@ export default {
 				this.$store.commit("debuggerState", debbugStory);
 			}
 		},
-		/* _____________________________________________________*/
-		/* ?. Общие методы                                         */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* code[epic=methods/профиль] Общие методы */
 		/* Метод удаления значения из массива */
 		removeArrValue(array, value) {
 			this.spesialist.connections[array] = this.spesialist.connections[array].filter((item) => {
@@ -1033,6 +1033,16 @@ export default {
 				for (let key in response.data.sections) {
 					this.sections[key] = response.data.sections[key];
 				}
+
+				this.sections.specializations.forEach((item) => {
+					item.category = "Первая";
+
+					this.spesialist.connections.specializations.forEach((itemOther) => {
+						if (itemOther.id_specialization == item.id) {
+							item.category = itemOther.category;
+						}
+					});
+				});
 			})
 			.catch((error) => {
 				console.log(error);
@@ -1054,7 +1064,20 @@ export default {
 	gap: 10px;
 }
 
-.specializations-list > .item {
+.specializations-list > .item,
+.clinics-list > .item {
+	display: grid;
+	grid-template-columns: 20px 30px 1fr 1fr;
+	gap: 10px;
+	border: 2px solid var(--input-border-color-inactive);
+	padding: 10px;
+	border-radius: 10px;
+
+	transition: all 0.2s;
+}
+
+.specializations-list > .item,
+.clinics-list > .item {
 	display: grid;
 	grid-template-columns: 20px 30px 1fr 1fr;
 	gap: 10px;
@@ -1076,17 +1099,6 @@ export default {
 	color: red;
 }
 
-.clinics-list > .item {
-	display: grid;
-	grid-template-columns: 20px 30px 1fr 1fr;
-	gap: 10px;
-	border: 2px solid var(--input-border-color-inactive);
-	padding: 10px;
-	border-radius: 10px;
-
-	transition: all 0.2s;
-}
-
 .specializations-list > .item.active,
 .clinics-list > .item.active {
 	border: 2px solid var(--input-border-color-active);
@@ -1106,6 +1118,7 @@ export default {
 .specializations-list > .item:first-of-type,
 .clinics-list > .item:first-of-type {
 	display: grid;
+	grid-template-columns: 20px 30px 1fr 1fr;
 	gap: 10px;
 
 	border: 0px;
@@ -1114,14 +1127,6 @@ export default {
 
 	font-size: 18px;
 	color: var(--input-border-color-active);
-}
-
-.specializations-list > .item:first-of-type {
-	grid-template-columns: 20px 30px 1fr;
-}
-
-.clinics-list > .item:first-of-type {
-	grid-template-columns: 20px 30px 1fr 1fr;
 }
 
 .specializations-list > .item:not(:first-of-type):hover,
@@ -1210,9 +1215,9 @@ export default {
 }
 
 .profile-list > .item {
-	display: flex;
-	justify-content: space-between;
+	display: grid;
 	align-items: center;
+	grid-template-columns: 1fr 1fr 30px;
 	gap: 10px;
 
 	border: 2px solid var(--input-border-color-inactive);
@@ -1224,12 +1229,33 @@ export default {
 	transition: all 0.2s;
 }
 
+.profile-list > .item:first-of-type {
+	display: grid;
+	align-items: center;
+	grid-template-columns: 1fr 1fr 30px;
+	gap: 10px;
+
+	border: 0px;
+	border-radius: 10px;
+	padding: 0px 10px;
+
+	color: var(--input-border-color-active);
+	font-size: 18px;
+
+	transition: all 0.2s;
+}
+
 .profile-list > .item-empty {
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	height: 100%;
 	color: #bcbcbc;
+}
+
+.profile-list > .item > .item-close {
+	justify-self: end;
+	align-self: end;
 }
 
 @media screen and (max-width: 1400px) {

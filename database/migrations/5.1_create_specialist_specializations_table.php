@@ -24,6 +24,22 @@ return new class extends Migration
             $table->string('category', 100);
             $table->timestamps();
         });
+
+        DB::table('specialist_specializations')->insert(
+            [
+                "id_specialist" => 1,
+                "id_specialization" => 1,
+                "category" => "Первая",
+            ]
+        );
+
+        DB::table('specialist_specializations')->insert(
+            [
+                "id_specialist" => 1,
+                "id_specialization" => 2,
+                "category" => "Высшая",
+            ]
+        );
     }
 
     /**

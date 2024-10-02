@@ -20,8 +20,17 @@ return new class extends Migration
          $table->id();
          $table->unsignedBigInteger('id_specialist')->references('id')->on('specialists')->onDelete('cascade');
          $table->unsignedBigInteger('id_clinic')->references('id')->on('clinics')->onDelete('cascade');
+         $table->boolean('priem');
          $table->timestamps();
       });
+
+      DB::table('specialist_clinics')->insert(
+         [
+             "id_specialist" => 1,
+             "id_clinic" => 1,
+             "priem" => false,
+         ]
+     );
    }
 
    /**
