@@ -150,6 +150,16 @@ class HomeController extends Controller
             "works" => Work::all(),
          ],
       ]);
+   }  
+   /* Вывод полной информации о враче */
+   public function getSpecialistSections(Request $request) {
+      return response()->json([
+         "specializations" => Specialization::all(),
+         "certificates" => Certificate::all(),
+         "clinics" => Clinic::all(),
+         "educations" => Education::all(),
+         "works" => Work::all(),
+      ]);
    }
    /* _____________________________________________________*/
    /* 2. Специализации                                     */

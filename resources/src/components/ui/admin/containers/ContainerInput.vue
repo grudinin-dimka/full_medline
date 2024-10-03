@@ -32,4 +32,12 @@ textarea::-webkit-scrollbar-thumb:hover {
 	background-color: rgb(210, 210, 210);
 	cursor: all-scroll;
 }
+
+span.error {
+	color: var(--span-color-error);
+}
+
+span.create {
+	color: var(--span-color-create);
+}
 </style>

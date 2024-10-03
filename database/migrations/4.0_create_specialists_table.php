@@ -26,19 +26,19 @@ return new class extends Migration
         // 10) filename - название прикреплённого файла
         Schema::create('specialists', function (Blueprint $table) {
             $table->id();
-            $table->string('link', 1000)->nullable();
-            $table->string('family', 300)->nullable();
-            $table->string('name', 300)->nullable();
-            $table->string('surname', 300)->nullable();
-            $table->string('category', 100)->nullable();
+            $table->string('link', 1000);
+            $table->string('family', 300);
+            $table->string('name', 300);
+            $table->string('surname', 300);
+            $table->string('category', 100);
             $table->string('degree', 300)->nullable();
             $table->string('rank', 300)->nullable();
             $table->date('startWorkAge')->nullable();
             $table->string('startWorkCity', 300)->nullable();
-            $table->boolean('adultDoctor')->nullable();
-            $table->boolean('childrenDoctor')->nullable();
+            $table->boolean('adultDoctor');
+            $table->boolean('childrenDoctor');
             $table->boolean('hide')->default(false);
-            $table->string('filename')->nullable();
+            $table->string('filename');
             $table->timestamps();
         });
 
@@ -48,10 +48,6 @@ return new class extends Migration
             "name" => "Павел",
             "surname" => "Александрович",
             "category" => "Вторая",
-            "degree" => "Кандидат медицинских наук",
-            "rank" => "Профессор",
-            "startWorkAge" => date('c'),
-            "startWorkCity" => "Москва",
             "adultDoctor" => true,
             "childrenDoctor" => false,
             "filename" => "vlasov.png"

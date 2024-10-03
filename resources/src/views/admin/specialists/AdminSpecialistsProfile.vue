@@ -132,27 +132,57 @@
 	<!-- Основные данные врача -->
 	<block-once>
 		<block-title>
-			<template #title>Профиль</template>
+			<template #title>
+				<span>ПРОФИЛЬ</span>
+				<span v-if="$route.params.id == 'new'" class="create"> (СОЗДАНИЕ)</span>
+			</template>
 			<template #buttons>
-				<icon-save :width="28" :height="28" @click="saveProfileChanges" />
+				<icon-save
+					:width="28"
+					:height="28"
+					@click="saveProfileChanges"
+					v-if="$route.params.id !== 'new'"
+				/>
+				<icon-add :width="28" :height="28" @click="console.log('create')" v-else></icon-add>
 			</template>
 		</block-title>
 
 		<div class="container-profile" v-show="loading.sections.profile">
-			<img :src="`${specialist.profile.data.path.body}`" class="profile-image" alt="" />
+			<div class="profile-image" v-if="$route.params.id == 'new'">
+				<div
+					class="item"
+					:style="{
+						backgroundImage: `url(/storage/default/image-none-default.png)`,
+					}"
+				></div>
+			</div>
+			<div class="profile-image" v-else>
+				<div
+					class="item"
+					:style="{
+						backgroundImage: `url(${specialist.profile.data.path.body})`,
+					}"
+				></div>
+			</div>
 			<div class="profile-info">
-				<!-- HACK: Проработать поля ошибок для "container-input-two" -->
-				<container-input-two :fieldset="true">
-					<template #legend>АВАТАР И ССЫЛКА</template>
+				<container-input-two :fieldset="true" :type="'create'">
+					<template #legend>
+						<span :class="{ create: $route.params.id === 'new' }">АВАТАР И ССЫЛКА</span>
+					</template>
 					<template #title-one>
-						<span>ФОТО ВРАЧА</span>
+						<span>ФОТО ВРАЧА<span v-if="$route.params.id == 'new'">*</span></span>
 						<span v-if="specialist.profile.data.filename.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #input-one>
 						<input class="profile-file" type="file" autocomplete="off" />
 					</template>
+					<template #error-one>
+						<span class="error" v-if="specialist.profile.errors.filename.status">
+							{{ specialist.profile.errors.filename.body }}
+						</span>
+					</template>
 					<template #title-two>
-						<span>ССЫЛКА НА ПРОДОКТОРОВ</span>
+						<span>ССЫЛКА НА ПРОДОКТОРОВ*</span>
 						<span v-if="specialist.profile.data.link.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #input-two>
@@ -161,15 +191,23 @@
 							placeholder="Введите ссылку"
 							autocomplete="off"
 							v-model="specialist.profile.data.link.body"
+							:class="{ error: specialist.profile.errors.link.status }"
 							@input="specialist.profile.data.link.edited = true"
-							@blur="checkModalInput('link', 'text', '')"
+							@blur="checkSpecialistInput('link', 'text')"
 						/>
 					</template>
+					<template #error-two>
+						<span class="error" v-if="specialist.profile.errors.link.status">
+							{{ specialist.profile.errors.link.body }}
+						</span>
+					</template>
 				</container-input-two>
-				<container-input-three :fieldset="true">
-					<template #legend>Ф.И.О.</template>
+				<container-input-three :fieldset="true" :type="'create'">
+					<template #legend>
+						<span :class="{ create: $route.params.id == 'new' }">Ф.И.О.</span>
+					</template>
 					<template #title-one>
-						<span>ФАМИЛИЯ</span>
+						<span>ФАМИЛИЯ*</span>
 						<span v-if="specialist.profile.data.family.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #input-one>
@@ -178,7 +216,9 @@
 							placeholder="Введите фамилию"
 							autocomplete="off"
 							v-model="specialist.profile.data.family.body"
+							:class="{ error: specialist.profile.errors.family.status }"
 							@input="specialist.profile.data.family.edited = true"
+							@blur="checkSpecialistInput('family', 'text')"
 						/>
 					</template>
 					<template #error-one>
@@ -187,7 +227,7 @@
 						</span>
 					</template>
 					<template #title-two>
-						<span>ИМЯ</span>
+						<span>ИМЯ*</span>
 						<span v-if="specialist.profile.data.name.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #input-two>
@@ -196,7 +236,9 @@
 							placeholder="Введите имя"
 							autocomplete="off"
 							v-model="specialist.profile.data.name.body"
+							:class="{ error: specialist.profile.errors.name.status }"
 							@input="specialist.profile.data.name.edited = true"
+							@blur="checkSpecialistInput('name', 'text')"
 						/>
 					</template>
 					<template #error-two>
@@ -205,7 +247,7 @@
 						</span>
 					</template>
 					<template #title-three>
-						<span>ОТЧЕСТВО</span>
+						<span>ОТЧЕСТВО*</span>
 						<span v-if="specialist.profile.data.surname.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #input-three>
@@ -214,6 +256,7 @@
 							placeholder="Введите отчество"
 							autocomplete="off"
 							v-model="specialist.profile.data.surname.body"
+							:class="{ error: specialist.profile.errors.surname.status }"
 							@input="specialist.profile.data.surname.edited = true"
 							@blur="checkSpecialistInput('surname', 'text')"
 						/>
@@ -228,18 +271,21 @@
 		</div>
 		<div class="container-profile-other" v-show="loading.sections.profile">
 			<container-input>
-				<container-select-three :fieldset="true">
-					<template #legend>НАУЧНОЕ ОБРАЗОВАНИЕ</template>
+				<container-select-three :fieldset="true" :type="'create'">
+					<template #legend>
+						<span :class="{ create: $route.params.id === 'new' }">НАУЧНОЕ ОБРАЗОВАНИЕ</span>
+					</template>
 					<template #title-one>
-						<span>КАТЕГОРИЯ</span>
+						<span>КАТЕГОРИЯ*</span>
 						<span v-if="specialist.profile.data.category.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #select-one>
 						<select
 							v-model="specialist.profile.data.category.body"
-							@input="specialist.profile.data.category.edited = true"
+							:class="{ error: specialist.profile.errors.category.status }"
+							@blur="checkSpecialistInput('category', 'select')"
 						>
-							<option disabled value="">Ничего не выбрано...</option>
+							<option value="" disabled>Ничего не выбрано...</option>
 							<option value="Первая">Первая</option>
 							<option value="Вторая">Вторая</option>
 							<option value="Высшая">Высшая</option>
@@ -263,11 +309,6 @@
 							@input="specialist.profile.data.degree.edited = true"
 						/>
 					</template>
-					<template #error-two>
-						<span class="error" v-if="specialist.profile.errors.degree.status">
-							{{ specialist.profile.errors.degree.body }}
-						</span>
-					</template>
 					<template #title-three>
 						<span>ЗВАНИЕ</span>
 						<span v-if="specialist.profile.data.rank.edited"> (ИЗМЕНЕНО)</span>
@@ -281,15 +322,12 @@
 							@input="specialist.profile.data.rank.edited = true"
 						/>
 					</template>
-					<template #error-three>
-						<span class="error" v-if="specialist.profile.errors.rank.status">
-							{{ specialist.profile.errors.rank.body }}
-						</span>
-					</template>
 				</container-select-three>
 				<!-- Первая работа -->
-				<container-input-two :fieldset="true">
-					<template #legend>ПЕРВАЯ РАБОТА</template>
+				<container-input-two :fieldset="true" :type="'create'">
+					<template #legend>
+						<span :class="{ create: $route.params.id === 'new' }">ПЕРВАЯ РАБОТА</span>
+					</template>
 					<template #title-one>
 						<span>НАЧАЛО ПЕРВОЙ РАБОТЫ</span>
 						<span v-if="specialist.profile.data.startWorkAge.edited"> (ИЗМЕНЕНО)</span>
@@ -317,34 +355,51 @@
 					</template>
 				</container-input-two>
 				<!-- Статус приёма -->
-				<container-input-two :fieldset="true">
-					<template #legend>ПРИЁМ ВРАЧА</template>
+				<!-- FIXME надо везде вообще добавить параметр :type="'create'" -->
+				<container-input-two :fieldset="true" :type="'create'">
+					<template #legend>
+						<span :class="{ create: $route.params.id === 'new' }">ПРИЁМ ВРАЧА</span>
+					</template>
 					<template #title-one>
-						<span>У ВЗРОСЛЫХ</span>
+						<span>У ВЗРОСЛЫХ*</span>
 						<span v-if="specialist.profile.data.adultDoctor.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #input-one>
 						<select
 							v-model="specialist.profile.data.adultDoctor.body"
-							@input="specialist.profile.data.adultDoctor.edited = true"
+							:class="{ error: specialist.profile.errors.adultDoctor.status }"
+							@blur="checkSpecialistInput('adultDoctor', 'select')"
 						>
+							<option value="" disabled>Ничего не выбрано...</option>
 							<option value="0">Нет</option>
 							<option value="1">Да</option>
 						</select>
 					</template>
+					<template #error-one>
+						<span class="error" v-if="specialist.profile.errors.adultDoctor.status">
+							{{ specialist.profile.errors.adultDoctor.body }}
+						</span>
+					</template>
 					<template #title-two>
-						<span>У ДЕТЕЙ</span>
+						<span>У ДЕТЕЙ*</span>
 						<span v-if="specialist.profile.data.childrenDoctor.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #input-two>
 						<select
 							autocomplete="off"
 							v-model="specialist.profile.data.childrenDoctor.body"
-							@input="specialist.profile.data.childrenDoctor.edited = true"
+							:class="{ error: specialist.profile.errors.childrenDoctor.status }"
+							@blur="checkSpecialistInput('childrenDoctor', 'select')"
 						>
+							<option value="" disabled>Ничего не выбрано...</option>
 							<option value="0">Нет</option>
 							<option value="1">Да</option>
 						</select>
+					</template>
+					<template #error-two>
+						<span class="error" v-if="specialist.profile.errors.childrenDoctor.status">
+							{{ specialist.profile.errors.childrenDoctor.body }}
+						</span>
 					</template>
 				</container-input-two>
 			</container-input>
@@ -367,7 +422,12 @@
 				</template>
 				<template #buttons>
 					<!-- TODO: Сделать сохранение данных специализаций -->
-					<icon-save :width="28" :height="28" @click="saveSpecializationsChanges" />
+					<icon-save
+						:width="28"
+						:height="28"
+						@click="saveSpecializationsChanges"
+						v-if="$route.params.id !== 'new'"
+					/>
 				</template>
 			</block-title>
 		</template>
@@ -414,7 +474,10 @@
 			/>
 
 			<block-buttons>
-				<button-default @click="editSpecialization"> Добавить </button-default>
+				<button-default @click="editSpecialization" v-if="$route.params.id !== 'new'">
+					Добавить
+				</button-default>
+				<button-claim @click="editSpecialization" v-else> Добавить </button-claim>
 			</block-buttons>
 		</template>
 		<!-- Клиники -->
@@ -423,7 +486,12 @@
 				<template #title> Клиники ({{ specialist.connections.clinics.length }}) </template>
 				<template #buttons>
 					<!-- TODO: Сделать сохранение данных клиник -->
-					<icon-save :width="28" :height="28" />
+					<icon-save
+						:width="28"
+						:height="28"
+						@click="console.log('save')"
+						v-if="$route.params.id !== 'new'"
+					/>
 				</template>
 			</block-title>
 		</template>
@@ -462,7 +530,10 @@
 			/>
 
 			<block-buttons>
-				<button-default @click="editClinics"> Добавить </button-default>
+				<button-default @click="editClinics" v-if="$route.params.id !== 'new'">
+					Добавить
+				</button-default>
+				<button-claim @click="editClinics" v-else> Добавить </button-claim>
 			</block-buttons>
 		</template>
 	</block-two>
@@ -472,7 +543,12 @@
 		<block-title>
 			<template #title> Сертификаты </template>
 			<template #buttons>
-				<icon-save :width="28" :height="28" />
+				<icon-save
+					:width="28"
+					:height="28"
+					@click="console.log('save')"
+					v-if="$route.params.id !== 'new'"
+				/>
 			</template>
 		</block-title>
 
@@ -505,7 +581,8 @@
 		/>
 
 		<block-buttons>
-			<button-default> Добавить </button-default>
+			<button-default @click="" v-if="$route.params.id !== 'new'"> Добавить </button-default>
+			<button-claim @click="" v-else> Добавить </button-claim>
 		</block-buttons>
 	</block-once>
 
@@ -514,7 +591,12 @@
 		<block-title>
 			<template #title> Образование </template>
 			<template #buttons>
-				<icon-save :width="28" :height="28" />
+				<icon-save
+					:width="28"
+					:height="28"
+					@click="console.log('save')"
+					v-if="$route.params.id !== 'new'"
+				/>
 			</template>
 		</block-title>
 
@@ -547,7 +629,8 @@
 		/>
 
 		<block-buttons>
-			<button-default> Добавить </button-default>
+			<button-default @click="" v-if="$route.params.id !== 'new'"> Добавить </button-default>
+			<button-claim @click="" v-else> Добавить </button-claim>
 		</block-buttons>
 	</block-once>
 
@@ -556,7 +639,12 @@
 		<block-title>
 			<template #title> Места работы </template>
 			<template #buttons>
-				<icon-save :width="28" :height="28" />
+				<icon-save
+					:width="28"
+					:height="28"
+					@click="console.log('save')"
+					v-if="$route.params.id !== 'new'"
+				/>
 			</template>
 		</block-title>
 
@@ -589,7 +677,8 @@
 		/>
 
 		<block-buttons>
-			<button-default> Добавить </button-default>
+			<button-default @click="" v-if="$route.params.id !== 'new'"> Добавить </button-default>
+			<button-claim @click="" v-else> Добавить </button-claim>
 		</block-buttons>
 	</block-once>
 </template>
@@ -626,6 +715,7 @@ import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue"
 import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 
 import IconSave from "../../../components/icons/IconSave.vue";
+import IconAdd from "../../../components/icons/IconAdd.vue";
 
 import axios from "axios";
 
@@ -655,6 +745,7 @@ export default {
 		ButtonRemove,
 		ButtonClaim,
 		IconSave,
+		IconAdd,
 		axios,
 		RouterView,
 		RouterLink,
@@ -785,11 +876,11 @@ export default {
 							edited: false,
 						},
 						adultDoctor: {
-							body: false,
+							body: "",
 							edited: false,
 						},
 						childrenDoctor: {
-							body: false,
+							body: "",
 							edited: false,
 						},
 						hide: {
@@ -848,15 +939,15 @@ export default {
 							status: false,
 						},
 						adultDoctor: {
-							body: false,
+							body: "",
 							status: false,
 						},
 						childrenDoctor: {
-							body: false,
+							body: "",
 							status: false,
 						},
 						hide: {
-							body: false,
+							body: "",
 							status: false,
 						},
 						filename: {
@@ -1056,24 +1147,10 @@ export default {
 				};
 			}
 
-			/* Проверка на наличие в массиве со специализациями */
-			let valueInSpecializations = this.specializations.find((element, index, array) => {
-				if (element.id == value) {
-					return true;
-				}
-			});
-
-			if (valueInSpecializations) {
-				return {
-					status: false,
-					message: "Ошибок нет.",
-				};
-			} else {
-				return {
-					status: true,
-					message: "Такого значения нет в специализациях.",
-				};
-			}
+			return {
+				status: false,
+				message: "Ошибок нет.",
+			};
 		},
 		// Проверка всех полей ввода модального окна
 		checkModalInputsAll(inputKeys) {
@@ -1243,7 +1320,10 @@ export default {
 					this.cheked.specializations.forEach((item) => {
 						this.specialist.connections.specializations.push({
 							id: maxId + 1,
-							id_specialist: this.specialist.profile.id.body,
+							id_specialist:
+								this.$route.params.id !== "new"
+									? this.specialist.profile.data.id.body
+									: "new",
 							id_specialization: item,
 						});
 
@@ -1333,7 +1413,7 @@ export default {
 				// Обнуление массива
 				this.cheked.clinics = [];
 
-				// Заполнение выбранных специализаций из массива
+				// Заполнение выбранных клиник из массива
 				this.specialist.connections.clinics.forEach((connClinic) => {
 					this.cheked.clinics.push(connClinic.id_clinic);
 
@@ -1379,7 +1459,10 @@ export default {
 							priem: this.sections.clinics.find((clinic) => {
 								return clinic.id == checkClinic;
 							}).priem,
-							id_specialist: this.specialist.profile.id.body,
+							id_specialist:
+								this.$route.params.id !== "new"
+									? this.specialist.profile.data.id.body
+									: "new",
 							id_clinic: checkClinic,
 						});
 
@@ -1413,48 +1496,113 @@ export default {
 		},
 	},
 	mounted() {
-		axios({
-			method: "post",
-			headers: {
-				Accept: "application/json",
-			},
-			url: `${this.$store.state.axios.urlApi}` + `get-specialist-all`,
-			data: {
-				id: this.$route.params.id,
-			},
-		})
-			.then((response) => {
-				for (let key in response.data.specialist.profile) {
-					this.specialist.profile.data[key].body = response.data.specialist.profile[key];
-				}
+		if (this.$route.params.id !== "new") {
+			axios({
+				method: "post",
+				headers: {
+					Accept: "application/json",
+				},
+				url: `${this.$store.state.axios.urlApi}` + `get-specialist-all`,
+				data: {
+					id: this.$route.params.id,
+				},
+			})
+				.then((response) => {
+					for (let key in response.data.specialist.profile) {
+						this.specialist.profile.data[key].body = response.data.specialist.profile[key];
+					}
 
-				for (let key in response.data.specialist.connections) {
-					this.specialist.connections[key] = response.data.specialist.connections[key];
-				}
+					for (let key in response.data.specialist.connections) {
+						this.specialist.connections[key] = response.data.specialist.connections[key];
+					}
 
-				for (let key in response.data.sections) {
-					this.sections[key] = response.data.sections[key];
-				}
+					for (let key in response.data.sections) {
+						this.sections[key] = response.data.sections[key];
+					}
 
-				// Добавление поля "Прием" в клиниках
-				this.sections.clinics.forEach((item) => {
-					item.priem = 0;
+					// Добавление поля "Прием" в клиниках
+					this.sections.clinics.forEach((item) => {
+						item.priem = 0;
 
-					this.specialist.connections.clinics.forEach((itemOther) => {
-						if (itemOther.id_clinic == item.id) {
-							item.priem = itemOther.priem;
-						}
+						this.specialist.connections.clinics.forEach((itemOther) => {
+							if (itemOther.id_clinic == item.id) {
+								item.priem = itemOther.priem;
+							}
+						});
 					});
+				})
+				.catch((error) => {
+					console.log(error);
+				})
+				.finally(() => {
+					for (let key in this.loading.loader) {
+						this.loading.loader[key] = false;
+					}
 				});
-			})
-			.catch((error) => {
-				console.log(error);
-			})
-			.finally(() => {
-				for (let key in this.loading.loader) {
-					this.loading.loader[key] = false;
+		} else if (this.$route.params.id == "new") {
+			/* FIXME надо сделать запрос на сервак для получения специализаций, клиник и т.д. */
+			// Сброс данных всей полей профиля
+			for (let key in this.specialist.profile.data) {
+				switch (key) {
+					case "id":
+						this.specialist.profile.data[key].body = "new";
+						break;
+					case "path":
+						this.specialist.profile.data[key].body = "storage/default/specialist.png";
+						break;
+					case "file":
+						this.specialist.profile.data[key] = "";
+						break;
+					default:
+						this.specialist.profile.data[key].body = "";
+						break;
 				}
-			});
+			}
+
+			// Сброс данных всех связей
+			for (let key in this.specialist.connections) {
+				this.specialist.connections[key] = [];
+			}
+
+			axios({
+				method: "post",
+				headers: {
+					Accept: "application/json",
+				},
+				url: `${this.$store.state.axios.urlApi}` + `get-specialist-sections`,
+			})
+				.then((response) => {
+					for (let key in response.data) {
+						this.sections[key] = response.data[key];
+					}
+
+					// Добавление поля "Прием" в клиниках
+					this.sections.clinics.forEach((item) => {
+						item.priem = 0;
+
+						this.specialist.connections.clinics.forEach((itemOther) => {
+							if (itemOther.id_clinic == item.id) {
+								item.priem = itemOther.priem;
+							}
+						});
+					});
+				})
+				.catch((error) => {
+					console.log(error);
+				})
+				.finally(() => {
+					for (let key in this.loading.loader) {
+						this.loading.loader[key] = false;
+					}
+				});
+		} else {
+			let debbugStory = {
+				title: "Ошибка.",
+				body: "Произошла непредвиденная ошибка.",
+				type: "Error",
+			};
+			this.$store.commit("debuggerState", debbugStory);
+		}
 	},
 };
 </script>
@@ -1532,8 +1680,8 @@ export default {
 }
 
 .container-profile {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
+	display: flex;
+	flex-wrap: wrap;
 	gap: 20px;
 
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
@@ -1543,25 +1691,24 @@ export default {
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
-.profile-image-loader {
+.profile-image {
+	flex: 1 0 500px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	font-size: 20px;
-	color: #bcbcbc;
-	border-radius: 15px;
+	min-height: 300px;
 }
 
-.profile-image {
-	align-self: center;
-	justify-self: center;
-	flex: 1 0 340px;
-	max-width: 450px;
-	border-radius: 10px;
+.profile-image > .item {
+	width: max(100% - 100px, 500px);
+	height: 100%;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
 }
 
 .profile-info {
-	flex-grow: 1;
+	flex: 1 0 500px;
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
@@ -1646,23 +1793,5 @@ export default {
 .profile-list > .item > .item-close {
 	justify-self: end;
 	align-self: end;
-}
-
-@media screen and (max-width: 1400px) {
-	.container-profile {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: center;
-		align-items: center;
-		gap: 20px;
-	}
-}
-
-@media screen and (min-width: 1960px) {
-	.profile-image {
-		flex: 1 0 300px;
-		max-width: 300px;
-		border-radius: 10px;
-	}
 }
 </style>

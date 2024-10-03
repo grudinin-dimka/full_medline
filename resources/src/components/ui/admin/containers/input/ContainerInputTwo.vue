@@ -1,5 +1,5 @@
 <template>
-	<fieldset class="container-input-two" v-if="fieldset">
+	<fieldset class="container-input-two" :class="{ create: type === 'create' }" v-if="fieldset">
 		<legend>
 			<slot name="legend"></slot>
 		</legend>
@@ -19,7 +19,7 @@
 		</div>
 	</fieldset>
 
-	<div class="container-input-two" v-else>
+	<div class="container-input-two" :class="{ create: type === 'create' }" v-else>
 		<div class="item">
 			<label>
 				<slot name="title-one"></slot>
@@ -43,6 +43,12 @@ export default {
 		fieldset: {
 			type: Boolean,
 			default: false,
+			required: true,
+		},
+		type: {
+			type: String,
+			default: "",
+			required: true,
 		},
 	},
 };
@@ -73,6 +79,10 @@ fieldset.container-input-two {
 	background-color: rgba(255, 255, 255, 0.5);
 }
 
+fieldset.container-input-two.create:focus-within {
+	border: 2px solid #44a533;
+}
+
 fieldset.container-input-two:focus-within {
 	border: 2px solid var(--input-border-color-active);
 }
@@ -94,8 +104,7 @@ fieldset.container-input-two:focus-within {
 	font-size: 18px;
 }
 
-.container-input-two > .item > input,
-.container-input-two > .item > select {
+:is(.container-input-two > .item) > :is(input, select) {
 	box-sizing: border-box;
 	outline: none;
 
@@ -112,17 +121,19 @@ fieldset.container-input-two:focus-within {
 	transition: all 0.2s;
 }
 
-.container-input-two > .item > input:focus,
-.container-input-two > .item > select:focus {
+.container-input-two > .item > :is(input:focus, select:focus) {
 	border: 2px solid var(--input-border-color-active);
+}
+
+.container-input-two.create > .item > :is(input:focus, select:focus) {
+	border: 2px solid #44a533;
 }
 
 .container-input-two > .item > input::placeholder {
 	color: var(--input-placeholder-color);
 }
 
-.container-input-two > .item > input.error,
-.container-input-two > .item > select.error {
+.container-input-two > .item > :is(input.error, select.error) {
 	background-color: var(--input-background-color-error);
 	border: 2px solid var(--input-border-color-error);
 

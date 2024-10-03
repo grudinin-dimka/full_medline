@@ -10,7 +10,10 @@
 		<template #body>
 			<container-input>
 				<!-- Название и другое -->
-				<container-input-two :fieldset="true">
+				<container-input-two
+					:fieldset="true"
+					:type="modal.type == 'create' ? 'create' : 'default'"
+				>
 					<template #legend>
 						<span :class="{ create: modal.type == 'create' }">НАЗВАНИЕ И ДРУГОЕ</span>
 					</template>
@@ -55,7 +58,10 @@
 				</container-input-two>
 
 				<!-- Город и улица -->
-				<container-input-two :fieldset="true">
+				<container-input-two
+					:fieldset="true"
+					:type="modal.type == 'create' ? 'create' : 'default'"
+				>
 					<template #legend>
 						<span :class="{ create: modal.type == 'create' }">ГОРОД И УЛИЦА</span>
 					</template>
@@ -102,7 +108,10 @@
 				</container-input-two>
 
 				<!-- Дом и индекс -->
-				<container-input-two :fieldset="true">
+				<container-input-two
+					:fieldset="true"
+					:type="modal.type == 'create' ? 'create' : 'default'"
+				>
 					<template #legend>
 						<span :class="{ create: modal.type == 'create' }">ДОМ И ИНДЕКС</span>
 					</template>
@@ -150,7 +159,10 @@
 				</container-input-two>
 
 				<!-- Географические координаты -->
-				<container-input-two :fieldset="true">
+				<container-input-two
+					:fieldset="true"
+					:type="modal.type == 'create' ? 'create' : 'default'"
+				>
 					<template #legend>
 						<span :class="{ create: modal.type == 'create' }">ГЕОГРАФИЧЕСКИЕ КООРДИНАТЫ</span>
 					</template>

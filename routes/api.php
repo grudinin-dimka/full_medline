@@ -24,6 +24,7 @@ Route::post('/get-footer', [HomeController::class, 'getFooter']);
 Route::post('/get-specialists', [HomeController::class, 'getSpecialists']);
 Route::post('/get-specialist-profile', [HomeController::class, 'getSpecialistProfile']);
 Route::post('/get-specialist-all', [HomeController::class, 'getSpecialistAll']);
+Route::post('/get-specialist-sections', [HomeController::class, 'getSpecialistSections']);
 Route::post('/get-specialists-short', [HomeController::class, 'getSpecialistsShort']);
 /* 2.2. Специализации                                   */
 Route::post('/get-specializations-all', [HomeController::class, 'getSpecializationsAll']);

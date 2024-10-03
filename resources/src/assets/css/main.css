@@ -26,8 +26,8 @@
 	--button-default-color-hover: #26b8c7;
 	--button-remove-color: #cd3f3f;
 	--button-remove-color-hover: #d74949;
-	--button-claim-color: #00bd48;
-	--button-claim-color-hover: rgb(10, 199, 82);
+	--button-claim-color: #44a533;
+	--button-claim-color-hover: rgb(78, 175, 61);
 
 	/* Поля ввода какой-либо информации */
 	--input-border-color-inactive: #cccccc;
@@ -42,9 +42,11 @@
 	/* svg */
 	--svg-icon-arrow-fill: rgba(0, 171, 189, 0.5);
 	--svg-icon-arrow-fill-hover: var(--primary-color);
+	--svg-icon-add-item: rgba(68, 165, 51, 0.5);
+	--svg-icon-add-item-hover: #44a533;
 
-	/* Блоки с выводом ошибок */
 	--span-color-error: #ff5b5b;
+	--span-color-create: #44a533;
 }
 
 body {

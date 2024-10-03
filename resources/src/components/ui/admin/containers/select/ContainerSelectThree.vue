@@ -1,5 +1,5 @@
 <template>
-	<fieldset class="container-select-three" v-if="fieldset">
+	<fieldset class="container-select-three" :class="{ create: type === 'create' }" v-if="fieldset">
 		<legend>
 			<slot name="legend"></slot>
 		</legend>
@@ -26,7 +26,7 @@
 		</div>
 	</fieldset>
 
-	<div class="container-select-three" v-else>
+	<div class="container-select-three" :class="{ create: type === 'create' }" v-else>
 		<div class="item">
 			<label>
 				<slot name="title-one"></slot>
@@ -58,6 +58,11 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		type: {
+			type: String,
+			default: "",
+			required: true,
+		},
 	},
 };
 </script>
@@ -74,6 +79,10 @@ fieldset.container-select-three {
 
 fieldset.container-select-three:focus-within {
 	border: 2px solid var(--input-border-color-active);
+}
+
+fieldset.container-select-three.create:focus-within {
+	border: 2px solid #44a533;
 }
 
 .container-select-three {
@@ -114,7 +123,18 @@ fieldset.container-select-three:focus-within {
 	border: 2px solid var(--input-border-color-active);
 }
 
+.container-select-three.create > .item > :is(input, select):focus {
+	border: 2px solid #44a533;
+}
+
 .container-select-three > .item > :is(input, select)::placeholder {
 	color: var(--input-placeholder-color);
+}
+
+.container-select-three > .item > :is(input.error, select.error) {
+	background-color: var(--input-background-color-error);
+	border: 2px solid var(--input-border-color-error);
+
+	caret-color: red;
 }
 </style>
