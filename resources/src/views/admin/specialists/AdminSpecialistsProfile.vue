@@ -134,33 +134,35 @@
 		<block-title>
 			<template #title>Профиль</template>
 			<template #buttons>
-				<icon-save :width="28" :height="28" />
+				<icon-save :width="28" :height="28" @click="saveProfileChanges" />
 			</template>
 		</block-title>
 
 		<div class="container-profile" v-show="loading.sections.profile">
-			<img :src="`${specialist.profile.path.body}`" class="profile-image" alt="" />
+			<img :src="`${specialist.profile.data.path.body}`" class="profile-image" alt="" />
 			<div class="profile-info">
+				<!-- HACK: Проработать поля ошибок для "container-input-two" -->
 				<container-input-two :fieldset="true">
 					<template #legend>АВАТАР И ССЫЛКА</template>
 					<template #title-one>
 						<span>ФОТО ВРАЧА</span>
-						<span v-if="specialist.profile.filename.edited"> (ИЗМЕНЕНО)</span>
+						<span v-if="specialist.profile.data.filename.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #input-one>
 						<input class="profile-file" type="file" autocomplete="off" />
 					</template>
 					<template #title-two>
 						<span>ССЫЛКА НА ПРОДОКТОРОВ</span>
-						<span v-if="specialist.profile.link.edited"> (ИЗМЕНЕНО)</span>
+						<span v-if="specialist.profile.data.link.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #input-two>
 						<input
 							type="text"
 							placeholder="Введите ссылку"
 							autocomplete="off"
-							v-model="specialist.profile.link.body"
-							@input="specialist.profile.link.edited = true"
+							v-model="specialist.profile.data.link.body"
+							@input="specialist.profile.data.link.edited = true"
+							@blur="checkModalInput('link', 'text', '')"
 						/>
 					</template>
 				</container-input-two>
@@ -168,69 +170,74 @@
 					<template #legend>Ф.И.О.</template>
 					<template #title-one>
 						<span>ФАМИЛИЯ</span>
-						<span v-if="specialist.profile.family.edited"> (ИЗМЕНЕНО)</span>
+						<span v-if="specialist.profile.data.family.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #input-one>
 						<input
 							type="text"
 							placeholder="Введите фамилию"
 							autocomplete="off"
-							v-model="specialist.profile.family.body"
-							@input="specialist.profile.family.edited = true"
+							v-model="specialist.profile.data.family.body"
+							@input="specialist.profile.data.family.edited = true"
 						/>
 					</template>
 					<template #error-one>
-						<span class="error" v-if="false">Ошибка</span>
+						<span class="error" v-if="specialist.profile.errors.family.status">
+							{{ specialist.profile.errors.family.body }}
+						</span>
 					</template>
 					<template #title-two>
 						<span>ИМЯ</span>
-						<span v-if="specialist.profile.name.edited"> (ИЗМЕНЕНО)</span>
+						<span v-if="specialist.profile.data.name.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #input-two>
 						<input
 							type="text"
 							placeholder="Введите имя"
 							autocomplete="off"
-							v-model="specialist.profile.name.body"
-							@input="specialist.profile.name.edited = true"
+							v-model="specialist.profile.data.name.body"
+							@input="specialist.profile.data.name.edited = true"
 						/>
 					</template>
 					<template #error-two>
-						<span class="error" v-if="false">Ошибка</span>
+						<span class="error" v-if="specialist.profile.errors.name.status">
+							{{ specialist.profile.errors.name.body }}
+						</span>
 					</template>
 					<template #title-three>
 						<span>ОТЧЕСТВО</span>
-						<span v-if="specialist.profile.surname.edited"> (ИЗМЕНЕНО)</span>
+						<span v-if="specialist.profile.data.surname.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #input-three>
 						<input
 							type="text"
 							placeholder="Введите отчество"
 							autocomplete="off"
-							v-model="specialist.profile.surname.body"
-							@input="specialist.profile.surname.edited = true"
+							v-model="specialist.profile.data.surname.body"
+							@input="specialist.profile.data.surname.edited = true"
+							@blur="checkSpecialistInput('surname', 'text')"
 						/>
 					</template>
 					<template #error-three>
-						<span class="error" v-if="false">Ошибка</span>
+						<span class="error" v-if="specialist.profile.errors.surname.status">
+							{{ specialist.profile.errors.surname.body }}
+						</span>
 					</template>
 				</container-input-three>
 			</div>
 		</div>
 		<div class="container-profile-other" v-show="loading.sections.profile">
 			<container-input>
-				<!-- TODO: Сделать свойства для этих полей -->
-				<!-- HACK: Проработать поля ошибок для "container-input-three" -->
 				<container-select-three :fieldset="true">
 					<template #legend>НАУЧНОЕ ОБРАЗОВАНИЕ</template>
 					<template #title-one>
 						<span>КАТЕГОРИЯ</span>
-						<span v-if="specialist.profile.category.edited"> (ИЗМЕНЕНО)</span>
+						<span v-if="specialist.profile.data.category.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #select-one>
 						<select
-							v-model="specialist.profile.category.body"
-							@input="specialist.profile.category.edited = true"
+							v-model="specialist.profile.data.category.body"
+							@input="specialist.profile.data.category.edited = true"
 						>
 							<option disabled value="">Ничего не выбрано...</option>
 							<option value="Первая">Первая</option>
@@ -239,39 +246,45 @@
 						</select>
 					</template>
 					<template #error-one>
-						<span class="error" v-if="false">Ошибка</span>
+						<span class="error" v-if="specialist.profile.errors.category.status">
+							{{ specialist.profile.errors.category.body }}
+						</span>
 					</template>
 					<template #title-two>
 						<span>СТЕПЕНЬ</span>
-						<span v-if="specialist.profile.degree.edited"> (ИЗМЕНЕНО)</span>
+						<span v-if="specialist.profile.data.degree.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #select-two>
 						<input
 							type="text"
 							placeholder="Введите степень"
 							autocomplete="off"
-							v-model="specialist.profile.degree.body"
-							@input="specialist.profile.degree.edited = true"
+							v-model="specialist.profile.data.degree.body"
+							@input="specialist.profile.data.degree.edited = true"
 						/>
 					</template>
 					<template #error-two>
-						<span class="error" v-if="false">Ошибка</span>
+						<span class="error" v-if="specialist.profile.errors.degree.status">
+							{{ specialist.profile.errors.degree.body }}
+						</span>
 					</template>
 					<template #title-three>
 						<span>ЗВАНИЕ</span>
-						<span v-if="specialist.profile.rank.edited"> (ИЗМЕНЕНО)</span>
+						<span v-if="specialist.profile.data.rank.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #select-three>
 						<input
 							type="text"
 							placeholder="Введите звание"
 							autocomplete="off"
-							v-model="specialist.profile.rank.body"
-							@input="specialist.profile.rank.edited = true"
+							v-model="specialist.profile.data.rank.body"
+							@input="specialist.profile.data.rank.edited = true"
 						/>
 					</template>
 					<template #error-three>
-						<span class="error" v-if="false">Ошибка</span>
+						<span class="error" v-if="specialist.profile.errors.rank.status">
+							{{ specialist.profile.errors.rank.body }}
+						</span>
 					</template>
 				</container-select-three>
 				<!-- Первая работа -->
@@ -279,27 +292,27 @@
 					<template #legend>ПЕРВАЯ РАБОТА</template>
 					<template #title-one>
 						<span>НАЧАЛО ПЕРВОЙ РАБОТЫ</span>
-						<span v-if="specialist.profile.startWorkAge.edited"> (ИЗМЕНЕНО)</span>
+						<span v-if="specialist.profile.data.startWorkAge.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #input-one>
 						<input
 							type="date"
 							autocomplete="off"
-							v-model="specialist.profile.startWorkAge.body"
-							@input="specialist.profile.startWorkAge.edited = true"
+							v-model="specialist.profile.data.startWorkAge.body"
+							@input="specialist.profile.data.startWorkAge.edited = true"
 						/>
 					</template>
 					<template #title-two>
 						<span>ГОРОД ПЕРВОЙ РАБОТЫ</span>
-						<span v-if="specialist.profile.startWorkCity.edited"> (ИЗМЕНЕНО)</span>
+						<span v-if="specialist.profile.data.startWorkCity.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #input-two>
 						<input
 							type="text"
 							placeholder="Введите название города"
 							autocomplete="off"
-							v-model="specialist.profile.startWorkCity.body"
-							@input="specialist.profile.startWorkCity.edited = true"
+							v-model="specialist.profile.data.startWorkCity.body"
+							@input="specialist.profile.data.startWorkCity.edited = true"
 						/>
 					</template>
 				</container-input-two>
@@ -308,12 +321,12 @@
 					<template #legend>ПРИЁМ ВРАЧА</template>
 					<template #title-one>
 						<span>У ВЗРОСЛЫХ</span>
-						<span v-if="specialist.profile.adultDoctor.edited"> (ИЗМЕНЕНО)</span>
+						<span v-if="specialist.profile.data.adultDoctor.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #input-one>
 						<select
-							v-model="specialist.profile.adultDoctor.body"
-							@input="specialist.profile.adultDoctor.edited = true"
+							v-model="specialist.profile.data.adultDoctor.body"
+							@input="specialist.profile.data.adultDoctor.edited = true"
 						>
 							<option value="0">Нет</option>
 							<option value="1">Да</option>
@@ -321,13 +334,13 @@
 					</template>
 					<template #title-two>
 						<span>У ДЕТЕЙ</span>
-						<span v-if="specialist.profile.childrenDoctor.edited"> (ИЗМЕНЕНО)</span>
+						<span v-if="specialist.profile.data.childrenDoctor.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #input-two>
 						<select
 							autocomplete="off"
-							v-model="specialist.profile.childrenDoctor.body"
-							@input="specialist.profile.childrenDoctor.edited = true"
+							v-model="specialist.profile.data.childrenDoctor.body"
+							@input="specialist.profile.data.childrenDoctor.edited = true"
 						>
 							<option value="0">Нет</option>
 							<option value="1">Да</option>
@@ -496,84 +509,89 @@
 		</block-buttons>
 	</block-once>
 
-	<!-- Образование и места работы -->
-	<block-two>
-		<!-- Образование -->
-		<template #title-one>
-			<block-title>
-				<template #title> Образование </template>
-				<template #buttons>
-					<icon-save :width="28" :height="28" />
-				</template>
-			</block-title>
-		</template>
-		<template #body-one>
-			<div class="profile-list" v-show="loading.sections.educations">
-				<!-- Если образования не выбраны -->
-				<div class="item-empty" v-if="specialist.connections.educations.length == 0">
-					<div class="item-title">Пока тут ничего нет...</div>
+	<!-- Образование -->
+	<block-once>
+		<block-title>
+			<template #title> Образование </template>
+			<template #buttons>
+				<icon-save :width="28" :height="28" />
+			</template>
+		</block-title>
+
+		<div class="profile-list" v-show="loading.sections.certificates">
+			<!-- Если сертификаты не выбраны -->
+			<div class="item-empty" v-if="specialist.connections.certificates.length == 0">
+				<div class="item-title">Пока тут ничего нет...</div>
+			</div>
+			<!-- Если специализации выбраны -->
+			<div
+				class="item"
+				v-else
+				v-for="certificate in specialist.connections.certificates"
+				:key="certificate.id"
+			>
+				<div class="item-title">
+					{{ getCertificateName(certificate) }}
 				</div>
-				<!-- Если образования выбраны -->
-				<div
-					class="item"
-					v-else
-					v-for="education in specialist.connections.educations"
-					:key="education.id"
-				>
-					<div class="item-title">{{ sections.educations[education.id].name }}</div>
-					<div class="item-close" @click="removeArrValue('educations', education)">
-						<icon-close :width="26" :height="26" />
-					</div>
+				<div class="item-close" @click="removeArrValue('certificates', certificate)">
+					<icon-close :width="26" :height="26" />
 				</div>
 			</div>
+		</div>
 
-			<!-- Загрузчик образований -->
-			<loader-child
-				:isLoading="loading.loader.educations"
-				:minHeight="100"
-				@loaderChildAfterLeave="loaderChildAfterLeave"
-			/>
+		<!-- Загрузчик профиля -->
+		<loader-child
+			:isLoading="loading.loader.clinics"
+			:minHeight="100"
+			@loaderChildAfterLeave="loaderChildAfterLeave"
+		/>
 
-			<block-buttons>
-				<button-default> Добавить </button-default>
-			</block-buttons>
-		</template>
-		<!-- Места работы -->
-		<template #title-two>
-			<block-title>
-				<template #title> Места работы </template>
-				<template #buttons>
-					<icon-save :width="28" :height="28" />
-				</template>
-			</block-title>
-		</template>
-		<template #body-two>
-			<div class="profile-list" v-show="loading.sections.works">
-				<!-- Если образования не выбраны -->
-				<div class="item-empty" v-if="specialist.connections.works.length == 0">
-					<div class="item-title">Пока тут ничего нет...</div>
+		<block-buttons>
+			<button-default> Добавить </button-default>
+		</block-buttons>
+	</block-once>
+
+	<!-- Места работы -->
+	<block-once>
+		<block-title>
+			<template #title> Места работы </template>
+			<template #buttons>
+				<icon-save :width="28" :height="28" />
+			</template>
+		</block-title>
+
+		<div class="profile-list" v-show="loading.sections.certificates">
+			<!-- Если сертификаты не выбраны -->
+			<div class="item-empty" v-if="specialist.connections.certificates.length == 0">
+				<div class="item-title">Пока тут ничего нет...</div>
+			</div>
+			<!-- Если специализации выбраны -->
+			<div
+				class="item"
+				v-else
+				v-for="certificate in specialist.connections.certificates"
+				:key="certificate.id"
+			>
+				<div class="item-title">
+					{{ getCertificateName(certificate) }}
 				</div>
-				<!-- Если образования выбраны -->
-				<div class="item" v-else v-for="work in specialist.connections.works" :key="work.id">
-					<div class="item-title">{{ sections.works[work.id].name }}</div>
-					<div class="item-close" @click="removeArrValue('works', work)">
-						<icon-close :width="26" :height="26" />
-					</div>
+				<div class="item-close" @click="removeArrValue('certificates', certificate)">
+					<icon-close :width="26" :height="26" />
 				</div>
 			</div>
+		</div>
 
-			<!-- Загрузчик мест работы -->
-			<loader-child
-				:isLoading="loading.loader.works"
-				:minHeight="100"
-				@loaderChildAfterLeave="loaderChildAfterLeave"
-			/>
+		<!-- Загрузчик профиля -->
+		<loader-child
+			:isLoading="loading.loader.clinics"
+			:minHeight="100"
+			@loaderChildAfterLeave="loaderChildAfterLeave"
+		/>
 
-			<block-buttons>
-				<button-default> Добавить </button-default>
-			</block-buttons>
-		</template>
-	</block-two>
+		<block-buttons>
+			<button-default> Добавить </button-default>
+		</block-buttons>
+	</block-once>
 </template>
 
 <script>
@@ -724,66 +742,131 @@ export default {
 			specialist: {
 				// Основная информация
 				profile: {
-					file: "",
-					id: {
-						body: "",
-						edited: false,
+					data: {
+						file: "",
+						id: {
+							body: "",
+							edited: false,
+						},
+						link: {
+							body: "",
+							edited: false,
+						},
+						family: {
+							body: "",
+							edited: false,
+						},
+						name: {
+							body: "",
+							edited: false,
+						},
+						surname: {
+							body: "",
+							edited: false,
+						},
+						category: {
+							body: "",
+							edited: false,
+						},
+						degree: {
+							body: "",
+							edited: false,
+						},
+						rank: {
+							body: "",
+							edited: false,
+						},
+						startWorkAge: {
+							body: "",
+							edited: false,
+						},
+						startWorkCity: {
+							body: "",
+							edited: false,
+						},
+						adultDoctor: {
+							body: false,
+							edited: false,
+						},
+						childrenDoctor: {
+							body: false,
+							edited: false,
+						},
+						hide: {
+							body: false,
+							edited: false,
+						},
+						filename: {
+							body: "",
+							edited: false,
+						},
+						path: {
+							body: "",
+							edited: false,
+						},
 					},
-					link: {
-						body: "",
-						edited: false,
-					},
-					family: {
-						body: "",
-						edited: false,
-					},
-					name: {
-						body: "",
-						edited: false,
-					},
-					surname: {
-						body: "",
-						edited: false,
-					},
-					category: {
-						body: "",
-						edited: false,
-					},
-					degree: {
-						body: "",
-						edited: false,
-					},
-					rank: {
-						body: "",
-						edited: false,
-					},
-					startWorkAge: {
-						body: "",
-						edited: false,
-					},
-					startWorkCity: {
-						body: "",
-						edited: false,
-					},
-					adultDoctor: {
-						body: false,
-						edited: false,
-					},
-					childrenDoctor: {
-						body: false,
-						edited: false,
-					},
-					hide: {
-						body: false,
-						edited: false,
-					},
-					filename: {
-						body: "",
-						edited: false,
-					},
-					path: {
-						body: "",
-						edited: false,
+					errors: {
+						file: "",
+						id: {
+							body: "",
+							status: false,
+						},
+						link: {
+							body: "",
+							status: false,
+						},
+						family: {
+							body: "",
+							status: false,
+						},
+						name: {
+							body: "",
+							status: false,
+						},
+						surname: {
+							body: "",
+							status: false,
+						},
+						category: {
+							body: "",
+							status: false,
+						},
+						degree: {
+							body: "",
+							status: false,
+						},
+						rank: {
+							body: "",
+							status: false,
+						},
+						startWorkAge: {
+							body: "",
+							status: false,
+						},
+						startWorkCity: {
+							body: "",
+							status: false,
+						},
+						adultDoctor: {
+							body: false,
+							status: false,
+						},
+						childrenDoctor: {
+							body: false,
+							status: false,
+						},
+						hide: {
+							body: false,
+							status: false,
+						},
+						filename: {
+							body: "",
+							status: false,
+						},
+						path: {
+							body: "",
+							status: false,
+						},
 					},
 				},
 				// Связи
@@ -914,6 +997,172 @@ export default {
 			this[modalName].status = false;
 			document.body.classList.remove("modal-open");
 		},
+		/* _____________________________________________________*/
+		/* 2. Работа с полями ввода модального окна             */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		// Проверка введенного текстового значения
+		checkInputText(value) {
+			/* Проверка на пустую строку */
+			if (value == "" || value == null) {
+				return {
+					status: true,
+					message: "Поле не может быть пустым.",
+				};
+			}
+
+			/* Проверка на соответствие типу string */
+			if (typeof value != "string") {
+				return {
+					status: true,
+					message: "Тип данных не совпадает.",
+				};
+			}
+
+			return {
+				status: false,
+				message: "Ошибок нет.",
+			};
+		},
+		// Проверка введенного текстового значения
+		checkInputNumber(value) {
+			/* Проверка на пустую строку */
+			if (value == "" || value == null) {
+				return {
+					status: true,
+					message: "Поле не может быть пустым.",
+				};
+			}
+
+			/* Проверка на соответствие типу Number */
+			if (!Number(value)) {
+				console.log(value, typeof value);
+				return {
+					status: true,
+					message: "Тип данных не совпадает.",
+				};
+			}
+
+			return {
+				status: false,
+				message: "Ошибок нет.",
+			};
+		},
+		checkSelect(value) {
+			/* Проверка на пустую строку */
+			if (value == "" || value == "null") {
+				return {
+					status: true,
+					message: "Поле не может быть пустым.",
+				};
+			}
+
+			/* Проверка на наличие в массиве со специализациями */
+			let valueInSpecializations = this.specializations.find((element, index, array) => {
+				if (element.id == value) {
+					return true;
+				}
+			});
+
+			if (valueInSpecializations) {
+				return {
+					status: false,
+					message: "Ошибок нет.",
+				};
+			} else {
+				return {
+					status: true,
+					message: "Такого значения нет в специализациях.",
+				};
+			}
+		},
+		// Проверка всех полей ввода модального окна
+		checkModalInputsAll(inputKeys) {
+			let errorCount = 0;
+			for (let i = 0; i < inputKeys.length; i++) {
+				switch (inputKeys[i]) {
+					// Для индекса
+					case "id_specialization":
+						if (this.checkModalInput(inputKeys[i], "select")) {
+							errorCount++;
+						}
+						break;
+					// Для всех остальных полей
+					default:
+						if (this.checkModalInput(inputKeys[i], "text")) {
+							errorCount++;
+						}
+						break;
+				}
+			}
+
+			if (errorCount > 0) {
+				return true;
+			} else {
+				return false;
+			}
+		},
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                РАБОТА С ПОЛЯМИ ВВОДА              |*/
+		/* |___________________________________________________|*/
+		/* _____________________________________________________*/
+		/* 1. Специалист                                        */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		// Проверка конкретного поля ввода
+		checkSpecialistInput(dataKey, inputType) {
+			let errorLog = {};
+			switch (inputType) {
+				case "text":
+					errorLog = this.checkInputText(this.specialist.profile.data[dataKey].body);
+					break;
+				case "number":
+					errorLog = this.checkInputNumber(this.specialist.profile.data[dataKey].body);
+					break;
+				case "select":
+					errorLog = this.checkSelect(this.specialist.profile.data[dataKey].body);
+					break;
+				default:
+					break;
+			}
+
+			if (errorLog.status) {
+				this.specialist.profile.errors[dataKey].body = errorLog.message;
+				this.specialist.profile.errors[dataKey].status = true;
+
+				return true;
+			} else {
+				this.specialist.profile.errors[dataKey].body = "";
+				this.specialist.profile.errors[dataKey].status = false;
+
+				return false;
+			}
+		},
+
+		// Проверка всех полей ввода
+		checkSpecialistInputsAll(inputKeys) {
+			let errorCount = 0;
+			for (let i = 0; i < inputKeys.length; i++) {
+				switch (inputKeys[i]) {
+					// Для индекса
+					case "id_specialization":
+						if (this.checkModalInput(inputKeys[i], "select")) {
+							errorCount++;
+						}
+						break;
+					// Для всех остальных полей
+					default:
+						if (this.checkModalInput(inputKeys[i], "text")) {
+							errorCount++;
+						}
+						break;
+				}
+			}
+
+			if (errorCount > 0) {
+				return true;
+			} else {
+				return false;
+			}
+		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                    ПАГИНАЦИЯ                      |*/
 		/* |___________________________________________________|*/
@@ -953,6 +1202,9 @@ export default {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                     ПРОФИЛЬ                       |*/
 		/* |___________________________________________________|*/
+		saveProfileChanges() {
+			console.log("Сохранение данных профиля.");
+		},
 		/* _____________________________________________________*/
 		/* 1. Специализации                                     */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
@@ -1173,7 +1425,7 @@ export default {
 		})
 			.then((response) => {
 				for (let key in response.data.specialist.profile) {
-					this.specialist.profile[key].body = response.data.specialist.profile[key];
+					this.specialist.profile.data[key].body = response.data.specialist.profile[key];
 				}
 
 				for (let key in response.data.specialist.connections) {
