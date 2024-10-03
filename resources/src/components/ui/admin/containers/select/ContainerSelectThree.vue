@@ -1,5 +1,5 @@
 <template>
-	<fieldset class="container-input-three" v-if="fieldset">
+	<fieldset class="container-select-three" v-if="fieldset">
 		<legend>
 			<slot name="legend"></slot>
 		</legend>
@@ -7,45 +7,45 @@
 			<label>
 				<slot name="title-one"></slot>
 			</label>
-			<slot name="input-one"></slot>
+			<slot name="select-one"></slot>
 			<slot name="error-one"></slot>
 		</div>
 		<div class="item">
 			<label>
 				<slot name="title-two"></slot>
 			</label>
-			<slot name="input-two"></slot>
+			<slot name="select-two"></slot>
 			<slot name="error-two"></slot>
 		</div>
 		<div class="item">
 			<label>
 				<slot name="title-three"></slot>
 			</label>
-			<slot name="input-three"></slot>
+			<slot name="select-three"></slot>
 			<slot name="error-three"></slot>
 		</div>
 	</fieldset>
 
-	<div class="container-input-three" v-else>
+	<div class="container-select-three" v-else>
 		<div class="item">
 			<label>
 				<slot name="title-one"></slot>
 			</label>
-			<slot name="input-one"></slot>
+			<slot name="select-one"></slot>
 			<slot name="error-one"></slot>
 		</div>
 		<div class="item">
 			<label>
 				<slot name="title-two"></slot>
 			</label>
-			<slot name="input-two"></slot>
+			<slot name="select-two"></slot>
 			<slot name="error-two"></slot>
 		</div>
 		<div class="item">
 			<label>
 				<slot name="title-three"></slot>
 			</label>
-			<slot name="input-three"></slot>
+			<slot name="select-three"></slot>
 			<slot name="error-three"></slot>
 		</div>
 	</div>
@@ -63,7 +63,7 @@ export default {
 </script>
 
 <style>
-fieldset.container-input-three {
+fieldset.container-select-three {
 	margin-top: 5px;
 	border: 2px solid var(--input-border-color-inactive);
 	border-radius: 15px;
@@ -72,28 +72,28 @@ fieldset.container-input-three {
 	background-color: rgb(255, 255, 255);
 }
 
-fieldset.container-input-three:focus-within {
+fieldset.container-select-three:focus-within {
 	border: 2px solid var(--input-border-color-active);
 }
 
-.container-input-three {
+.container-select-three {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 10px;
 }
 
-.container-input-three > .item {
+.container-select-three > .item {
 	flex: 1 0 350px;
 	display: flex;
 	flex-direction: column;
 	gap: 5px;
 }
 
-.container-input-three > .item > label {
+.container-select-three > .item > label {
 	font-size: 18px;
 }
 
-.container-input-three > .item > input {
+.container-select-three > .item > :is(input, select) {
 	box-sizing: border-box;
 	outline: none;
 
@@ -110,11 +110,11 @@ fieldset.container-input-three:focus-within {
 	transition: all 0.2s;
 }
 
-.container-input-three > .item > input:focus {
+.container-select-three > .item > :is(input, select):focus {
 	border: 2px solid var(--input-border-color-active);
 }
 
-.container-input-three > .item > input::placeholder {
+.container-select-three > .item > :is(input, select)::placeholder {
 	color: var(--input-placeholder-color);
 }
 </style>

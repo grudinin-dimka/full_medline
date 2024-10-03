@@ -26,9 +26,13 @@ return new class extends Migration
         // 10) filename - название прикреплённого файла
         Schema::create('specialists', function (Blueprint $table) {
             $table->id();
+            $table->string('link', 1000)->nullable();
             $table->string('family', 300)->nullable();
             $table->string('name', 300)->nullable();
             $table->string('surname', 300)->nullable();
+            $table->string('category', 100)->nullable();
+            $table->string('degree', 300)->nullable();
+            $table->string('rank', 300)->nullable();
             $table->date('startWorkAge')->nullable();
             $table->string('startWorkCity', 300)->nullable();
             $table->boolean('adultDoctor')->nullable();
@@ -39,9 +43,13 @@ return new class extends Migration
         });
 
         DB::table('specialists')->insert([
+            "link" => "https://prodoctorov.ru/shadrinsk/vrach/871312-vlasov/",
             "family" => "Власов",
             "name" => "Павел",
             "surname" => "Александрович",
+            "category" => "Вторая",
+            "degree" => "Кандидат медицинских наук",
+            "rank" => "Профессор",
             "startWorkAge" => date('c'),
             "startWorkCity" => "Москва",
             "adultDoctor" => true,
@@ -49,9 +57,13 @@ return new class extends Migration
             "filename" => "vlasov.png"
         ]);
         DB::table('specialists')->insert([
+            "link" => "https://prodoctorov.ru/shadrinsk/vrach/513584-dymshakova/",
             "family" => "Дымшакова",
             "name" => "Наталья",
             "surname" => "Юрьевна",
+            "category" => "Первая",
+            "degree" => "Кандидат медицинских наук",
+            "rank" => "Доцент",
             "startWorkAge" => date('c'),
             "startWorkCity" => "Москва",
             "adultDoctor" => true,
@@ -59,9 +71,13 @@ return new class extends Migration
             "filename" => "dimshakova.png"
         ]);
         DB::table('specialists')->insert([
+            "link" => "https://prodoctorov.ru/shadrinsk/vrach/649542-kuzovnikova/",
             "family" => "Кузовникова",
             "name" => "Тамара",
             "surname" => "Георгиевна",
+            "category" => "Первая",
+            "degree" => "Доктор медицинских наук",
+            "rank" => "Эмерит",
             "startWorkAge" => date('c'),
             "startWorkCity" => "Москва",
             "adultDoctor" => true,

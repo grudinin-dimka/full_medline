@@ -139,116 +139,196 @@
 		</block-title>
 
 		<div class="container-profile" v-show="loading.sections.profile">
-			<img :src="`${spesialist.profile.path.body}`" class="profile-image" alt="" />
+			<img :src="`${specialist.profile.path.body}`" class="profile-image" alt="" />
 			<div class="profile-info">
 				<container-input-two :fieldset="true">
 					<template #legend>АВАТАР И ССЫЛКА</template>
-					<template #title-one>ФОТО ВРАЧА</template>
+					<template #title-one>
+						<span>ФОТО ВРАЧА</span>
+						<span v-if="specialist.profile.filename.edited"> (ИЗМЕНЕНО)</span>
+					</template>
 					<template #input-one>
 						<input class="profile-file" type="file" autocomplete="off" />
 					</template>
-					<template #title-two>ССЫЛКА НА ПРОДОКТОРОВ</template>
+					<template #title-two>
+						<span>ССЫЛКА НА ПРОДОКТОРОВ</span>
+						<span v-if="specialist.profile.link.edited"> (ИЗМЕНЕНО)</span>
+					</template>
 					<template #input-two>
 						<input
 							type="text"
 							placeholder="Введите ссылку"
 							autocomplete="off"
-							v-model="spesialist.profile.link.body"
+							v-model="specialist.profile.link.body"
+							@input="specialist.profile.link.edited = true"
 						/>
 					</template>
 				</container-input-two>
 				<container-input-three :fieldset="true">
 					<template #legend>Ф.И.О.</template>
-					<template #title-one>ФАМИЛИЯ</template>
+					<template #title-one>
+						<span>ФАМИЛИЯ</span>
+						<span v-if="specialist.profile.family.edited"> (ИЗМЕНЕНО)</span>
+					</template>
 					<template #input-one>
 						<input
 							type="text"
 							placeholder="Введите фамилию"
 							autocomplete="off"
-							v-model="spesialist.profile.family.body"
+							v-model="specialist.profile.family.body"
+							@input="specialist.profile.family.edited = true"
 						/>
 					</template>
-					<template #title-two>ИМЯ</template>
+					<template #error-one>
+						<span class="error" v-if="false">Ошибка</span>
+					</template>
+					<template #title-two>
+						<span>ИМЯ</span>
+						<span v-if="specialist.profile.name.edited"> (ИЗМЕНЕНО)</span>
+					</template>
 					<template #input-two>
 						<input
 							type="text"
 							placeholder="Введите имя"
 							autocomplete="off"
-							v-model="spesialist.profile.name.body"
+							v-model="specialist.profile.name.body"
+							@input="specialist.profile.name.edited = true"
 						/>
 					</template>
-					<template #title-three>ОТЧЕСТВО</template>
+					<template #error-two>
+						<span class="error" v-if="false">Ошибка</span>
+					</template>
+					<template #title-three>
+						<span>ОТЧЕСТВО</span>
+						<span v-if="specialist.profile.surname.edited"> (ИЗМЕНЕНО)</span>
+					</template>
 					<template #input-three>
 						<input
 							type="text"
 							placeholder="Введите отчество"
 							autocomplete="off"
-							v-model="spesialist.profile.surname.body"
+							v-model="specialist.profile.surname.body"
+							@input="specialist.profile.surname.edited = true"
 						/>
+					</template>
+					<template #error-three>
+						<span class="error" v-if="false">Ошибка</span>
 					</template>
 				</container-input-three>
 			</div>
 		</div>
-
 		<div class="container-profile-other" v-show="loading.sections.profile">
 			<container-input>
-				<container-input-three :fieldset="true">
+				<!-- TODO: Сделать свойства для этих полей -->
+				<!-- HACK: Проработать поля ошибок для "container-input-three" -->
+				<container-select-three :fieldset="true">
 					<template #legend>НАУЧНОЕ ОБРАЗОВАНИЕ</template>
-					<template #title-one>КАТЕГОРИЯ</template>
-					<template #input-one>
-						<input
-							type="text"
-							placeholder="Введите категорию"
-							autocomplete="off"
-						/>
+					<template #title-one>
+						<span>КАТЕГОРИЯ</span>
+						<span v-if="specialist.profile.category.edited"> (ИЗМЕНЕНО)</span>
 					</template>
-					<template #title-two>СТЕПЕНЬ</template>
-					<template #input-two>
+					<template #select-one>
+						<select
+							v-model="specialist.profile.category.body"
+							@input="specialist.profile.category.edited = true"
+						>
+							<option disabled value="">Ничего не выбрано...</option>
+							<option value="Первая">Первая</option>
+							<option value="Вторая">Вторая</option>
+							<option value="Высшая">Высшая</option>
+						</select>
+					</template>
+					<template #error-one>
+						<span class="error" v-if="false">Ошибка</span>
+					</template>
+					<template #title-two>
+						<span>СТЕПЕНЬ</span>
+						<span v-if="specialist.profile.degree.edited"> (ИЗМЕНЕНО)</span>
+					</template>
+					<template #select-two>
 						<input
 							type="text"
 							placeholder="Введите степень"
 							autocomplete="off"
+							v-model="specialist.profile.degree.body"
+							@input="specialist.profile.degree.edited = true"
 						/>
 					</template>
-					<template #title-three>ЗВАНИЕ</template>
-					<template #input-three>
+					<template #error-two>
+						<span class="error" v-if="false">Ошибка</span>
+					</template>
+					<template #title-three>
+						<span>ЗВАНИЕ</span>
+						<span v-if="specialist.profile.rank.edited"> (ИЗМЕНЕНО)</span>
+					</template>
+					<template #select-three>
 						<input
 							type="text"
 							placeholder="Введите звание"
 							autocomplete="off"
+							v-model="specialist.profile.rank.body"
+							@input="specialist.profile.rank.edited = true"
 						/>
 					</template>
-				</container-input-three>
+					<template #error-three>
+						<span class="error" v-if="false">Ошибка</span>
+					</template>
+				</container-select-three>
 				<!-- Первая работа -->
 				<container-input-two :fieldset="true">
 					<template #legend>ПЕРВАЯ РАБОТА</template>
-					<template #title-one>НАЧАЛО ПЕРВОЙ РАБОТЫ</template>
-					<template #input-one>
-						<input type="date" v-model="spesialist.profile.startWorkAge.body" />
+					<template #title-one>
+						<span>НАЧАЛО ПЕРВОЙ РАБОТЫ</span>
+						<span v-if="specialist.profile.startWorkAge.edited"> (ИЗМЕНЕНО)</span>
 					</template>
-					<template #title-two>ГОРОД ПЕРВОЙ РАБОТЫ</template>
+					<template #input-one>
+						<input
+							type="date"
+							autocomplete="off"
+							v-model="specialist.profile.startWorkAge.body"
+							@input="specialist.profile.startWorkAge.edited = true"
+						/>
+					</template>
+					<template #title-two>
+						<span>ГОРОД ПЕРВОЙ РАБОТЫ</span>
+						<span v-if="specialist.profile.startWorkCity.edited"> (ИЗМЕНЕНО)</span>
+					</template>
 					<template #input-two>
 						<input
 							type="text"
 							placeholder="Введите название города"
 							autocomplete="off"
-							v-model="spesialist.profile.startWorkCity.body"
+							v-model="specialist.profile.startWorkCity.body"
+							@input="specialist.profile.startWorkCity.edited = true"
 						/>
 					</template>
 				</container-input-two>
 				<!-- Статус приёма -->
 				<container-input-two :fieldset="true">
 					<template #legend>ПРИЁМ ВРАЧА</template>
-					<template #title-one>У ВЗРОСЛЫХ</template>
+					<template #title-one>
+						<span>У ВЗРОСЛЫХ</span>
+						<span v-if="specialist.profile.adultDoctor.edited"> (ИЗМЕНЕНО)</span>
+					</template>
 					<template #input-one>
-						<select v-model="spesialist.profile.adultDoctor.body">
+						<select
+							v-model="specialist.profile.adultDoctor.body"
+							@input="specialist.profile.adultDoctor.edited = true"
+						>
 							<option value="0">Нет</option>
 							<option value="1">Да</option>
 						</select>
 					</template>
-					<template #title-two>У ДЕТЕЙ</template>
+					<template #title-two>
+						<span>У ДЕТЕЙ</span>
+						<span v-if="specialist.profile.childrenDoctor.edited"> (ИЗМЕНЕНО)</span>
+					</template>
 					<template #input-two>
-						<select v-model="spesialist.profile.childrenDoctor.body" autocomplete="off">
+						<select
+							autocomplete="off"
+							v-model="specialist.profile.childrenDoctor.body"
+							@input="specialist.profile.childrenDoctor.edited = true"
+						>
 							<option value="0">Нет</option>
 							<option value="1">Да</option>
 						</select>
@@ -270,9 +350,10 @@
 		<template #title-one>
 			<block-title>
 				<template #title>
-					Специализации ({{ spesialist.connections.specializations.length }})
+					Специализации ({{ specialist.connections.specializations.length }})
 				</template>
 				<template #buttons>
+					<!-- TODO: Сделать сохранение данных специализаций -->
 					<icon-save :width="28" :height="28" @click="saveSpecializationsChanges" />
 				</template>
 			</block-title>
@@ -280,7 +361,7 @@
 		<template #body-one>
 			<div class="profile-list" v-show="loading.sections.specializations">
 				<!-- Если специализации не выбраны -->
-				<div class="item-empty" v-if="spesialist.connections.specializations.length == 0">
+				<div class="item-empty" v-if="specialist.connections.specializations.length == 0">
 					<div class="item-title">Пока тут ничего нет...</div>
 				</div>
 				<!-- Если специализации выбраны -->
@@ -290,7 +371,7 @@
 					</div>
 					<div
 						class="item"
-						v-for="specialization in spesialist.connections.specializations"
+						v-for="specialization in specialist.connections.specializations"
 						:key="specialization.id"
 					>
 						<!-- <div class="item-title">1</div> -->
@@ -326,8 +407,9 @@
 		<!-- Клиники -->
 		<template #title-two>
 			<block-title>
-				<template #title> Клиники ({{ spesialist.connections.clinics.length }}) </template>
+				<template #title> Клиники ({{ specialist.connections.clinics.length }}) </template>
 				<template #buttons>
+					<!-- TODO: Сделать сохранение данных клиник -->
 					<icon-save :width="28" :height="28" />
 				</template>
 			</block-title>
@@ -335,7 +417,7 @@
 		<template #body-two>
 			<div class="profile-list" v-show="loading.sections.clinics">
 				<!-- Если клиники не выбраны -->
-				<div class="item-empty" v-if="spesialist.connections.clinics.length == 0">
+				<div class="item-empty" v-if="specialist.connections.clinics.length == 0">
 					<div class="item-title">Пока тут ничего нет...</div>
 				</div>
 				<template v-else>
@@ -345,7 +427,7 @@
 						<div></div>
 					</div>
 					<!-- Если клиники выбраны -->
-					<div class="item" v-for="clinic in spesialist.connections.clinics" :key="clinic.id">
+					<div class="item" v-for="clinic in specialist.connections.clinics" :key="clinic.id">
 						<div class="item-title">
 							{{ sections.clinics.filter((item) => item.id == clinic.id_clinic)[0].name }}
 						</div>
@@ -383,14 +465,14 @@
 
 		<div class="profile-list" v-show="loading.sections.certificates">
 			<!-- Если сертификаты не выбраны -->
-			<div class="item-empty" v-if="spesialist.connections.certificates.length == 0">
+			<div class="item-empty" v-if="specialist.connections.certificates.length == 0">
 				<div class="item-title">Пока тут ничего нет...</div>
 			</div>
 			<!-- Если специализации выбраны -->
 			<div
 				class="item"
 				v-else
-				v-for="certificate in spesialist.connections.certificates"
+				v-for="certificate in specialist.connections.certificates"
 				:key="certificate.id"
 			>
 				<div class="item-title">
@@ -428,14 +510,14 @@
 		<template #body-one>
 			<div class="profile-list" v-show="loading.sections.educations">
 				<!-- Если образования не выбраны -->
-				<div class="item-empty" v-if="spesialist.connections.educations.length == 0">
+				<div class="item-empty" v-if="specialist.connections.educations.length == 0">
 					<div class="item-title">Пока тут ничего нет...</div>
 				</div>
 				<!-- Если образования выбраны -->
 				<div
 					class="item"
 					v-else
-					v-for="education in spesialist.connections.educations"
+					v-for="education in specialist.connections.educations"
 					:key="education.id"
 				>
 					<div class="item-title">{{ sections.educations[education.id].name }}</div>
@@ -468,11 +550,11 @@
 		<template #body-two>
 			<div class="profile-list" v-show="loading.sections.works">
 				<!-- Если образования не выбраны -->
-				<div class="item-empty" v-if="spesialist.connections.works.length == 0">
+				<div class="item-empty" v-if="specialist.connections.works.length == 0">
 					<div class="item-title">Пока тут ничего нет...</div>
 				</div>
 				<!-- Если образования выбраны -->
-				<div class="item" v-else v-for="work in spesialist.connections.works" :key="work.id">
+				<div class="item" v-else v-for="work in specialist.connections.works" :key="work.id">
 					<div class="item-title">{{ sections.works[work.id].name }}</div>
 					<div class="item-close" @click="removeArrValue('works', work)">
 						<icon-close :width="26" :height="26" />
@@ -517,6 +599,7 @@ import ContainerInput from "../../../components/ui/admin/containers/ContainerInp
 import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
 import ContainerInputTwo from "../../../components/ui/admin/containers/input/ContainerInputTwo.vue";
 import ContainerInputThree from "../../../components/ui/admin/containers/input/ContainerInputThree.vue";
+import ContainerSelectThree from "../../../components/ui/admin/containers/select/ContainerSelectThree.vue";
 
 import Pagination from "../../../components/ui/admin/pagination/Pagination.vue";
 
@@ -546,6 +629,7 @@ export default {
 		ContainerInputOnce,
 		ContainerInputTwo,
 		ContainerInputThree,
+		ContainerSelectThree,
 		Pagination,
 		TableButtonDefault,
 		TableButtonRemove,
@@ -637,7 +721,7 @@ export default {
 				},
 			},
 			/* Специалист */
-			spesialist: {
+			specialist: {
 				// Основная информация
 				profile: {
 					file: "",
@@ -658,6 +742,18 @@ export default {
 						edited: false,
 					},
 					surname: {
+						body: "",
+						edited: false,
+					},
+					category: {
+						body: "",
+						edited: false,
+					},
+					degree: {
+						body: "",
+						edited: false,
+					},
+					rank: {
 						body: "",
 						edited: false,
 					},
@@ -866,7 +962,7 @@ export default {
 			this.cheked.specializations = [];
 
 			// Заполнение выбранных специализаций
-			this.spesialist.connections.specializations.forEach((connSpecilization) =>
+			this.specialist.connections.specializations.forEach((connSpecilization) =>
 				this.cheked.specializations.push(connSpecilization.id_specialization)
 			);
 
@@ -876,7 +972,7 @@ export default {
 		updateSpecialization() {
 			try {
 				// Обнуление сертификатов специалиста
-				this.spesialist.connections.specializations = [];
+				this.specialist.connections.specializations = [];
 
 				let maxId = 0;
 				// Если ничего не выбрано, то оставляем пустой массив, иначе заполняем массив выбранными значениями
@@ -893,14 +989,14 @@ export default {
 
 					/* Заполнение выбранных специализаций в массив */
 					this.cheked.specializations.forEach((item) => {
-						this.spesialist.connections.specializations.push({
+						this.specialist.connections.specializations.push({
 							id: maxId + 1,
-							id_specialist: this.spesialist.profile.id.body,
+							id_specialist: this.specialist.profile.id.body,
 							id_specialization: item,
 						});
 
 						/* Поиск максимального id */
-						this.spesialist.connections.specializations.filter((item) => {
+						this.specialist.connections.specializations.filter((item) => {
 							if (item.id > maxId) maxId++;
 						});
 					});
@@ -922,7 +1018,7 @@ export default {
 				let newArray = [];
 
 				// Заполнение нового массива
-				this.spesialist.connections.specializations.forEach((item) => {
+				this.specialist.connections.specializations.forEach((item) => {
 					newArray.push(Object.assign({}, item));
 				});
 
@@ -945,7 +1041,7 @@ export default {
 						Authorization: `Bearer ${localStorage.getItem("token")}`,
 					},
 					data: {
-						idSpecialist: this.spesialist.profile.id.body,
+						idSpecialist: this.specialist.profile.id.body,
 						specialistSpecializations: newArray,
 					},
 				})
@@ -986,7 +1082,7 @@ export default {
 				this.cheked.clinics = [];
 
 				// Заполнение выбранных специализаций из массива
-				this.spesialist.connections.clinics.forEach((connClinic) => {
+				this.specialist.connections.clinics.forEach((connClinic) => {
 					this.cheked.clinics.push(connClinic.id_clinic);
 
 					/* Заполнение статуса приёма в клиниках в массив */
@@ -1009,7 +1105,7 @@ export default {
 		updateClinics() {
 			try {
 				// Обнуление сертификатов специалиста
-				this.spesialist.connections.clinics = [];
+				this.specialist.connections.clinics = [];
 
 				let maxId = 0;
 				// Если ничего не выбрано, то оставляем пустой массив, иначе заполняем массив выбранными значениями
@@ -1026,17 +1122,17 @@ export default {
 
 					// Заполнение выбранных специализаций в массив
 					this.cheked.clinics.forEach((checkClinic) => {
-						this.spesialist.connections.clinics.push({
+						this.specialist.connections.clinics.push({
 							id: maxId + 1,
 							priem: this.sections.clinics.find((clinic) => {
 								return clinic.id == checkClinic;
 							}).priem,
-							id_specialist: this.spesialist.profile.id.body,
+							id_specialist: this.specialist.profile.id.body,
 							id_clinic: checkClinic,
 						});
 
 						// Поиск максимального id
-						this.spesialist.connections.clinics.filter((connClinic) => {
+						this.specialist.connections.clinics.filter((connClinic) => {
 							if (connClinic.id > maxId) maxId++;
 						});
 					});
@@ -1057,7 +1153,7 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Метод удаления значения из массива */
 		removeArrValue(array, value) {
-			this.spesialist.connections[array] = this.spesialist.connections[array].filter((item) => {
+			this.specialist.connections[array] = this.specialist.connections[array].filter((item) => {
 				if (item.id !== value.id) {
 					return item;
 				}
@@ -1077,11 +1173,11 @@ export default {
 		})
 			.then((response) => {
 				for (let key in response.data.specialist.profile) {
-					this.spesialist.profile[key].body = response.data.specialist.profile[key];
+					this.specialist.profile[key].body = response.data.specialist.profile[key];
 				}
 
 				for (let key in response.data.specialist.connections) {
-					this.spesialist.connections[key] = response.data.specialist.connections[key];
+					this.specialist.connections[key] = response.data.specialist.connections[key];
 				}
 
 				for (let key in response.data.sections) {
@@ -1092,7 +1188,7 @@ export default {
 				this.sections.clinics.forEach((item) => {
 					item.priem = 0;
 
-					this.spesialist.connections.clinics.forEach((itemOther) => {
+					this.specialist.connections.clinics.forEach((itemOther) => {
 						if (itemOther.id_clinic == item.id) {
 							item.priem = itemOther.priem;
 						}
@@ -1112,37 +1208,31 @@ export default {
 </script>
 
 <style scoped>
-.specializations-list,
-.clinics-list {
+:is(.specializations-list, .clinics-list) {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
 }
 
-.specializations-list > .item {
+:is(.specializations-list, .clinics-list) > .item {
 	display: grid;
-	grid-template-columns: 20px 30px 1fr;
 	gap: 10px;
 	border: 2px solid var(--input-border-color-inactive);
 	padding: 10px;
 	border-radius: 10px;
 
 	transition: all 0.2s;
+}
+
+.specializations-list > .item {
+	grid-template-columns: 20px 30px 1fr;
 }
 
 .clinics-list > .item {
-	display: grid;
 	grid-template-columns: 20px 30px 1fr 1fr;
-	gap: 10px;
-	border: 2px solid var(--input-border-color-inactive);
-	padding: 10px;
-	border-radius: 10px;
-
-	transition: all 0.2s;
 }
 
-.specializations-list > .item > select,
-.clinics-list > .item > select {
+:is(.specializations-list, .clinics-list) > .item > select {
 	border: 0px;
 	background-color: rgba(0, 0, 0, 0);
 	font-size: 18px;
@@ -1153,24 +1243,20 @@ export default {
 	color: red;
 }
 
-.specializations-list > .item.active,
-.clinics-list > .item.active {
+:is(.specializations-list, .clinics-list) > .item.active {
 	border: 2px solid var(--input-border-color-active);
 	background-color: #f2feff;
 }
 
-.specializations-list > .item > input[type="checkbox"],
-.clinics-list > .item > input[type="checkbox"] {
+:is(.specializations-list, .clinics-list) > .item > input[type="checkbox"] {
 	cursor: pointer;
 }
 
-.specializations-list > .item > input[type="checkbox"]:checked,
-.clinics-list > .item > input[type="checkbox"]:checked {
+:is(.specializations-list, .clinics-list) > .item > input[type="checkbox"]:checked {
 	accent-color: #8fe5ee;
 }
 
-.specializations-list > .item:first-of-type,
-.clinics-list > .item:first-of-type {
+:is(.specializations-list, .clinics-list) > .item:first-of-type {
 	display: grid;
 	grid-template-columns: 20px 30px 1fr 1fr;
 	gap: 10px;
@@ -1183,14 +1269,12 @@ export default {
 	color: var(--input-border-color-active);
 }
 
-.specializations-list > .item:not(:first-of-type):hover,
-.clinics-list > .item:not(:first-of-type):hover {
+:is(.specializations-list, .clinics-list) > .item:not(:first-of-type):hover {
 	border: 2px solid var(--input-border-color-active);
 	background-color: #f2feff;
 }
 
-.specializations-list > .item > label,
-.clinics-list > .item > label {
+:is(.specializations-list, .clinics-list) > .item > label {
 	cursor: pointer;
 	font-size: 18px;
 }
