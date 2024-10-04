@@ -388,7 +388,7 @@ export default {
 		// Проверка введенного текстового значения
 		checkInputText(value) {
 			/* Проверка на пустую строку */
-			if (value == "" || value == null) {
+			if (value === "" || value === null) {
 				return {
 					status: true,
 					message: "Поле не может быть пустым.",
@@ -411,7 +411,7 @@ export default {
 		// Проверка введенного текстового значения
 		checkInputNumber(value) {
 			/* Проверка на пустую строку */
-			if (value == "" || value == null) {
+			if (value === "" || value === null) {
 				return {
 					status: true,
 					message: "Поле не может быть пустым.",

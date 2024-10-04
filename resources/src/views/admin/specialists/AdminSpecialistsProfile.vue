@@ -137,6 +137,12 @@
 				<span v-if="$route.params.id == 'new'" class="create"> (СОЗДАНИЕ)</span>
 			</template>
 			<template #buttons>
+				<icon-save-all
+					:width="28"
+					:height="28"
+					@click="saveSpecialistChanges"
+					v-if="$route.params.id !== 'new'"
+				/>
 				<icon-save
 					:width="28"
 					:height="28"
@@ -165,7 +171,10 @@
 				></div>
 			</div>
 			<div class="profile-info">
-				<container-input-two :fieldset="true" :type="'create'">
+				<container-input-two
+					:fieldset="true"
+					:type="$route.params.id == 'new' ? 'create' : 'edit'"
+				>
 					<template #legend>
 						<span :class="{ create: $route.params.id === 'new' }">АВАТАР И ССЫЛКА</span>
 					</template>
@@ -202,7 +211,10 @@
 						</span>
 					</template>
 				</container-input-two>
-				<container-input-three :fieldset="true" :type="'create'">
+				<container-input-three
+					:fieldset="true"
+					:type="$route.params.id == 'new' ? 'create' : 'edit'"
+				>
 					<template #legend>
 						<span :class="{ create: $route.params.id == 'new' }">Ф.И.О.</span>
 					</template>
@@ -271,7 +283,10 @@
 		</div>
 		<div class="container-profile-other" v-show="loading.sections.profile">
 			<container-input>
-				<container-select-three :fieldset="true" :type="'create'">
+				<container-select-three
+					:fieldset="true"
+					:type="$route.params.id == 'new' ? 'create' : 'edit'"
+				>
 					<template #legend>
 						<span :class="{ create: $route.params.id === 'new' }">НАУЧНОЕ ОБРАЗОВАНИЕ</span>
 					</template>
@@ -324,7 +339,10 @@
 					</template>
 				</container-select-three>
 				<!-- Первая работа -->
-				<container-input-two :fieldset="true" :type="'create'">
+				<container-input-two
+					:fieldset="true"
+					:type="$route.params.id == 'new' ? 'create' : 'edit'"
+				>
 					<template #legend>
 						<span :class="{ create: $route.params.id === 'new' }">ПЕРВАЯ РАБОТА</span>
 					</template>
@@ -355,7 +373,10 @@
 					</template>
 				</container-input-two>
 				<!-- Статус приёма -->
-				<container-input-two :fieldset="true" :type="'create'">
+				<container-input-two
+					:fieldset="true"
+					:type="$route.params.id == 'new' ? 'create' : 'edit'"
+				>
 					<template #legend>
 						<span :class="{ create: $route.params.id === 'new' }">ПРИЁМ ВРАЧА</span>
 					</template>
@@ -370,8 +391,8 @@
 							@blur="checkSpecialistInput('adultDoctor', 'select')"
 						>
 							<option value="" disabled>Ничего не выбрано...</option>
-							<option value="0">Нет</option>
-							<option value="1">Да</option>
+							<option :value="0">Нет</option>
+							<option :value="1">Да</option>
 						</select>
 					</template>
 					<template #error-one>
@@ -391,8 +412,8 @@
 							@blur="checkSpecialistInput('childrenDoctor', 'select')"
 						>
 							<option value="" disabled>Ничего не выбрано...</option>
-							<option value="0">Нет</option>
-							<option value="1">Да</option>
+							<option :value="0">Нет</option>
+							<option :value="1">Да</option>
 						</select>
 					</template>
 					<template #error-two>
@@ -488,7 +509,7 @@
 					<icon-save
 						:width="28"
 						:height="28"
-						@click="console.log('save')"
+						@click="saveClinicsChanges"
 						v-if="$route.params.id !== 'new'"
 					/>
 				</template>
@@ -551,26 +572,10 @@
 			</template>
 		</block-title>
 
-		<div class="profile-list" v-show="loading.sections.certificates">
-			<!-- Если сертификаты не выбраны -->
-			<div class="item-empty" v-if="specialist.connections.certificates.length == 0">
-				<div class="item-title">Пока тут ничего нет...</div>
-			</div>
-			<!-- Если специализации выбраны -->
-			<div
-				class="item"
-				v-else
-				v-for="certificate in specialist.connections.certificates"
-				:key="certificate.id"
-			>
-				<div class="item-title">
-					{{ getCertificateName(certificate) }}
-				</div>
-				<div class="item-close" @click="removeArrValue('certificates', certificate)">
-					<icon-close :width="26" :height="26" />
-				</div>
-			</div>
-		</div>
+		<admin-specialists-table
+			v-show="loading.sections.certificates"
+			:array="specialist.connections.certificates"
+		/>
 
 		<!-- Загрузчик профиля -->
 		<loader-child
@@ -599,26 +604,10 @@
 			</template>
 		</block-title>
 
-		<div class="profile-list" v-show="loading.sections.certificates">
-			<!-- Если сертификаты не выбраны -->
-			<div class="item-empty" v-if="specialist.connections.certificates.length == 0">
-				<div class="item-title">Пока тут ничего нет...</div>
-			</div>
-			<!-- Если специализации выбраны -->
-			<div
-				class="item"
-				v-else
-				v-for="certificate in specialist.connections.certificates"
-				:key="certificate.id"
-			>
-				<div class="item-title">
-					{{ getCertificateName(certificate) }}
-				</div>
-				<div class="item-close" @click="removeArrValue('certificates', certificate)">
-					<icon-close :width="26" :height="26" />
-				</div>
-			</div>
-		</div>
+		<admin-specialists-table
+			v-show="loading.sections.educations"
+			:array="specialist.connections.educations"
+		/>
 
 		<!-- Загрузчик профиля -->
 		<loader-child
@@ -647,26 +636,10 @@
 			</template>
 		</block-title>
 
-		<div class="profile-list" v-show="loading.sections.certificates">
-			<!-- Если сертификаты не выбраны -->
-			<div class="item-empty" v-if="specialist.connections.certificates.length == 0">
-				<div class="item-title">Пока тут ничего нет...</div>
-			</div>
-			<!-- Если специализации выбраны -->
-			<div
-				class="item"
-				v-else
-				v-for="certificate in specialist.connections.certificates"
-				:key="certificate.id"
-			>
-				<div class="item-title">
-					{{ getCertificateName(certificate) }}
-				</div>
-				<div class="item-close" @click="removeArrValue('certificates', certificate)">
-					<icon-close :width="26" :height="26" />
-				</div>
-			</div>
-		</div>
+		<admin-specialists-table
+			v-show="loading.sections.works"
+			:array="specialist.connections.works"
+		/>
 
 		<!-- Загрузчик профиля -->
 		<loader-child
@@ -684,6 +657,7 @@
 
 <script>
 import AdminModal from "../../../components/includes/admin/AdminModal.vue";
+import AdminSpecialistsTable from "./AdminSpecialistsTable.vue";
 
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 
@@ -714,6 +688,7 @@ import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue"
 import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 
 import IconSave from "../../../components/icons/IconSave.vue";
+import IconSaveAll from "../../../components/icons/IconSaveAll.vue";
 import IconAdd from "../../../components/icons/IconAdd.vue";
 
 import axios from "axios";
@@ -723,6 +698,7 @@ import { RouterView, RouterLink } from "vue-router";
 export default {
 	components: {
 		AdminModal,
+		AdminSpecialistsTable,
 		InfoBar,
 		LoaderChild,
 		ElementInputLabel,
@@ -744,6 +720,7 @@ export default {
 		ButtonRemove,
 		ButtonClaim,
 		IconSave,
+		IconSaveAll,
 		IconAdd,
 		axios,
 		RouterView,
@@ -833,7 +810,10 @@ export default {
 				// Основная информация
 				profile: {
 					data: {
-						file: "",
+						file: {
+							body: "",
+							edited: false,
+						},
 						id: {
 							body: "",
 							edited: false,
@@ -1095,7 +1075,7 @@ export default {
 		// Проверка введенного текстового значения
 		checkInputText(value) {
 			/* Проверка на пустую строку */
-			if (value == "" || value == null) {
+			if (value === "" || value === null) {
 				return {
 					status: true,
 					message: "Поле не может быть пустым.",
@@ -1118,16 +1098,14 @@ export default {
 		// Проверка введенного текстового значения
 		checkInputNumber(value) {
 			/* Проверка на пустую строку */
-			if (value == "" || value == null) {
+			if (value === "" || value === null) {
 				return {
 					status: true,
 					message: "Поле не может быть пустым.",
 				};
 			}
-
 			/* Проверка на соответствие типу Number */
-			if (!Number(value)) {
-				console.log(value, typeof value);
+			if (Number.isNaN(Number(value))) {
 				return {
 					status: true,
 					message: "Тип данных не совпадает.",
@@ -1141,7 +1119,7 @@ export default {
 		},
 		checkSelect(value) {
 			/* Проверка на пустую строку */
-			if (value == "" || value == "null") {
+			if (value === "" || value === "null") {
 				return {
 					status: true,
 					message: "Поле не может быть пустым.",
@@ -1214,21 +1192,22 @@ export default {
 				return false;
 			}
 		},
-
-		// Проверка всех полей ввода
+		/* Проверка всех полей ввода */
 		checkSpecialistInputsAll(inputKeys) {
 			let errorCount = 0;
 			for (let i = 0; i < inputKeys.length; i++) {
 				switch (inputKeys[i]) {
 					// Для индекса
-					case "id_specialization":
-						if (this.checkModalInput(inputKeys[i], "select")) {
+					case "category":
+					case "adultDoctor":
+					case "childrenDoctor":
+						if (this.checkSpecialistInput(inputKeys[i], "select")) {
 							errorCount++;
 						}
 						break;
 					// Для всех остальных полей
 					default:
-						if (this.checkModalInput(inputKeys[i], "text")) {
+						if (this.checkSpecialistInput(inputKeys[i], "text")) {
 							errorCount++;
 						}
 						break;
@@ -1278,10 +1257,88 @@ export default {
 			this.paginationClinics.pages.current = pageNumber;
 		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                     ПРОФИЛЬ                       |*/
+		/* |                       ВРАЧ                        |*/
 		/* |___________________________________________________|*/
+
+		saveSpecialistChanges() {},
+		/* _____________________________________________________*/
+		/* 1. Специализации                                     */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* Сохранение изменений */
 		saveProfileChanges() {
-			console.log("Сохранение данных профиля.");
+			// Проверка на статус добавления специалиста
+			if (this.specialist.profile.data.id.body === "new") return;
+
+			try {
+				if (
+					this.checkSpecialistInputsAll([
+						"link",
+						"family",
+						"name",
+						"surname",
+						"category",
+						"adultDoctor",
+						"childrenDoctor",
+					])
+				)
+					return;
+
+				// Сохранение данных
+				axios({
+					method: "post",
+					url: `${this.$store.state.axios.urlApi}` + `save-specialist-profile-changes`,
+					headers: {
+						Accept: "application/json",
+						Authorization: `Bearer ${localStorage.getItem("token")}`,
+					},
+					data: {
+						array: {
+							profile: this.specialist.profile.data,
+							connections: this.specialist.connections,
+						},
+					},
+				})
+					.then((response) => {
+						if (response.data.status) {
+							let debbugStory = {
+								title: "Успешно!",
+								body: response.data.message,
+								type: "Completed",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+
+							this.clearSpecialistProfileEdited();
+						} else {
+							let debbugStory = {
+								title: "Ошибка.",
+								body: response.data.message,
+								type: "Error",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+						}
+					})
+					.catch((error) => {
+						let debbugStory = {
+							title: "Ошибка.",
+							body: "При сохранении профиля произошла ошибка.",
+							type: "Error",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					});
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Не удалось сохранить данные",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
+		/* Очистка статуса изменений */
+		clearSpecialistProfileEdited() {
+			for (let key in this.specialist.profile.data) {
+				this.specialist.profile.data[key].edited = false;
+			}
 		},
 		/* _____________________________________________________*/
 		/* 1. Специализации                                     */
@@ -1350,24 +1407,6 @@ export default {
 				// Проверка на статус добавления специалиста
 				if (this.specialist.profile.data.id.body === "new") return;
 
-				let newArray = [];
-
-				// Заполнение нового массива
-				this.specialist.connections.specializations.forEach((item) => {
-					newArray.push(Object.assign({}, item));
-				});
-
-				// Сортировка нового массива
-				newArray.sort((a, b) => {
-					if (a.id > b.id) {
-						return 1;
-					} else if (a.id < b.id) {
-						return -1;
-					} else {
-						return 0;
-					}
-				});
-
 				axios({
 					method: "post",
 					url: `${this.$store.state.axios.urlApi}` + `save-specialist-specializations-changes`,
@@ -1377,7 +1416,7 @@ export default {
 					},
 					data: {
 						id: this.specialist.profile.data.id.body,
-						array: newArray,
+						array: this.specialist.connections.specializations,
 					},
 				})
 					.then((response) => {
@@ -1420,6 +1459,9 @@ export default {
 		/* Открытие списка клиник */
 		editClinics() {
 			try {
+				// Проверка на статус добавления специалиста
+				if (this.specialist.profile.data.id.body === "new") return;
+
 				// Обнуление массива
 				this.cheked.clinics = [];
 
@@ -1493,6 +1535,59 @@ export default {
 				this.$store.commit("debuggerState", debbugStory);
 			}
 		},
+		/* Сохранение изменений */
+		saveClinicsChanges() {
+			try {
+				// Проверка на статус добавления специалиста
+				if (this.specialist.profile.data.id.body === "new") return;
+
+				axios({
+					method: "post",
+					url: `${this.$store.state.axios.urlApi}` + `save-specialist-clinics-changes`,
+					headers: {
+						Accept: "application/json",
+						Authorization: `Bearer ${localStorage.getItem("token")}`,
+					},
+					data: {
+						id: this.specialist.profile.data.id.body,
+						array: this.specialist.connections.clinics,
+					},
+				})
+					.then((response) => {
+						if (response.data.status) {
+							let debbugStory = {
+								title: "Успешно!",
+								body: response.data.message,
+								type: "Completed",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+						} else {
+							let debbugStory = {
+								title: "Ошибка.",
+								body: response.data.message,
+								type: "Error",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+						}
+					})
+					.catch((error) => {
+						let debbugStory = {
+							title: "Ошибка.",
+							body: "Данные почему-то не сохранились...",
+							type: "Error",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					});
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "При сохранении значений произошла ошибка.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
+
 		/* _____________________________________________________*/
 		/* ?. Общие методы                                      */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/

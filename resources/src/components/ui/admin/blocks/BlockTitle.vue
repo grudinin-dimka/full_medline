@@ -22,6 +22,11 @@ export default {
     align-items: center;
   }
 
+  .block-title-buttons{
+    display: flex;
+    gap: 10px;
+  }
+
   h3 {
     font-size: 24px;
     font-weight: 500;

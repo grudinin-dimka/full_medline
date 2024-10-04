@@ -18,11 +18,12 @@ use App\Models\Slide;
 use App\Models\Footer;
 use App\Models\Specialist;
 use App\Models\Specialization;
+use App\Models\SpecialistSpecialization;
 use App\Models\Clinic;
+use App\Models\SpecialistClinic;
 use App\Models\Education;
 use App\Models\Work;
 use App\Models\Certificate;
-use App\Models\SpecialistSpecialization;
 
 class AdminController extends Controller
 {
@@ -194,6 +195,38 @@ class AdminController extends Controller
          };
       };      
    }
+   /* Сохранение всех данных специалиста */ 
+   public function saveSpecialistProfileChanges(Request $request) {
+      $specialist = Specialist::find($request->array["profile"]["id"]["body"]);
+      
+      if ($specialist) {
+         $specialist->update([
+            'link' => $request->array["profile"]["link"]["body"],
+            'family' => $request->array["profile"]["family"]["body"],
+            'name' => $request->array["profile"]["name"]["body"],
+            'surname' => $request->array["profile"]["surname"]["body"],
+            'category' => $request->array["profile"]["category"]["body"],
+            'degree' => $request->array["profile"]["degree"]["body"],
+            'rank' => $request->array["profile"]["rank"]["body"],
+            'startWorkAge' => $request->array["profile"]["startWorkAge"]["body"],
+            'startWorkCity' => $request->array["profile"]["startWorkCity"]["body"],
+            'adultDoctor' => $request->array["profile"]["adultDoctor"]["body"],
+            'childrenDoctor' => $request->array["profile"]["childrenDoctor"]["body"],
+         ]);
+
+         return response()->json([
+            "status" => true,
+            "message" => "Данные профиля врача обновлены.",
+            "data" => $specialist,
+         ]);   
+      } else {
+         return response()->json([
+            "status" => false,
+            "message" => "Врач не найден.",
+            "data" => $request->all(),
+         ]);            
+      }
+   }
    /* FIXME Добавить проверок при помощи валидатора на количество символов */
    /* Сохранение специализаций специалиста */ 
    public function saveSpecialistSpecializationsChanges(Request $request) {
@@ -229,7 +262,53 @@ class AdminController extends Controller
          
          return response()->json([
             "status" => true,
-            "message" => "Данные сохранились.",
+            "message" => "Данные о специализациях сохранились.",
+         ]);
+      } else {
+         return response()->json([
+            "status" => false,
+            "message" => "Специалист не найден.",
+         ]);
+      }
+   }
+   /* Сохранение клиник специалиста */ 
+   public function saveSpecialistClinicsChanges(Request $request) {
+      // Проверка на существование
+      if(Specialist::find($request->id)) {         
+         // Поиск или добавление 
+         foreach ($request->array as $key => $value) {
+            SpecialistClinic::firstOrCreate([
+               'id_specialist' => $value["id_specialist"],
+               'id_clinic' => $value["id_clinic"], 
+               "priem" => $value["priem"],
+            ]);
+         };
+
+         // Удаление ненужных записей
+         $specialistClinics = SpecialistClinic::where('id_specialist', $request->id)->get();
+         foreach ($specialistClinics as $key => $value) {
+            // Поиск в массиве
+            $status = false;
+            foreach ($request->array as $key => $valueReqArr) {
+               if (
+                  $value["id_specialist"] === $valueReqArr["id_specialist"] 
+                     && 
+                  $value["id_clinic"] === $valueReqArr["id_clinic"]
+                     &&
+                  $value["priem"] === $valueReqArr["priem"]
+               ) {
+                  $status = true;
+               };
+            }
+
+            if (!$status) {
+               $value->delete();
+            };
+         };
+         
+         return response()->json([
+            "status" => true,
+            "message" => "Данные о клиниках сохранились.",
          ]);
       } else {
          return response()->json([
