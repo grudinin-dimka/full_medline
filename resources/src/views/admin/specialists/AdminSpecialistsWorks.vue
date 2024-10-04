@@ -1,4 +1,5 @@
 <template>
+	<!-- TODO Перенести в профиль врача весь компонент -->
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                  МОДАЛЬНОЕ ОКНО                   |-->
 	<!--|___________________________________________________|-->
@@ -63,7 +64,7 @@
 				</template>
 			</ContainerTextareaOnce>
 			<!-- Начало и конец -->
-			<container-input-two :fieldset="true">
+			<container-input-two :fieldset="true" :type="modal.type == 'create' ? 'create' : 'default'">
 				<template #legend>
 					<span :class="{ create: modal.type == 'create' }">НАЧАЛО И ОКОНЧАНИЕ РАБОТЫ</span>
 				</template>

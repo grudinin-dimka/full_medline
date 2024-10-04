@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -61,6 +60,8 @@ class AdminController extends Controller
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                    ГЛАВНАЯ                        |*/
    /* |___________________________________________________|*/
+   /* FIXME Добавить проверок при помощи валидатора на количество символов */
+   /* FIXME Сделать доп проверки на существование специалиста */
    /* _____________________________________________________*/
    /* 1. Слайдер                                           */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
@@ -171,6 +172,8 @@ class AdminController extends Controller
    /* _____________________________________________________*/
    /* 1. Врачи                                             */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+   /* FIXME Добавить проверок при помощи валидатора на количество символов */
+   /* FIXME Сделать доп проверки на существование специалиста */
    /* Сохранение специалистов */ 
    public function saveSpecialistsChanges(Request $request) {
       // Удаление помеченных
@@ -191,24 +194,48 @@ class AdminController extends Controller
          };
       };      
    }
+   /* FIXME Добавить проверок при помощи валидатора на количество символов */
    /* Сохранение специализаций специалиста */ 
    public function saveSpecialistSpecializationsChanges(Request $request) {
-      $specializations = SpecialistSpecialization::where('id_specialist', $request->idSpecialist)->get();
+      // Проверка на существование
+      if(Specialist::find($request->id)) {         
+         // Поиск или добавление 
+         foreach ($request->array as $key => $value) {
+            SpecialistSpecialization::firstOrCreate([
+               'id_specialist' => $value["id_specialist"],
+               'id_specialization' => $value["id_specialization"], 
+            ]);
+         };
 
-      foreach($request->specialistSpecializations as $specialistSpecializationsKey => $specialistSpecializationsValue) {
-         SpecialistSpecialization::findOrCreate([
-            'id_specialist' => $request->idSpecialist,
-            'id_specialization' => $specialistSpecializationsValue->id_specialization
-         ]);
+         // Удаление ненужных записей
+         $specialistSpecializations = SpecialistSpecialization::where('id_specialist', $request->id)->get();
+         foreach ($specialistSpecializations as $key => $value) {
+            // Поиск в массиве
+            $status = false;
+            foreach ($request->array as $key => $valueReqArr) {
+               if (
+                  $value["id_specialist"] === $valueReqArr["id_specialist"] 
+                     && 
+                  $value["id_specialization"] === $valueReqArr["id_specialization"]
+               ) {
+                  $status = true;
+               };
+            }
 
-         // $status = false;
+            if (!$status) {
+               $value->delete();
+            };
+         };
          
-         // /* Проверка на совпадение */
-         // foreach($specializations as $specializationKey => $specializationValue) {
-         //    if ($specialistSpecializationsValue->id_specialization == $specializationValue->id_specialization) {
-         //       $status = true;
-         //    }
-         // }
+         return response()->json([
+            "status" => true,
+            "message" => "Данные сохранились.",
+         ]);
+      } else {
+         return response()->json([
+            "status" => false,
+            "message" => "Специалист не найден.",
+         ]);
       }
    }
 

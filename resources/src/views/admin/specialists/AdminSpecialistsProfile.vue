@@ -120,10 +120,10 @@
 			</block-buttons>
 		</template>
 	</admin-modal>
-
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                   СПЕЦИАЛИСТ                      |-->
 	<!--|___________________________________________________|-->
+	<!-- HACK Проработать детальнее адаптивный дизайн -->
 	<info-bar>
 		<template v-slot:title>Специалисты</template>
 		<template v-slot:addreas>specialists/{{ $route.params.id }}</template>
@@ -355,7 +355,6 @@
 					</template>
 				</container-input-two>
 				<!-- Статус приёма -->
-				<!-- FIXME надо везде вообще добавить параметр :type="'create'" -->
 				<container-input-two :fieldset="true" :type="'create'">
 					<template #legend>
 						<span :class="{ create: $route.params.id === 'new' }">ПРИЁМ ВРАЧА</span>
@@ -421,7 +420,6 @@
 					Специализации ({{ specialist.connections.specializations.length }})
 				</template>
 				<template #buttons>
-					<!-- TODO: Сделать сохранение данных специализаций -->
 					<icon-save
 						:width="28"
 						:height="28"
@@ -442,6 +440,7 @@
 					<div class="item">
 						<div>Название</div>
 					</div>
+					<!-- HACK Сделать сортировку по алфавиту -->
 					<div
 						class="item"
 						v-for="specialization in specialist.connections.specializations"
@@ -998,6 +997,7 @@ export default {
 				this.sections.specializations.length / this.paginationSpecializations.elements.range
 			);
 		},
+		/* HACK Сделать сортировку по алфавиту */
 		getSortedSpecializations() {
 			return [...this.sections.specializations].splice(
 				(this.paginationSpecializations.pages.current - 1) *
@@ -1011,6 +1011,7 @@ export default {
 		getPagesClinicsTotal() {
 			return Math.ceil(this.sections.clinics.length / this.paginationClinics.elements.range);
 		},
+		/* HACK Сделать сортировку по алфавиту */
 		getSortedClinics() {
 			return [...this.sections.clinics].splice(
 				(this.paginationClinics.pages.current - 1) * this.paginationClinics.elements.range,
@@ -1333,7 +1334,6 @@ export default {
 						});
 					});
 				}
-
 				this.closeModal("modalSpecializations");
 			} catch (error) {
 				let debbugStory = {
@@ -1347,6 +1347,9 @@ export default {
 		/* Сохранение изменений */
 		saveSpecializationsChanges() {
 			try {
+				// Проверка на статус добавления специалиста
+				if (this.specialist.profile.data.id.body === "new") return;
+
 				let newArray = [];
 
 				// Заполнение нового массива
@@ -1373,19 +1376,26 @@ export default {
 						Authorization: `Bearer ${localStorage.getItem("token")}`,
 					},
 					data: {
-						idSpecialist: this.specialist.profile.id.body,
-						specialistSpecializations: newArray,
+						id: this.specialist.profile.data.id.body,
+						array: newArray,
 					},
 				})
 					.then((response) => {
-						console.log(response.data);
-
-						let debbugStory = {
-							title: "Успешно!",
-							body: "Данные сохранились.",
-							type: "Completed",
-						};
-						this.$store.commit("debuggerState", debbugStory);
+						if (response.data.status) {
+							let debbugStory = {
+								title: "Успешно!",
+								body: response.data.message,
+								type: "Completed",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+						} else {
+							let debbugStory = {
+								title: "Ошибка.",
+								body: response.data.message,
+								type: "Error",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+						}
 					})
 					.catch((error) => {
 						let debbugStory = {
@@ -1496,7 +1506,8 @@ export default {
 		},
 	},
 	mounted() {
-		if (this.$route.params.id !== "new") {
+		// FIXME Сделать проверку на неизвестные id
+		if (this.$route.params.id !== "new" && !Number.isNaN(Number(this.$route.params.id))) {
 			axios({
 				method: "post",
 				headers: {
@@ -1540,7 +1551,6 @@ export default {
 					}
 				});
 		} else if (this.$route.params.id == "new") {
-			/* FIXME надо сделать запрос на сервак для получения специализаций, клиник и т.д. */
 			// Сброс данных всей полей профиля
 			for (let key in this.specialist.profile.data) {
 				switch (key) {
