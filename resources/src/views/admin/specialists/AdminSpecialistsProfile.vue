@@ -438,7 +438,10 @@
 		<template #title-one>
 			<block-title>
 				<template #title>
-					Специализации ({{ specialist.connections.specializations.length }})
+					Специализации
+					<span v-show="loading.sections.specializations">
+						({{ specialist.connections.specializations.length }})
+					</span>
 				</template>
 				<template #buttons>
 					<icon-save
@@ -503,7 +506,12 @@
 		<!-- Клиники -->
 		<template #title-two>
 			<block-title>
-				<template #title> Клиники ({{ specialist.connections.clinics.length }}) </template>
+				<template #title>
+					Клиники
+					<span v-show="loading.sections.specializations">
+						({{ specialist.connections.clinics.length }})
+					</span>
+				</template>
 				<template #buttons>
 					<!-- TODO: Сделать сохранение данных клиник -->
 					<icon-save
@@ -574,7 +582,7 @@
 
 		<admin-specialists-table
 			v-show="loading.sections.certificates"
-			:array="specialist.connections.certificates"
+			:array="getSpecialistCertificates"
 		/>
 
 		<!-- Загрузчик профиля -->
@@ -998,6 +1006,12 @@ export default {
 				this.paginationClinics.elements.range
 			);
 		},
+		/* _____________________________________________________*/
+		/* 3. Сертификаты                                       */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		getSpecialistCertificates() {
+			return [...this.sections.certificates];
+		},
 	},
 	watch: {
 		// "pagination.pages.current"(newValue, oldValue) {
@@ -1259,8 +1273,19 @@ export default {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                       ВРАЧ                        |*/
 		/* |___________________________________________________|*/
+		// STOP делаю сортировку массива по тем сертификатам, которые есть у специаилста
+		saveSpecialistChanges() {
+			let arr = [...this.sections.certificates];
+			arr.filter((item) => {
+				this.specialist.connections.certificates.forEach((cert) => {
+					if (cert.id_certificate == item.id) {
+						return item;
+					}
+				});
+			});
 
-		saveSpecialistChanges() {},
+			// console.log(arr);
+		},
 		/* _____________________________________________________*/
 		/* 1. Специализации                                     */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
