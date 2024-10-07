@@ -21,9 +21,10 @@ use App\Models\Specialization;
 use App\Models\SpecialistSpecialization;
 use App\Models\Clinic;
 use App\Models\SpecialistClinic;
+use App\Models\Certificate;
+use App\Models\SpecialistCertificate;
 use App\Models\Education;
 use App\Models\Work;
-use App\Models\Certificate;
 
 class AdminController extends Controller
 {
@@ -318,12 +319,55 @@ class AdminController extends Controller
       }
    }
    public function saveSpecialistCertificatesChanges(Request $request) {
+      // if ($value["delete"] !== true && $value['create'] !== true){
+      //    $clinic = Clinic::find($value['id']);
+      //    $clinicUpdate = $clinic->update([
+      //       "name" => $value['name'],
+      //       "organization" => $value['organization'],
+      //       "endEducation" => $value['endEducation'],
+      //    ]);     
+      // }         
+
+
+
       // Проверка на существование
       if(Specialist::find($request->id)) {         
-         
+         $arrayID = [];
+
+         // Удаление помеченных
+         foreach ($request->array as $key => $value) {
+            if ($value["delete"] === true){
+               $certificate = Certificate::find($value['id']);
+               $certificate->delete();
+            }         
+
+            if ($value['create'] === true) {
+               $certificateCreate = Certificate::create([
+                  "name" => $value['name'],
+                  "organization" => $value['organization'],
+                  "endEducation" => $value['endEducation'],
+               ]);
+
+               if($certificateCreate) {
+                  SpecialistCertificate::create([
+                     'id_specialist' => $request->id,
+                     'id_certificate' => $certificateCreate->id,
+                  ]);   
+               }
+   
+               $arrayID[] = (object) [
+                  // Прошлый id
+                  'old' => $value['id'], 
+                  // Новый id
+                  'new' => $certificateCreate->id
+               ];            
+            };  
+         }
+
          return response()->json([
             "status" => true,
             "message" => "Данные о сертификатах сохранились.",
+            "data" => $arrayID,
          ]);
       } else {
          return response()->json([
@@ -337,17 +381,16 @@ class AdminController extends Controller
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
    /* Сохранение изменений специализаций */
    public function saveSpecializationsChanges(Request $request) {
+      $arrayID = [];
+      
       // Удаление помеченных
       foreach ($request->specializations as $key => $value) {
          if ($value["delete"] === true){
             $specialization = Specialization::find($value['id']);
             $specialization->delete();
-         }         
-      }
+            continue;
+         };       
 
-      $arrayID = [];
-      // Добавление новых
-      foreach ($request->specializations as $key => $value) {
          if ($value['create'] === true) {
             $specializationCreate = Specialization::create([
                "name" => $value['name'],
@@ -360,17 +403,14 @@ class AdminController extends Controller
                // Новый id
                'new' => $specializationCreate->id
             ];            
+            continue;
          };       
-      }
 
-      // Обновление данных 
-      foreach ($request->specializations as $key => $value) {
-         if ($value["delete"] !== true && $value['create'] !== true){
-            $specialization = Specialization::find($value['id']);
-            $specializationUpdate = $specialization->update([
-               'name' => $value['name'],
-            ]);     
-         }         
+         /* Обновление данных */
+         $specialization = Specialization::find($value['id']);
+         $specializationUpdate = $specialization->update([
+            'name' => $value['name'],
+         ]);     
       }
       
       return $arrayID;
@@ -380,17 +420,17 @@ class AdminController extends Controller
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
    /* Сохранение изменений клиник */
    public function saveClinicsChanges(Request $request) {
-      // Удаление помеченных
+      $arrayID = [];
+
       foreach ($request->clinics as $key => $value) {
+         // Удаление
          if ($value["delete"] === true){
             $clinic = Clinic::find($value['id']);
             $clinic->delete();
+            continue;
          }         
-      }
 
-      $arrayID = [];
-      // Добавление новых
-      foreach ($request->clinics as $key => $value) {
+         // Создание
          if ($value["create"] === true) {
             $clinicToCreate = Clinic::create([
                "name" => $value['name'],
@@ -409,23 +449,20 @@ class AdminController extends Controller
                // Новый id
                'new' => $clinicToCreate->id
             ];            
+            continue;
          };       
-      }
 
-      // Обновление данных 
-      foreach ($request->clinics as $key => $value) {
-         if ($value["delete"] !== true && $value['create'] !== true){
-            $clinic = Clinic::find($value['id']);
-            $clinicUpdate = $clinic->update([
-               "name" => $value['name'],
-               "city" => $value['city'],
-               "street" => $value['street'],
-               "home" => $value['home'],
-               "index" => $value['index'],
-               "geoWidth" => $value['geoWidth'],
-               "geoLongitude" => $value['geoLongitude'],
-            ]);     
-         }         
+         // Обновление данных
+         $clinic = Clinic::find($value['id']);
+         $clinicUpdate = $clinic->update([
+            "name" => $value['name'],
+            "city" => $value['city'],
+            "street" => $value['street'],
+            "home" => $value['home'],
+            "index" => $value['index'],
+            "geoWidth" => $value['geoWidth'],
+            "geoLongitude" => $value['geoLongitude'],
+         ]);     
       }
 
       return $arrayID;
@@ -435,17 +472,17 @@ class AdminController extends Controller
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
    /* Сохранение изменений образований */
    public function saveEducationsChanges(Request $request) {
-      // Удаление помеченных
+      $arrayID = [];
+
       foreach ($request->educations as $key => $value) {
+         // Удаление
          if ($value["delete"] === true){
             $education = Education::find($value['id']);
             $education->delete();
+            continue;
          }         
-      }
 
-      $arrayID = [];
-      // Добавление новых
-      foreach ($request->educations as $key => $value) {
+         // Создание
          if ($value["create"] === true) {
             $educationToCreate = Education::create([
                "name" => $value['name'],
@@ -461,22 +498,19 @@ class AdminController extends Controller
                // Новый id
                'new' => $educationToCreate->id
             ];            
+            continue;
          };       
-      }
 
-      // Обновление данных 
-      foreach ($request->educations as $key => $value) {
-         if ($value["delete"] !== true && $value['create'] !== true){
-            $education = Education::find($value['id']);
-            $educationUpdate = $education->update([
-               "name" => $value['name'],
-               "organization" => $value['organization'],
-               "date" => $value['date'],
-               "id_specialization" => $value['id_specialization'],
-            ]);     
-         }         
+         // Обновление
+         $education = Education::find($value['id']);
+         $educationUpdate = $education->update([
+            "name" => $value['name'],
+            "organization" => $value['organization'],
+            "date" => $value['date'],
+            "id_specialization" => $value['id_specialization'],
+         ]);     
       }
-
+      
       return $arrayID;      
    }
    /* _____________________________________________________*/
@@ -484,17 +518,17 @@ class AdminController extends Controller
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
    /* Сохранение изменений работ */
    public function saveWorkChanges(Request $request) {
-      // Удаление помеченных
+      $arrayID = [];
+
       foreach ($request->works as $key => $value) {
+         // Удаление
          if ($value["delete"] === true){
             $work = Work::find($value['id']);
             $work->delete();
+            continue;
          }         
-      }
 
-      $arrayID = [];
-      // Добавление новых
-      foreach ($request->works as $key => $value) {
+         // Создание
          if ($value["create"] === true) {
             $workToCreate = Work::create([
                "startWork" => $value['startWork'],
@@ -509,21 +543,18 @@ class AdminController extends Controller
                'old' => $value['id'], 
                // Новый id
                'new' => $workToCreate->id
-            ];            
+            ];       
+            continue;     
          };       
-      }
 
-      // Обновление данных 
-      foreach ($request->works as $key => $value) {
-         if ($value["delete"] !== true && $value['create'] !== true){
-            $work = Work::find($value['id']);
-            $workUpdate = $work->update([
-               "startWork" => $value['startWork'],
-               "endWork" => $value['endWork'],
-               "organization" => $value['organization'],
-               "name" => $value['name'],
-            ]);     
-         }         
+         // Обновление
+         $work = Work::find($value['id']);
+         $workUpdate = $work->update([
+            "startWork" => $value['startWork'],
+            "endWork" => $value['endWork'],
+            "organization" => $value['organization'],
+            "name" => $value['name'],
+         ]);     
       }
       
       return $arrayID;      
@@ -533,17 +564,17 @@ class AdminController extends Controller
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
    /* Сохранение изменений сертификатов */
    public function saveCertificatesChanges(Request $request) {
-      // Удаление помеченных
+      $arrayID = [];
+
       foreach ($request->certificates as $key => $value) {
+         // Удаление
          if ($value["delete"] === true){
             $certificate = Certificate::find($value['id']);
             $certificate->delete();
+            continue;
          }         
-      }
 
-      $arrayID = [];
-      // Добавление новых
-      foreach ($request->certificates as $key => $value) {
+         // Создание
          if ($value["create"] === true) {
             $certificateToCreate = Certificate::create([
                "organization" => $value['organization'],
@@ -557,20 +588,17 @@ class AdminController extends Controller
                'old' => $value['id'], 
                // Новый id
                'new' => $certificateToCreate->id
-            ];            
-         };       
-      }
-
-      // Обновление данных 
-      foreach ($request->certificates as $key => $value) {
-         if ($value["delete"] !== true && $value['create'] !== true){
-            $certificate = Certificate::find($value['id']);
-            $certificateUpdate = $certificate->update([
-               "organization" => $value['organization'],
-               "endEducation" => $value['endEducation'],
-               "name" => $value['name'],
-            ]);     
-         }         
+            ];    
+            continue;        
+         };
+         
+         // Обновление
+         $certificate = Certificate::find($value['id']);
+         $certificateUpdate = $certificate->update([
+            "organization" => $value['organization'],
+            "endEducation" => $value['endEducation'],
+            "name" => $value['name'],
+         ]);     
       }
 
       return $arrayID;      
