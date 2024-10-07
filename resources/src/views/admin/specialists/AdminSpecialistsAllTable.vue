@@ -1,5 +1,5 @@
 <template>
-	<!-- TODO Сделать изменение кнопки "удалить", а также "изменить" в зависимости от статуса удаления -->
+	<!-- TODO Сделать изменение кнопки "изменить" -->
 	<table>
 		<thead>
 			<tr>
@@ -161,12 +161,24 @@
 							@click="
 								$router.push({ name: 'especialist-profile', params: { id: specialist.id } })
 							"
+							v-if="!specialist.delete"
 						>
-							Профиль
+							Открыть
 						</table-button-default>
-						<table-button-remove @click="$emit('touchRemoveSpecialist', specialist.id)">
+						<TableButtonDisabled v-if="specialist.delete"> Открыть </TableButtonDisabled>
+
+						<table-button-remove
+							@click="$emit('touchRemoveSpecialist', specialist.id)"
+							v-if="!specialist.delete"
+						>
 							Удалить
 						</table-button-remove>
+						<table-button-default
+							@click="$emit('touchRemoveSpecialist', specialist.id)"
+							v-if="specialist.delete"
+						>
+							Восстановить
+						</table-button-default>
 					</table-container-buttons>
 				</td>
 			</tr>
@@ -318,6 +330,10 @@ th:nth-of-type(2) {
 
 th:nth-of-type(3) {
 	min-width: 150px;
+}
+
+th:nth-of-type(4) {
+	min-width: 70px;
 }
 
 th:last-child {

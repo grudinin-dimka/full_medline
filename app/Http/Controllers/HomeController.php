@@ -131,23 +131,56 @@ class HomeController extends Controller
       $specialist = Specialist::where('id', $request->id)->first();
       $specialist->path = Storage::url('specialists/' . $specialist->filename);
 
+      // Получение данных о специализациях
+      $specialistCertificates = SpecialistCertificate::where('id_specialist', $request->id)->get();
+      $certificates = Certificate::all();
+      $includeSpecialistCertificates = [];
+      foreach ($specialistCertificates as $key => $valueSpecialistCertificates) {
+         foreach ($certificates as $key => $valueCertificate) {
+            if ($valueSpecialistCertificates->id_certificate == $valueCertificate->id) {
+               $includeSpecialistCertificates[] = $valueCertificate;
+            }
+         }
+      };
+
+      // Получение данных о обучениях
+      $specialistEducations = SpecialistEducation::where('id_specialist', $request->id)->get();
+      $educations = Education::all();
+      $includeSpecialistEducations = [];
+      foreach ($specialistEducations as $key => $valueSpecialistEducations) {
+         foreach ($educations as $key => $valueEducations) {
+            if ($valueSpecialistEducations->id_education == $valueEducations->id) {
+               $includeSpecialistEducations[] = $valueEducations;
+            }
+         }
+      };
+
+      // Получение данных о прошлых работах
+      $specialistWorks = SpecialistWork::where('id_specialist', $request->id)->get();
+      $works = Work::all();
+      $includeSpecialistWorks = [];
+      foreach ($specialistWorks as $key => $valueSpecialistWorks) {
+         foreach ($works as $key => $valueWorks) {
+            if ($valueSpecialistWorks->id_work == $valueWorks->id) {
+               $includeSpecialistWorks[] = $valueWorks;
+            }
+         }
+      }
+
       return response()->json([
          "specialist" => (object) [
             "profile" => $specialist,
             "connections" => (object) [
                "specializations" => SpecialistSpecialization::where('id_specialist', $request->id)->get(),
-               "certificates" => SpecialistCertificate::where('id_specialist', $request->id)->get(),
                "clinics" => SpecialistClinic::where('id_specialist', $request->id)->get(),
-               "educations" => SpecialistEducation::where('id_specialist', $request->id)->get(),
-               "works" => SpecialistWork::where('id_specialist', $request->id)->get(),                  
+               "certificates" => $includeSpecialistCertificates,
+               "educations" => $includeSpecialistEducations,
+               "works" => $includeSpecialistWorks,                  
             ],
          ],
          "sections" => (object) [
             "specializations" => Specialization::all(),
-            "certificates" => Certificate::all(),
             "clinics" => Clinic::all(),
-            "educations" => Education::all(),
-            "works" => Work::all(),
          ],
       ]);
    }  

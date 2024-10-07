@@ -2,7 +2,9 @@
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                  МОДАЛЬНОЕ ОКНО                   |-->
 	<!--|___________________________________________________|-->
-	<!-- Специализации -->
+	<!--____________________________________________________-->
+	<!--1. Специализации                                    -->
+	<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
 	<admin-modal @touchCloseModal="closeModal('modalSpecializations')" :modal="modalSpecializations">
 		<template #title>
 			<span class="create" v-if="modalSpecializations.type == 'create'">
@@ -63,7 +65,9 @@
 			</block-buttons>
 		</template>
 	</admin-modal>
-	<!-- Клиники -->
+	<!--____________________________________________________-->
+	<!--2. Клиники                                          -->
+	<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
 	<admin-modal @touchCloseModal="closeModal('modalClinics')" :modal="modalClinics">
 		<template #title>
 			<span class="create" v-if="modalClinics.type == 'create'"> СПЕЦИАЛИЗАЦИЯ (СОЗДАНИЕ) </span>
@@ -120,9 +124,96 @@
 			</block-buttons>
 		</template>
 	</admin-modal>
+	<!--____________________________________________________-->
+	<!--3. Сертификаты                                      -->
+	<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
+	<admin-modal @touchCloseModal="closeModal('modalCertificates')" :modal="modalCertificates">
+		<template #title>
+			<span class="create" v-if="modalCertificates.type == 'create'">
+				СЕРТИФИКАТ (СОЗДАНИЕ)
+			</span>
+			<span v-if="modalCertificates.type == 'edit'">СЕРТИФИКАТ</span>
+		</template>
+		<template #body>
+			<container-input-once>
+				<template #title>
+					<span :class="{ create: modalCertificates.type == 'create' }">НАЗВАНИЕ*</span>
+					<span :class="{ create: modalCertificates.type == 'create' }" v-if="false">
+						(ИЗМЕНЕНО)
+					</span>
+				</template>
+				<template #input>
+					<input
+						type="text"
+						placeholder="Название должности"
+						:class="{ error: false }"
+						v-model="currentCertificate.data.name.body"
+					/>
+				</template>
+				<template #error>
+					<span class="error" v-if="false"> Ошибка </span>
+				</template>
+			</container-input-once>
+			<!-- Организация -->
+			<container-input-once>
+				<template #title>
+					<span :class="{ create: modalCertificates.type == 'create' }">ОРГАНИЗАЦИЯ*</span>
+					<span :class="{ create: modalCertificates.type == 'create' }" v-if="false">
+						(ИЗМЕНЕНО)
+					</span>
+				</template>
+				<template #input>
+					<input
+						type="text"
+						placeholder="Название организации"
+						:class="{ error: false }"
+						v-model="currentCertificate.data.organization.body"
+					/>
+				</template>
+				<template #error>
+					<span class="error" v-if="false"> Ошибка </span>
+				</template>
+			</container-input-once>
+			<!-- Дата окончания обучения -->
+			<container-input-once>
+				<template #title>
+					<span :class="{ create: modalCertificates.type == 'create' }"
+						>ОКОНЧАНИЕ ОБУЧЕНИЯ*</span
+					>
+					<span :class="{ create: modalCertificates.type == 'create' }" v-if="false">
+						(ИЗМЕНЕНО)
+					</span>
+				</template>
+				<template #input>
+					<input
+						type="date"
+						placeholder="Введите дату"
+						:class="{ error: false }"
+						v-model="currentCertificate.data.endEducation.body"
+					/>
+				</template>
+				<template #error>
+					<span class="error" v-if="false"> Ошибка </span>
+				</template>
+			</container-input-once>
+		</template>
+		<template #footer>
+			<block-buttons>
+				<button-claim @click="" v-if="modalCertificates.type == 'create'">
+					Создать
+				</button-claim>
+				<button-default @click="updateClinics" v-if="modalCertificates.type == 'edit'">
+					Обновить
+				</button-default>
+			</block-buttons>
+		</template>
+	</admin-modal>
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                   СПЕЦИАЛИСТ                      |-->
 	<!--|___________________________________________________|-->
+	<!--____________________________________________________-->
+	<!--1. Профиль                                          -->
+	<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
 	<!-- HACK Проработать детальнее адаптивный дизайн -->
 	<info-bar>
 		<template v-slot:title>Специалисты</template>
@@ -149,7 +240,7 @@
 					@click="saveProfileChanges"
 					v-if="$route.params.id !== 'new'"
 				/>
-				<icon-add :width="28" :height="28" @click="console.log('create')" v-else></icon-add>
+				<icon-add :width="28" :height="28" @click="$router.push('1')" v-else></icon-add>
 			</template>
 		</block-title>
 
@@ -433,8 +524,10 @@
 		/>
 	</block-once>
 
-	<block-two>
-		<!-- Специализации -->
+	<block-two v-if="$route.params.id !== 'new'">
+		<!--____________________________________________________-->
+		<!--2. Специализации                                    -->
+		<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
 		<template #title-one>
 			<block-title>
 				<template #title>
@@ -503,7 +596,9 @@
 				<button-claim @click="editSpecialization" v-else> Добавить </button-claim>
 			</block-buttons>
 		</template>
-		<!-- Клиники -->
+		<!--____________________________________________________-->
+		<!--3. Клиники                                          -->
+		<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
 		<template #title-two>
 			<block-title>
 				<template #title>
@@ -513,13 +608,7 @@
 					</span>
 				</template>
 				<template #buttons>
-					<!-- TODO: Сделать сохранение данных клиник -->
-					<icon-save
-						:width="28"
-						:height="28"
-						@click="saveClinicsChanges"
-						v-if="$route.params.id !== 'new'"
-					/>
+					<icon-save :width="28" :height="28" @click="saveClinicsChanges" />
 				</template>
 			</block-title>
 		</template>
@@ -561,28 +650,26 @@
 				<button-default @click="editClinics" v-if="$route.params.id !== 'new'">
 					Добавить
 				</button-default>
-				<button-claim @click="editClinics" v-else> Добавить </button-claim>
 			</block-buttons>
 		</template>
 	</block-two>
 
-	<!-- Сертификаты -->
-	<block-once>
+	<!--____________________________________________________-->
+	<!--4. Сертификаты                                      -->
+	<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
+	<block-once v-if="$route.params.id !== 'new'">
 		<block-title>
 			<template #title> Сертификаты </template>
 			<template #buttons>
-				<icon-save
-					:width="28"
-					:height="28"
-					@click="console.log('save')"
-					v-if="$route.params.id !== 'new'"
-				/>
+				<icon-save :width="28" :height="28" @click="console.log('save')" />
 			</template>
 		</block-title>
 
 		<admin-specialists-table
 			v-show="loading.sections.certificates"
 			:array="getSpecialistCertificates"
+			@touchEditArrValue="editArrayValue('certificates', $event)"
+			@touchRemoveArrValue="updateDeleteValue('certificates', $event)"
 		/>
 
 		<!-- Загрузчик профиля -->
@@ -593,28 +680,25 @@
 		/>
 
 		<block-buttons>
-			<button-default @click="" v-if="$route.params.id !== 'new'"> Добавить </button-default>
-			<button-claim @click="" v-else> Добавить </button-claim>
+			<button-default @click=""> Добавить </button-default>
 		</block-buttons>
 	</block-once>
 
-	<!-- Образование -->
-	<block-once>
+	<!--____________________________________________________-->
+	<!--5. Образование                                      -->
+	<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
+	<block-once v-if="$route.params.id !== 'new'">
 		<block-title>
 			<template #title> Образование </template>
 			<template #buttons>
-				<icon-save
-					:width="28"
-					:height="28"
-					@click="console.log('save')"
-					v-if="$route.params.id !== 'new'"
-				/>
+				<icon-save :width="28" :height="28" @click="console.log('save')" />
 			</template>
 		</block-title>
 
 		<admin-specialists-table
 			v-show="loading.sections.educations"
-			:array="specialist.connections.educations"
+			:array="getSpecialistEducations"
+			@touchRemoveArrValue="updateDeleteValue('educations', $event)"
 		/>
 
 		<!-- Загрузчик профиля -->
@@ -625,13 +709,14 @@
 		/>
 
 		<block-buttons>
-			<button-default @click="" v-if="$route.params.id !== 'new'"> Добавить </button-default>
-			<button-claim @click="" v-else> Добавить </button-claim>
+			<button-default @click=""> Добавить </button-default>
 		</block-buttons>
 	</block-once>
 
-	<!-- Места работы -->
-	<block-once>
+	<!--____________________________________________________-->
+	<!--6. Места работы                                     -->
+	<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
+	<block-once v-if="$route.params.id !== 'new'">
 		<block-title>
 			<template #title> Места работы </template>
 			<template #buttons>
@@ -646,7 +731,8 @@
 
 		<admin-specialists-table
 			v-show="loading.sections.works"
-			:array="specialist.connections.works"
+			:array="getSpecialistWorks"
+			@touchRemoveArrValue="updateDeleteValue('works', $event)"
 		/>
 
 		<!-- Загрузчик профиля -->
@@ -657,8 +743,7 @@
 		/>
 
 		<block-buttons>
-			<button-default @click="" v-if="$route.params.id !== 'new'"> Добавить </button-default>
-			<button-claim @click="" v-else> Добавить </button-claim>
+			<button-default> Добавить </button-default>
 		</block-buttons>
 	</block-once>
 </template>
@@ -773,6 +858,71 @@ export default {
 					images: false,
 					body: true,
 					footer: true,
+				},
+			},
+			modalCertificates: {
+				title: "",
+				status: false,
+				type: null,
+				style: {
+					create: false,
+					delete: false,
+				},
+				modules: {
+					title: true,
+					buttons: {
+						hide: false,
+						close: true,
+					},
+					images: false,
+					body: true,
+					footer: true,
+				},
+			},
+			currentCertificate: {
+				errors: {
+					id: {
+						body: "",
+						status: false,
+					},
+					organization: {
+						body: "",
+						status: false,
+					},
+					endEducation: {
+						body: "",
+						status: false,
+					},
+					name: {
+						body: "",
+						status: false,
+					},
+				},
+				data: {
+					id: {
+						body: "",
+						edited: false,
+					},
+					organization: {
+						body: "",
+						edited: false,
+					},
+					endEducation: {
+						body: "",
+						edited: false,
+					},
+					name: {
+						body: "",
+						edited: false,
+					},
+					create: {
+						body: false,
+						edited: false,
+					},
+					delete: {
+						body: false,
+						edited: false,
+					},
 				},
 			},
 			/* Загрузчик */
@@ -958,11 +1108,8 @@ export default {
 			},
 			/* Секции */
 			sections: {
-				certificates: [],
 				specializations: [],
 				clinics: [],
-				educations: [],
-				works: [],
 			},
 			/* Чекбоксовые массивы */
 			cheked: {
@@ -1010,13 +1157,20 @@ export default {
 		/* 3. Сертификаты                                       */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		getSpecialistCertificates() {
-			return [...this.sections.certificates];
+			return [...this.specialist.connections.certificates];
 		},
-	},
-	watch: {
-		// "pagination.pages.current"(newValue, oldValue) {
-		// 	console.log(newValue, oldValue);
-		// },
+		/* _____________________________________________________*/
+		/* 4. Обучения                                          */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		getSpecialistEducations() {
+			return [...this.specialist.connections.educations];
+		},
+		/* _____________________________________________________*/
+		/* 5. Прошлые работы                                    */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		getSpecialistWorks() {
+			return [...this.specialist.connections.works];
+		},
 	},
 	methods: {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -1273,7 +1427,6 @@ export default {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                       ВРАЧ                        |*/
 		/* |___________________________________________________|*/
-		// STOP делаю сортировку массива по тем сертификатам, которые есть у специаилста
 		saveSpecialistChanges() {
 			let arr = [...this.sections.certificates];
 			arr.filter((item) => {
@@ -1617,16 +1770,54 @@ export default {
 		/* ?. Общие методы                                      */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Метод удаления значения из массива */
-		removeArrValue(array, value) {
-			this.specialist.connections[array] = this.specialist.connections[array].filter((item) => {
-				if (item.id !== value.id) {
+		removeArrValue(arrayName, value) {
+			this.specialist.connections[arrayName] = this.specialist.connections[arrayName].filter(
+				(item) => {
+					if (item.id !== value.id) {
+						return item;
+					}
+				}
+			);
+		},
+		/* Метод пометки статуса на удаление */
+		updateDeleteValue(arrayName, value) {
+			let filterValue = this.specialist.connections[arrayName].filter((item) => {
+				if (item.id == value) {
 					return item;
 				}
 			});
+
+			filterValue[0].delete = !filterValue[0].delete;
+		},
+		/* Метод открытия модального окна для обновления значений */
+		editArrayValue(arrayName, value) {
+			switch (arrayName) {
+				case "certificates":
+					let filterCertificate = this.specialist.connections.certificates.filter(
+						(item) => {
+							if (item.id == value) {
+								return item;
+							}
+						}
+					);
+					
+					for(let key in filterCertificate[0]) {
+						console.log(key, filterCertificate[0][key]);
+					}
+
+					
+					this.openModal("edit", "modalCertificates");
+					break;
+				case "educations":
+					this.openModal("edit", "modalEducations");
+					break;
+				case "works":
+					this.openModal("edit", "modalWorks");
+					break;
+			}
 		},
 	},
 	mounted() {
-		// FIXME Сделать проверку на неизвестные id
 		if (this.$route.params.id !== "new" && !Number.isNaN(Number(this.$route.params.id))) {
 			axios({
 				method: "post",
@@ -1660,6 +1851,20 @@ export default {
 								item.priem = itemOther.priem;
 							}
 						});
+					});
+
+					// Добавление полей delete, create
+					this.specialist.connections.certificates.forEach((item) => {
+						item.create = false;
+						item.delete = false;
+					});
+					this.specialist.connections.educations.forEach((item) => {
+						item.create = false;
+						item.delete = false;
+					});
+					this.specialist.connections.works.forEach((item) => {
+						item.create = false;
+						item.delete = false;
 					});
 				})
 				.catch((error) => {

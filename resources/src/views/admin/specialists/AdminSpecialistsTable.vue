@@ -80,9 +80,9 @@
 							@click="$emit('touchEditArrValue', value)"
 							v-if="!value.delete"
 						>
-							Изменить
+							Открыть
 						</table-button-default>
-						<TableButtonDisabled v-else> Изменить </TableButtonDisabled>
+						<TableButtonDisabled v-else> Открыть </TableButtonDisabled>
 						<table-button-remove
 							v-if="!value.delete && !value.create"
 							@click="$emit('touchRemoveArrValue', value.id)"
@@ -94,7 +94,7 @@
 							v-if="value.delete"
 							@click="$emit('touchRemoveArrValue', value.id)"
 						>
-							Вернуть
+							Восстановить
 						</table-button-default>
 					</table-container-buttons>
 				</td>
