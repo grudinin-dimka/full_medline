@@ -8,7 +8,7 @@
 			<span v-if="modal.type == 'edit'">СПЕЦИАЛИЗАЦИЯ (РЕДАКТИРОВАНИЕ)</span>
 		</template>
 		<template #body>
-			<ContainerInputOnce>
+			<container-input-once :type="modal.type == 'create' ? 'create' : 'edit'">
 				<template #title>
 					<span :class="{ create: modal.type == 'create' }">НАЗВАНИЕ*</span>
 					<span
@@ -37,7 +37,7 @@
 						{{ this.currentSpecialization.errors.name.body }}
 					</span>
 				</template>
-			</ContainerInputOnce>
+			</container-input-once>
 		</template>
 		<template #footer>
 			<block-buttons>

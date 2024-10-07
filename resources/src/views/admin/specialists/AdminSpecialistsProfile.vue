@@ -132,13 +132,16 @@
 			<span class="create" v-if="modalCertificates.type == 'create'">
 				СЕРТИФИКАТ (СОЗДАНИЕ)
 			</span>
-			<span v-if="modalCertificates.type == 'edit'">СЕРТИФИКАТ</span>
+			<span v-if="modalCertificates.type == 'edit'">СЕРТИФИКАТ (РЕДАКТИРОВАНИЕ)</span>
 		</template>
 		<template #body>
-			<container-input-once>
+			<container-input-once :type="modalCertificates.type == 'create' ? 'create' : 'edit'">
 				<template #title>
 					<span :class="{ create: modalCertificates.type == 'create' }">НАЗВАНИЕ*</span>
-					<span :class="{ create: modalCertificates.type == 'create' }" v-if="false">
+					<span
+						:class="{ create: modalCertificates.type == 'create' }"
+						v-if="currentCertificate.data.name.edited"
+					>
 						(ИЗМЕНЕНО)
 					</span>
 				</template>
@@ -146,19 +149,26 @@
 					<input
 						type="text"
 						placeholder="Название должности"
-						:class="{ error: false }"
+						:class="{ error: currentCertificate.errors.name.status }"
 						v-model="currentCertificate.data.name.body"
+						@input="currentCertificate.data.name.edited = true"
+						@blur="checkModalInput('currentCertificate', 'name', 'text')"
 					/>
 				</template>
 				<template #error>
-					<span class="error" v-if="false"> Ошибка </span>
+					<span class="error" v-if="currentCertificate.errors.name.body">
+						{{ currentCertificate.errors.name.body }}
+					</span>
 				</template>
 			</container-input-once>
 			<!-- Организация -->
-			<container-input-once>
+			<container-input-once :type="modalCertificates.type == 'create' ? 'create' : 'edit'">
 				<template #title>
 					<span :class="{ create: modalCertificates.type == 'create' }">ОРГАНИЗАЦИЯ*</span>
-					<span :class="{ create: modalCertificates.type == 'create' }" v-if="false">
+					<span
+						:class="{ create: modalCertificates.type == 'create' }"
+						v-if="currentCertificate.data.organization.edited"
+					>
 						(ИЗМЕНЕНО)
 					</span>
 				</template>
@@ -166,21 +176,28 @@
 					<input
 						type="text"
 						placeholder="Название организации"
-						:class="{ error: false }"
+						:class="{ error: currentCertificate.errors.organization.status }"
 						v-model="currentCertificate.data.organization.body"
+						@input="currentCertificate.data.organization.edited = true"
+						@blur="checkModalInput('currentCertificate', 'organization', 'text')"
 					/>
 				</template>
 				<template #error>
-					<span class="error" v-if="false"> Ошибка </span>
+					<span class="error" v-if="currentCertificate.errors.organization.body">
+						{{ currentCertificate.errors.organization.body }}
+					</span>
 				</template>
 			</container-input-once>
 			<!-- Дата окончания обучения -->
-			<container-input-once>
+			<container-input-once :type="modalCertificates.type == 'create' ? 'create' : 'edit'">
 				<template #title>
 					<span :class="{ create: modalCertificates.type == 'create' }"
 						>ОКОНЧАНИЕ ОБУЧЕНИЯ*</span
 					>
-					<span :class="{ create: modalCertificates.type == 'create' }" v-if="false">
+					<span
+						:class="{ create: modalCertificates.type == 'create' }"
+						v-if="currentCertificate.data.endEducation.edited"
+					>
 						(ИЗМЕНЕНО)
 					</span>
 				</template>
@@ -188,12 +205,16 @@
 					<input
 						type="date"
 						placeholder="Введите дату"
-						:class="{ error: false }"
+						:class="{ error: currentCertificate.errors.endEducation.status }"
 						v-model="currentCertificate.data.endEducation.body"
+						@blur="checkModalInput('currentCertificate', 'endEducation', 'text')"
+						@input="currentCertificate.data.endEducation.edited = true"
 					/>
 				</template>
 				<template #error>
-					<span class="error" v-if="false"> Ошибка </span>
+					<span class="error" v-if="currentCertificate.errors.endEducation.body">
+						{{ currentCertificate.errors.endEducation.body }}
+					</span>
 				</template>
 			</container-input-once>
 		</template>
@@ -202,7 +223,7 @@
 				<button-claim @click="" v-if="modalCertificates.type == 'create'">
 					Создать
 				</button-claim>
-				<button-default @click="updateClinics" v-if="modalCertificates.type == 'edit'">
+				<button-default @click="updateCertificate" v-if="modalCertificates.type == 'edit'">
 					Обновить
 				</button-default>
 			</block-buttons>
@@ -228,12 +249,7 @@
 				<span v-if="$route.params.id == 'new'" class="create"> (СОЗДАНИЕ)</span>
 			</template>
 			<template #buttons>
-				<icon-save-all
-					:width="28"
-					:height="28"
-					@click="saveSpecialistChanges"
-					v-if="$route.params.id !== 'new'"
-				/>
+				<icon-save-all :width="28" :height="28" @click="" v-if="$route.params.id !== 'new'" />
 				<icon-save
 					:width="28"
 					:height="28"
@@ -668,7 +684,7 @@
 		<admin-specialists-table
 			v-show="loading.sections.certificates"
 			:array="getSpecialistCertificates"
-			@touchEditArrValue="editArrayValue('certificates', $event)"
+			@touchEditArrValue="editArrayValue('edit', 'certificates', $event)"
 			@touchRemoveArrValue="updateDeleteValue('certificates', $event)"
 		/>
 
@@ -680,7 +696,9 @@
 		/>
 
 		<block-buttons>
-			<button-default @click=""> Добавить </button-default>
+			<button-default @click="editArrayValue('create', 'certificates', null)">
+				Добавить
+			</button-default>
 		</block-buttons>
 	</block-once>
 
@@ -1200,22 +1218,31 @@ export default {
 		/* 1. Основные действия                                 */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Открытие */
-		openModal(type, modalName) {
+		openModal(type, modalName, currentName) {
 			switch (type) {
 				case "create":
 					{
+						if (modalName !== "modalSpecializations" && modalName !== "modalClinics") {
+							this.clearModalErrors(currentName);
+							this.clearModalData(currentName);
+						}
+
 						this[modalName].type = "create";
 						this[modalName].status = true;
 						this[modalName].style.create = true;
 						this[modalName].style.delete = false;
-						this.clearModalData();
 					}
 					document.body.classList.add("modal-open");
 					break;
 				case "edit":
 					{
+						if (modalName !== "modalSpecializations" && modalName !== "modalClinics") {
+							this.clearModalErrors(currentName);
+						}
+
 						this[modalName].type = "edit";
 						this[modalName].status = true;
+						this[modalName].style.create = false;
 						this[modalName].style.delete = false;
 					}
 					document.body.classList.add("modal-open");
@@ -1236,6 +1263,20 @@ export default {
 		closeModal(modalName) {
 			this[modalName].status = false;
 			document.body.classList.remove("modal-open");
+		},
+		/* Очистка содержимого модального окна */
+		clearModalData(currentName) {
+			for (let key in this[currentName].data) {
+				this[currentName].data[key].body = "";
+				this[currentName].data[key].edited = false;
+			}
+		},
+		/* Очистка ошибок */
+		clearModalErrors(currentName) {
+			for (let key in this[currentName].errors) {
+				this[currentName].errors[key].body = "";
+				this[currentName].errors[key].status = false;
+			}
 		},
 		/* _____________________________________________________*/
 		/* 2. Работа с полями ввода модального окна             */
@@ -1299,20 +1340,43 @@ export default {
 				message: "Ошибок нет.",
 			};
 		},
+		// Проверка поля имени
+		checkModalInput(currentName, dataKey, inputType) {
+			let errorLog = {};
+			switch (inputType) {
+				case "text":
+					errorLog = this.checkInputText(this[currentName].data[dataKey].body);
+					break;
+				case "number":
+					errorLog = this.checkInputNumber(this[currentName].data[dataKey].body);
+					break;
+				case "select":
+					errorLog = this.checkSelect(this[currentName].data[dataKey].body);
+					break;
+				default:
+					break;
+			}
+
+			if (errorLog.status) {
+				this[currentName].errors[dataKey].body = errorLog.message;
+				this[currentName].errors[dataKey].status = true;
+
+				return true;
+			} else {
+				this[currentName].errors[dataKey].body = "";
+				this[currentName].errors[dataKey].status = false;
+
+				return false;
+			}
+		},
 		// Проверка всех полей ввода модального окна
-		checkModalInputsAll(inputKeys) {
+		checkModalInputsAll(currentName, inputKeys) {
 			let errorCount = 0;
 			for (let i = 0; i < inputKeys.length; i++) {
 				switch (inputKeys[i]) {
-					// Для индекса
-					case "id_specialization":
-						if (this.checkModalInput(inputKeys[i], "select")) {
-							errorCount++;
-						}
-						break;
 					// Для всех остальных полей
 					default:
-						if (this.checkModalInput(inputKeys[i], "text")) {
+						if (this.checkModalInput(currentName, inputKeys[i], "text")) {
 							errorCount++;
 						}
 						break;
@@ -1427,20 +1491,8 @@ export default {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                       ВРАЧ                        |*/
 		/* |___________________________________________________|*/
-		saveSpecialistChanges() {
-			let arr = [...this.sections.certificates];
-			arr.filter((item) => {
-				this.specialist.connections.certificates.forEach((cert) => {
-					if (cert.id_certificate == item.id) {
-						return item;
-					}
-				});
-			});
-
-			// console.log(arr);
-		},
 		/* _____________________________________________________*/
-		/* 1. Специализации                                     */
+		/* 1. Профиль                                           */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Сохранение изменений */
 		saveProfileChanges() {
@@ -1519,7 +1571,7 @@ export default {
 			}
 		},
 		/* _____________________________________________________*/
-		/* 1. Специализации                                     */
+		/* 2. Специализации                                     */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Открытие списка специализация */
 		editSpecialization() {
@@ -1531,7 +1583,7 @@ export default {
 				this.cheked.specializations.push(connSpecilization.id_specialization)
 			);
 
-			this.openModal("edit", "modalSpecializations");
+			this.openModal("edit", "modalSpecializations", null);
 		},
 		/* Обновление специализаций */
 		updateSpecialization() {
@@ -1632,7 +1684,7 @@ export default {
 			}
 		},
 		/* _____________________________________________________*/
-		/* 2. Клиники                                           */
+		/* 3. Клиники                                           */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Открытие списка клиник */
 		editClinics() {
@@ -1765,7 +1817,39 @@ export default {
 				this.$store.commit("debuggerState", debbugStory);
 			}
 		},
+		/* _____________________________________________________*/
+		/* 4. Сертификаты                                       */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* Обновление данных */
+		updateCertificate() {
+			if (
+				this.checkModalInputsAll("currentCertificate", ["name", "organization", "endEducation"])
+			)
+				return;
 
+			try {
+				let сertificateToUpdate = this.specialist.connections.certificates.filter(
+					(сertificate) => {
+						if (сertificate.id === this.currentCertificate.data.id.body) {
+							return сertificate;
+						}
+					}
+				);
+
+				for (let key in this.currentCertificate.data) {
+					сertificateToUpdate[0][key] = this.currentCertificate.data[key].body;
+				}
+
+				this.closeModal("modalCertificates");
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "При обновлении что-то пошло не так.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
 		/* _____________________________________________________*/
 		/* ?. Общие методы                                      */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
@@ -1790,29 +1874,35 @@ export default {
 			filterValue[0].delete = !filterValue[0].delete;
 		},
 		/* Метод открытия модального окна для обновления значений */
-		editArrayValue(arrayName, value) {
+		editArrayValue(type, arrayName, value) {
 			switch (arrayName) {
 				case "certificates":
-					let filterCertificate = this.specialist.connections.certificates.filter(
-						(item) => {
-							if (item.id == value) {
-								return item;
-							}
-						}
-					);
-					
-					for(let key in filterCertificate[0]) {
-						console.log(key, filterCertificate[0][key]);
+					/* Создание */
+					if (type == "create") {
+						this.openModal(type, "modalCertificates", "currentCertificate");
 					}
+					/* Редактирование */
+					if (type == "edit") {
+						let filterCertificate = this.specialist.connections.certificates.filter(
+							(item) => {
+								if (item.id == value.id) {
+									return item;
+								}
+							}
+						);
 
-					
-					this.openModal("edit", "modalCertificates");
+						for (let key in this.currentCertificate.data) {
+							this.currentCertificate.data[key].body = filterCertificate[0][key];
+						}
+
+						this.openModal(type, "modalCertificates", "currentCertificate");
+					}
 					break;
 				case "educations":
-					this.openModal("edit", "modalEducations");
+					this.openModal(type, "modalEducations", "currentEducation");
 					break;
 				case "works":
-					this.openModal("edit", "modalWorks");
+					this.openModal(type, "modalWorks", "currentWork");
 					break;
 			}
 		},
