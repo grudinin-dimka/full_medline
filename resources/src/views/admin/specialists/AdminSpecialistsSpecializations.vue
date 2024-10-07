@@ -216,12 +216,8 @@ export default {
 				case "edit":
 					{
 						this.modal.type = "edit";
-						if (this.currentSpecialization.data.create.body) {
-							this.modal.style.create = true;
-						} else {
-							this.modal.style.create = false;
-						}
 						this.modal.status = true;
+						this.modal.style.create = false;
 						this.modal.style.delete = false;
 					}
 					document.body.classList.add("modal-open");

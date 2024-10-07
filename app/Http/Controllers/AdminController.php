@@ -317,7 +317,21 @@ class AdminController extends Controller
          ]);
       }
    }
-
+   public function saveSpecialistCertificatesChanges(Request $request) {
+      // Проверка на существование
+      if(Specialist::find($request->id)) {         
+         
+         return response()->json([
+            "status" => true,
+            "message" => "Данные о сертификатах сохранились.",
+         ]);
+      } else {
+         return response()->json([
+            "status" => false,
+            "message" => "Специалист не найден.",
+         ]);
+      }
+   }
    /* _____________________________________________________*/
    /* 2. Специализации                                     */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/

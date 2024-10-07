@@ -220,7 +220,7 @@
 		</template>
 		<template #footer>
 			<block-buttons>
-				<button-claim @click="" v-if="modalCertificates.type == 'create'">
+				<button-claim @click="addCertificate" v-if="modalCertificates.type == 'create'">
 					Создать
 				</button-claim>
 				<button-default @click="updateCertificate" v-if="modalCertificates.type == 'edit'">
@@ -576,7 +576,7 @@
 					<!-- HACK Сделать сортировку по алфавиту -->
 					<div
 						class="item"
-						v-for="specialization in specialist.connections.specializations"
+						v-for="specialization in sortedConnectionsSpecializations"
 						:key="specialization.id"
 					>
 						<!-- <div class="item-title">1</div> -->
@@ -677,7 +677,7 @@
 		<block-title>
 			<template #title> Сертификаты </template>
 			<template #buttons>
-				<icon-save :width="28" :height="28" @click="console.log('save')" />
+				<icon-save :width="28" :height="28" @click="saveCertificateChanges" />
 			</template>
 		</block-title>
 
@@ -1145,6 +1145,14 @@ export default {
 		/* _____________________________________________________*/
 		/* 1. Специализации                                     */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* TODO Доделать сотрировку по алфавиту в блоке this.specialist.connections.specializations */
+		sortedConnectionsSpecializations() {
+			const collator = new Intl.Collator("ru");
+
+			return [...this.specialist.connections.specializations].sort((a, b) => {
+				return collator.compare(a.name, b.name);
+			});
+		},
 		getPagesSpecializationsTotal() {
 			return Math.ceil(
 				this.sections.specializations.length / this.paginationSpecializations.elements.range
@@ -1850,6 +1858,92 @@ export default {
 				this.$store.commit("debuggerState", debbugStory);
 			}
 		},
+		/* Добавление данных */
+		addCertificate() {
+			if (
+				this.checkModalInputsAll("currentCertificate", ["name", "organization", "endEducation"])
+			)
+				return;
+
+			try {
+				// Поиск максимального id
+				let maxId = 0;
+				this.specialist.connections.certificates.forEach((item) => {
+					if (item.id > maxId) maxId = item.id;
+				});
+
+				this.specialist.connections.certificates.push({
+					id: maxId + 1,
+					name: this.currentCertificate.data.name.body,
+					organization: this.currentCertificate.data.organization.body,
+					endEducation: this.currentCertificate.data.endEducation.body,
+					create: true,
+					delete: false,
+				});
+
+				this.closeModal("modalCertificates");
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "При добавлении что-то пошло не так.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
+		/* Сохранение изменений */
+		saveCertificateChanges() {
+			try {
+				// Проверка на статус добавления специалиста
+				if (this.specialist.profile.data.id.body === "new") return;
+
+				axios({
+					method: "post",
+					url: `${this.$store.state.axios.urlApi}` + `save-specialist-certificates-changes`,
+					headers: {
+						Accept: "application/json",
+						Authorization: `Bearer ${localStorage.getItem("token")}`,
+					},
+					data: {
+						id: this.specialist.profile.data.id.body,
+						array: this.specialist.connections.certificates,
+					},
+				})
+					.then((response) => {
+						if (response.data.status) {
+							let debbugStory = {
+								title: "Успешно!",
+								body: response.data.message,
+								type: "Completed",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+						} else {
+							let debbugStory = {
+								title: "Ошибка.",
+								body: response.data.message,
+								type: "Error",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+						}
+					})
+					.catch((error) => {
+						let debbugStory = {
+							title: "Ошибка.",
+							body: "Данные почему-то не сохранились...",
+							type: "Error",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					});
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "При сохранении значений произошла ошибка.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
+
 		/* _____________________________________________________*/
 		/* ?. Общие методы                                      */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
@@ -1955,6 +2049,15 @@ export default {
 					this.specialist.connections.works.forEach((item) => {
 						item.create = false;
 						item.delete = false;
+					});
+
+					// Сортировка специализаций и клиник по алфавиту
+					const collator = new Intl.Collator("ru");
+					this.sections.specializations.sort((a, b) => {
+						return collator.compare(a.name, b.name);
+					});
+					this.sections.clinics.sort((a, b) => {
+						return collator.compare(a.name, b.name);
 					});
 				})
 				.catch((error) => {

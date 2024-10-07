@@ -441,28 +441,23 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Открытие */
 		openModal(type) {
+			this.clearModalErrors();
+
 			switch (type) {
 				case "create":
-					this.clearModalErrors();
-
 					this.modal.type = "create";
 					this.modal.status = true;
 					this.modal.style.create = true;
 					this.modal.style.delete = false;
+
 					this.clearModalData();
 
 					document.body.classList.add("modal-open");
 					break;
 				case "edit":
-					this.clearModalErrors();
-
 					this.modal.type = "edit";
-					if (this.currentClinic.data.create.body) {
-						this.modal.style.create = true;
-					} else {
-						this.modal.style.create = false;
-					}
 					this.modal.status = true;
+					this.modal.style.create = false;
 					this.modal.style.delete = false;
 
 					document.body.classList.add("modal-open");
