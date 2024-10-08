@@ -138,13 +138,8 @@
 		<template #body>
 			<container-input-once :type="modalCertificates.type == 'create' ? 'create' : 'edit'">
 				<template #title>
-					<span :class="{ create: modalCertificates.type == 'create' }">НАЗВАНИЕ*</span>
-					<span
-						:class="{ create: modalCertificates.type == 'create' }"
-						v-if="currentCertificate.data.name.edited"
-					>
-						(ИЗМЕНЕНО)
-					</span>
+					<span>НАЗВАНИЕ*</span>
+					<span v-if="currentCertificate.data.name.edited"> (ИЗМЕНЕНО) </span>
 				</template>
 				<template #input>
 					<input
@@ -165,13 +160,8 @@
 			<!-- Организация -->
 			<container-input-once :type="modalCertificates.type == 'create' ? 'create' : 'edit'">
 				<template #title>
-					<span :class="{ create: modalCertificates.type == 'create' }">ОРГАНИЗАЦИЯ*</span>
-					<span
-						:class="{ create: modalCertificates.type == 'create' }"
-						v-if="currentCertificate.data.organization.edited"
-					>
-						(ИЗМЕНЕНО)
-					</span>
+					<span>ОРГАНИЗАЦИЯ*</span>
+					<span v-if="currentCertificate.data.organization.edited"> (ИЗМЕНЕНО) </span>
 				</template>
 				<template #input>
 					<input
@@ -192,15 +182,8 @@
 			<!-- Дата окончания обучения -->
 			<container-input-once :type="modalCertificates.type == 'create' ? 'create' : 'edit'">
 				<template #title>
-					<span :class="{ create: modalCertificates.type == 'create' }"
-						>ОКОНЧАНИЕ ОБУЧЕНИЯ*</span
-					>
-					<span
-						:class="{ create: modalCertificates.type == 'create' }"
-						v-if="currentCertificate.data.endEducation.edited"
-					>
-						(ИЗМЕНЕНО)
-					</span>
+					<span>ОКОНЧАНИЕ ОБУЧЕНИЯ*</span>
+					<span v-if="currentCertificate.data.endEducation.edited"> (ИЗМЕНЕНО) </span>
 				</template>
 				<template #input>
 					<input
@@ -225,6 +208,129 @@
 					Создать
 				</button-claim>
 				<button-default @click="updateCertificate" v-if="modalCertificates.type == 'edit'">
+					Обновить
+				</button-default>
+			</block-buttons>
+		</template>
+	</admin-modal>
+	<!--____________________________________________________-->
+	<!--4. Образования                                      -->
+	<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
+	<admin-modal @touchCloseModal="closeModal('modalEducations')" :modal="modalEducations">
+		<template #title>
+			<span class="create" v-if="modalEducations.type == 'create'"> СЕРТИФИКАТ (СОЗДАНИЕ) </span>
+			<span v-if="modalEducations.type == 'edit'">СЕРТИФИКАТ (РЕДАКТИРОВАНИЕ)</span>
+		</template>
+		<template #body>
+			<container-input>
+				<!-- Название -->
+				<container-input-once :type="modalEducations.type == 'create' ? 'create' : 'edit'">
+					<template #title>
+						<span>НАЗВАНИЕ*</span>
+						<span v-if="currentEducation.data.name.edited"> (ИЗМЕНЕНО) </span>
+					</template>
+					<template #input>
+						<input
+							type="text"
+							placeholder="Введите название"
+							autocomplete="off"
+							:class="{ error: currentEducation.errors.name.status }"
+							v-model="currentEducation.data.name.body"
+							@blur="checkModalInput('name', 'text')"
+							@input="currentEducation.data.name.edited = true"
+						/>
+					</template>
+					<template #error>
+						<span class="error" v-if="currentEducation.errors.name.status">
+							{{ currentEducation.errors.name.body }}
+						</span>
+					</template>
+				</container-input-once>
+				<!-- Организация -->
+				<container-textarea-once :type="modalEducations.type == 'create' ? 'create' : 'edit'">
+					<template #title>
+						<span :class="{ create: modalEducations.type == 'create' }">ОРГАНИЗАЦИЯ*</span>
+						<span
+							:class="{ create: modalEducations.type == 'create' }"
+							v-if="currentEducation.data.organization.edited"
+						>
+							(ИЗМЕНЕНО)
+						</span>
+					</template>
+					<template #textarea>
+						<textarea
+							rows="4"
+							placeholder="Введите организацию"
+							autocomplete="off"
+							:class="{ error: currentEducation.errors.organization.status }"
+							v-model="currentEducation.data.organization.body"
+							@input="currentEducation.data.organization.edited = true"
+						></textarea>
+					</template>
+					<template #error>
+						<span class="error" v-if="currentEducation.errors.organization.status">
+							{{ currentEducation.errors.organization.body }}
+						</span>
+					</template>
+				</container-textarea-once>
+				<!-- Дата получения образования -->
+				<container-input-once :type="modalEducations.type == 'create' ? 'create' : 'edit'">
+					<template #title>
+						<span :class="{ create: modalEducations.type == 'create' }">ДАТА ПОЛУЧЕНИЯ*</span>
+						<span
+							:class="{ create: modal.type == 'create' }"
+							v-if="currentEducation.data.date.edited"
+						>
+							(ИЗМЕНЕНО)</span
+						>
+					</template>
+					<template #input>
+						<input
+							type="date"
+							placeholder="Введите организацию"
+							autocomplete="off"
+							:class="{ error: currentEducation.errors.date.status }"
+							v-model="currentEducation.data.date.body"
+							@input="currentEducation.data.date.edited = true"
+						/>
+					</template>
+					<template #error>
+						<span class="error" v-if="currentEducation.errors.date.status">
+							{{ currentEducation.errors.date.body }}
+						</span>
+					</template>
+				</container-input-once>
+				<!-- Выбор специализации -->
+				<container-select-once :type="modalEducations.type == 'create' ? 'create' : 'edit'">
+					<template #title>
+						<span :class="{ create: modalEducations.type == 'create' }">СПЕЦИАЛИЗАЦИЯ*</span>
+						<span
+							:class="{ create: modalEducations.type == 'create' }"
+							v-if="currentEducation.data.id_specialization.edited"
+						>
+							(ИЗМЕНЕНО)</span
+						>
+					</template>
+					<template #select>
+						<select
+							v-model="currentEducation.data.id_specialization.body"
+							:class="{ error: currentEducation.errors.id_specialization.status }"
+						>
+							<option disabled value="">Ничего не выбрано...</option>
+						</select>
+					</template>
+					<template #error>
+						<span class="error" v-if="currentEducation.errors.id_specialization.status">
+							{{ currentEducation.errors.id_specialization.body }}
+						</span>
+					</template>
+				</container-select-once>
+			</container-input>
+		</template>
+		<template #footer>
+			<block-buttons>
+				<button-claim @click="" v-if="modalEducations.type == 'create'"> Создать </button-claim>
+				<button-default @click="" v-if="modalEducations.type == 'edit'">
 					Обновить
 				</button-default>
 			</block-buttons>
@@ -791,7 +897,9 @@ import ContainerInput from "../../../components/ui/admin/containers/ContainerInp
 import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
 import ContainerInputTwo from "../../../components/ui/admin/containers/input/ContainerInputTwo.vue";
 import ContainerInputThree from "../../../components/ui/admin/containers/input/ContainerInputThree.vue";
+import ContainerSelectOnce from "../../../components/ui/admin/containers/select/ContainerSelectOnce.vue";
 import ContainerSelectThree from "../../../components/ui/admin/containers/select/ContainerSelectThree.vue";
+import ContainerTextareaOnce from "../../../components/ui/admin/containers/textarea/ContainerTextareaOnce.vue";
 
 import Pagination from "../../../components/ui/admin/pagination/Pagination.vue";
 
@@ -824,7 +932,9 @@ export default {
 		ContainerInputOnce,
 		ContainerInputTwo,
 		ContainerInputThree,
+		ContainerSelectOnce,
 		ContainerSelectThree,
+		ContainerTextareaOnce,
 		Pagination,
 		TableButtonDefault,
 		TableButtonRemove,
@@ -932,6 +1042,87 @@ export default {
 					},
 					name: {
 						body: "",
+						edited: false,
+					},
+					create: {
+						body: false,
+						edited: false,
+					},
+					delete: {
+						body: false,
+						edited: false,
+					},
+				},
+			},
+			modalEducations: {
+				title: "",
+				status: false,
+				type: null,
+				style: {
+					create: false,
+					delete: false,
+				},
+				modules: {
+					title: true,
+					buttons: {
+						hide: false,
+						close: true,
+					},
+					images: false,
+					body: true,
+					footer: true,
+				},
+			},
+			currentEducation: {
+				errors: {
+					id: {
+						body: null,
+						status: false,
+					},
+					name: {
+						body: null,
+						status: false,
+					},
+					organization: {
+						body: null,
+						status: false,
+					},
+					date: {
+						body: null,
+						status: false,
+					},
+					id_specialization: {
+						body: null,
+						status: false,
+					},
+					create: {
+						body: false,
+						status: false,
+					},
+					delete: {
+						body: false,
+						status: false,
+					},
+				},
+				data: {
+					id: {
+						body: null,
+						edited: false,
+					},
+					name: {
+						body: null,
+						edited: false,
+					},
+					organization: {
+						body: null,
+						edited: false,
+					},
+					date: {
+						body: null,
+						edited: false,
+					},
+					id_specialization: {
+						body: null,
 						edited: false,
 					},
 					create: {

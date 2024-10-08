@@ -61,6 +61,10 @@ export default {
 	border: 2px solid #44a533;
 }
 
+.container-input-once.create > label > span {
+	color: #44a533;
+}
+
 .container-input-once > input:focus {
 	border: 2px solid var(--input-border-color-active);
 }

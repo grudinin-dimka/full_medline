@@ -60,16 +60,6 @@ fieldset > legend {
 	color: var(--primary-color);
 }
 
-fieldset > legend > span {
-	font-size: 18px;
-	color: var(--primary-color);
-}
-
-fieldset > legend > span.create {
-	font-size: 18px;
-	color: #44a533;
-}
-
 fieldset.container-input-two {
 	margin-top: 5px;
 	border: 2px solid rgba(0, 0, 0, 0.2);
@@ -85,6 +75,10 @@ fieldset.container-input-two.create:focus-within {
 
 fieldset.container-input-two:focus-within {
 	border: 2px solid var(--input-border-color-active);
+}
+
+fieldset.container-input-two.create > legend > span {
+	color: #44a533;
 }
 
 .container-input-two {

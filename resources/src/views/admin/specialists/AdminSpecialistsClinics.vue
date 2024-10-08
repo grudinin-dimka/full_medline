@@ -12,10 +12,10 @@
 				<!-- Название и другое -->
 				<container-input-two
 					:fieldset="true"
-					:type="modal.type == 'create' ? 'create' : 'default'"
+					:type="modal.type == 'create' ? 'create' : 'edit'"
 				>
 					<template #legend>
-						<span :class="{ create: modal.type == 'create' }">НАЗВАНИЕ И ДРУГОЕ</span>
+						<span>НАЗВАНИЕ И ДРУГОЕ</span>
 					</template>
 					<!-- НАЗВАНИЕ -->
 					<template #title-one>
@@ -63,7 +63,7 @@
 					:type="modal.type == 'create' ? 'create' : 'default'"
 				>
 					<template #legend>
-						<span :class="{ create: modal.type == 'create' }">ГОРОД И УЛИЦА</span>
+						<span>ГОРОД И УЛИЦА</span>
 					</template>
 					<!-- Город -->
 					<template #title-one>
@@ -113,7 +113,7 @@
 					:type="modal.type == 'create' ? 'create' : 'default'"
 				>
 					<template #legend>
-						<span :class="{ create: modal.type == 'create' }">ДОМ И ИНДЕКС</span>
+						<span>ДОМ И ИНДЕКС</span>
 					</template>
 					<!-- ДОМ -->
 					<template #title-one>
@@ -164,7 +164,7 @@
 					:type="modal.type == 'create' ? 'create' : 'default'"
 				>
 					<template #legend>
-						<span :class="{ create: modal.type == 'create' }">ГЕОГРАФИЧЕСКИЕ КООРДИНАТЫ</span>
+						<span>ГЕОГРАФИЧЕСКИЕ КООРДИНАТЫ</span>
 					</template>
 					<!-- Ширина -->
 					<template #title-one>

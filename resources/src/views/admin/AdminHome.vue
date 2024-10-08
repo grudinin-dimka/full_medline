@@ -68,7 +68,7 @@
 			<!-- Название -->
 			<container-input-once :type="modal.type == 'create' ? 'create' : 'edit'">
 				<template #title>
-					<span :class="{ create: modal.type == 'create' }">НАЗВАНИЕ*</span>
+					<span>НАЗВАНИЕ*</span>
 					<span v-if="currentSlide.data.name.edited"> (ИЗМЕНЕНО) </span>
 				</template>
 				<template #input>
@@ -92,7 +92,7 @@
 			<!-- Ссылка -->
 			<container-input-once :type="modal.type == 'create' ? 'create' : 'edit'">
 				<template #title>
-					<span :class="{ create: modal.type == 'create' }">ССЫЛКА*</span>
+					<span>ССЫЛКА*</span>
 					<span v-if="currentSlide.data.link.edited">(ИЗМЕНЕНО)</span>
 				</template>
 				<template #input>

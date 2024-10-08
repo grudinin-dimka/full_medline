@@ -10,13 +10,8 @@
 		<template #body>
 			<container-input-once :type="modal.type == 'create' ? 'create' : 'edit'">
 				<template #title>
-					<span :class="{ create: modal.type == 'create' }">НАЗВАНИЕ*</span>
-					<span
-						:class="{ create: modal.type == 'create' }"
-						v-if="currentSpecialization.data.name.edited"
-					>
-						(ИЗМЕНЕНО)
-					</span>
+					<span>НАЗВАНИЕ*</span>
+					<span v-if="currentSpecialization.data.name.edited"> (ИЗМЕНЕНО) </span>
 				</template>
 				<template #input>
 					<input
@@ -25,7 +20,6 @@
 						placeholder="Название специализации"
 						v-model="currentSpecialization.data.name.body"
 						:class="{
-							create: modal.style.create,
 							error: currentSpecialization.errors.name.status,
 						}"
 						@input="currentSpecialization.data.name.edited = true"
@@ -202,6 +196,8 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Открытие */
 		openModal(type) {
+			this.clearModalErrors();
+
 			switch (type) {
 				case "create":
 					{
