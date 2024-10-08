@@ -13,6 +13,7 @@
 			<span v-if="modalSpecializations.type == 'edit'">СПЕЦИАЛИЗАЦИИ</span>
 		</template>
 		<template #body>
+			<!-- TODO сделать область нажатия на кнопки выбора больше -->
 			<!-- Список специализаций -->
 			<div class="specializations-list">
 				<div class="item">
@@ -1825,124 +1826,59 @@ export default {
 				this.$store.commit("debuggerState", debbugStory);
 			}
 		},
-		/* _____________________________________________________*/
-		/* 4. Сертификаты                                       */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		/* Обновление данных */
-		updateCertificate() {
-			if (
-				this.checkModalInputsAll("currentCertificate", ["name", "organization", "endEducation"])
-			)
-				return;
-
+		/* Сохранение изменений */
+		saveCertificateChanges() {
 			try {
-				let сertificateToUpdate = this.specialist.connections.certificates.filter(
-					(сertificate) => {
-						if (сertificate.id === this.currentCertificate.data.id.body) {
-							return сertificate;
+				// Проверка на статус добавления специалиста
+				if (this.specialist.profile.data.id.body === "new") return;
+
+				axios({
+					method: "post",
+					url: `${this.$store.state.axios.urlApi}` + `save-specialist-certificates-changes`,
+					headers: {
+						Accept: "application/json",
+						Authorization: `Bearer ${localStorage.getItem("token")}`,
+					},
+					data: {
+						id: this.specialist.profile.data.id.body,
+						array: this.specialist.connections.certificates,
+					},
+				})
+					.then((response) => {
+						if (response.data.status) {
+							let debbugStory = {
+								title: "Успешно!",
+								body: response.data.message,
+								type: "Completed",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+						} else {
+							let debbugStory = {
+								title: "Ошибка.",
+								body: response.data.message,
+								type: "Error",
+							};
+							this.$store.commit("debuggerState", debbugStory);
 						}
-					}
-				);
-
-				for (let key in this.currentCertificate.data) {
-					сertificateToUpdate[0][key] = this.currentCertificate.data[key].body;
-				}
-
-				this.closeModal("modalCertificates");
+					})
+					.catch((error) => {
+						let debbugStory = {
+							title: "Ошибка.",
+							body: "Данные почему-то не сохранились...",
+							type: "Error",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					});
 			} catch (error) {
 				let debbugStory = {
 					title: "Ошибка.",
-					body: "При обновлении что-то пошло не так.",
+					body: "При сохранении значений произошла ошибка.",
 					type: "Error",
 				};
 				this.$store.commit("debuggerState", debbugStory);
 			}
 		},
-		/* Добавление данных */
-		addCertificate() {
-			if (
-				this.checkModalInputsAll("currentCertificate", ["name", "organization", "endEducation"])
-			)
-				return;
-
-			try {
-				// Поиск максимального id
-				let maxId = 0;
-				this.specialist.connections.certificates.forEach((item) => {
-					if (item.id > maxId) maxId = item.id;
-				});
-
-				this.specialist.connections.certificates.push({
-					id: maxId + 1,
-					name: this.currentCertificate.data.name.body,
-					organization: this.currentCertificate.data.organization.body,
-					endEducation: this.currentCertificate.data.endEducation.body,
-					create: true,
-					delete: false,
-				});
-
-				this.closeModal("modalCertificates");
-			} catch (error) {
-				let debbugStory = {
-					title: "Ошибка.",
-					body: "При добавлении что-то пошло не так.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
-			}
-		},
-		// /* Сохранение изменений */
-		// saveCertificateChanges() {
-		// 	try {
-		// 		// Проверка на статус добавления специалиста
-		// 		if (this.specialist.profile.data.id.body === "new") return;
-
-		// 		axios({
-		// 			method: "post",
-		// 			url: `${this.$store.state.axios.urlApi}` + `save-specialist-certificates-changes`,
-		// 			headers: {
-		// 				Accept: "application/json",
-		// 				Authorization: `Bearer ${localStorage.getItem("token")}`,
-		// 			},
-		// 			data: {
-		// 				id: this.specialist.profile.data.id.body,
-		// 				array: this.specialist.connections.certificates,
-		// 			},
-		// 		})
-		// 			.then((response) => {
-		// 				if (response.data.status) {
-		// 					let debbugStory = {
-		// 						title: "Успешно!",
-		// 						body: response.data.message,
-		// 						type: "Completed",
-		// 					};
-		// 					this.$store.commit("debuggerState", debbugStory);
-		// 				} else {
-		// 					let debbugStory = {
-		// 						title: "Ошибка.",
-		// 						body: response.data.message,
-		// 						type: "Error",
-		// 					};
-		// 					this.$store.commit("debuggerState", debbugStory);
-		// 				}
-		// 			})
-		// 			.catch((error) => {
-		// 				let debbugStory = {
-		// 					title: "Ошибка.",
-		// 					body: "Данные почему-то не сохранились...",
-		// 					type: "Error",
-		// 				};
-		// 				this.$store.commit("debuggerState", debbugStory);
-		// 			});
-		// 	} catch (error) {
-		// 		let debbugStory = {
-		// 			title: "Ошибка.",
-		// 			body: "При сохранении значений произошла ошибка.",
-		// 			type: "Error",
-		// 		};
-		// 		this.$store.commit("debuggerState", debbugStory);
-		// 	}
-		// },
+		
 
 		/* _____________________________________________________*/
 		/* ?. Общие методы                                      */
@@ -2014,16 +1950,17 @@ export default {
 				},
 			})
 				.then((response) => {
+					// Заполнение профиля
 					for (let key in response.data.specialist.profile) {
 						this.specialist.profile.data[key].body = response.data.specialist.profile[key];
+					}
+					// Заполнение секций
+					for (let key in response.data.sections) {
+						this.sections[key] = response.data.sections[key];
 					}
 
 					for (let key in response.data.specialist.connections) {
 						this.specialist.connections[key] = response.data.specialist.connections[key];
-					}
-
-					for (let key in response.data.sections) {
-						this.sections[key] = response.data.sections[key];
 					}
 
 					// Добавление поля "Прием" в клиниках
@@ -2146,8 +2083,8 @@ export default {
 	display: grid;
 	gap: 10px;
 	border: 2px solid var(--input-border-color-inactive);
-	padding: 10px;
 	border-radius: 10px;
+	padding: 15px;
 
 	transition: all 0.2s;
 }

@@ -63,23 +63,22 @@ class AdminController extends Controller
    /* |                    ГЛАВНАЯ                        |*/
    /* |___________________________________________________|*/
    /* FIXME Добавить проверок при помощи валидатора на количество символов */
-   /* FIXME Сделать доп проверки на существование специалиста */
    /* _____________________________________________________*/
    /* 1. Слайдер                                           */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
    /* Сохранение содержимого всех слайдов */
    public function saveSlidesChanges(Request $request) {
-      // Удаление слайдов, подлежащих удалению
-      foreach ($request->slides as $key => $value) {
-         if ($value['delete'] === true) {
-         $slide = Slide::find($value['id']);
-         $slide->delete();
-         };
-      };
-
       $arrayID = [];
-      // Добавление новых слайдов
+
       foreach ($request->slides as $key => $value) {
+         // Удаление
+         if ($value['delete'] === true) {
+            $slide = Slide::find($value['id']);
+            $slide->delete();
+            continue;
+         };
+
+         // Добавление
          if ($value['create'] === true){
             $slideCreate = Slide::create([
                'name' => $value['name'],
@@ -96,21 +95,18 @@ class AdminController extends Controller
                // Новый id
                'new' => $slideCreate->id
             ];
+            continue;
          };
-      };
 
-      // Обновление существующих слайдов
-      foreach ($request->slides as $key => $value) {
-         if ($value['delete'] !== true && $value['create'] !== true) {
-            $slide = Slide::find($value['id']);
-            $slideUpdate = $slide->update([
-               'name' => $value['name'],
-               'link' => $value['link'],
-               'filename' => $value['filename'],
-               'hide' => $value['hide'],
-               'order' => $value['order'],
-            ]);  
-         };
+         // Обновление
+         $slide = Slide::find($value['id']);
+         $slideUpdate = $slide->update([
+            'name' => $value['name'],
+            'link' => $value['link'],
+            'filename' => $value['filename'],
+            'hide' => $value['hide'],
+            'order' => $value['order'],
+         ]);  
       };
 
       // Сортировка слайдов по порядку от наименьшего до наибольшого
@@ -175,7 +171,6 @@ class AdminController extends Controller
    /* 1. Врачи                                             */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
    /* FIXME Добавить проверок при помощи валидатора на количество символов */
-   /* FIXME Сделать доп проверки на существование специалиста */
    /* Сохранение специалистов */ 
    public function saveSpecialistsChanges(Request $request) {
       // Удаление помеченных
@@ -319,28 +314,19 @@ class AdminController extends Controller
       }
    }
    public function saveSpecialistCertificatesChanges(Request $request) {
-      // if ($value["delete"] !== true && $value['create'] !== true){
-      //    $clinic = Clinic::find($value['id']);
-      //    $clinicUpdate = $clinic->update([
-      //       "name" => $value['name'],
-      //       "organization" => $value['organization'],
-      //       "endEducation" => $value['endEducation'],
-      //    ]);     
-      // }         
-
-
-
       // Проверка на существование
       if(Specialist::find($request->id)) {         
          $arrayID = [];
 
-         // Удаление помеченных
          foreach ($request->array as $key => $value) {
+            // Удаление
             if ($value["delete"] === true){
                $certificate = Certificate::find($value['id']);
                $certificate->delete();
+               continue;
             }         
 
+            // Создание
             if ($value['create'] === true) {
                $certificateCreate = Certificate::create([
                   "name" => $value['name'],
@@ -361,7 +347,16 @@ class AdminController extends Controller
                   // Новый id
                   'new' => $certificateCreate->id
                ];            
+               continue;
             };  
+
+            // Обновление
+            $clinic = Clinic::find($value['id']);
+            $clinicUpdate = $clinic->update([
+               "name" => $value['name'],
+               "organization" => $value['organization'],
+               "endEducation" => $value['endEducation'],
+            ]);           
          }
 
          return response()->json([
@@ -383,14 +378,15 @@ class AdminController extends Controller
    public function saveSpecializationsChanges(Request $request) {
       $arrayID = [];
       
-      // Удаление помеченных
       foreach ($request->specializations as $key => $value) {
+         // Удаление
          if ($value["delete"] === true){
             $specialization = Specialization::find($value['id']);
             $specialization->delete();
             continue;
          };       
 
+         // Создание
          if ($value['create'] === true) {
             $specializationCreate = Specialization::create([
                "name" => $value['name'],
@@ -406,7 +402,7 @@ class AdminController extends Controller
             continue;
          };       
 
-         /* Обновление данных */
+         // Обновление
          $specialization = Specialization::find($value['id']);
          $specializationUpdate = $specialization->update([
             'name' => $value['name'],
@@ -452,7 +448,7 @@ class AdminController extends Controller
             continue;
          };       
 
-         // Обновление данных
+         // Обновление
          $clinic = Clinic::find($value['id']);
          $clinicUpdate = $clinic->update([
             "name" => $value['name'],
