@@ -66,7 +66,7 @@
 		</template>
 		<template #body>
 			<!-- Название -->
-			<ContainerInputOnce>
+			<container-input-once :type="modal.type == 'create' ? 'create' : 'edit'">
 				<template #title>
 					<span :class="{ create: modal.type == 'create' }">НАЗВАНИЕ*</span>
 					<span v-if="currentSlide.data.name.edited"> (ИЗМЕНЕНО) </span>
@@ -88,9 +88,9 @@
 						{{ currentSlide.errors.name.value }}
 					</span>
 				</template>
-			</ContainerInputOnce>
+			</container-input-once>
 			<!-- Ссылка -->
-			<ContainerInputOnce>
+			<container-input-once :type="modal.type == 'create' ? 'create' : 'edit'">
 				<template #title>
 					<span :class="{ create: modal.type == 'create' }">ССЫЛКА*</span>
 					<span v-if="currentSlide.data.link.edited">(ИЗМЕНЕНО)</span>
@@ -112,7 +112,7 @@
 						{{ currentSlide.errors.link.value }}
 					</span>
 				</template>
-			</ContainerInputOnce>
+			</container-input-once>
 		</template>
 		<template #footer>
 			<block-buttons v-if="modal.type == 'edit'">
@@ -338,7 +338,9 @@
 							<span class="error" v-if="false"> Ошибка </span>
 						</template>
 						<template #counter>
-							<span class="counter">{{ footer.footer.symbolsCount }}/{{ footer.footer.symbolsCountMax }}</span>
+							<span class="counter"
+								>{{ footer.footer.symbolsCount }}/{{ footer.footer.symbolsCountMax }}</span
+							>
 						</template>
 					</container-textarea-once>
 				</div>

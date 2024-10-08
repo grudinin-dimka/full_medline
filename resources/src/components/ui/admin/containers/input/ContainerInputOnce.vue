@@ -1,5 +1,5 @@
 <template>
-	<div class="container-input-once">
+	<div class="container-input-once" :class="{ create: type === 'create' }">
 		<label>
 			<slot name="title"></slot>
 		</label>
@@ -8,7 +8,17 @@
 	</div>
 </template>
 
-<script setup></script>
+<script>
+export default {
+	props: {
+		type: {
+			type: String,
+			default: "",
+			required: true,
+		},
+	},
+};
+</script>
 
 <style>
 .container-input-once {
@@ -45,6 +55,10 @@
 	caret-color: var(--input-border-color-active);
 
 	transition: all 0.2s;
+}
+
+.container-input-once.create > :is(input:focus, select:focus) {
+	border: 2px solid #44a533;
 }
 
 .container-input-once > input:focus {
