@@ -24,32 +24,16 @@ return new class extends Migration
          $table->string('name', 1000);
          $table->string('organization', 1000);
          $table->date('date');
-         $table->unsignedBigInteger('id_specialization')->references('id')->on('specializations')->onDelete('cascade');
+         $table->string('speсialization', 1000);
          $table->timestamps();
       });
 
       DB::table('educations')->insert(
          [
-            "name" => "Власов Павел Александрович - 'Терапевт'",
+            "name" => "Высшее образование",
             "organization" => "Российский национальный исследовательский медицинский университет имени Н. И. Пирогова",
             "date" => date("Y-m-d"),
-            "id_specialization" => 2
-         ]
-      );
-      DB::table('educations')->insert(
-         [
-            "name" => "Иванов Иван Иванович - 'Хирург'",
-            "organization" => "Первый Санкт-Петербургский государственный медицинский университет имени И. П. Павлова",
-            "date" => date("Y-m-d"),
-            "id_specialization" => 1
-         ]
-      );
-      DB::table('educations')->insert(
-         [
-            "name" => "Иванов Иван Иванович - 'Акушер'",
-            "organization" => "Сибирский государственный медицинский университет",
-            "date" => date("Y-m-d"),
-            "id_specialization" => 3
+            "speсialization" => "Медецинское дело",
          ]
       );
    }

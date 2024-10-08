@@ -13,7 +13,7 @@
 			<span v-if="modalSpecializations.type == 'edit'">СПЕЦИАЛИЗАЦИИ</span>
 		</template>
 		<template #body>
-			<!-- TODO сделать область нажатия на кнопки выбора больше -->
+			<!-- HACK сделать область нажатия на кнопки выбора больше -->
 			<!-- Список специализаций -->
 			<div class="specializations-list">
 				<div class="item">
@@ -218,8 +218,10 @@
 	<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
 	<admin-modal @touchCloseModal="closeModal('modalEducations')" :modal="modalEducations">
 		<template #title>
-			<span class="create" v-if="modalEducations.type == 'create'"> СЕРТИФИКАТ (СОЗДАНИЕ) </span>
-			<span v-if="modalEducations.type == 'edit'">СЕРТИФИКАТ (РЕДАКТИРОВАНИЕ)</span>
+			<span class="create" v-if="modalEducations.type == 'create'">
+				ОБРАЗОВАНИЕ (СОЗДАНИЕ)
+			</span>
+			<span v-if="modalEducations.type == 'edit'">ОБРАЗОВАНИЕ (РЕДАКТИРОВАНИЕ)</span>
 		</template>
 		<template #body>
 			<container-input>
@@ -236,7 +238,7 @@
 							autocomplete="off"
 							:class="{ error: currentEducation.errors.name.status }"
 							v-model="currentEducation.data.name.body"
-							@blur="checkModalInput('name', 'text')"
+							@blur="checkModalInput('currentEducation', 'name', 'text')"
 							@input="currentEducation.data.name.edited = true"
 						/>
 					</template>
@@ -264,6 +266,7 @@
 							autocomplete="off"
 							:class="{ error: currentEducation.errors.organization.status }"
 							v-model="currentEducation.data.organization.body"
+							@blur="checkModalInput('currentEducation', 'organization', 'text')"
 							@input="currentEducation.data.organization.edited = true"
 						></textarea>
 					</template>
@@ -278,7 +281,7 @@
 					<template #title>
 						<span :class="{ create: modalEducations.type == 'create' }">ДАТА ПОЛУЧЕНИЯ*</span>
 						<span
-							:class="{ create: modal.type == 'create' }"
+							:class="{ create: modalEducations.type == 'create' }"
 							v-if="currentEducation.data.date.edited"
 						>
 							(ИЗМЕНЕНО)</span
@@ -291,6 +294,7 @@
 							autocomplete="off"
 							:class="{ error: currentEducation.errors.date.status }"
 							v-model="currentEducation.data.date.body"
+							@blur="checkModalInput('currentEducation', 'date', 'text')"
 							@input="currentEducation.data.date.edited = true"
 						/>
 					</template>
@@ -301,36 +305,47 @@
 					</template>
 				</container-input-once>
 				<!-- Выбор специализации -->
-				<container-select-once :type="modalEducations.type == 'create' ? 'create' : 'edit'">
+				<container-input-once :type="modalEducations.type == 'create' ? 'create' : 'edit'">
 					<template #title>
 						<span :class="{ create: modalEducations.type == 'create' }">СПЕЦИАЛИЗАЦИЯ*</span>
 						<span
 							:class="{ create: modalEducations.type == 'create' }"
-							v-if="currentEducation.data.id_specialization.edited"
+							v-if="currentEducation.data.speсialization.edited"
 						>
 							(ИЗМЕНЕНО)</span
 						>
 					</template>
-					<template #select>
-						<select
-							v-model="currentEducation.data.id_specialization.body"
-							:class="{ error: currentEducation.errors.id_specialization.status }"
-						>
-							<option disabled value="">Ничего не выбрано...</option>
-						</select>
+					<template #input>
+						<input
+							type="text"
+							placeholder="Введите специализацию"
+							autocomplete="off"
+							list="eduacation-specializations"
+							:class="{ error: currentEducation.errors.speсialization.status }"
+							v-model="currentEducation.data.speсialization.body"
+							@blur="checkModalInput('currentEducation', 'speсialization', 'text')"
+							@input="currentEducation.data.speсialization.edited = true"
+						/>
+						<datalist id="eduacation-specializations">
+							<option value="Лечебное дело"></option>
+							<option value="Сестринское дело"></option>
+							<option value="Фармация"></option>
+						</datalist>
 					</template>
 					<template #error>
-						<span class="error" v-if="currentEducation.errors.id_specialization.status">
-							{{ currentEducation.errors.id_specialization.body }}
+						<span class="error" v-if="currentEducation.errors.speсialization.status">
+							{{ currentEducation.errors.speсialization.body }}
 						</span>
 					</template>
-				</container-select-once>
+				</container-input-once>
 			</container-input>
 		</template>
 		<template #footer>
 			<block-buttons>
-				<button-claim @click="" v-if="modalEducations.type == 'create'"> Создать </button-claim>
-				<button-default @click="" v-if="modalEducations.type == 'edit'">
+				<button-claim @click="addEducation" v-if="modalEducations.type == 'create'">
+					Создать
+				</button-claim>
+				<button-default @click="updateEducation" v-if="modalEducations.type == 'edit'">
 					Обновить
 				</button-default>
 			</block-buttons>
@@ -473,6 +488,7 @@
 						</span>
 					</template>
 					<template #title-three>
+						<!-- TODO сделать не обязательным -->
 						<span>ОТЧЕСТВО*</span>
 						<span v-if="specialist.profile.data.surname.edited"> (ИЗМЕНЕНО)</span>
 					</template>
@@ -558,10 +574,10 @@
 					:type="$route.params.id == 'new' ? 'create' : 'edit'"
 				>
 					<template #legend>
-						<span :class="{ create: $route.params.id === 'new' }">ПЕРВАЯ РАБОТА</span>
+						<span :class="{ create: $route.params.id === 'new' }">НАЧАЛО КАРЪЕРЫ</span>
 					</template>
 					<template #title-one>
-						<span>НАЧАЛО ПЕРВОЙ РАБОТЫ</span>
+						<span>ДАТА</span>
 						<span v-if="specialist.profile.data.startWorkAge.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #input-one>
@@ -573,7 +589,7 @@
 						/>
 					</template>
 					<template #title-two>
-						<span>ГОРОД ПЕРВОЙ РАБОТЫ</span>
+						<span>ГОРОД</span>
 						<span v-if="specialist.profile.data.startWorkCity.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #input-two>
@@ -614,6 +630,7 @@
 							{{ specialist.profile.errors.adultDoctor.body }}
 						</span>
 					</template>
+					<!-- TODO сделать так, чтобы появлялось поле ввода, если принемает врачей -->
 					<template #title-two>
 						<span>У ДЕТЕЙ*</span>
 						<span v-if="specialist.profile.data.childrenDoctor.edited"> (ИЗМЕНЕНО)</span>
@@ -823,6 +840,7 @@
 		<admin-specialists-table
 			v-show="loading.sections.educations"
 			:array="getSpecialistEducations"
+			@touchEditArrValue="editArrayValue('edit', 'educations', $event)"
 			@touchRemoveArrValue="updateDeleteValue('educations', $event)"
 		/>
 
@@ -834,7 +852,9 @@
 		/>
 
 		<block-buttons>
-			<button-default @click=""> Добавить </button-default>
+			<button-default @click="editArrayValue('create', 'educations', null)">
+				Добавить
+			</button-default>
 		</block-buttons>
 	</block-once>
 
@@ -1091,7 +1111,7 @@ export default {
 						body: null,
 						status: false,
 					},
-					id_specialization: {
+					speсialization: {
 						body: null,
 						status: false,
 					},
@@ -1121,7 +1141,7 @@ export default {
 						body: null,
 						edited: false,
 					},
-					id_specialization: {
+					speсialization: {
 						body: null,
 						edited: false,
 					},
@@ -2178,6 +2198,80 @@ export default {
 				});
 		},
 		/* _____________________________________________________*/
+		/* 5. Образования                                       */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* Добавление данных */
+		addEducation() {
+			if (
+				this.checkModalInputsAll("currentEducation", [
+					"name",
+					"organization",
+					"date",
+					"speсialization",
+				])
+			)
+				return;
+
+			try {
+				// Поиск максимального id
+				let maxId = 0;
+				this.specialist.connections.educations.forEach((item) => {
+					if (item.id > maxId) maxId = item.id;
+				});
+
+				this.specialist.connections.educations.push({
+					id: maxId + 1,
+					name: this.currentEducation.data.name.body,
+					organization: this.currentEducation.data.organization.body,
+					date: this.currentEducation.data.date.body,
+					speсialization: this.currentEducation.data.speсialization.body,
+					create: true,
+					delete: false,
+				});
+				this.closeModal("modalEducations");
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "При добавлении что-то пошло не так.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
+
+		/* Обновление данных */
+		updateEducation() {
+			if (
+				this.checkModalInputsAll("currentEducation", [
+					"name",
+					"organization",
+					"date",
+					"speсialization",
+				])
+			)
+				return;
+
+			try {
+				let educationToUpdate = this.specialist.connections.educations.filter((education) => {
+					if (education.id === this.currentEducation.data.id.body) {
+						return education;
+					}
+				});
+
+				for (let key in this.currentEducation.data) {
+					educationToUpdate[0][key] = this.currentEducation.data[key].body;
+				}
+				this.closeModal("modalEducations");
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "При обновлении что-то пошло не так.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
+		/* _____________________________________________________*/
 		/* ?. Общие методы                                      */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Фильтрация массивов */
@@ -2277,6 +2371,25 @@ export default {
 					}
 					break;
 				case "educations":
+					/* Создание */
+					if (type == "create") {
+						this.openModal(type, "modalEducations", "currentEducation");
+					}
+					/* Редактирование */
+					if (type == "edit") {
+						let filterEducation = this.specialist.connections.educations.filter((item) => {
+							if (item.id == value.id) {
+								return item;
+							}
+						});
+
+						for (let key in this.currentEducation.data) {
+							this.currentEducation.data[key].body = filterEducation[0][key];
+						}
+
+						this.openModal(type, "modalEducations", "currentEducation");
+					}
+
 					this.openModal(type, "modalEducations", "currentEducation");
 					break;
 				case "works":

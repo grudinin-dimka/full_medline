@@ -94,35 +94,34 @@
 						</span>
 					</template>
 				</container-input-once>
-				<!-- Выбор специализации -->
-				<container-select-once :type="modal.type == 'create' ? 'create' : 'edit'">
+				<!-- Ввод специализации -->
+				<container-input-once :type="modal.type == 'create' ? 'create' : 'edit'">
 					<template #title>
 						<span :class="{ create: modal.type == 'create' }">СПЕЦИАЛИЗАЦИЯ*</span>
 						<span
 							:class="{ create: modal.type == 'create' }"
-							v-if="currentEducation.data.id_specialization.edited"
+							v-if="currentEducation.data.speсialization.edited"
 						>
 							(ИЗМЕНЕНО)</span
 						>
 					</template>
-					<template #select>
-						<select
-							v-model="currentEducation.data.id_specialization.body"
-							:class="{ error: currentEducation.errors.id_specialization.status }"
-							@blur="checkModalInput('id_specialization', 'select')"
-						>
-							<option disabled value="">Ничего не выбрано...</option>
-							<option :value="specialization.id" v-for="specialization in specializations">
-								{{ specialization.name }}
-							</option>
-						</select>
+					<template #input>
+						<input
+							type="text"
+							placeholder="Введите специализацию"
+							autocomplete="off"
+							:class="{ error: currentEducation.errors.speсialization.status }"
+							v-model="currentEducation.data.speсialization.body"
+							@blur="checkModalInput('speсialization', 'text')"
+							@input="currentEducation.data.speсialization.edited = true"
+						/>
 					</template>
 					<template #error>
-						<span class="error" v-if="currentEducation.errors.id_specialization.status">
-							{{ currentEducation.errors.id_specialization.body }}
+						<span class="error" v-if="currentEducation.errors.speсialization.status">
+							{{ currentEducation.errors.speсialization.body }}
 						</span>
 					</template>
-				</container-select-once>
+				</container-input-once>
 			</container-input>
 		</template>
 		<template #footer>
@@ -266,7 +265,7 @@ export default {
 						body: null,
 						status: false,
 					},
-					id_specialization: {
+					speсialization: {
 						body: null,
 						status: false,
 					},
@@ -296,7 +295,7 @@ export default {
 						body: null,
 						edited: false,
 					},
-					id_specialization: {
+					speсialization: {
 						body: null,
 						edited: false,
 					},
@@ -311,16 +310,6 @@ export default {
 				},
 			},
 			educations: [],
-			specializations: [
-				{
-					id: 1,
-					name: "Терапевт",
-				},
-				{
-					id: 2,
-					name: "Хирург",
-				},
-			],
 		};
 	},
 	methods: {
@@ -494,12 +483,6 @@ export default {
 			let errorCount = 0;
 			for (let i = 0; i < inputKeys.length; i++) {
 				switch (inputKeys[i]) {
-					// Для индекса
-					case "id_specialization":
-						if (this.checkModalInput(inputKeys[i], "select")) {
-							errorCount++;
-						}
-						break;
 					// Для всех остальных полей
 					default:
 						if (this.checkModalInput(inputKeys[i], "text")) {
@@ -607,7 +590,7 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Добавление образования */
 		addEducation() {
-			if (this.checkModalInputsAll(["name", "organization", "date", "id_specialization"]))
+			if (this.checkModalInputsAll(["name", "organization", "date", "speсialization"]))
 				return;
 
 			try {
@@ -624,7 +607,7 @@ export default {
 					name: this.currentEducation.data.name.body,
 					organization: this.currentEducation.data.organization.body,
 					date: this.currentEducation.data.date.body,
-					id_specialization: this.currentEducation.data.id_specialization.body,
+					speсialization: this.currentEducation.data.speсialization.body,
 					create: true,
 					delete: false,
 				});
@@ -650,7 +633,7 @@ export default {
 			educationToDelete[0].delete = !educationToDelete[0].delete;
 		},
 		updateEducation() {
-			if (this.checkModalInputsAll(["name", "organization", "date", "id_specialization"]))
+			if (this.checkModalInputsAll(["name", "organization", "date", "speсialization"]))
 				return;
 
 			try {
@@ -775,7 +758,6 @@ export default {
 		})
 			.then((response) => {
 				this.educations = response.data.educations;
-				this.specializations = response.data.spezializations;
 				this.loading.loader = false;
 
 				for (let key in this.educations) {

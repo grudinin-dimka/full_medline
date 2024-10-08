@@ -216,11 +216,9 @@ class HomeController extends Controller
    /* Вывод данных из таблицы "образование" */
    public function getEducationsAll(Request $request) {
       $educations = Education::all();
-      $specializations = Specialization::all();
 
       return response()->json([
          "educations" => $educations,
-         "spezializations" => $specializations,
       ]);
    }
    /* _____________________________________________________*/

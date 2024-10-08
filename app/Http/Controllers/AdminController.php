@@ -484,7 +484,7 @@ class AdminController extends Controller
                "name" => $value['name'],
                "organization" => $value['organization'],
                "date" => $value['date'],
-               "id_specialization" => $value['id_specialization'],
+               "speсialization" => $value['speсialization'],
             ]);
 
             /* Запись нового объекта в массив */
@@ -503,7 +503,7 @@ class AdminController extends Controller
             "name" => $value['name'],
             "organization" => $value['organization'],
             "date" => $value['date'],
-            "id_specialization" => $value['id_specialization'],
+            "speсialization" => $value['speсialization'],
          ]);     
       }
       
