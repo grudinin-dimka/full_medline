@@ -351,8 +351,8 @@ class AdminController extends Controller
             };  
 
             // Обновление
-            $clinic = Clinic::find($value['id']);
-            $clinicUpdate = $clinic->update([
+            $certificate = Certificate::find($value['id']);
+            $certificateUpdate = $certificate->update([
                "name" => $value['name'],
                "organization" => $value['organization'],
                "endEducation" => $value['endEducation'],

@@ -1,5 +1,5 @@
 <template>
-	<div class="container-textarea-once">
+	<div class="container-textarea-once" :class="{ create: type === 'create' }">
 		<label>
 			<slot name="title"></slot>
 		</label>
@@ -11,7 +11,17 @@
 	</div>
 </template>
 
-<script setup></script>
+<script>
+export default {
+	props: {
+		type: {
+			type: String,
+			default: "",
+			required: true,
+		},
+	},
+};
+</script>
 
 <style>
 .container-textarea-once {
@@ -60,6 +70,10 @@
 
 .container-textarea-once > textarea::placeholder {
 	color: var(--input-placeholder-color);
+}
+
+.container-textarea-once.create > :is(input:focus, select:focus, textarea:focus) {
+	border: 2px solid #44a533;
 }
 
 span.error {

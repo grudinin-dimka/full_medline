@@ -221,7 +221,7 @@
 			<containerInput>
 				<!-- Заголовок -->
 				<div class="block-textarea">
-					<container-textarea-once>
+					<container-textarea-once :type="'edit'">
 						<template #title>
 							<span>ЗАГОЛОВОК</span>
 							<span v-if="footer.title.edited"> (ИЗМЕНЕНО)</span>
@@ -244,7 +244,7 @@
 				</div>
 				<!-- Дополнение к заголовку -->
 				<div class="block-textarea">
-					<container-textarea-once>
+					<container-textarea-once :type="'edit'">
 						<template #title>
 							<span>ДОПОЛНЕНИЕ К ЗАГОЛОВКУ</span>
 							<span v-if="footer.titleDesc.edited"> (ИЗМЕНЕНО)</span>
@@ -269,7 +269,7 @@
 				</div>
 				<!-- Лицензия -->
 				<div class="block-textarea">
-					<container-textarea-once>
+					<container-textarea-once :type="'edit'">
 						<template #title>
 							<span>ЛИЦЕНЗИЯ</span>
 							<span v-if="footer.license.edited"> (ИЗМЕНЕНО)</span>
@@ -292,7 +292,7 @@
 				</div>
 				<!-- Лицензия -->
 				<div class="block-textarea">
-					<container-textarea-once>
+					<container-textarea-once :type="'edit'">
 						<template #title>
 							<span>ОСНОВНОЙ ТЕКСТ</span>
 							<span v-if="footer.licenseDesc.edited"> (ИЗМЕНЕНО)</span>
@@ -319,7 +319,7 @@
 				</div>
 				<!-- Лицензия -->
 				<div class="block-textarea">
-					<container-textarea-once>
+					<container-textarea-once :type="'edit'">
 						<template #title>
 							<span>ПОДВАЛ</span>
 							<span v-if="footer.footer.edited"> (ИЗМЕНЕНО)</span>
@@ -1132,7 +1132,7 @@ export default {
 
 					let debbugStory = {
 						title: "Успешно!",
-						body: "Данные о слайдах обновлены в базе данных.",
+						body: "Данные о слайдах сохранены.",
 						type: "Completed",
 					};
 					this.$store.commit("debuggerState", debbugStory);
@@ -1140,7 +1140,7 @@ export default {
 				.catch((error) => {
 					let debbugStory = {
 						title: "Ошибка.",
-						body: "Что-то помешало обновить данные о слайдах в базе данных.",
+						body: "Что-то помешало сохранить данные о слайдах.",
 						type: "Error",
 					};
 					this.$store.commit("debuggerState", debbugStory);
@@ -1214,7 +1214,7 @@ export default {
 				.then((response) => {
 					let debbugStory = {
 						title: "Успешно!",
-						body: "Данные о футере обновлены в базе данных.",
+						body: "Данные о футере сохранены.",
 						type: "Completed",
 					};
 					this.$store.commit("debuggerState", debbugStory);

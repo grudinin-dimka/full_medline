@@ -1,5 +1,5 @@
 <template>
-	<div class="container-select-once">
+	<div class="container-select-once" :class="{ create: type === 'create' }">
 		<label>
 			<slot name="title"></slot>
 		</label>
@@ -11,9 +11,10 @@
 <script>
 export default {
 	props: {
-		fieldset: {
-			type: Boolean,
-			default: false,
+		type: {
+			type: String,
+			default: "",
+			required: true,
 		},
 	},
 };
@@ -60,6 +61,10 @@ export default {
 
 .container-select-once > option::placeholder {
 	color: var(--input-placeholder-color);
+}
+
+.container-select-once.create > :is(input:focus, select:focus) {
+	border: 2px solid #44a533;
 }
 
 .container-select-once > select.error {

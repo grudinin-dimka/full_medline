@@ -684,7 +684,8 @@
 
 		<admin-specialists-table
 			v-show="loading.sections.certificates"
-			:array="getSpecialistCertificates"
+			:array="specialist.connections.certificates"
+			@useFilter="filterArray"
 			@touchEditArrValue="editArrayValue('edit', 'certificates', $event)"
 			@touchRemoveArrValue="updateDeleteValue('certificates', $event)"
 		/>
@@ -702,7 +703,6 @@
 			</button-default>
 		</block-buttons>
 	</block-once>
-
 	<!--____________________________________________________-->
 	<!--5. Образование                                      -->
 	<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
@@ -1183,9 +1183,7 @@ export default {
 		/* _____________________________________________________*/
 		/* 3. Сертификаты                                       */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		getSpecialistCertificates() {
-			return [...this.specialist.connections.certificates];
-		},
+		/* .... */
 		/* _____________________________________________________*/
 		/* 4. Обучения                                          */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
@@ -1228,14 +1226,21 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Открытие */
 		openModal(type, modalName, currentName) {
+			if (modalName !== "modalSpecializations" && modalName !== "modalClinics") {
+				this.clearModal(currentName, {
+					errors: true,
+					edited: true,
+				});
+			}
+
 			switch (type) {
 				case "create":
 					{
 						if (modalName !== "modalSpecializations" && modalName !== "modalClinics") {
-							this.clearModalErrors(currentName);
-							this.clearModalData(currentName);
+							this.clearModal(currentName, {
+								data: true,
+							});
 						}
-
 						this[modalName].type = "create";
 						this[modalName].status = true;
 						this[modalName].style.create = true;
@@ -1245,10 +1250,6 @@ export default {
 					break;
 				case "edit":
 					{
-						if (modalName !== "modalSpecializations" && modalName !== "modalClinics") {
-							this.clearModalErrors(currentName);
-						}
-
 						this[modalName].type = "edit";
 						this[modalName].status = true;
 						this[modalName].style.create = false;
@@ -1273,18 +1274,25 @@ export default {
 			this[modalName].status = false;
 			document.body.classList.remove("modal-open");
 		},
-		/* Очистка содержимого модального окна */
-		clearModalData(currentName) {
-			for (let key in this[currentName].data) {
-				this[currentName].data[key].body = "";
-				this[currentName].data[key].edited = false;
+		/* Очистка модального окна */
+		clearModal(currentName, settings = { data: false, errors: false, edited: false }) {
+			if (settings.data) {
+				for (let key in this[currentName].data) {
+					this[currentName].data[key].body = "";
+				}
 			}
-		},
-		/* Очистка ошибок */
-		clearModalErrors(currentName) {
-			for (let key in this[currentName].errors) {
-				this[currentName].errors[key].body = "";
-				this[currentName].errors[key].status = false;
+
+			if (settings.edited) {
+				for (let key in this[currentName].data) {
+					this[currentName].data[key].edited = "";
+				}
+			}
+
+			if (settings.errors) {
+				for (let key in this[currentName].errors) {
+					this[currentName].errors[key].body = "";
+					this[currentName].errors[key].status = false;
+				}
 			}
 		},
 		/* _____________________________________________________*/
@@ -1714,7 +1722,7 @@ export default {
 					}).priem = connClinic.priem;
 				});
 
-				this.openModal("edit", "modalClinics");
+				this.openModal("edit", "modalClinics", null);
 			} catch (error) {
 				let debbugStory = {
 					title: "Ошибка.",
@@ -1826,63 +1834,212 @@ export default {
 				this.$store.commit("debuggerState", debbugStory);
 			}
 		},
+		/* _____________________________________________________*/
+		/* 4. Сертификаты                                       */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* Добавление данных */
+		addCertificate() {
+			if (
+				this.checkModalInputsAll("currentCertificate", ["name", "organization", "endEducation"])
+			)
+				return;
+			try {
+				// Поиск максимального id
+				let maxId = 0;
+				this.specialist.connections.certificates.forEach((item) => {
+					if (item.id > maxId) maxId = item.id;
+				});
+				this.specialist.connections.certificates.push({
+					id: maxId + 1,
+					name: this.currentCertificate.data.name.body,
+					organization: this.currentCertificate.data.organization.body,
+					endEducation: this.currentCertificate.data.endEducation.body,
+					create: true,
+					delete: false,
+				});
+				this.closeModal("modalCertificates");
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "При добавлении что-то пошло не так.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
+		/* Обновление данных */
+		updateCertificate() {
+			if (
+				this.checkModalInputsAll("currentCertificate", ["name", "organization", "endEducation"])
+			)
+				return;
+			try {
+				let сertificateToUpdate = this.specialist.connections.certificates.filter(
+					(сertificate) => {
+						if (сertificate.id === this.currentCertificate.data.id.body) {
+							return сertificate;
+						}
+					}
+				);
+				for (let key in this.currentCertificate.data) {
+					сertificateToUpdate[0][key] = this.currentCertificate.data[key].body;
+				}
+				this.closeModal("modalCertificates");
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "При обновлении что-то пошло не так.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
 		/* Сохранение изменений */
 		saveCertificateChanges() {
-			try {
-				// Проверка на статус добавления специалиста
-				if (this.specialist.profile.data.id.body === "new") return;
+			// Проверка на статус добавления специалиста
+			if (this.specialist.profile.data.id.body === "new") return;
 
-				axios({
-					method: "post",
-					url: `${this.$store.state.axios.urlApi}` + `save-specialist-certificates-changes`,
-					headers: {
-						Accept: "application/json",
-						Authorization: `Bearer ${localStorage.getItem("token")}`,
-					},
-					data: {
-						id: this.specialist.profile.data.id.body,
-						array: this.specialist.connections.certificates,
-					},
-				})
-					.then((response) => {
-						if (response.data.status) {
+			axios({
+				method: "post",
+				url: `${this.$store.state.axios.urlApi}` + `save-specialist-certificates-changes`,
+				headers: {
+					Accept: "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: {
+					id: this.specialist.profile.data.id.body,
+					array: this.specialist.connections.certificates,
+				},
+			})
+				.then((response) => {
+					if (response.data.status) {
+						try {
+							// Обновление id добавленных элементов на данные из бд
+							for (let key in response.data.data) {
+								let certificate = this.specialist.connections.certificates.filter(
+									(item) => {
+										if (item.id === response.data.data[key].old) {
+											return item;
+										}
+									}
+								);
+								certificate[0].id = response.data.data[key].new;
+							}
+
+							// Получения нового массива специалистов, помеченных на удаление
+							let res = this.specialist.connections.certificates.filter((item) => {
+								if (item.delete == true) {
+									return Object.assign({}, item);
+								}
+							});
+
+							// Повторять, пока не будут удалены все элементы, помеченные на удаление
+							while (res.length > 0) {
+								/* Получение индекса элемента, помеченного на удаление из массива специалистов */
+								this.specialist.connections.certificates.splice(
+									this.specialist.connections.certificates.indexOf(res[0]),
+									1
+								);
+								/* Обновление списка с элементами, помеченными на удаление */
+								res = this.specialist.connections.certificates.filter((item) => {
+									if (item.delete == true) {
+										return Object.assign({}, item);
+									}
+								});
+							}
+
+							// Сброс флагов добавления и удаления
+							this.specialist.connections.certificates.forEach((item) => {
+								item.create = false;
+								item.delete = false;
+							});
+
 							let debbugStory = {
 								title: "Успешно!",
 								body: response.data.message,
 								type: "Completed",
 							};
 							this.$store.commit("debuggerState", debbugStory);
-						} else {
+						} catch (error) {
 							let debbugStory = {
 								title: "Ошибка.",
-								body: response.data.message,
+								body: "После сохранения что-то пошло не так.",
 								type: "Error",
 							};
 							this.$store.commit("debuggerState", debbugStory);
 						}
-					})
-					.catch((error) => {
+					} else {
 						let debbugStory = {
 							title: "Ошибка.",
-							body: "Данные почему-то не сохранились...",
+							body: response.data.message,
 							type: "Error",
 						};
 						this.$store.commit("debuggerState", debbugStory);
-					});
-			} catch (error) {
-				let debbugStory = {
-					title: "Ошибка.",
-					body: "При сохранении значений произошла ошибка.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
-			}
+					}
+				})
+				.catch((error) => {
+					let debbugStory = {
+						title: "Ошибка.",
+						body: "Данные почему-то не сохранились...",
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+				});
 		},
-		
-
 		/* _____________________________________________________*/
 		/* ?. Общие методы                                      */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* Фильтрация массивов */
+		filterArray(column, type) {
+			// Объявляем объект Intl.Collator, который обеспечивает сравнение строк с учётом языка.
+			const collator = new Intl.Collator("ru");
+
+			switch (column) {
+				case "id":
+					if (type == "default") {
+						this.specialist.connections.certificates.sort((a, b) => {
+							if (a.id > b.id) {
+								return 1;
+							}
+							if (a.id < b.id) {
+								return -1;
+							}
+							// a должно быть равным b
+							return 0;
+						});
+					}
+
+					if (type == "reverse") {
+						this.specialist.connections.certificates.sort((a, b) => {
+							if (a.id < b.id) {
+								return 1;
+							}
+							if (a.id > b.id) {
+								return -1;
+							}
+							// a должно быть равным b
+							return 0;
+						});
+					}
+					break;
+				case "name":
+					if (type == "default") {
+						this.specialist.connections.certificates.sort((a, b) => {
+							return collator.compare(a.name, b.name);
+						});
+					}
+
+					if (type == "reverse") {
+						this.specialist.connections.certificates.reverse((a, b) => {
+							return collator.compare(a.name, b.name);
+						});
+					}
+
+					break;
+				default:
+					break;
+			}
+		},
 		/* Метод удаления значения из массива */
 		removeArrValue(arrayName, value) {
 			this.specialist.connections[arrayName] = this.specialist.connections[arrayName].filter(

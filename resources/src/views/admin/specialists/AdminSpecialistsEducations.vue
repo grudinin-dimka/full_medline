@@ -11,7 +11,7 @@
 		<template #body>
 			<container-input>
 				<!-- Название -->
-				<container-input-once>
+				<container-input-once :type="modal.type == 'create' ? 'create' : 'edit'">
 					<template #title>
 						<span :class="{ create: modal.type == 'create' }">НАЗВАНИЕ*</span>
 						<span
@@ -39,7 +39,7 @@
 					</template>
 				</container-input-once>
 				<!-- Организация -->
-				<container-textarea-once>
+				<container-textarea-once :type="modal.type == 'create' ? 'create' : 'edit'">
 					<template #title>
 						<span :class="{ create: modal.type == 'create' }">ОРГАНИЗАЦИЯ*</span>
 						<span
@@ -67,7 +67,7 @@
 					</template>
 				</container-textarea-once>
 				<!-- Дата получения образования -->
-				<container-input-once>
+				<container-input-once :type="modal.type == 'create' ? 'create' : 'edit'">
 					<template #title>
 						<span :class="{ create: modal.type == 'create' }">ДАТА ПОЛУЧЕНИЯ*</span>
 						<span
@@ -95,7 +95,7 @@
 					</template>
 				</container-input-once>
 				<!-- Выбор специализации -->
-				<container-select-once>
+				<container-select-once :type="modal.type == 'create' ? 'create' : 'edit'">
 					<template #title>
 						<span :class="{ create: modal.type == 'create' }">СПЕЦИАЛИЗАЦИЯ*</span>
 						<span
