@@ -324,6 +324,7 @@
 						/>
 						<datalist id="eduacation-specializations">
 							<option value="Лечебное дело"></option>
+							<option value="Педиатрия"></option>
 							<option value="Сестринское дело"></option>
 							<option value="Фармация"></option>
 						</datalist>
@@ -485,10 +486,16 @@
 			</template>
 			<template #buttons>
 				<icon-save-all :width="28" :height="28" @click="" v-if="$route.params.id !== 'new'" />
-				<icon-save
+				<!-- <icon-save
 					:width="28"
 					:height="28"
 					@click="saveProfileChanges"
+					v-if="$route.params.id !== 'new'"
+				/> -->
+				<icon-save
+					:width="28"
+					:height="28"
+					@click="saveProfileImage"
 					v-if="$route.params.id !== 'new'"
 				/>
 				<icon-add :width="28" :height="28" @click="$router.push('1')" v-else></icon-add>
@@ -525,7 +532,7 @@
 						<span v-if="specialist.profile.data.filename.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #input-one>
-						<input class="profile-file" type="file" autocomplete="off" />
+						<input class="profile-file" type="file" autocomplete="off" ref="fileUpload" />
 					</template>
 					<template #error-one>
 						<span class="error" v-if="specialist.profile.errors.filename.status">
@@ -995,7 +1002,7 @@
 				<icon-save
 					:width="28"
 					:height="28"
-					@click="console.log('save')"
+					@click="saveWorkChanges"
 					v-if="$route.params.id !== 'new'"
 				/>
 			</template>
@@ -1926,6 +1933,44 @@ export default {
 		/* 1. Профиль                                           */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Сохранение изменений */
+		saveProfileImage() {
+			/* Загрузка файла */
+			this.specialist.profile.data.file.body = this.$refs.fileUpload.files[0];
+			let formData = new FormData();
+			formData.append("image", this.specialist.profile.data.file.body);
+			formData.append("type", "specialist");
+
+			axios({
+				method: "post",
+				url: `${this.$store.state.axios.urlApi}` + `upload-file`,
+				headers: {
+					contentType: "multipart/form-data",
+					authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: formData,
+			})
+				.then((response) => {
+					if (response.data.status) {
+						let debbugStory = {
+							title: "Успешно!",
+							body: response.data.message,
+							type: "Completed",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					} else {
+						// filename: response.data.replace("/storage/slides/", ""),
+						let debbugStory = {
+							title: "Ошибка.",
+							body: response.data.message,
+							type: "Error",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					}
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		},
 		saveProfileChanges() {
 			// Проверка на статус добавления специалиста
 			if (this.specialist.profile.data.id.body === "new") return;
@@ -2636,6 +2681,96 @@ export default {
 				};
 				this.$store.commit("debuggerState", debbugStory);
 			}
+		},
+		/* Сохранение */
+		saveWorkChanges() {
+			// Проверка на статус добавления специалиста
+			if (this.specialist.profile.data.id.body === "new") return;
+
+			axios({
+				method: "post",
+				url: `${this.$store.state.axios.urlApi}` + `save-specialist-works-changes`,
+				headers: {
+					Accept: "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: {
+					id: this.specialist.profile.data.id.body,
+					array: this.specialist.connections.works,
+				},
+			})
+				.then((response) => {
+					if (response.data.status) {
+						try {
+							// Обновление id добавленных элементов на данные из бд
+							for (let key in response.data.data) {
+								let work = this.specialist.connections.works.filter((item) => {
+									if (item.id === response.data.data[key].old) {
+										return item;
+									}
+								});
+								work[0].id = response.data.data[key].new;
+							}
+
+							// Получения нового массива специалистов, помеченных на удаление
+							let res = this.specialist.connections.works.filter((item) => {
+								if (item.delete == true) {
+									return Object.assign({}, item);
+								}
+							});
+
+							// Повторять, пока не будут удалены все элементы, помеченные на удаление
+							while (res.length > 0) {
+								/* Получение индекса элемента, помеченного на удаление из массива специалистов */
+								this.specialist.connections.works.splice(
+									this.specialist.connections.works.indexOf(res[0]),
+									1
+								);
+								/* Обновление списка с элементами, помеченными на удаление */
+								res = this.specialist.connections.works.filter((item) => {
+									if (item.delete == true) {
+										return Object.assign({}, item);
+									}
+								});
+							}
+
+							// Сброс флагов добавления и удаления
+							this.specialist.connections.works.forEach((item) => {
+								item.create = false;
+								item.delete = false;
+							});
+
+							let debbugStory = {
+								title: "Успешно!",
+								body: response.data.message,
+								type: "Completed",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+						} catch (error) {
+							let debbugStory = {
+								title: "Ошибка.",
+								body: "После сохранения что-то пошло не так.",
+								type: "Error",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+						}
+					} else {
+						let debbugStory = {
+							title: "Ошибка.",
+							body: response.data.message,
+							type: "Error",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					}
+				})
+				.catch((error) => {
+					let debbugStory = {
+						title: "Ошибка.",
+						body: "Данные почему-то не сохранились...",
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+				});
 		},
 		/* _____________________________________________________*/
 		/* ?. Общие методы                                      */

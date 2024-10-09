@@ -26,6 +26,7 @@ use App\Models\SpecialistCertificate;
 use App\Models\Education;
 use App\Models\SpecialistEducation;
 use App\Models\Work;
+use App\Models\SpecialistWork;
 
 class AdminController extends Controller
 {
@@ -56,9 +57,19 @@ class AdminController extends Controller
             );
             break;
          }
-      };
-      
-      return Storage::url($path);
+
+         return response()->json([
+            "status" => true,
+            "message" => "Файл загружен.",
+            "data" => Storage::url($path),
+         ]);
+      } else {
+         return response()->json([
+            "status" => false,
+            "message" => "Отсутствует файл.",
+            "data" => null,
+         ]);
+      };      
    } 
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                    ГЛАВНАЯ                        |*/
@@ -358,6 +369,13 @@ class AdminController extends Controller
                "organization" => $value['organization'],
                "endEducation" => $value['endEducation'],
             ]);           
+
+            if(!$certificateUpdate) {
+               return response()->json([
+                  "status" => false,
+                  "message" => "Не удалось обновить значение.",
+               ]);      
+            }
          }
 
          return response()->json([
@@ -365,6 +383,7 @@ class AdminController extends Controller
             "message" => "Данные о сертификатах сохранились.",
             "data" => $arrayID,
          ]);
+
       } else {
          return response()->json([
             "status" => false,
@@ -417,12 +436,86 @@ class AdminController extends Controller
                "organization" => $value['organization'],
                "date" => $value['date'],
                "speсialization" => $value['speсialization'],
-            ]);           
+            ]);      
+            
+            if(!$educationUpdate) {
+               return response()->json([
+                  "status" => false,
+                  "message" => "Не удалось обновить значение.",
+               ]);      
+            }
          }
 
          return response()->json([
             "status" => true,
             "message" => "Данные об обучении сохранились.",
+            "data" => $arrayID,
+         ]);
+      } else {
+         return response()->json([
+            "status" => false,
+            "message" => "Специалист не найден.",
+         ]);
+      }      
+   }
+   public function saveSpecialistWorksChanges(Request $request) {
+      // Проверка на существование
+      if(Specialist::find($request->id)) {         
+         $arrayID = [];
+
+         foreach ($request->array as $key => $value) {
+            // Удаление
+            if ($value["delete"] === true){
+               $work = Work::find($value['id']);
+               $work->delete();
+               continue;
+            }         
+
+            // Создание
+            if ($value['create'] === true) {
+               $workCreate = Work::create([
+                  "name" => $value['name'],
+                  "organization" => $value['organization'],
+                  "startWork" => $value['startWork'],
+                  "endWork" => $value['endWork'],
+               ]);
+
+               if($workCreate) {
+                  SpecialistWork::create([
+                     'id_specialist' => $request->id,
+                     'id_work' => $workCreate->id,
+                  ]);   
+               }
+   
+               $arrayID[] = (object) [
+                  // Прошлый id
+                  'old' => $value['id'], 
+                  // Новый id
+                  'new' => $workCreate->id
+               ];            
+               continue;
+            };       
+
+            // Обновление
+            $work = Work::find($value['id']);
+            $workUpdate = $work->update([
+               "name" => $value['name'],
+               "organization" => $value['organization'],
+               "startWork" => $value['startWork'],
+               "endWork" => $value['endWork'],
+            ]);           
+         
+            if(!$workUpdate) {
+               return response()->json([
+                  "status" => false,
+                  "message" => "Не удалось обновить значение.",
+               ]);      
+            }
+         }
+
+         return response()->json([
+            "status" => true,
+            "message" => "Данные о прошлых работах сохранились.",
             "data" => $arrayID,
          ]);
       } else {

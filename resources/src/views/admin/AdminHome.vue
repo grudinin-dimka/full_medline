@@ -920,14 +920,7 @@ export default {
 					data: formData,
 				})
 					.then((response) => {
-						if (!response.data) {
-							let debbugStory = {
-								title: "Ошибка.",
-								body: "Файл не прошел проверку.",
-								type: "Error",
-							};
-							this.$store.commit("debuggerState", debbugStory);
-						} else {
+						if (response.data.status) {
 							try {
 								// Поиск максимального id
 								let maxId = 0;
@@ -941,8 +934,8 @@ export default {
 									id: 1 + maxId,
 									name: this.$refs.inputName.value,
 									link: this.$refs.inputLink.value,
-									path: response.data,
-									filename: response.data.replace("/storage/slides/", ""),
+									path: response.data.data,
+									filename: response.data.data.replace("/storage/slides/", ""),
 									hide: false,
 									order: 1 + this.slides[this.slides.length - 1].order,
 									create: true,
@@ -953,18 +946,25 @@ export default {
 
 								let debbugStory = {
 									title: "Успешно!",
-									body: "Создан новый слайд.",
+									body: "Новый слайд добавлен.",
 									type: "Completed",
 								};
 								this.$store.commit("debuggerState", debbugStory);
 							} catch (error) {
 								let debbugStory = {
 									title: "Ошибка.",
-									body: "Не удалость создать новый слайд.",
+									body: "При добавлении что-то пошло не так...",
 									type: "Error",
 								};
 								this.$store.commit("debuggerState", debbugStory);
 							}
+						} else {
+							let debbugStory = {
+								title: "Ошибка.",
+								body: response.data.message,
+								type: "Error",
+							};
+							this.$store.commit("debuggerState", debbugStory);
 						}
 					})
 					.catch((error) => {
