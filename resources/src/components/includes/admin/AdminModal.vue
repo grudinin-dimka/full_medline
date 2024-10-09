@@ -19,21 +19,10 @@
 				<div class="modal-head-buttons">
 					<slot name="buttonHide" v-if="modal.modules.buttons.hide"></slot>
 					<button
-						class="button-close"
 						v-if="modal.modules.buttons.close"
 						@click="$emit('touchCloseModal')"
 					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							height="26px"
-							width="26px"
-							viewBox="0 -960 960 960"
-							fill="black"
-						>
-							<path
-								d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
-							/>
-						</svg>
+						<IconClose :width="26" :height="26" />
 					</button>
 				</div>
 			</div>
@@ -54,7 +43,12 @@
 </template>
 
 <script>
+import IconClose from "../../icons/IconClose.vue";
+
 export default {
+	components: {
+		IconClose,
+	},
 	props: {
 		modal: Object,
 		required: true,

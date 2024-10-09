@@ -64,6 +64,7 @@ Route::post('/save-specialist-profile-changes', [AdminController::class, 'saveSp
 Route::post('/save-specialist-specializations-changes', [AdminController::class, 'saveSpecialistSpecializationsChanges'])->middleware('auth:sanctum');
 Route::post('/save-specialist-clinics-changes', [AdminController::class, 'saveSpecialistClinicsChanges'])->middleware('auth:sanctum');
 Route::post('/save-specialist-certificates-changes', [AdminController::class, 'saveSpecialistCertificatesChanges'])->middleware('auth:sanctum');
+Route::post('/save-specialist-educations-changes', [AdminController::class, 'saveSpecialistEducationsChanges'])->middleware('auth:sanctum');
 /* 2.2. Специализации                                   */
 Route::post('/save-specializations-changes', [AdminController::class, 'saveSpecializationsChanges'])->middleware('auth:sanctum');
 /* 2.3. Клиники                                         */

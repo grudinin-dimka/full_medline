@@ -10,15 +10,10 @@
 		</template>
 		<template #body>
 			<!-- Название -->
-			<ContainerInputOnce>
+			<container-input-once :type="modal.type == 'create' ? 'create' : 'edit'">
 				<template #title>
-					<span :class="{ create: modal.type == 'create' }">НАЗВАНИЕ*</span>
-					<span
-						:class="{ create: modal.type == 'create' }"
-						v-if="currentWork.data.name.edited"
-					>
-						(ИЗМЕНЕНО)
-					</span>
+					<span>НАЗВАНИЕ*</span>
+					<span v-if="currentWork.data.name.edited"> (ИЗМЕНЕНО) </span>
 				</template>
 				<template #input>
 					<input
@@ -35,17 +30,12 @@
 						{{ currentWork.errors.name.body }}
 					</span>
 				</template>
-			</ContainerInputOnce>
+			</container-input-once>
 			<!-- Организация -->
-			<ContainerTextareaOnce>
+			<container-textarea-once :type="modal.type == 'create' ? 'create' : 'edit'">
 				<template #title>
-					<span :class="{ create: modal.type == 'create' }">ОРГАНИЗАЦИЯ*</span>
-					<span
-						:class="{ create: modal.type == 'create' }"
-						v-if="currentWork.data.organization.edited"
-					>
-						(ИЗМЕНЕНО)
-					</span>
+					<span>ОРГАНИЗАЦИЯ*</span>
+					<span v-if="currentWork.data.organization.edited"> (ИЗМЕНЕНО) </span>
 				</template>
 				<template #textarea>
 					<textarea
@@ -62,11 +52,14 @@
 						{{ currentWork.errors.organization.body }}
 					</span>
 				</template>
-			</ContainerTextareaOnce>
+			</container-textarea-once>
 			<!-- Начало и конец -->
-			<container-input-two :fieldset="true" :type="modal.type == 'create' ? 'create' : 'default'">
+			<container-input-two
+				:fieldset="true"
+				:type="modal.type == 'create' ? 'create' : 'default'"
+			>
 				<template #legend>
-					<span :class="{ create: modal.type == 'create' }">НАЧАЛО И ОКОНЧАНИЕ РАБОТЫ</span>
+					<span>НАЧАЛО И ОКОНЧАНИЕ РАБОТЫ</span>
 				</template>
 				<!-- Начало работы -->
 				<template #title-one>

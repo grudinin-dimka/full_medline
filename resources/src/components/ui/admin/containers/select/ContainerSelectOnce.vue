@@ -33,11 +33,6 @@ export default {
 	color: var(--primary-color);
 }
 
-.container-select-once > label > span.create {
-	font-size: 18px;
-	color: #44a533;
-}
-
 .container-select-once > select {
 	box-sizing: border-box;
 	outline: none;
@@ -65,6 +60,10 @@ export default {
 
 .container-select-once.create > :is(input:focus, select:focus) {
 	border: 2px solid #44a533;
+}
+
+.container-select-once.create > label > span {
+	color: #44a533;
 }
 
 .container-select-once > select.error {

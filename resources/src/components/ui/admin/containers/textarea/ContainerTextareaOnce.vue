@@ -76,6 +76,10 @@ export default {
 	border: 2px solid #44a533;
 }
 
+.container-textarea-once.create > label > span {
+	color: #44a533;
+}
+
 span.error {
 	color: var(--span-color-error);
 }

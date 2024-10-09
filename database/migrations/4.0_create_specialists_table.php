@@ -29,7 +29,7 @@ return new class extends Migration
             $table->string('link', 1000);
             $table->string('family', 300);
             $table->string('name', 300);
-            $table->string('surname', 300);
+            $table->string('surname', 300)->nullable();
             $table->string('category', 100);
             $table->string('degree', 300)->nullable();
             $table->string('rank', 300)->nullable();

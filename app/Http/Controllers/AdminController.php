@@ -24,6 +24,7 @@ use App\Models\SpecialistClinic;
 use App\Models\Certificate;
 use App\Models\SpecialistCertificate;
 use App\Models\Education;
+use App\Models\SpecialistEducation;
 use App\Models\Work;
 
 class AdminController extends Controller
@@ -370,6 +371,66 @@ class AdminController extends Controller
             "message" => "Специалист не найден.",
          ]);
       }
+   }
+   public function saveSpecialistEducationsChanges(Request $request) {
+      // Проверка на существование
+      if(Specialist::find($request->id)) {         
+         $arrayID = [];
+
+         foreach ($request->array as $key => $value) {
+            // Удаление
+            if ($value["delete"] === true){
+               $education = Education::find($value['id']);
+               $education->delete();
+               continue;
+            }         
+
+            // Создание
+            if ($value['create'] === true) {
+               $educationCreate = Education::create([
+                  "name" => $value['name'],
+                  "organization" => $value['organization'],
+                  "date" => $value['date'],
+                  "speсialization" => $value['speсialization'],
+               ]);
+
+               if($educationCreate) {
+                  SpecialistEducation::create([
+                     'id_specialist' => $request->id,
+                     'id_education' => $educationCreate->id,
+                  ]);   
+               }
+   
+               $arrayID[] = (object) [
+                  // Прошлый id
+                  'old' => $value['id'], 
+                  // Новый id
+                  'new' => $educationCreate->id
+               ];            
+               continue;
+            };       
+
+            // Обновление
+            $education = Education::find($value['id']);
+            $educationUpdate = $education->update([
+               "name" => $value['name'],
+               "organization" => $value['organization'],
+               "date" => $value['date'],
+               "speсialization" => $value['speсialization'],
+            ]);           
+         }
+
+         return response()->json([
+            "status" => true,
+            "message" => "Данные об обучении сохранились.",
+            "data" => $arrayID,
+         ]);
+      } else {
+         return response()->json([
+            "status" => false,
+            "message" => "Специалист не найден.",
+         ]);
+      }      
    }
    /* _____________________________________________________*/
    /* 2. Специализации                                     */

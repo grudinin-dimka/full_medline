@@ -13,15 +13,15 @@
 			<span v-if="modalSpecializations.type == 'edit'">СПЕЦИАЛИЗАЦИИ</span>
 		</template>
 		<template #body>
-			<!-- HACK сделать область нажатия на кнопки выбора больше -->
 			<!-- Список специализаций -->
 			<div class="specializations-list">
-				<div class="item">
+				<label class="item">
 					<div></div>
 					<div></div>
 					<div>Название</div>
-				</div>
-				<div
+				</label>
+				<!-- HACK Сделать соритровку по алфавиту -->
+				<label
 					class="item"
 					v-for="(specialization, index) in getSortedSpecializations"
 					:key="specialization.id"
@@ -35,14 +35,9 @@
 								(paginationSpecializations.pages.current - 1)
 						}}
 					</div>
-					<input
-						type="checkbox"
-						:id="`spec-${specialization.id}`"
-						:value="specialization.id"
-						v-model="cheked.specializations"
-					/>
-					<label :for="`spec-${specialization.id}`">{{ specialization.name }}</label>
-				</div>
+					<input type="checkbox" :value="specialization.id" v-model="cheked.specializations" />
+					<div>{{ specialization.name }}</div>
+				</label>
 			</div>
 
 			<!-- Пагинация -->
@@ -77,13 +72,14 @@
 		<template #body>
 			<!-- Список специализаций -->
 			<div class="clinics-list">
-				<div class="item">
+				<label class="item">
 					<div></div>
 					<div></div>
 					<div>Название</div>
 					<div>Статус приёма</div>
-				</div>
-				<div
+				</label>
+				<!-- HACK Сделать соритровку по алфавиту -->
+				<label
 					class="item"
 					v-for="(clinic, index) in getSortedClinics"
 					:key="clinic.id"
@@ -102,12 +98,12 @@
 						:value="clinic.id"
 						v-model="cheked.clinics"
 					/>
-					<label :for="`clin-${clinic.id}`">{{ clinic.name }}</label>
+					<div>{{ clinic.name }}</div>
 					<select v-model="clinic.priem">
 						<option :value="0">Нет</option>
 						<option :value="1">Да</option>
 					</select>
-				</div>
+				</label>
 			</div>
 			<!-- Пагинация -->
 			<pagination
@@ -351,6 +347,123 @@
 			</block-buttons>
 		</template>
 	</admin-modal>
+	<!--____________________________________________________-->
+	<!--5. Прошлые работы                                   -->
+	<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
+	<admin-modal @touchCloseModal="closeModal('modalWorks')" :modal="modalWorks">
+		<template #title>
+			<span class="create" v-if="modalWorks.type == 'create'"> РАБОТА (СОЗДАНИЕ) </span>
+			<span v-if="modalWorks.type == 'edit'">РАБОТА (РЕДАКТИРОВАНИЕ)</span>
+		</template>
+		<template #body>
+			<container-input>
+				<!-- Название -->
+				<container-input-once :type="modalWorks.type == 'create' ? 'create' : 'edit'">
+					<template #title>
+						<span>НАЗВАНИЕ*</span>
+						<span v-if="currentWork.data.name.edited"> (ИЗМЕНЕНО) </span>
+					</template>
+					<template #input>
+						<input
+							type="text"
+							placeholder="Название работы"
+							v-model="currentWork.data.name.body"
+							:class="{ error: currentWork.errors.name.status }"
+							@input="currentWork.data.name.edited = true"
+							@blur="checkModalInput('currentWork', 'name', 'text')"
+						/>
+					</template>
+					<template #error>
+						<span class="error" v-if="currentWork.errors.name.status">
+							{{ currentWork.errors.name.body }}
+						</span>
+					</template>
+				</container-input-once>
+				<!-- Организация -->
+				<container-textarea-once :type="modalWorks.type == 'create' ? 'create' : 'edit'">
+					<template #title>
+						<span>ОРГАНИЗАЦИЯ*</span>
+						<span v-if="currentWork.data.organization.edited"> (ИЗМЕНЕНО) </span>
+					</template>
+					<template #textarea>
+						<textarea
+							rows="4"
+							placeholder="Название организации"
+							v-model="currentWork.data.organization.body"
+							:class="{ error: currentWork.errors.organization.status }"
+							@input="currentWork.data.organization.edited = true"
+							@blur="checkModalInput('currentWork', 'organization', 'text')"
+						></textarea>
+					</template>
+					<template #error>
+						<span class="error" v-if="currentWork.errors.organization.status">
+							{{ currentWork.errors.organization.body }}
+						</span>
+					</template>
+				</container-textarea-once>
+				<!-- Начало и конец -->
+				<container-input-two
+					:fieldset="true"
+					:type="modalWorks.type == 'create' ? 'create' : 'default'"
+				>
+					<template #legend>
+						<span>НАЧАЛО И ОКОНЧАНИЕ РАБОТЫ</span>
+					</template>
+					<!-- Начало работы -->
+					<template #title-one>
+						<span>ДАТА НАЧАЛА*</span>
+						<span v-if="currentWork.data.startWork.edited"> (ИЗМЕНЕНО)</span>
+					</template>
+					<template #input-one>
+						<input
+							type="date"
+							autocomplete="off"
+							v-model="currentWork.data.startWork.body"
+							:class="{ error: currentWork.errors.startWork.status }"
+							@input="currentWork.data.startWork.edited = true"
+							@blur="checkModalInput('currentWork', 'startWork', 'text')"
+						/>
+					</template>
+					<template #error-one>
+						<span class="error" v-if="currentWork.errors.startWork.status">
+							{{ currentWork.errors.startWork.body }}
+						</span>
+					</template>
+					<!-- Конец работы -->
+					<template #title-two>
+						<span>ДАТА ОКОНЧАНИЯ*</span>
+						<span v-if="currentWork.data.endWork.edited"> (ИЗМЕНЕНО)</span>
+					</template>
+					<template #input-two>
+						<input
+							type="date"
+							placeholder="Введите улицу"
+							autocomplete="off"
+							v-model="currentWork.data.endWork.body"
+							:class="{ error: currentWork.errors.endWork.status }"
+							@input="currentWork.data.endWork.edited = true"
+							@blur="checkModalInput('currentWork', 'endWork', 'text')"
+						/>
+					</template>
+					<template #error-two>
+						<span class="error" v-if="currentWork.errors.endWork.status">
+							{{ currentWork.errors.endWork.body }}
+						</span>
+					</template>
+				</container-input-two>
+			</container-input>
+		</template>
+		<template #footer>
+			<block-buttons>
+				<button-claim @click="addWork" v-if="modalWorks.type == 'create'">
+					Создать
+				</button-claim>
+				<button-default @click="updateWork" v-if="modalWorks.type == 'edit'">
+					Обновить
+				</button-default>
+			</block-buttons>
+		</template>
+	</admin-modal>
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                   СПЕЦИАЛИСТ                      |-->
 	<!--|___________________________________________________|-->
@@ -489,7 +602,7 @@
 					</template>
 					<template #title-three>
 						<!-- TODO сделать не обязательным -->
-						<span>ОТЧЕСТВО*</span>
+						<span>ОТЧЕСТВО</span>
 						<span v-if="specialist.profile.data.surname.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #input-three>
@@ -500,7 +613,6 @@
 							v-model="specialist.profile.data.surname.body"
 							:class="{ error: specialist.profile.errors.surname.status }"
 							@input="specialist.profile.data.surname.edited = true"
-							@blur="checkSpecialistInput('surname', 'text')"
 						/>
 					</template>
 					<template #error-three>
@@ -671,7 +783,7 @@
 		<template #title-one>
 			<block-title>
 				<template #title>
-					Специализации
+					СПЕЦИАЛИЗАЦИИ
 					<span v-show="loading.sections.specializations">
 						({{ specialist.connections.specializations.length }})
 					</span>
@@ -742,7 +854,7 @@
 		<template #title-two>
 			<block-title>
 				<template #title>
-					Клиники
+					КЛИНИКИ
 					<span v-show="loading.sections.specializations">
 						({{ specialist.connections.clinics.length }})
 					</span>
@@ -799,7 +911,12 @@
 	<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
 	<block-once v-if="$route.params.id !== 'new'">
 		<block-title>
-			<template #title> Сертификаты </template>
+			<template #title>
+				СЕРТИФИКАТЫ
+				<span v-show="loading.sections.certificates">
+					({{ specialist.connections.certificates.length }})
+				</span>
+			</template>
 			<template #buttons>
 				<icon-save :width="28" :height="28" @click="saveCertificateChanges" />
 			</template>
@@ -831,9 +948,14 @@
 	<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
 	<block-once v-if="$route.params.id !== 'new'">
 		<block-title>
-			<template #title> Образование </template>
+			<template #title>
+				ОБРАЗОВАНИЕ
+				<span v-show="loading.sections.educations">
+					({{ specialist.connections.educations.length }})
+				</span>
+			</template>
 			<template #buttons>
-				<icon-save :width="28" :height="28" @click="console.log('save')" />
+				<icon-save :width="28" :height="28" @click="saveEducationChanges" />
 			</template>
 		</block-title>
 
@@ -863,7 +985,12 @@
 	<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
 	<block-once v-if="$route.params.id !== 'new'">
 		<block-title>
-			<template #title> Места работы </template>
+			<template #title>
+				МЕСТА РАБОТЫ
+				<span v-show="loading.sections.works">
+					({{ specialist.connections.works.length }})
+				</span>
+			</template>
 			<template #buttons>
 				<icon-save
 					:width="28"
@@ -877,6 +1004,7 @@
 		<admin-specialists-table
 			v-show="loading.sections.works"
 			:array="getSpecialistWorks"
+			@touchEditArrValue="editArrayValue('edit', 'works', $event)"
 			@touchRemoveArrValue="updateDeleteValue('works', $event)"
 		/>
 
@@ -888,7 +1016,9 @@
 		/>
 
 		<block-buttons>
-			<button-default> Добавить </button-default>
+			<button-default @click="editArrayValue('create', 'works', null)">
+				Добавить
+			</button-default>
 		</block-buttons>
 	</block-once>
 </template>
@@ -1143,6 +1273,79 @@ export default {
 					},
 					speсialization: {
 						body: null,
+						edited: false,
+					},
+					create: {
+						body: false,
+						edited: false,
+					},
+					delete: {
+						body: false,
+						edited: false,
+					},
+				},
+			},
+			modalWorks: {
+				title: "",
+				status: false,
+				type: null,
+				style: {
+					create: false,
+					delete: false,
+				},
+				modules: {
+					title: true,
+					buttons: {
+						hide: false,
+						close: true,
+					},
+					images: false,
+					body: true,
+					footer: true,
+				},
+			},
+			currentWork: {
+				errors: {
+					id: {
+						body: "",
+						status: false,
+					},
+					startWork: {
+						body: "",
+						status: false,
+					},
+					endWork: {
+						body: "",
+						status: false,
+					},
+					organization: {
+						body: "",
+						status: false,
+					},
+					name: {
+						body: "",
+						status: false,
+					},
+				},
+				data: {
+					id: {
+						body: "",
+						edited: false,
+					},
+					startWork: {
+						body: "",
+						edited: false,
+					},
+					endWork: {
+						body: "",
+						edited: false,
+					},
+					organization: {
+						body: "",
+						edited: false,
+					},
+					name: {
+						body: "",
 						edited: false,
 					},
 					create: {
@@ -1733,7 +1936,6 @@ export default {
 						"link",
 						"family",
 						"name",
-						"surname",
 						"category",
 						"adultDoctor",
 						"childrenDoctor",
@@ -2238,7 +2440,6 @@ export default {
 				this.$store.commit("debuggerState", debbugStory);
 			}
 		},
-
 		/* Обновление данных */
 		updateEducation() {
 			if (
@@ -2262,6 +2463,171 @@ export default {
 					educationToUpdate[0][key] = this.currentEducation.data[key].body;
 				}
 				this.closeModal("modalEducations");
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "При обновлении что-то пошло не так.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
+		/* Сохранение */
+		saveEducationChanges() {
+			// Проверка на статус добавления специалиста
+			if (this.specialist.profile.data.id.body === "new") return;
+
+			axios({
+				method: "post",
+				url: `${this.$store.state.axios.urlApi}` + `save-specialist-educations-changes`,
+				headers: {
+					Accept: "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: {
+					id: this.specialist.profile.data.id.body,
+					array: this.specialist.connections.educations,
+				},
+			})
+				.then((response) => {
+					if (response.data.status) {
+						try {
+							// Обновление id добавленных элементов на данные из бд
+							for (let key in response.data.data) {
+								let education = this.specialist.connections.educations.filter((item) => {
+									if (item.id === response.data.data[key].old) {
+										return item;
+									}
+								});
+								education[0].id = response.data.data[key].new;
+							}
+
+							// Получения нового массива специалистов, помеченных на удаление
+							let res = this.specialist.connections.educations.filter((item) => {
+								if (item.delete == true) {
+									return Object.assign({}, item);
+								}
+							});
+
+							// Повторять, пока не будут удалены все элементы, помеченные на удаление
+							while (res.length > 0) {
+								/* Получение индекса элемента, помеченного на удаление из массива специалистов */
+								this.specialist.connections.educations.splice(
+									this.specialist.connections.educations.indexOf(res[0]),
+									1
+								);
+								/* Обновление списка с элементами, помеченными на удаление */
+								res = this.specialist.connections.educations.filter((item) => {
+									if (item.delete == true) {
+										return Object.assign({}, item);
+									}
+								});
+							}
+
+							// Сброс флагов добавления и удаления
+							this.specialist.connections.educations.forEach((item) => {
+								item.create = false;
+								item.delete = false;
+							});
+
+							let debbugStory = {
+								title: "Успешно!",
+								body: response.data.message,
+								type: "Completed",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+						} catch (error) {
+							let debbugStory = {
+								title: "Ошибка.",
+								body: "После сохранения что-то пошло не так.",
+								type: "Error",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+						}
+					} else {
+						let debbugStory = {
+							title: "Ошибка.",
+							body: response.data.message,
+							type: "Error",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					}
+				})
+				.catch((error) => {
+					let debbugStory = {
+						title: "Ошибка.",
+						body: "Данные почему-то не сохранились...",
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+				});
+		},
+		/* _____________________________________________________*/
+		/* 6. Прошлые работы                                    */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* Добавление */
+		addWork() {
+			if (
+				this.checkModalInputsAll("currentWork", [
+					"name",
+					"organization",
+					"startWork",
+					"endWork",
+				])
+			)
+				return;
+
+			try {
+				// Поиск максимального id
+				let maxId = 0;
+				this.specialist.connections.works.forEach((item) => {
+					if (item.id > maxId) maxId = item.id;
+				});
+
+				this.specialist.connections.works.push({
+					id: maxId + 1,
+					name: this.currentWork.data.name.body,
+					organization: this.currentWork.data.organization.body,
+					startWork: this.currentWork.data.startWork.body,
+					endWork: this.currentWork.data.endWork.body,
+					create: true,
+					delete: false,
+				});
+
+				this.closeModal("modalWorks");
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "При добавлении что-то пошло не так.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
+		/* Обновление */
+		updateWork() {
+			if (
+				this.checkModalInputsAll("currentWork", [
+					"name",
+					"organization",
+					"startWork",
+					"endWork",
+				])
+			)
+				return;
+
+			try {
+				let workToUpdate = this.specialist.connections.works.filter((work) => {
+					if (work.id === this.currentWork.data.id.body) {
+						return work;
+					}
+				});
+
+				for (let key in this.currentWork.data) {
+					workToUpdate[0][key] = this.currentWork.data[key].body;
+				}
+
+				this.closeModal("modalWorks");
 			} catch (error) {
 				let debbugStory = {
 					title: "Ошибка.",
@@ -2389,11 +2755,28 @@ export default {
 
 						this.openModal(type, "modalEducations", "currentEducation");
 					}
-
-					this.openModal(type, "modalEducations", "currentEducation");
 					break;
 				case "works":
-					this.openModal(type, "modalWorks", "currentWork");
+					/* Создание */
+					if (type == "create") {
+						this.openModal(type, "modalWorks", "currentWork");
+					}
+
+					/* Редактирование */
+					if (type == "edit") {
+						let filterWorks = this.specialist.connections.works.filter((item) => {
+							if (item.id == value.id) {
+								return item;
+							}
+						});
+
+						for (let key in this.currentWork.data) {
+							this.currentWork.data[key].body = filterWorks[0][key];
+						}
+
+						this.openModal(type, "modalWorks", "currentWork");
+					}
+
 					break;
 			}
 		},
@@ -2541,21 +2924,27 @@ export default {
 }
 
 :is(.specializations-list, .clinics-list) > .item {
+	cursor: pointer;
+	justify-content: center;
+	align-items: center;
+
 	display: grid;
 	gap: 10px;
 	border: 2px solid var(--input-border-color-inactive);
 	border-radius: 10px;
 	padding: 15px;
 
+	font-size: 18px;
+
 	transition: all 0.2s;
 }
 
 .specializations-list > .item {
-	grid-template-columns: 20px 30px 1fr;
+	grid-template-columns: 30px 30px 1fr;
 }
 
 .clinics-list > .item {
-	grid-template-columns: 20px 30px 1fr 1fr;
+	grid-template-columns: 30px 30px 1fr 1fr;
 }
 
 :is(.specializations-list, .clinics-list) > .item > select {
@@ -2576,6 +2965,9 @@ export default {
 
 :is(.specializations-list, .clinics-list) > .item > input[type="checkbox"] {
 	cursor: pointer;
+
+	width: 17.5px;
+	height: 17.5px;
 }
 
 :is(.specializations-list, .clinics-list) > .item > input[type="checkbox"]:checked {
@@ -2584,7 +2976,7 @@ export default {
 
 :is(.specializations-list, .clinics-list) > .item:first-of-type {
 	display: grid;
-	grid-template-columns: 20px 30px 1fr 1fr;
+	grid-template-columns: 40px 30px 1fr 1fr;
 	gap: 10px;
 
 	border: 0px;
