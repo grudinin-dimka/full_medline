@@ -1611,7 +1611,7 @@ abstract class PrettyPrinterAbstract implements PrettyPrinter {
              * UnionType->types
              */
 
-            /* TODO
+            /* 
              * Stmt_If->elseifs
              * Stmt_TryCatch->catches
              * Expr_Array->items
@@ -1637,7 +1637,7 @@ abstract class PrettyPrinterAbstract implements PrettyPrinter {
             Param::class . '->flags' => ['pModifiers', \T_VARIABLE],
             Expr\Closure::class . '->static' => ['pStatic', \T_FUNCTION],
             Expr\ArrowFunction::class . '->static' => ['pStatic', \T_FN],
-            //Stmt\TraitUseAdaptation\Alias::class . '->newModifier' => 0, // TODO
+            //Stmt\TraitUseAdaptation\Alias::class . '->newModifier' => 0, 
         ];
 
         // List of integer subnodes that are not modifiers:

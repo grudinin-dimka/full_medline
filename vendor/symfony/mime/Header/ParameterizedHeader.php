@@ -115,7 +115,7 @@ final class ParameterizedHeader extends UnstructuredHeader
 
         // If it's not already a valid parameter value...
         if (!preg_match('/^'.self::TOKEN_REGEX.'$/D', $value)) {
-            // TODO: text, or something else??
+            // todo: text, or something else??
             // ... and it's not ascii
             if (!preg_match('/^[\x00-\x08\x0B\x0C\x0E-\x7F]*$/D', $value)) {
                 $encoded = true;
