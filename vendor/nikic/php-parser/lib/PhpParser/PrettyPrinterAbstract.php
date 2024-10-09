@@ -546,7 +546,6 @@ abstract class PrettyPrinterAbstract implements PrettyPrinter {
             $result .= $this->origTokens->getTokenCode($pos, count($origTokens) - 1, 0);
         } else {
             // Fallback
-            // TODO Add <?php properly
             $result = "<?php" . $this->newline . $this->pStmts($stmts, false);
         }
 
@@ -777,7 +776,6 @@ abstract class PrettyPrinterAbstract implements PrettyPrinter {
                 // This was a single statement without braces, but either additional statements
                 // have been added, or the single statement has been removed. This requires the
                 // addition of braces. For now fall back.
-                // TODO: Try to preserve formatting
                 return null;
             }
         }
@@ -828,7 +826,6 @@ abstract class PrettyPrinterAbstract implements PrettyPrinter {
                 if ($skipRemovedNode) {
                     if ($isStmtList && $this->origTokens->haveTagInRange($pos, $itemStartPos)) {
                         // We'd remove an opening/closing PHP tag.
-                        // TODO: Preserve formatting.
                         $this->setIndentLevel($origIndentLevel);
                         return null;
                     }
@@ -938,7 +935,6 @@ abstract class PrettyPrinterAbstract implements PrettyPrinter {
                 } else {
                     if ($isStmtList && $this->origTokens->haveTagInRange($pos, $itemStartPos)) {
                         // We'd remove an opening/closing PHP tag.
-                        // TODO: Preserve formatting.
                         return null;
                     }
                 }
@@ -961,7 +957,6 @@ abstract class PrettyPrinterAbstract implements PrettyPrinter {
         }
 
         if ($skipRemovedNode) {
-            // TODO: Support removing single node.
             return null;
         }
 
@@ -1425,7 +1420,6 @@ abstract class PrettyPrinterAbstract implements PrettyPrinter {
             return;
         }
 
-        // TODO: "yield" where both key and value are inserted doesn't work
         // [$find, $beforeToken, $extraLeft, $extraRight]
         $this->insertionMap = [
             'Expr_ArrayDimFetch->dim' => ['[', false, null, null],
@@ -1454,7 +1448,7 @@ abstract class PrettyPrinterAbstract implements PrettyPrinter {
             'PropertyItem->default' => [null, false, ' = ', null],
             'Stmt_Return->expr' => [\T_RETURN, false, ' ', null],
             'Stmt_StaticVar->default' => [null, false, ' = ', null],
-            //'Stmt_TraitUseAdaptation_Alias->newName' => [T_AS, false, ' ', null], // TODO
+            //'Stmt_TraitUseAdaptation_Alias->newName' => [T_AS, false, ' ', null], 
             'Stmt_TryCatch->finally' => [null, false, ' ', null],
 
             // 'Expr_Exit->expr': Complicated due to optional ()
@@ -1472,7 +1466,7 @@ abstract class PrettyPrinterAbstract implements PrettyPrinter {
 
         $this->listInsertionMap = [
             // special
-            //'Expr_ShellExec->parts' => '', // TODO These need to be treated more carefully
+            //'Expr_ShellExec->parts' => '', 
             //'Scalar_InterpolatedString->parts' => '',
             Stmt\Catch_::class . '->types' => '|',
             UnionType::class . '->types' => '|',

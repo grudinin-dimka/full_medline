@@ -64,7 +64,6 @@ final class DocumentBlockParser extends AbstractBlockContinueParser
         $walker = $this->document->walker();
         while ($event = $walker->next()) {
             $node = $event->getNode();
-            // TODO for v3: It would be great if we could find an alternate way to identify such paragraphs.
             // Unfortunately, we can't simply check for empty paragraphs here because inlines haven't been processed yet,
             // meaning all paragraphs will appear blank here, and we don't have a way to check the status of the reference parser
             // which is attached to the (already-closed) paragraph parser.

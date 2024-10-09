@@ -230,7 +230,6 @@ class TokenStream {
             if ($id === \T_CONSTANT_ENCAPSED_STRING || $id === \T_ENCAPSED_AND_WHITESPACE) {
                 $result .= $text;
             } else {
-                // TODO Handle non-space indentation
                 if ($indent < 0) {
                     $result .= str_replace("\n" . str_repeat(" ", -$indent), "\n", $text);
                 } elseif ($indent > 0) {

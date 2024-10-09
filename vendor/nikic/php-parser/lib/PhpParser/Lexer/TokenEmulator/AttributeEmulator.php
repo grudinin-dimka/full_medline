@@ -32,7 +32,6 @@ final class AttributeEmulator extends TokenEmulator {
     }
 
     public function reverseEmulate(string $code, array $tokens): array {
-        // TODO
         return $tokens;
     }
 

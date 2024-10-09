@@ -64,7 +64,6 @@ class Data implements DataInterface, ArrayAccess
 
         if (!is_array($currentValue[$endKey])) {
             // Promote this key to an array.
-            // TODO: Is this really what we want to do?
             $currentValue[$endKey] = [$currentValue[$endKey]];
         }
 

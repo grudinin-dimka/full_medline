@@ -495,7 +495,7 @@
 				<icon-save
 					:width="28"
 					:height="28"
-					@click="saveProfileImage"
+					@click="saveProfileChanges"
 					v-if="$route.params.id !== 'new'"
 				/>
 				<icon-add :width="28" :height="28" @click="$router.push('1')" v-else></icon-add>
@@ -532,11 +532,17 @@
 						<span v-if="specialist.profile.data.filename.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #input-one>
-						<input class="profile-file" type="file" autocomplete="off" ref="fileUpload" />
+						<input
+							class="profile-file"
+							type="file"
+							autocomplete="off"
+							ref="fileUpload"
+							:class="{ error: specialist.profile.errors.file.status }"
+						/>
 					</template>
 					<template #error-one>
-						<span class="error" v-if="specialist.profile.errors.filename.status">
-							{{ specialist.profile.errors.filename.body }}
+						<span class="error" v-if="specialist.profile.errors.file.status">
+							{{ specialist.profile.errors.file.body }}
 						</span>
 					</template>
 					<template #title-two>
@@ -1408,10 +1414,6 @@ export default {
 				// Основная информация
 				profile: {
 					data: {
-						file: {
-							body: "",
-							edited: false,
-						},
 						id: {
 							body: "",
 							edited: false,
@@ -1474,7 +1476,10 @@ export default {
 						},
 					},
 					errors: {
-						file: "",
+						file: {
+							body: "",
+							status: false,
+						},
 						id: {
 							body: "",
 							status: false,
@@ -1867,6 +1872,38 @@ export default {
 			let errorCount = 0;
 			for (let i = 0; i < inputKeys.length; i++) {
 				switch (inputKeys[i]) {
+					case "file":
+						/* Проверка на тип загруженного файла */
+						if (this.$refs.fileUpload.files[0].type !== "image/png") {
+							let debbugStory = {
+								title: "Ошибка.",
+								body: "Разрешенный формат файла: png.",
+								type: "Error",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+							errorCount++;
+
+							this.specialist.profile.errors.file.status = true;
+							this.specialist.profile.errors.file.body = "Разрешенный формат файла: png.";
+							continue;
+						}
+
+						/* Проверка на размер загруженного файла */
+						let fileSize = this.$refs.fileUpload.files[0].size / 1024 / 1024;
+						if (fileSize > 10) {
+							let debbugStory = {
+								title: "Ошибка.",
+								body: "Размер файла более 10 МБ.",
+								type: "Error",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+							errorCount++;
+
+							this.specialist.profile.errors.file.status = true;
+							this.specialist.profile.errors.file.body = "Размер файла более 10 МБ.";
+							continue;
+						}
+						break;
 					// Для индекса
 					case "category":
 					case "adultDoctor":
@@ -1935,9 +1972,8 @@ export default {
 		/* Сохранение изменений */
 		saveProfileImage() {
 			/* Загрузка файла */
-			this.specialist.profile.data.file.body = this.$refs.fileUpload.files[0];
 			let formData = new FormData();
-			formData.append("image", this.specialist.profile.data.file.body);
+			formData.append("image", this.$refs.fileUpload.files[0]);
 			formData.append("type", "specialist");
 
 			axios({
@@ -1951,93 +1987,137 @@ export default {
 			})
 				.then((response) => {
 					if (response.data.status) {
-						let debbugStory = {
-							title: "Успешно!",
-							body: response.data.message,
-							type: "Completed",
+						return {
+							status: true,
+							message: "Изображение сохранилось.",
+							data: response.data.data,
 						};
-						this.$store.commit("debuggerState", debbugStory);
 					} else {
-						// filename: response.data.replace("/storage/slides/", ""),
-						let debbugStory = {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "Error",
+						return {
+							status: false,
+							message: "Изображение не сохранено.",
+							data: null,
 						};
-						this.$store.commit("debuggerState", debbugStory);
 					}
 				})
 				.catch((error) => {
-					console.log(error);
+					return {
+						status: false,
+						message: "Произошла ошибка при сохранении изображения.",
+						data: null,
+					};
 				});
 		},
 		saveProfileChanges() {
 			// Проверка на статус добавления специалиста
 			if (this.specialist.profile.data.id.body === "new") return;
 
-			try {
-				if (
-					this.checkSpecialistInputsAll([
-						"link",
-						"family",
-						"name",
-						"category",
-						"adultDoctor",
-						"childrenDoctor",
-					])
-				)
-					return;
+			// try {
+			if (
+				this.checkSpecialistInputsAll([
+					"link",
+					"family",
+					"name",
+					"category",
+					"adultDoctor",
+					"childrenDoctor",
+				])
+			)
+				return;
 
-				// Сохранение данных
-				axios({
-					method: "post",
-					url: `${this.$store.state.axios.urlApi}` + `save-specialist-profile-changes`,
-					headers: {
-						Accept: "application/json",
-						Authorization: `Bearer ${localStorage.getItem("token")}`,
-					},
-					data: {
-						array: {
-							profile: this.specialist.profile.data,
-							connections: this.specialist.connections,
-						},
-					},
-				})
-					.then((response) => {
-						if (response.data.status) {
-							let debbugStory = {
-								title: "Успешно!",
-								body: response.data.message,
-								type: "Completed",
-							};
-							this.$store.commit("debuggerState", debbugStory);
+			if (this.$refs.fileUpload.files[0]) {
+				if (this.checkSpecialistInputsAll(["file"])) return;
 
-							this.clearSpecialistProfileEdited();
-						} else {
-							let debbugStory = {
-								title: "Ошибка.",
-								body: response.data.message,
-								type: "Error",
-							};
-							this.$store.commit("debuggerState", debbugStory);
-						}
-					})
-					.catch((error) => {
-						let debbugStory = {
-							title: "Ошибка.",
-							body: "При сохранении профиля произошла ошибка.",
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
-					});
-			} catch (error) {
-				let debbugStory = {
-					title: "Ошибка.",
-					body: "Не удалось сохранить данные",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+				// /* Загрузка файла */
+				// let formData = new FormData();
+				// formData.append("image", this.$refs.fileUpload.files[0]);
+				// formData.append("type", "specialist");
+
+				// axios({
+				// 	method: "post",
+				// 	url: `${this.$store.state.axios.urlApi}` + `upload-file`,
+				// 	headers: {
+				// 		contentType: "multipart/form-data",
+				// 		authorization: `Bearer ${localStorage.getItem("token")}`,
+				// 	},
+				// 	data: formData,
+				// })
+				// 	.then((response) => {
+				// 		if (response.data.status) {
+				// 			this.specialist.profile.data.path.body = response.data.data;
+				// 			this.specialist.profile.data.filename.body = response.data.data.replace(
+				// 				"/storage/specialists/",
+				// 				""
+				// 			);
+				// 		} else {
+				// 			let debbugStory = {
+				// 				title: "Ошибка.",
+				// 				body: "Не удалось загрузить изображение.",
+				// 				type: "Error",
+				// 			};
+				// 			this.$store.commit("debuggerState", debbugStory);
+				// 		}
+				// 	})
+				// 	.catch((error) => {
+				// 		let debbugStory = {
+				// 			title: "Ошибка.",
+				// 			body: "Во время загрузки изображения произошла ошибка.",
+				// 			type: "Error",
+				// 		};
+				// 		this.$store.commit("debuggerState", debbugStory);
+				// 	});
 			}
+
+			// 	// Сохранение данных
+			// 	axios({
+			// 		method: "post",
+			// 		url: `${this.$store.state.axios.urlApi}` + `save-specialist-profile-changes`,
+			// 		headers: {
+			// 			Accept: "application/json",
+			// 			Authorization: `Bearer ${localStorage.getItem("token")}`,
+			// 		},
+			// 		data: {
+			// 			array: {
+			// 				profile: this.specialist.profile.data,
+			// 				connections: this.specialist.connections,
+			// 			},
+			// 		},
+			// 	})
+			// 		.then((response) => {
+			// 			if (response.data.status) {
+			// 				let debbugStory = {
+			// 					title: "Успешно!",
+			// 					body: response.data.message,
+			// 					type: "Completed",
+			// 				};
+			// 				this.$store.commit("debuggerState", debbugStory);
+
+			// 				this.clearSpecialistProfileEdited();
+			// 			} else {
+			// 				let debbugStory = {
+			// 					title: "Ошибка.",
+			// 					body: response.data.message,
+			// 					type: "Error",
+			// 				};
+			// 				this.$store.commit("debuggerState", debbugStory);
+			// 			}
+			// 		})
+			// 		.catch((error) => {
+			// 			let debbugStory = {
+			// 				title: "Ошибка.",
+			// 				body: "При сохранении профиля произошла ошибка.",
+			// 				type: "Error",
+			// 			};
+			// 			this.$store.commit("debuggerState", debbugStory);
+			// 		});
+			// } catch (error) {
+			// 	let debbugStory = {
+			// 		title: "Ошибка.",
+			// 		body: "Не удалось сохранить данные",
+			// 		type: "Error",
+			// 	};
+			// 	this.$store.commit("debuggerState", debbugStory);
+			// }
 		},
 		/* Очистка статуса изменений */
 		clearSpecialistProfileEdited() {

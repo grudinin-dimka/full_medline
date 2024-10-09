@@ -28,7 +28,6 @@
 			</div>
 			<div class="modal-img" v-if="modal.modules.images">
 				<slot name="img"></slot>
-				<slot name="img-input"></slot>
 			</div>
 			<!-- Тело окна -->
 			<div class="modal-body" v-if="modal.modules.body">
@@ -168,12 +167,8 @@ export default {
 }
 
 .modal-img {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
+	display: flex;
 	justify-content: center;
-	align-items: justify;
-	gap: 20px;
-	min-height: 300px;
 }
 
 .modal-body {

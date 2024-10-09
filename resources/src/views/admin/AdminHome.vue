@@ -38,81 +38,97 @@
 		</template>
 		<template #img>
 			<div
+				class="modal-slide-img"
 				v-if="modal.type == 'edit'"
-				class="modal-body-img"
 				:style="{
 					backgroundImage: `url(${currentSlide.data.path.body})`,
 				}"
 				ref="modalImg"
 			></div>
 			<div
+				class="modal-slide-img"
 				v-if="modal.type == 'create'"
-				class="modal-body-img"
 				:style="{
 					backgroundImage: `url(/storage/default/image-none-create.png)`,
 				}"
 				ref="modalImg"
 			></div>
 		</template>
-		<template #img-input>
-			<input
-				class="modal-img-input"
-				type="file"
-				ref="fileUpload"
-				:class="{ error: currentSlide.errors.file.status }"
-				placeholder="Файл"
-				:disabled="currentSlide.data.delete.body"
-			/>
-		</template>
 		<template #body>
-			<!-- Название -->
-			<container-input-once :type="modal.type == 'create' ? 'create' : 'edit'">
-				<template #title>
-					<span>НАЗВАНИЕ*</span>
-					<span v-if="currentSlide.data.name.edited"> (ИЗМЕНЕНО) </span>
-				</template>
-				<template #input>
-					<input
-						type="text"
-						v-model="currentSlide.data.name.body"
-						ref="inputName"
-						@input="currentSlide.data.name.edited = true"
-						@blur="checkModalInput('name', 'text')"
-						:class="{ error: currentSlide.errors.name.status }"
-						placeholder="Название слайда"
-						:disabled="currentSlide.data.delete.body"
-					/>
-				</template>
-				<template #error>
-					<span class="error" v-if="currentSlide.errors.name.status">
-						{{ currentSlide.errors.name.value }}
-					</span>
-				</template>
-			</container-input-once>
-			<!-- Ссылка -->
-			<container-input-once :type="modal.type == 'create' ? 'create' : 'edit'">
-				<template #title>
-					<span>ССЫЛКА*</span>
-					<span v-if="currentSlide.data.link.edited">(ИЗМЕНЕНО)</span>
-				</template>
-				<template #input>
-					<input
-						type="text"
-						v-model="currentSlide.data.link.body"
-						ref="inputLink"
-						@input="currentSlide.data.link.edited = true"
-						@blur="checkModalInput('link', 'text')"
-						:class="{ error: currentSlide.errors.link.status }"
-						placeholder="Ссылка слайда"
-						:disabled="currentSlide.data.delete.body"
-					/>
-				</template>
-				<template #error>
-					<span class="error" v-if="currentSlide.errors.link.status">
-						{{ currentSlide.errors.link.value }}
-					</span>
-				</template>
-			</container-input-once>
+			<container-input>
+				<!-- Название -->
+				<container-input-once :type="modal.type == 'create' ? 'create' : 'edit'">
+					<template #title>
+						<span>ИЗОБРАЖЕНИЕ*</span>
+						<span v-if="currentSlide.data.name.edited"> (ИЗМЕНЕНО) </span>
+					</template>
+					<template #input>
+						<input
+							type="file"
+							class="slide-file"
+							placeholder="Загрузите изображение"
+							ref="fileUpload"
+							:disabled="currentSlide.data.delete.body"
+						/>
+					</template>
+					<!-- TODO Сделать ошибки, как в профиле врача -->
+					<!-- TODO Проверить также загрузку изображений -->
+					<!-- STOP Делал ошибки картинок -->
+					<template #error>
+						<span class="error" v-if="currentSlide.errors.name.status">
+							{{ currentSlide.errors.name.value }}
+						</span>
+					</template>
+				</container-input-once>
+				<!-- Название -->
+				<container-input-once :type="modal.type == 'create' ? 'create' : 'edit'">
+					<template #title>
+						<span>НАЗВАНИЕ*</span>
+						<span v-if="currentSlide.data.name.edited"> (ИЗМЕНЕНО) </span>
+					</template>
+					<template #input>
+						<input
+							type="text"
+							v-model="currentSlide.data.name.body"
+							ref="inputName"
+							@input="currentSlide.data.name.edited = true"
+							@blur="checkModalInput('name', 'text')"
+							:class="{ error: currentSlide.errors.name.status }"
+							placeholder="Введите название"
+							:disabled="currentSlide.data.delete.body"
+						/>
+					</template>
+					<template #error>
+						<span class="error" v-if="currentSlide.errors.name.status">
+							{{ currentSlide.errors.name.value }}
+						</span>
+					</template>
+				</container-input-once>
+				<!-- Ссылка -->
+				<container-input-once :type="modal.type == 'create' ? 'create' : 'edit'">
+					<template #title>
+						<span>ССЫЛКА*</span>
+						<span v-if="currentSlide.data.link.edited">(ИЗМЕНЕНО)</span>
+					</template>
+					<template #input>
+						<input
+							type="text"
+							v-model="currentSlide.data.link.body"
+							ref="inputLink"
+							@input="currentSlide.data.link.edited = true"
+							@blur="checkModalInput('link', 'text')"
+							:class="{ error: currentSlide.errors.link.status }"
+							placeholder="Введите ссылку"
+							:disabled="currentSlide.data.delete.body"
+						/>
+					</template>
+					<template #error>
+						<span class="error" v-if="currentSlide.errors.link.status">
+							{{ currentSlide.errors.link.value }}
+						</span>
+					</template>
+				</container-input-once>
+			</container-input>
 		</template>
 		<template #footer>
 			<block-buttons v-if="modal.type == 'edit'">
@@ -1286,109 +1302,13 @@ export default {
 </script>
 
 <style scoped>
-.modal-img-input {
-	box-sizing: border-box;
-	outline: none;
-	max-width: 400px;
-
-	background-color: white;
-	padding: 10px;
-	border: 2px solid var(--input-border-color-inactive);
-	border-radius: 10px;
-
-	font-size: 20px;
-	caret-color: var(--input-border-color-active);
-
-	transition: all 0.2s;
-}
-
-.modal-img-input:disabled {
-	background-color: #faf0f0;
-}
-
-.modal-img-input.error {
-	background-color: var(--input-background-color-error);
-	border: 2px solid var(--input-border-color-error);
-}
-
-.modal-img-input::file-selector-button {
-	flex-grow: 1;
-	cursor: pointer;
-	background-color: var(--button-default-color);
-	border: 0px;
-	border-radius: 5px;
-	color: white;
-	padding: 5px;
-}
-
-.modal-img-input.error::file-selector-button {
-	background-color: var(--input-border-color-error);
-	border: 2px solid var(--input-border-color-error);
-}
-
-.modal-body-img {
-	width: auto;
+.modal-slide-img {
 	background-size: contain;
 	background-position: center center;
 	background-repeat: no-repeat;
-	padding: 5px;
-	border-radius: 10px;
-}
-
-.modal-body-inputs {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
-}
-
-.modal-body-inputs-block {
-	display: flex;
-	flex-direction: column;
-	gap: 5px;
-}
-
-.modal-body-inputs-block > article > input::file-selector-button {
-	box-sizing: border-box;
-	outline: none;
-	cursor: pointer;
-	background-color: var(--button-default-color);
-	border: 0px;
-	border-radius: 5px;
-	color: white;
-	padding: 5px;
 
 	width: 100%;
-	height: 58px;
-
-	font-size: 20px;
-	caret-color: var(--input-border-color-active);
-
-	transition: all 0.2s;
-}
-
-.modal-body-inputs-block > article > input::file-selector-button:hover {
-	background-color: var(--button-default-color-hover);
-}
-
-textarea {
-	resize: none;
-	box-sizing: border-box;
-	outline: none;
-
-	padding: 10px;
-	border: 2px solid var(--input-border-color-inactive);
-	border-radius: 10px;
-
-	width: 100%;
-
-	font-size: 18px;
-	caret-color: var(--input-border-color-active);
-
-	transition: all 0.2s;
-}
-
-textarea:focus {
-	border: 2px solid var(--input-border-color-active);
+	height: 400px;
 }
 
 .slider {
