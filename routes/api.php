@@ -59,8 +59,13 @@ Route::post('/save-footer', [AdminController::class, 'saveFooter'])->middleware(
 /* 2. Специалисты                                       */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 /* 2.1. Врачи                                           */
-Route::post('/add-specialist', [AdminController::class, 'addSpecialist'])->middleware('auth:sanctum');
+// Общее сохранение                                    
 Route::post('/save-specialists-changes', [AdminController::class, 'saveSpecialistsChanges'])->middleware('auth:sanctum');
+// Модульное сохранение                                    
+Route::post('/save-specialist-modular', [AdminController::class, 'saveSpecialistModular'])->middleware('auth:sanctum');
+// Добавление нового специалиста                                    
+Route::post('/add-specialist', [AdminController::class, 'addSpecialist'])->middleware('auth:sanctum');
+// Отдельные сохранения                                    
 Route::post('/save-specialist-profile-changes', [AdminController::class, 'saveSpecialistProfileChanges'])->middleware('auth:sanctum');
 Route::post('/save-specialist-specializations-changes', [AdminController::class, 'saveSpecialistSpecializationsChanges'])->middleware('auth:sanctum');
 Route::post('/save-specialist-clinics-changes', [AdminController::class, 'saveSpecialistClinicsChanges'])->middleware('auth:sanctum');

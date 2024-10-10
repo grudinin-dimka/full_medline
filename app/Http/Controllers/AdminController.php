@@ -194,6 +194,43 @@ class AdminController extends Controller
    /* _____________________________________________________*/
    /* 1. Врачи                                             */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+   /* Модульное сохранение */
+   public function saveSpecialistModular(Request $request) {
+      $result = null;
+      
+      switch ($request->type) {
+         case 'profile':
+            $result = $this->saveSpecialistProfile($request);            
+            return $result;
+            
+            break;         
+         case 'specializations':
+            $result = $this->saveSpecialistSpecializations($request);
+            return $result;
+            
+            break;         
+         default:
+            break;
+      }
+   }
+   public function saveSpecialistProfile(Request $request) {
+      return (object) [
+         "status" => true,
+         "message" => "Успешно",
+      ];
+   }
+   public function saveSpecialistSpecializations(Request $request) {
+      return (object) [
+         "status" => true,
+         "message" => "Успешно",
+      ];
+   }
+
+
+
+
+
+
    /* FIXME Добавить проверок при помощи валидатора на количество символов */
    /* Сохранение специалистов */ 
    public function saveSpecialistsChanges(Request $request) {
@@ -336,9 +373,6 @@ class AdminController extends Controller
             "data" => null,
          ]);   
       };
-   }
-   public function saveSpecialistAll($value) {
-      return 'test: ' . $value;
    }
    /* FIXME Добавить проверок при помощи валидатора на количество символов */
    /* Сохранение специализаций специалиста */ 

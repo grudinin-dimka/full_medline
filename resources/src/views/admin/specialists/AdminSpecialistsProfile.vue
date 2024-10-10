@@ -485,7 +485,12 @@
 				<span v-if="$route.params.id == 'new'" class="create"> (СОЗДАНИЕ)</span>
 			</template>
 			<template #buttons>
-				<icon-save-all :width="28" :height="28" @click="" v-if="$route.params.id !== 'new'" />
+				<icon-save-all
+					:width="28"
+					:height="28"
+					@click="saveSpecialistModular"
+					v-if="$route.params.id !== 'new'"
+				/>
 				<icon-save
 					:width="28"
 					:height="28"
@@ -1955,8 +1960,29 @@ export default {
 		/* 1. Профиль                                           */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Модульное сохранение данных */
-
-
+		saveSpecialistModular() {
+			let formData = new FormData();
+			formData.append("type", "profile");
+			formData.append("image", this.$refs.fileUpload.files[0]);
+			formData.append("data", JSON.stringify(this.specialist.profile.data));
+			
+			// Сохранение данных
+			axios({
+				method: "post",
+				url: `${this.$store.state.axios.urlApi}` + `save-specialist-modular`,
+				headers: {
+					Accept: "multipart/form-data",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: formData,
+			})
+				.then((response) => {
+					console.log(response.data);
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		},
 
 		/* Сохранение данных профиля */
 		saveProfileChanges() {
@@ -2999,6 +3025,7 @@ export default {
 		},
 	},
 	mounted() {
+		/* FIXME Сделать проверку на неизвестный id */
 		if (this.$route.params.id !== "new" && !Number.isNaN(Number(this.$route.params.id))) {
 			axios({
 				method: "post",
