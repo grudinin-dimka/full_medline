@@ -492,7 +492,7 @@
 					@click="saveProfileChanges"
 					v-if="$route.params.id !== 'new'"
 				/>
-				<icon-add :width="28" :height="28" @click="$router.push('1')" v-else></icon-add>
+				<icon-add :width="28" :height="28" @click="addSpecialist" v-else></icon-add>
 			</template>
 		</block-title>
 
@@ -555,7 +555,7 @@
 						/>
 					</template>
 					<template #error-two>
-						<span class="error" v-if="specialist.profile.errors.link.status">
+						<span class="error" v-if="true">
 							{{ specialist.profile.errors.link.body }}
 						</span>
 					</template>
@@ -1954,9 +1954,16 @@ export default {
 		/* _____________________________________________________*/
 		/* 1. Профиль                                           */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* Модульное сохранение данных */
+
+
+
+		/* Сохранение данных профиля */
 		saveProfileChanges() {
 			// Проверка на статус добавления специалиста
 			if (this.specialist.profile.data.id.body === "new") return;
+
+			console.log(this.specialist.profile.data);
 
 			try {
 				if (
@@ -2027,6 +2034,91 @@ export default {
 					type: "Error",
 				};
 				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
+		/* Сохранение данных профиля */
+		addSpecialist() {
+			// Проверка на статус добавления специалиста
+			if (this.specialist.profile.data.id.body !== "new") return;
+
+			if (!this.$refs.fileUpload.files[0]) {
+				this.specialist.profile.errors.file.status = true;
+				this.specialist.profile.errors.file.body = "Файл не загружен.";
+
+				// Проверка на заполненность обязательных полей
+				if (
+					this.checkSpecialistInputsAll([
+						"link",
+						"family",
+						"name",
+						"category",
+						"adultDoctor",
+						"childrenDoctor",
+					])
+				)
+					return;
+			} else {
+				// Проверка на заполненность обязательных полей
+				if (
+					this.checkSpecialistInputsAll([
+						"link",
+						"family",
+						"name",
+						"category",
+						"adultDoctor",
+						"childrenDoctor",
+						"file",
+					])
+				)
+					return;
+
+				let formData = new FormData();
+				formData.append("image", this.$refs.fileUpload.files[0]);
+				formData.append("profile", JSON.stringify(this.specialist.profile.data));
+
+				// Сохранение данных
+				axios({
+					method: "post",
+					url: `${this.$store.state.axios.urlApi}` + `add-specialist`,
+					headers: {
+						Accept: "multipart/form-data",
+						Authorization: `Bearer ${localStorage.getItem("token")}`,
+					},
+					data: formData,
+				})
+					.then((response) => {
+						this.clearSpecialistProfileEdited();
+						this.$refs.fileUpload.value = "";
+
+						if (response.data.status) {
+							this.specialist.profile.data.id.body = response.data.data.id;
+
+							this.specialist.profile.data.path.body = response.data.data.path;
+							this.specialist.profile.data.filename.body = response.data.data.path.replace(
+								"/storage/specialists/",
+								""
+							);
+
+							this.$router.push(String(response.data.data.id));
+
+							let debbugStory = {
+								title: "Успешно!",
+								body: response.data.message,
+								type: "Completed",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+						} else {
+							let debbugStory = {
+								title: "Ошибка.",
+								body: response.data.message,
+								type: "Error",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+						}
+					})
+					.catch((error) => {
+						console.log(error);
+					});
 			}
 		},
 		/* Очистка статуса изменений */
@@ -3143,7 +3235,7 @@ export default {
 }
 
 .profile-image > .item {
-	width: max(100% - 100px, 500px);
+	width: 500px;
 	height: 100%;
 	background-size: contain;
 	background-repeat: no-repeat;

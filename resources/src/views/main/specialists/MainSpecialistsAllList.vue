@@ -8,7 +8,7 @@
 		<div class="specialist-body">
 			<div class="specialist-body-options">
 				<div class="specialist-body-options-title">
-					{{ specialist.name }}
+					{{ specialist.family + " " + specialist.name + " " + specialist.surname }}
 				</div>
 				<div class="specialist-body-options-other">
 					<div class="specialist-body-options-other-block">
@@ -18,12 +18,6 @@
 					<div class="specialist-body-options-other-block">
 						<div>Стаж:</div>
 						<div>{{ specialist.startWorkAge }}</div>
-					</div>
-					<div class="specialist-body-options-other-block">
-						<div>Обучение и квалифиция:</div>
-						<div>
-							{{ specialist.education }}
-						</div>
 					</div>
 					<div class="specialist-body-options-other-block">
 						<div>Ссылка:</div>
