@@ -60,6 +60,7 @@
 				<container-input-once :type="modal.type == 'create' ? 'create' : 'edit'">
 					<template #title>
 						<span>ИЗОБРАЖЕНИЕ*</span>
+						<span v-if="currentSlide.data.file.edited"> (ИЗМЕНЕНО) </span>
 					</template>
 					<template #input>
 						<input
@@ -69,6 +70,7 @@
 							ref="fileUpload"
 							:class="{ error: currentSlide.errors.file.status }"
 							:disabled="currentSlide.data.delete.body"
+							@input="currentSlide.data.file.edited = true"
 						/>
 					</template>
 					<!-- TODO Сделать ошибки, как в профиле врача -->
@@ -463,7 +465,6 @@ export default {
 			},
 			currentSlide: {
 				status: false,
-				file: null,
 				errors: {
 					name: {
 						status: false,
@@ -501,6 +502,10 @@ export default {
 					},
 					order: {
 						body: "",
+						edited: false,
+					},
+					file: {
+						body: null,
 						edited: false,
 					},
 					hide: {
@@ -620,19 +625,8 @@ export default {
 				switch (inputKeys[i]) {
 					// Для поля файл
 					case "file":
-						/* Присваивание данных поля ввода файла пользователем в переменную */
-						let file = this.$refs.fileUpload.files[0];
-						/* Проверка на загрузку файла пользователем */
-						if (!file) {
-							this.currentSlide.errors.file.status = true;
-							this.currentSlide.errors.file.value = "Вы не загрузили изображение.";
-							errorCount++;
-
-							continue;
-						}
-
 						/* Проверка на тип загруженного файла */
-						if (file.type !== "image/png") {
+						if (this.$refs.fileUpload.files[0].type !== "image/png") {
 							this.currentSlide.errors.file.status = true;
 							this.currentSlide.errors.file.value = "Разрешенный формат файла: png.";
 							errorCount++;
@@ -641,7 +635,7 @@ export default {
 						}
 
 						/* Проверка на размер загруженного файла */
-						let fileSize = file.size / 1024 / 1024;
+						let fileSize = this.$refs.fileUpload.files[0].size / 1024 / 1024;
 						if (fileSize > 10) {
 							this.currentSlide.errors.file.status = true;
 							this.currentSlide.errors.file.value = "Размер файла более 10 МБ.";
@@ -903,9 +897,20 @@ export default {
 				/* Присваивание данных поля ввода файла пользователем в переменную */
 				this.currentSlide.file = this.$refs.fileUpload.files[0];
 
-				// Проверка на заполненность полей ввода
-				if (this.checkModalInputsAll(["name", "link", "file"])) {
-					return;
+				/* Проверка на загрузку файла пользователем */
+				if (!this.$refs.fileUpload.files[0]) {
+					this.currentSlide.errors.file.status = true;
+					this.currentSlide.errors.file.value = "Вы не загрузили изображение.";
+
+					// Проверка на заполненность полей ввода
+					if (this.checkModalInputsAll(["name", "link"])) {
+						return;
+					}
+				} else {
+					// Проверка на заполненность полей ввода
+					if (this.checkModalInputsAll(["name", "link", "file"])) {
+						return;
+					}
 				}
 
 				/* Загрузка файла */
@@ -1007,9 +1012,6 @@ export default {
 					return;
 				}
 
-				/* Присваивание данных поля ввода файла пользователем в переменную */
-				this.currentSlide.file = this.$refs.fileUpload.files[0];
-
 				/* Получение текущего объекта из массива this.slides */
 				let resultSlideCurrent = this.slides.filter(
 					(slide) => slide.order === this.currentSlide.data.order.body
@@ -1031,9 +1033,8 @@ export default {
 				if (this.checkModalInputsAll(["file"])) return;
 
 				/* Загрузка файла */
-				this.currentSlide.file = this.$refs.fileUpload.files[0];
 				let formData = new FormData();
-				formData.append("image", this.currentSlide.file);
+				formData.append("image", this.$refs.fileUpload.files[0]);
 				formData.append("type", "slide");
 
 				axios({

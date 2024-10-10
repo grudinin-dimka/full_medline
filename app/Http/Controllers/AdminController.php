@@ -43,7 +43,11 @@ class AdminController extends Controller
                File::types('png')->max(10 * 1024),
             ],
          ]);
-         if ($validated->fails()) return false;
+         if ($validated->fails()) return response()->json([
+            "status" => false,
+            "message" => "Файл не прошёл проверку.",
+            "data" => null,
+         ]);;
 
          switch ($request->type) {
          case 'slide':
@@ -58,11 +62,19 @@ class AdminController extends Controller
             break;
          }
 
-         return response()->json([
-            "status" => true,
-            "message" => "Файл загружен.",
-            "data" => Storage::url($path),
-         ]);
+         if ($path) {
+            return response()->json([
+               "status" => true,
+               "message" => "Файл загружен.",
+               "data" => Storage::url($path),
+            ]);
+         } else {
+            return response()->json([
+               "status" => false,
+               "message" => "Файл не удалось загрузить.",
+               "data" => null,
+            ]);
+         };
       } else {
          return response()->json([
             "status" => false,
@@ -190,50 +202,77 @@ class AdminController extends Controller
          if ($value['delete'] === true) {
             $specialist = Specialist::find($value['id']);
             $specialist->delete();
+            continue;
          };
-      };      
 
-      // Обновление данных
-      foreach ($request->specialists as $key => $value) {
-         if ($value['delete'] !== true) {
-            $specialist = Specialist::find($value['id']);
-            $specialist->update([
-               'hide' => $value['hide'],
-            ]);
-         };
+         $specialist = Specialist::find($value['id']);
+         $specialist->update([
+            'hide' => $value['hide'],
+         ]);
       };      
    }
    /* Сохранение всех данных специалиста */ 
    public function saveSpecialistProfileChanges(Request $request) {
-      $specialist = Specialist::find($request->array["profile"]["id"]["body"]);
-      
+      $path = null;
+
+      if($request->hasFile('image')) {
+         $validated = validator($request->all(), [
+            'image' => [
+               'required',
+               File::types('png')->max(10 * 1024),
+            ],
+         ]);
+         if ($validated->fails()) return response()->json([
+            "status" => false,
+            "message" => "Файл не прошёл проверку.",
+            "data" => null,
+         ]);
+
+         $path = $request->file('image')->store(
+            'public/specialists'
+         );
+
+         if (!$path) {
+            return response()->json([
+               "status" => false,
+               "message" => "Не удалось сохранить изображение.",
+               "data" => null,
+            ]);
+         }
+      };      
+
+      $profile = json_decode($request->profile);
+      $specialist = Specialist::find($profile->id->body);
+
       if ($specialist) {
          $specialist->update([
-            'link' => $request->array["profile"]["link"]["body"],
-            'family' => $request->array["profile"]["family"]["body"],
-            'name' => $request->array["profile"]["name"]["body"],
-            'surname' => $request->array["profile"]["surname"]["body"],
-            'category' => $request->array["profile"]["category"]["body"],
-            'degree' => $request->array["profile"]["degree"]["body"],
-            'rank' => $request->array["profile"]["rank"]["body"],
-            'startWorkAge' => $request->array["profile"]["startWorkAge"]["body"],
-            'startWorkCity' => $request->array["profile"]["startWorkCity"]["body"],
-            'adultDoctor' => $request->array["profile"]["adultDoctor"]["body"],
-            'childrenDoctor' => $request->array["profile"]["childrenDoctor"]["body"],
+            'link' => $profile->link->body,
+            'family' => $profile->family->body,
+            'name' => $profile->name->body,
+            'surname' => $profile->surname->body,
+            'category' => $profile->category->body,
+            'degree' => $profile->degree->body,
+            'rank' => $profile->rank->body,
+            'startWorkAge' => $profile->startWorkAge->body,
+            'startWorkCity' => $profile->startWorkCity->body,
+            'adultDoctor' => $profile->adultDoctor->body,
+            'childrenDoctor' => $profile->childrenDoctor->body,
          ]);
+
+         if($path) $specialist->update(['filename' => str_replace("public/specialists/", "", $path)]);
 
          return response()->json([
             "status" => true,
-            "message" => "Данные профиля врача обновлены.",
-            "data" => $specialist,
+            "message" => "Данные обновлены.",
+            "data" => $path ? Storage::url($path) : null,
          ]);   
       } else {
          return response()->json([
             "status" => false,
             "message" => "Врач не найден.",
-            "data" => $request->all(),
-         ]);            
-      }
+            "data" => null,
+         ]);   
+      };
    }
    /* FIXME Добавить проверок при помощи валидатора на количество символов */
    /* Сохранение специализаций специалиста */ 
