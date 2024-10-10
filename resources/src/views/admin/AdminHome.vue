@@ -60,7 +60,6 @@
 				<container-input-once :type="modal.type == 'create' ? 'create' : 'edit'">
 					<template #title>
 						<span>ИЗОБРАЖЕНИЕ*</span>
-						<span v-if="currentSlide.data.name.edited"> (ИЗМЕНЕНО) </span>
 					</template>
 					<template #input>
 						<input
@@ -68,6 +67,7 @@
 							class="slide-file"
 							placeholder="Загрузите изображение"
 							ref="fileUpload"
+							:class="{ error: currentSlide.errors.file.status }"
 							:disabled="currentSlide.data.delete.body"
 						/>
 					</template>
@@ -75,8 +75,8 @@
 					<!-- TODO Проверить также загрузку изображений -->
 					<!-- STOP Делал ошибки картинок -->
 					<template #error>
-						<span class="error" v-if="currentSlide.errors.name.status">
-							{{ currentSlide.errors.name.value }}
+						<span class="error" v-if="currentSlide.errors.file.status">
+							{{ currentSlide.errors.file.value }}
 						</span>
 					</template>
 				</container-input-once>
@@ -624,28 +624,18 @@ export default {
 						let file = this.$refs.fileUpload.files[0];
 						/* Проверка на загрузку файла пользователем */
 						if (!file) {
-							let debbugStory = {
-								title: "Ошибка.",
-								body: "Вы не загрузили изображение специалиста.",
-								type: "Error",
-							};
-							this.$store.commit("debuggerState", debbugStory);
-							errorCount++;
 							this.currentSlide.errors.file.status = true;
+							this.currentSlide.errors.file.value = "Вы не загрузили изображение.";
+							errorCount++;
 
 							continue;
 						}
 
 						/* Проверка на тип загруженного файла */
 						if (file.type !== "image/png") {
-							let debbugStory = {
-								title: "Ошибка.",
-								body: "Разрешенный формат файла: png.",
-								type: "Error",
-							};
-							this.$store.commit("debuggerState", debbugStory);
-							errorCount++;
 							this.currentSlide.errors.file.status = true;
+							this.currentSlide.errors.file.value = "Разрешенный формат файла: png.";
+							errorCount++;
 
 							continue;
 						}
@@ -653,17 +643,15 @@ export default {
 						/* Проверка на размер загруженного файла */
 						let fileSize = file.size / 1024 / 1024;
 						if (fileSize > 10) {
-							let debbugStory = {
-								title: "Ошибка.",
-								body: "Превышен размер загружаемого файла (не более 10 МБ).",
-								type: "Error",
-							};
-							this.$store.commit("debuggerState", debbugStory);
-							errorCount++;
 							this.currentSlide.errors.file.status = true;
+							this.currentSlide.errors.file.value = "Размер файла более 10 МБ.";
+							errorCount++;
 
 							continue;
 						}
+
+						this.currentSlide.errors.file.status = false;
+
 						break;
 					// Для всех остальных полей
 					default:
@@ -1019,6 +1007,9 @@ export default {
 					return;
 				}
 
+				/* Присваивание данных поля ввода файла пользователем в переменную */
+				this.currentSlide.file = this.$refs.fileUpload.files[0];
+
 				/* Получение текущего объекта из массива this.slides */
 				let resultSlideCurrent = this.slides.filter(
 					(slide) => slide.order === this.currentSlide.data.order.body
@@ -1033,18 +1024,11 @@ export default {
 					}
 				}
 
-				/* Присваивание данных поля ввода файла пользователем в переменную */
-				this.currentSlide.file = this.$refs.fileUpload.files[0];
+				// Если файл не загружен, то закрываем модальное окно
+				if (!this.$refs.fileUpload.files[0]) return this.closeSlide();
 
-				/* Проверка на загрузку файла пользователем */
-				if (!this.currentSlide.file) return this.closeSlide();
-
-				/* Проверка на тип загруженного файла */
-				if (this.currentSlide.file.type !== "image/png") {
-					this.currentSlide.errors.file.value = "Недопустимый тип файла.";
-					this.currentSlide.errors.file.status = true;
-					return;
-				}
+				// Проверка на заполненность полей ввода
+				if (this.checkModalInputsAll(["file"])) return;
 
 				/* Загрузка файла */
 				this.currentSlide.file = this.$refs.fileUpload.files[0];
@@ -1062,9 +1046,12 @@ export default {
 					data: formData,
 				})
 					.then((response) => {
-						this.currentSlide.data.path.body = response.data;
-						filteredSlideCurrent.path = response.data;
-						filteredSlideCurrent.filename = response.data.replace("/storage/slides/", "");
+						this.currentSlide.data.path.body = response.data.data;
+						filteredSlideCurrent.path = response.data.data;
+						filteredSlideCurrent.filename = response.data.data.replace(
+							"/storage/slides/",
+							""
+						);
 					})
 					.catch((error) => {
 						console.log(error);
