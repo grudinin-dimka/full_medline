@@ -47,24 +47,38 @@
 
 	<div class="container-input-two-sub" :class="{ create: type === 'create' }" v-else>
 		<div class="item">
-			<label>
-				<slot name="title-one"></slot>
-			</label>
-			<slot name="input-one"></slot>
-			<slot name="error-one"></slot>
-		</div>
-		<div class="item">
-			<label>
-				<slot name="title-two"></slot>
-			</label>
 			<div class="input">
 				<div class="item">
+					<label>
+						<slot name="title-one"></slot>
+					</label>
+					<slot name="input-one"></slot>
+					<slot name="error-one"></slot>
+				</div>
+				<div class="item" v-if="subOne">
+					<label>
+						<slot name="title-sub-one"></slot>
+					</label>
+					<slot name="input-sub-one"></slot>
+					<slot name="error-sub-one"></slot>
+				</div>
+			</div>
+		</div>
+		<div class="item">
+			<div class="input">
+				<div class="item">
+					<label>
+						<slot name="title-two"></slot>
+					</label>
 					<slot name="input-two"></slot>
 					<slot name="error-two"></slot>
 				</div>
 				<div class="item" v-if="subTwo">
+					<label>
+						<slot name="title-sub-two"></slot>
+					</label>
 					<slot name="input-sub-two"></slot>
-					<slot name="error-two"></slot>
+					<slot name="error-sub-two"></slot>
 				</div>
 			</div>
 		</div>

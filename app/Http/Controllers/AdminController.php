@@ -353,8 +353,9 @@ class AdminController extends Controller
          "rank" => $profile->rank->body,
          "startWorkAge" => $profile->startWorkAge->body ? $profile->startWorkAge->body : null,
          "startWorkCity" => $profile->startWorkCity->body,
-         "adultDoctor" => true,
-         "childrenDoctor" => false,
+         "adultDoctor" => $profile->adultDoctor->body,
+         "childrenDoctor" => $profile->childrenDoctor->body,
+         "childrenDoctorAge" => $profile->childrenDoctor->body ? $profile->childrenDoctorAge->body : 0,
          "filename" => str_replace("public/specialists/", "", $path),
       ]);
 

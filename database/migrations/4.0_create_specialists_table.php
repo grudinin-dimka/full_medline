@@ -37,7 +37,7 @@ return new class extends Migration
             $table->string('startWorkCity', 300)->nullable();
             $table->boolean('adultDoctor');
             $table->boolean('childrenDoctor');
-            $table->integer('childrenDoctorAge')-> nullable()->default(0);
+            $table->integer('childrenDoctorAge')->default(0);
             $table->boolean('hide')->default(false);
             $table->string('filename');
             $table->timestamps();

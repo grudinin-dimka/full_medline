@@ -761,18 +761,16 @@
 						<span v-if="specialist.profile.data.childrenDoctor.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #input-two>
-						<div class="children-doctor">
-							<select
-								autocomplete="off"
-								v-model="specialist.profile.data.childrenDoctor.body"
-								:class="{ error: specialist.profile.errors.childrenDoctor.status }"
-								@blur="checkSpecialistInput('childrenDoctor', 'select')"
-							>
-								<option value="" disabled>Ничего не выбрано...</option>
-								<option :value="0">Нет</option>
-								<option :value="1">Да</option>
-							</select>
-						</div>
+						<select
+							autocomplete="off"
+							v-model="specialist.profile.data.childrenDoctor.body"
+							:class="{ error: specialist.profile.errors.childrenDoctor.status }"
+							@blur="checkSpecialistInput('childrenDoctor', 'select')"
+						>
+							<option value="" disabled>Ничего не выбрано...</option>
+							<option :value="0">Нет</option>
+							<option :value="1">Да</option>
+						</select>
 					</template>
 					<template #error-two>
 						<span class="error" v-if="specialist.profile.errors.childrenDoctor.status">
@@ -780,7 +778,7 @@
 						</span>
 					</template>
 					<template #title-sub-two>
-						<span>ВОЗРАСТ (+{{ specialist.profile.data.childrenDoctorAge.body }})</span>
+						<span>ВОЗРАСТ* (+{{ specialist.profile.data.childrenDoctorAge.body }})</span>
 						<span v-if="specialist.profile.data.childrenDoctorAge.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #input-sub-two>
@@ -788,8 +786,15 @@
 							type="number"
 							placeholder="Годы"
 							v-model="specialist.profile.data.childrenDoctorAge.body"
+							:class="{ error: specialist.profile.errors.childrenDoctorAge.status }"
 							@input="specialist.profile.data.childrenDoctorAge.edited = true"
+							@blur="checkSpecialistInput('childrenDoctorAge', 'number')"
 						/>
+					</template>
+					<template #error-sub-two>
+						<span class="error" v-if="true">
+							{{ specialist.profile.errors.childrenDoctorAge.body }}
+						</span>
 					</template>
 				</container-input-two-sub>
 			</container-input>
@@ -1548,6 +1553,10 @@ export default {
 							body: "",
 							status: false,
 						},
+						childrenDoctorAge: {
+							body: "",
+							status: false,
+						},
 						hide: {
 							body: "",
 							status: false,
@@ -1923,6 +1932,12 @@ export default {
 							errorCount++;
 						}
 						break;
+					// Для возраста
+					case "childrenDoctorAge":
+						if (this.checkSpecialistInput(inputKeys[i], "number")) {
+							errorCount++;
+						}
+						break;
 					// Для всех остальных полей
 					default:
 						if (this.checkSpecialistInput(inputKeys[i], "text")) {
@@ -2004,13 +2019,10 @@ export default {
 					console.log(error);
 				});
 		},
-
 		/* Сохранение данных профиля */
 		saveProfileChanges() {
 			// Проверка на статус добавления специалиста
 			if (this.specialist.profile.data.id.body === "new") return;
-
-			console.log(this.specialist.profile.data);
 
 			try {
 				if (
@@ -2024,6 +2036,13 @@ export default {
 					])
 				)
 					return;
+
+				if (this.specialist.profile.data.childrenDoctor.body) {
+					if (this.checkSpecialistInputsAll(["childrenDoctorAge"])) return;
+				} else {
+					this.specialist.profile.errors.childrenDoctorAge.status = false;
+					this.specialist.profile.errors.childrenDoctorAge.body = "";
+				}
 
 				if (this.$refs.fileUpload.files[0]) {
 					if (this.checkSpecialistInputsAll(["file"])) return;
@@ -2118,6 +2137,13 @@ export default {
 					])
 				)
 					return;
+
+				if (this.specialist.profile.data.childrenDoctor.body) {
+					if (this.checkSpecialistInputsAll(["childrenDoctorAge"])) return;
+				} else {
+					this.specialist.profile.errors.childrenDoctorAge.status = false;
+					this.specialist.profile.errors.childrenDoctorAge.body = "";
+				}
 
 				let formData = new FormData();
 				formData.append("image", this.$refs.fileUpload.files[0]);
