@@ -200,12 +200,12 @@ class AdminController extends Controller
       $result = null;
       
       switch ($request->type) {
-         case 'profile':
+         case "profile":
             $result = $this->saveSpecialistProfile($request);            
             return $result;
             
             break;         
-         case 'specializations':
+         case "specializations":
             $result = $this->saveSpecialistSpecializations($request);
             return $result;
             
@@ -214,12 +214,69 @@ class AdminController extends Controller
             break;
       }
    }
+   /* Сохранение профиля специалиста */
    public function saveSpecialistProfile(Request $request) {
-      return response()->json([
-         "status" => true,
-         "message" => "Работает.",
-         "data" => null,
-      ]);
+      $path = null;
+
+      if($request->hasFile('image')) {
+         $validated = validator($request->all(), [
+            'image' => [
+               'required',
+               File::types('png')->max(10 * 1024),
+            ],
+         ]);
+         if ($validated->fails()) return response()->json([
+            "status" => false,
+            "message" => "Файл не прошёл проверку.",
+            "data" => null,
+         ]);
+
+         $path = $request->file('image')->store(
+            'public/specialists'
+         );
+         
+         if (!$path) {
+            return response()->json([
+               "status" => false,
+               "message" => "Не удалось сохранить изображение.",
+               "data" => null,
+            ]);
+         }
+      };      
+
+      $profile = json_decode($request->profile);
+      $specialist = Specialist::find($profile->id->body);
+
+      if ($specialist) {
+         $specialist->update([
+            'link' => $profile->link->body,
+            'family' => $profile->family->body,
+            'name' => $profile->name->body,
+            'surname' => $profile->surname->body,
+            'category' => $profile->category->body,
+            'degree' => $profile->degree->body,
+            'rank' => $profile->rank->body,
+            'startWorkAge' => $profile->startWorkAge->body ? $profile->startWorkAge->body : null,
+            'startWorkCity' => $profile->startWorkCity->body,
+            'adultDoctor' => $profile->adultDoctor->body,
+            'childrenDoctor' => $profile->childrenDoctor->body,
+            'childrenDoctorAge' => $profile->childrenDoctor->body ? $profile->childrenDoctorAge->body : 0,
+         ]);
+
+         if($path) $specialist->update(['filename' => str_replace("public/specialists/", "", $path)]);
+
+         return response()->json([
+            "status" => true,
+            "message" => "Данные о профиле специалиста обновлены.",
+            "data" => $path ? Storage::url($path) : null,
+         ]);   
+      } else {
+         return response()->json([
+            "status" => false,
+            "message" => "Врач не найден.",
+            "data" => null,
+         ]);   
+      };
    }
    public function saveSpecialistSpecializations(Request $request) {
       return response()->json([

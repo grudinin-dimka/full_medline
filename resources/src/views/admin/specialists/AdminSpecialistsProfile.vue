@@ -488,7 +488,7 @@
 				<icon-save-all
 					:width="28"
 					:height="28"
-					@click="saveSpecialistModular"
+					@click="saveSpecialistModular('profile')"
 					v-if="$route.params.id !== 'new'"
 				/>
 				<icon-save
@@ -792,7 +792,7 @@
 						/>
 					</template>
 					<template #error-sub-two>
-						<span class="error" v-if="true">
+						<span class="error" v-if="specialist.profile.errors.childrenDoctorAge.status">
 							{{ specialist.profile.errors.childrenDoctorAge.body }}
 						</span>
 					</template>
@@ -1996,28 +1996,54 @@ export default {
 		/* 1. Профиль                                           */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Модульное сохранение данных */
-		saveSpecialistModular() {
+		async saveSpecialistModular(type) {
 			let formData = new FormData();
-			formData.append("type", "profile");
-			formData.append("image", this.$refs.fileUpload.files[0]);
-			formData.append("data", JSON.stringify(this.specialist.profile.data));
+			formData.append("type", type);
 
-			// Сохранение данных
-			axios({
-				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `save-specialist-modular`,
-				headers: {
-					Accept: "multipart/form-data",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-				data: formData,
-			})
-				.then((response) => {
-					console.log(response.data);
-				})
-				.catch((error) => {
-					console.log(error);
-				});
+			/* STOP делал модульный вызов сохранения, а также в бекенде тоже самое */
+			switch (type) {
+				case "profile":
+					this.saveProfileChanges();
+					break;
+				case "specializations":
+					formData.append("data", JSON.stringify(this.specialist.connections.specializations));
+					break;
+				default:
+					break;
+			}
+
+			// // Сохранение данных
+			// axios({
+			// 	method: "post",
+			// 	url: `${this.$store.state.axios.urlApi}` + `save-specialist-modular`,
+			// 	headers: {
+			// 		Accept: "multipart/form-data",
+			// 		Authorization: `Bearer ${localStorage.getItem("token")}`,
+			// 	},
+			// 	data: formData,
+			// })
+			// 	.then((response) => {
+			// 		if (response.data.status) {
+			// 			let debbugStory = {
+			// 				title: "Успешно!",
+			// 				body: response.data.message,
+			// 				type: "Completed",
+			// 			};
+			// 			this.$store.commit("debuggerState", debbugStory);
+			// 		} else {
+			// 			let debbugStory = {
+			// 				title: "Ошибка.",
+			// 				body: response.data.message,
+			// 				type: "Error",
+			// 			};
+			// 			this.$store.commit("debuggerState", debbugStory);
+			// 		}
+
+			// 		console.log(response.data.data);
+			// 	})
+			// 	.catch((error) => {
+			// 		console.log(error);
+			// 	});
 		},
 		/* Сохранение данных профиля */
 		saveProfileChanges() {
