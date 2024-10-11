@@ -37,6 +37,7 @@ return new class extends Migration
             $table->string('startWorkCity', 300)->nullable();
             $table->boolean('adultDoctor');
             $table->boolean('childrenDoctor');
+            $table->integer('childrenDoctorAge')-> nullable()->default(0);
             $table->boolean('hide')->default(false);
             $table->string('filename');
             $table->timestamps();
@@ -77,7 +78,8 @@ return new class extends Migration
             "startWorkAge" => date('c'),
             "startWorkCity" => "Москва",
             "adultDoctor" => true,
-            "childrenDoctor" => false,
+            "childrenDoctor" => true,
+            "childrenDoctorAge" => 3,
             "filename" => "kuzovnikova.png"
         ]);
     }

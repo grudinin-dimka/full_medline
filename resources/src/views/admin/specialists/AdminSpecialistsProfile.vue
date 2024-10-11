@@ -726,8 +726,10 @@
 					</template>
 				</container-input-two>
 				<!-- Статус приёма -->
-				<container-input-two
+				<container-input-two-sub
 					:fieldset="true"
+					:subOne="false"
+					:subTwo="specialist.profile.data.childrenDoctor.body ? true : false"
 					:type="$route.params.id == 'new' ? 'create' : 'edit'"
 				>
 					<template #legend>
@@ -759,23 +761,37 @@
 						<span v-if="specialist.profile.data.childrenDoctor.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #input-two>
-						<select
-							autocomplete="off"
-							v-model="specialist.profile.data.childrenDoctor.body"
-							:class="{ error: specialist.profile.errors.childrenDoctor.status }"
-							@blur="checkSpecialistInput('childrenDoctor', 'select')"
-						>
-							<option value="" disabled>Ничего не выбрано...</option>
-							<option :value="0">Нет</option>
-							<option :value="1">Да</option>
-						</select>
+						<div class="children-doctor">
+							<select
+								autocomplete="off"
+								v-model="specialist.profile.data.childrenDoctor.body"
+								:class="{ error: specialist.profile.errors.childrenDoctor.status }"
+								@blur="checkSpecialistInput('childrenDoctor', 'select')"
+							>
+								<option value="" disabled>Ничего не выбрано...</option>
+								<option :value="0">Нет</option>
+								<option :value="1">Да</option>
+							</select>
+						</div>
 					</template>
 					<template #error-two>
 						<span class="error" v-if="specialist.profile.errors.childrenDoctor.status">
 							{{ specialist.profile.errors.childrenDoctor.body }}
 						</span>
 					</template>
-				</container-input-two>
+					<template #title-sub-two>
+						<span>ВОЗРАСТ (+{{ specialist.profile.data.childrenDoctorAge.body }})</span>
+						<span v-if="specialist.profile.data.childrenDoctorAge.edited"> (ИЗМЕНЕНО)</span>
+					</template>
+					<template #input-sub-two>
+						<input
+							type="number"
+							placeholder="Годы"
+							v-model="specialist.profile.data.childrenDoctorAge.body"
+							@input="specialist.profile.data.childrenDoctorAge.edited = true"
+						/>
+					</template>
+				</container-input-two-sub>
 			</container-input>
 		</div>
 
@@ -1057,6 +1073,7 @@ import IconClose from "../../../components/icons/IconClose.vue";
 import ContainerInput from "../../../components/ui/admin/containers/ContainerInput.vue";
 import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
 import ContainerInputTwo from "../../../components/ui/admin/containers/input/ContainerInputTwo.vue";
+import ContainerInputTwoSub from "../../../components/ui/admin/containers/input/ContainerInputTwoSub.vue";
 import ContainerInputThree from "../../../components/ui/admin/containers/input/ContainerInputThree.vue";
 import ContainerSelectOnce from "../../../components/ui/admin/containers/select/ContainerSelectOnce.vue";
 import ContainerSelectThree from "../../../components/ui/admin/containers/select/ContainerSelectThree.vue";
@@ -1092,6 +1109,7 @@ export default {
 		ContainerInput,
 		ContainerInputOnce,
 		ContainerInputTwo,
+		ContainerInputTwoSub,
 		ContainerInputThree,
 		ContainerSelectOnce,
 		ContainerSelectThree,
@@ -1457,6 +1475,10 @@ export default {
 							edited: false,
 						},
 						childrenDoctor: {
+							body: "",
+							edited: false,
+						},
+						childrenDoctorAge: {
 							body: "",
 							edited: false,
 						},
@@ -1964,7 +1986,7 @@ export default {
 			formData.append("type", "profile");
 			formData.append("image", this.$refs.fileUpload.files[0]);
 			formData.append("data", JSON.stringify(this.specialist.profile.data));
-			
+
 			// Сохранение данных
 			axios({
 				method: "post",
@@ -3160,6 +3182,44 @@ export default {
 </script>
 
 <style scoped>
+.children-doctor {
+	display: flex;
+	gap: 10px;
+}
+
+.children-doctor > :is(input, select) {
+	box-sizing: border-box;
+	outline: none;
+
+	padding: 10px;
+	border: 2px solid var(--input-border-color-inactive);
+	border-radius: 10px;
+
+	width: 100%;
+	height: 58px;
+
+	font-size: 20px;
+	caret-color: var(--input-border-color-active);
+
+	transition: all 0.2s;
+}
+
+.children-doctor > :is(input:focus, select:focus) {
+	border: 2px solid var(--input-border-color-active);
+}
+
+.children-doctor > input::placeholder {
+	color: var(--input-placeholder-color);
+}
+
+.children-doctor > select {
+	flex: 3 0 100px;
+}
+
+.children-doctor > input {
+	flex: 1 0 50px;
+}
+
 :is(.specializations-list, .clinics-list) {
 	display: flex;
 	flex-direction: column;

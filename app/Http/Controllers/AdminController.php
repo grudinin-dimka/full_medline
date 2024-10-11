@@ -215,17 +215,22 @@ class AdminController extends Controller
       }
    }
    public function saveSpecialistProfile(Request $request) {
-      return (object) [
+      return response()->json([
          "status" => true,
-         "message" => "Успешно",
-      ];
+         "message" => "Работает.",
+         "data" => null,
+      ]);
    }
    public function saveSpecialistSpecializations(Request $request) {
-      return (object) [
+      return response()->json([
          "status" => true,
-         "message" => "Успешно",
-      ];
+         "message" => "Работает.",
+         "data" => null,
+      ]);
    }
+
+
+
    /* FIXME Добавить проверок при помощи валидатора на количество символов */
    /* Сохранение специалистов */ 
    public function saveSpecialistsChanges(Request $request) {
@@ -289,6 +294,7 @@ class AdminController extends Controller
             'startWorkCity' => $profile->startWorkCity->body,
             'adultDoctor' => $profile->adultDoctor->body,
             'childrenDoctor' => $profile->childrenDoctor->body,
+            'childrenDoctorAge' => $profile->childrenDoctor->body ? $profile->childrenDoctorAge->body : 0,
          ]);
 
          if($path) $specialist->update(['filename' => str_replace("public/specialists/", "", $path)]);
