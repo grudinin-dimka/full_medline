@@ -1563,7 +1563,7 @@ abstract class PrettyPrinterAbstract implements PrettyPrinter {
             return;
         }
 
-        // TODO Insertion into empty statement lists.
+        // todo Insertion into empty statement lists.
 
         // [$find, $extraLeft, $extraRight]
         $this->emptyListInsertionMap = [

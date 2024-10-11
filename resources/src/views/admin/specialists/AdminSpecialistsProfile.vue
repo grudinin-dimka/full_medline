@@ -613,7 +613,6 @@
 						</span>
 					</template>
 					<template #title-three>
-						<!-- TODO сделать не обязательным -->
 						<span>ОТЧЕСТВО</span>
 						<span v-if="specialist.profile.data.surname.edited"> (ИЗМЕНЕНО)</span>
 					</template>

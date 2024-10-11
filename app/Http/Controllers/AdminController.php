@@ -194,6 +194,7 @@ class AdminController extends Controller
    /* _____________________________________________________*/
    /* 1. Врачи                                             */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+   // STOP придумываю модульную структуру сохранения данных
    /* Модульное сохранение */
    public function saveSpecialistModular(Request $request) {
       $result = null;
@@ -225,12 +226,6 @@ class AdminController extends Controller
          "message" => "Успешно",
       ];
    }
-
-
-
-
-
-
    /* FIXME Добавить проверок при помощи валидатора на количество символов */
    /* Сохранение специалистов */ 
    public function saveSpecialistsChanges(Request $request) {

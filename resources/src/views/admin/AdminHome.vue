@@ -73,9 +73,6 @@
 							@input="currentSlide.data.file.edited = true"
 						/>
 					</template>
-					<!-- TODO Сделать ошибки, как в профиле врача -->
-					<!-- TODO Проверить также загрузку изображений -->
-					<!-- STOP Делал ошибки картинок -->
 					<template #error>
 						<span class="error" v-if="currentSlide.errors.file.status">
 							{{ currentSlide.errors.file.value }}
