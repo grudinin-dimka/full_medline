@@ -1996,7 +1996,6 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Модульное сохранение данных */
 		async saveSpecialistModular(type) {
-			/* STOP делал модульный вызов сохранения, а также в бекенде тоже самое */
 			switch (type) {
 				case "profile":
 					this.saveProfileChanges();
@@ -2014,47 +2013,14 @@ export default {
 					this.saveEducationChanges();
 					break;
 				case "works":
-					this.saveWorkChanges();
+					this.saveWorksChanges();
 					break;
 				case "all":
-					console.log("save all");
+					this.saveSpecialistAll();
 					break;
 				default:
 					break;
 			}
-
-			// // Сохранение данных
-			// axios({
-			// 	method: "post",
-			// 	url: `${this.$store.state.axios.urlApi}` + `save-specialist-modular`,
-			// 	headers: {
-			// 		Accept: "multipart/form-data",
-			// 		Authorization: `Bearer ${localStorage.getItem("token")}`,
-			// 	},
-			// 	data: formData,
-			// })
-			// 	.then((response) => {
-			// 		if (response.data.status) {
-			// 			let debbugStory = {
-			// 				title: "Успешно!",
-			// 				body: response.data.message,
-			// 				type: "Completed",
-			// 			};
-			// 			this.$store.commit("debuggerState", debbugStory);
-			// 		} else {
-			// 			let debbugStory = {
-			// 				title: "Ошибка.",
-			// 				body: response.data.message,
-			// 				type: "Error",
-			// 			};
-			// 			this.$store.commit("debuggerState", debbugStory);
-			// 		}
-
-			// 		console.log(response.data.data);
-			// 	})
-			// 	.catch((error) => {
-			// 		console.log(error);
-			// 	});
 		},
 		/* Сохранение данных профиля */
 		async saveProfileChanges() {
@@ -2231,6 +2197,55 @@ export default {
 						console.log(error);
 					});
 			}
+		},
+		saveSpecialistAll() {
+			let formData = new FormData();
+			formData.append("type", "all");
+			// Данные блока профиля
+			formData.append("image", this.$refs.fileUpload.files[0]);
+			formData.append("profile", JSON.stringify(this.specialist.profile.data));
+			// Id специалиста
+			formData.append("id", JSON.stringify(this.specialist.profile.data.id.body));
+			// Данные блока специализаций
+			formData.append(
+				"specializations",
+				JSON.stringify(this.specialist.connections.specializations)
+			);
+			// Данные блока клиник
+			formData.append("clinics", JSON.stringify(this.specialist.connections.clinics));
+
+			// Сохранение данных
+			axios({
+				method: "post",
+				url: `${this.$store.state.axios.urlApi}` + `save-specialist-modular`,
+				headers: {
+					Accept: "multipart/form-data",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: formData,
+			})
+				.then((response) => {
+					if (response.data.status) {
+						let debbugStory = {
+							title: "Успешно!",
+							body: response.data.message,
+							type: "Completed",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					} else {
+						let debbugStory = {
+							title: "Ошибка.",
+							body: response.data.message,
+							type: "Error",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					}
+
+					console.log(response.data.data);
+				})
+				.catch((error) => {
+					console.log(error);
+				});
 		},
 		/* Очистка статуса изменений */
 		clearSpecialistProfileEdited() {
@@ -2574,47 +2589,14 @@ export default {
 				.then((response) => {
 					if (response.data.status) {
 						try {
-							console.log(response.data.data);
-							// Обновление id добавленных элементов на данные из бд
-							for (let key in response.data.data) {
-								let certificate = this.specialist.connections.certificates.filter(
-									(item) => {
-										if (item.id === response.data.data[key].old) {
-											return item;
-										}
-									}
-								);
-								certificate[0].id = response.data.data[key].new;
-							}
-							console.log(this.specialist.connections.certificates);
+							/* Обновление id в соответствии с изменениями */
+							this.updateIdFromConnection("certificates", response.data.data);
 
-							// Получения нового массива специалистов, помеченных на удаление
-							let res = this.specialist.connections.certificates.filter((item) => {
-								if (item.delete == true) {
-									return Object.assign({}, item);
-								}
-							});
+							/* Очистка удалённых элементов */
+							this.clearDeletesFromConnection("certificates");
 
-							// Повторять, пока не будут удалены все элементы, помеченные на удаление
-							while (res.length > 0) {
-								/* Получение индекса элемента, помеченного на удаление из массива специалистов */
-								this.specialist.connections.certificates.splice(
-									this.specialist.connections.certificates.indexOf(res[0]),
-									1
-								);
-								/* Обновление списка с элементами, помеченными на удаление */
-								res = this.specialist.connections.certificates.filter((item) => {
-									if (item.delete == true) {
-										return Object.assign({}, item);
-									}
-								});
-							}
-
-							// Сброс флагов добавления и удаления
-							this.specialist.connections.certificates.forEach((item) => {
-								item.create = false;
-								item.delete = false;
-							});
+							/* Обновление флагов на удаление и сохранение */
+							this.clearFlagsFromConnection("certificates");
 
 							let debbugStory = {
 								title: "Успешно!",
@@ -2726,58 +2708,31 @@ export default {
 			// Проверка на статус добавления специалиста
 			if (this.specialist.profile.data.id.body === "new") return;
 
+			let formData = new FormData();
+			formData.append("type", "educations");
+			formData.append("id", JSON.stringify(this.specialist.profile.data.id.body));
+			formData.append("educations", JSON.stringify(this.specialist.connections.educations));
+
 			await axios({
 				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `save-specialist-educations-changes`,
+				url: `${this.$store.state.axios.urlApi}` + `save-specialist-modular`,
 				headers: {
-					Accept: "application/json",
+					Accept: "multipart/form-data",
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
-				data: {
-					id: this.specialist.profile.data.id.body,
-					array: this.specialist.connections.educations,
-				},
+				data: formData,
 			})
 				.then((response) => {
 					if (response.data.status) {
 						try {
-							// Обновление id добавленных элементов на данные из бд
-							for (let key in response.data.data) {
-								let education = this.specialist.connections.educations.filter((item) => {
-									if (item.id === response.data.data[key].old) {
-										return item;
-									}
-								});
-								education[0].id = response.data.data[key].new;
-							}
+							/* Обновление id в соответствии с изменениями */
+							this.updateIdFromConnection("educations", response.data.data);
 
-							// Получения нового массива специалистов, помеченных на удаление
-							let res = this.specialist.connections.educations.filter((item) => {
-								if (item.delete == true) {
-									return Object.assign({}, item);
-								}
-							});
+							/* Очистка удалённых элементов */
+							this.clearDeletesFromConnection("educations");
 
-							// Повторять, пока не будут удалены все элементы, помеченные на удаление
-							while (res.length > 0) {
-								/* Получение индекса элемента, помеченного на удаление из массива специалистов */
-								this.specialist.connections.educations.splice(
-									this.specialist.connections.educations.indexOf(res[0]),
-									1
-								);
-								/* Обновление списка с элементами, помеченными на удаление */
-								res = this.specialist.connections.educations.filter((item) => {
-									if (item.delete == true) {
-										return Object.assign({}, item);
-									}
-								});
-							}
-
-							// Сброс флагов добавления и удаления
-							this.specialist.connections.educations.forEach((item) => {
-								item.create = false;
-								item.delete = false;
-							});
+							/* Обновление флагов на удаление и сохранение */
+							this.clearFlagsFromConnection("educations");
 
 							let debbugStory = {
 								title: "Успешно!",
@@ -2887,62 +2842,35 @@ export default {
 			}
 		},
 		/* Сохранение */
-		async saveWorkChanges() {
+		async saveWorksChanges() {
 			// Проверка на статус добавления специалиста
 			if (this.specialist.profile.data.id.body === "new") return;
 
+			let formData = new FormData();
+			formData.append("type", "works");
+			formData.append("id", JSON.stringify(this.specialist.profile.data.id.body));
+			formData.append("works", JSON.stringify(this.specialist.connections.works));
+
 			await axios({
 				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `save-specialist-works-changes`,
+				url: `${this.$store.state.axios.urlApi}` + `save-specialist-modular`,
 				headers: {
-					Accept: "application/json",
+					Accept: "multipart/form-data",
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
-				data: {
-					id: this.specialist.profile.data.id.body,
-					array: this.specialist.connections.works,
-				},
+				data: formData,
 			})
 				.then((response) => {
 					if (response.data.status) {
 						try {
-							// Обновление id добавленных элементов на данные из бд
-							for (let key in response.data.data) {
-								let work = this.specialist.connections.works.filter((item) => {
-									if (item.id === response.data.data[key].old) {
-										return item;
-									}
-								});
-								work[0].id = response.data.data[key].new;
-							}
+							/* Обновление id в соответствии с изменениями */
+							this.updateIdFromConnection("works", response.data.data);
 
-							// Получения нового массива специалистов, помеченных на удаление
-							let res = this.specialist.connections.works.filter((item) => {
-								if (item.delete == true) {
-									return Object.assign({}, item);
-								}
-							});
+							/* Очистка удалённых элементов */
+							this.clearDeletesFromConnection("works");
 
-							// Повторять, пока не будут удалены все элементы, помеченные на удаление
-							while (res.length > 0) {
-								/* Получение индекса элемента, помеченного на удаление из массива специалистов */
-								this.specialist.connections.works.splice(
-									this.specialist.connections.works.indexOf(res[0]),
-									1
-								);
-								/* Обновление списка с элементами, помеченными на удаление */
-								res = this.specialist.connections.works.filter((item) => {
-									if (item.delete == true) {
-										return Object.assign({}, item);
-									}
-								});
-							}
-
-							// Сброс флагов добавления и удаления
-							this.specialist.connections.works.forEach((item) => {
-								item.create = false;
-								item.delete = false;
-							});
+							/* Обновление флагов на удаление и сохранение */
+							this.clearFlagsFromConnection("works");
 
 							let debbugStory = {
 								title: "Успешно!",
@@ -2979,6 +2907,81 @@ export default {
 		/* _____________________________________________________*/
 		/* ?. Общие методы                                      */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* Обновление значений id */
+		updateIdFromConnection(connectionName, idArray) {
+			try {
+				let connectionCreate = this.specialist.connections[connectionName].filter((item) => {
+					if (item.create) return item;
+				});
+
+				// Изменение значений со старых id на новые из б.д.
+				for (let key in connectionCreate) {
+					connectionCreate[key].id = idArray.find((item) => {
+						if (item.old == connectionCreate[key].id) {
+							return item;
+						}
+					}).new;
+				}
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Не удалось обновить id.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
+		/* Очистка удалённых элементов */
+		clearDeletesFromConnection(connectionName) {
+			try {
+				// Получения нового массива специалистов, помеченных на удаление
+				let res = this.specialist.connections[connectionName].filter((item) => {
+					if (item.delete == true) {
+						return Object.assign({}, item);
+					}
+				});
+
+				// Повторять, пока не будут удалены все элементы, помеченные на удаление
+				while (res.length > 0) {
+					/* Получение индекса элемента, помеченного на удаление из массива специалистов */
+					this.specialist.connections[connectionName].splice(
+						this.specialist.connections[connectionName].indexOf(res[0]),
+						1
+					);
+					/* Обновление списка с элементами, помеченными на удаление */
+					res = this.specialist.connections[connectionName].filter((item) => {
+						if (item.delete == true) {
+							return Object.assign({}, item);
+						}
+					});
+				}
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Не удалось очистить удалённые элементы.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
+		clearFlagsFromConnection(connectionName) {
+			try {
+				// Сброс флагов добавления и удаления
+				this.specialist.connections[connectionName].forEach((item) => {
+					item.create = false;
+					item.delete = false;
+				});
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Не удалось сбросить флаги.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
+		/* Удаление элементов со статусом на удаление */
+		deleteValueFromArray(idArray) {},
 		/* Фильтрация массивов */
 		filterArray(column, type) {
 			// Объявляем объект Intl.Collator, который обеспечивает сравнение строк с учётом языка.

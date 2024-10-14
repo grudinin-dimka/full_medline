@@ -201,22 +201,83 @@ class AdminController extends Controller
       switch ($request->type) {
          case "profile":
             $result = $this->saveSpecialistProfile($request);            
-            return $result;
-            
+            return response()->json($result);
             break;         
          case "specializations":
             $result = $this->saveSpecialistSpecializations($request);
-            return $result;
+            return response()->json($result);
          case "clinics":
             $result = $this->saveSpecialistClinics($request);
-            return $result;               
+            return response()->json($result);
             break;         
          case "certificates":
             $result = $this->saveSpecialistCertificates($request);
-            return $result;               
+            return response()->json($result);
             break;         
-         default:
+         case "educations":
+            $result = $this->saveSpecialistEducations($request);
+            return response()->json($result);
+            break;         
+         case "works":
+            $result = $this->saveSpecialistWorks($request);
+            return response()->json($result);
+            break;
+         case "all":
+            // Сохранение профиля
+            $saveProfile = $this->saveSpecialistProfile($request);            
+            if (!$saveProfile->status) {
+               return response()->json($saveProfile);
+            };
+
+            // Сохранение специализаций
+            $saveSpecializations = $this->saveSpecialistSpecializations($request);            
+            if (!$saveSpecializations->status) {
+               return response()->json($saveSpecializations);
+            };
+
+            // Сохранение клиник
+            $saveClinic = $this->saveSpecialistClinics($request);            
+            if (!$saveClinic->status) {
+               return response()->json($saveClinic);
+            };
+
+            // Сохранение сертификатов
+            $saveClinic = $this->saveSpecialistCertificates($request);            
+            if (!$saveClinic->status) {
+               return response()->json($saveClinic);
+            };
             
+            // Сохранение образований
+            $saveEducation = $this->saveSpecialistEducations($request);            
+            if (!$saveEducation->status) {
+               return response()->json($saveEducation);
+            };
+            
+            // Сохранение работ
+            $saveWork = $this->saveSpecialistWorks($request);            
+            if (!$saveWork->status) {
+               return response()->json($saveWork);
+            };
+
+            return response()->json([
+               "status" => true,
+               "message" => "Все данные специалиста сохранены.",
+               "data" => (object) [
+                  "profile" => $saveProfile->data,
+                  "specializations" => $saveSpecializations->data,
+                  "clinics" => $saveClinic->data,
+                  "certificates" => $saveClinic->data,
+                  "educations" => $saveEducation->data,
+                  "works" => $saveWork->data,     
+               ],
+            ]);
+            break;
+         default:
+            return response()->json([
+               "status" => false,
+               "message" => "Неизивестный тип сохранения.",
+               "data" => null,
+            ]);            
             break;
       }
    }
@@ -232,22 +293,23 @@ class AdminController extends Controller
                File::types('png')->max(10 * 1024),
             ],
          ]);
-         if ($validated->fails()) return response()->json([
+
+         if ($validated->fails()) return (object) [
             "status" => false,
             "message" => "Файл не прошёл проверку.",
             "data" => null,
-         ]);
+         ];
 
          $path = $request->file('image')->store(
             'public/specialists'
          );
          
          if (!$path) {
-            return response()->json([
+            return (object) [
                "status" => false,
                "message" => "Не удалось сохранить изображение.",
                "data" => null,
-            ]);
+            ];
          }
       };      
 
@@ -270,17 +332,17 @@ class AdminController extends Controller
 
          if($path) $specialist->update(['filename' => str_replace("public/specialists/", "", $path)]);
 
-         return response()->json([
+         return (object) [
             "status" => true,
             "message" => "Данные о профиле специалиста обновлены.",
             "data" => $path ? Storage::url($path) : null,
-         ]);   
+         ];   
       } else {
-         return response()->json([
+         return (object) [
             "status" => false,
             "message" => "Врач не найден.",
             "data" => null,
-         ]);   
+         ];   
       };
    }
    /* Модуль: Сохранение специализации */ 
@@ -321,24 +383,24 @@ class AdminController extends Controller
                };
             };
             
-            return response()->json([
+            return (object) [
                "status" => true,
                "message" => "Данные о специализациях сохранились.",
                "data" => null,
-            ]);
+            ];
          } else {
-            return response()->json([
+            return (object) [
                "status" => false,
                "message" => "При поиске данных о специализациях возникли проблемы.",
                "data" => null,
-            ]);
+            ];
          };
       } else {
-         return response()->json([
+         return (object) [
             "status" => false,
             "message" => "Специалист не найден.",
             "data" => null,
-         ]);
+         ];
       }
    }
    /* Модуль: Сохранение клиник */
@@ -379,15 +441,15 @@ class AdminController extends Controller
             };
          };
          
-         return response()->json([
+         return (object) [
             "status" => true,
             "message" => "Данные о клиниках сохранились.",
-         ]);
+         ];
       } else {
-         return response()->json([
+         return (object) [
             "status" => false,
             "message" => "Специалист не найден.",
-         ]);
+         ];
       };
    }
    /* Модуль: Сохранение сертификатов */
@@ -396,8 +458,6 @@ class AdminController extends Controller
       $id = json_decode($request->id);
       
       $specialist = Specialist::find($id);
-
-      // Проверка на существование
       if($specialist) {         
          $arrayID = [];
          foreach ($certificates as $key => $value) {
@@ -441,30 +501,171 @@ class AdminController extends Controller
             ]);           
 
             if(!$certificateUpdate) {
-               return response()->json([
+               return (object) [
                   "status" => false,
                   "message" => "Не удалось обновить значение.",
-               ]);      
+               ];      
             }
          };
-         return response()->json([
+         return (object) [
             "status" => true,
             "message" => "Данные о сертификатах сохранились.",
             "data" => $arrayID,
-         ]);
+         ];
       } else {
-         return response()->json([
+         return (object) [
             "status" => false,
             "message" => "Специалист не найден.",
-         ]);
+         ];
       }
    }
+   /* Модуль: Сохранение образований */
+   public function saveSpecialistEducations(Request $request) {
+      $educations = json_decode($request->educations);
+      $id = json_decode($request->id);
+      
+      $specialist = Specialist::find($id);
+      if($specialist::find($request->id)) {         
+         $arrayID = [];
 
+         foreach ($educations as $key => $value) {
+            // Удаление
+            if ($value->delete === true){
+               $education = Education::find($value->id);
+               $education->delete();
+               continue;
+            }         
 
+            // Создание
+            if ($value->create === true) {
+               $educationCreate = Education::create([
+                  "name" => $value->name,
+                  "organization" => $value->organization,
+                  "date" => $value->date,
+                  "speсialization" => $value->speсialization,
+               ]);
 
+               if($educationCreate) {
+                  SpecialistEducation::create([
+                     'id_specialist' => $request->id,
+                     'id_education' => $educationCreate->id,
+                  ]);   
+               }
+   
+               $arrayID[] = (object) [
+                  // Прошлый id
+                  'old' => $value->id, 
+                  // Новый id
+                  'new' => $educationCreate->id
+               ];            
+               continue;
+            };       
 
-   /* FIXME Добавить проверок при помощи валидатора на количество символов */
-   /* Сохранение специалистов */ 
+            // Обновление
+            $education = Education::find($value->id);
+            $educationUpdate = $education->update([
+               "name" => $value->name,
+               "organization" => $value->organization,
+               "date" => $value->date,
+               "speсialization" => $value->speсialization,
+            ]);      
+            
+            if(!$educationUpdate) {
+               return (object) [
+                  "status" => false,
+                  "message" => "Не удалось обновить значение.",
+                  "data" => null,
+               ];      
+            }
+         }
+
+         return (object) [
+            "status" => true,
+            "message" => "Данные об образованиях сохранились.",
+            "data" => $arrayID,
+         ];
+      } else {
+         return (object) [
+            "status" => false,
+            "message" => "Специалист не найден.",
+            "data" => null,
+         ];
+      }     
+   }
+   /* Модуль: Сохранение прошлых работ */
+   public function saveSpecialistWorks(Request $request) {
+      $works = json_decode($request->works);
+      $id = json_decode($request->id);
+
+      $specialist = Specialist::find($id);
+      if($specialist) {         
+         $arrayID = [];
+
+         foreach ($works as $key => $value) {
+            // Удаление
+            if ($value->delete === true){
+               $work = Work::find($value->id);
+               $work->delete();
+               continue;
+            }         
+
+            // Создание
+            if ($value->create === true) {
+               $workCreate = Work::create([
+                  "name" => $value->name,
+                  "organization" => $value->organization,
+                  "startWork" => $value->startWork,
+                  "endWork" => $value->endWork,
+               ]);
+
+               if($workCreate) {
+                  SpecialistWork::create([
+                     'id_specialist' => $request->id,
+                     'id_work' => $workCreate->id,
+                  ]);   
+               }
+   
+               $arrayID[] = (object) [
+                  // Прошлый id
+                  'old' => $value->id, 
+                  // Новый id
+                  'new' => $workCreate->id
+               ];            
+               continue;
+            };       
+
+            // Обновление
+            $work = Work::find($value->id);
+            $workUpdate = $work->update([
+               "name" => $value->name,
+               "organization" => $value->organization,
+               "startWork" => $value->startWork,
+               "endWork" => $value->endWork,
+            ]);           
+         
+            if(!$workUpdate) {
+               return (object) [
+                  "status" => false,
+                  "message" => "Не удалось обновить значение.",
+                  "data" => null,
+               ];      
+            }
+         }
+
+         return (object) [
+            "status" => true,
+            "message" => "Данные о прошлых работах сохранились.",
+            "data" => $arrayID,
+         ];
+      } else {
+         return (object) [
+            "status" => false,
+            "message" => "Специалист не найден.",
+            "data" => null,
+         ];
+      }      
+   }
+   /* Сохранение таблицы со специалистами */ 
    public function saveSpecialistsChanges(Request $request) {
       // Удаление помеченных
       foreach ($request->specialists as $key => $value) {
@@ -476,9 +677,15 @@ class AdminController extends Controller
 
          $specialist = Specialist::find($value['id']);
          $specialist->update([
-            'hide' => $value['hide'],
+               'hide' => $value['hide'],
          ]);
       };      
+
+      return response()->json([
+         "status" => true,
+         "message" => "Данные обновлены.",
+         "data" => null,
+      ]);
    }
    /* Добавление нового специалиста */ 
    public function addSpecialist(Request $request) {
@@ -543,206 +750,6 @@ class AdminController extends Controller
             "data" => null,
          ]);   
       };
-   }
-   public function saveSpecialistCertificatesChanges(Request $request) {
-      // Проверка на существование
-      if(Specialist::find($request->id)) {         
-         $arrayID = [];
-
-         foreach ($request->array as $key => $value) {
-            // Удаление
-            if ($value["delete"] === true){
-               $certificate = Certificate::find($value['id']);
-               $certificate->delete();
-               continue;
-            }         
-
-            // Создание
-            if ($value['create'] === true) {
-               $certificateCreate = Certificate::create([
-                  "name" => $value['name'],
-                  "organization" => $value['organization'],
-                  "endEducation" => $value['endEducation'],
-               ]);
-
-               if($certificateCreate) {
-                  SpecialistCertificate::create([
-                     'id_specialist' => $request->id,
-                     'id_certificate' => $certificateCreate->id,
-                  ]);   
-               }
-   
-               $arrayID[] = (object) [
-                  // Прошлый id
-                  'old' => $value['id'], 
-                  // Новый id
-                  'new' => $certificateCreate->id
-               ];            
-               continue;
-            };  
-
-            // Обновление
-            $certificate = Certificate::find($value['id']);
-            $certificateUpdate = $certificate->update([
-               "name" => $value['name'],
-               "organization" => $value['organization'],
-               "endEducation" => $value['endEducation'],
-            ]);           
-
-            if(!$certificateUpdate) {
-               return response()->json([
-                  "status" => false,
-                  "message" => "Не удалось обновить значение.",
-               ]);      
-            }
-         }
-
-         return response()->json([
-            "status" => true,
-            "message" => "Данные о сертификатах сохранились.",
-            "data" => $arrayID,
-         ]);
-
-      } else {
-         return response()->json([
-            "status" => false,
-            "message" => "Специалист не найден.",
-         ]);
-      }
-   }
-   public function saveSpecialistEducationsChanges(Request $request) {
-      // Проверка на существование
-      if(Specialist::find($request->id)) {         
-         $arrayID = [];
-
-         foreach ($request->array as $key => $value) {
-            // Удаление
-            if ($value["delete"] === true){
-               $education = Education::find($value['id']);
-               $education->delete();
-               continue;
-            }         
-
-            // Создание
-            if ($value['create'] === true) {
-               $educationCreate = Education::create([
-                  "name" => $value['name'],
-                  "organization" => $value['organization'],
-                  "date" => $value['date'],
-                  "speсialization" => $value['speсialization'],
-               ]);
-
-               if($educationCreate) {
-                  SpecialistEducation::create([
-                     'id_specialist' => $request->id,
-                     'id_education' => $educationCreate->id,
-                  ]);   
-               }
-   
-               $arrayID[] = (object) [
-                  // Прошлый id
-                  'old' => $value['id'], 
-                  // Новый id
-                  'new' => $educationCreate->id
-               ];            
-               continue;
-            };       
-
-            // Обновление
-            $education = Education::find($value['id']);
-            $educationUpdate = $education->update([
-               "name" => $value['name'],
-               "organization" => $value['organization'],
-               "date" => $value['date'],
-               "speсialization" => $value['speсialization'],
-            ]);      
-            
-            if(!$educationUpdate) {
-               return response()->json([
-                  "status" => false,
-                  "message" => "Не удалось обновить значение.",
-               ]);      
-            }
-         }
-
-         return response()->json([
-            "status" => true,
-            "message" => "Данные об обучении сохранились.",
-            "data" => $arrayID,
-         ]);
-      } else {
-         return response()->json([
-            "status" => false,
-            "message" => "Специалист не найден.",
-         ]);
-      }      
-   }
-   public function saveSpecialistWorksChanges(Request $request) {
-      // Проверка на существование
-      if(Specialist::find($request->id)) {         
-         $arrayID = [];
-
-         foreach ($request->array as $key => $value) {
-            // Удаление
-            if ($value["delete"] === true){
-               $work = Work::find($value['id']);
-               $work->delete();
-               continue;
-            }         
-
-            // Создание
-            if ($value['create'] === true) {
-               $workCreate = Work::create([
-                  "name" => $value['name'],
-                  "organization" => $value['organization'],
-                  "startWork" => $value['startWork'],
-                  "endWork" => $value['endWork'],
-               ]);
-
-               if($workCreate) {
-                  SpecialistWork::create([
-                     'id_specialist' => $request->id,
-                     'id_work' => $workCreate->id,
-                  ]);   
-               }
-   
-               $arrayID[] = (object) [
-                  // Прошлый id
-                  'old' => $value['id'], 
-                  // Новый id
-                  'new' => $workCreate->id
-               ];            
-               continue;
-            };       
-
-            // Обновление
-            $work = Work::find($value['id']);
-            $workUpdate = $work->update([
-               "name" => $value['name'],
-               "organization" => $value['organization'],
-               "startWork" => $value['startWork'],
-               "endWork" => $value['endWork'],
-            ]);           
-         
-            if(!$workUpdate) {
-               return response()->json([
-                  "status" => false,
-                  "message" => "Не удалось обновить значение.",
-               ]);      
-            }
-         }
-
-         return response()->json([
-            "status" => true,
-            "message" => "Данные о прошлых работах сохранились.",
-            "data" => $arrayID,
-         ]);
-      } else {
-         return response()->json([
-            "status" => false,
-            "message" => "Специалист не найден.",
-         ]);
-      }      
    }
    /* _____________________________________________________*/
    /* 2. Специализации                                     */
