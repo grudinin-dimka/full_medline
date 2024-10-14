@@ -91,7 +91,7 @@ export default {
 	computed: {
 		/* Изменение настроек слайдера */
 		calcItemsToShow() {
-			if (this.windowWidth >= 1600) {
+			if (this.windowWidth >= 1600 || this.windowWidth == null) {
 				return 5;
 			} else if ((this.windowWidth >= 1300) & (this.windowWidth <= 1600)) {
 				return 4;
@@ -111,22 +111,6 @@ export default {
 		/* Сортировка списка слайдов по порядку */
 		sortSlider() {
 			this.slides.sort((a, b) => a.order - b.order);
-		},
-		/* Изменение настроек слайдера */
-		changeCarousel() {
-			let windowWidth = window.document.documentElement.clientWidth;
-
-			if ((windowWidth >= 1600) & (windowWidth <= 1920)) {
-				this.carouselSettings.itemsToShow = 5;
-			} else if ((windowWidth >= 1300) & (windowWidth <= 1600)) {
-				this.carouselSettings.itemsToShow = 4;
-			} else if ((windowWidth >= 960) & (windowWidth <= 1300)) {
-				this.carouselSettings.itemsToShow = 3;
-			} else if ((windowWidth >= 660) & (windowWidth <= 960)) {
-				this.carouselSettings.itemsToShow = 2;
-			} else if ((windowWidth >= 0) & (windowWidth <= 660)) {
-				this.carouselSettings.itemsToShow = 1;
-			}
 		},
 	},
 };
