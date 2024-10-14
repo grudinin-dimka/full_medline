@@ -228,37 +228,31 @@ class AdminController extends Controller
             if (!$saveProfile->status) {
                return response()->json($saveProfile);
             };
-
             // Сохранение специализаций
             $saveSpecializations = $this->saveSpecialistSpecializations($request);            
             if (!$saveSpecializations->status) {
                return response()->json($saveSpecializations);
             };
-
             // Сохранение клиник
             $saveClinic = $this->saveSpecialistClinics($request);            
             if (!$saveClinic->status) {
                return response()->json($saveClinic);
             };
-
             // Сохранение сертификатов
             $saveClinic = $this->saveSpecialistCertificates($request);            
             if (!$saveClinic->status) {
                return response()->json($saveClinic);
             };
-            
             // Сохранение образований
             $saveEducation = $this->saveSpecialistEducations($request);            
             if (!$saveEducation->status) {
                return response()->json($saveEducation);
             };
-            
             // Сохранение работ
             $saveWork = $this->saveSpecialistWorks($request);            
             if (!$saveWork->status) {
                return response()->json($saveWork);
             };
-
             return response()->json([
                "status" => true,
                "message" => "Все данные специалиста сохранены.",
