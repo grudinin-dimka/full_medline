@@ -824,7 +824,7 @@
 					<icon-save
 						:width="28"
 						:height="28"
-						@click="saveSpecializationsChanges"
+						@click="saveSpecialistModular('specializations')"
 						v-if="$route.params.id !== 'new'"
 					/>
 				</template>
@@ -887,12 +887,12 @@
 			<block-title>
 				<template #title>
 					КЛИНИКИ
-					<span v-show="loading.sections.specializations">
+					<span v-show="loading.sections.clinics">
 						({{ specialist.connections.clinics.length }})
 					</span>
 				</template>
 				<template #buttons>
-					<icon-save :width="28" :height="28" @click="saveClinicsChanges" />
+					<icon-save :width="28" :height="28" @click="saveSpecialistModular('clinics')" />
 				</template>
 			</block-title>
 		</template>
@@ -950,7 +950,7 @@
 				</span>
 			</template>
 			<template #buttons>
-				<icon-save :width="28" :height="28" @click="saveCertificateChanges" />
+				<icon-save :width="28" :height="28" @click="saveSpecialistModular('certificates')" />
 			</template>
 		</block-title>
 
@@ -987,7 +987,7 @@
 				</span>
 			</template>
 			<template #buttons>
-				<icon-save :width="28" :height="28" @click="saveEducationChanges" />
+				<icon-save :width="28" :height="28" @click="saveSpecialistModular('educations')" />
 			</template>
 		</block-title>
 
@@ -1027,7 +1027,7 @@
 				<icon-save
 					:width="28"
 					:height="28"
-					@click="saveWorkChanges"
+					@click="saveSpecialistModular('works')"
 					v-if="$route.params.id !== 'new'"
 				/>
 			</template>
@@ -2005,6 +2005,21 @@ export default {
 				case "specializations":
 					this.saveSpecializationsChanges();
 					break;
+				case "clinics":
+					this.saveClinicsChanges();
+					break;
+				case "certificates":
+					this.saveCertificateChanges();
+					break;
+				case "educations":
+					this.saveEducationChanges();
+					break;
+				case "works":
+					this.saveWorkChanges();
+					break;
+				case "all":
+					console.log("save all");
+					break;
 				default:
 					break;
 			}
@@ -2043,7 +2058,7 @@ export default {
 			// 	});
 		},
 		/* Сохранение данных профиля */
-		saveProfileChanges() {
+		async saveProfileChanges() {
 			// Проверка на статус добавления специалиста
 			if (this.specialist.profile.data.id.body === "new") return;
 
@@ -2126,7 +2141,7 @@ export default {
 			}
 		},
 		/* Сохранение данных профиля */
-		addSpecialist() {
+		async addSpecialist() {
 			// Проверка на статус добавления специалиста
 			if (this.specialist.profile.data.id.body !== "new") return;
 
@@ -2173,7 +2188,7 @@ export default {
 				formData.append("profile", JSON.stringify(this.specialist.profile.data));
 
 				// Сохранение данных
-				axios({
+				await axios({
 					method: "post",
 					url: `${this.$store.state.axios.urlApi}` + `add-specialist`,
 					headers: {
@@ -2285,12 +2300,12 @@ export default {
 			}
 		},
 		/* Сохранение изменений */
-		saveSpecializationsChanges() {
+		async saveSpecializationsChanges() {
 			try {
 				// Проверка на статус добавления специалиста
 				if (this.specialist.profile.data.id.body === "new") return;
 
-				axios({
+				await axios({
 					method: "post",
 					url: `${this.$store.state.axios.urlApi}` + `save-specialist-specializations-changes`,
 					headers: {
@@ -2419,12 +2434,12 @@ export default {
 			}
 		},
 		/* Сохранение изменений */
-		saveClinicsChanges() {
+		async saveClinicsChanges() {
 			try {
 				// Проверка на статус добавления специалиста
 				if (this.specialist.profile.data.id.body === "new") return;
 
-				axios({
+				await axios({
 					method: "post",
 					url: `${this.$store.state.axios.urlApi}` + `save-specialist-clinics-changes`,
 					headers: {
@@ -2531,11 +2546,11 @@ export default {
 			}
 		},
 		/* Сохранение изменений */
-		saveCertificateChanges() {
+		async saveCertificateChanges() {
 			// Проверка на статус добавления специалиста
 			if (this.specialist.profile.data.id.body === "new") return;
 
-			axios({
+			await axios({
 				method: "post",
 				url: `${this.$store.state.axios.urlApi}` + `save-specialist-certificates-changes`,
 				headers: {
@@ -2696,11 +2711,11 @@ export default {
 			}
 		},
 		/* Сохранение */
-		saveEducationChanges() {
+		async saveEducationChanges() {
 			// Проверка на статус добавления специалиста
 			if (this.specialist.profile.data.id.body === "new") return;
 
-			axios({
+			await axios({
 				method: "post",
 				url: `${this.$store.state.axios.urlApi}` + `save-specialist-educations-changes`,
 				headers: {
@@ -2861,11 +2876,11 @@ export default {
 			}
 		},
 		/* Сохранение */
-		saveWorkChanges() {
+		async saveWorkChanges() {
 			// Проверка на статус добавления специалиста
 			if (this.specialist.profile.data.id.body === "new") return;
 
-			axios({
+			await axios({
 				method: "post",
 				url: `${this.$store.state.axios.urlApi}` + `save-specialist-works-changes`,
 				headers: {
