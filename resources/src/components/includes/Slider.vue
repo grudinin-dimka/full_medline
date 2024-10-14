@@ -1,6 +1,6 @@
 <template>
 	<carousel
-		:items-to-show="carouselSettings.itemsToShow"
+		:items-to-show="calcItemsToShow"
 		:wrap-around="true"
 		:transition="750"
 		:autoplay="5000"
@@ -54,6 +54,7 @@ export default {
 	data() {
 		return {
 			slides: [],
+			windowWidth: null,
 			carouselSettings: {
 				itemsToShow: 5,
 			},
@@ -78,16 +79,35 @@ export default {
 				this.$store.commit("debuggerState", debbugStory);
 			});
 
-		window.addEventListener("resize", this.changeCarousel);
-		window.addEventListener("load", this.changeCarousel);
-		window.addEventListener("reload", this.changeCarousel);
+		window.addEventListener("resize", this.setWidth);
+		window.addEventListener("load", this.setWidth);
+		window.addEventListener("reload", this.setWidth);
 	},
 	unmounted() {
-		window.removeEventListener("resize", this.changeCarousel);
-		window.removeEventListener("load", this.changeCarousel);
-		window.removeEventListener("reload", this.changeCarousel);
+		window.removeEventListener("resize", this.setWidth);
+		window.removeEventListener("load", this.setWidth);
+		window.removeEventListener("reload", this.setWidth);
+	},
+	computed: {
+		/* Изменение настроек слайдера */
+		calcItemsToShow() {
+			if (this.windowWidth >= 1600) {
+				return 5;
+			} else if ((this.windowWidth >= 1300) & (this.windowWidth <= 1600)) {
+				return 4;
+			} else if ((this.windowWidth >= 960) & (this.windowWidth <= 1300)) {
+				return 3;
+			} else if ((this.windowWidth >= 660) & (this.windowWidth <= 960)) {
+				return 2;
+			} else if ((this.windowWidth >= 0) & (this.windowWidth <= 660)) {
+				return 1;
+			}
+		},
 	},
 	methods: {
+		setWidth() {
+			this.windowWidth = window.document.documentElement.clientWidth;
+		},
 		/* Сортировка списка слайдов по порядку */
 		sortSlider() {
 			this.slides.sort((a, b) => a.order - b.order);

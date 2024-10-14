@@ -481,7 +481,7 @@
 	<block-once>
 		<block-title>
 			<template #title>
-				<span :class="{ create : $route.params.id == 'new' }">ПРОФИЛЬ</span>
+				<span :class="{ create: $route.params.id == 'new' }">ПРОФИЛЬ</span>
 				<span v-if="$route.params.id == 'new'" class="create"> (СОЗДАНИЕ)</span>
 			</template>
 			<template #buttons>
@@ -755,7 +755,6 @@
 							{{ specialist.profile.errors.adultDoctor.body }}
 						</span>
 					</template>
-					<!-- TODO сделать так, чтобы появлялось поле ввода, если принемает врачей -->
 					<template #title-two>
 						<span>У ДЕТЕЙ*</span>
 						<span v-if="specialist.profile.data.childrenDoctor.edited"> (ИЗМЕНЕНО)</span>
@@ -2087,13 +2086,14 @@ export default {
 				}
 
 				let formData = new FormData();
+				formData.append("type", "profile");
 				formData.append("image", this.$refs.fileUpload.files[0]);
 				formData.append("profile", JSON.stringify(this.specialist.profile.data));
 
 				// Сохранение данных
 				axios({
 					method: "post",
-					url: `${this.$store.state.axios.urlApi}` + `save-specialist-profile-changes`,
+					url: `${this.$store.state.axios.urlApi}` + `save-specialist-modular`,
 					headers: {
 						Accept: "multipart/form-data",
 						Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -2305,17 +2305,19 @@ export default {
 				// Проверка на статус добавления специалиста
 				if (this.specialist.profile.data.id.body === "new") return;
 
+				let formData = new FormData();
+				formData.append("type", "specializations");
+				formData.append("id", JSON.stringify(this.specialist.profile.data.id.body));
+				formData.append("specializations", JSON.stringify(this.specialist.connections.specializations));
+
 				await axios({
 					method: "post",
-					url: `${this.$store.state.axios.urlApi}` + `save-specialist-specializations-changes`,
+					url: `${this.$store.state.axios.urlApi}` + `save-specialist-modular`,
 					headers: {
-						Accept: "application/json",
+						Accept: "multipart/form-data",
 						Authorization: `Bearer ${localStorage.getItem("token")}`,
 					},
-					data: {
-						id: this.specialist.profile.data.id.body,
-						array: this.specialist.connections.specializations,
-					},
+					data: formData,
 				})
 					.then((response) => {
 						if (response.data.status) {
@@ -2439,17 +2441,19 @@ export default {
 				// Проверка на статус добавления специалиста
 				if (this.specialist.profile.data.id.body === "new") return;
 
+				let formData = new FormData();
+				formData.append("type", "clinics");
+				formData.append("id", JSON.stringify(this.specialist.profile.data.id.body));
+				formData.append("clinics", JSON.stringify(this.specialist.connections.clinics));
+				
 				await axios({
 					method: "post",
-					url: `${this.$store.state.axios.urlApi}` + `save-specialist-clinics-changes`,
+					url: `${this.$store.state.axios.urlApi}` + `save-specialist-modular`,
 					headers: {
-						Accept: "application/json",
+						Accept: "multipart/form-data",
 						Authorization: `Bearer ${localStorage.getItem("token")}`,
 					},
-					data: {
-						id: this.specialist.profile.data.id.body,
-						array: this.specialist.connections.clinics,
-					},
+					data: formData,
 				})
 					.then((response) => {
 						if (response.data.status) {

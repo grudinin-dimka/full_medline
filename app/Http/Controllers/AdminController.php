@@ -194,7 +194,6 @@ class AdminController extends Controller
    /* _____________________________________________________*/
    /* 1. Врачи                                             */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-   // STOP придумываю модульную структуру сохранения данных
    /* Модульное сохранение */
    public function saveSpecialistModular(Request $request) {
       $result = null;
@@ -208,16 +207,20 @@ class AdminController extends Controller
          case "specializations":
             $result = $this->saveSpecialistSpecializations($request);
             return $result;
-            
+         case "clinics":
+            $result = $this->saveSpecialistClinics($request);
+            return $result;               
             break;         
          default:
+            
             break;
       }
    }
-   /* Сохранение профиля специалиста */
+   /* Модуль: Сохранение профиля */ 
    public function saveSpecialistProfile(Request $request) {
+      $profile = json_decode($request->profile);
+      
       $path = null;
-
       if($request->hasFile('image')) {
          $validated = validator($request->all(), [
             'image' => [
@@ -244,9 +247,7 @@ class AdminController extends Controller
          }
       };      
 
-      $profile = json_decode($request->profile);
       $specialist = Specialist::find($profile->id->body);
-
       if ($specialist) {
          $specialist->update([
             'link' => $profile->link->body,
@@ -278,13 +279,116 @@ class AdminController extends Controller
          ]);   
       };
    }
+   /* Модуль: Сохранение специализации */ 
    public function saveSpecialistSpecializations(Request $request) {
-      return response()->json([
-         "status" => true,
-         "message" => "Работает.",
-         "data" => null,
-      ]);
+      $specializations = json_decode($request->specializations);
+      $id = json_decode($request->id);
+      
+      $specialist = Specialist::find($id);
+      if($specialist) {         
+         // Поиск или добавление 
+         foreach ($specializations as $key => $value) {
+            SpecialistSpecialization::firstOrCreate([
+               'id_specialist' => $value->id_specialist,
+               'id_specialization' => $value->id_specialization, 
+            ]);
+         };
+
+         // Поиск в массиве
+         $specialistSpecializations = SpecialistSpecialization::where('id_specialist', $id)->get();
+         
+         if($specialistSpecializations) {
+            // Удаление ненужных записей
+            foreach ($specialistSpecializations as $key => $value) {
+               // Поиск в массиве
+               $status = false;
+               foreach ($specializations as $key => $valueReqArr) {
+                  if (
+                     $value->id_specialist === $valueReqArr->id_specialist 
+                        && 
+                     $value->id_specialization === $valueReqArr->id_specialization
+                  ) {
+                     $status = true;
+                  };
+               }
+   
+               if (!$status) {
+                  $value->delete();
+               };
+            };
+            
+            return response()->json([
+               "status" => true,
+               "message" => "Данные о специализациях сохранились.",
+               "data" => null,
+            ]);
+         } else {
+            return response()->json([
+               "status" => false,
+               "message" => "При поиске данных о специализациях возникли проблемы.",
+               "data" => null,
+            ]);
+         };
+      } else {
+         return response()->json([
+            "status" => false,
+            "message" => "Специалист не найден.",
+            "data" => null,
+         ]);
+      }
    }
+   /* Модуль: Сохранение клиник */
+   public function saveSpecialistClinics(Request $request) {
+      $clinics = json_decode($request->clinics);
+      $id = json_decode($request->id);
+      
+      $specialist = Specialist::find($id);
+      if($specialist) {         
+         // Поиск или добавление 
+         foreach ($clinics as $key => $value) {
+            SpecialistClinic::firstOrCreate([
+               'id_specialist' => $value->id_specialist,
+               'id_clinic' => $value->id_clinic, 
+               "priem" => $value->priem,
+            ]);
+         };
+
+         // Удаление ненужных записей
+         $specialistClinics = SpecialistClinic::where('id_specialist', $id)->get();
+         foreach ($specialistClinics as $key => $value) {
+            // Поиск в массиве
+            $status = false;
+            foreach ($clinics as $key => $valueReqArr) {
+               if (
+                  $value->id_specialist === $valueReqArr->id_specialist 
+                     && 
+                  $value->id_clinic === $valueReqArr->id_clinic
+                     &&
+                  $value->priem === $valueReqArr->priem
+               ) {
+                  $status = true;
+               };
+            }
+
+            if (!$status) {
+               $value->delete();
+            };
+         };
+         
+         return response()->json([
+            "status" => true,
+            "message" => "Данные о клиниках сохранились.",
+         ]);
+      } else {
+         return response()->json([
+            "status" => false,
+            "message" => "Специалист не найден.",
+         ]);
+      };
+   }
+
+
+
 
 
 
@@ -304,70 +408,6 @@ class AdminController extends Controller
             'hide' => $value['hide'],
          ]);
       };      
-   }
-   /* Сохранение всех данных специалиста */ 
-   public function saveSpecialistProfileChanges(Request $request) {
-      $path = null;
-
-      if($request->hasFile('image')) {
-         $validated = validator($request->all(), [
-            'image' => [
-               'required',
-               File::types('png')->max(10 * 1024),
-            ],
-         ]);
-         if ($validated->fails()) return response()->json([
-            "status" => false,
-            "message" => "Файл не прошёл проверку.",
-            "data" => null,
-         ]);
-
-         $path = $request->file('image')->store(
-            'public/specialists'
-         );
-
-         if (!$path) {
-            return response()->json([
-               "status" => false,
-               "message" => "Не удалось сохранить изображение.",
-               "data" => null,
-            ]);
-         }
-      };      
-
-      $profile = json_decode($request->profile);
-      $specialist = Specialist::find($profile->id->body);
-
-      if ($specialist) {
-         $specialist->update([
-            'link' => $profile->link->body,
-            'family' => $profile->family->body,
-            'name' => $profile->name->body,
-            'surname' => $profile->surname->body,
-            'category' => $profile->category->body,
-            'degree' => $profile->degree->body,
-            'rank' => $profile->rank->body,
-            'startWorkAge' => $profile->startWorkAge->body ? $profile->startWorkAge->body : null,
-            'startWorkCity' => $profile->startWorkCity->body,
-            'adultDoctor' => $profile->adultDoctor->body,
-            'childrenDoctor' => $profile->childrenDoctor->body,
-            'childrenDoctorAge' => $profile->childrenDoctor->body ? $profile->childrenDoctorAge->body : 0,
-         ]);
-
-         if($path) $specialist->update(['filename' => str_replace("public/specialists/", "", $path)]);
-
-         return response()->json([
-            "status" => true,
-            "message" => "Данные о профиле специалиста обновлены.",
-            "data" => $path ? Storage::url($path) : null,
-         ]);   
-      } else {
-         return response()->json([
-            "status" => false,
-            "message" => "Врач не найден.",
-            "data" => null,
-         ]);   
-      };
    }
    /* Добавление нового специалиста */ 
    public function addSpecialist(Request $request) {
@@ -432,50 +472,6 @@ class AdminController extends Controller
             "data" => null,
          ]);   
       };
-   }
-   /* FIXME Добавить проверок при помощи валидатора на количество символов */
-   /* Сохранение специализаций специалиста */ 
-   public function saveSpecialistSpecializationsChanges(Request $request) {
-      // Проверка на существование
-      if(Specialist::find($request->id)) {         
-         // Поиск или добавление 
-         foreach ($request->array as $key => $value) {
-            SpecialistSpecialization::firstOrCreate([
-               'id_specialist' => $value["id_specialist"],
-               'id_specialization' => $value["id_specialization"], 
-            ]);
-         };
-
-         // Удаление ненужных записей
-         $specialistSpecializations = SpecialistSpecialization::where('id_specialist', $request->id)->get();
-         foreach ($specialistSpecializations as $key => $value) {
-            // Поиск в массиве
-            $status = false;
-            foreach ($request->array as $key => $valueReqArr) {
-               if (
-                  $value["id_specialist"] === $valueReqArr["id_specialist"] 
-                     && 
-                  $value["id_specialization"] === $valueReqArr["id_specialization"]
-               ) {
-                  $status = true;
-               };
-            }
-
-            if (!$status) {
-               $value->delete();
-            };
-         };
-         
-         return response()->json([
-            "status" => true,
-            "message" => "Данные о специализациях сохранились.",
-         ]);
-      } else {
-         return response()->json([
-            "status" => false,
-            "message" => "Специалист не найден.",
-         ]);
-      }
    }
    /* Сохранение клиник специалиста */ 
    public function saveSpecialistClinicsChanges(Request $request) {
