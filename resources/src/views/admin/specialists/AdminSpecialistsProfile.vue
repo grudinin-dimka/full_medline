@@ -2308,7 +2308,10 @@ export default {
 				let formData = new FormData();
 				formData.append("type", "specializations");
 				formData.append("id", JSON.stringify(this.specialist.profile.data.id.body));
-				formData.append("specializations", JSON.stringify(this.specialist.connections.specializations));
+				formData.append(
+					"specializations",
+					JSON.stringify(this.specialist.connections.specializations)
+				);
 
 				await axios({
 					method: "post",
@@ -2445,7 +2448,7 @@ export default {
 				formData.append("type", "clinics");
 				formData.append("id", JSON.stringify(this.specialist.profile.data.id.body));
 				formData.append("clinics", JSON.stringify(this.specialist.connections.clinics));
-				
+
 				await axios({
 					method: "post",
 					url: `${this.$store.state.axios.urlApi}` + `save-specialist-modular`,
@@ -2554,21 +2557,24 @@ export default {
 			// Проверка на статус добавления специалиста
 			if (this.specialist.profile.data.id.body === "new") return;
 
+			let formData = new FormData();
+			formData.append("type", "certificates");
+			formData.append("id", JSON.stringify(this.specialist.profile.data.id.body));
+			formData.append("certificates", JSON.stringify(this.specialist.connections.certificates));
+
 			await axios({
 				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `save-specialist-certificates-changes`,
+				url: `${this.$store.state.axios.urlApi}` + `save-specialist-modular`,
 				headers: {
-					Accept: "application/json",
+					Accept: "multipart/form-data",
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
-				data: {
-					id: this.specialist.profile.data.id.body,
-					array: this.specialist.connections.certificates,
-				},
+				data: formData,
 			})
 				.then((response) => {
 					if (response.data.status) {
 						try {
+							console.log(response.data.data);
 							// Обновление id добавленных элементов на данные из бд
 							for (let key in response.data.data) {
 								let certificate = this.specialist.connections.certificates.filter(
@@ -2580,6 +2586,7 @@ export default {
 								);
 								certificate[0].id = response.data.data[key].new;
 							}
+							console.log(this.specialist.connections.certificates);
 
 							// Получения нового массива специалистов, помеченных на удаление
 							let res = this.specialist.connections.certificates.filter((item) => {

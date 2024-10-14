@@ -32,32 +32,36 @@ class LoginController extends Controller
   public function loginUser(Request $request) {
     // Валидация данных
     $validated = validator($request->all(), [
-      'name' => 'required',
-      'password' => 'required'      
+      "name" => "required",
+      "password" => "required"      
     ]);
     if ($validated->fails()) return response()->json([
-      'status' => false,
-      'token' => '',
+      "status" => false,
+      "message" => "Есть ошибки.",
+      "token" => "",
     ]);
 
     // Поиск пользователя по логину в бд
     $user = User::where('name', $request->name)->first();    
     if (!$user) return response()->json([
-      'status' => false,
-      'token' => '',
+      "status" => false,
+      "message" => "Пользователь не найден.",
+      "token" => '',
     ]);
 
     // Проверка хешированного пароля
     $hashPass = Hash::check($request->password, $user->password);      
     if (!$hashPass) return response()->json([
-      'status' => false,
-      'token' => '',
+      "status" => false,
+      "message" => "Неверный логин или пароль.",
+      "token" => "",
     ]);
 
     $user->tokens()->delete();
     return response()->json([
-      'status' => true,
-      'token' => $user->createToken('auth_token')->plainTextToken,
+      "status" => true,
+      "message" => "Авторизация пройдена.",
+      "token" => $user->createToken('auth_token')->plainTextToken,
     ]);
   }  
   

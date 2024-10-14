@@ -211,6 +211,10 @@ class AdminController extends Controller
             $result = $this->saveSpecialistClinics($request);
             return $result;               
             break;         
+         case "certificates":
+            $result = $this->saveSpecialistCertificates($request);
+            return $result;               
+            break;         
          default:
             
             break;
@@ -386,8 +390,75 @@ class AdminController extends Controller
          ]);
       };
    }
+   /* Модуль: Сохранение сертификатов */
+   public function saveSpecialistCertificates(Request $request) {
+      $certificates = json_decode($request->certificates);
+      $id = json_decode($request->id);
+      
+      $specialist = Specialist::find($id);
 
+      // Проверка на существование
+      if($specialist) {         
+         $arrayID = [];
+         foreach ($certificates as $key => $value) {
+            // Удаление
+            if ($value->delete === true){
+               $certificate = Certificate::find($value->id);
+               $certificate->delete();
+               continue;
+            }         
 
+            // Создание
+            if ($value->create === true) {
+               $certificateCreate = Certificate::create([
+                  "name" => $value->name,
+                  "organization" => $value->organization,
+                  "endEducation" => $value->endEducation,
+               ]);
+
+               if($certificateCreate) {
+                  SpecialistCertificate::create([
+                     'id_specialist' => $id,
+                     'id_certificate' => $certificateCreate->id,
+                  ]);   
+               }
+   
+               $arrayID[] = (object) [
+                  // Прошлый id
+                  'old' => $value->id, 
+                  // Новый id
+                  'new' => $certificateCreate->id
+               ];            
+               continue;
+            };  
+
+            // Обновление
+            $certificate = Certificate::find($value->id);
+            $certificateUpdate = $certificate->update([
+               "name" => $value->name,
+               "organization" => $value->organization,
+               "endEducation" => $value->endEducation,
+            ]);           
+
+            if(!$certificateUpdate) {
+               return response()->json([
+                  "status" => false,
+                  "message" => "Не удалось обновить значение.",
+               ]);      
+            }
+         };
+         return response()->json([
+            "status" => true,
+            "message" => "Данные о сертификатах сохранились.",
+            "data" => $arrayID,
+         ]);
+      } else {
+         return response()->json([
+            "status" => false,
+            "message" => "Специалист не найден.",
+         ]);
+      }
+   }
 
 
 
@@ -472,52 +543,6 @@ class AdminController extends Controller
             "data" => null,
          ]);   
       };
-   }
-   /* Сохранение клиник специалиста */ 
-   public function saveSpecialistClinicsChanges(Request $request) {
-      // Проверка на существование
-      if(Specialist::find($request->id)) {         
-         // Поиск или добавление 
-         foreach ($request->array as $key => $value) {
-            SpecialistClinic::firstOrCreate([
-               'id_specialist' => $value["id_specialist"],
-               'id_clinic' => $value["id_clinic"], 
-               "priem" => $value["priem"],
-            ]);
-         };
-
-         // Удаление ненужных записей
-         $specialistClinics = SpecialistClinic::where('id_specialist', $request->id)->get();
-         foreach ($specialistClinics as $key => $value) {
-            // Поиск в массиве
-            $status = false;
-            foreach ($request->array as $key => $valueReqArr) {
-               if (
-                  $value["id_specialist"] === $valueReqArr["id_specialist"] 
-                     && 
-                  $value["id_clinic"] === $valueReqArr["id_clinic"]
-                     &&
-                  $value["priem"] === $valueReqArr["priem"]
-               ) {
-                  $status = true;
-               };
-            }
-
-            if (!$status) {
-               $value->delete();
-            };
-         };
-         
-         return response()->json([
-            "status" => true,
-            "message" => "Данные о клиниках сохранились.",
-         ]);
-      } else {
-         return response()->json([
-            "status" => false,
-            "message" => "Специалист не найден.",
-         ]);
-      }
    }
    public function saveSpecialistCertificatesChanges(Request $request) {
       // Проверка на существование
