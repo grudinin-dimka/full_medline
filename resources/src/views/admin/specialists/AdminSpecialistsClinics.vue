@@ -4,7 +4,7 @@
 	<!--|___________________________________________________|-->
 	<admin-modal ref="modal" @touchCloseModal="closeModal" :modal="modal">
 		<template #title>
-			<span v-if="modal.type == 'create'" class="create">КЛИНИКА (СОЗДАНИЕ)*</span>
+			<span v-if="modal.type == 'create'" class="create">КЛИНИКА (СОЗДАНИЕ)</span>
 			<span v-if="modal.type == 'edit'">КЛИНИКА (РЕДАКТИРОВАНИЕ)</span>
 		</template>
 		<template #body>

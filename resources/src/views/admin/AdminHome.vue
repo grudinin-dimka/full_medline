@@ -57,7 +57,7 @@
 		<template #body>
 			<container-input>
 				<!-- Название -->
-				<container-input-once :type="modal.type == 'create' ? 'create' : 'edit'">
+				<container-input-once :type="modal.type == 'create' ? 'create' : modal.style.delete ? 'delete' : 'edit'">
 					<template #title>
 						<span>ИЗОБРАЖЕНИЕ*</span>
 						<span v-if="currentSlide.data.file.edited"> (ИЗМЕНЕНО) </span>
@@ -80,7 +80,7 @@
 					</template>
 				</container-input-once>
 				<!-- Название -->
-				<container-input-once :type="modal.type == 'create' ? 'create' : 'edit'">
+				<container-input-once :type="modal.type == 'create' ? 'create' : modal.style.delete ? 'delete' : 'edit'">
 					<template #title>
 						<span>НАЗВАНИЕ*</span>
 						<span v-if="currentSlide.data.name.edited"> (ИЗМЕНЕНО) </span>
@@ -104,7 +104,7 @@
 					</template>
 				</container-input-once>
 				<!-- Ссылка -->
-				<container-input-once :type="modal.type == 'create' ? 'create' : 'edit'">
+				<container-input-once :type="modal.type == 'create' ? 'create' : modal.style.delete ? 'delete' : 'edit'">
 					<template #title>
 						<span>ССЫЛКА*</span>
 						<span v-if="currentSlide.data.link.edited">(ИЗМЕНЕНО)</span>

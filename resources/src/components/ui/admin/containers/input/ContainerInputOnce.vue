@@ -1,5 +1,5 @@
 <template>
-	<div class="container-input-once" :class="{ create: type === 'create' }">
+	<div class="container-input-once" :class="{ create: type === 'create', delete: type === 'delete' }">
 		<label>
 			<slot name="title"></slot>
 		</label>
@@ -30,14 +30,6 @@ export default {
 .container-input-once > label > span {
 	font-size: 18px;
 	color: var(--primary-color);
-}
-
-.container-input-once > label > span.create {
-	color: #44a533;
-}
-
-.container-input-once > label > span.delete {
-	color: #a53333;
 }
 
 .container-input-once > input {
@@ -77,8 +69,16 @@ export default {
 	border: 2px solid #44a533;
 }
 
+.container-input-once.delete > :is(input:focus, select:focus) {
+	border: 2px solid #a53333;
+}
+
 .container-input-once.create > label > span {
 	color: #44a533;
+}
+
+.container-input-once.delete > label > span {
+	color: #a53333;
 }
 
 .container-input-once > input:focus {

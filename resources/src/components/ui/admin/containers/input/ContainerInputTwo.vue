@@ -1,5 +1,9 @@
 <template>
-	<fieldset class="container-input-two" :class="{ create: type === 'create' }" v-if="fieldset">
+	<fieldset
+		class="container-input-two"
+		:class="{ create: type === 'create', delete: type === 'delete' }"
+		v-if="fieldset"
+	>
 		<legend>
 			<slot name="legend"></slot>
 		</legend>
@@ -81,6 +85,10 @@ fieldset.container-input-two.create > legend > span {
 	color: #44a533;
 }
 
+fieldset.container-input-two.delete > legend > span {
+	color: #a53333;
+}
+
 .container-input-two {
 	display: flex;
 	flex-wrap: wrap;
@@ -121,6 +129,10 @@ fieldset.container-input-two.create > legend > span {
 
 .container-input-two.create > .item > :is(input:focus, select:focus) {
 	border: 2px solid #44a533;
+}
+
+.container-input-two.delete > .item > :is(input:focus, select:focus) {
+	border: 2px solid #a53333;
 }
 
 .container-input-two > .item > input::placeholder {

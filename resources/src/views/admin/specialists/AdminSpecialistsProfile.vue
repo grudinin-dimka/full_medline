@@ -481,7 +481,7 @@
 	<block-once>
 		<block-title>
 			<template #title>
-				<span>ПРОФИЛЬ</span>
+				<span :class="{ create : $route.params.id == 'new' }">ПРОФИЛЬ</span>
 				<span v-if="$route.params.id == 'new'" class="create"> (СОЗДАНИЕ)</span>
 			</template>
 			<template #buttons>
@@ -1997,16 +1997,13 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Модульное сохранение данных */
 		async saveSpecialistModular(type) {
-			let formData = new FormData();
-			formData.append("type", type);
-
 			/* STOP делал модульный вызов сохранения, а также в бекенде тоже самое */
 			switch (type) {
 				case "profile":
 					this.saveProfileChanges();
 					break;
 				case "specializations":
-					formData.append("data", JSON.stringify(this.specialist.connections.specializations));
+					this.saveSpecializationsChanges();
 					break;
 				default:
 					break;

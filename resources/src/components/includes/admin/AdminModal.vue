@@ -108,15 +108,15 @@ export default {
 	transform: scale(1);
 }
 
-.modal.create .modal-container {
+/* .modal.create .modal-container {
 	background-color: #d7f5d2;
 	border: 0px solid #3cae1f;
-}
+} */
 
-.modal.delete .modal-container {
+/* .modal.delete .modal-container {
 	background-color: #f5d2d2;
 	border: 0px solid #b93a3a;
-}
+} */
 
 .modal-head {
 	display: flex;
