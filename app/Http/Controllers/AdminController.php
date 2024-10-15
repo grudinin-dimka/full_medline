@@ -253,13 +253,12 @@ class AdminController extends Controller
             if (!$saveWork->status) {
                return response()->json($saveWork);
             };
+            
             return response()->json([
                "status" => true,
                "message" => "Все данные специалиста сохранены.",
                "data" => (object) [
-                  "profile" => $saveProfile->data,
-                  "specializations" => $saveSpecializations->data,
-                  "clinics" => $saveClinic->data,
+                  "imagePath" => $saveProfile->data,
                   "certificates" => $saveClinic->data,
                   "educations" => $saveEducation->data,
                   "works" => $saveWork->data,     

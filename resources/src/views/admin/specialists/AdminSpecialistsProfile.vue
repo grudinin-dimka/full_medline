@@ -488,13 +488,13 @@
 				<icon-save-all
 					:width="28"
 					:height="28"
-					@click="saveSpecialistModular('profile')"
+					@click="saveSpecialistModular('all')"
 					v-if="$route.params.id !== 'new'"
 				/>
 				<icon-save
 					:width="28"
 					:height="28"
-					@click="saveProfileChanges"
+					@click="saveSpecialistModular('profile')"
 					v-if="$route.params.id !== 'new'"
 				/>
 				<icon-add :width="28" :height="28" @click="addSpecialist" v-else></icon-add>
@@ -2198,58 +2198,122 @@ export default {
 					});
 			}
 		},
-		/* STOP думал как сделать обработку данных при модульном сохранении, решил, что буду 
-		*  данные с сервака обрабатывать функциями дубликатами для табличных блоков, а для двух
-		*  блоков там в ответе только статус и сообщения.
-		*/
-		saveSpecialistAll() {
-			let formData = new FormData();
-			formData.append("type", "all");
-			// Данные блока профиля
-			formData.append("image", this.$refs.fileUpload.files[0]);
-			formData.append("profile", JSON.stringify(this.specialist.profile.data));
-			// Id специалиста
-			formData.append("id", JSON.stringify(this.specialist.profile.data.id.body));
-			// Данные блока специализаций
-			formData.append(
-				"specializations",
-				JSON.stringify(this.specialist.connections.specializations)
-			);
-			// Данные блока клиник
-			formData.append("clinics", JSON.stringify(this.specialist.connections.clinics));
+		async saveSpecialistAll() {
+			// Проверка на статус добавления специалиста
+			if (this.specialist.profile.data.id.body === "new") return;
 
-			// Сохранение данных
-			axios({
-				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `save-specialist-modular`,
-				headers: {
-					Accept: "multipart/form-data",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-				data: formData,
-			})
-				.then((response) => {
-					if (response.data.status) {
-						let debbugStory = {
-							title: "Успешно!",
-							body: response.data.message,
-							type: "Completed",
-						};
-						this.$store.commit("debuggerState", debbugStory);
-					} else {
-						let debbugStory = {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
-					}
+			if (
+				this.checkSpecialistInputsAll([
+					"link",
+					"family",
+					"name",
+					"category",
+					"adultDoctor",
+					"childrenDoctor",
+				])
+			)
+				return;
 
-					console.log(response.data.data);
+			if (this.specialist.profile.data.childrenDoctor.body) {
+				if (this.checkSpecialistInputsAll(["childrenDoctorAge"])) return;
+			} else {
+				this.specialist.profile.errors.childrenDoctorAge.status = false;
+				this.specialist.profile.errors.childrenDoctorAge.body = "";
+			}
+
+			if (this.$refs.fileUpload.files[0]) {
+				if (this.checkSpecialistInputsAll(["file"])) return;
+			}
+
+			try {
+				let formData = new FormData();
+				formData.append("type", "all");
+				// Данные блока профиля
+				formData.append("image", this.$refs.fileUpload.files[0]);
+				formData.append("profile", JSON.stringify(this.specialist.profile.data));
+				// Id специалиста
+				formData.append("id", JSON.stringify(this.specialist.profile.data.id.body));
+				// Данные блока специализаций
+				formData.append(
+					"specializations",
+					JSON.stringify(this.specialist.connections.specializations)
+				);
+				// Данные блока клиник
+				formData.append("clinics", JSON.stringify(this.specialist.connections.clinics));
+				// Данные блока сертификаты
+				formData.append("certificates", JSON.stringify(this.specialist.connections.certificates));
+				// Данные блока образования
+				formData.append("educations", JSON.stringify(this.specialist.connections.educations));
+				// Данные блока прошлых работ
+				formData.append("works", JSON.stringify(this.specialist.connections.works));
+	
+				// Сохранение данных
+				await axios({
+					method: "post",
+					url: `${this.$store.state.axios.urlApi}` + `save-specialist-modular`,
+					headers: {
+						Accept: "multipart/form-data",
+						Authorization: `Bearer ${localStorage.getItem("token")}`,
+					},
+					data: formData,
 				})
-				.catch((error) => {
-					console.log(error);
-				});
+					.then((response) => {
+						if (response.data.status) {
+							// Замена изображения профиля
+							if (response.data.data.imagePath != null) {
+								this.clearSpecialistProfileEdited();
+								this.$refs.fileUpload.value = "";
+	
+								this.specialist.profile.data.path.body = response.data.data.imagePath;
+								this.specialist.profile.data.filename.body = response.data.data.imagePath.replace(
+									"/storage/specialists/",
+									""
+								);
+							}
+	
+							let blocks = [
+								"certificates",
+								"educations",
+								"works",
+							];
+
+							blocks.forEach((block) => { 
+								/* Обновление id в соответствии с изменениями */
+								this.updateIdFromConnection(block, response.data.data[block]);
+
+								/* Очистка удалённых элементов */
+								this.clearDeletesFromConnection(block);
+
+								/* Обновление флагов на удаление и сохранение */
+								this.clearFlagsFromConnection(block);
+							});
+
+							let debbugStory = {
+								title: "Успешно!",
+								body: response.data.message,
+								type: "Completed",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+						} else {
+							let debbugStory = {
+								title: "Ошибка.",
+								body: response.data.message,
+								type: "Error",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+						}
+					})
+					.catch((error) => {
+						console.log(error);
+					});
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "При сохранении данных специалиста произошла ошибка.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
 		},
 		/* Очистка статуса изменений */
 		clearSpecialistProfileEdited() {
