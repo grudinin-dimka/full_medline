@@ -1996,6 +1996,9 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Модульное сохранение данных */
 		async saveSpecialistModular(type) {
+			// Проверка на статус добавления специалиста
+			if (this.specialist.profile.data.id.body === "new") return;
+
 			switch (type) {
 				case "profile":
 					this.saveProfileChanges();
@@ -2024,9 +2027,6 @@ export default {
 		},
 		/* Сохранение данных профиля */
 		async saveProfileChanges() {
-			// Проверка на статус добавления специалиста
-			if (this.specialist.profile.data.id.body === "new") return;
-
 			try {
 				if (
 					this.checkSpecialistInputsAll([
@@ -2199,9 +2199,6 @@ export default {
 			}
 		},
 		async saveSpecialistAll() {
-			// Проверка на статус добавления специалиста
-			if (this.specialist.profile.data.id.body === "new") return;
-
 			if (
 				this.checkSpecialistInputsAll([
 					"link",
@@ -2259,6 +2256,8 @@ export default {
 				})
 					.then((response) => {
 						if (response.data.status) {
+							this.clearSpecialistProfileEdited();
+								
 							// Замена изображения профиля
 							if (response.data.data.imagePath != null) {
 								this.clearSpecialistProfileEdited();
@@ -2385,9 +2384,6 @@ export default {
 		/* Сохранение изменений */
 		async saveSpecializationsChanges() {
 			try {
-				// Проверка на статус добавления специалиста
-				if (this.specialist.profile.data.id.body === "new") return;
-
 				let formData = new FormData();
 				formData.append("type", "specializations");
 				formData.append("id", JSON.stringify(this.specialist.profile.data.id.body));
@@ -2524,9 +2520,6 @@ export default {
 		/* Сохранение изменений */
 		async saveClinicsChanges() {
 			try {
-				// Проверка на статус добавления специалиста
-				if (this.specialist.profile.data.id.body === "new") return;
-
 				let formData = new FormData();
 				formData.append("type", "clinics");
 				formData.append("id", JSON.stringify(this.specialist.profile.data.id.body));
@@ -2637,9 +2630,6 @@ export default {
 		},
 		/* Сохранение изменений */
 		async saveCertificateChanges() {
-			// Проверка на статус добавления специалиста
-			if (this.specialist.profile.data.id.body === "new") return;
-
 			let formData = new FormData();
 			formData.append("type", "certificates");
 			formData.append("id", JSON.stringify(this.specialist.profile.data.id.body));
@@ -2773,9 +2763,6 @@ export default {
 		},
 		/* Сохранение */
 		async saveEducationChanges() {
-			// Проверка на статус добавления специалиста
-			if (this.specialist.profile.data.id.body === "new") return;
-
 			let formData = new FormData();
 			formData.append("type", "educations");
 			formData.append("id", JSON.stringify(this.specialist.profile.data.id.body));
@@ -2911,9 +2898,6 @@ export default {
 		},
 		/* Сохранение */
 		async saveWorksChanges() {
-			// Проверка на статус добавления специалиста
-			if (this.specialist.profile.data.id.body === "new") return;
-
 			let formData = new FormData();
 			formData.append("type", "works");
 			formData.append("id", JSON.stringify(this.specialist.profile.data.id.body));
@@ -3205,59 +3189,73 @@ export default {
 				},
 			})
 				.then((response) => {
-					// Заполнение профиля
-					for (let key in response.data.specialist.profile) {
-						this.specialist.profile.data[key].body = response.data.specialist.profile[key];
-					}
-					// Заполнение секций
-					for (let key in response.data.sections) {
-						this.sections[key] = response.data.sections[key];
-					}
-
-					for (let key in response.data.specialist.connections) {
-						this.specialist.connections[key] = response.data.specialist.connections[key];
-					}
-
-					// Добавление поля "Прием" в клиниках
-					this.sections.clinics.forEach((item) => {
-						item.priem = 0;
-
-						this.specialist.connections.clinics.forEach((itemOther) => {
-							if (itemOther.id_clinic == item.id) {
-								item.priem = itemOther.priem;
-							}
+					if (response.data.status) {						
+						// Заполнение профиля
+						for (let key in response.data.data.specialist.profile) {
+							this.specialist.profile.data[key].body = response.data.data.specialist.profile[key];
+						}
+						// Заполнение секций
+						for (let key in response.data.data.sections) {
+							this.sections[key] = response.data.data.sections[key];
+						}
+	
+						for (let key in response.data.data.specialist.connections) {
+							this.specialist.connections[key] = response.data.data.specialist.connections[key];
+						}
+	
+						// Добавление поля "Прием" в клиниках
+						this.sections.clinics.forEach((item) => {
+							item.priem = 0;
+	
+							this.specialist.connections.clinics.forEach((itemOther) => {
+								if (itemOther.id_clinic == item.id) {
+									item.priem = itemOther.priem;
+								}
+							});
 						});
-					});
+	
+						// Добавление полей delete, create
+						this.specialist.connections.certificates.forEach((item) => {
+							item.create = false;
+							item.delete = false;
+						});
+						this.specialist.connections.educations.forEach((item) => {
+							item.create = false;
+							item.delete = false;
+						});
+						this.specialist.connections.works.forEach((item) => {
+							item.create = false;
+							item.delete = false;
+						});
+	
+						// Сортировка специализаций и клиник по алфавиту
+						const collator = new Intl.Collator("ru");
+						this.sections.specializations.sort((a, b) => {
+							return collator.compare(a.name, b.name);
+						});
+						this.sections.clinics.sort((a, b) => {
+							return collator.compare(a.name, b.name);
+						});
+					} else {
+						this.specialist.profile.data.id.body = "none";
 
-					// Добавление полей delete, create
-					this.specialist.connections.certificates.forEach((item) => {
-						item.create = false;
-						item.delete = false;
-					});
-					this.specialist.connections.educations.forEach((item) => {
-						item.create = false;
-						item.delete = false;
-					});
-					this.specialist.connections.works.forEach((item) => {
-						item.create = false;
-						item.delete = false;
-					});
+						let debbugStory = {
+							title: "Ошибка.",
+							body: response.data.message,
+							type: "Error",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					}
 
-					// Сортировка специализаций и клиник по алфавиту
-					const collator = new Intl.Collator("ru");
-					this.sections.specializations.sort((a, b) => {
-						return collator.compare(a.name, b.name);
-					});
-					this.sections.clinics.sort((a, b) => {
-						return collator.compare(a.name, b.name);
-					});
 				})
 				.catch((error) => {
 					console.log(error);
 				})
 				.finally(() => {
-					for (let key in this.loading.loader) {
-						this.loading.loader[key] = false;
+					if(this.specialist.profile.data.id.body != "none") {
+						for (let key in this.loading.loader) {
+							this.loading.loader[key] = false;
+						}
 					}
 				});
 		} else if (this.$route.params.id == "new") {

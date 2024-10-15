@@ -333,7 +333,7 @@ class AdminController extends Controller
       } else {
          return (object) [
             "status" => false,
-            "message" => "Врач не найден.",
+            "message" => "Специалист не найден.",
             "data" => null,
          ];   
       };
@@ -518,7 +518,7 @@ class AdminController extends Controller
       $id = json_decode($request->id);
       
       $specialist = Specialist::find($id);
-      if($specialist::find($request->id)) {         
+      if($specialist) {         
          $arrayID = [];
 
          foreach ($educations as $key => $value) {
