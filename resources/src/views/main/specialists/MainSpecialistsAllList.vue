@@ -13,11 +13,11 @@
 					</div>
 					<div class="specialist-body-options-other-block">
 						<div>Звание:</div>
-						<div>{{ specialist.rank }}</div>
+						<div>{{ specialist.rank }}.</div>
 					</div>
 					<div class="specialist-body-options-other-block">
 						<div>Степень:</div>
-						<div>{{ specialist.degree }}</div>
+						<div>{{ specialist.degree }}.</div>
 					</div>
 					<div class="specialist-body-options-other-block">
 						<div>Стаж:</div>
@@ -25,15 +25,15 @@
 					</div>
 					<div class="specialist-body-options-other-block" v-if="specialist.childrenDoctor">
 						<div>Приём у детей:</div>
-						<div>{{ specialist.childrenDoctorAge }}+</div>
+						<div>{{ specialist.childrenDoctorAge }}+.</div>
 					</div>
 					<div class="specialist-body-options-other-block" v-else>
 						<div>Приём у детей:</div>
-						<div>Нет</div>
+						<div>Нет.</div>
 					</div>
 					<div class="specialist-body-options-other-block">
 						<div>Приём у взрослых:</div>
-						<div>{{ specialist.childrenDoctor ? "Да" : "Нет" }}</div>
+						<div>{{ specialist.childrenDoctor ? "Да." : "Нет." }}</div>
 					</div>
 				</div>
 			</div>

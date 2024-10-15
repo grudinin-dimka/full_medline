@@ -668,9 +668,15 @@
 							type="text"
 							placeholder="Введите степень"
 							autocomplete="off"
+							list="specialist-dedgree"
 							v-model="specialist.profile.data.degree.body"
 							@input="specialist.profile.data.degree.edited = true"
 						/>
+						<datalist id="specialist-dedgree">
+							<option value="Отсутствует">Отсутствует</option>
+							<option value="Кандидат медицинских наук">Кандидат медицинских наук</option>
+							<option value="Доктор медицинских наук">Доктор медицинских наук</option>
+						</datalist>
 					</template>
 					<template #title-three>
 						<span>ЗВАНИЕ</span>
@@ -681,9 +687,15 @@
 							type="text"
 							placeholder="Введите звание"
 							autocomplete="off"
+							list="specialist-rank"
 							v-model="specialist.profile.data.rank.body"
 							@input="specialist.profile.data.rank.edited = true"
 						/>
+						<datalist id="specialist-rank">
+							<option value="Отсутствует">Отсутствует</option>
+							<option value="Доцент">Доцент</option>
+							<option value="Профессор">Профессор</option>
+						</datalist>
 					</template>
 				</container-select-three>
 				<!-- Первая работа -->

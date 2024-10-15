@@ -6,9 +6,7 @@
 		<span class="link-arrow"> / </span>
 		<router-link :to="`/specialists/${$route.params.name}`">
 			<load-text :isLoading="isLoading"> Загрузка... </load-text>
-			<span class="specialist-name" v-if="isSpecialist">{{
-				specialist.name
-			}}</span>
+			<span class="specialist-name" v-if="isSpecialist">{{ specialist.name }}</span>
 		</router-link>
 	</info-bar>
 
@@ -20,27 +18,41 @@
 			<div class="specialist-profile">
 				<div class="specialist-profile-head">
 					<div class="specialist-profile-head-title">
-						<span>{{ specialist.name }}</span>
+						<div>
+							{{ specialist.family + " " + specialist.name + " " + specialist.surname }}
+						</div>
 					</div>
 					<div class="specialist-profile-head-item">
-						<span>Специальность:</span>
-						<span>{{ specialist.specialization }}</span>
+						<div>Категория:</div>
+						<div>{{ specialist.category }}</div>
 					</div>
 					<div class="specialist-profile-head-item">
-						<span>Образование:</span>
-						<span>{{ specialist.education }}</span>
+						<div>Звание:</div>
+						<div>{{ specialist.rank }}.</div>
 					</div>
 					<div class="specialist-profile-head-item">
-						<span>Повышение квалификации:</span>
-						<span>{{ specialist.advancedTraining }}</span>
+						<div>Степень:</div>
+						<div>{{ specialist.degree }}.</div>
 					</div>
 					<div class="specialist-profile-head-item">
-						<span>Сертификаты:</span>
-						<span>{{ specialist.certificates }}</span>
+						<div>Стаж:</div>
+						<div>{{ getWorkAges(specialist.startWorkAge) }}</div>
 					</div>
 					<div class="specialist-profile-head-item">
-						<span>Врачебный стаж:</span>
-						<span>{{ specialist.startWorkAge }}</span>
+						<div>Приём у детей:</div>
+						<div>{{ specialist.childrenDoctorAge }}+.</div>
+					</div>
+					<div class="specialist-profile-head-item">
+						<div>Приём у детей:</div>
+						<div>Нет.</div>
+					</div>
+					<div class="specialist-profile-head-item">
+						<div>Приём у взрослых:</div>
+						<div>{{ specialist.childrenDoctor ? "Да." : "Нет." }}</div>
+					</div>
+					<div class="specialist-profile-head-item">
+						<div>Врачебный стаж:</div>
+						<div>{{ specialist.startWorkAge }}</div>
 					</div>
 				</div>
 			</div>
@@ -70,6 +82,24 @@ export default {
 			isSpecialist: false,
 			specialist: {},
 		};
+	},
+	methods: {
+		getWorkAges(date) {
+			let startDate = new Date(date);
+			let currentDate = new Date();
+			let result = currentDate.getFullYear() - startDate.getFullYear();
+			if (result == 0) return "Менее года.";
+			switch (result) {
+				case 1:
+					return result + " " + "год.";
+				case 2:
+				case 3:
+				case 4:
+					return result + " " + "года.";
+				default:
+					return result + " " + "лет.";
+			}
+		},
 	},
 	mounted() {
 		// Получение массива слайдов с сервера
