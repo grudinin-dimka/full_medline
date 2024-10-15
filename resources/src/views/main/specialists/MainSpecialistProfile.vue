@@ -38,21 +38,17 @@
 						<div>Стаж:</div>
 						<div>{{ getWorkAges(specialist.startWorkAge) }}</div>
 					</div>
-					<div class="specialist-profile-head-item">
+					<div class="specialist-profile-head-item" v-if="specialist.childrenDoctor">
 						<div>Приём у детей:</div>
 						<div>{{ specialist.childrenDoctorAge }}+.</div>
 					</div>
-					<div class="specialist-profile-head-item">
+					<div class="specialist-profile-head-item" v-else>
 						<div>Приём у детей:</div>
 						<div>Нет.</div>
 					</div>
 					<div class="specialist-profile-head-item">
 						<div>Приём у взрослых:</div>
 						<div>{{ specialist.childrenDoctor ? "Да." : "Нет." }}</div>
-					</div>
-					<div class="specialist-profile-head-item">
-						<div>Врачебный стаж:</div>
-						<div>{{ specialist.startWorkAge }}</div>
 					</div>
 				</div>
 			</div>
