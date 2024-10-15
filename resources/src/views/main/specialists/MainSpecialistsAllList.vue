@@ -1,9 +1,5 @@
 <template>
-	<div
-		class="specialist"
-		v-for="specialist in specialists"
-		:key="specialist.id"
-	>
+	<div class="specialist" v-for="specialist in specialists" :key="specialist.id">
 		<img :src="specialist.path" />
 		<div class="specialist-body">
 			<div class="specialist-body-options">
@@ -12,25 +8,36 @@
 				</div>
 				<div class="specialist-body-options-other">
 					<div class="specialist-body-options-other-block">
-						<div>Специализация:</div>
-						<div>{{ specialist.specialization }}</div>
+						<div>Категория:</div>
+						<div>{{ specialist.category }}.</div>
+					</div>
+					<div class="specialist-body-options-other-block">
+						<div>Звание:</div>
+						<div>{{ specialist.rank }}</div>
+					</div>
+					<div class="specialist-body-options-other-block">
+						<div>Степень:</div>
+						<div>{{ specialist.degree }}</div>
 					</div>
 					<div class="specialist-body-options-other-block">
 						<div>Стаж:</div>
-						<div>{{ specialist.startWorkAge }}</div>
+						<div>{{ getWorkAges(specialist.startWorkAge) }}</div>
+					</div>
+					<div class="specialist-body-options-other-block" v-if="specialist.childrenDoctor">
+						<div>Приём у детей:</div>
+						<div>{{ specialist.childrenDoctorAge }}+</div>
+					</div>
+					<div class="specialist-body-options-other-block" v-else>
+						<div>Приём у детей:</div>
+						<div>Нет</div>
 					</div>
 					<div class="specialist-body-options-other-block">
-						<div>Ссылка:</div>
-						<div>
-							{{ specialist.link }}
-						</div>
+						<div>Приём у взрослых:</div>
+						<div>{{ specialist.childrenDoctor ? "Да" : "Нет" }}</div>
 					</div>
 				</div>
 			</div>
-			<div
-				class="specialist-body-link"
-				@click="openspecialistProfile(specialist)"
-			>
+			<div class="specialist-body-link" @click="openspecialistProfile(specialist)">
 				Подробнее
 			</div>
 		</div>
@@ -48,6 +55,25 @@ export default {
 		},
 	},
 	methods: {
+		getWorkAges(date) {
+			let startDate = new Date(date);
+			let currentDate = new Date();
+			let result = currentDate.getFullYear() - startDate.getFullYear();
+			if (result == 0) return "Менее года.";
+			switch (result) {
+				case 1:
+					return result + " " + "год.";
+					break;
+				case 2:
+				case 3:
+				case 4:
+					return result + " " + "года.";
+					break;
+				default:
+					return result + " " + "лет.";
+					break;
+			}
+		},
 		openspecialistProfile(specialist) {
 			window.scrollTo({
 				top: 0,
@@ -121,7 +147,7 @@ export default {
 
 .specialist-body-options-other-block {
 	display: grid;
-	grid-template-columns: 150px 1fr;
+	grid-template-columns: 175px 1fr;
 }
 
 .specialist-body-options-other-block > div {
@@ -144,6 +170,10 @@ export default {
 	color: var(--primary-color);
 	cursor: pointer;
 	text-align: right;
+}
+
+.specialist-body-link:hover {
+	text-decoration: underline;
 }
 
 @keyframes show {

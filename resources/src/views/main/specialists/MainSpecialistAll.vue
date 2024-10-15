@@ -5,12 +5,18 @@
 		<router-link to="/specialists">Специалисты</router-link>
 	</info-bar>
 
-	<loader-child :isLoading="isLoading" />
+	<template v-if="loading.sections.specialists">
+		<filters></filters>
+		<block>
+			<specialists-list :specialists="specialists" />
+		</block>
+	</template>
 
-	<filters v-if="isSpecialist"></filters>
-	<block v-if="isSpecialist">
-		<specialists-list :specialists="specialists"/>
-	</block>
+	<loader-child
+		:isLoading="loading.loader.specialists"
+		:minHeight="400"
+		@loaderChildAfterLeave="loaderChildAfterLeave"
+	/>
 </template>
 
 <script>
@@ -35,18 +41,38 @@ export default {
 	data() {
 		return {
 			specialists: [],
+			loading: {
+				loader: {
+					specialists: true,
+				},
+				sections: {
+					specialists: false,
+				},
+			},
 			isLoading: true,
 			isSpecialist: false,
 		};
 	},
 	methods: {
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                   ЗАГРУЗЧИК                       |*/
+		/* |___________________________________________________|*/
+		/* После скрытия элементы */
+		loaderChildAfterLeave() {
+			this.loading.sections.specialists = true;
+		},
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                  СПЕЦИАЛИСТЫ                      |*/
+		/* |___________________________________________________|*/
+		/* Открытие профиля доктора */
 		openDoctorProfile(id) {
+			this.$router.push("/specialists/" + id);
+
 			window.scrollTo({
 				top: 0,
 				left: 0,
 				behavior: "smooth",
 			});
-			this.$router.push("/specialists/" + id);
 		},
 	},
 	mounted() {
@@ -56,10 +82,6 @@ export default {
 			url: `${this.$store.state.axios.urlApi}` + `get-specialists`,
 		})
 			.then((response) => {
-				this.isLoading = false;
-				setTimeout(() => {
-					this.isSpecialist = true;					
-				}, 500)
 				this.specialists = response.data;
 			})
 			.catch((error) => {
@@ -69,6 +91,9 @@ export default {
 					type: "Error",
 				};
 				this.$store.commit("debuggerState", debbugStory);
+			})
+			.finally(() => {
+				this.loading.loader.specialists = false;
 			});
 	},
 };

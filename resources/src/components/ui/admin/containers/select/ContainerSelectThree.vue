@@ -137,4 +137,10 @@ fieldset.container-select-three.create:focus-within {
 
 	caret-color: red;
 }
+
+@media screen and (width <= 450px) {
+	.container-select-three > .item {
+		flex: 1 0 200px;
+	}
+}
 </style>

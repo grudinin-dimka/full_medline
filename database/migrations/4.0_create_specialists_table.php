@@ -49,6 +49,10 @@ return new class extends Migration
             "name" => "Павел",
             "surname" => "Александрович",
             "category" => "Вторая",
+            "degree" => "Кандидат медицинских наук",
+            "rank" => "Доцент",
+            "startWorkAge" => date('c'),
+            "startWorkCity" => "Москва",
             "adultDoctor" => true,
             "childrenDoctor" => false,
             "filename" => "vlasov.png"

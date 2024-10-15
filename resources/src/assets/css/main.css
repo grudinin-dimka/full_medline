@@ -62,24 +62,24 @@ body,
 }
 
 body.modal-open {
-	padding-right: 17.5px;
+	padding-right: 17px;
 	background-color: #ececec;
 	overflow: hidden;
 }
 
 body.modal-open > #app > header > .user {
-	margin-right: 17.5px;
+	margin-right: 17px;
 }
 
 body.modal-open > #app > .debugger {
-	margin-right: 17.5px;
+	margin-right: 17px;
 }
 
 /* Скролбар блока со стандартным стилем*/
 /* Define the scrollbar style */
 body::-webkit-scrollbar,
 table::-webkit-scrollbar {
-	width: 17.5px;
+	width: 17px;
 }
 
 /* Define the thumb style */

@@ -203,4 +203,10 @@ fieldset.container-input-two-sub.create > legend > span {
 
 	caret-color: red;
 }
+
+@media screen and (width <= 450px) {
+	.container-input-two-sub-sub > .item {
+		flex: 1 0 200px;
+	}
+}
 </style>

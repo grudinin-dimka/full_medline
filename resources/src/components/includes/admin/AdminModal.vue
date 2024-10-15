@@ -1,44 +1,45 @@
 <template>
-	<div
-		class="modal"
-		:class="{
-			active: modal.status,
-			create: modal.style.create,
-			delete: modal.style.delete,
-		}"
-		@click.self="$emit('touchCloseModal')"
-	>
-		<div class="modal-container">
-			<!-- Верхняя часть окна -->
-			<div class="modal-head">
-				<!-- Заголовок -->
-				<div class="modal-head-title">
-					<slot name="title" v-if="modal.modules.title"></slot>
+	<transition name="modal">
+		<div
+			v-show="modal.status"
+			class="modal"
+			:class="{
+				create: modal.style.create,
+				delete: modal.style.delete,
+			}"
+			@click.self="$emit('touchCloseModal')"
+		>
+			<transition name="modal-container">
+				<div class="modal-container" v-show="modal.status">
+					<!-- Верхняя часть окна -->
+					<div class="modal-head">
+						<!-- Заголовок -->
+						<div class="modal-head-title">
+							<slot name="title" v-if="modal.modules.title"></slot>
+						</div>
+						<!-- Кнопки -->
+						<div class="modal-head-buttons">
+							<slot name="buttonHide" v-if="modal.modules.buttons.hide"></slot>
+							<button v-if="modal.modules.buttons.close" @click="$emit('touchCloseModal')">
+								<IconClose :width="26" :height="26" />
+							</button>
+						</div>
+					</div>
+					<div class="modal-img" v-if="modal.modules.images">
+						<slot name="img"></slot>
+					</div>
+					<!-- Тело окна -->
+					<div class="modal-body" v-if="modal.modules.body">
+						<slot name="body"></slot>
+					</div>
+					<!-- Нижняя часть окна -->
+					<slot name="footer" v-if="modal.modules.footer">
+						<slot name="footer"></slot>
+					</slot>
 				</div>
-				<!-- Кнопки -->
-				<div class="modal-head-buttons">
-					<slot name="buttonHide" v-if="modal.modules.buttons.hide"></slot>
-					<button
-						v-if="modal.modules.buttons.close"
-						@click="$emit('touchCloseModal')"
-					>
-						<IconClose :width="26" :height="26" />
-					</button>
-				</div>
-			</div>
-			<div class="modal-img" v-if="modal.modules.images">
-				<slot name="img"></slot>
-			</div>
-			<!-- Тело окна -->
-			<div class="modal-body" v-if="modal.modules.body">
-				<slot name="body"></slot>
-			</div>
-			<!-- Нижняя часть окна -->
-			<slot name="footer" v-if="modal.modules.footer">
-				<slot name="footer"></slot>
-			</slot>
+			</transition>
 		</div>
-	</div>
+	</transition>
 </template>
 
 <script>
@@ -49,7 +50,11 @@ export default {
 		IconClose,
 	},
 	props: {
-		modal: Object,
+		modal: {
+			type: Object,
+			required: true,
+			default: () => {},
+		},
 		required: true,
 		default: () => {
 			return {
@@ -61,6 +66,27 @@ export default {
 </script>
 
 <style scoped>
+.modal-enter-active,
+.modal-leave-active {
+	transition: opacity 0.3s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+	opacity: 0;
+}
+
+.modal-container-enter-active,
+.modal-container-leave-active {
+	transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.modal-container-enter-from,
+.modal-container-leave-to {
+	opacity: 0;
+	transform: scale(0.7);
+}
+
 .modal {
 	position: fixed;
 	display: flex;
@@ -70,20 +96,10 @@ export default {
 	top: 0px;
 	left: 0px;
 
-	opacity: 0;
-	visibility: hidden;
-
 	width: 100%;
 	height: 100%;
 
 	background: rgba(0, 0, 0, 0.39);
-
-	transition: all 0.3s;
-}
-
-.modal.active {
-	opacity: 1;
-	visibility: visible;
 }
 
 .modal-container {
@@ -99,13 +115,6 @@ export default {
 	width: 100%;
 	max-width: 1000px;
 	max-height: 100%;
-
-	transition: transform 0.3s;
-	transform: scale(0.7);
-}
-
-.modal.active .modal-container {
-	transform: scale(1);
 }
 
 /* .modal.create .modal-container {

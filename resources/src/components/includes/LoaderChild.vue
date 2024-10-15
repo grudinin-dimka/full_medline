@@ -33,7 +33,7 @@ export default {
 <style scoped>
 .v-enter-active {
 	animation: swirlAdded 1s;
-	transition: opacity 0.5s ease;
+	transition: opacity 0.4s ease;
 }
 
 .v-enter-from,

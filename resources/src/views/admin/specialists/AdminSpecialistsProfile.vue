@@ -472,6 +472,7 @@
 	<!--1. Профиль                                          -->
 	<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
 	<!-- HACK Проработать детальнее адаптивный дизайн -->
+	<!-- HACK Переделать функцию модульного сохранения строго под сохранение данных всей страницы -->
 	<info-bar>
 		<template v-slot:title>Специалисты</template>
 		<template v-slot:addreas>specialists/{{ $route.params.id }}</template>
@@ -485,16 +486,10 @@
 				<span v-if="$route.params.id == 'new'" class="create"> (СОЗДАНИЕ)</span>
 			</template>
 			<template #buttons>
-				<icon-save-all
-					:width="28"
-					:height="28"
-					@click="saveSpecialistModular('all')"
-					v-if="$route.params.id !== 'new'"
-				/>
 				<icon-save
 					:width="28"
 					:height="28"
-					@click="saveSpecialistModular('profile')"
+					@click="saveSpecialistModular('all')"
 					v-if="$route.params.id !== 'new'"
 				/>
 				<icon-add :width="28" :height="28" @click="addSpecialist" v-else></icon-add>
@@ -700,7 +695,7 @@
 						<span :class="{ create: $route.params.id === 'new' }">НАЧАЛО КАРЪЕРЫ</span>
 					</template>
 					<template #title-one>
-						<span>ДАТА</span>
+						<span>ДАТА*</span>
 						<span v-if="specialist.profile.data.startWorkAge.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #input-one>
@@ -708,8 +703,15 @@
 							type="date"
 							autocomplete="off"
 							v-model="specialist.profile.data.startWorkAge.body"
+							:class="{ error: specialist.profile.errors.startWorkAge.status }"
 							@input="specialist.profile.data.startWorkAge.edited = true"
+							@blur="checkSpecialistInput('startWorkAge', 'text')"
 						/>
+					</template>
+					<template #error-one>
+						<span class="error" v-if="specialist.profile.errors.startWorkAge.status">
+							{{ specialist.profile.errors.startWorkAge.body }}
+						</span>
 					</template>
 					<template #title-two>
 						<span>ГОРОД</span>
@@ -824,7 +826,7 @@
 						:width="28"
 						:height="28"
 						@click="saveSpecialistModular('specializations')"
-						v-if="$route.params.id !== 'new'"
+						v-if="false"
 					/>
 				</template>
 			</block-title>
@@ -891,7 +893,12 @@
 					</span>
 				</template>
 				<template #buttons>
-					<icon-save :width="28" :height="28" @click="saveSpecialistModular('clinics')" />
+					<icon-save
+						:width="28"
+						:height="28"
+						@click="saveSpecialistModular('clinics')"
+						v-if="false"
+					/>
 				</template>
 			</block-title>
 		</template>
@@ -949,7 +956,12 @@
 				</span>
 			</template>
 			<template #buttons>
-				<icon-save :width="28" :height="28" @click="saveSpecialistModular('certificates')" />
+				<icon-save
+					:width="28"
+					:height="28"
+					@click="saveSpecialistModular('certificates')"
+					v-if="false"
+				/>
 			</template>
 		</block-title>
 
@@ -986,7 +998,12 @@
 				</span>
 			</template>
 			<template #buttons>
-				<icon-save :width="28" :height="28" @click="saveSpecialistModular('educations')" />
+				<icon-save
+					:width="28"
+					:height="28"
+					@click="saveSpecialistModular('educations')"
+					v-if="false"
+				/>
 			</template>
 		</block-title>
 
@@ -1027,7 +1044,7 @@
 					:width="28"
 					:height="28"
 					@click="saveSpecialistModular('works')"
-					v-if="$route.params.id !== 'new'"
+					v-if="false"
 				/>
 			</template>
 		</block-title>
@@ -2207,6 +2224,7 @@ export default {
 					"category",
 					"adultDoctor",
 					"childrenDoctor",
+					"startWorkAge",
 				])
 			)
 				return;
@@ -2238,12 +2256,15 @@ export default {
 				// Данные блока клиник
 				formData.append("clinics", JSON.stringify(this.specialist.connections.clinics));
 				// Данные блока сертификаты
-				formData.append("certificates", JSON.stringify(this.specialist.connections.certificates));
+				formData.append(
+					"certificates",
+					JSON.stringify(this.specialist.connections.certificates)
+				);
 				// Данные блока образования
 				formData.append("educations", JSON.stringify(this.specialist.connections.educations));
 				// Данные блока прошлых работ
 				formData.append("works", JSON.stringify(this.specialist.connections.works));
-	
+
 				// Сохранение данных
 				await axios({
 					method: "post",
@@ -2257,26 +2278,20 @@ export default {
 					.then((response) => {
 						if (response.data.status) {
 							this.clearSpecialistProfileEdited();
-								
+
 							// Замена изображения профиля
 							if (response.data.data.imagePath != null) {
 								this.clearSpecialistProfileEdited();
 								this.$refs.fileUpload.value = "";
-	
-								this.specialist.profile.data.path.body = response.data.data.imagePath;
-								this.specialist.profile.data.filename.body = response.data.data.imagePath.replace(
-									"/storage/specialists/",
-									""
-								);
-							}
-	
-							let blocks = [
-								"certificates",
-								"educations",
-								"works",
-							];
 
-							blocks.forEach((block) => { 
+								this.specialist.profile.data.path.body = response.data.data.imagePath;
+								this.specialist.profile.data.filename.body =
+									response.data.data.imagePath.replace("/storage/specialists/", "");
+							}
+
+							let blocks = ["certificates", "educations", "works"];
+
+							blocks.forEach((block) => {
 								/* Обновление id в соответствии с изменениями */
 								this.updateIdFromConnection(block, response.data.data[block]);
 
@@ -3189,31 +3204,33 @@ export default {
 				},
 			})
 				.then((response) => {
-					if (response.data.status) {						
+					if (response.data.status) {
 						// Заполнение профиля
 						for (let key in response.data.data.specialist.profile) {
-							this.specialist.profile.data[key].body = response.data.data.specialist.profile[key];
+							this.specialist.profile.data[key].body =
+								response.data.data.specialist.profile[key];
 						}
 						// Заполнение секций
 						for (let key in response.data.data.sections) {
 							this.sections[key] = response.data.data.sections[key];
 						}
-	
+
 						for (let key in response.data.data.specialist.connections) {
-							this.specialist.connections[key] = response.data.data.specialist.connections[key];
+							this.specialist.connections[key] =
+								response.data.data.specialist.connections[key];
 						}
-	
+
 						// Добавление поля "Прием" в клиниках
 						this.sections.clinics.forEach((item) => {
 							item.priem = 0;
-	
+
 							this.specialist.connections.clinics.forEach((itemOther) => {
 								if (itemOther.id_clinic == item.id) {
 									item.priem = itemOther.priem;
 								}
 							});
 						});
-	
+
 						// Добавление полей delete, create
 						this.specialist.connections.certificates.forEach((item) => {
 							item.create = false;
@@ -3227,7 +3244,7 @@ export default {
 							item.create = false;
 							item.delete = false;
 						});
-	
+
 						// Сортировка специализаций и клиник по алфавиту
 						const collator = new Intl.Collator("ru");
 						this.sections.specializations.sort((a, b) => {
@@ -3246,13 +3263,12 @@ export default {
 						};
 						this.$store.commit("debuggerState", debbugStory);
 					}
-
 				})
 				.catch((error) => {
 					console.log(error);
 				})
 				.finally(() => {
-					if(this.specialist.profile.data.id.body != "none") {
+					if (this.specialist.profile.data.id.body != "none") {
 						for (let key in this.loading.loader) {
 							this.loading.loader[key] = false;
 						}
@@ -3449,11 +3465,11 @@ export default {
 	flex-wrap: wrap;
 	gap: 20px;
 
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
+	animation: show-bottom-to-top-15 0.4s ease-in-out;
 }
 
 .container-profile-other {
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
+	animation: show-bottom-to-top-15 0.4s ease-in-out;
 }
 
 .profile-image {
@@ -3513,7 +3529,7 @@ export default {
 	flex-direction: column;
 	gap: 10px;
 
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
+	animation: show-bottom-to-top-15 0.4s ease-in-out;
 }
 
 .profile-list > .item {
@@ -3558,5 +3574,25 @@ export default {
 .profile-list > .item > .item-close {
 	justify-self: end;
 	align-self: end;
+}
+
+@media screen and (width <= 1000px) {
+	.profile-info {
+		flex: 1 0 0px;
+	}
+}
+
+@media screen and (width <= 600px) {
+	.container-profile {
+		flex-direction: column;
+	}
+
+	.profile-image {
+		flex: 1 0 0px;
+	}
+
+	.profile-image > .item {
+		width: 100%;
+	}
 }
 </style>

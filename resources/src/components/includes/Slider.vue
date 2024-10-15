@@ -20,11 +20,6 @@
 						backgroundRepeat: 'no-repeat',
 					}"
 				></div>
-				<!-- <img
-					:src="slide.path"
-					:alt="slide.name"
-					width="300px"
-				/> -->
 			</a>
 		</slide>
 
@@ -151,5 +146,9 @@ export default {
 
 .carousel__pagination-button.carousel__pagination-button--active::after {
 	background-color: rgba(0, 171, 189, 1);
+}
+
+.carousel {
+	animation: show 0.5s ease-out;
 }
 </style>
