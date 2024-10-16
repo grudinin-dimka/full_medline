@@ -659,6 +659,7 @@ class AdminController extends Controller
       }      
    }
    /* Сохранение таблицы со специалистами */ 
+   /* FIXME сделать удаление ненужных картинок */
    public function saveSpecialistsChanges(Request $request) {
       // Удаление помеченных
       foreach ($request->specialists as $key => $value) {

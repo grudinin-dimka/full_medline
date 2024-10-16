@@ -105,7 +105,7 @@
 
 <script>
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
-import Block from "../../../components/ui/main/Block.vue";
+import Block from "../../../components/ui/main/blocks/Block.vue";
 import axios from "axios";
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
 import LoadText from "../../../components/ui/main/LoadText.vue";

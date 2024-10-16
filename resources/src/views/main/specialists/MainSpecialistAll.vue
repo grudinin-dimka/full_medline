@@ -5,7 +5,8 @@
 		<router-link to="/specialists">Специалисты</router-link>
 	</info-bar>
 
-	<filters v-if="loading.sections.specialists"></filters>
+	<!-- TODO: Сделать фильтры, в идеале, чтобы при вводе specialists/terapevt выводились врачи -->
+	<!-- <filters v-if="loading.sections.specialists" :filters="filters"></filters> -->
 	<block>
 		<specialists-list :specialists="specialists" v-if="loading.sections.specialists" />
 	</block>
@@ -18,7 +19,7 @@
 </template>
 
 <script>
-import Block from "../../../components/ui/main/Block.vue";
+import Block from "../../../components/ui/main/blocks/Block.vue";
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import Filters from "../../../components/ui/main/Filters.vue";
 import { RouterLink } from "vue-router";
@@ -47,8 +48,16 @@ export default {
 					specialists: false,
 				},
 			},
-			isLoading: true,
-			isSpecialist: false,
+			filters: [
+				{
+					id: 1,
+					name: "Хирург",
+				},
+				{
+					id: 2,
+					name: "Терапевт",
+				},
+			],
 		};
 	},
 	methods: {
@@ -62,16 +71,6 @@ export default {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                  СПЕЦИАЛИСТЫ                      |*/
 		/* |___________________________________________________|*/
-		/* Открытие профиля доктора */
-		openDoctorProfile(id) {
-			this.$router.push("/specialists/" + id);
-
-			window.scrollTo({
-				top: 0,
-				left: 0,
-				behavior: "smooth",
-			});
-		},
 	},
 	mounted() {
 		// Получение массива докторов с сервера
@@ -80,7 +79,18 @@ export default {
 			url: `${this.$store.state.axios.urlApi}` + `get-specialists`,
 		})
 			.then((response) => {
-				this.specialists = response.data;
+				if (response.data.status) {
+					this.specialists = response.data.data;
+				} else {
+					this.specialists = null;
+
+					let debbugStory = {
+						title: "Ошибка.",
+						body: response.data.message,
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+				}
 			})
 			.catch((error) => {
 				let debbugStory = {
@@ -91,20 +101,12 @@ export default {
 				this.$store.commit("debuggerState", debbugStory);
 			})
 			.finally(() => {
-				this.loading.loader.specialists = false;
+				if (this.specialists != null) {
+					this.loading.loader.specialists = false;					
+				}
 			});
 	},
 };
 </script>
 
-<style scoped>
-.list-enter-active,
-.list-leave-active {
-	transition: all 0.5s ease;
-}
-.list-enter-from,
-.list-leave-to {
-	opacity: 0;
-	transform: translateX(30px);
-}
-</style>
+<style scoped></style>

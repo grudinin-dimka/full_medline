@@ -10,39 +10,12 @@
 
 <script>
 export default {
-   data() {
-      return {
-         filters: [
-            {
-               id: 1,
-               name: 'Все',
-            },
-            {
-               id: 2,
-               name: 'Терапевт',
-            },
-            {
-               id: 3,
-               name: 'Невролог',
-            },
-            {
-               id: 4,
-               name: 'Уролог',
-            },
-            {
-               id: 5,
-               name: 'Хирург',
-            },
-            {
-               id: 6,
-               name: 'Нейрохирург',
-            },
-            {
-               id: 7,
-               name: 'Ортопед',
-            },
-         ]
-      }
+   props: {
+      filters: {
+         type: Array,
+         required: true,
+         default: [],
+      }     
    },
 }
 </script>

@@ -5,17 +5,21 @@
 		<router-link to="/about">О нас</router-link>
 	</info-bar>
 
-	<loader-child :isLoading="isLoading" />
+	<block>
+		<loader-child :isLoading="isLoading" />
+	</block>
 </template>
 
 <script>
 import InfoBar from "../../components/ui/main/InfoBar.vue";
 import LoaderChild from "../../components/includes/LoaderChild.vue";
+import Block from "../../components/ui/main/blocks/Block.vue";
 
 export default {
    components: {
       InfoBar,
 		LoaderChild,
+		Block,
    },
 	data() {
 		return {

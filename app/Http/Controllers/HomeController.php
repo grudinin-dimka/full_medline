@@ -80,13 +80,27 @@ class HomeController extends Controller
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
    /* Вывод всех докторов */ 
    public function getSpecialists(Request $request) {
-      $specialists = Specialist::where('hide', false)->get();
-      foreach ($specialists as $key => $value) {
-         $specialists[$key]->url = makeUrl($specialists[$key]->family . " " . $specialists[$key]->name . " " . $specialists[$key]->surname);
-         $specialists[$key]->path = Storage::url('specialists/' . $value->filename);      
-      };
+      $specializations = Specialization::all();
 
-      return $specialists;
+      $specialists = Specialist::where('hide', false)->get();
+      if($specialists) {
+         foreach ($specialists as $key => $value) {
+            $specialists[$key]->url = makeUrl($specialists[$key]->family . " " . $specialists[$key]->name . " " . $specialists[$key]->surname);
+            $specialists[$key]->path = Storage::url('specialists/' . $value->filename);      
+         };
+
+         return response()->json([
+            "status" => true,
+            "message" => "Специалисты найдены.",
+            "data" => $specialists,
+         ]);
+      } else {
+         return response()->json([
+            "status" => false,
+            "message" => "Специалисты не найдены.",
+            "data" => null,
+         ]);
+      };
    }
    /* Вывод конкретного доктора */
    public function getSpecialistProfile(Request $request) {

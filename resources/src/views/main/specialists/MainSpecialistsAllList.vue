@@ -1,4 +1,5 @@
 <template>
+	<!-- TODO сделать отображение специализаций -->
 	<div class="specialist" v-for="specialist in specialists" :key="specialist.id">
 		<img :src="specialist.path" />
 		<div class="specialist-body">
@@ -25,7 +26,7 @@
 					</div>
 					<div class="specialist-body-options-other-block">
 						<div>Приём у взрослых:</div>
-						<div>{{ specialist.childrenDoctor ? "Да." : "Нет." }}</div>
+						<div>{{ specialist.adultDoctor ? "Да." : "Нет." }}</div>
 					</div>
 				</div>
 			</div>
@@ -73,7 +74,7 @@ export default {
 				behavior: "instant",
 			});
 
-			this.$router.push("/specialists/" + specialist.url);
+			this.$router.push({ name: "doctorname", params: { name: specialist.url, catagory: null } });
 		},
 	},
 };
