@@ -228,7 +228,7 @@ export default {
 	min-height: 300px;
 	width: 1000px;
 
-	animation: show 0.5s ease-out;
+	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 .container-specialist-profile > img {

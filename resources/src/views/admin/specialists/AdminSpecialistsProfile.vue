@@ -490,9 +490,14 @@
 					:width="28"
 					:height="28"
 					@click="saveSpecialistModular('all')"
-					v-if="$route.params.id !== 'new'"
+					v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.body !== null"
 				/>
-				<icon-add :width="28" :height="28" @click="addSpecialist" v-else></icon-add>
+				<icon-add
+					:width="28"
+					:height="28"
+					@click="addSpecialist"
+					v-if="$route.params.id === 'new'"
+				></icon-add>
 			</template>
 		</block-title>
 
@@ -887,10 +892,18 @@
 			/>
 
 			<block-buttons>
-				<button-default @click="editSpecialization" v-if="$route.params.id !== 'new'">
+				<button-disabled v-if="this.specialist.profile.data.id.body == null">
+					Добавить
+				</button-disabled>
+				<button-default
+					@click="editSpecialization"
+					v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.body !== null"
+				>
 					Добавить
 				</button-default>
-				<button-claim @click="editSpecialization" v-else> Добавить </button-claim>
+				<button-claim @click="editSpecialization" v-if="$route.params.id === 'new'">
+					Добавить
+				</button-claim>
 			</block-buttons>
 		</template>
 		<!--____________________________________________________-->
@@ -949,7 +962,10 @@
 			/>
 
 			<block-buttons>
-				<button-default @click="editClinics" v-if="$route.params.id !== 'new'">
+				<button-disabled v-if="this.specialist.profile.data.id.body == null">
+					Добавить
+				</button-disabled>
+				<button-default @click="editClinics" v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.body !== null">
 					Добавить
 				</button-default>
 			</block-buttons>
@@ -993,7 +1009,10 @@
 		/>
 
 		<block-buttons>
-			<button-default @click="editArrayValue('create', 'certificates', null)">
+			<button-disabled v-if="this.specialist.profile.data.id.body == null">
+				Добавить
+			</button-disabled>
+			<button-default @click="editArrayValue('create', 'certificates', null)" v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.body !== null">
 				Добавить
 			</button-default>
 		</block-buttons>
@@ -1034,7 +1053,10 @@
 		/>
 
 		<block-buttons>
-			<button-default @click="editArrayValue('create', 'educations', null)">
+			<button-disabled v-if="this.specialist.profile.data.id.body == null">
+				Добавить	
+			</button-disabled>
+			<button-default @click="editArrayValue('create', 'educations', null)" v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.body !== null">
 				Добавить
 			</button-default>
 		</block-buttons>
@@ -1076,7 +1098,10 @@
 		/>
 
 		<block-buttons>
-			<button-default @click="editArrayValue('create', 'works', null)">
+			<button-disabled v-if="this.specialist.profile.data.id.body == null">
+				Добавить	
+			</button-disabled>
+			<button-default @click="editArrayValue('create', 'works', null)" v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.body !== null">
 				Добавить
 			</button-default>
 		</block-buttons>
@@ -1115,6 +1140,7 @@ import ContainerTextareaOnce from "../../../components/ui/admin/containers/texta
 import Pagination from "../../../components/ui/admin/pagination/Pagination.vue";
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
+import ButtonDisabled from "../../../components/ui/admin/buttons/ButtonDisabled.vue";
 import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
 import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 
@@ -1151,6 +1177,7 @@ export default {
 		TableButtonDefault,
 		TableButtonRemove,
 		ButtonDefault,
+		ButtonDisabled,
 		ButtonRemove,
 		ButtonClaim,
 		IconSave,
@@ -3203,7 +3230,6 @@ export default {
 		},
 	},
 	mounted() {
-		/* FIXME Сделать проверку на неизвестный id */
 		if (this.$route.params.id !== "new" && !Number.isNaN(Number(this.$route.params.id))) {
 			axios({
 				method: "post",
@@ -3342,6 +3368,8 @@ export default {
 					}
 				});
 		} else {
+			this.specialist.profile.data.id.body = null;
+
 			let debbugStory = {
 				title: "Ошибка.",
 				body: "Произошла непредвиденная ошибка.",

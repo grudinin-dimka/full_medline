@@ -74,7 +74,10 @@ export default {
 				behavior: "instant",
 			});
 
-			this.$router.push({ name: "doctorname", params: { name: specialist.url, catagory: null } });
+			this.$router.push({
+				name: "doctorname",
+				params: { name: specialist.url, catagory: null },
+			});
 		},
 	},
 };
@@ -103,7 +106,7 @@ export default {
 
 	width: 1000px;
 
-	animation: show 0.5s ease-out;
+	animation: show-bottom-to-top-15 0.5s ease-in-out;
 	transition: all 0.2s;
 }
 

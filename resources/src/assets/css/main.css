@@ -24,6 +24,8 @@
 	/* Кнопки */
 	--button-default-color: var(--primary-color);
 	--button-default-color-hover: #26b8c7;
+	--button-disabled-color: #969696;
+	--button-disabled-color-hover: #a0a0a0;
 	--button-remove-color: #cd3f3f;
 	--button-remove-color-hover: #d74949;
 	--button-claim-color: #44a533;

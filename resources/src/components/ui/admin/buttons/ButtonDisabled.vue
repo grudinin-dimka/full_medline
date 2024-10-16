@@ -1,5 +1,5 @@
 <template>
-	<button class="default">
+	<button class="disabled">
 		<slot></slot>
 	</button>
 </template>
@@ -9,8 +9,8 @@ export default {};
 </script>
 
 <style scoped>
-button.default {
-	cursor: pointer;
+button.disabled {
+	cursor: not-allowed;
 
 	padding: 15px 30px;
 	border: 0px solid black;
@@ -19,10 +19,10 @@ button.default {
 	font-size: 20px;
 	color: white;
 
-	background-color: var(--button-default-color);
+	background-color: var(--button-disabled-color);
 }
 
 button.default:hover {
-	background-color: var(--button-default-color-hover);
+	background-color: var(--button-disabled-color-hover);
 }
 </style>

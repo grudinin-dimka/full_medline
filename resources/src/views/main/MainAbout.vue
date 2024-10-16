@@ -6,6 +6,16 @@
 	</info-bar>
 
 	<block>
+		<div class="about">	
+			<div class="item">
+				<div class="images">
+					<div :style="{
+						backgroundImage: `url('../../assets/img/dimshakova.png')`,
+					}"></div>
+				</div>
+				<div class="description"></div>
+			</div>
+		</div>
 		<loader-child :isLoading="isLoading" />
 	</block>
 </template>

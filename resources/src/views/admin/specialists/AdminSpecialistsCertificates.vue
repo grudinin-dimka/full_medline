@@ -9,7 +9,7 @@
 		</template>
 		<template #body>
 			<!-- Название -->
-			<container-input-once>
+			<container-input-once :type="modal.type == 'create' ? 'create' : 'edit'">
 				<template #title>
 					<span :class="{ create: modal.type == 'create' }">НАЗВАНИЕ*</span>
 					<span
@@ -36,7 +36,7 @@
 				</template>
 			</container-input-once>
 			<!-- Организация -->
-			<container-input-once>
+			<container-input-once :type="modal.type == 'create' ? 'create' : 'edit'">
 				<template #title>
 					<span :class="{ create: modal.type == 'create' }">ОРГАНИЗАЦИЯ*</span>
 					<span
@@ -63,7 +63,7 @@
 				</template>
 			</container-input-once>
 			<!-- Дата окончания обучения -->
-			<container-input-once>
+			<container-input-once :type="modal.type == 'create' ? 'create' : 'edit'">
 				<template #title>
 					<span :class="{ create: modal.type == 'create' }">ОКОНЧАНИЕ ОБУЧЕНИЯ*</span>
 					<span

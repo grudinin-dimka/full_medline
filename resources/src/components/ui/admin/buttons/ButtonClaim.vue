@@ -6,7 +6,7 @@
 
 <script></script>
 
-<style>
+<style scoped>
 button.claim {
 	cursor: pointer;
 
