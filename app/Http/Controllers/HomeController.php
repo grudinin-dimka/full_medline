@@ -80,9 +80,9 @@ class HomeController extends Controller
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
    /* Вывод всех докторов */ 
    public function getSpecialists(Request $request) {
-      $specialists = Specialist::all();
+      $specialists = Specialist::where('hide', false)->get();
       foreach ($specialists as $key => $value) {
-         $specialists[$key]->url = makeUrl($specialists[$key]->name);
+         $specialists[$key]->url = makeUrl($specialists[$key]->family . " " . $specialists[$key]->name . " " . $specialists[$key]->surname);
          $specialists[$key]->path = Storage::url('specialists/' . $value->filename);      
       };
 
@@ -93,15 +93,66 @@ class HomeController extends Controller
       $specialists = Specialist::all();
 
       foreach ($specialists as $key => $value) {
-         $stringTransliterate = Transliterator::create('Any-Latin; Latin-ASCII')->transliterate($specialists[$key]->name);
+         $stringTransliterate = Transliterator::create('Any-Latin; Latin-ASCII')->transliterate($specialists[$key]->family . " " . $specialists[$key]->name . " " . $specialists[$key]->surname);
          $stringUnderCase = strtolower($stringTransliterate);
          $stringReplace = str_replace(" ", "-", $stringUnderCase);
-
+         
          if ($request->url == $stringReplace) {
-         $specialists[$key]->path= Storage::url('specialists/' . $specialists[$key]->filename);
-         return $specialists[$key];
+            $specialists[$key]->path= Storage::url('specialists/' . $specialists[$key]->filename);
+
+            $specialistsSpecializations = SpecialistSpecialization::where('id_specialist', $specialists[$key]->id)->get();
+            if($specialistsSpecializations) {
+               $specializations = [];
+               foreach ($specialistsSpecializations as $specialistsSpecializationsKey => $specialistsSpecializationsValue) {
+                  $specializations[] = Specialization::find($specialistsSpecializationsValue->id_specialization);
+               };   
+            } else {
+               return response()->json([
+                  "status" => false,
+                  "message" => "Не удалось получить специализации.",
+                  "data" => (object)[
+                     "profile" => null,
+                     "specializations" => null,
+                     "educations" => null,
+                  ],
+               ]);    
+            };
+
+            $specialistsEducations = SpecialistEducation::where('id_specialist', $specialists[$key]->id)->get();
+            if($specialistsEducations) {
+               $educations = [];
+               foreach ($specialistsEducations as $specialistsEducationsKey => $specialistsEducationsValue) {
+                  $educations[] = Education::find($specialistsEducationsValue->id_education);
+               };               
+            } else {
+               return response()->json([
+                  "status" => false,
+                  "message" => "Не удалось получить специализации.",
+                  "data" => (object)[
+                     "profile" => null,
+                     "specializations" => null,
+                     "educations" => null,
+                  ],
+               ]);    
+            }
+
+            return response()->json([
+               "status" => true,
+               "message" => "Данные получены.",
+               "data" => (object)[
+                  "profile" => $specialists[$key],
+                  "specializations" => $specializations,
+                  "educations" => $educations,
+               ],
+            ]);            
          };
       };
+
+      return response()->json([
+         "status" => false,
+         "message" => "Специалист не найден.",
+         "data" => null,
+      ]);            
    }
    /* Вывод сокращенной информации о врачах */ 
    public function getSpecialistsShort(Request $request) {

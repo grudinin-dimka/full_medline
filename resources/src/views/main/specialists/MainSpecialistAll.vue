@@ -5,12 +5,10 @@
 		<router-link to="/specialists">Специалисты</router-link>
 	</info-bar>
 
-	<template v-if="loading.sections.specialists">
-		<filters></filters>
-		<block>
-			<specialists-list :specialists="specialists" />
-		</block>
-	</template>
+	<filters v-if="loading.sections.specialists"></filters>
+	<block>
+		<specialists-list :specialists="specialists" v-if="loading.sections.specialists" />
+	</block>
 
 	<loader-child
 		:isLoading="loading.loader.specialists"

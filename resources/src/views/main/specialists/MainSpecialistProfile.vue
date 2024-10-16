@@ -5,56 +5,102 @@
 		<router-link to="/specialists">Специалисты</router-link>
 		<span class="link-arrow"> / </span>
 		<router-link :to="`/specialists/${$route.params.name}`">
-			<load-text :isLoading="isLoading"> Загрузка... </load-text>
-			<span class="specialist-name" v-if="isSpecialist">{{ specialist.name }}</span>
+			<load-text :isLoading="loading.loader.profile"> Загрузка... </load-text>
+			<span class="specialist-name" v-if="loading.sections.profile">{{
+				specialist.profile.family +
+				" " +
+				specialist.profile.name +
+				" " +
+				specialist.profile.surname
+			}}</span>
 		</router-link>
 	</info-bar>
 
-	<loader-child :isLoading="isLoading" />
-
-	<block v-if="isSpecialist">
-		<div class="container-specialist-profile">
-			<img :src="specialist.path" />
+	<block>
+		<div class="container-specialist-profile" v-if="loading.sections.profile">
+			<img :src="specialist.profile.path" />
 			<div class="specialist-profile">
-				<div class="specialist-profile-head">
-					<div class="specialist-profile-head-title">
-						<div>
-							{{ specialist.family + " " + specialist.name + " " + specialist.surname }}
-						</div>
-					</div>
-					<div class="specialist-profile-head-item">
-						<div>Категория:</div>
-						<div>{{ specialist.category }}</div>
-					</div>
-					<div class="specialist-profile-head-item">
-						<div>Звание:</div>
-						<div>{{ specialist.rank }}.</div>
-					</div>
-					<div class="specialist-profile-head-item">
-						<div>Степень:</div>
-						<div>{{ specialist.degree }}.</div>
-					</div>
-					<div class="specialist-profile-head-item">
-						<div>Стаж:</div>
-						<div>{{ getWorkAges(specialist.startWorkAge) }}</div>
-					</div>
-					<div class="specialist-profile-head-item" v-if="specialist.childrenDoctor">
-						<div>Приём у детей:</div>
-						<div>{{ specialist.childrenDoctorAge }}+.</div>
-					</div>
-					<div class="specialist-profile-head-item" v-else>
-						<div>Приём у детей:</div>
-						<div>Нет.</div>
-					</div>
-					<div class="specialist-profile-head-item">
-						<div>Приём у взрослых:</div>
-						<div>{{ specialist.childrenDoctor ? "Да." : "Нет." }}</div>
-					</div>
-				</div>
+				<table class="specialist-profile-head">
+					<thead>
+						<th colspan="2">
+							{{
+								specialist.profile.family +
+								" " +
+								specialist.profile.name +
+								" " +
+								specialist.profile.surname
+							}}
+						</th>
+					</thead>
+					<tbody>
+						<tr v-if="specialist.specializations.length">
+							<td width="250px">Специализации:</td>
+							<td>{{ getSpecializations }}</td>
+						</tr>
+						<tr>
+							<td width="250px">Категория:</td>
+							<td>{{ specialist.profile.category }}.</td>
+						</tr>
+						<tr>
+							<td>Стаж:</td>
+							<td>{{ getWorkAges(specialist.profile.startWorkAge) }}.</td>
+						</tr>
+						<tr>
+							<td>Приём:</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>
+								<ul>
+									<li>У детей:</li>
+								</ul>
+							</td>
+							<td v-if="specialist.profile.childrenDoctor">
+								{{ specialist.profile.childrenDoctorAge }}+.
+							</td>
+							<td v-else>Нет.</td>
+						</tr>
+						<tr>
+							<td>
+								<ul>
+									<li>У взрослых:</li>
+								</ul>
+							</td>
+							<td>{{ specialist.profile.adultDoctor ? "Да." : "Нет." }}</td>
+						</tr>
+						<tr v-if="specialist.educations.length">
+							<td>Образования:</td>
+							<td></td>
+						</tr>
+						<tr
+							v-if="specialist.educations.length"
+							v-for="education in specialist.educations"
+						>
+							<td colspan="2">
+								<ul>
+									<li>{{ education.organization }}.</li>
+								</ul>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" height="50px">
+								<a class="prodoctorov" :href="specialist.profile.link">
+									<span class="red">ПРО</span>
+									<span class="blue">ДОКТОРОВ</span>
+								</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
-			<!-- User {{ $route.params.id }} -->
 		</div>
 	</block>
+
+	<loader-child
+		:isLoading="loading.loader.profile"
+		:minHeight="400"
+		@loaderChildAfterLeave="loaderChildAfterLeave"
+	/>
 </template>
 
 <script>
@@ -74,26 +120,54 @@ export default {
 	},
 	data() {
 		return {
-			isLoading: true,
-			isSpecialist: false,
-			specialist: {},
+			loading: {
+				loader: {
+					profile: true,
+				},
+				sections: {
+					profile: false,
+				},
+			},
+			specialist: {
+				profile: {},
+				specializations: [],
+				education: [],
+			},
 		};
 	},
+	computed: {
+		getSpecializations() {
+			let result = "";
+
+			this.specialist.specializations.forEach((specialization) => {
+				result += specialization.name + ", ";
+			});
+
+			return result.slice(0, -2) + ".";
+		},
+	},
 	methods: {
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                   ЗАГРУЗЧИК                       |*/
+		/* |___________________________________________________|*/
+		/* После скрытия элементы */
+		loaderChildAfterLeave() {
+			this.loading.sections.profile = true;
+		},
 		getWorkAges(date) {
 			let startDate = new Date(date);
 			let currentDate = new Date();
 			let result = currentDate.getFullYear() - startDate.getFullYear();
-			if (result == 0) return "Менее года.";
+			if (result == 0) return "Менее года";
 			switch (result) {
 				case 1:
-					return result + " " + "год.";
+					return result + " " + "год";
 				case 2:
 				case 3:
 				case 4:
-					return result + " " + "года.";
+					return result + " " + "года";
 				default:
-					return result + " " + "лет.";
+					return result + " " + "лет";
 			}
 		},
 	},
@@ -107,12 +181,20 @@ export default {
 			},
 		})
 			.then((response) => {
-				this.specialist = response.data;
+				if (response.data.status) {
+					this.specialist.profile = response.data.data.profile;
+					this.specialist.specializations = response.data.data.specializations;
+					this.specialist.educations = response.data.data.educations;
+				} else {
+					this.specialist.profile = null;
 
-				this.isLoading = false;
-				setTimeout(() => {
-					this.isSpecialist = true;
-				}, 500);
+					let debbugStory = {
+						title: "Ошибка.",
+						body: response.data.message,
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+				}
 			})
 			.catch((error) => {
 				let debbugStory = {
@@ -121,6 +203,11 @@ export default {
 					type: "Error",
 				};
 				this.$store.commit("debuggerState", debbugStory);
+			})
+			.finally(() => {
+				if (this.specialist.profile != null) {
+					this.loading.loader.profile = false;
+				}
 			});
 	},
 };
@@ -132,12 +219,16 @@ export default {
 }
 
 .container-specialist-profile {
-	margin: 0px 30px;
-	display: flex;
+	display: grid;
+	grid-template-columns: 350px 1fr;
 	gap: 20px;
-	max-width: 1000px;
 
-	animation: transform 0.5s ease-out;
+	margin: 0px 30px;
+
+	min-height: 300px;
+	width: 1000px;
+
+	animation: show 0.5s ease-out;
 }
 
 .container-specialist-profile > img {
@@ -155,66 +246,56 @@ export default {
 	gap: 20px;
 }
 
-.specialist-profile-head {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
-}
-
-.specialist-profile-head-title {
+.specialist-profile-head th {
 	font-size: 24px;
+	text-align: left;
+	font-weight: normal;
 }
 
-.specialist-profile-head-item {
-	display: grid;
-	font-size: 16px;
-	grid-template-columns: 250px 1fr;
+.specialist-profile-head td {
+	font-size: 18px;
+	padding: 5px 0px;
 }
 
-.specialist-profile-body {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
-}
-
-.specialist-profile-body-title {
-	font-size: 20px;
-}
-
-.specialist-profile-body > ul {
+.specialist-profile-head td ul {
 	margin: 0px;
-	padding-left: 20px;
 }
 
-.specialist-profile-body > ul > li:not(:last-child) {
-	margin-bottom: 10px;
+a.prodoctorov {
+	box-sizing: border-box;
+
+	border: 2px solid var(--input-border-color-inactive);
+	border-radius: 50px;
+	padding: 10px;
+	width: 200px;
+
+	font-size: 18px;
+	text-decoration: none;
+	text-align: center;
+
+	transition: all 0.2s;
 }
 
-@keyframes show {
-	0% {
-		opacity: 0;
-	}
-	100% {
-		opacity: 1;
-	}
+a.prodoctorov:hover {
+	border: 2px solid #ec9d9e;
+	background-color: #fff0f0;
 }
 
-@keyframes transform {
-	0% {
-		opacity: 0;
-		transform: translateY(30px);
-	}
-	100% {
-		opacity: 1;
-		transform: translateY(0);
-	}
+a.prodoctorov .red {
+	color: #ec2227;
 }
 
-@media screen and (max-width: 990px) {
+a.prodoctorov .blue {
+	color: #117cc0;
+}
+
+@media screen and (width <= 1000px) {
 	.container-specialist-profile {
+		display: flex;
+		flex-wrap: wrap;
 		justify-content: center;
-		align-items: center;
-		flex-direction: column;
+
+		width: calc(100% - 60px);
 	}
 }
 
@@ -233,7 +314,7 @@ export default {
 		max-width: 300px;
 	}
 
-	.specialist-profile-head-item {
+	.specialist-profile-head > .item {
 		font-size: 16px;
 		grid-template-columns: 1fr 1fr;
 	}

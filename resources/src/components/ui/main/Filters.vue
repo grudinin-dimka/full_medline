@@ -66,9 +66,13 @@ export default {
 
 .filters-body-item {
    cursor: pointer;
+
    padding: 5px;
    border: 2px solid var(--input-border-color-inactive);
    border-radius: 10px;
+
+   font-size: 18px;
+
    transition: all 0.15s;
 }
 

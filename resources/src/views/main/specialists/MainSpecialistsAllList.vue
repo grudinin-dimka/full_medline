@@ -12,14 +12,6 @@
 						<div>{{ specialist.category }}.</div>
 					</div>
 					<div class="specialist-body-options-other-block">
-						<div>Звание:</div>
-						<div>{{ specialist.rank }}.</div>
-					</div>
-					<div class="specialist-body-options-other-block">
-						<div>Степень:</div>
-						<div>{{ specialist.degree }}.</div>
-					</div>
-					<div class="specialist-body-options-other-block">
 						<div>Стаж:</div>
 						<div>{{ getWorkAges(specialist.startWorkAge) }}</div>
 					</div>
@@ -78,8 +70,9 @@ export default {
 			window.scrollTo({
 				top: 0,
 				left: 0,
-				behavior: "smooth",
+				behavior: "instant",
 			});
+
 			this.$router.push("/specialists/" + specialist.url);
 		},
 	},
@@ -151,7 +144,7 @@ export default {
 }
 
 .specialist-body-options-other-block > div {
-	font-size: 16px;
+	font-size: 18px;
 }
 
 .specialist-body-price {
@@ -174,17 +167,6 @@ export default {
 
 .specialist-body-link:hover {
 	text-decoration: underline;
-}
-
-@keyframes show {
-	0% {
-		opacity: 0;
-		transform: translateY(30px);
-	}
-	100% {
-		opacity: 1;
-		transform: translateY(0);
-	}
 }
 
 @media screen and (max-width: 1080px) {
