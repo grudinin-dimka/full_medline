@@ -1,5 +1,5 @@
 <template>
-	<div class="container-textarea-once" :class="{ create: type === 'create' }">
+	<div class="container-textarea-once" :class="{ create: type === 'create', delete: type === 'delete' }">
 		<label>
 			<slot name="title"></slot>
 		</label>
@@ -33,11 +33,6 @@ export default {
 .container-textarea-once > label > span {
 	font-size: 18px;
 	color: var(--primary-color);
-}
-
-.container-textarea-once > label > span.create {
-	font-size: 18px;
-	color: #44a533;
 }
 
 .container-textarea-once > textarea {
@@ -80,8 +75,8 @@ export default {
 	color: #44a533;
 }
 
-span.error {
-	color: var(--span-color-error);
+.container-textarea-once.delete > label > span {
+	color: #a53333;
 }
 
 .error-counter {

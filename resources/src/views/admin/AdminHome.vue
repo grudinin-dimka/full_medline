@@ -49,7 +49,7 @@
 				class="modal-slide-img"
 				v-if="modal.type == 'create'"
 				:style="{
-					backgroundImage: `url(/storage/default/image-none-create.png)`,
+					backgroundImage: `url(/storage/default/image-none-default.png)`,
 				}"
 				ref="modalImg"
 			></div>

@@ -32,7 +32,7 @@ export default {
 	color: var(--primary-color);
 }
 
-.container-input-once > input {
+.container-input-once > :is(input, select) {
 	box-sizing: border-box;
 	outline: none;
 
