@@ -30,7 +30,7 @@
 						СПЕЦИАЛИЗАЦИИ
 					</a>
 					<a href="#" @click.prevent="insertSubPage('especialists-clinics')"> КЛИНИКИ </a>
-					<a href="#" @click.prevent="insertSubPage('especialists-educations')"> ОБРАЗОВАНИЕ </a>
+					<a href="#" @click.prevent="insertSubPage('especialists-educations')"> ОБРАЗОВАНИЯ </a>
 					<a href="#" @click.prevent="insertSubPage('especialists-works')"> МЕСТА РАБОТЫ </a>
 					<a href="#" @click.prevent="insertSubPage('especialists-certificates')"> СЕРТИФИКАТЫ </a>
 				</div>

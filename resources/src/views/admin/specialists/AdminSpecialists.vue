@@ -1,4 +1,5 @@
 <template>
+	<!-- TODO надо сделать раздел с информацией о компании -->
 	<router-view />
 </template>
 

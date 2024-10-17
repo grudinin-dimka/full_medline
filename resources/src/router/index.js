@@ -110,7 +110,7 @@ const router = createRouter({
 					path: "eabout",
 					name: "eabout",
 					meta: { title: "(e) О нас" },
-					component: () => import("../views/admin/AdminAboutUs.vue"),
+					component: () => import("../views/admin/about/AdminAboutUs.vue"),
 				},
 				{
 					path: "especialists",
