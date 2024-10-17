@@ -1,75 +1,23 @@
 <template>
 	<div class="about">
-		<div class="item">
+		<div
+			class="item"
+			@click="$emit('touchEditBlock')"
+			v-for="block in infoBlocks"
+			:key="block.id"
+		>
 			<div class="body">
 				<div class="images">
 					<div
+						v-for="image in block.images"
 						class="item"
 						:style="{
-							backgroundImage: `url(/storage/about/1.jpg)`,
+							backgroundImage: `url(${image.path})`,
 						}"
 					></div>
-					<div
-						class="item"
-						:style="{
-							backgroundImage: `url(/storage/about/2.jpg)`,
-						}"
-					></div>
+					
 				</div>
-				<div class="description">
-					В настоящее время «МедЛайн» работает в рамках лицензии на осуществление медицинской
-					деятельности № Л041-01107-72/00572725 от 11.09.2020 г., выданной Департаментом
-					здравоохранения Тюменской области. В г. Шадринске действуют два филиала (ул.
-					Комсомольская, 16, ул. К. Либкнехта, 10).
-				</div>
-			</div>
-		</div>
-		<div class="item">
-			<div class="body">
-				<div class="images">
-					<div
-						class="item"
-						:style="{
-							backgroundImage: `url(/storage/about/4.jpg)`,
-						}"
-					></div>
-					<div
-						class="item"
-						:style="{
-							backgroundImage: `url(/storage/about/5.jpg)`,
-						}"
-					></div>
-					<div
-						class="item"
-						:style="{
-							backgroundImage: `url(/storage/about/6.jpg)`,
-						}"
-					></div>
-				</div>
-				<div class="description">
-					Под брендом «СанЛайн» в Шадринске действует одноименный санаторий на ул. Октябрьской,
-					3 в г. Шадринске. Медицинскую деятельность «СанЛайн» ведёт на основании лицензии №
-					Л041-01141-45/00573044 от 08.11.2021 г., выданной Департаментом здравоохранения
-					Курганской области. Юридическое лицо – ООО «Медлайн-Проф».
-				</div>
-			</div>
-		</div>
-		<div class="item">
-			<div class="body">
-				<div class="images">
-					<div
-						class="item"
-						:style="{
-							backgroundImage: `url(/storage/about/6.jpg)`,
-						}"
-					></div>
-				</div>
-				<div class="description">
-					Под брендом «СанЛайн» в Шадринске действует одноименный санаторий на ул. Октябрьской,
-					3 в г. Шадринске. Медицинскую деятельность «СанЛайн» ведёт на основании лицензии №
-					Л041-01141-45/00573044 от 08.11.2021 г., выданной Департаментом здравоохранения
-					Курганской области. Юридическое лицо – ООО «Медлайн-Проф».
-				</div>
+				<div class="description">{{ block.description }}</div>
 			</div>
 		</div>
 	</div>
@@ -77,7 +25,13 @@
 
 <script>
 export default {
-	props: {},
+	props: {
+		infoBlocks: {
+			type: Array,
+			required: true,
+			default: [],
+		},
+	},
 	data() {
 		return {};
 	},
@@ -88,7 +42,7 @@ export default {
 .about {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
-	grid-auto-rows: 300px;
+	grid-auto-rows: 400px;
 	gap: 20px;
 }
 
@@ -129,16 +83,15 @@ export default {
 	flex: 1 0 100px;
 	border-radius: 10px;
 	min-width: 100px;
-	min-height: 150px;
+	min-height: 200px;
 	background-position: center center;
 	background-repeat: no-repeat;
 	background-size: cover;
 }
 
 .description {
-	height: 100px;
+	height: 160px;
 	overflow-y: scroll;
-	border-radius: 10px;
 }
 
 .item:hover > .body > .description::-webkit-scrollbar-thumb {

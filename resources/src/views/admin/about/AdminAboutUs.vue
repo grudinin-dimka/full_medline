@@ -2,12 +2,52 @@
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                  МОДАЛЬНОЕ ОКНО                   |-->
 	<!--|___________________________________________________|-->
-	<admin-modal ref="modal" @touchCloseModal="" :modal="modal">
+	<admin-modal ref="modal" @touchCloseModal="closeModal" :modal="modal">
 		<template #title>
-			<span v-if="modal.type == 'create'">СЕРТИФИКАТ (СОЗДАНИЕ)</span>
-			<span v-if="modal.type == 'edit'">СЕРТИФИКАТ (РЕДАКТИРОВАНИЕ)</span>
+			<span v-if="modal.type == 'create'">ИНФОРМАЦИОННЫЙ БЛОК</span>
+			<span v-if="modal.type == 'edit'">ИНФОРМАЦИОННЫЙ БЛОК (РЕДАКТИРОВАНИЕ)</span>
 		</template>
-		<template #body> </template>
+		<template #body>
+			<!-- STOP делал кнопки для картинок у модального окна -->
+			<div class="modal-images">
+				<div class="item">
+					<div
+						class="img"
+						:style="{
+							backgroundImage: `url(/storage/about/4.jpg)`,
+						}"
+					></div>
+				</div>
+				<div>
+					<div
+						class="item"
+						:style="{
+							backgroundImage: `url(/storage/about/5.jpg)`,
+						}"
+					></div>
+				</div>
+				<div>
+					<div
+						class="item"
+						:style="{
+							backgroundImage: `url(/storage/about/6.jpg)`,
+						}"
+					></div>
+				</div>
+			</div>
+			<container-input-once :type="modal.type == 'create' ? 'create' : 'edit'">
+				<template #title>
+					<span :class="{ create: modal.type == 'create' }">ЗАГРУЗКА ФАЙЛА*</span>
+					<span :class="{ create: modal.type == 'create' }" v-if="false"> (ИЗМЕНЕНО) </span>
+				</template>
+				<template #input>
+					<input type="file" placeholder="Название организации" :class="{ error: false }" />
+				</template>
+				<template #error>
+					<span class="error" v-if="false"> Ошибка. </span>
+				</template>
+			</container-input-once>
+		</template>
 		<template #footer>
 			<BlockButtons>
 				<button-claim @click="" v-if="modal.type == 'create'"> Создать </button-claim>
@@ -49,7 +89,11 @@
 			</template>
 		</container-textarea-once>
 
-		<LoaderChild :isLoading="loading.loader.title" :minHeight="200"></LoaderChild>
+		<LoaderChild
+			:isLoading="loading.loader.title"
+			:minHeight="150"
+			@loaderChildAfterLeave="loaderChildAfterLeave"
+		></LoaderChild>
 	</block-once>
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|               ИНФОРМАЦИОННЫЕ БЛОКИ                |-->
@@ -63,14 +107,18 @@
 		</block-title>
 
 		<template v-if="loading.sections.infoBlocks">
-			<AdminAboutUsList />
+			<AdminAboutUsList :infoBlocks="infoBlocks" @touchEditBlock="openModal('edit')" />
 
 			<block-buttons>
 				<button-default @click=""> Добавить </button-default>
 			</block-buttons>
 		</template>
 
-		<LoaderChild :isLoading="loading.loader.infoBlocks" :minHeight="300"></LoaderChild>
+		<LoaderChild
+			:isLoading="loading.loader.infoBlocks"
+			:minHeight="300"
+			@loaderChildAfterLeave="loaderChildAfterLeave"
+		></LoaderChild>
 	</block-once>
 </template>
 
@@ -96,8 +144,6 @@ import AdminAboutUsList from "./AdminAboutUsList.vue";
 import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
 import ContainerTextareaOnce from "../../../components/ui/admin/containers/textarea/ContainerTextareaOnce.vue";
 
-import IconArrow from "../../../components/icons/IconArrow.vue";
-
 export default {
 	components: {
 		AdminModal,
@@ -113,7 +159,6 @@ export default {
 		AdminAboutUsList,
 		ContainerInputOnce,
 		ContainerTextareaOnce,
-		IconArrow,
 	},
 	data() {
 		return {
@@ -146,23 +191,19 @@ export default {
 					infoBlocks: false,
 				},
 			},
-			currentCertificate: {
+			currentInfoBlock: {
 				errors: {
 					id: {
 						body: "",
-						status: false,
+						edited: false,
 					},
-					organization: {
-						body: "",
-						status: false,
+					images: {
+						body: [],
+						edited: false,
 					},
-					endEducation: {
+					description: {
 						body: "",
-						status: false,
-					},
-					name: {
-						body: "",
-						status: false,
+						edited: false,
 					},
 				},
 				data: {
@@ -170,15 +211,11 @@ export default {
 						body: "",
 						edited: false,
 					},
-					organization: {
-						body: "",
+					images: {
+						body: [],
 						edited: false,
 					},
-					endEducation: {
-						body: "",
-						edited: false,
-					},
-					name: {
+					description: {
 						body: "",
 						edited: false,
 					},
@@ -192,6 +229,50 @@ export default {
 					},
 				},
 			},
+			infoBlocks: [
+				{
+					id: 1,
+					description: `Lorem, ipsum dolor sit amet consectetur adipisicing elit. Minima dicta explicabo nulla tempora eveniet dolore dolorem id earum suscipit, dolorum quidem iure provident autem nam, animi sapiente dignissimos sed est, asperiores beatae praesentium deserunt doloribus natus sit. Possimus, accusamus natus, dolorem ea nihil error, est quod consectetur veritatis vitae optio.`,
+					images: [
+						{
+							id: 1,
+							path: "/storage/about/1.jpg",
+						},
+					],
+				},
+				{
+					id: 2,
+					description: `Lorem, ipsum dolor sit amet consectetur adipisicing elit. Minima dicta explicabo nulla tempora eveniet dolore dolorem id earum suscipit, dolorum quidem iure provident autem nam, animi sapiente dignissimos sed est, asperiores beatae praesentium deserunt doloribus natus sit. Possimus, accusamus natus, dolorem ea nihil error, est quod consectetur veritatis vitae optio. Possimus, accusamus natus, dolorem ea nihil error, est quod consectetur veritatis vitae optio. Possimus, accusamus natus, dolorem ea nihil error, est quod consectetur veritatis vitae optio. Possimus, accusamus natus, dolorem ea nihil error, est quod consectetur veritatis vitae optio.`,
+					images: [
+						{
+							id: 3,
+							path: "/storage/about/2.jpg",
+						},
+						{
+							id: 4,
+							path: "/storage/about/3.jpg",
+						},
+					],
+				},
+				{
+					id: 3,
+					description: "Описание блока",
+					images: [
+						{
+							id: 5,
+							path: "/storage/about/4.jpg",
+						},
+						{
+							id: 6,
+							path: "/storage/about/5.jpg",
+						},
+						{
+							id: 7,
+							path: "/storage/about/6.jpg",
+						},
+					],
+				},
+			],
 		};
 	},
 	methods: {
@@ -200,7 +281,8 @@ export default {
 		/* |___________________________________________________|*/
 		/* После скрытия загрузчика */
 		loaderChildAfterLeave() {
-			this.loading.table = true;
+			this.loading.sections.title = true;
+			this.loading.sections.infoBlocks = true;
 		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                 Модальное окно                    |*/
@@ -213,26 +295,26 @@ export default {
 			switch (type) {
 				case "create":
 					{
-						this.clearModalErrors();
+						// this.clearModalErrors();
 
 						this.modal.type = "create";
 						this.modal.status = true;
 						this.modal.style.create = true;
 						this.modal.style.delete = false;
-						this.clearModalData();
+						// this.clearModalData();
 					}
 					document.body.classList.add("modal-open");
 					break;
 				case "edit":
 					{
-						this.clearModalErrors();
+						// this.clearModalErrors();
 
 						this.modal.type = "edit";
-						if (this.currentCertificate.data.create.body) {
-							this.modal.style.create = true;
-						} else {
-							this.modal.style.create = false;
-						}
+						// if (this.currentCertificate.data.create.body) {
+						// 	this.modal.style.create = true;
+						// } else {
+						this.modal.style.create = false;
+						// }
 						this.modal.status = true;
 						this.modal.style.delete = false;
 					}
@@ -270,7 +352,28 @@ export default {
 			}
 		},
 	},
+	mounted() {
+		this.loading.loader.title = false;
+		this.loading.loader.infoBlocks = false;
+	},
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.modal-images {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+.modal-images > .item {
+	flex: 1 0 300px;
+	border-radius: 10px;
+	min-width: 100px;
+	min-height: 300px;
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+</style>
