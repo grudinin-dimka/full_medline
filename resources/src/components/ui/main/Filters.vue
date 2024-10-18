@@ -31,7 +31,7 @@ export default {
 
 .filters-body {
    margin: 0px 30px;
-   width: 1000px;
+   width: 1250px;
    display: inline-flex;
    flex-wrap: wrap;
    gap: 10px;

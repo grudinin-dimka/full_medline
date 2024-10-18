@@ -104,7 +104,7 @@ export default {
 	border-radius: 20px;
 	padding: 20px;
 
-	width: 1000px;
+	width: 1250px;
 
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
 	transition: all 0.2s;

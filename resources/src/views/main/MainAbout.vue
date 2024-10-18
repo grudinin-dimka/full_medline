@@ -45,7 +45,7 @@ export default {
 	flex-direction: column;
 	gap: 20px;
 
-	width: 1000px;
+	width: 1250px;
 	font-size: 18px;
 }
 

@@ -53,6 +53,7 @@
 						></div>
 					</template>
 				</div>
+				<div class="title">{{ block.title }}</div>
 				<div class="description">{{ block.description }}</div>
 			</div>
 		</div>
@@ -78,7 +79,7 @@ export default {
 .about {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
-	grid-auto-rows: 400px;
+	grid-auto-rows: 35	0px;
 	gap: 20px;
 
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
@@ -121,7 +122,7 @@ export default {
 	flex: 1 0 100px;
 	border-radius: 10px;
 	min-width: 100px;
-	min-height: 200px;
+	min-height: 150px;
 	background-position: center center;
 	background-repeat: no-repeat;
 	background-size: cover;
@@ -133,7 +134,7 @@ export default {
 }
 
 .description {
-	height: 160px;
+	height: 130px;
 	overflow-y: scroll;
 }
 
@@ -162,5 +163,14 @@ export default {
 .description::-webkit-scrollbar-thumb:hover {
 	background-color: rgb(210, 210, 210);
 	cursor: all-scroll;
+}
+
+.title {
+	font-weight: bold;
+	font-size: 20px;
+	height: 30px;
+	width: 200px;
+	overflow-x: hidden;
+	text-wrap:nowrap;
 }
 </style>

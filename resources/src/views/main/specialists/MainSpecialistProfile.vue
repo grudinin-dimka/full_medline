@@ -220,18 +220,21 @@ export default {
 
 .container-specialist-profile {
 	display: grid;
-	grid-template-columns: 350px 1fr;
+	grid-template-columns: 500px 1fr;
 	gap: 20px;
 
 	margin: 0px 30px;
 
 	min-height: 300px;
-	width: 1000px;
+	width: 1250px;
 
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 .container-specialist-profile > img {
+	align-self: center;
+	justify-self: end;
+
 	width: 350px;
 	border-radius: 15px;
 	background-size: contain;

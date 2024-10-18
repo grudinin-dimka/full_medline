@@ -8,7 +8,6 @@
 			<span v-if="modal.type == 'edit'">ИНФОРМАЦИОННЫЙ БЛОК (РЕДАКТИРОВАНИЕ)</span>
 		</template>
 		<template #body>
-			<!-- STOP делал кнопки для картинок у модального окна -->
 			<div class="modal-images">
 				<div class="item" v-if="currentInfoBlock.data.images.one.body">
 					<div
@@ -158,6 +157,23 @@
 			</div>
 			<container-textarea-once :type="'edit'">
 				<template #title>
+					<span>ЗАГОЛОВОК</span>
+					<span v-if="false"> (ИЗМЕНЕНО) </span>
+				</template>
+				<template #textarea>
+					<textarea
+						rows="4"
+						placeholder="Введите заголовок"
+						autocomplete="off"
+						:class="{ error: false }"
+					></textarea>
+				</template>
+				<template #error>
+					<span class="error" v-if="false"> Ошибка </span>
+				</template>
+			</container-textarea-once>
+			<container-textarea-once :type="'edit'">
+				<template #title>
 					<span>ОПИСАНИЕ</span>
 					<span v-if="false"> (ИЗМЕНЕНО) </span>
 				</template>
@@ -186,41 +202,6 @@
 		<template v-slot:title>О нас</template>
 		<template v-slot:addreas>about</template>
 	</info-bar>
-	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
-	<!--|                    ЗАГОЛОВОК                      |-->
-	<!--|___________________________________________________|-->
-	<block-once>
-		<block-title>
-			<template #title>ЗАГОЛОВОК СТРАНИЦЫ</template>
-			<template #buttons>
-				<icon-save :width="28" :height="28" @click="" />
-			</template>
-		</block-title>
-
-		<container-textarea-once :type="'edit'" v-if="loading.sections.title" class="textarea-show">
-			<template #title>
-				<span>ЗАГОЛОВОК</span>
-				<span v-if="false"> (ИЗМЕНЕНО) </span>
-			</template>
-			<template #textarea>
-				<textarea
-					rows="4"
-					placeholder="Введите заголовок"
-					autocomplete="off"
-					:class="{ error: false }"
-				></textarea>
-			</template>
-			<template #error>
-				<span class="error" v-if="false"> Ошибка </span>
-			</template>
-		</container-textarea-once>
-
-		<LoaderChild
-			:isLoading="loading.loader.title"
-			:minHeight="150"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
-		></LoaderChild>
-	</block-once>
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|               ИНФОРМАЦИОННЫЕ БЛОКИ                |-->
 	<!--|___________________________________________________|-->
@@ -270,6 +251,8 @@ import AdminAboutUsList from "./AdminAboutUsList.vue";
 import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
 import ContainerTextareaOnce from "../../../components/ui/admin/containers/textarea/ContainerTextareaOnce.vue";
 
+import axios from "axios";
+
 export default {
 	components: {
 		AdminModal,
@@ -285,6 +268,7 @@ export default {
 		AdminAboutUsList,
 		ContainerInputOnce,
 		ContainerTextareaOnce,
+		axios,
 	},
 	data() {
 		return {
@@ -378,11 +362,13 @@ export default {
 			infoBlocks: [
 				{
 					id: 1,
+					title: `* Общество с ограниченной ответственностью «Медицинская Линия» (ООО «МедЛайн») организовано в 2007 г. Первый филиал открылся в городе Шадринске Курганской области, на улице Карла Либкнехта, 10.`,
 					description: `Lorem, ipsum dolor sit amet consectetur adipisicing elit. Minima dicta explicabo nulla tempora eveniet dolore dolorem id earum suscipit, dolorum quidem iure provident autem nam, animi sapiente dignissimos sed est, asperiores beatae praesentium deserunt doloribus natus sit. Possimus, accusamus natus, dolorem ea nihil error, est quod consectetur veritatis vitae optio.`,
 					images: [],
 				},
 				{
 					id: 1,
+					title: "Заголовок",
 					description: `Lorem, ipsum dolor sit amet consectetur adipisicing elit. Minima dicta explicabo nulla tempora eveniet dolore dolorem id earum suscipit, dolorum quidem iure provident autem nam, animi sapiente dignissimos sed est, asperiores beatae praesentium deserunt doloribus natus sit. Possimus, accusamus natus, dolorem ea nihil error, est quod consectetur veritatis vitae optio.`,
 					images: [
 						{
@@ -393,6 +379,7 @@ export default {
 				},
 				{
 					id: 2,
+					title: "Заголовок",
 					description: `Lorem, ipsum dolor sit amet consectetur adipisicing elit. Minima dicta explicabo nulla tempora eveniet dolore dolorem id earum suscipit, dolorum quidem iure provident autem nam, animi sapiente dignissimos sed est, asperiores beatae praesentium deserunt doloribus natus sit. Possimus, accusamus natus, dolorem ea nihil error, est quod consectetur veritatis vitae optio. Possimus, accusamus natus, dolorem ea nihil error, est quod consectetur veritatis vitae optio. Possimus, accusamus natus, dolorem ea nihil error, est quod consectetur veritatis vitae optio. Possimus, accusamus natus, dolorem ea nihil error, est quod consectetur veritatis vitae optio.`,
 					images: [
 						{
@@ -407,6 +394,7 @@ export default {
 				},
 				{
 					id: 3,
+					title: "Заголовок",
 					description: "Описание блока",
 					images: [
 						{
@@ -506,6 +494,29 @@ export default {
 	mounted() {
 		this.loading.loader.title = false;
 		this.loading.loader.infoBlocks = false;
+
+		axios({
+			method: "post",
+			headers: {
+				Accept: "application/json",
+			},
+			url: `${this.$store.state.axios.urlApi}` + `get-abouts-all`,
+		})
+			.then((response) => {
+				if (response.data.status) {
+					console.log(response.data);
+				} else {
+					let debbugStory = {
+						title: "Ошибка.",
+						body: response.data.message,
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+				}
+			})
+			.catch((error) => {
+				console.log(error);
+			});
 	},
 };
 </script>

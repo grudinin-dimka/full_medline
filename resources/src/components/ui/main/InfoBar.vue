@@ -23,7 +23,7 @@ export default {
    }
 
    .info-bar-title {
-      width: 1000px;
+      width: 1250px;
    }
 
    @media screen and (max-width: 500px) {

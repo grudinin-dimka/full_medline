@@ -316,6 +316,18 @@ class HomeController extends Controller
       $certificate = Certificate::all();
       return $certificate;
    }
+   /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+   /* |                     О НАС                         |*/
+   /* |___________________________________________________|*/
+   public function getAboutsAll(Request $request) {
+      
+
+      return response()->json([
+         "status" => true,
+         "message" => "Успешно.",
+         "data" => null,
+      ]);
+   }
 };
 
 function makeUrl($url) {
