@@ -2,7 +2,7 @@
 	<div class="about">
 		<div
 			class="item"
-			@click="$emit('touchEditBlock')"
+			@click="$emit('touchEditBlock', block)"
 			v-for="block in infoBlocks"
 			:key="block.id"
 		>
@@ -127,7 +127,9 @@ export default {
 }
 
 .images > .item.default {
+	box-sizing: border-box;
 	border: 3px dotted #e4e4e4;
+
 	background-size: contain;
 }
 

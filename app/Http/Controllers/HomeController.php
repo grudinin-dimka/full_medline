@@ -24,6 +24,7 @@ use App\Models\Work;
 use App\Models\SpecialistWork;
 use App\Models\Certificate;
 use App\Models\SpecialistCertificate;
+use App\Models\About;
 
 use Illuminate\Support\Facades\Storage;
 
@@ -320,13 +321,27 @@ class HomeController extends Controller
    /* |                     О НАС                         |*/
    /* |___________________________________________________|*/
    public function getAboutsAll(Request $request) {
-      
+      $about = About::all();
+      if($about) {
+         foreach ($about as $key => $value) {
+            $value->imageOne = Storage::url('abouts/' . $value->imageOne);
+            $value->imageTwo = Storage::url('abouts/' . $value->imageTwo);
+            $value->imageThree = Storage::url('abouts/' . $value->imageThree);
+         };
 
-      return response()->json([
-         "status" => true,
-         "message" => "Успешно.",
-         "data" => null,
-      ]);
+         return response()->json([
+            "status" => true,
+            "message" => "Успешно.",
+            "data" => $about,
+         ]);
+      } else {
+         return response()->json([
+            "status" => false,
+            "message" => "Не удалось получить данные.",
+            "data" => [],
+         ]);
+      }
+
    }
 };
 
