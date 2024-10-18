@@ -8,14 +8,50 @@
 		>
 			<div class="body">
 				<div class="images">
-					<div
-						v-for="image in block.images"
-						class="item"
-						:style="{
-							backgroundImage: `url(${image.path})`,
-						}"
-					></div>
-					
+					<template v-if="block.images">
+						<div
+							v-if="block.images.length > 0"
+							class="item"
+							:style="{
+								backgroundImage: `url(${block.images[0].path})`,
+							}"
+						></div>
+						<div
+							v-else
+							class="item default"
+							:style="{
+								backgroundImage: `url(/storage/default/stones-none-default.png)`,
+							}"
+						></div>
+						<div
+							v-if="block.images.length > 1"
+							class="item"
+							:style="{
+								backgroundImage: `url(${block.images[1].path})`,
+							}"
+						></div>
+						<div
+							v-else
+							class="item default"
+							:style="{
+								backgroundImage: `url(/storage/default/stones-none-default.png)`,
+							}"
+						></div>
+						<div
+							v-if="block.images.length > 2"
+							class="item"
+							:style="{
+								backgroundImage: `url(${block.images[2].path})`,
+							}"
+						></div>
+						<div
+							v-else
+							class="item default"
+							:style="{
+								backgroundImage: `url(/storage/default/stones-none-default.png)`,
+							}"
+						></div>
+					</template>
 				</div>
 				<div class="description">{{ block.description }}</div>
 			</div>
@@ -44,6 +80,8 @@ export default {
 	grid-template-columns: repeat(3, 1fr);
 	grid-auto-rows: 400px;
 	gap: 20px;
+
+	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 .about > .item {
@@ -87,6 +125,11 @@ export default {
 	background-position: center center;
 	background-repeat: no-repeat;
 	background-size: cover;
+}
+
+.images > .item.default {
+	border: 3px dotted #e4e4e4;
+	background-size: contain;
 }
 
 .description {
