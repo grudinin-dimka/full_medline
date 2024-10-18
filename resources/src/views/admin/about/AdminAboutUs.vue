@@ -307,19 +307,17 @@ export default {
 						body: "",
 						status: false,
 					},
-					images: {
-						one: {
-							body: "",
-							status: false,
-						},
-						two: {
-							body: "",
-							status: false,
-						},
-						three: {
-							body: "",
-							status: false,
-						},
+					imageOne: {
+						body: "",
+						status: false,
+					},
+					imageTwo: {
+						body: "",
+						status: false,
+					},
+					imageThree: {
+						body: "",
+						status: false,
 					},
 					description: {
 						body: "",
@@ -362,54 +360,35 @@ export default {
 			infoBlocks: [
 				{
 					id: 1,
-					title: `* Общество с ограниченной ответственностью «Медицинская Линия» (ООО «МедЛайн») организовано в 2007 г. Первый филиал открылся в городе Шадринске Курганской области, на улице Карла Либкнехта, 10.`,
+					title: `Заголовок какой-то вот такой и там что-то дальше`,
 					description: `Lorem, ipsum dolor sit amet consectetur adipisicing elit. Minima dicta explicabo nulla tempora eveniet dolore dolorem id earum suscipit, dolorum quidem iure provident autem nam, animi sapiente dignissimos sed est, asperiores beatae praesentium deserunt doloribus natus sit. Possimus, accusamus natus, dolorem ea nihil error, est quod consectetur veritatis vitae optio.`,
-					images: [],
+					imageOne: "",
+					imageTwo: "",
+					imageThree: "",
 				},
 				{
 					id: 1,
 					title: "Заголовок",
 					description: `Lorem, ipsum dolor sit amet consectetur adipisicing elit. Minima dicta explicabo nulla tempora eveniet dolore dolorem id earum suscipit, dolorum quidem iure provident autem nam, animi sapiente dignissimos sed est, asperiores beatae praesentium deserunt doloribus natus sit. Possimus, accusamus natus, dolorem ea nihil error, est quod consectetur veritatis vitae optio.`,
-					images: [
-						{
-							id: 1,
-							path: "/storage/about/1.jpg",
-						},
-					],
+					imageOne: "/storage/about/1.jpg",
+					imageTwo: "/storage/about/2.jpg",
+					imageThree: "/storage/about/3.jpg",
 				},
 				{
 					id: 2,
 					title: "Заголовок",
 					description: `Lorem, ipsum dolor sit amet consectetur adipisicing elit. Minima dicta explicabo nulla tempora eveniet dolore dolorem id earum suscipit, dolorum quidem iure provident autem nam, animi sapiente dignissimos sed est, asperiores beatae praesentium deserunt doloribus natus sit. Possimus, accusamus natus, dolorem ea nihil error, est quod consectetur veritatis vitae optio. Possimus, accusamus natus, dolorem ea nihil error, est quod consectetur veritatis vitae optio. Possimus, accusamus natus, dolorem ea nihil error, est quod consectetur veritatis vitae optio. Possimus, accusamus natus, dolorem ea nihil error, est quod consectetur veritatis vitae optio.`,
-					images: [
-						{
-							id: 3,
-							path: "/storage/about/2.jpg",
-						},
-						{
-							id: 4,
-							path: "/storage/about/3.jpg",
-						},
-					],
+					imageOne: "",
+					imageTwo: "/storage/about/2.jpg",
+					imageThree: "",
 				},
 				{
 					id: 3,
 					title: "Заголовок",
 					description: "Описание блока",
-					images: [
-						{
-							id: 5,
-							path: "/storage/about/4.jpg",
-						},
-						{
-							id: 6,
-							path: "/storage/about/5.jpg",
-						},
-						{
-							id: 7,
-							path: "/storage/about/6.jpg",
-						},
-					],
+					imageOne: "/storage/about/4.jpg",
+					imageTwo: "/storage/about/5.jpg",
+					imageThree: "",
 				},
 			],
 		};
@@ -504,7 +483,6 @@ export default {
 		})
 			.then((response) => {
 				if (response.data.status) {
-					console.log(response.data);
 				} else {
 					let debbugStory = {
 						title: "Ошибка.",

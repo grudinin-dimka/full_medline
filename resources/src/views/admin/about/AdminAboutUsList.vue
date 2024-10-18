@@ -8,50 +8,48 @@
 		>
 			<div class="body">
 				<div class="images">
-					<template v-if="block.images">
-						<div
-							v-if="block.images.length > 0"
-							class="item"
-							:style="{
-								backgroundImage: `url(${block.images[0].path})`,
-							}"
-						></div>
-						<div
-							v-else
-							class="item default"
-							:style="{
-								backgroundImage: `url(/storage/default/stones-none-default.png)`,
-							}"
-						></div>
-						<div
-							v-if="block.images.length > 1"
-							class="item"
-							:style="{
-								backgroundImage: `url(${block.images[1].path})`,
-							}"
-						></div>
-						<div
-							v-else
-							class="item default"
-							:style="{
-								backgroundImage: `url(/storage/default/stones-none-default.png)`,
-							}"
-						></div>
-						<div
-							v-if="block.images.length > 2"
-							class="item"
-							:style="{
-								backgroundImage: `url(${block.images[2].path})`,
-							}"
-						></div>
-						<div
-							v-else
-							class="item default"
-							:style="{
-								backgroundImage: `url(/storage/default/stones-none-default.png)`,
-							}"
-						></div>
-					</template>
+					<div
+						v-if="block.imageOne"
+						class="item"
+						:style="{
+							backgroundImage: `url(${block.imageOne})`,
+						}"
+					></div>
+					<div
+						v-else
+						class="item default"
+						:style="{
+							backgroundImage: `url(/storage/default/stones-none-default.png)`,
+						}"
+					></div>
+					<div
+						v-if="block.imageTwo"
+						class="item"
+						:style="{
+							backgroundImage: `url(${block.imageTwo})`,
+						}"
+					></div>
+					<div
+						v-else
+						class="item default"
+						:style="{
+							backgroundImage: `url(/storage/default/stones-none-default.png)`,
+						}"
+					></div>
+					<div
+						v-if="block.imageThree"
+						class="item"
+						:style="{
+							backgroundImage: `url(${block.imageThree})`,
+						}"
+					></div>
+					<div
+						v-else
+						class="item default"
+						:style="{
+							backgroundImage: `url(/storage/default/stones-none-default.png)`,
+						}"
+					></div>
 				</div>
 				<div class="title">{{ block.title }}</div>
 				<div class="description">{{ block.description }}</div>
@@ -79,7 +77,7 @@ export default {
 .about {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
-	grid-auto-rows: 35	0px;
+	grid-auto-rows: 35 0px;
 	gap: 20px;
 
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
@@ -134,7 +132,7 @@ export default {
 }
 
 .description {
-	height: 130px;
+	height: 115px;
 	overflow-y: scroll;
 }
 
@@ -168,9 +166,9 @@ export default {
 .title {
 	font-weight: bold;
 	font-size: 20px;
-	height: 30px;
-	width: 200px;
-	overflow-x: hidden;
-	text-wrap:nowrap;
+	-webkit-line-clamp: 1; /* Число отображаемых строк */
+	display: -webkit-box; /* Включаем флексбоксы */
+	-webkit-box-orient: vertical; /* Вертикальная ориентация */
+	overflow: hidden; /* Обрезаем всё за пределами блока */
 }
 </style>
