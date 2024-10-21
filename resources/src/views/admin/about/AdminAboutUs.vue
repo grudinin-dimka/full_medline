@@ -3,14 +3,7 @@
 	<!--|                  МОДАЛЬНОЕ ОКНО                   |-->
 	<!--|___________________________________________________|-->
 	<admin-modal ref="modal" @touchCloseModal="closeModal" :modal="modal">
-		<template
-			#title
-			v-if="
-				!currentInfoBlock.data.delete.body &&
-				!currentInfoBlock.data.create.body &&
-				!modal.style.create
-			"
-		>
+		<template #title v-if="!currentInfoBlock.data.delete.body && !modal.style.create">
 			<icon-arrow :width="16" :height="16" :rotate="-90" @click="" />
 			#{{ currentInfoBlock.data.order.body }}
 			<icon-arrow :width="16" :height="16" :rotate="90" @click="" />
@@ -29,7 +22,7 @@
 						}"
 					></div>
 					<div class="buttons">
-						<div class="icon edit" @click="openModal('edit', 'subModal')">
+						<div class="icon edit" @click="editImage('imageOne')">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								height="24px"
@@ -65,7 +58,7 @@
 						}"
 					></div>
 					<div class="buttons add">
-						<div class="icon create" @click="openModal('edit', 'subModal')">
+						<div class="icon create" @click="editImage('imageOne')">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								height="24px"
@@ -86,7 +79,7 @@
 						}"
 					></div>
 					<div class="buttons">
-						<div class="icon edit" @click="openModal('edit', 'subModal')">
+						<div class="icon edit" @click="editImage('imageTwo')">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								height="24px"
@@ -122,7 +115,7 @@
 						}"
 					></div>
 					<div class="buttons add">
-						<div class="icon create" @click="openModal('edit', 'subModal')">
+						<div class="icon create" @click="editImage('imageTwo')">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								height="24px"
@@ -143,7 +136,7 @@
 						}"
 					></div>
 					<div class="buttons">
-						<div class="icon edit" @click="openModal('edit', 'subModal')">
+						<div class="icon edit" @click="editImage('imageThree')">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								height="24px"
@@ -179,7 +172,7 @@
 						}"
 					></div>
 					<div class="buttons add">
-						<div class="icon create" @click="openModal('edit', 'subModal')">
+						<div class="icon create" @click="editImage('imageThree')">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								height="24px"
@@ -238,10 +231,12 @@
 		</template>
 		<template #footer>
 			<BlockButtons>
-				<button-claim @click="" v-if="modal.type == 'create'"> Создать </button-claim>
+				<button-claim @click="addInfoBlock" v-if="modal.type == 'create'">
+					Создать
+				</button-claim>
 				<button-remove
 					@click="deleteInfoBlock"
-					v-if="modal.type == 'edit' && !currentInfoBlock.data.delete.body"
+					v-if="modal.type == 'edit' && !currentInfoBlock.data.delete.body && !currentInfoBlock.data.create.body"
 				>
 					Удалить
 				</button-remove>
@@ -278,7 +273,7 @@
 		</template>
 		<template #footer>
 			<block-buttons>
-				<button-default @click=""> Обновить </button-default>
+				<button-default @click="updateImage"> Обновить </button-default>
 			</block-buttons>
 		</template>
 	</admin-sub-modal>
@@ -485,6 +480,7 @@ export default {
 					},
 				},
 			},
+			currentImage: "",
 			infoBlocks: [],
 		};
 	},
@@ -526,11 +522,7 @@ export default {
 						this[name].type = "edit";
 						this[name].status = true;
 						this[name].style.delete = false;
-						if (this.currentInfoBlock.data.create.body) {
-							this[name].style.create = true;
-						} else {
-							this[name].style.create = false;
-						}
+						this[name].style.create = false;
 
 						if (this.currentInfoBlock.data.delete.body) {
 							this[name].style.delete = true;
@@ -599,15 +591,59 @@ export default {
 		},
 		/* Удаление */
 		deleteInfoBlock() {
-			let block = this.infoBlocks.find((item) => item.id == this.currentInfoBlock.data.id.body);
+			try {
+				let block = this.infoBlocks.find(
+					(item) => item.id == this.currentInfoBlock.data.id.body
+				);
 
-			if (block.delete) {
-				block.delete = false;
-			} else {
-				block.delete = true;
+				if (block.delete) {
+					block.delete = false;
+				} else {
+					block.delete = true;
+				}
+
+				this.closeModal("modal");
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Не удалось пометить блок на удаление.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
 			}
+		},
+		/* Добавление */
+		addInfoBlock() {
+			try {
+				let maxId = 1;
 
-			this.closeModal("modal");
+				this.infoBlocks.forEach((item) => {
+					if (item.id > maxId) {
+						maxId = item.id;
+					}
+				});
+
+				this.infoBlocks.push({
+					id: maxId + 1,
+					order: this.infoBlocks[this.infoBlocks.length - 1].order + 1,
+					title: this.currentInfoBlock.data.title.body,
+					description: this.currentInfoBlock.data.description.body,
+					imageOne: this.currentInfoBlock.data.imageOne.body,
+					imageTwo: this.currentInfoBlock.data.imageTwo.body,
+					imageOne: this.currentInfoBlock.data.imageThree.body,
+					create: true,
+					delete: false,
+				});
+
+				this.closeModal("modal");
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Не удалось добавить новый блок.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
 		},
 		/* Обновление */
 		updateInfoBlock() {
@@ -619,9 +655,18 @@ export default {
 
 			this.closeModal("modal");
 		},
+		/* Удаление */
 		removeInfoBlockImage(name) {
 			this.currentInfoBlock.data[name].body = "";
 		},
+		/* Изменение картинки */
+		editImage(name) {
+			this.currentImage = name;
+			this.openModal("edit", "subModal");
+		},
+		updateImage() {
+			
+		},	
 	},
 	mounted() {
 		axios({

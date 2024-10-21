@@ -55,8 +55,12 @@
 						}"
 					></div>
 				</div>
-				<div class="title">{{ block.title }}</div>
-				<div class="description">{{ block.description }}</div>
+				<div class="title" :class="{ none: !block.title }">
+					{{ block.title ? block.title : "Пусто" }}
+				</div>
+				<div class="description" :class="{ none: !block.description }">
+					{{ block.description ? block.description : "Пусто" }}
+				</div>
 			</div>
 		</div>
 	</div>
@@ -109,6 +113,15 @@ export default {
 .about > .item.delete:hover {
 	border: 2px solid #f79999;
 	background-color: rgb(255, 240, 240);
+}
+
+.about > .item.create {
+	border: 2px solid var(--create-border-color);
+}
+
+.about > .item.create:hover {
+	background-color: var(--create-background-color);
+	border: 2px solid var(--create-border-color);
 }
 
 .about > .item > .body {
@@ -185,5 +198,10 @@ export default {
 	display: -webkit-box; /* Включаем флексбоксы */
 	-webkit-box-orient: vertical; /* Вертикальная ориентация */
 	overflow: hidden; /* Обрезаем всё за пределами блока */
+}
+
+.title.none,
+.description.none {
+	color: rgb(200, 200, 200);
 }
 </style>
