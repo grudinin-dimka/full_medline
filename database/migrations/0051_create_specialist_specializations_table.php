@@ -20,8 +20,8 @@ return new class extends Migration
         // 4) category - категория специализации
         Schema::create('specialist_specializations', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_specialist')->references('id')->on('specialists')->onDelete('cascade');
-            $table->unsignedBigInteger('id_specialization')->references('id')->on('specializations')->onDelete('cascade');
+            $table->foreignId('id_specialist')->references('id')->on('specialists')->onDelete('cascade');
+            $table->foreignId('id_specialization')->references('id')->on('specializations')->onDelete('cascade');
             $table->timestamps();
         });
 

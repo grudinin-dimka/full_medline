@@ -19,8 +19,8 @@ return new class extends Migration
       // 3) id_clinic - ссылка на клинику
       Schema::create('specialist_clinics', function (Blueprint $table) {
          $table->id();
-         $table->unsignedBigInteger('id_specialist')->references('id')->on('specialists')->onDelete('cascade');
-         $table->unsignedBigInteger('id_clinic')->references('id')->on('clinics')->onDelete('cascade');
+         $table->foreignId('id_specialist')->references('id')->on('specialists')->onDelete('cascade');
+         $table->foreignId('id_clinic')->references('id')->on('clinics')->onDelete('cascade');
          $table->boolean('priem');
          $table->timestamps();
       });

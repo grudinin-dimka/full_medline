@@ -15,8 +15,8 @@ return new class extends Migration
       /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
       Schema::create('specialist_educations', function (Blueprint $table) {
          $table->id();
-         $table->unsignedBigInteger('id_specialist')->references('id')->on('specialists')->onDelete('cascade');
-         $table->unsignedBigInteger('id_education')->references('id')->on('educations')->onDelete('cascade');
+         $table->foreignId('id_specialist')->references('id')->on('specialists')->onDelete('cascade');
+         $table->foreignId('id_education')->references('id')->on('educations')->onDelete('cascade');
          $table->timestamps();
       });
    }

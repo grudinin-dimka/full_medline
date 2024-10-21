@@ -167,7 +167,7 @@
 						}"
 					></div>
 					<div class="buttons">
-						<div class="icon create">
+						<div class="icon create" @click="openModal('edit', 'subModal')">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								height="24px"
@@ -223,6 +223,7 @@
 		<template #footer>
 			<BlockButtons>
 				<button-claim @click="" v-if="modal.type == 'create'"> Создать </button-claim>
+				<button-remove @click="" v-if="modal.type == 'edit' && !currentInfoBlock.data.delete.body"> Удалить </button-remove>
 				<ButtonDefault @click="updateInfoBlock" v-if="modal.type == 'edit'">
 					Обновить
 				</ButtonDefault>
@@ -249,10 +250,9 @@
 			</container-input-once>
 		</template>
 		<template #footer>
-			<BlockButtons>
-				<button-claim @click="" v-if="modal.type == 'create'"> Создать </button-claim>
-				<ButtonDefault @click="" v-if="modal.type == 'edit'"> Обновить </ButtonDefault>
-			</BlockButtons>
+			<block-buttons>
+				<button-default @click=""> Обновить </button-default>
+			</block-buttons>
 		</template>
 	</admin-sub-modal>
 
@@ -299,6 +299,7 @@ import BlockTitle from "../../../components/ui/admin/blocks/BlockTitle.vue";
 import BlockButtons from "../../../components/ui/admin/blocks/BlockButtons.vue";
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
+import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
 import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 
 import IconSave from "../../../components/icons/IconSave.vue";
@@ -322,6 +323,7 @@ export default {
 		BlockTitle,
 		BlockButtons,
 		ButtonDefault,
+		ButtonRemove,
 		ButtonClaim,
 		IconSave,
 		LoaderChild,
@@ -478,10 +480,10 @@ export default {
 						this[name].type = "edit";
 						this[name].status = true;
 						this[name].style.delete = false;
-						if (this.currentInfoBlock.data.create.body) {							
+						if (this.currentInfoBlock.data.create.body) {
 							this[name].style.create = true;
 						} else {
-							this[name].style.create = false;							
+							this[name].style.create = false;
 						}
 						this[name].style.delete = false;
 					}

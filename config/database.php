@@ -61,7 +61,6 @@ return [
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
         ],
-
         'mariadb' => [
             'driver' => 'mariadb',
             'url' => env('DB_URL'),
@@ -81,22 +80,20 @@ return [
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
         ],
-
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DB_URL'),
-            'host' => env('DB_HOST', '127.0.0.1'),
+            'host' => env('DB_HOST', 'PostgreSQL-16'),
             'port' => env('DB_PORT', '5432'),
-            'database' => env('DB_DATABASE', 'sanctum'),
-            'username' => env('DB_USERNAME', 'root'),
-            'password' => env('DB_PASSWORD', '123456'),
+            'database' => env('DB_DATABASE', 'medline'),
+            'username' => env('DB_USERNAME', 'postgres'),
+            'password' => env('DB_PASSWORD', ''),
             'charset' => env('DB_CHARSET', 'utf8'),
             'prefix' => '',
             'prefix_indexes' => true,
             'search_path' => 'public',
             'sslmode' => 'prefer',
         ],
-
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'url' => env('DB_URL'),
