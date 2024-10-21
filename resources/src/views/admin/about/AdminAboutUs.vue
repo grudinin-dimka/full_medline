@@ -612,10 +612,14 @@ export default {
 				this.currentImage.errors.body = "Поле не может быть пустым.";
 				return;
 			}
+			/* STOP остановился на том, что контроллер возвращает ошибку, так как файл не пнг, надо это переделать */
 			/* Проверка на тип загруженного файла */
-			if (this.$refs.fileUpload.files[0].type !== "image/png") {
+			if (
+				this.$refs.fileUpload.files[0].type !== "image/png" &&
+				this.$refs.fileUpload.files[0].type !== "image/jpeg"
+			) {
 				this.currentImage.errors.status = true;
-				this.currentImage.errors.body = "Разрешенный формат файла: png.";
+				this.currentImage.errors.body = "Разрешенный формат файла: png, jpg.";
 				return;
 			}
 			/* Проверка на размер загруженного файла */
@@ -644,13 +648,26 @@ export default {
 			})
 				.then((response) => {
 					if (response.data.status) {
-						
+						try {
+							this.currentInfoBlock.data[this.currentImage.data.body].body =
+								response.data.data;
+							this.closeModal("subModal");
+						} catch (error) {
+							let debbugStory = {
+								title: "Ошибка.",
+								body: "Не удалось обновить данные после загрузки изображения.",
+								type: "Error",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+						}
 					} else {
-						
+						let debbugStory = {
+							title: "Ошибка.",
+							body: response.data.message,
+							type: "Error",
+						};
+						this.$store.commit("debuggerState", debbugStory);
 					}
-					// this.currentSlide.data.path.body = response.data.data;
-					// filteredSlideCurrent.path = response.data.data;
-					// filteredSlideCurrent.filename = response.data.data.replace("/storage/slides/", "");
 				})
 				.catch((error) => {
 					console.log(error);
