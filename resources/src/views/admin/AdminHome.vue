@@ -13,13 +13,13 @@
 				v-if="currentSlide.data.hide.body"
 				:height="26"
 				:width="26"
-				@click="changeSlideHide"
+				@click="currentSlide.data.hide.body = false"
 			/>
 			<IconVisible
 				v-else="currentSlide.data.hide.body"
 				:height="26"
 				:width="26"
-				@click="changeSlideHide"
+				@click="currentSlide.data.hide.body = true"
 			/>
 		</template>
 		<template #title v-if="modal.style.create || modal.style.delete">
@@ -57,7 +57,9 @@
 		<template #body>
 			<container-input>
 				<!-- Название -->
-				<container-input-once :type="modal.type == 'create' ? 'create' : modal.style.delete ? 'delete' : 'edit'">
+				<container-input-once
+					:type="modal.type == 'create' ? 'create' : modal.style.delete ? 'delete' : 'edit'"
+				>
 					<template #title>
 						<span>ИЗОБРАЖЕНИЕ*</span>
 						<span v-if="currentSlide.data.file.edited"> (ИЗМЕНЕНО) </span>
@@ -80,7 +82,9 @@
 					</template>
 				</container-input-once>
 				<!-- Название -->
-				<container-input-once :type="modal.type == 'create' ? 'create' : modal.style.delete ? 'delete' : 'edit'">
+				<container-input-once
+					:type="modal.type == 'create' ? 'create' : modal.style.delete ? 'delete' : 'edit'"
+				>
 					<template #title>
 						<span>НАЗВАНИЕ*</span>
 						<span v-if="currentSlide.data.name.edited"> (ИЗМЕНЕНО) </span>
@@ -104,7 +108,9 @@
 					</template>
 				</container-input-once>
 				<!-- Ссылка -->
-				<container-input-once :type="modal.type == 'create' ? 'create' : modal.style.delete ? 'delete' : 'edit'">
+				<container-input-once
+					:type="modal.type == 'create' ? 'create' : modal.style.delete ? 'delete' : 'edit'"
+				>
 					<template #title>
 						<span>ССЫЛКА*</span>
 						<span v-if="currentSlide.data.link.edited">(ИЗМЕНЕНО)</span>
@@ -773,32 +779,6 @@ export default {
 		/* _____________________________________________________*/
 		/* 4. Изменение состояний                               */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		// Изменение скрытия выбранного слайда
-		changeSlideHide() {
-			try {
-				/* Фильтрация массива с объектми до нашего объекта в новый массив */
-				let resultSlideCurrent = this.slides.filter(
-					(slide) => slide.order === this.currentSlide.data.order.body
-				);
-				/* Получение нужного объекта */
-				let filteredSlideCurrent = resultSlideCurrent[0];
-				// Проверка на состояние скрытия
-				if (this.currentSlide.data.hide.body) {
-					filteredSlideCurrent.hide = false;
-					this.currentSlide.data.hide.body = false;
-				} else {
-					filteredSlideCurrent.hide = true;
-					this.currentSlide.data.hide.body = true;
-				}
-			} catch (error) {
-				let debbugStory = {
-					title: "Ошибка.",
-					body: "Не удалось обновить состояние скрытия выбранного слайда.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
-			}
-		},
 		// Изменение порядка выбранного слайда
 		changeSlideOrder(type) {
 			try {
@@ -988,15 +968,12 @@ export default {
 		// Пометка на удаление выбранного слайда
 		markDeleteSlide() {
 			/* Получение текущего объекта из массива this.slides */
-			let resultSlideCurrent = this.slides.filter(
-				(slide) => slide.order === this.currentSlide.data.order.body
-			);
-			let filteredSlideCurrent = resultSlideCurrent[0];
+			let slide = this.slides.find((slide) => slide.order === this.currentSlide.data.order.body);
 
-			if (filteredSlideCurrent.delete) {
-				filteredSlideCurrent.delete = false;
+			if (slide.delete) {
+				slide.delete = false;
 			} else {
-				filteredSlideCurrent.delete = true;
+				slide.delete = true;
 			}
 
 			this.closeSlide();

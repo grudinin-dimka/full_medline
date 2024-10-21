@@ -3,9 +3,21 @@
 	<!--|                  МОДАЛЬНОЕ ОКНО                   |-->
 	<!--|___________________________________________________|-->
 	<admin-modal ref="modal" @touchCloseModal="closeModal" :modal="modal">
-		<template #title>
-			<span v-if="modal.type == 'create'">СОЗДАНИЕ</span>
-			<span v-if="modal.type == 'edit'">РЕДАКТИРОВАНИЕ</span>
+		<template
+			#title
+			v-if="
+				!currentInfoBlock.data.delete.body &&
+				!currentInfoBlock.data.create.body &&
+				!modal.style.create
+			"
+		>
+			<icon-arrow :width="16" :height="16" :rotate="-90" @click="" />
+			#{{ currentInfoBlock.data.order.body }}
+			<icon-arrow :width="16" :height="16" :rotate="90" @click="" />
+		</template>
+		<template #title v-else>
+			<span v-if="modal.type == 'create'">БЛОК (СОЗДАНИЕ)</span>
+			<span v-if="modal.type == 'edit'">БЛОК (РЕДАКТИРОВАНИЕ)</span>
 		</template>
 		<template #body>
 			<div class="modal-images">
@@ -52,7 +64,7 @@
 							backgroundImage: `url(/storage/default/stones-none-default.png)`,
 						}"
 					></div>
-					<div class="buttons">
+					<div class="buttons add">
 						<div class="icon create" @click="openModal('edit', 'subModal')">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -109,7 +121,7 @@
 							backgroundImage: `url(/storage/default/stones-none-default.png)`,
 						}"
 					></div>
-					<div class="buttons">
+					<div class="buttons add">
 						<div class="icon create" @click="openModal('edit', 'subModal')">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -166,7 +178,7 @@
 							backgroundImage: `url(/storage/default/stones-none-default.png)`,
 						}"
 					></div>
-					<div class="buttons">
+					<div class="buttons add">
 						<div class="icon create" @click="openModal('edit', 'subModal')">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -181,7 +193,9 @@
 					</div>
 				</div>
 			</div>
-			<container-textarea-once :type="modal.type == 'create' ? 'create' : 'edit'">
+			<container-textarea-once
+				:type="modal.type == 'create' ? 'create' : modal.style.delete ? 'delete' : 'edit'"
+			>
 				<template #title>
 					<span>ЗАГОЛОВОК</span>
 					<span v-if="currentInfoBlock.data.title.edited"> (ИЗМЕНЕНО) </span>
@@ -200,7 +214,9 @@
 					<span class="error" v-if="false"> Ошибка </span>
 				</template>
 			</container-textarea-once>
-			<container-textarea-once :type="modal.type == 'create' ? 'create' : 'edit'">
+			<container-textarea-once
+				:type="modal.type == 'create' ? 'create' : modal.style.delete ? 'delete' : 'edit'"
+			>
 				<template #title>
 					<span>ОПИСАНИЕ</span>
 					<span v-if="currentInfoBlock.data.description.edited"> (ИЗМЕНЕНО) </span>
@@ -223,9 +239,20 @@
 		<template #footer>
 			<BlockButtons>
 				<button-claim @click="" v-if="modal.type == 'create'"> Создать </button-claim>
-				<button-remove @click="" v-if="modal.type == 'edit' && !currentInfoBlock.data.delete.body"> Удалить </button-remove>
-				<ButtonDefault @click="updateInfoBlock" v-if="modal.type == 'edit'">
+				<button-remove
+					@click="deleteInfoBlock"
+					v-if="modal.type == 'edit' && !currentInfoBlock.data.delete.body"
+				>
+					Удалить
+				</button-remove>
+				<ButtonDefault
+					@click="updateInfoBlock"
+					v-if="modal.type == 'edit' && !currentInfoBlock.data.delete.body"
+				>
 					Обновить
+				</ButtonDefault>
+				<ButtonDefault @click="deleteInfoBlock" v-if="currentInfoBlock.data.delete.body">
+					Восстановить
 				</ButtonDefault>
 			</BlockButtons>
 		</template>
@@ -302,7 +329,10 @@ import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vu
 import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
 import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 
+import IconArrow from "../../../components/icons/IconArrow.vue";
 import IconSave from "../../../components/icons/IconSave.vue";
+import IconHide from "../../../components/icons/IconHide.vue";
+import IconVisible from "../../../components/icons/IconVisible.vue";
 
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
 
@@ -325,7 +355,10 @@ export default {
 		ButtonDefault,
 		ButtonRemove,
 		ButtonClaim,
+		IconArrow,
 		IconSave,
+		IconHide,
+		IconVisible,
 		LoaderChild,
 		AdminAboutUsList,
 		ContainerInputOnce,
@@ -345,7 +378,7 @@ export default {
 				modules: {
 					title: true,
 					buttons: {
-						hide: false,
+						hide: true,
 						close: true,
 					},
 					images: false,
@@ -388,6 +421,10 @@ export default {
 						body: "",
 						status: false,
 					},
+					order: {
+						body: "",
+						status: false,
+					},
 					title: {
 						body: "",
 						status: false,
@@ -411,6 +448,10 @@ export default {
 				},
 				data: {
 					id: {
+						body: "",
+						edited: false,
+					},
+					order: {
 						body: "",
 						edited: false,
 					},
@@ -446,6 +487,11 @@ export default {
 			},
 			infoBlocks: [],
 		};
+	},
+	computed: {
+		getSortedInfoBlocks() {
+			return this.infoBlocks.sort((a, b) => a.order - b.order);
+		},
 	},
 	methods: {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -485,7 +531,12 @@ export default {
 						} else {
 							this[name].style.create = false;
 						}
-						this[name].style.delete = false;
+
+						if (this.currentInfoBlock.data.delete.body) {
+							this[name].style.delete = true;
+						} else {
+							this[name].style.delete = false;
+						}
 					}
 					document.body.classList.add("modal-open");
 					break;
@@ -545,6 +596,18 @@ export default {
 			this.clearModalErrors("currentInfoBlock");
 
 			this.openModal("edit", "modal");
+		},
+		/* Удаление */
+		deleteInfoBlock() {
+			let block = this.infoBlocks.find((item) => item.id == this.currentInfoBlock.data.id.body);
+
+			if (block.delete) {
+				block.delete = false;
+			} else {
+				block.delete = true;
+			}
+
+			this.closeModal("modal");
 		},
 		/* Обновление */
 		updateInfoBlock() {
@@ -629,6 +692,11 @@ export default {
 	position: absolute;
 	display: flex;
 	gap: 5px;
+	top: 10px;
+	right: 10px;
+}
+
+.modal-images > .item > .buttons.add {
 	top: 5px;
 	right: 5px;
 }

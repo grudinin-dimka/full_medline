@@ -2,6 +2,10 @@
 	<div class="about">
 		<div
 			class="item"
+			:class="{
+				create: block.create,
+				delete: block.delete,
+			}"
 			@click="$emit('touchEditBlock', block)"
 			v-for="block in infoBlocks"
 			:key="block.id"
@@ -96,6 +100,15 @@ export default {
 	font-size: 16px;
 
 	transition: all 0.2s;
+}
+
+.about > .item.delete {
+	border: 2px solid #ec7b7b;
+}
+
+.about > .item.delete:hover {
+	border: 2px solid #f79999;
+	background-color: rgb(255, 240, 240);
 }
 
 .about > .item > .body {

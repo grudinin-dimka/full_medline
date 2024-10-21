@@ -22,6 +22,7 @@ return new class extends Migration
       // 5) imageThree - путь к третьей картинке
       Schema::create('abouts', function (Blueprint $table) {
          $table->id();
+         $table->unsignedBigInteger('order');
          $table->string('title')->nullable();
          $table->string('description')->nullable();
          $table->string('imageOne')->nullable();
@@ -32,6 +33,7 @@ return new class extends Migration
  
       DB::table('abouts')->insert(
          [
+            "order" => "1",
             "title" => "Заголовок блока о нас",
             "description" => "Описание какой-то инфо-блока",
             "imageOne" => "1.jpg",
