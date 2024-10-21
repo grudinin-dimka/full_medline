@@ -1021,12 +1021,30 @@ export default {
 					data: formData,
 				})
 					.then((response) => {
-						this.currentSlide.data.path.body = response.data.data;
-						filteredSlideCurrent.path = response.data.data;
-						filteredSlideCurrent.filename = response.data.data.replace(
-							"/storage/slides/",
-							""
-						);
+						if (response.data.status) {
+							try {
+								this.currentSlide.data.path.body = response.data.data;
+								filteredSlideCurrent.path = response.data.data;
+								filteredSlideCurrent.filename = response.data.data.replace(
+									"/storage/slides/",
+									""
+								);
+							} catch (error) {
+								let debbugStory = {
+									title: "Ошибка.",
+									body: "Не удалось обновить данные после загрузки изображения.",
+									type: "Error",
+								};
+								this.$store.commit("debuggerState", debbugStory);
+							}
+						} else {
+							let debbugStory = {
+								title: "Ошибка.",
+								body: response.data.message,
+								type: "Error",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+						}
 					})
 					.catch((error) => {
 						console.log(error);

@@ -21,7 +21,7 @@
 							backgroundImage: `url(${currentInfoBlock.data.imageOne.body})`,
 						}"
 					></div>
-					<div class="buttons">
+					<div class="buttons" v-if="!currentInfoBlock.data.delete.body">
 						<div class="icon edit" @click="editImage('imageOne')">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -57,7 +57,7 @@
 							backgroundImage: `url(/storage/default/stones-none-default.png)`,
 						}"
 					></div>
-					<div class="buttons add">
+					<div class="buttons add" v-if="!currentInfoBlock.data.delete.body">
 						<div class="icon create" @click="editImage('imageOne')">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -78,7 +78,7 @@
 							backgroundImage: `url(${currentInfoBlock.data.imageTwo.body})`,
 						}"
 					></div>
-					<div class="buttons">
+					<div class="buttons" v-if="!currentInfoBlock.data.delete.body">
 						<div class="icon edit" @click="editImage('imageTwo')">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -114,7 +114,7 @@
 							backgroundImage: `url(/storage/default/stones-none-default.png)`,
 						}"
 					></div>
-					<div class="buttons add">
+					<div class="buttons add" v-if="!currentInfoBlock.data.delete.body">
 						<div class="icon create" @click="editImage('imageTwo')">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -135,7 +135,7 @@
 							backgroundImage: `url(${currentInfoBlock.data.imageThree.body})`,
 						}"
 					></div>
-					<div class="buttons">
+					<div class="buttons" v-if="!currentInfoBlock.data.delete.body">
 						<div class="icon edit" @click="editImage('imageThree')">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -171,7 +171,7 @@
 							backgroundImage: `url(/storage/default/stones-none-default.png)`,
 						}"
 					></div>
-					<div class="buttons add">
+					<div class="buttons add" v-if="!currentInfoBlock.data.delete.body">
 						<div class="icon create" @click="editImage('imageThree')">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -236,7 +236,11 @@
 				</button-claim>
 				<button-remove
 					@click="deleteInfoBlock"
-					v-if="modal.type == 'edit' && !currentInfoBlock.data.delete.body && !currentInfoBlock.data.create.body"
+					v-if="
+						modal.type == 'edit' &&
+						!currentInfoBlock.data.delete.body &&
+						!currentInfoBlock.data.create.body
+					"
 				>
 					Удалить
 				</button-remove>
@@ -260,14 +264,22 @@
 		<template #body>
 			<container-input-once :type="'edit'">
 				<template #title>
-					<span>НОВЫЙ ФАЙЛ</span>
-					<span v-if="false"> (ИЗМЕНЕНО) </span>
+					<span>НОВЫЙ ФАЙЛ*</span>
+					<span v-if="currentImage.data.edited"> (ИЗМЕНЕНО) </span>
 				</template>
 				<template #input>
-					<input type="file" />
+					<input
+						type="file"
+						autocomplete="off"
+						ref="fileUpload"
+						:class="{ error: currentImage.errors.status }"
+						@input="currentImage.data.edited = true"
+					/>
 				</template>
 				<template #error>
-					<span class="error" v-if="false"> Ошибка </span>
+					<span class="error" v-if="currentImage.errors.status">
+						{{ currentImage.errors.body }}
+					</span>
 				</template>
 			</container-input-once>
 		</template>
@@ -480,7 +492,16 @@ export default {
 					},
 				},
 			},
-			currentImage: "",
+			currentImage: {
+				errors: {
+					body: "",
+					status: false,
+				},
+				data: {
+					body: "",
+					edited: false,
+				},
+			},
 			infoBlocks: [],
 		};
 	},
@@ -571,6 +592,71 @@ export default {
 			}
 		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |               SUB-МОДАЛЬНОЕ ОКНО                  |*/
+		/* |___________________________________________________|*/
+		/* _____________________________________________________*/
+		/* 1. Основные действия                                 */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* Изменение картинки */
+		editImage(name) {
+			this.currentImage.data.body = name;
+			this.currentImage.data.edited = false;
+			this.currentImage.errors.status = false;
+
+			this.openModal("edit", "subModal");
+		},
+		updateImage() {
+			/* Проверка на загруженный файл */
+			if (!this.$refs.fileUpload.files[0]) {
+				this.currentImage.errors.status = true;
+				this.currentImage.errors.body = "Поле не может быть пустым.";
+				return;
+			}
+			/* Проверка на тип загруженного файла */
+			if (this.$refs.fileUpload.files[0].type !== "image/png") {
+				this.currentImage.errors.status = true;
+				this.currentImage.errors.body = "Разрешенный формат файла: png.";
+				return;
+			}
+			/* Проверка на размер загруженного файла */
+			let fileSize = this.$refs.fileUpload.files[0].size / 1024 / 1024;
+			if (fileSize > 10) {
+				this.currentImage.errors.status = true;
+				this.currentImage.errors.body = "Размер файла более 10 МБ.";
+				return;
+			}
+
+			this.currentImage.errors.status = false;
+
+			/* Загрузка файла */
+			let formData = new FormData();
+			formData.append("image", this.$refs.fileUpload.files[0]);
+			formData.append("type", "abouts");
+
+			axios({
+				method: "post",
+				url: `${this.$store.state.axios.urlApi}` + `upload-file`,
+				headers: {
+					"Content-Type": "multipart/form-data",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: formData,
+			})
+				.then((response) => {
+					if (response.data.status) {
+						
+					} else {
+						
+					}
+					// this.currentSlide.data.path.body = response.data.data;
+					// filteredSlideCurrent.path = response.data.data;
+					// filteredSlideCurrent.filename = response.data.data.replace("/storage/slides/", "");
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		},
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |              ИНФОРМАЦИОННЫЕ БЛОКИ                 |*/
 		/* |___________________________________________________|*/
 		/* _____________________________________________________*/
@@ -659,14 +745,6 @@ export default {
 		removeInfoBlockImage(name) {
 			this.currentInfoBlock.data[name].body = "";
 		},
-		/* Изменение картинки */
-		editImage(name) {
-			this.currentImage = name;
-			this.openModal("edit", "subModal");
-		},
-		updateImage() {
-			
-		},	
 	},
 	mounted() {
 		axios({

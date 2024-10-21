@@ -50,16 +50,21 @@ class AdminController extends Controller
          ]);;
 
          switch ($request->type) {
-         case 'slide':
-            $path = $request->file('image')->store(
-               'public/slides'
-            );
-            break;
-         case 'specialist':
-            $path = $request->file('image')->store(
-               'public/specialists'
-            );
-            break;
+            case 'slide':
+               $path = $request->file('image')->store(
+                  'public/slides'
+               );
+               break;
+            case 'specialist':
+               $path = $request->file('image')->store(
+                  'public/specialists'
+               );
+               break;
+            case 'abouts':
+               $path = $request->file('image')->store(
+                  'public/abouts'
+               );
+               break;
          }
 
          if ($path) {
