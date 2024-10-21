@@ -4,20 +4,20 @@
 	<!--|___________________________________________________|-->
 	<admin-modal ref="modal" @touchCloseModal="closeModal" :modal="modal">
 		<template #title>
-			<span v-if="modal.type == 'create'">ИНФОРМАЦИОННЫЙ БЛОК</span>
-			<span v-if="modal.type == 'edit'">ИНФОРМАЦИОННЫЙ БЛОК (РЕДАКТИРОВАНИЕ)</span>
+			<span v-if="modal.type == 'create'">СОЗДАНИЕ</span>
+			<span v-if="modal.type == 'edit'">РЕДАКТИРОВАНИЕ</span>
 		</template>
 		<template #body>
 			<div class="modal-images">
-				<div class="item" v-if="currentInfoBlock.data.images.one.body">
+				<div class="item" v-if="currentInfoBlock.data.imageOne.body">
 					<div
 						class="img"
 						:style="{
-							backgroundImage: `url(${currentInfoBlock.data.images.one.body})`,
+							backgroundImage: `url(${currentInfoBlock.data.imageOne.body})`,
 						}"
 					></div>
 					<div class="buttons">
-						<div class="icon edit">
+						<div class="icon edit" @click="openModal('edit', 'subModal')">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								height="24px"
@@ -30,7 +30,7 @@
 								/>
 							</svg>
 						</div>
-						<div class="icon delete">
+						<div class="icon delete" @click="removeInfoBlockImage('imageOne')">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								height="24px"
@@ -53,7 +53,7 @@
 						}"
 					></div>
 					<div class="buttons">
-						<div class="icon create">
+						<div class="icon create" @click="openModal('edit', 'subModal')">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								height="24px"
@@ -66,15 +66,28 @@
 						</div>
 					</div>
 				</div>
-				<div class="item" v-if="currentInfoBlock.data.images.two.body">
+				<div class="item" v-if="currentInfoBlock.data.imageTwo.body">
 					<div
 						class="img"
 						:style="{
-							backgroundImage: `url(${currentInfoBlock.data.images.two.body})`,
+							backgroundImage: `url(${currentInfoBlock.data.imageTwo.body})`,
 						}"
 					></div>
 					<div class="buttons">
-						<div class="icon delete">
+						<div class="icon edit" @click="openModal('edit', 'subModal')">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								height="24px"
+								viewBox="0 -960 960 960"
+								width="24px"
+								fill="#e8eaed"
+							>
+								<path
+									d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"
+								/>
+							</svg>
+						</div>
+						<div class="icon delete" @click="removeInfoBlockImage('imageTwo')">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								height="24px"
@@ -97,7 +110,7 @@
 						}"
 					></div>
 					<div class="buttons">
-						<div class="icon create">
+						<div class="icon create" @click="openModal('edit', 'subModal')">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								height="24px"
@@ -110,15 +123,28 @@
 						</div>
 					</div>
 				</div>
-				<div class="item" v-if="currentInfoBlock.data.images.three.body">
+				<div class="item" v-if="currentInfoBlock.data.imageThree.body">
 					<div
 						class="img"
 						:style="{
-							backgroundImage: `url(${currentInfoBlock.data.images.three.body})`,
+							backgroundImage: `url(${currentInfoBlock.data.imageThree.body})`,
 						}"
 					></div>
 					<div class="buttons">
-						<div class="icon delete">
+						<div class="icon edit" @click="openModal('edit', 'subModal')">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								height="24px"
+								viewBox="0 -960 960 960"
+								width="24px"
+								fill="#e8eaed"
+							>
+								<path
+									d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"
+								/>
+							</svg>
+						</div>
+						<div class="icon delete" @click="removeInfoBlockImage('imageThree')">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								height="24px"
@@ -155,10 +181,10 @@
 					</div>
 				</div>
 			</div>
-			<container-textarea-once :type="'edit'">
+			<container-textarea-once :type="modal.type == 'create' ? 'create' : 'edit'">
 				<template #title>
 					<span>ЗАГОЛОВОК</span>
-					<span v-if="false"> (ИЗМЕНЕНО) </span>
+					<span v-if="currentInfoBlock.data.title.edited"> (ИЗМЕНЕНО) </span>
 				</template>
 				<template #textarea>
 					<textarea
@@ -166,16 +192,18 @@
 						placeholder="Введите заголовок"
 						autocomplete="off"
 						:class="{ error: false }"
+						v-model="currentInfoBlock.data.title.body"
+						@input="currentInfoBlock.data.title.edited = true"
 					></textarea>
 				</template>
 				<template #error>
 					<span class="error" v-if="false"> Ошибка </span>
 				</template>
 			</container-textarea-once>
-			<container-textarea-once :type="'edit'">
+			<container-textarea-once :type="modal.type == 'create' ? 'create' : 'edit'">
 				<template #title>
 					<span>ОПИСАНИЕ</span>
-					<span v-if="false"> (ИЗМЕНЕНО) </span>
+					<span v-if="currentInfoBlock.data.description.edited"> (ИЗМЕНЕНО) </span>
 				</template>
 				<template #textarea>
 					<textarea
@@ -183,6 +211,8 @@
 						placeholder="Введите заголовок"
 						autocomplete="off"
 						:class="{ error: false }"
+						v-model="currentInfoBlock.data.description.body"
+						@input="currentInfoBlock.data.description.edited = true"
 					></textarea>
 				</template>
 				<template #error>
@@ -193,10 +223,38 @@
 		<template #footer>
 			<BlockButtons>
 				<button-claim @click="" v-if="modal.type == 'create'"> Создать </button-claim>
-				<ButtonDefault @click="" v-if="modal.type == 'edit'"> Обновить </ButtonDefault>
+				<ButtonDefault @click="updateInfoBlock" v-if="modal.type == 'edit'">
+					Обновить
+				</ButtonDefault>
 			</BlockButtons>
 		</template>
 	</admin-modal>
+	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
+	<!--|            МОДАЛЬНОЕ ОКНО (ДОЧЕРНЕЕ)              |-->
+	<!--|___________________________________________________|-->
+	<admin-sub-modal ref="sub-modal" @touchCloseModal="closeModal('subModal')" :modal="subModal">
+		<template #title>ЗАГРУЗКА ИЗОБРАЖЕНИЯ</template>
+		<template #body>
+			<container-input-once :type="'edit'">
+				<template #title>
+					<span>НОВЫЙ ФАЙЛ</span>
+					<span v-if="false"> (ИЗМЕНЕНО) </span>
+				</template>
+				<template #input>
+					<input type="file" />
+				</template>
+				<template #error>
+					<span class="error" v-if="false"> Ошибка </span>
+				</template>
+			</container-input-once>
+		</template>
+		<template #footer>
+			<BlockButtons>
+				<button-claim @click="" v-if="modal.type == 'create'"> Создать </button-claim>
+				<ButtonDefault @click="" v-if="modal.type == 'edit'"> Обновить </ButtonDefault>
+			</BlockButtons>
+		</template>
+	</admin-sub-modal>
 
 	<info-bar>
 		<template v-slot:title>О нас</template>
@@ -217,7 +275,7 @@
 			<AdminAboutUsList :infoBlocks="infoBlocks" @touchEditBlock="editInfoBlock" />
 
 			<block-buttons>
-				<button-default @click=""> Добавить </button-default>
+				<button-default @click="openModal('create')"> Добавить </button-default>
 			</block-buttons>
 		</template>
 
@@ -231,6 +289,7 @@
 
 <script>
 import AdminModal from "../../../components/includes/admin/AdminModal.vue";
+import AdminSubModal from "../../../components/includes/admin/AdminSubModal.vue";
 
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 
@@ -256,6 +315,7 @@ import axios from "axios";
 export default {
 	components: {
 		AdminModal,
+		AdminSubModal,
 		InfoBar,
 		BlockOnce,
 		BlockTwo,
@@ -291,6 +351,25 @@ export default {
 					footer: true,
 				},
 			},
+			subModal: {
+				title: "",
+				status: false,
+				type: null,
+				style: {
+					create: false,
+					delete: false,
+				},
+				modules: {
+					title: true,
+					buttons: {
+						hide: false,
+						close: true,
+					},
+					images: false,
+					body: true,
+					footer: true,
+				},
+			},
 			loading: {
 				loader: {
 					title: true,
@@ -307,6 +386,14 @@ export default {
 						body: "",
 						status: false,
 					},
+					title: {
+						body: "",
+						status: false,
+					},
+					description: {
+						body: "",
+						status: false,
+					},
 					imageOne: {
 						body: "",
 						status: false,
@@ -319,31 +406,29 @@ export default {
 						body: "",
 						status: false,
 					},
-					description: {
-						body: "",
-						status: false,
-					},
 				},
 				data: {
 					id: {
 						body: "",
 						edited: false,
 					},
-					images: {
-						one: {
-							body: "/storage/about/1.jpg",
-							status: false,
-						},
-						two: {
-							body: "",
-							status: false,
-						},
-						three: {
-							body: "",
-							status: false,
-						},
+					title: {
+						body: "",
+						edited: false,
 					},
 					description: {
+						body: "",
+						edited: false,
+					},
+					imageOne: {
+						body: "",
+						edited: false,
+					},
+					imageTwo: {
+						body: "",
+						edited: false,
+					},
+					imageThree: {
 						body: "",
 						edited: false,
 					},
@@ -376,32 +461,29 @@ export default {
 		/* 1. Основные действия                                 */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Открытие */
-		openModal(type) {
+		openModal(type = "edit", name = "modal") {
 			switch (type) {
 				case "create":
 					{
-						// this.clearModalErrors();
-
-						this.modal.type = "create";
-						this.modal.status = true;
-						this.modal.style.create = true;
-						this.modal.style.delete = false;
-						// this.clearModalData();
+						this[name].type = "create";
+						this[name].status = true;
+						this[name].style.create = true;
+						this[name].style.delete = false;
+						this.clearModalData("currentInfoBlock");
 					}
 					document.body.classList.add("modal-open");
 					break;
 				case "edit":
 					{
-						// this.clearModalErrors();
-
-						this.modal.type = "edit";
-						// if (this.currentCertificate.data.create.body) {
-						// 	this.modal.style.create = true;
-						// } else {
-						this.modal.style.create = false;
-						// }
-						this.modal.status = true;
-						this.modal.style.delete = false;
+						this[name].type = "edit";
+						this[name].status = true;
+						this[name].style.delete = false;
+						if (this.currentInfoBlock.data.create.body) {							
+							this[name].style.create = true;
+						} else {
+							this[name].style.create = false;							
+						}
+						this[name].style.delete = false;
 					}
 					document.body.classList.add("modal-open");
 					break;
@@ -418,42 +500,65 @@ export default {
 			}
 		},
 		/* Закрытие */
-		closeModal() {
-			this.modal.status = false;
-			document.body.classList.remove("modal-open");
+		closeModal(name = "modal") {
+			this[name].status = false;
+			if (name == "modal") {
+				document.body.classList.remove("modal-open");
+			}
 		},
 		/* Очистка содержимого модального окна */
-		clearModalData() {
-			for (let key in this.currentCertificate.data) {
-				this.currentCertificate.data[key].body = "";
-				this.currentCertificate.data[key].edited = false;
+		clearModalData(name = "currentInfoBlock") {
+			for (let key in this[name].data) {
+				this[name].data[key].body = "";
+			}
+		},
+		/* Очистка содержимого модального окна */
+		clearModalEdited(name = "currentInfoBlock") {
+			for (let key in this[name].data) {
+				this[name].data[key].edited = false;
 			}
 		},
 		/* Очистка ошибок */
-		clearModalErrors() {
-			for (let key in this.currentCertificate.errors) {
-				this.currentCertificate.errors[key].body = "";
-				this.currentCertificate.errors[key].status = false;
+		clearModalErrors(name = "currentInfoBlock") {
+			for (let key in this[name].errors) {
+				this[name].errors[key].body = "";
+				this[name].errors[key].status = false;
 			}
 		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                 Модальное окно                    |*/
+		/* |              ИНФОРМАЦИОННЫЕ БЛОКИ                 |*/
 		/* |___________________________________________________|*/
 		/* _____________________________________________________*/
 		/* 1. Основные действия                                 */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Открытие */
 		editInfoBlock(selectedBlock) {
-			for(let key in this.currentInfoBlock.data) {
+			this.modal.title = "БЛОК (РЕДАКТИРОВАНИЕ)";
+
+			for (let key in this.currentInfoBlock.data) {
 				this.currentInfoBlock.data[key].body = selectedBlock[key];
-			};
-			console.log(selectedBlock);
-		}
+			}
+
+			this.clearModalEdited("currentInfoBlock");
+			this.clearModalErrors("currentInfoBlock");
+
+			this.openModal("edit", "modal");
+		},
+		/* Обновление */
+		updateInfoBlock() {
+			let block = this.infoBlocks.find((item) => item.id == this.currentInfoBlock.data.id.body);
+
+			for (let key in this.currentInfoBlock.data) {
+				block[key] = this.currentInfoBlock.data[key].body;
+			}
+
+			this.closeModal("modal");
+		},
+		removeInfoBlockImage(name) {
+			this.currentInfoBlock.data[name].body = "";
+		},
 	},
 	mounted() {
-		this.loading.loader.title = false;
-		this.loading.loader.infoBlocks = false;
-
 		axios({
 			method: "post",
 			headers: {
@@ -475,6 +580,9 @@ export default {
 			})
 			.catch((error) => {
 				console.log(error);
+			})
+			.finally(() => {
+				this.loading.loader.infoBlocks = false;
 			});
 	},
 };
