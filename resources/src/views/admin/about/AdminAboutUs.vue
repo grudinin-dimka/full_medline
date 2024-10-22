@@ -770,6 +770,8 @@ export default {
 				return;
 			}
 
+			/* Преидущий элемент */
+			let blockPrevious = null;
 
 
 

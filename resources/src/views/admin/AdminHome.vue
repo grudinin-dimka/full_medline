@@ -786,12 +786,12 @@ export default {
 					return;
 				}
 
-				/* Объявление переменных предидущего слайда */
-				let slidePrevious = null;
-				// Проверка на то, является ли текущий слайд первым
+				// Является ли текущий слайд первым
 				let firstSlideStatus = this.currentSlide.data.order.body == 1;
 
-				if (firstSlideStatus) {
+				// Предидущей элемент
+				let slidePrevious = null;
+				if (this.currentSlide.data.order.body == 1) {
 					slidePrevious = this.slides.find((slide) => slide.order === this.slides.length);
 				} else {
 					slidePrevious = this.slides.find(
@@ -799,15 +799,15 @@ export default {
 					);
 				}
 
-				/* Фильтрация массива с объектми до нашего объекта в новый массив */
+				// Текущий элемент
 				let slideCurrent = this.slides.find(
 					(slide) => slide.order === this.currentSlide.data.order.body
 				);
 
-				// Проверка на то, является ли текущий слайд последним
+				// Является ли текущий слайд последним
 				let lastSlideStatus = this.currentSlide.data.order.body == this.slides.length;
 
-				/* Объявление переменных следующего слайда */
+				// Следующий элемент
 				let slideNext = null;
 				if (lastSlideStatus) {
 					slideNext = this.slides.find((slide) => slide.order === 1);
