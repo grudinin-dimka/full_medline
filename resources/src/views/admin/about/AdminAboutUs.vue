@@ -884,7 +884,104 @@ export default {
 		},
 		/* Сохранение */
 		saveInfoBlocks() {
-			console.log("save");
+			let formData = new FormData();
+			formData.append("abouts", JSON.stringify(this.infoBlocks));
+
+			axios({
+				method: "post",
+				url: `${this.$store.state.axios.urlApi}` + `save-abouts-changes`,
+				headers: {
+					"Content-Type": "multipart/form-data",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: formData,
+			})
+				.then((response) => {
+					if (response.data.status) {
+						try {
+							console.log(response.data.data);
+
+							let debbugStory = {
+								title: "Успешно!",
+								body: "Сервер выполнил запрос.",
+								type: "Completed",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+						} catch (error) {
+							let debbugStory = {
+								title: "Ошибка.",
+								body: "Не удалось обновить данные после загрузки изображения.",
+								type: "Error",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+						}
+					} else {
+						let debbugStory = {
+							title: "Ошибка.",
+							body: response.data.message,
+							type: "Error",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					}
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		},
+		/* Очистка удалённых элементов */
+		clearDeletesFromArray(arrayName) {
+			try {
+				// Получения нового массива специалистов, помеченных на удаление
+				let elementsDelete = this[arrayName].filter((item) => {
+					if (item.delete == true) {
+						return Object.assign({}, item);
+					}
+				});
+
+				// Повторять, пока не будут удалены все элементы, помеченные на удаление
+				while (elementsDelete.length > 0) {
+					/* Получение индекса элемента, помеченного на удаление из массива специалистов */
+					this[arrayName].splice(this[arrayName].indexOf(elementsDelete[0]), 1);
+					/* Обновление списка с элементами, помеченными на удаление */
+					elementsDelete = this[arrayName].filter((item) => {
+						if (item.delete == true) {
+							return Object.assign({}, item);
+						}
+					});
+				}
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Не удалось очистить удалённые элементы.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
+		/* Очистка пометок на удаление и сохранение */
+		clearFlagsFromArray(arrayName) {
+			try {
+				// Сброс флагов добавления и удаления
+				this[arrayName].forEach((item) => {
+					item.create = false;
+					item.delete = false;
+				});
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Не удалось сбросить флаги.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
+		/* Обновление значений order */
+		updateOrdersFromArray(arrayName) {
+			let count = 0;
+			for (let key in this[arrayName]) {
+				count++;
+				this[arrayName][key].order = count;
+			}
 		},
 	},
 	mounted() {

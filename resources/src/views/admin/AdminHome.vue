@@ -1059,14 +1059,14 @@ export default {
 				this.$store.commit("debuggerState", debbugStory);
 			}
 		},
-		// Сохранение изменений в базе данных
+		/* Сохранение изменений в базе данных */
 		saveSlidesChanges() {
 			let dataSlides = [];
-			/* Копирование данных слайдов */
+			// Копирование данных слайдов
 			for (let i = 0; i < this.slides.length; i++) {
 				dataSlides.push(Object.assign({}, this.slides[i]));
 			}
-			/* Удаление свойства path из данных */
+			// Удаление свойства path из данных
 			for (let i = 0; i < dataSlides.length; i++) {
 				for (let key in dataSlides[i]) {
 					delete dataSlides[i].path;
@@ -1084,54 +1084,33 @@ export default {
 				},
 			})
 				.then((response) => {
-					// Обновление id добавленных элементов на данные из бд
-					for (let key in response.data) {
-						let slide = this.slides.filter((slide) => {
-							if (slide.id === response.data[key].old) {
-								return slide;
-							}
-						});
-						slide[0].id = response.data[key].new;
+					if (response.data.status) {
+						// Обновление id в соответствии с изменениями
+						this.updateIdFromArray("slides", response.data.data);
+
+						// Очистка удалённых элементов
+						this.clearDeletesFromArray("slides");
+
+						// Обновление флагов на удаление и сохранение
+						this.clearFlagsFromArray("slides");
+
+						// Обновление свойства order в массиве слайдов
+						this.updateOrdersFromArray("slides");
+
+						let debbugStory = {
+							title: "Успешно!",
+							body: response.data.message,
+							type: "Completed",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					} else {
+						let debbugStory = {
+							title: "Ошибка.",
+							body: response.data.message,
+							type: "Error",
+						};
+						this.$store.commit("debuggerState", debbugStory);
 					}
-
-					// Получения нового массива слайдов, помеченных на удаление
-					let res = this.slides.filter((slide) => {
-						if (slide.delete == true) {
-							return Object.assign({}, slide);
-						}
-					});
-
-					// Повторять, пока не будут удалены все элементы, помеченные на удаление
-					while (res.length > 0) {
-						/* Получение индекса элемента, помеченного на удаление из массива специалистов */
-						this.slides.splice(this.slides.indexOf(res[0]), 1);
-						/* Обновление списка с элементами, помеченными на удаление */
-						res = this.slides.filter((slide) => {
-							if (slide.delete == true) {
-								return Object.assign({}, slide);
-							}
-						});
-					}
-
-					// Сброс флагов добавления и удаления
-					for (let index in this.slides) {
-						this.slides[index].create = false;
-						this.slides[index].delete = false;
-					}
-
-					// Обновление свойства order в массиве слайдов
-					let count = 0;
-					for (let slide in this.slides) {
-						count++;
-						this.slides[slide].order = count;
-					}
-
-					let debbugStory = {
-						title: "Успешно!",
-						body: "Данные о слайдах сохранены.",
-						type: "Completed",
-					};
-					this.$store.commit("debuggerState", debbugStory);
 				})
 				.catch((error) => {
 					let debbugStory = {
@@ -1140,8 +1119,86 @@ export default {
 						type: "Error",
 					};
 					this.$store.commit("debuggerState", debbugStory);
-					console.log(error);
 				});
+		},
+		/* Обновление значений id */
+		updateIdFromArray(arrayName, arrayId) {
+			try {
+				let elementsCreate = this[arrayName].filter((item) => {
+					if (item.create) return item;
+				});
+
+				// Изменение значений со старых id на новые из б.д.
+				for (let key in elementsCreate) {
+					elementsCreate[key].id = arrayId.find((item) => {
+						if (item.old == elementsCreate[key].id) {
+							return item;
+						}
+					}).new;
+				}
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Не удалось обновить id.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
+		/* Очистка удалённых элементов */
+		clearDeletesFromArray(arrayName) {
+			try {
+				// Получения нового массива специалистов, помеченных на удаление
+				let elementsDelete = this[arrayName].filter((item) => {
+					if (item.delete == true) {
+						return Object.assign({}, item);
+					}
+				});
+
+				// Повторять, пока не будут удалены все элементы, помеченные на удаление
+				while (elementsDelete.length > 0) {
+					/* Получение индекса элемента, помеченного на удаление из массива специалистов */
+					this[arrayName].splice(this[arrayName].indexOf(elementsDelete[0]), 1);
+					/* Обновление списка с элементами, помеченными на удаление */
+					elementsDelete = this[arrayName].filter((item) => {
+						if (item.delete == true) {
+							return Object.assign({}, item);
+						}
+					});
+				}
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Не удалось очистить удалённые элементы.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
+		/* Очистка пометок на удаление и сохранение */
+		clearFlagsFromArray(arrayName) {
+			try {
+				// Сброс флагов добавления и удаления
+				this[arrayName].forEach((item) => {
+					item.create = false;
+					item.delete = false;
+				});
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Не удалось сбросить флаги.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
+		/* Обновление значений order */
+		updateOrdersFromArray(arrayName) {
+			let count = 0;
+			for (let key in this[arrayName]) {
+				count++;
+				this[arrayName][key].order = count;
+			}
 		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                     ФУТЕР                         |*/

@@ -10,6 +10,6 @@ class About extends Model
     use HasFactory;
 
     protected $table = 'abouts';
-    protected $quarded = ['*'];
+    protected $guarded = [];
     protected $hidden = ['created_at', 'updated_at'];
 }

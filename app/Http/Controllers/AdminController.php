@@ -14,8 +14,12 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Rules\File;
 
 use App\Models\User;
+
 use App\Models\Slide;
 use App\Models\Footer;
+
+use App\Models\About;
+
 use App\Models\Specialist;
 use App\Models\Specialization;
 use App\Models\SpecialistSpecialization;
@@ -151,26 +155,37 @@ class AdminController extends Controller
 
       // Получение всех файлов
       $filesSlides = Storage::files('public/slides');
-
-      foreach ($filesSlides as $fileKey => $fileValue) {
-         $useFile = false;
-         /* Проверка на использование файла */
-         foreach ($slides as $slideKey => $slideValue) {
-         /* Обрезание значения $fileValue до названия файла */
-         $str = str_replace('public/slides/', '', $fileValue);
-         /* Проверка значения названия файла на совпадение */
-         if ($slideValue->filename == $str) {
-            $useFile = true;
+      if($filesSlides) {
+         foreach ($filesSlides as $fileKey => $fileValue) {
+            $useFile = false;
+            /* Проверка на использование файла */
+            foreach ($slides as $slideKey => $slideValue) {
+            /* Обрезание значения $fileValue до названия файла */
+            $str = str_replace('public/slides/', '', $fileValue);
+            /* Проверка значения названия файла на совпадение */
+            if ($slideValue->filename == $str) {
+               $useFile = true;
+            };
+            };
+   
+            /* Удаление файла, если не используется */
+            if (!$useFile) {
+               Storage::delete($fileValue);
+            };
          };
-         };
+      } else {
+         return response()->json([
+            "status" => false,
+            "message" => "Отсутствуют файлы.",
+            "data" => null,
+         ]);
+      }
 
-         /* Удаление файла, если не используется */
-         if (!$useFile) {
-         Storage::delete($fileValue);
-         };
-      };
-
-      return $arrayID;
+      return response()->json([
+         "status" => true,
+         "message" => "Данные обновлены.",
+         "data" => $arrayID
+      ]);
    } 
    /* _____________________________________________________*/
    /* 2. Футер                                             */
@@ -192,6 +207,64 @@ class AdminController extends Controller
       } else {
          return false;
       };
+   }
+   /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+   /* |                     О НАС                         |*/
+   /* |___________________________________________________|*/
+   /* _____________________________________________________*/
+   /* 1. Информационные блоки                              */
+   /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+   /* STOP делал сохранение, не доделал */
+   public function saveAboutsChanges(Request $request) {
+      $abouts = json_decode($request->abouts);
+      $arrayID = [];
+
+      foreach ($abouts as $key => $value) {
+         // Удаление
+         if ($value->delete === true) {
+            $about = About::find($value->id);
+            $about->delete();
+            continue;
+         };
+
+         // Добавление
+         if ($value->create === true){
+            $aboutCreate = About::create([
+               "order" => $value->order,
+               "title" => $value->title,
+               "description" => $value->description,
+               "imageOne" => $value->imageOne,
+               "imageTwo" => $value->imageTwo,
+               "imageThree" => $value->imageThree,
+            ]);
+
+            /* Запись нового объекта в массив */
+            $arrayID[] = (object) [
+               // Прошлый id
+               'old' => $value->id, 
+               // Новый id
+               'new' => $aboutCreate->id
+            ];
+            continue;
+         };
+
+         // Обновление
+         $about = About::find($value->id);
+         $about->update([
+            "order" => $value->order,
+            "title" => $value->title,
+            "description" => $value->description,
+            "imageOne" => $value->imageOne,
+            "imageTwo" => $value->imageTwo,
+            "imageThree" => $value->imageThree,
+         ]);   
+      };
+
+      return response()->json([
+         "status" => true,
+         "message" => "Данные обновлены.",
+         "data" => $arrayID,
+      ]);
    }
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                  СПЕЦИАЛИСТЫ                      |*/
