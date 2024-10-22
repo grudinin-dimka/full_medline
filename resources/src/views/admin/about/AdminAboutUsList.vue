@@ -10,6 +10,14 @@
 			v-for="block in infoBlocks"
 			:key="block.id"
 		>
+			<div class="head">
+				<div>
+					id: {{ block.create ? "?" : block.id }}
+				</div>
+				<div>
+					order: {{ block.order }}
+				</div>
+			</div>
 			<div class="body">
 				<div class="images">
 					<div
@@ -121,6 +129,27 @@ export default {
 
 .about > .item.create:hover {
 	background-color: var(--create-background-color);
+	border: 2px solid var(--create-border-color);
+}
+
+.about > .item > .head {
+	display: flex;
+	gap: 10px;
+}
+
+.about > .item > .head > div {
+	padding: 5px 10px;
+	border-radius: 7.5px;
+	border: 2px solid var(--input-border-color-inactive);
+
+	transition: all 0.2s;
+}
+
+.about > .item:hover > .head > div {
+	border: 2px solid var(--input-border-color-active);
+}
+
+.about > .item.create > .head > div {
 	border: 2px solid var(--create-border-color);
 }
 

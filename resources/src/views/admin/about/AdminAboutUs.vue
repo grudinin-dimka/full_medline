@@ -735,11 +735,12 @@ export default {
 					description: this.currentInfoBlock.data.description.body,
 					imageOne: this.currentInfoBlock.data.imageOne.body,
 					imageTwo: this.currentInfoBlock.data.imageTwo.body,
-					imageOne: this.currentInfoBlock.data.imageThree.body,
+					imageThree: this.currentInfoBlock.data.imageThree.body,
 					create: true,
 					delete: false,
 				});
 
+				console.log(this.infoBlocks);
 				this.closeModal("modal");
 			} catch (error) {
 				let debbugStory = {
@@ -770,52 +771,80 @@ export default {
 				return;
 			}
 
-			/* Преидущий элемент */
+			// Является ли текущий элемент первым
+			let firstBlockStatus = this.currentInfoBlock.data.order.body == 1;
+			// Предидущей элемент
 			let blockPrevious = null;
-
-
-
-
-
-
-
-
-
-
-
-
-
-				/* Объявление переменных предидущего слайда */
-				let slidePrevious = null;
-				// Проверка на то, является ли текущий слайд первым
-				let firstSlideStatus = this.currentSlide.data.order.body == 1;
-
-				if (firstSlideStatus) {
-					slidePrevious = this.slides.find((slide) => slide.order === this.slides.length);
-				} else {
-					slidePrevious = this.slides.find(
-						(slide) => slide.order === this.currentSlide.data.order.body - 1
-					);
-				}
-
-				/* Фильтрация массива с объектми до нашего объекта в новый массив */
-				let slideCurrent = this.slides.find(
-					(slide) => slide.order === this.currentSlide.data.order.body
+			if (firstBlockStatus) {
+				blockPrevious = this.infoBlocks.find((block) => block.order === this.infoBlocks.length);
+			} else {
+				blockPrevious = this.infoBlocks.find(
+					(block) => block.order === this.currentInfoBlock.data.order.body - 1
 				);
+			}
 
-				// Проверка на то, является ли текущий слайд последним
-				let lastSlideStatus = this.currentSlide.data.order.body == this.slides.length;
+			// Текущий элемент
+			let blockCurrent = this.infoBlocks.find(
+				(block) => block.order === this.currentInfoBlock.data.order.body
+			);
 
-				/* Объявление переменных следующего слайда */
-				let slideNext = null;
-				if (lastSlideStatus) {
-					slideNext = this.slides.find((slide) => slide.order === 1);
-				} else {
-					slideNext = this.slides.find(
-						(slide) => slide.order === this.currentSlide.data.order.body + 1
-					);
-				}
+			// Является ли текущий элемент последним
+			let lastBlockStatus = this.currentInfoBlock.data.order.body == this.infoBlocks.length;
 
+			// Следующий элемент
+			let blockNext = null;
+			if (lastBlockStatus) {
+				blockNext = this.infoBlocks.find((block) => block.order === 1);
+			} else {
+				blockNext = this.infoBlocks.find(
+					(block) => block.order === this.currentInfoBlock.data.order.body + 1
+				);
+			}
+
+			// Изменение порядка
+			switch (type) {
+				case "up":
+					{
+						if (lastBlockStatus) {
+							this.currentInfoBlock.data.order.body = 1;
+							blockCurrent.order = 1;
+							blockNext.order = this.infoBlocks.length;
+						} else {
+							this.currentInfoBlock.data.order.body++;
+							blockCurrent.order++;
+							blockNext.order--;
+						}
+						this.sortInfoBlocks("order");
+					}
+					break;
+				case "down":
+					{
+						if (firstBlockStatus) {
+							this.currentInfoBlock.data.order.body = this.infoBlocks.length;
+							blockCurrent.order = this.infoBlocks.length;
+							blockPrevious.order = 1;
+						} else {
+							this.currentInfoBlock.data.order.body--;
+							blockCurrent.order--;
+							blockPrevious.order++;
+						}
+						this.sortInfoBlocks("order");
+					}
+					break;
+			}
+		},
+		/* Соритровка */
+		sortInfoBlocks(type) {
+			switch (type) {
+				case "id":
+					this.infoBlocks.sort((a, b) => a.id - b.id);
+					break;
+				case "order":
+					this.infoBlocks.sort((a, b) => a.order - b.order);
+					break;
+				default:
+					break;
+			}
 		},
 	},
 	mounted() {
@@ -829,6 +858,11 @@ export default {
 			.then((response) => {
 				if (response.data.status) {
 					this.infoBlocks = response.data.data;
+
+					this.infoBlocks.forEach((item) => {
+						item.create = false;
+						item.delete = false;
+					});
 				} else {
 					let debbugStory = {
 						title: "Ошибка.",

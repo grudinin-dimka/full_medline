@@ -184,6 +184,10 @@
 				}"
 				@click="openSlide(slide, 'edit')"
 			>
+				<div class="head">
+					<div>id: {{ slide.create ? "?" : slide.id }}</div>
+					<div>order: {{ slide.order }}</div>
+				</div>
 				<div
 					v-bind:style="{
 						'background-image': `url(${slide.path})`,
@@ -193,7 +197,7 @@
 						'background-repeat': 'no-repeat',
 					}"
 				></div>
-				<div class="slider-block-id">#{{ slide.order }}</div>
+				<!-- <div class="slider-block-id">#{{ slide.order }}</div> -->
 				<div class="slider-block-info">
 					<article>
 						<SlideUserCard />
@@ -786,12 +790,12 @@ export default {
 					return;
 				}
 
-				// Является ли текущий слайд первым
+				// Является ли текущий элемент первым
 				let firstSlideStatus = this.currentSlide.data.order.body == 1;
 
 				// Предидущей элемент
 				let slidePrevious = null;
-				if (this.currentSlide.data.order.body == 1) {
+				if (firstSlideStatus) {
 					slidePrevious = this.slides.find((slide) => slide.order === this.slides.length);
 				} else {
 					slidePrevious = this.slides.find(
@@ -804,7 +808,7 @@ export default {
 					(slide) => slide.order === this.currentSlide.data.order.body
 				);
 
-				// Является ли текущий слайд последним
+				// Является ли текущий элемент последним
 				let lastSlideStatus = this.currentSlide.data.order.body == this.slides.length;
 
 				// Следующий элемент
@@ -1298,6 +1302,7 @@ export default {
 	cursor: pointer;
 	display: flex;
 	flex-direction: column;
+	gap: 10px;
 
 	border: 2px solid var(--input-border-color-inactive);
 	border-radius: 10px;
@@ -1305,6 +1310,31 @@ export default {
 	overflow: hidden;
 
 	transition: all 0.2s;
+}
+
+.slider-block > .head {
+	display: flex;
+	gap: 10px;
+}
+
+.slider-block > .head > div {
+	padding: 5px 10px;
+	border-radius: 7.5px;
+	border: 2px solid var(--input-border-color-inactive);
+
+	transition: all 0.2s;
+}
+
+.slider-block:hover > .head > div {
+	border: 2px solid var(--input-border-color-active);
+}
+
+.slider-block.create > .head > div {
+	border: 2px solid var(--create-border-color);
+}
+
+.slider-block.delete > .head > div {
+	border: 2px solid #ec7b7b;
 }
 
 .slider-block.hide {
