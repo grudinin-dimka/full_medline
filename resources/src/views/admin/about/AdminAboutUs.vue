@@ -301,7 +301,7 @@
 		<block-title>
 			<template #title>ИНФОРМАЦИОННЫЕ БЛОКИ</template>
 			<template #buttons>
-				<icon-save :width="28" :height="28" @click="" />
+				<icon-save :width="28" :height="28" @click="saveInfoBlocks" />
 			</template>
 		</block-title>
 
@@ -845,6 +845,10 @@ export default {
 				default:
 					break;
 			}
+		},
+		/* Сохранение */
+		saveInfoBlocks() {
+			console.log("save");
 		},
 	},
 	mounted() {
