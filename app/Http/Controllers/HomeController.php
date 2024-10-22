@@ -324,9 +324,9 @@ class HomeController extends Controller
       $about = About::all();
       if($about) {
          foreach ($about as $key => $value) {
-            $value->imageOne = Storage::url('abouts/' . $value->imageOne);
-            $value->imageTwo = Storage::url('abouts/' . $value->imageTwo);
-            $value->imageThree = Storage::url('abouts/' . $value->imageThree);
+            $value->pathOne = Storage::url('abouts/' . $value->imageOne);
+            $value->pathTwo = Storage::url('abouts/' . $value->imageTwo);
+            $value->pathThree = Storage::url('abouts/' . $value->imageThree);
          };
 
          return response()->json([

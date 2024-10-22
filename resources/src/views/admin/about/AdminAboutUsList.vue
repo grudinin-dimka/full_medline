@@ -24,7 +24,7 @@
 						v-if="block.imageOne"
 						class="item"
 						:style="{
-							backgroundImage: `url(${block.imageOne})`,
+							backgroundImage: `url(${block.pathOne})`,
 						}"
 					></div>
 					<div
@@ -38,7 +38,7 @@
 						v-if="block.imageTwo"
 						class="item"
 						:style="{
-							backgroundImage: `url(${block.imageTwo})`,
+							backgroundImage: `url(${block.pathTwo})`,
 						}"
 					></div>
 					<div
@@ -52,7 +52,7 @@
 						v-if="block.imageThree"
 						class="item"
 						:style="{
-							backgroundImage: `url(${block.imageThree})`,
+							backgroundImage: `url(${block.pathThree})`,
 						}"
 					></div>
 					<div

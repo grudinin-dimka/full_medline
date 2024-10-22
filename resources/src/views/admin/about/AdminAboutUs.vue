@@ -18,7 +18,7 @@
 					<div
 						class="img"
 						:style="{
-							backgroundImage: `url(${currentInfoBlock.data.imageOne.body})`,
+							backgroundImage: `url(${currentInfoBlock.data.pathOne.body})`,
 						}"
 					></div>
 					<div class="buttons" v-if="!currentInfoBlock.data.delete.body">
@@ -75,7 +75,7 @@
 					<div
 						class="img"
 						:style="{
-							backgroundImage: `url(${currentInfoBlock.data.imageTwo.body})`,
+							backgroundImage: `url(${currentInfoBlock.data.pathTwo.body})`,
 						}"
 					></div>
 					<div class="buttons" v-if="!currentInfoBlock.data.delete.body">
@@ -132,7 +132,7 @@
 					<div
 						class="img"
 						:style="{
-							backgroundImage: `url(${currentInfoBlock.data.imageThree.body})`,
+							backgroundImage: `url(${currentInfoBlock.data.pathThree.body})`,
 						}"
 					></div>
 					<div class="buttons" v-if="!currentInfoBlock.data.delete.body">
@@ -482,6 +482,18 @@ export default {
 						body: "",
 						edited: false,
 					},
+					pathOne: {
+						body: "",
+						edited: false,
+					},
+					pathTwo: {
+						body: "",
+						edited: false,
+					},
+					pathThree: {
+						body: "",
+						edited: false,
+					},
 					create: {
 						body: false,
 						edited: false,
@@ -651,8 +663,29 @@ export default {
 				.then((response) => {
 					if (response.data.status) {
 						try {
-							this.currentInfoBlock.data[this.currentImage.data.body].body =
-								response.data.data;
+							switch (this.currentImage.data.body) {
+								case "imageOne":
+									this.currentInfoBlock.data.pathOne.body = response.data.data;
+									this.currentInfoBlock.data.imageOne.body = response.data.data.replace(
+										"/storage/abouts/",
+										""
+									);
+									break;
+								case "imageTwo":
+									this.currentInfoBlock.data.pathTwo.body = response.data.data;
+									this.currentInfoBlock.data.imageTwo.body = response.data.data.replace(
+										"/storage/abouts/",
+										""
+									);
+									break;
+								case "imageThree":
+									this.currentInfoBlock.data.pathThree.body = response.data.data;
+									this.currentInfoBlock.data.imageThree.body = response.data.data.replace(
+										"/storage/abouts/",
+										""
+									);
+									break;
+							}
 							this.closeModal("subModal");
 						} catch (error) {
 							let debbugStory = {
@@ -736,6 +769,9 @@ export default {
 					imageOne: this.currentInfoBlock.data.imageOne.body,
 					imageTwo: this.currentInfoBlock.data.imageTwo.body,
 					imageThree: this.currentInfoBlock.data.imageThree.body,
+					pathOne: this.currentInfoBlock.data.pathOne.body,
+					pathTwo: this.currentInfoBlock.data.pathTwo.body,
+					pathThree: this.currentInfoBlock.data.pathThree.body,
 					create: true,
 					delete: false,
 				});
