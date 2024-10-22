@@ -4,9 +4,9 @@
 	<!--|___________________________________________________|-->
 	<admin-modal ref="modal" @touchCloseModal="closeModal" :modal="modal">
 		<template #title v-if="!currentInfoBlock.data.delete.body && !modal.style.create">
-			<icon-arrow :width="16" :height="16" :rotate="-90" @click="" />
+			<icon-arrow :width="16" :height="16" :rotate="-90" @click="changeInfoBlockOrder('down')" />
 			#{{ currentInfoBlock.data.order.body }}
-			<icon-arrow :width="16" :height="16" :rotate="90" @click="" />
+			<icon-arrow :width="16" :height="16" :rotate="90" @click="changeInfoBlockOrder('up')" />
 		</template>
 		<template #title v-else>
 			<span v-if="modal.type == 'create'">БЛОК (СОЗДАНИЕ)</span>
@@ -602,6 +602,7 @@ export default {
 			this.currentImage.data.body = name;
 			this.currentImage.data.edited = false;
 			this.currentImage.errors.status = false;
+			this.$refs.fileUpload.value = "";
 
 			this.openModal("edit", "subModal");
 		},
@@ -636,6 +637,7 @@ export default {
 			let formData = new FormData();
 			formData.append("image", this.$refs.fileUpload.files[0]);
 			formData.append("type", "abouts");
+			formData.append("formats", ["png", "jpg", "jpeg"]);
 
 			axios({
 				method: "post",
@@ -761,6 +763,29 @@ export default {
 		/* Удаление */
 		removeInfoBlockImage(name) {
 			this.currentInfoBlock.data[name].body = "";
+		},
+		/* Изменение порядка */
+		changeInfoBlockOrder(type) {
+			if (this.infoBlocks.length <= 1) {
+				return;
+			}
+
+			let prevBlock = this.infoBlocks.find(
+				(item) => item.order == this.currentInfoBlock.data.order.body - 1
+			);
+			let nextBlock = this.infoBlocks.find(
+				(item) => item.order == this.currentInfoBlock.data.order.body + 1
+			);
+
+			if (type == "up") {
+				prevBlock.order = this.currentInfoBlock.data.order.body;
+				nextBlock.order = prevBlock.order + 1;
+			} else if (type == "down") {
+				nextBlock.order = this.currentInfoBlock.data.order.body;
+				prevBlock.order = nextBlock.order - 1;
+			}
+
+			this.currentInfoBlock.data.order.body = nextBlock.order;
 		},
 	},
 	mounted() {

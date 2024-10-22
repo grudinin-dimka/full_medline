@@ -965,7 +965,10 @@
 				<button-disabled v-if="this.specialist.profile.data.id.body == null">
 					Добавить
 				</button-disabled>
-				<button-default @click="editClinics" v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.body !== null">
+				<button-default
+					@click="editClinics"
+					v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.body !== null"
+				>
 					Добавить
 				</button-default>
 			</block-buttons>
@@ -1012,7 +1015,10 @@
 			<button-disabled v-if="this.specialist.profile.data.id.body == null">
 				Добавить
 			</button-disabled>
-			<button-default @click="editArrayValue('create', 'certificates', null)" v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.body !== null">
+			<button-default
+				@click="editArrayValue('create', 'certificates', null)"
+				v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.body !== null"
+			>
 				Добавить
 			</button-default>
 		</block-buttons>
@@ -1054,9 +1060,12 @@
 
 		<block-buttons>
 			<button-disabled v-if="this.specialist.profile.data.id.body == null">
-				Добавить	
+				Добавить
 			</button-disabled>
-			<button-default @click="editArrayValue('create', 'educations', null)" v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.body !== null">
+			<button-default
+				@click="editArrayValue('create', 'educations', null)"
+				v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.body !== null"
+			>
 				Добавить
 			</button-default>
 		</block-buttons>
@@ -1099,9 +1108,12 @@
 
 		<block-buttons>
 			<button-disabled v-if="this.specialist.profile.data.id.body == null">
-				Добавить	
+				Добавить
 			</button-disabled>
-			<button-default @click="editArrayValue('create', 'works', null)" v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.body !== null">
+			<button-default
+				@click="editArrayValue('create', 'works', null)"
+				v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.body !== null"
+			>
 				Добавить
 			</button-default>
 		</block-buttons>
@@ -2110,6 +2122,7 @@ export default {
 				let formData = new FormData();
 				formData.append("type", "profile");
 				formData.append("image", this.$refs.fileUpload.files[0]);
+				formData.append("formats", ["png"]);
 				formData.append("profile", JSON.stringify(this.specialist.profile.data));
 
 				// Сохранение данных
@@ -2207,6 +2220,7 @@ export default {
 
 				let formData = new FormData();
 				formData.append("image", this.$refs.fileUpload.files[0]);
+				formData.append("formats", ["png"]);
 				formData.append("profile", JSON.stringify(this.specialist.profile.data));
 
 				// Сохранение данных
@@ -2284,6 +2298,7 @@ export default {
 				formData.append("type", "all");
 				// Данные блока профиля
 				formData.append("image", this.$refs.fileUpload.files[0]);
+				formData.append("formats", ["png"]);
 				formData.append("profile", JSON.stringify(this.specialist.profile.data));
 				// Id специалиста
 				formData.append("id", JSON.stringify(this.specialist.profile.data.id.body));

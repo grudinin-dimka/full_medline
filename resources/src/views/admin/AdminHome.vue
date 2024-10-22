@@ -783,44 +783,34 @@ export default {
 		changeSlideOrder(type) {
 			try {
 				/* Объявление переменных предидущего слайда */
-				let resultSlidePrevious = [null];
-				let filteredSlidePrevious = [null];
+				let slidePrevious = null;
 				// Проверка на то, является ли текущий слайд первым
 				let firstSlideStatus = this.currentSlide.data.order.body == 1;
 
 				if (firstSlideStatus) {
-					resultSlidePrevious = this.slides.filter(
-						(slide) => slide.order === this.slides.length
-					);
-					filteredSlidePrevious = resultSlidePrevious[0];
+					slidePrevious = this.slides.find((slide) => slide.order === this.slides.length);
 				} else {
-					resultSlidePrevious = this.slides.filter(
+					slidePrevious = this.slides.find(
 						(slide) => slide.order === this.currentSlide.data.order.body - 1
 					);
-					filteredSlidePrevious = resultSlidePrevious[0];
 				}
 
 				/* Фильтрация массива с объектми до нашего объекта в новый массив */
-				let resultSlideCurrent = this.slides.filter(
+				let slideCurrent = this.slides.find(
 					(slide) => slide.order === this.currentSlide.data.order.body
 				);
-				/* Получение текущего объекта */
-				let filteredSlideCurrent = resultSlideCurrent[0];
 
 				// Проверка на то, является ли текущий слайд последним
 				let lastSlideStatus = this.currentSlide.data.order.body == this.slides.length;
 
 				/* Объявление переменных следующего слайда */
-				let resultSlideNext = [null];
-				let filteredSlideNext = [null];
+				let slideNext = null;
 				if (lastSlideStatus) {
-					resultSlideNext = this.slides.filter((slide) => slide.order === 1);
-					filteredSlideNext = resultSlideNext[0];
+					slideNext = this.slides.find((slide) => slide.order === 1);
 				} else {
-					resultSlideNext = this.slides.filter(
+					slideNext = this.slides.find(
 						(slide) => slide.order === this.currentSlide.data.order.body + 1
 					);
-					filteredSlideNext = resultSlideNext[0];
 				}
 
 				// Изменение порядка
@@ -829,13 +819,13 @@ export default {
 						{
 							if (lastSlideStatus) {
 								this.currentSlide.data.order.body = 1;
-								filteredSlideCurrent.order = 1;
-								filteredSlideNext.order = this.slides.length;
+								slideCurrent.order = 1;
+								slideNext.order = this.slides.length;
 								this.sortSlider();
 							} else {
 								this.currentSlide.data.order.body++;
-								filteredSlideCurrent.order++;
-								filteredSlideNext.order--;
+								slideCurrent.order++;
+								slideNext.order--;
 								this.sortSlider();
 							}
 						}
@@ -844,13 +834,13 @@ export default {
 						{
 							if (firstSlideStatus) {
 								this.currentSlide.data.order.body = this.slides.length;
-								filteredSlideCurrent.order = this.slides.length;
-								filteredSlidePrevious.order = 1;
+								slideCurrent.order = this.slides.length;
+								slidePrevious.order = 1;
 								this.sortSlider();
 							} else {
 								this.currentSlide.data.order.body--;
-								filteredSlideCurrent.order--;
-								filteredSlidePrevious.order++;
+								slideCurrent.order--;
+								slidePrevious.order++;
 								this.sortSlider();
 							}
 						}
@@ -895,6 +885,7 @@ export default {
 				let formData = new FormData();
 				formData.append("image", this.currentSlide.file);
 				formData.append("type", "slide");
+				formData.append("formats", ["png"]);
 
 				axios({
 					method: "post",
@@ -1010,6 +1001,7 @@ export default {
 				let formData = new FormData();
 				formData.append("image", this.$refs.fileUpload.files[0]);
 				formData.append("type", "slide");
+				formData.append("formats", ["png"]);
 
 				axios({
 					method: "post",
