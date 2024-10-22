@@ -770,22 +770,50 @@ export default {
 				return;
 			}
 
-			let prevBlock = this.infoBlocks.find(
-				(item) => item.order == this.currentInfoBlock.data.order.body - 1
-			);
-			let nextBlock = this.infoBlocks.find(
-				(item) => item.order == this.currentInfoBlock.data.order.body + 1
-			);
 
-			if (type == "up") {
-				prevBlock.order = this.currentInfoBlock.data.order.body;
-				nextBlock.order = prevBlock.order + 1;
-			} else if (type == "down") {
-				nextBlock.order = this.currentInfoBlock.data.order.body;
-				prevBlock.order = nextBlock.order - 1;
-			}
 
-			this.currentInfoBlock.data.order.body = nextBlock.order;
+
+
+
+
+
+
+
+
+
+
+
+				/* Объявление переменных предидущего слайда */
+				let slidePrevious = null;
+				// Проверка на то, является ли текущий слайд первым
+				let firstSlideStatus = this.currentSlide.data.order.body == 1;
+
+				if (firstSlideStatus) {
+					slidePrevious = this.slides.find((slide) => slide.order === this.slides.length);
+				} else {
+					slidePrevious = this.slides.find(
+						(slide) => slide.order === this.currentSlide.data.order.body - 1
+					);
+				}
+
+				/* Фильтрация массива с объектми до нашего объекта в новый массив */
+				let slideCurrent = this.slides.find(
+					(slide) => slide.order === this.currentSlide.data.order.body
+				);
+
+				// Проверка на то, является ли текущий слайд последним
+				let lastSlideStatus = this.currentSlide.data.order.body == this.slides.length;
+
+				/* Объявление переменных следующего слайда */
+				let slideNext = null;
+				if (lastSlideStatus) {
+					slideNext = this.slides.find((slide) => slide.order === 1);
+				} else {
+					slideNext = this.slides.find(
+						(slide) => slide.order === this.currentSlide.data.order.body + 1
+					);
+				}
+
 		},
 	},
 	mounted() {

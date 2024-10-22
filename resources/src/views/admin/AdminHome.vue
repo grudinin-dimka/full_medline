@@ -782,6 +782,10 @@ export default {
 		// Изменение порядка выбранного слайда
 		changeSlideOrder(type) {
 			try {
+				if (this.slides.length <= 1) {
+					return;
+				}
+
 				/* Объявление переменных предидущего слайда */
 				let slidePrevious = null;
 				// Проверка на то, является ли текущий слайд первым
