@@ -151,7 +151,7 @@
 				</button-default>
 			</block-buttons>
 			<block-buttons v-if="modal.type == 'create'">
-				<button-claim @click.prevent="createSlide"> Создать </button-claim>
+				<button-claim @click.prevent="addSlide"> Создать </button-claim>
 			</block-buttons>
 		</template>
 	</modal>
@@ -172,52 +172,57 @@
 			</template>
 		</block-title>
 
-		<div class="slider" v-show="loading.slider">
-			<div
-				v-for="slide in slides"
-				:key="slide.id"
-				class="slider-block"
-				:class="{
-					hide: slide.hide,
-					create: slide.create,
-					delete: slide.delete,
-				}"
-				@click="openSlide(slide, 'edit')"
-			>
-				<div class="head">
-					<div>id: {{ slide.create ? "?" : slide.id }}</div>
-					<div>order: {{ slide.order }}</div>
-				</div>
+		<template v-if="loading.slider">
+			<div class="slider">
 				<div
-					v-bind:style="{
-						'background-image': `url(${slide.path})`,
-						height: '275px',
-						'background-size': 'contain	',
-						'background-position': 'center center',
-						'background-repeat': 'no-repeat',
+					v-if="slides.length > 0"
+					v-for="slide in slides"
+					:key="slide.id"
+					class="slider-block"
+					:class="{
+						hide: slide.hide,
+						create: slide.create,
+						delete: slide.delete,
 					}"
-				></div>
-				<!-- <div class="slider-block-id">#{{ slide.order }}</div> -->
-				<div class="slider-block-info">
-					<article>
-						<SlideUserCard />
-						<label>
-							{{ slide.name }}
-						</label>
-					</article>
-					<article>
-						<SlideLink />
-						<label>
-							{{ slide.link }}
-						</label>
-					</article>
-					<article>
-						<SlidePath />
-						<label> {{ slide.path }} </label>
-					</article>
+					@click="openSlide(slide, 'edit')"
+				>
+					<div class="head">
+						<div>id: {{ slide.create ? "?" : slide.id }}</div>
+						<div>order: {{ slide.order }}</div>
+					</div>
+					<div
+						v-bind:style="{
+							'background-image': `url(${slide.path})`,
+							height: '275px',
+							'background-size': 'contain	',
+							'background-position': 'center center',
+							'background-repeat': 'no-repeat',
+						}"
+					></div>
+					<!-- <div class="slider-block-id">#{{ slide.order }}</div> -->
+					<div class="slider-block-info">
+						<article>
+							<SlideUserCard />
+							<label>
+								{{ slide.name }}
+							</label>
+						</article>
+						<article>
+							<SlideLink />
+							<label>
+								{{ slide.link }}
+							</label>
+						</article>
+						<article>
+							<SlidePath />
+							<label> {{ slide.path }} </label>
+						</article>
+					</div>
 				</div>
 			</div>
-		</div>
+			<!-- Элемент пустой страницы -->
+			<empty :minHeight="300" v-if="slides.length == 0" />
+		</template>
 
 		<!-- Загрузка слайдов -->
 		<loader-child
@@ -387,6 +392,7 @@ import axios from "axios";
 import ElementInputLabel from "../../components/ui/admin/elements/ElementInputLabel.vue";
 
 import LoaderChild from "../../components/includes/LoaderChild.vue";
+import Empty from "../../components/includes/Empty.vue";
 
 import Modal from "../../components/includes/admin/AdminModal.vue";
 import InfoBar from "../../components/ui/admin/InfoBar.vue";
@@ -417,6 +423,7 @@ export default {
 		axios,
 		ElementInputLabel,
 		LoaderChild,
+		Empty,
 		Modal,
 		InfoBar,
 		ContainerInput,
@@ -867,7 +874,7 @@ export default {
 		/* 5. Сохранение, обновление, удаление                  */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		// Создание нового слайда
-		createSlide() {
+		addSlide() {
 			try {
 				/* Присваивание данных поля ввода файла пользователем в переменную */
 				this.currentSlide.file = this.$refs.fileUpload.files[0];
@@ -908,21 +915,19 @@ export default {
 						if (response.data.status) {
 							try {
 								// Поиск максимального id
-								let maxId = 0;
-								for (let key in this.slides) {
-									if (this.slides[key].id > maxId) {
-										maxId = this.slides[key].id;
-									}
-								}
+								let maxId = this.getMaxIdFromArray("slides");
+
+								// // Поиск максимального order
+								let maxOrder = this.getMaxOrderFromArray("slides");
 
 								this.slides.push({
-									id: 1 + maxId,
+									id: maxId + 1,
 									name: this.$refs.inputName.value,
 									link: this.$refs.inputLink.value,
 									path: response.data.data,
 									filename: response.data.data.replace("/storage/slides/", ""),
 									hide: false,
-									order: 1 + this.slides[this.slides.length - 1].order,
+									order: maxOrder + 1,
 									create: true,
 									delete: false,
 								});
@@ -1120,6 +1125,50 @@ export default {
 					};
 					this.$store.commit("debuggerState", debbugStory);
 				});
+		},
+		/* Поиск максимального id */
+		getMaxIdFromArray(arrayName) {
+			try {
+				// Поиск максимального id
+				let maxId = 0;
+
+				this[arrayName].forEach((item) => {
+					if (item.id > maxId) {
+						maxId = item.id;
+					}
+				});
+
+				return maxId;
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Не удалось получить максимальный id.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
+		/* Поиск максимального order */
+		getMaxOrderFromArray(arrayName) {
+			try {
+				// Поиск максимального order
+				let maxOrder = 0;
+
+				this[arrayName].forEach((item) => {
+					if (item.order > maxOrder) {
+						maxOrder = item.order;
+					}
+				});
+
+				return maxOrder;
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Не удалось получить максимальный order.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
 		},
 		/* Обновление значений id */
 		updateIdFromArray(arrayName, arrayId) {

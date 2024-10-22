@@ -260,6 +260,49 @@ class AdminController extends Controller
          ]);   
       };
 
+      // Сортировка слайдов по порядку от наименьшего до наибольшого
+      $aboutsAll = About::all()->SortBy('order');
+
+      // Обновление порядковых номеров
+      $count = 0;
+      foreach ($aboutsAll as $aboutKey => $aboutValue) {
+         $count++;
+         $aboutValue->order = $count;
+         $aboutValue->save();
+      };
+
+      // Получение всех файлов
+      $filesAbouts = Storage::files('public/abouts');
+      if($filesAbouts) {
+         foreach ($filesAbouts as $fileKey => $fileValue) {
+            $useFile = false;
+            /* Проверка на использование файла */
+            foreach ($aboutsAll as $aboutKey => $aboutValue) {
+               /* Обрезание значения $fileValue до названия файла */
+               $str = str_replace('public/abouts/', '', $fileValue);
+               /* Проверка значения названия файла на совпадение */
+               if (
+                  $aboutValue->imageOne == $str || 
+                  $aboutValue->imageTwo == $str || 
+                  $aboutValue->imageThree == $str
+               ) {
+                  $useFile = true;
+               };
+            };
+   
+            /* Удаление файла, если не используется */
+            if (!$useFile) {
+               Storage::delete($fileValue);
+            };
+         };
+      } else {
+         return response()->json([
+            "status" => false,
+            "message" => "Отсутствуют файлы.",
+            "data" => null,
+         ]);
+      }
+
       return response()->json([
          "status" => true,
          "message" => "Данные обновлены.",
@@ -331,7 +374,7 @@ class AdminController extends Controller
             if (!$saveWork->status) {
                return response()->json($saveWork);
             };
-            
+
             return response()->json([
                "status" => true,
                "message" => "Все данные специалиста сохранены.",
@@ -752,6 +795,35 @@ class AdminController extends Controller
                'hide' => $value['hide'],
          ]);
       };      
+
+      $specialists = Specialist::all();
+      // Получение всех файлов
+      $filesSpecialists = Storage::files('public/specialists');
+      if($filesSpecialists) {
+         foreach ($filesSpecialists as $fileKey => $fileValue) {
+            $useFile = false;
+            /* Проверка на использование файла */
+            foreach ($specialists as $specialistKey => $specialistValue) {
+               /* Обрезание значения $fileValue до названия файла */
+               $str = str_replace('public/specialists/', '', $fileValue);
+               /* Проверка значения названия файла на совпадение */
+               if ($specialistValue->filename == $str) {
+                  $useFile = true;
+               };
+            };
+   
+            /* Удаление файла, если не используется */
+            if (!$useFile) {
+               Storage::delete($fileValue);
+            };
+         };
+      } else {
+         return response()->json([
+            "status" => false,
+            "message" => "Отсутствуют файлы.",
+            "data" => null,
+         ]);
+      }
 
       return response()->json([
          "status" => true,

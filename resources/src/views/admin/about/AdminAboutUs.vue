@@ -306,11 +306,14 @@
 		</block-title>
 
 		<template v-if="loading.sections.infoBlocks">
-			<AdminAboutUsList :infoBlocks="infoBlocks" @touchEditBlock="editInfoBlock" />
+			<AdminAboutUsList
+				:infoBlocks="infoBlocks"
+				@touchEditBlock="editInfoBlock"
+				v-if="infoBlocks.length > 0"
+			/>
 
-			<block-buttons>
-				<button-default @click="openModal('create')"> Добавить </button-default>
-			</block-buttons>
+			<!-- Элемент пустой страницы -->
+			<empty :minHeight="300" v-if="infoBlocks.length == 0" />
 		</template>
 
 		<LoaderChild
@@ -318,6 +321,10 @@
 			:minHeight="300"
 			@loaderChildAfterLeave="loaderChildAfterLeave"
 		></LoaderChild>
+
+		<block-buttons>
+			<button-default @click="openModal('create')"> Добавить </button-default>
+		</block-buttons>
 	</block-once>
 </template>
 
@@ -342,6 +349,7 @@ import IconHide from "../../../components/icons/IconHide.vue";
 import IconVisible from "../../../components/icons/IconVisible.vue";
 
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
+import Empty from "../../../components/includes/Empty.vue";
 
 import AdminAboutUsList from "./AdminAboutUsList.vue";
 
@@ -367,6 +375,7 @@ export default {
 		IconHide,
 		IconVisible,
 		LoaderChild,
+		Empty,
 		AdminAboutUsList,
 		ContainerInputOnce,
 		ContainerTextareaOnce,
@@ -753,17 +762,15 @@ export default {
 		/* Добавление */
 		addInfoBlock() {
 			try {
-				let maxId = 1;
+				// Поиск максимального id
+				let maxId = this.getMaxIdFromArray("infoBlocks");
 
-				this.infoBlocks.forEach((item) => {
-					if (item.id > maxId) {
-						maxId = item.id;
-					}
-				});
+				// // Поиск максимального order
+				let maxOrder = this.getMaxOrderFromArray("infoBlocks");
 
 				this.infoBlocks.push({
 					id: maxId + 1,
-					order: this.infoBlocks[this.infoBlocks.length - 1].order + 1,
+					order: maxOrder + 1,
 					title: this.currentInfoBlock.data.title.body,
 					description: this.currentInfoBlock.data.description.body,
 					imageOne: this.currentInfoBlock.data.imageOne.body,
@@ -776,7 +783,6 @@ export default {
 					delete: false,
 				});
 
-				console.log(this.infoBlocks);
 				this.closeModal("modal");
 			} catch (error) {
 				let debbugStory = {
@@ -882,6 +888,9 @@ export default {
 					break;
 			}
 		},
+		/* STOP Проверить надо до конца все баги в "ГЛАВНАЯ", "О НАС", "СПЕЦИАЛИСТЫ"
+		*  надо бы ещё сделать на главной раздел "О НАС".
+		*/
 		/* Сохранение */
 		saveInfoBlocks() {
 			let formData = new FormData();
@@ -899,11 +908,21 @@ export default {
 				.then((response) => {
 					if (response.data.status) {
 						try {
-							console.log(response.data.data);
+							// Обновление id в соответствии с изменениями
+							this.updateIdFromArray("infoBlocks", response.data.data);
+
+							// Очистка удалённых элементов
+							this.clearDeletesFromArray("infoBlocks");
+
+							// Обновление флагов на удаление и сохранение
+							this.clearFlagsFromArray("infoBlocks");
+
+							// Обновление свойства order в массиве слайдов
+							this.updateOrdersFromArray("infoBlocks");
 
 							let debbugStory = {
 								title: "Успешно!",
-								body: "Сервер выполнил запрос.",
+								body: response.data.message,
 								type: "Completed",
 							};
 							this.$store.commit("debuggerState", debbugStory);
@@ -927,6 +946,74 @@ export default {
 				.catch((error) => {
 					console.log(error);
 				});
+		},
+		/* Поиск максимального id */
+		getMaxIdFromArray(arrayName) {
+			try {
+				// Поиск максимального id
+				let maxId = 0;
+
+				this[arrayName].forEach((item) => {
+					if (item.id > maxId) {
+						maxId = item.id;
+					}
+				});
+
+				return maxId;
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Не удалось получить максимальный id.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
+		/* Поиск максимального order */
+		getMaxOrderFromArray(arrayName) {
+			try {
+				// Поиск максимального order
+				let maxOrder = 0;
+
+				this[arrayName].forEach((item) => {
+					if (item.order > maxOrder) {
+						maxOrder = item.order;
+					}
+				});
+
+				return maxOrder;
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Не удалось получить максимальный order.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
+		/* Обновление значений id */
+		updateIdFromArray(arrayName, arrayId) {
+			try {
+				let elementsCreate = this[arrayName].filter((item) => {
+					if (item.create) return item;
+				});
+
+				// Изменение значений со старых id на новые из б.д.
+				for (let key in elementsCreate) {
+					elementsCreate[key].id = arrayId.find((item) => {
+						if (item.old == elementsCreate[key].id) {
+							return item;
+						}
+					}).new;
+				}
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Не удалось обновить id.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
 		},
 		/* Очистка удалённых элементов */
 		clearDeletesFromArray(arrayName) {
