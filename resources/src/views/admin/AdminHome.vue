@@ -453,10 +453,6 @@ export default {
 				slider: false,
 				footer: false,
 			},
-			url: {
-				images: import.meta.env.VITE_SOME_URL,
-				public: "http://127.0.0.1:5173/storage/app/public/img",
-			},
 			slides: [],
 			modal: {
 				title: "",

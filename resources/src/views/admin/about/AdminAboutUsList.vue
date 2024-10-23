@@ -245,4 +245,16 @@ export default {
 .description.none {
 	color: rgb(200, 200, 200);
 }
+
+@media screen and (width <= 1700px) {
+	.about {
+		grid-template-columns: repeat(2, 1fr);
+	}	
+}
+
+@media screen and (width <= 1200px) {
+	.about {
+		grid-template-columns: repeat(1, 1fr);
+	}	
+}
 </style>

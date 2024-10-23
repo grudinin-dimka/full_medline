@@ -23,13 +23,13 @@ const router = createRouter({
 					path: "about",
 					name: "about",
 					meta: { title: "О нас" },
-					component: () => import("../views/main/MainAbout.vue"),
+					component: () => import("../views/main/about/MainAbout.vue"),
 				},
 				{
 					path: "specialists",
 					name: "specialist",
 					meta: { title: "Специалисты" },
-					component: () => import("../views/main/MainSpecialists.vue"),
+					component: () => import("../views/main/specialists/MainSpecialists.vue"),
 					children: [
 						{
 							path: "",
@@ -77,7 +77,7 @@ const router = createRouter({
 					path: "contacts",
 					name: "contacts",
 					meta: { title: "Контакты" },
-					component: () => import("../views/main/MainContacts.vue"),
+					component: () => import("../views/main/contacts/MainContacts.vue"),
 				},
 			],
 		},
@@ -167,6 +167,12 @@ const router = createRouter({
 					name: "eprice",
 					meta: { title: "(e) Цены" },
 					component: () => import("../views/admin/AdminPrice.vue"),
+				},
+				{
+					path: "econtacts",
+					name: "econtacts",
+					meta: { title: "(e) Контакты" },
+					component: () => import("../views/admin/contacts/AdminContacts.vue"),
 				},
 			],
 		},

@@ -15,10 +15,10 @@
 </template>
 
 <script>
-import InfoBar from "../../components/ui/main/InfoBar.vue";
-import LoaderChild from "../../components/includes/LoaderChild.vue";
-import Block from "../../components/ui/main/blocks/Block.vue";
-import MainAboutList from "./about/MainAboutList.vue";
+import InfoBar from "../../../components/ui/main/InfoBar.vue";
+import LoaderChild from "../../../components/includes/LoaderChild.vue";
+import Block from "../../../components/ui/main/blocks/Block.vue";
+import MainAboutList from "./MainAboutList.vue";
 
 import axios from "axios";
 

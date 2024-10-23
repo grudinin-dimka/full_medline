@@ -30,12 +30,19 @@
 						СПЕЦИАЛИЗАЦИИ
 					</a>
 					<a href="#" @click.prevent="insertSubPage('especialists-clinics')"> КЛИНИКИ </a>
-					<a href="#" @click.prevent="insertSubPage('especialists-educations')"> ОБРАЗОВАНИЯ </a>
+					<a href="#" @click.prevent="insertSubPage('especialists-educations')">
+						ОБРАЗОВАНИЯ
+					</a>
 					<a href="#" @click.prevent="insertSubPage('especialists-works')"> МЕСТА РАБОТЫ </a>
-					<a href="#" @click.prevent="insertSubPage('especialists-certificates')"> СЕРТИФИКАТЫ </a>
+					<a href="#" @click.prevent="insertSubPage('especialists-certificates')">
+						СЕРТИФИКАТЫ
+					</a>
 				</div>
 			</div>
 			<a class="item-title" href="#" @click.prevent="insertPage('eprice')"> ЦЕНЫ </a>
+			<div class="item">
+				<a class="item-title" href="#" @click.prevent="insertPage('econtacts')"> КОНТАКТЫ </a>
+			</div>
 		</div>
 		<div class="aside-footer">
 			<button class="btn-close" @click="logoutUser">Выйти</button>
