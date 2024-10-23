@@ -31,9 +31,37 @@
 				</template>
 			</container-textarea-once>
 			<div class="modal-phone">
-				<div class="title">Номера:</div>
+				<div class="item">
+					<div class="content">НОМЕРА</div>
+					<div class="buttons">
+						<div class="icon create">
+							<IconCreate :width="24" :height="24" :type="'create'"></IconCreate>
+						</div>
+					</div>
+				</div>
 				<div class="item">
 					<div class="content">+7(495)123-45-67</div>
+					<div class="buttons">
+						<div class="icon edit">
+							<IconEdit :width="24" :height="24" :type="'edit'"></IconEdit>
+						</div>
+						<div class="icon delete">
+							<IconRemove :width="24" :height="24" :type="'delete'"></IconRemove>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-phone">
+				<div class="item">
+					<div class="content">ПОЧТА</div>
+					<div class="buttons">
+						<div class="icon create">
+							<IconCreate :width="24" :height="24" :type="'create'"></IconCreate>
+						</div>
+					</div>
+				</div>
+				<div class="item">
+					<div class="content">medline-address@mail.ru</div>
 					<div class="buttons">
 						<div class="icon edit">
 							<IconEdit :width="24" :height="24" :type="'edit'"></IconEdit>
@@ -260,6 +288,24 @@ export default {
 </script>
 
 <style scoped>
+.modal-phone {
+   display: flex;
+   flex-direction: column;
+   gap: 10px;   
+}
+
+.modal-phone > .item:first-of-type {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	border: 0px solid var(--input-border-color-inactive);
+	border-radius: 10px;
+   padding: 10px 10px 10px 0px;
+   
+   color: var(--primary-color);
+}
+
 .modal-phone > .item {
 	display: flex;
 	justify-content: space-between;
@@ -268,6 +314,10 @@ export default {
 	border: 2px solid var(--input-border-color-inactive);
 	border-radius: 10px;
    padding: 10px;
+}
+
+.modal-phone > .item > .content {
+   font-size: 18px;
 }
 
 .modal-phone > .item > .buttons {
