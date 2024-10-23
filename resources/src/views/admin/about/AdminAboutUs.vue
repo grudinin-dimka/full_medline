@@ -23,30 +23,10 @@
 					></div>
 					<div class="buttons" v-if="!currentInfoBlock.data.delete.body">
 						<div class="icon edit" @click="editImage('imageOne')">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								height="24px"
-								viewBox="0 -960 960 960"
-								width="24px"
-								fill="#e8eaed"
-							>
-								<path
-									d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"
-								/>
-							</svg>
+							<IconEdit :width="24" :height="24" :type="'edit'"></IconEdit>
 						</div>
 						<div class="icon delete" @click="removeInfoBlockImage('imageOne')">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								height="24px"
-								viewBox="0 -960 960 960"
-								width="24px"
-								fill="#e8eaed"
-							>
-								<path
-									d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"
-								/>
-							</svg>
+							<IconRemove :width="24" :height="24" :type="'delete'"></IconRemove>
 						</div>
 					</div>
 				</div>
@@ -59,15 +39,7 @@
 					></div>
 					<div class="buttons add" v-if="!currentInfoBlock.data.delete.body">
 						<div class="icon create" @click="editImage('imageOne')">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								height="24px"
-								viewBox="0 -960 960 960"
-								width="24px"
-								fill="#e8eaed"
-							>
-								<path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
-							</svg>
+							<IconCreate :width="24" :height="24" :type="'create'"></IconCreate>
 						</div>
 					</div>
 				</div>
@@ -80,30 +52,10 @@
 					></div>
 					<div class="buttons" v-if="!currentInfoBlock.data.delete.body">
 						<div class="icon edit" @click="editImage('imageTwo')">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								height="24px"
-								viewBox="0 -960 960 960"
-								width="24px"
-								fill="#e8eaed"
-							>
-								<path
-									d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"
-								/>
-							</svg>
+							<IconEdit :width="24" :height="24" :type="'edit'"></IconEdit>
 						</div>
 						<div class="icon delete" @click="removeInfoBlockImage('imageTwo')">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								height="24px"
-								viewBox="0 -960 960 960"
-								width="24px"
-								fill="#e8eaed"
-							>
-								<path
-									d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"
-								/>
-							</svg>
+							<IconRemove :width="24" :height="24" :type="'delete'"></IconRemove>
 						</div>
 					</div>
 				</div>
@@ -116,15 +68,7 @@
 					></div>
 					<div class="buttons add" v-if="!currentInfoBlock.data.delete.body">
 						<div class="icon create" @click="editImage('imageTwo')">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								height="24px"
-								viewBox="0 -960 960 960"
-								width="24px"
-								fill="#e8eaed"
-							>
-								<path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
-							</svg>
+							<IconCreate :width="24" :height="24" :type="'create'"></IconCreate>
 						</div>
 					</div>
 				</div>
@@ -137,30 +81,10 @@
 					></div>
 					<div class="buttons" v-if="!currentInfoBlock.data.delete.body">
 						<div class="icon edit" @click="editImage('imageThree')">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								height="24px"
-								viewBox="0 -960 960 960"
-								width="24px"
-								fill="#e8eaed"
-							>
-								<path
-									d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"
-								/>
-							</svg>
+							<IconEdit :width="24" :height="24" :type="'edit'"></IconEdit>
 						</div>
 						<div class="icon delete" @click="removeInfoBlockImage('imageThree')">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								height="24px"
-								viewBox="0 -960 960 960"
-								width="24px"
-								fill="#e8eaed"
-							>
-								<path
-									d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"
-								/>
-							</svg>
+							<IconRemove :width="24" :height="24" :type="'delete'"></IconRemove>
 						</div>
 					</div>
 				</div>
@@ -173,15 +97,7 @@
 					></div>
 					<div class="buttons add" v-if="!currentInfoBlock.data.delete.body">
 						<div class="icon create" @click="editImage('imageThree')">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								height="24px"
-								viewBox="0 -960 960 960"
-								width="24px"
-								fill="#e8eaed"
-							>
-								<path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
-							</svg>
+							<IconCreate :width="24" :height="24" :type="'create'"></IconCreate>
 						</div>
 					</div>
 				</div>
@@ -347,6 +263,9 @@ import IconArrow from "../../../components/icons/IconArrow.vue";
 import IconSave from "../../../components/icons/IconSave.vue";
 import IconHide from "../../../components/icons/IconHide.vue";
 import IconVisible from "../../../components/icons/IconVisible.vue";
+import IconEdit from "../../../components/icons/IconEdit.vue";
+import IconRemove from "../../../components/icons/IconRemove.vue";
+import IconCreate from "../../../components/icons/IconCreate.vue";
 
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
 import Empty from "../../../components/includes/Empty.vue";
@@ -374,6 +293,9 @@ export default {
 		IconSave,
 		IconHide,
 		IconVisible,
+		IconEdit,
+		IconRemove,
+		IconCreate,
 		LoaderChild,
 		Empty,
 		AdminAboutUsList,
@@ -889,8 +811,8 @@ export default {
 			}
 		},
 		/* STOP Проверить надо до конца все баги в "ГЛАВНАЯ", "О НАС", "СПЕЦИАЛИСТЫ"
-		*  надо бы ещё сделать на главной раздел "О НАС".
-		*/
+		 *  надо бы ещё сделать на главной раздел "О НАС".
+		 */
 		/* Сохранение */
 		saveInfoBlocks() {
 			let formData = new FormData();
@@ -1173,10 +1095,6 @@ export default {
 	background-color: rgb(245, 227, 227);
 }
 
-.modal-images > .item > .buttons > .icon.delete > svg {
-	fill: #d74949;
-}
-
 .modal-images > .item > .buttons > .icon.edit {
 	background-color: rgb(234, 253, 255);
 }
@@ -1185,20 +1103,12 @@ export default {
 	background-color: rgb(224, 243, 245);
 }
 
-.modal-images > .item > .buttons > .icon.edit > svg {
-	fill: var(--primary-color);
-}
-
 .modal-images > .item > .buttons > .icon.create {
 	background-color: rgb(234, 255, 236);
 }
 
 .modal-images > .item > .buttons > .icon.create:hover {
 	background-color: rgb(224, 245, 226);
-}
-
-.modal-images > .item > .buttons > .icon.create > svg {
-	fill: rgb(62, 208, 76);
 }
 
 .textarea-show {
