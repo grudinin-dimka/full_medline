@@ -30,17 +30,21 @@
 					<span class="error" v-if="false"> Ошибка </span>
 				</template>
 			</container-textarea-once>
-         <div class="modal-phone">
-            <div class="title">Номера:</div>
-            <div class="item">
-               <div class="content">+7(495)123-45-67</div>
-               <div class="buttons">
-                  <div>Кнопка 1</div>
-                  <div>Кнопка 2</div>
-               </div>
-            </div>
-         </div>
-      </template>
+			<div class="modal-phone">
+				<div class="title">Номера:</div>
+				<div class="item">
+					<div class="content">+7(495)123-45-67</div>
+					<div class="buttons">
+						<div class="icon edit">
+							<IconEdit :width="24" :height="24" :type="'edit'"></IconEdit>
+						</div>
+						<div class="icon delete">
+							<IconRemove :width="24" :height="24" :type="'delete'"></IconRemove>
+						</div>
+					</div>
+				</div>
+			</div>
+		</template>
 		<template #footer>
 			<BlockButtons>
 				<button-claim v-if="false"> Создать </button-claim>
@@ -131,6 +135,9 @@ import IconArrow from "../../../components/icons/IconArrow.vue";
 import IconHide from "../../../components/icons/IconHide.vue";
 import IconVisible from "../../../components/icons/IconVisible.vue";
 import IconSave from "../../../components/icons/IconSave.vue";
+import IconEdit from "../../../components/icons/IconEdit.vue";
+import IconRemove from "../../../components/icons/IconRemove.vue";
+import IconCreate from "../../../components/icons/IconCreate.vue";
 
 export default {
 	components: {
@@ -149,6 +156,9 @@ export default {
 		IconHide,
 		IconVisible,
 		IconSave,
+		IconEdit,
+		IconRemove,
+		IconCreate,
 	},
 	data() {
 		return {
@@ -251,17 +261,51 @@ export default {
 
 <style scoped>
 .modal-phone > .item {
-   display: flex;
-   justify-content: space-between;
-   align-items: center;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 
-   border: 2px solid var(--input-border-color-inactive);
-   border-radius: 10px;
+	border: 2px solid var(--input-border-color-inactive);
+	border-radius: 10px;
+   padding: 10px;
 }
 
 .modal-phone > .item > .buttons {
-   display: flex;
-   gap: 10px;
+	display: flex;
+	gap: 10px;
+}
+
+.modal-phone > .item > .buttons > .icon {
+	cursor: pointer;
+	padding: 10px;
+	border-radius: 100px;
+
+	width: 25px;
+	height: 25px;
+}
+
+.modal-phone > .item > .buttons > .icon.edit {
+	background-color: rgb(234, 253, 255);
+}
+
+.modal-phone > .item > .buttons > .icon.edit:hover {
+	background-color: rgb(224, 243, 245);
+}
+
+.modal-phone > .item > .buttons > .icon.create {
+	background-color: rgb(234, 255, 236);
+}
+
+.modal-phone > .item > .buttons > .icon.create:hover {
+	background-color: rgb(224, 245, 226);
+}
+
+.modal-phone > .item > .buttons > .icon.delete {
+	background-color: rgb(255, 237, 237);
+}
+
+.modal-phone > .item > .buttons > .icon.delete:hover {
+	background-color: rgb(245, 227, 227);
 }
 
 .contacts {
@@ -333,29 +377,29 @@ export default {
 }
 
 .contacts > .item > .body > .info > :is(.mail, .phone) > ul {
-   padding: 0px;
-   margin: 10px 10px;
-   inline-size: 80%;
+	padding: 0px;
+	margin: 10px 10px;
+	inline-size: 80%;
 }
 
 .contacts > .item > .body > .info > :is(.mail, .phone) > ul > li {
-   white-space: nowrap;
-   overflow: hidden;
-   text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 
-   margin-top: 10px;
+	margin-top: 10px;
 }
 
 .contacts > .item > .body > .info > .mail > ul > li::before {
-   content: "🖂";
-   padding-right: 10px;
-   font-weight: bold;
+	content: "🖂";
+	padding-right: 10px;
+	font-weight: bold;
 }
 
 .contacts > .item > .body > .info > .phone > ul > li::before {
-   content: "☎ ";
-   padding-right: 10px;
-   font-weight: bold;
+	content: "☎ ";
+	padding-right: 10px;
+	font-weight: bold;
 }
 
 .contacts > .item > .body > .phone > ul {
