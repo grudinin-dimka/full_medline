@@ -1087,6 +1087,8 @@ export default {
 						item.create = false;
 						item.delete = false;
 					});
+
+					this.infoBlocks.sort((a, b) => a.order - b.order);
 				} else {
 					let debbugStory = {
 						title: "Ошибка.",

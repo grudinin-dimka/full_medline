@@ -1445,7 +1445,7 @@ export default {
 
 .slider-block.hide {
 	border: 2px solid rgb(210, 210, 210);
-	background-color: rgb(230, 230, 230);
+	background-color: rgb(240, 240, 240);
 }
 
 .slider-block.create {

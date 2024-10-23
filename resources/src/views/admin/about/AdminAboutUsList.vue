@@ -8,7 +8,7 @@
 			}"
 			@click="$emit('touchEditBlock', block)"
 			v-for="block in infoBlocks"
-			:key="block.id"
+			:key="block.order"
 		>
 			<div class="head">
 				<div>

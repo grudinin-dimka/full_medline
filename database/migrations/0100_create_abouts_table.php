@@ -23,24 +23,13 @@ return new class extends Migration
       Schema::create('abouts', function (Blueprint $table) {
          $table->id();
          $table->unsignedBigInteger('order');
-         $table->string('title')->nullable();
-         $table->string('description')->nullable();
+         $table->text('title')->nullable();
+         $table->text('description')->nullable();
          $table->string('imageOne')->nullable();
          $table->string('imageTwo')->nullable();
          $table->string('imageThree')->nullable();
          $table->timestamps();
       });
- 
-      DB::table('abouts')->insert(
-         [
-            "order" => "1",
-            "title" => "Заголовок блока о нас",
-            "description" => "Описание какой-то инфо-блока",
-            "imageOne" => "1.jpg",
-            "imageTwo" => "2.jpg",
-            "imageThree" => "3.jpg",
-         ]
-      );
    }
 
    /**

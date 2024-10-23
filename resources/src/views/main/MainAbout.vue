@@ -6,8 +6,11 @@
 	</info-bar>
 
 	<block>
-		<MainAboutList />
-		<loader-child :isLoading="loading.loader.about" />
+		<MainAboutList v-if="loading.sections.about" :abouts="abouts"/>
+		<loader-child
+			:isLoading="loading.loader.about"
+			@loaderChildAfterLeave="loaderChildAfterLeave"
+		/>
 	</block>
 </template>
 
@@ -17,24 +20,76 @@ import LoaderChild from "../../components/includes/LoaderChild.vue";
 import Block from "../../components/ui/main/blocks/Block.vue";
 import MainAboutList from "./about/MainAboutList.vue";
 
+import axios from "axios";
+
 export default {
 	components: {
 		InfoBar,
 		LoaderChild,
 		Block,
 		MainAboutList,
+		axios,
+	},
+	methods: {
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                   Загрузчик                       |*/
+		/* |___________________________________________________|*/
+		/* После скрытия элементы */
+		loaderChildAfterLeave() {
+			this.loading.sections.about = true;
+		},
 	},
 	data() {
 		return {
 			loading: {
 				loader: {
-					about: false,
+					about: true,
 				},
 				sections: {
 					about: false,
 				},
 			},
+			abouts: [],
 		};
+	},
+	mounted() {
+		this.loading.loader.about = false;
+
+		axios({
+			method: "post",
+			url: `${this.$store.state.axios.urlApi}` + `get-abouts-all`,
+		})
+			.then((response) => {
+				if (response.data.status) {
+					this.abouts = response.data.data;
+
+					this.abouts.sort((a, b) => {
+						return a.order - b.order;
+					})
+				} else {
+					this.specialists = null;
+
+					let debbugStory = {
+						title: "Ошибка.",
+						body: response.data.message,
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+				}
+			})
+			.catch((error) => {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Произошла ошибка при получении данных о слайдере.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			})
+			.finally(() => {
+				if (this.specialists != null) {
+					this.loading.loader.specialists = false;
+				}
+			});
 	},
 };
 </script>
@@ -47,6 +102,8 @@ export default {
 
 	width: 1250px;
 	font-size: 18px;
+
+	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 .about > .title {
