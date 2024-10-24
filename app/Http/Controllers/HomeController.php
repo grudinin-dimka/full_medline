@@ -371,7 +371,7 @@ class HomeController extends Controller
       };
 
       foreach ($contacts as $contactKey => $contactValue) {
-         $contactPhones = ContactPhone::where('id_contact', $contactValue->id)->get();
+         $contactPhones = ContactPhone::where('contactId', $contactValue->id)->get();
          if(!$contactPhones) {
             return response()->json([
                "status" => false,
@@ -380,7 +380,13 @@ class HomeController extends Controller
             ]);                  
          }
 
-         $contactMails = ContactMail::where('id_contact', $contactValue->id)->get();
+         $phones = [];
+         foreach ($contactPhones as $contactPhonesKey => $contactPhonesValue) {
+            $phones[] = Phone::where('id', $contactPhonesValue->phoneId)->first();
+         };
+         $contactValue->phones = $phones; 
+
+         $contactMails = ContactMail::where('contactId', $contactValue->id)->get();
          if(!$contactMails) {
             return response()->json([
                "status" => false,
@@ -388,6 +394,12 @@ class HomeController extends Controller
                "data" => [],
             ]);                  
          }
+
+         $mails = [];
+         foreach ($contactMails as $contactMailsKey => $contactMailsValue) {
+            $mails[] = Mail::where('id', $contactMailsValue->mailId)->first();
+         };
+         $contactValue->mails = $mails; 
       };
 
       return response()->json([
