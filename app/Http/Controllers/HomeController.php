@@ -27,7 +27,7 @@ use App\Models\SpecialistCertificate;
 use App\Models\About;
 use App\Models\Contact;
 use App\Models\Phone;
-use App\Models\ContactPhones;
+use App\Models\ContactPhone;
 use App\Models\Mail;
 use App\Models\ContactMail;
 
@@ -353,7 +353,6 @@ class HomeController extends Controller
    /* |___________________________________________________|*/
    public function getContactsAll(Request $request) {
       $clinics = Clinic::all();
-
       if(!$clinics) {
          return response()->json([
             "status" => false,
@@ -363,13 +362,32 @@ class HomeController extends Controller
       };
 
       $contacts = Contact::all();
-
       if(!$contacts) {
          return response()->json([
             "status" => false,
             "message" => "Не удалось получить клиники.",
             "data" => [],
          ]);               
+      };
+
+      foreach ($contacts as $contactKey => $contactValue) {
+         $contactPhones = ContactPhone::where('id_contact', $contactValue->id)->get();
+         if(!$contactPhones) {
+            return response()->json([
+               "status" => false,
+               "message" => "Не удалось получить номера контакта.",
+               "data" => [],
+            ]);                  
+         }
+
+         $contactMails = ContactMail::where('id_contact', $contactValue->id)->get();
+         if(!$contactMails) {
+            return response()->json([
+               "status" => false,
+               "message" => "Не удалось получить почты контакта.",
+               "data" => [],
+            ]);                  
+         }
       };
 
       return response()->json([

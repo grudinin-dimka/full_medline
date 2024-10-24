@@ -15,12 +15,14 @@ return new class extends Migration
         Schema::create('contacts', function (Blueprint $table) {
             $table->id();
             $table->text('name');
+            $table->foreignId('clinicId')->references('id')->on('clinics')->onDelete('cascade')->nullable();
             $table->timestamps();
         });
 
         DB::table('contacts')->insert(
             [
                 "name" => "На Комсомольской",
+                "clinicId" => 1,
             ]
         );
     }
