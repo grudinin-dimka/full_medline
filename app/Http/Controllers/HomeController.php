@@ -25,6 +25,10 @@ use App\Models\SpecialistWork;
 use App\Models\Certificate;
 use App\Models\SpecialistCertificate;
 use App\Models\About;
+use App\Models\Contact;
+use App\Models\ContactClinic;
+use App\Models\ContactPhones;
+use App\Models\Phone;
 
 use Illuminate\Support\Facades\Storage;
 
@@ -338,6 +342,40 @@ class HomeController extends Controller
          return response()->json([
             "status" => false,
             "message" => "Не удалось получить данные.",
+            "data" => [],
+         ]);
+      }
+
+   }
+   /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+   /* |                    КОНТАКТЫ                       |*/
+   /* |___________________________________________________|*/
+   public function getContactsAll(Request $request) {
+      $contacts = Contact::all();
+
+      if($contacts) {
+         $clinics = Clinic::all();
+
+         if($clinics) {
+            return response()->json([
+               "status" => true,
+               "message" => "Успешно.",
+               "data" => (object) [
+                  "contacts" => $contacts,
+                  "clinics" => $clinics,
+               ],
+            ]);   
+         } else {
+            return response()->json([
+               "status" => false,
+               "message" => "Не удалось получить клиники.",
+               "data" => [],
+            ]);               
+         }
+      } else {
+         return response()->json([
+            "status" => false,
+            "message" => "Не удалось получить контакты.",
             "data" => [],
          ]);
       }

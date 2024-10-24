@@ -40,6 +40,10 @@ Route::post('/get-certificates-all', [HomeController::class, 'getCertificatesAll
 /* О нас                                                */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 Route::post('/get-abouts-all', [HomeController::class, 'getAboutsAll']);
+/* _____________________________________________________*/
+/* Контакты                                             */
+/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+Route::post('/get-contacts-all', [HomeController::class, 'getContactsAll']);
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 /* |                  АДМИНИСТРАТОР                    |*/
 /* |___________________________________________________|*/

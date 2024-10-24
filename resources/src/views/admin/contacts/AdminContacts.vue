@@ -13,65 +13,58 @@
 			<span v-if="modal.type == 'edit'">КОНТАКТ (РЕДАКТИРОВАНИЕ)</span>
 		</template>
 		<template #body>
-			<container-textarea-once :type="'edit'">
-				<template #title>
-					<span>ЗАГОЛОВОК</span>
-					<span v-if="true"> (ИЗМЕНЕНО) </span>
-				</template>
-				<template #textarea>
-					<textarea
-						rows="4"
-						placeholder="Введите заголовок"
-						autocomplete="off"
-						:class="{ error: false }"
-					></textarea>
-				</template>
-				<template #error>
-					<span class="error" v-if="false"> Ошибка </span>
-				</template>
-			</container-textarea-once>
-			<div class="modal-phone">
-				<div class="item">
-					<div class="content">НОМЕРА</div>
-					<div class="buttons">
-						<div class="icon create">
-							<IconCreate :width="24" :height="24" :type="'create'"></IconCreate>
-						</div>
-					</div>
-				</div>
-				<div class="item">
-					<div class="content">+7(495)123-45-67</div>
-					<div class="buttons">
-						<div class="icon edit">
-							<IconEdit :width="24" :height="24" :type="'edit'"></IconEdit>
-						</div>
-						<div class="icon delete">
-							<IconRemove :width="24" :height="24" :type="'delete'"></IconRemove>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="modal-phone">
-				<div class="item">
-					<div class="content">ПОЧТА</div>
-					<div class="buttons">
-						<div class="icon create">
-							<IconCreate :width="24" :height="24" :type="'create'"></IconCreate>
-						</div>
-					</div>
-				</div>
-				<div class="item">
-					<div class="content">medline-address@mail.ru</div>
-					<div class="buttons">
-						<div class="icon edit">
-							<IconEdit :width="24" :height="24" :type="'edit'"></IconEdit>
-						</div>
-						<div class="icon delete">
-							<IconRemove :width="24" :height="24" :type="'delete'"></IconRemove>
-						</div>
-					</div>
-				</div>
-			</div>
+			<ContainerInput>
+				<container-textarea-once :type="'edit'">
+					<template #title>
+						<span>ЗАГОЛОВОК</span>
+						<span v-if="true"> (ИЗМЕНЕНО) </span>
+					</template>
+					<template #textarea>
+						<textarea
+							rows="4"
+							placeholder="Введите заголовок"
+							autocomplete="off"
+							:class="{ error: false }"
+						></textarea>
+					</template>
+					<template #error>
+						<span class="error" v-if="false"> Ошибка </span>
+					</template>
+				</container-textarea-once>
+				<ContainerSelectOnce type="edit">
+					<template #title>
+						<span>КЛИНИКА</span>
+					</template>
+					<template #select>
+						<select>
+							<option>Ничего не выбрано</option>
+							<option v-for="clinic in clinics" :key="clinic.id">{{ clinic.name }}</option>
+						</select>
+					</template>
+				</ContainerSelectOnce>
+				<admin-modal-list
+					:array="[
+						{ id: 1, content: '88005553535' },
+						{ id: 2, content: '88005553535' },
+					]"
+					@touchCreate="console.log('create')"
+					@touchEdit="console.log('edit')"
+					@touchDelete="console.log('delete')"
+				>
+					<template #title>ТЕЛЕФОНЫ</template>
+				</admin-modal-list>
+				<admin-modal-list
+					:array="[
+						{ id: 1, content: 'medline-address@mail.ru' },
+						{ id: 2, content: 'medline-address@mail.ru' },
+					]"
+					@touchCreate="console.log('create')"
+					@touchEdit="console.log('edit')"
+					@touchDelete="console.log('delete')"
+				>
+					<template #title>ПОЧТА</template>
+				</admin-modal-list>
+			</ContainerInput>
 		</template>
 		<template #footer>
 			<BlockButtons>
@@ -143,6 +136,7 @@
 
 <script>
 import AdminModal from "../../../components/includes/admin/AdminModal.vue";
+import AdminModalList from "../../../components/includes/admin/AdminModalList.vue";
 
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 
@@ -153,6 +147,8 @@ import BlockTitle from "../../../components/ui/admin/blocks/BlockTitle.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockButtons from "../../../components/ui/admin/blocks/BlockButtons.vue";
 
+import ContainerInput from "../../../components/ui/admin/containers/ContainerInput.vue";
+import ContainerSelectOnce from "../../../components/ui/admin/containers/select/ContainerSelectOnce.vue";
 import ContainerTextareaOnce from "../../../components/ui/admin/containers/textarea/ContainerTextareaOnce.vue";
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
@@ -167,15 +163,20 @@ import IconEdit from "../../../components/icons/IconEdit.vue";
 import IconRemove from "../../../components/icons/IconRemove.vue";
 import IconCreate from "../../../components/icons/IconCreate.vue";
 
+import axios from "axios";
+
 export default {
 	components: {
 		AdminModal,
+		AdminModalList,
 		InfoBar,
 		LoaderChild,
 		Empty,
 		BlockTitle,
 		BlockOnce,
 		BlockButtons,
+		ContainerInput,
+		ContainerSelectOnce,
 		ContainerTextareaOnce,
 		ButtonDefault,
 		ButtonRemove,
@@ -187,9 +188,18 @@ export default {
 		IconEdit,
 		IconRemove,
 		IconCreate,
+		axios,
 	},
 	data() {
 		return {
+			loading: {
+				loader: {
+					clinics: true,
+				},
+				sections: {
+					clinics: false,
+				},
+			},
 			modal: {
 				title: "",
 				status: false,
@@ -209,14 +219,27 @@ export default {
 					footer: true,
 				},
 			},
-			loading: {
-				loader: {
-					clinics: true,
+			currentClinic: {
+				errors: {
+					
 				},
-				sections: {
-					clinics: false,
+				data: {
+					id: {
+						body: null,
+						edited: false,
+					},
+					title: {
+						body: null,
+						edited: false,						
+					},
+					clinicId: {
+						body: null,
+						edited: false,						
+					},
 				},
 			},
+			contacts: [],
+			clinics: [],
 		};
 	},
 	methods: {
@@ -283,81 +306,24 @@ export default {
 	},
 	mounted() {
 		this.loading.loader.clinics = false;
+
+		axios({
+			method: "post",
+			url: `${this.$store.state.axios.urlApi}` + `get-contacts-all`,
+		})
+			.then((response) => {
+				if (response.data.status) {
+					this.clinics = response.data.data.clinics;
+				} else {
+				}
+			})
+			.catch((error) => {})
+			.finally(() => {});
 	},
 };
 </script>
 
 <style scoped>
-.modal-phone {
-   display: flex;
-   flex-direction: column;
-   gap: 10px;   
-}
-
-.modal-phone > .item:first-of-type {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-
-	border: 0px solid var(--input-border-color-inactive);
-	border-radius: 10px;
-   padding: 10px 10px 10px 0px;
-   
-   color: var(--primary-color);
-}
-
-.modal-phone > .item {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-
-	border: 2px solid var(--input-border-color-inactive);
-	border-radius: 10px;
-   padding: 10px;
-}
-
-.modal-phone > .item > .content {
-   font-size: 18px;
-}
-
-.modal-phone > .item > .buttons {
-	display: flex;
-	gap: 10px;
-}
-
-.modal-phone > .item > .buttons > .icon {
-	cursor: pointer;
-	padding: 10px;
-	border-radius: 100px;
-
-	width: 25px;
-	height: 25px;
-}
-
-.modal-phone > .item > .buttons > .icon.edit {
-	background-color: rgb(234, 253, 255);
-}
-
-.modal-phone > .item > .buttons > .icon.edit:hover {
-	background-color: rgb(224, 243, 245);
-}
-
-.modal-phone > .item > .buttons > .icon.create {
-	background-color: rgb(234, 255, 236);
-}
-
-.modal-phone > .item > .buttons > .icon.create:hover {
-	background-color: rgb(224, 245, 226);
-}
-
-.modal-phone > .item > .buttons > .icon.delete {
-	background-color: rgb(255, 237, 237);
-}
-
-.modal-phone > .item > .buttons > .icon.delete:hover {
-	background-color: rgb(245, 227, 227);
-}
-
 .contacts {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
