@@ -13,7 +13,7 @@
 			</div>
 		</div>
 		<div class="item" v-for="item in array" :key="item.id">
-			<div class="content">{{ item.content }}</div>
+			<div class="content">{{ item.name }}</div>
 			<div class="buttons">
 				<div class="icon edit" @click="$emit('touchEdit', item)">
 					<IconEdit :width="24" :height="24" :type="'edit'"></IconEdit>

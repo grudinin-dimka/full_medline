@@ -17,7 +17,7 @@
 				<container-textarea-once :type="'edit'">
 					<template #title>
 						<span>ЗАГОЛОВОК</span>
-						<span v-if="true"> (ИЗМЕНЕНО) </span>
+						<span v-if="false"> (ИЗМЕНЕНО) </span>
 					</template>
 					<template #textarea>
 						<textarea
@@ -25,6 +25,7 @@
 							placeholder="Введите заголовок"
 							autocomplete="off"
 							:class="{ error: false }"
+							v-model="currentContact.data.name.body"
 						></textarea>
 					</template>
 					<template #error>
@@ -36,33 +37,32 @@
 						<span>КЛИНИКА</span>
 					</template>
 					<template #select>
-						<select>
-							<option>Ничего не выбрано</option>
-							<option v-for="clinic in clinics" :key="clinic.id">{{ clinic.name }}</option>
+						<select v-model="currentContact.data.clinicId.body">
+							<option value="null" selected>Ничего не выбрано</option>
+							<option v-for="clinic in clinics" :key="clinic.id" :value="clinic.id">
+								{{ clinic.name }}
+							</option>
 						</select>
 					</template>
 				</ContainerSelectOnce>
 				<admin-modal-list
-					:array="[
-						{ id: 1, content: '88005553535' },
-						{ id: 2, content: '88005553535' },
-					]"
+					:array="currentContact.data.phones.body"
 					@touchCreate="console.log('create')"
 					@touchEdit="console.log('edit')"
-					@touchDelete="console.log('delete')"
+					@touchDelete="deleteContactPhone"
 				>
-					<template #title>ТЕЛЕФОНЫ</template>
+					<template #title>☎ ТЕЛЕФОНЫ</template>
 				</admin-modal-list>
 				<admin-modal-list
-					:array="[
-						{ id: 1, content: 'medline-address@mail.ru' },
-						{ id: 2, content: 'medline-address@mail.ru' },
-					]"
+					:array="currentContact.data.mails.body"
 					@touchCreate="console.log('create')"
 					@touchEdit="console.log('edit')"
-					@touchDelete="console.log('delete')"
+					@touchDelete="deleteContactMail"
 				>
-					<template #title>ПОЧТА</template>
+					<template #title>
+						<span style="font-weight: bold">🖂</span>
+						ПОЧТА
+					</template>
 				</admin-modal-list>
 			</ContainerInput>
 		</template>
@@ -70,7 +70,7 @@
 			<BlockButtons>
 				<button-claim v-if="false"> Создать </button-claim>
 				<button-remove> Удалить </button-remove>
-				<ButtonDefault> Обновить </ButtonDefault>
+				<ButtonDefault @click="updateContact"> Обновить </ButtonDefault>
 			</BlockButtons>
 		</template>
 	</admin-modal>
@@ -92,28 +92,42 @@
 		</block-title>
 
 		<div class="contacts" v-if="loading.sections.clinics">
-			<div class="item" @click="openModal('edit', 'modal')">
+			<div class="item" @click="editContact(contact)" v-for="contact in contacts">
 				<div class="head">
-					<div>id: 1</div>
-					<div>order: 1</div>
+					<div>id: {{ contact.id }}</div>
+					<div>order: {{ contact.order }}</div>
 				</div>
 				<div class="body">
-					<div class="title">Колл центр</div>
+					<div class="title">{{ contact.name }}</div>
+					<div>
+						Клиника:
+						<span :class="{ empty: contact.clinicId == 'null' || contact.clinicId == null }">
+							{{
+								clinics.find((item) => item.id == contact.clinicId)?.name ?? "Отсутствует"
+							}}
+						</span>
+					</div>
 					<div class="info">
 						<div class="phone">
 							<div>Номера:</div>
 							<ul>
-								<li>+7(495)123-45-67</li>
-								<li>+7(495)123-45-67</li>
-								<li>+7(495)123-45-67</li>
+								<li v-if="contact.phones.length > 0" v-for="phone in contact.phones">
+									{{ phone.name }}
+								</li>
+								<li v-else>
+									<span class="empty"> Отсутствует </span>
+								</li>
 							</ul>
 						</div>
 						<div class="mail">
 							<div>Почта:</div>
 							<ul>
-								<li>medline-address@mail.ru</li>
-								<li>medline-address@mail.ru</li>
-								<li>medline-address@mail.ru</li>
+								<li v-if="contact.mails.length > 0" v-for="mail in contact.mails">
+									{{ mail.name }}
+								</li>
+								<li v-else>
+									<span class="empty"> Отсутствует </span>
+								</li>
 							</ul>
 						</div>
 					</div>
@@ -219,14 +233,43 @@ export default {
 					footer: true,
 				},
 			},
-			currentClinic: {
-				errors: {},
+			currentContact: {
+				errors: {
+					id: {
+						body: null,
+						status: false,
+					},
+					name: {
+						body: null,
+						status: false,
+					},
+					clinicId: {
+						body: null,
+						status: false,
+					},
+					mails: {
+						body: null,
+						status: false,
+					},
+					phones: {
+						body: null,
+						status: false,
+					},
+					create: {
+						body: null,
+						status: false,
+					},
+					delete: {
+						body: null,
+						status: false,
+					},
+				},
 				data: {
 					id: {
 						body: null,
 						edited: false,
 					},
-					title: {
+					name: {
 						body: null,
 						edited: false,
 					},
@@ -234,10 +277,31 @@ export default {
 						body: null,
 						edited: false,
 					},
+					mails: {
+						body: [],
+						edited: false,
+					},
+					phones: {
+						body: [],
+						edited: false,
+					},
+					create: {
+						body: null,
+						edited: false,
+					},
+					delete: {
+						body: null,
+						edited: false,
+					},
 				},
 			},
 			contacts: [],
-			clinics: [],
+			clinics: [
+				{
+					id: 0,
+					name: "Нулевой элемент",
+				},
+			],
 		};
 	},
 	methods: {
@@ -301,6 +365,49 @@ export default {
 				document.body.classList.remove("modal-open");
 			}
 		},
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                    КОНТАКТЫ                       |*/
+		/* |___________________________________________________|*/
+		/* Изменение */
+		editContact(selectedContact) {
+			for (let key in this.currentContact.data) {
+				this.currentContact.data[key].body = selectedContact[key];
+			}
+
+			this.openModal("edit", "modal");
+		},
+		/* Обновление */
+		updateContact() {
+			let contact = this.contacts.find(
+				(contact) => contact.id === this.currentContact.data.id.body
+			);
+
+			for (let key in this.currentContact.data) {
+				contact[key] = this.currentContact.data[key].body;
+			}
+
+			this.closeModal("modal");
+		},
+		/* Удаление телефона */
+		deleteContactPhone(selectedPhone) {
+			this.currentContact.data.phones.body = this.currentContact.data.phones.body.filter(
+				(phone) => {
+					if (selectedPhone.id !== phone.id) {
+						return phone;
+					}
+				}
+			);
+		},
+		/* Удаление почты */
+		deleteContactMail(selectedMail) {
+			this.currentContact.data.mails.body = this.currentContact.data.mails.body.filter(
+				(mail) => {
+					if (selectedMail.id !== mail.id) {
+						return mail;
+					}
+				}
+			);
+		},
 	},
 	mounted() {
 		this.loading.loader.clinics = false;
@@ -311,7 +418,13 @@ export default {
 		})
 			.then((response) => {
 				if (response.data.status) {
-					console.log(response.data.data);
+					this.contacts = response.data.data.contacts;
+					this.contacts.forEach((contact) => {
+						contact.create = false;
+						contact.delete = false;
+					});
+
+					this.clinics = response.data.data.clinics;
 				} else {
 				}
 			})
@@ -411,7 +524,7 @@ export default {
 }
 
 .contacts > .item > .body > .info > .phone > ul > li::before {
-	content: "☎ ";
+	content: "☎";
 	padding-right: 10px;
 	font-weight: bold;
 }
@@ -424,5 +537,9 @@ export default {
 .contacts > .item > .body > .phone > ul > li {
 	padding: 10px;
 	margin: 0px;
+}
+
+span.empty {
+	color: #c7c7c7;
 }
 </style>
