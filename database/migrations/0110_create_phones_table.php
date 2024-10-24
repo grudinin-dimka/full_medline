@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -16,6 +17,17 @@ return new class extends Migration
             $table->text('name');
             $table->timestamps();
         });
+
+        DB::table('phones')->insert(
+            [
+                "name" => "8(800)000-00-00",
+            ]
+        );
+        DB::table('phones')->insert(
+            [
+                "name" => "8(800)555-35-35",
+            ]
+        );
     }
 
     /**

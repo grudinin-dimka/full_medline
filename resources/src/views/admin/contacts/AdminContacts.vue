@@ -220,9 +220,7 @@ export default {
 				},
 			},
 			currentClinic: {
-				errors: {
-					
-				},
+				errors: {},
 				data: {
 					id: {
 						body: null,
@@ -230,11 +228,11 @@ export default {
 					},
 					title: {
 						body: null,
-						edited: false,						
+						edited: false,
 					},
 					clinicId: {
 						body: null,
-						edited: false,						
+						edited: false,
 					},
 				},
 			},
@@ -313,7 +311,7 @@ export default {
 		})
 			.then((response) => {
 				if (response.data.status) {
-					this.clinics = response.data.data.clinics;
+					console.log(response.data.data);
 				} else {
 				}
 			})

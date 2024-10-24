@@ -26,9 +26,10 @@ use App\Models\Certificate;
 use App\Models\SpecialistCertificate;
 use App\Models\About;
 use App\Models\Contact;
-use App\Models\ContactClinic;
-use App\Models\ContactPhones;
 use App\Models\Phone;
+use App\Models\ContactPhones;
+use App\Models\Mail;
+use App\Models\ContactMail;
 
 use Illuminate\Support\Facades\Storage;
 
@@ -351,35 +352,34 @@ class HomeController extends Controller
    /* |                    КОНТАКТЫ                       |*/
    /* |___________________________________________________|*/
    public function getContactsAll(Request $request) {
-      $contacts = Contact::all();
+      $clinics = Clinic::all();
 
-      if($contacts) {
-         $clinics = Clinic::all();
-
-         if($clinics) {
-            return response()->json([
-               "status" => true,
-               "message" => "Успешно.",
-               "data" => (object) [
-                  "contacts" => $contacts,
-                  "clinics" => $clinics,
-               ],
-            ]);   
-         } else {
-            return response()->json([
-               "status" => false,
-               "message" => "Не удалось получить клиники.",
-               "data" => [],
-            ]);               
-         }
-      } else {
+      if(!$clinics) {
          return response()->json([
             "status" => false,
             "message" => "Не удалось получить контакты.",
             "data" => [],
          ]);
-      }
+      };
 
+      $contacts = Contact::all();
+
+      if(!$contacts) {
+         return response()->json([
+            "status" => false,
+            "message" => "Не удалось получить клиники.",
+            "data" => [],
+         ]);               
+      };
+
+      return response()->json([
+         "status" => true,
+         "message" => "Успешно.",
+         "data" => (object) [
+            "contacts" => $contacts,
+            "clinics" => $clinics,
+         ],
+      ]);   
    }
 };
 
