@@ -75,6 +75,37 @@
 		</template>
 	</admin-modal>
 
+	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
+	<!--|            МОДАЛЬНОЕ ОКНО (ДОЧЕРНЕЕ)              |-->
+	<!--|___________________________________________________|-->
+	<admin-sub-modal ref="sub-modal" @touchCloseModal="closeModal('subModal')" :modal="subModal">
+		<template #title>ЗАГРУЗКА ИЗОБРАЖЕНИЯ</template>
+		<template #body>
+			<container-input-once :type="'edit'">
+				<template #title>
+					<span>НОВЫЙ ФАЙЛ*</span>
+					<span v-if="true"> (ИЗМЕНЕНО) </span>
+				</template>
+				<template #input>
+					<input
+						type="tel"
+						mask="+7 (999) 999-99-99"
+						autocomplete="off"
+						:class="{ error: false }"
+					/>
+				</template>
+				<template #error>
+					<span class="error" v-if="false"> Ошибка </span>
+				</template>
+			</container-input-once>
+		</template>
+		<template #footer>
+			<block-buttons>
+				<button-default @click=""> Обновить </button-default>
+			</block-buttons>
+		</template>
+	</admin-sub-modal>
+
 	<info-bar>
 		<template v-slot:title>Контакты</template>
 		<template v-slot:addreas>contacts</template>
@@ -150,6 +181,7 @@
 
 <script>
 import AdminModal from "../../../components/includes/admin/AdminModal.vue";
+import AdminSubModal from "../../../components/includes/admin/AdminSubModal.vue";
 import AdminModalList from "../../../components/includes/admin/AdminModalList.vue";
 
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
@@ -162,6 +194,7 @@ import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockButtons from "../../../components/ui/admin/blocks/BlockButtons.vue";
 
 import ContainerInput from "../../../components/ui/admin/containers/ContainerInput.vue";
+import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
 import ContainerSelectOnce from "../../../components/ui/admin/containers/select/ContainerSelectOnce.vue";
 import ContainerTextareaOnce from "../../../components/ui/admin/containers/textarea/ContainerTextareaOnce.vue";
 
@@ -182,6 +215,7 @@ import axios from "axios";
 export default {
 	components: {
 		AdminModal,
+		AdminSubModal,
 		AdminModalList,
 		InfoBar,
 		LoaderChild,
@@ -190,6 +224,7 @@ export default {
 		BlockOnce,
 		BlockButtons,
 		ContainerInput,
+		ContainerInputOnce,
 		ContainerSelectOnce,
 		ContainerTextareaOnce,
 		ButtonDefault,
@@ -226,6 +261,25 @@ export default {
 					title: true,
 					buttons: {
 						hide: true,
+						close: true,
+					},
+					images: false,
+					body: true,
+					footer: true,
+				},
+			},
+			subModal: {
+				title: "",
+				status: false,
+				type: null,
+				style: {
+					create: false,
+					delete: false,
+				},
+				modules: {
+					title: true,
+					buttons: {
+						hide: false,
 						close: true,
 					},
 					images: false,
@@ -294,6 +348,28 @@ export default {
 						edited: false,
 					},
 				},
+				currentPhone: {
+					errors: {
+						id: {
+							body: "",
+							status: false,
+						},
+						name: {
+							body: "",
+							status: false,
+						},
+					},
+					data: {
+						id: {
+							body: null,
+							edited: false,
+						},
+						name: {
+							body: null,
+							edited: false,
+						},
+					},
+				},
 			},
 			contacts: [],
 			clinics: [
@@ -311,6 +387,39 @@ export default {
 		/* После скрытия элементы */
 		loaderChildAfterLeave() {
 			this.loading.sections.clinics = true;
+		},
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |               SUB-МОДАЛЬНОЕ ОКНО                  |*/
+		/* |___________________________________________________|*/
+		/* _____________________________________________________*/
+		/* 1. Основные действия                                 */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* Изменение картинки */
+		editContactMail(selectedMail) {
+			this.openModal("edit", "subModal");
+		},
+		editContactPhone() {
+			this.closeModal("subModal");
+		},
+		/* Удаление телефона */
+		deleteContactPhone(selectedPhone) {
+			this.currentContact.data.phones.body = this.currentContact.data.phones.body.filter(
+				(phone) => {
+					if (selectedPhone.id !== phone.id) {
+						return phone;
+					}
+				}
+			);
+		},
+		/* Удаление почты */
+		deleteContactMail(selectedMail) {
+			this.currentContact.data.mails.body = this.currentContact.data.mails.body.filter(
+				(mail) => {
+					if (selectedMail.id !== mail.id) {
+						return mail;
+					}
+				}
+			);
 		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                 Модальное окно                    |*/
@@ -387,26 +496,6 @@ export default {
 			}
 
 			this.closeModal("modal");
-		},
-		/* Удаление телефона */
-		deleteContactPhone(selectedPhone) {
-			this.currentContact.data.phones.body = this.currentContact.data.phones.body.filter(
-				(phone) => {
-					if (selectedPhone.id !== phone.id) {
-						return phone;
-					}
-				}
-			);
-		},
-		/* Удаление почты */
-		deleteContactMail(selectedMail) {
-			this.currentContact.data.mails.body = this.currentContact.data.mails.body.filter(
-				(mail) => {
-					if (selectedMail.id !== mail.id) {
-						return mail;
-					}
-				}
-			);
 		},
 	},
 	mounted() {
