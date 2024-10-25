@@ -139,6 +139,7 @@ export default {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	font-family: "Azeret Mono";
 
 	margin-top: 10px;
 }

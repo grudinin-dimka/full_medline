@@ -214,7 +214,6 @@ class AdminController extends Controller
    /* _____________________________________________________*/
    /* 1. Информационные блоки                              */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-   /* STOP делал сохранение, не доделал */
    public function saveAboutsChanges(Request $request) {
       $abouts = json_decode($request->abouts);
       $arrayID = [];

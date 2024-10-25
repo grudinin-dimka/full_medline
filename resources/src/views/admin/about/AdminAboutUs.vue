@@ -203,8 +203,12 @@
 		</template>
 		<template #footer>
 			<block-buttons>
-				<button-default v-if="subModal.type == 'edit'" @click="updateImage"> Обновить </button-default>
-				<button-claim v-if="subModal.type == 'create'" @click="updateImage"> Добавить </button-claim>
+				<button-default v-if="subModal.type == 'edit'" @click="updateImage">
+					Обновить
+				</button-default>
+				<button-claim v-if="subModal.type == 'create'" @click="updateImage">
+					Добавить
+				</button-claim>
 			</block-buttons>
 		</template>
 	</admin-sub-modal>
@@ -700,10 +704,10 @@ export default {
 		addInfoBlock() {
 			try {
 				// Поиск максимального id
-				let maxId = this.getMaxIdFromArray("infoBlocks");
+				let maxId = this.getMaxIdFromArray(this.infoBlocks);
 
 				// // Поиск максимального order
-				let maxOrder = this.getMaxOrderFromArray("infoBlocks");
+				let maxOrder = this.getMaxOrderFromArray(this.infoBlocks);
 
 				this.infoBlocks.push({
 					id: maxId + 1,
@@ -825,9 +829,6 @@ export default {
 					break;
 			}
 		},
-		/* STOP Проверить надо до конца все баги в "ГЛАВНАЯ", "О НАС", "СПЕЦИАЛИСТЫ"
-		 *  надо бы ещё сделать на главной раздел "О НАС".
-		 */
 		/* Сохранение */
 		saveInfoBlocks() {
 			let formData = new FormData();
@@ -885,12 +886,12 @@ export default {
 				});
 		},
 		/* Поиск максимального id */
-		getMaxIdFromArray(arrayName) {
+		getMaxIdFromArray(array) {
 			try {
 				// Поиск максимального id
 				let maxId = 0;
 
-				this[arrayName].forEach((item) => {
+				array.forEach((item) => {
 					if (item.id > maxId) {
 						maxId = item.id;
 					}
@@ -907,12 +908,12 @@ export default {
 			}
 		},
 		/* Поиск максимального order */
-		getMaxOrderFromArray(arrayName) {
+		getMaxOrderFromArray(array) {
 			try {
 				// Поиск максимального order
 				let maxOrder = 0;
 
-				this[arrayName].forEach((item) => {
+				array.forEach((item) => {
 					if (item.order > maxOrder) {
 						maxOrder = item.order;
 					}

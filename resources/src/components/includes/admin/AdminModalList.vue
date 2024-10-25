@@ -1,9 +1,7 @@
-<!-- STOP ДОДЕЛАТЬ -->
-
 <template>
 	<div class="modal-list">
 		<div class="item">
-			<div class="content">
+			<div class="content default">
 				<slot name="title"></slot>
 			</div>
 			<div class="buttons">
@@ -78,6 +76,12 @@ export default {
 
 .modal-list > .item > .content {
 	font-size: 18px;
+	font-family: "Azeret Mono";
+}
+
+.modal-list > .item > .content.default {
+	font-size: 18px;
+	font-family: "Rubik";
 }
 
 .modal-list > .item > .buttons {
