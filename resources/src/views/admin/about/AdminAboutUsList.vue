@@ -203,11 +203,24 @@ export default {
 .description {
 	height: 115px;
 	overflow-y: scroll;
+	word-break: break-all;
 }
 
 .item:hover > .body > .description::-webkit-scrollbar-thumb {
 	background-color: rgb(220, 220, 220);
 	border: 6px solid #f2feff;
+	border-radius: 10px;
+}
+
+.item.delete:hover > .body > .description::-webkit-scrollbar-thumb {
+	background-color: rgb(220, 220, 220);
+	border: 6px solid rgb(255, 240, 240);
+	border-radius: 10px;
+}
+
+.item.create:hover > .body > .description::-webkit-scrollbar-thumb {
+	background-color: rgb(220, 220, 220);
+	border: 6px solid var(--create-background-color);
 	border-radius: 10px;
 }
 

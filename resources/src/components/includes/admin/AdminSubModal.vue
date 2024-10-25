@@ -254,17 +254,4 @@ export default {
 		min-height: none;
 	}
 }
-
-@media screen and (max-width: 500px) {
-	.modal-body {
-		height: 100%;
-	}
-
-	.modal-container {
-		justify-content: space-between;
-		margin: 0px;
-		height: 100%;
-		border-radius: 0px;
-	}
-}
 </style>

@@ -150,7 +150,7 @@
 			>
 				<template #title>
 					<span>ЭЛЕКТРОННЫЙ АДРЕС*</span>
-					<span v-if="true"> (ИЗМЕНЕНО) </span>
+					<span v-if="currentMail.data.name.edited"> (ИЗМЕНЕНО) </span>
 				</template>
 				<template #input>
 					<input
@@ -160,6 +160,7 @@
 						required
 						:class="{ error: currentMail.errors.name.status }"
 						v-model="currentMail.data.name.body"
+						@input="currentMail.data.name.edited = true"
 						@blur="checkModalInput('currentMail', 'name', 'email')"
 					/>
 				</template>
@@ -172,8 +173,10 @@
 		</template>
 		<template #footer>
 			<block-buttons>
-				<button-default v-if="subModalMail.type == 'edit'" click=""> Обновить </button-default>
-				<button-claim v-if="subModalMail.type == 'create'" @click=""> Добавить </button-claim>
+				<button-default v-if="subModalMail.type == 'edit'" @click="updateContactMail">
+					Обновить
+				</button-default>
+				<button-claim v-if="subModalMail.type == 'create'" @click="addContactMail"> Добавить </button-claim>
 			</block-buttons>
 		</template>
 	</admin-sub-modal>
@@ -698,54 +701,8 @@ export default {
 			this.closeModal("modal");
 		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                      ПОЧТА                        |*/
-		/* |___________________________________________________|*/
-		/* _____________________________________________________*/
-		/* 1. Основные действия                                 */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		/* Изменение */
-		editContactMail(selectedMail) {
-			this.clearModalErrors("currentMail");
-			this.clearModalEdited("currentMail");
-
-			for (let key in this.currentMail.data) {
-				this.currentMail.data[key].body = selectedMail[key];
-			}
-
-			this.openModal("edit", "subModalMail");
-		},
-		/* Создание */
-		createContactMail() {
-			this.clearModalErrors("currentMail");
-			this.clearModalEdited("currentMail");
-			this.clearModalData("currentMail");
-
-			this.openModal("create", "subModalMail");
-		},
-		/* Удаление */
-		deleteContactMail(selectedMail) {
-			this.currentContact.data.mails.body = this.currentContact.data.mails.body.filter(
-				(mail) => {
-					if (selectedMail.id !== mail.id) {
-						return mail;
-					}
-				}
-			);
-		},
-		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                     ТЕЛЕФОН                       |*/
 		/* |___________________________________________________|*/
-		/* Изменение */
-		editContactPhone(selectedPhone) {
-			this.clearModalErrors("currentPhone");
-			this.clearModalEdited("currentPhone");
-
-			for (let key in this.currentPhone.data) {
-				this.currentPhone.data[key].body = selectedPhone[key];
-			}
-
-			this.openModal("edit", "subModalPhone");
-		},
 		/* Создание */
 		createContactPhone() {
 			this.clearModalErrors("currentPhone");
@@ -753,18 +710,6 @@ export default {
 			this.clearModalData("currentPhone");
 
 			this.openModal("create", "subModalPhone");
-		},
-		/* Обновление */
-		updateContactPhone() {
-			let phone = this.currentContact.data.phones.body.find((phone) => {
-				return phone.id == this.currentPhone.data.id.body;
-			});
-
-			for (let key in this.currentPhone.data) {
-				phone[key] = this.currentPhone.data[key].body;
-			}
-
-			this.closeModal("subModalPhone");
 		},
 		/* Добавление */
 		addContactPhone() {
@@ -778,18 +723,146 @@ export default {
 					id: maxId + 1,
 					name: this.currentPhone.data.name.body,
 				});
+
+				this.closeModal("subModalPhone");
 			} catch (error) {
-				console.log(error);
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Не удалось добавить телефон.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
+		/* Изменение */
+		editContactPhone(selectedPhone) {
+			this.clearModalErrors("currentPhone");
+			this.clearModalEdited("currentPhone");
+
+			for (let key in this.currentPhone.data) {
+				this.currentPhone.data[key].body = selectedPhone[key];
 			}
 
-			this.closeModal("subModalPhone");
+			this.openModal("edit", "subModalPhone");
+		},
+		/* Обновление */
+		updateContactPhone() {
+			try {
+				if (this.checkModalInput("currentPhone", "name", "phone")) return;
+
+				let phone = this.currentContact.data.phones.body.find((item) => {
+					return item.id == this.currentPhone.data.id.body;
+				});
+
+				for (let key in this.currentPhone.data) {
+					phone[key] = this.currentPhone.data[key].body;
+				}
+
+				this.closeModal("subModalPhone");
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Не удалось обновить телефон.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
 		},
 		/* Удаление */
 		deleteContactPhone(selectedPhone) {
-			this.currentContact.data.phones.body = this.currentContact.data.phones.body.filter(
-				(phone) => {
-					if (selectedPhone.id !== phone.id) {
-						return phone;
+			try {
+				this.currentContact.data.phones.body = this.currentContact.data.phones.body.filter(
+					(phone) => {
+						if (selectedPhone.id !== phone.id) {
+							return phone;
+						}
+					}
+				);
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Не удалось обновить телефон.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                      ПОЧТА                        |*/
+		/* |___________________________________________________|*/
+		/* _____________________________________________________*/
+		/* 1. Основные действия                                 */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* Создание */
+		createContactMail() {
+			this.clearModalErrors("currentMail");
+			this.clearModalEdited("currentMail");
+			this.clearModalData("currentMail");
+
+			this.openModal("create", "subModalMail");
+		},
+		/* Добавление */
+		addContactMail() {
+			// Поиск максимального id
+			try {
+				if (this.checkModalInput("currentMail", "name", "email")) return;
+
+				let maxId = this.getMaxIdFromArray(this.currentContact.data.mails.body);
+
+				this.currentContact.data.mails.body.push({
+					id: maxId + 1,
+					name: this.currentMail.data.name.body,
+				});
+
+				this.closeModal("subModalMail");
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Не удалось добавить почту.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
+		/* Изменение */
+		editContactMail(selectedMail) {
+			this.clearModalErrors("currentMail");
+			this.clearModalEdited("currentMail");
+
+			for (let key in this.currentMail.data) {
+				this.currentMail.data[key].body = selectedMail[key];
+			}
+
+			this.openModal("edit", "subModalMail");
+		},
+		updateContactMail() {
+			try {
+				if (this.checkModalInput("currentMail", "name", "email")) return;
+
+				let mail = this.currentContact.data.mails.body.find((item) => {
+					return item.id == this.currentMail.data.id.body;
+				});
+
+				for (let key in this.currentMail.data) {
+					mail[key] = this.currentMail.data[key].body;
+				}
+
+				this.closeModal("subModalMail");
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Не удалось обновить почту.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
+		/* Удаление */
+		deleteContactMail(selectedMail) {
+			this.currentContact.data.mails.body = this.currentContact.data.mails.body.filter(
+				(mail) => {
+					if (selectedMail.id !== mail.id) {
+						return mail;
 					}
 				}
 			);
@@ -802,7 +875,6 @@ export default {
 			let mailRegexp =
 				/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-			console.log(mailRegexp.test(mail));
 			this.validator.email = mailRegexp.test(mail);
 		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/

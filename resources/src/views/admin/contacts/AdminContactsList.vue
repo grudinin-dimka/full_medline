@@ -131,8 +131,51 @@ export default {
 
 .contacts > .item > .body > .info > :is(.mail, .phone) > ul {
 	padding: 0px;
-	margin: 10px 10px;
+	margin: 0px 10px;
 	inline-size: 80%;
+
+	overflow-y: auto;
+	height: 95px;
+}
+
+/* STOP делал цвета скролла, надо дальше сделать по идее добавление нового контакта */
+.contacts > .item:hover > .body > .info > :is(.mail, .phone) > ul::-webkit-scrollbar-thumb {
+	background-color: rgb(220, 220, 220);
+	border: 6px solid #f2feff;
+	border-radius: 10px;
+}
+
+.contacts > .item.delete:hover > .body > .info > :is(.mail, .phone) > ul::-webkit-scrollbar-thumb {
+	background-color: rgb(220, 220, 220);
+	border: 6px solid rgb(255, 240, 240);
+	border-radius: 10px;
+}
+
+.contacts > .item.create:hover > .body > .info > :is(.mail, .phone) > ul::-webkit-scrollbar-thumb {
+	background-color: rgb(220, 220, 220);
+	border: 6px solid var(--create-background-color);
+	border-radius: 10px;
+}
+
+ul::-webkit-scrollbar {
+	width: 18px;
+	transition: all 0.2s;
+}
+
+ul::-webkit-scrollbar-track {
+	background-color: rgba(255, 255, 255, 0);
+	border-radius: 10px;
+}
+
+ul::-webkit-scrollbar-thumb {
+	background-color: rgb(220, 220, 220);
+	border: 6px solid #ffffff;
+	border-radius: 10px;
+}
+
+ul::-webkit-scrollbar-thumb:hover {
+	background-color: rgb(210, 210, 210);
+	cursor: all-scroll;
 }
 
 .contacts > .item > .body > .info > :is(.mail, .phone) > ul > li {
