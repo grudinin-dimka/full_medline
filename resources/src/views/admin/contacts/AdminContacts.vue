@@ -47,16 +47,16 @@
 				</ContainerSelectOnce>
 				<admin-modal-list
 					:array="currentContact.data.phones.body"
-					@touchCreate="console.log('create')"
-					@touchEdit="console.log('edit')"
+					@touchCreate=""
+					@touchEdit="editContactPhone"
 					@touchDelete="deleteContactPhone"
 				>
 					<template #title>☎ ТЕЛЕФОНЫ</template>
 				</admin-modal-list>
 				<admin-modal-list
 					:array="currentContact.data.mails.body"
-					@touchCreate="console.log('create')"
-					@touchEdit="console.log('edit')"
+					@touchCreate=""
+					@touchEdit="editContactMail"
 					@touchDelete="deleteContactMail"
 				>
 					<template #title>
@@ -76,26 +76,70 @@
 	</admin-modal>
 
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
-	<!--|            МОДАЛЬНОЕ ОКНО (ДОЧЕРНЕЕ)              |-->
+	<!--|             МОДАЛЬНОЕ ОКНО (ТЕЛЕФОН)              |-->
 	<!--|___________________________________________________|-->
-	<admin-sub-modal ref="sub-modal" @touchCloseModal="closeModal('subModal')" :modal="subModal">
-		<template #title>ЗАГРУЗКА ИЗОБРАЖЕНИЯ</template>
+	<admin-sub-modal
+		ref="sub-modal-phone"
+		@touchCloseModal="closeModal('subModalPhone')"
+		:modal="subModalPhone"
+	>
+		<template #title>ТЕЛЕФОН (РЕДАКТИРОВАНИЕ)</template>
 		<template #body>
 			<container-input-once :type="'edit'">
 				<template #title>
-					<span>НОВЫЙ ФАЙЛ*</span>
+					<span>НОМЕР ТЕЛЕФОНА*</span>
 					<span v-if="true"> (ИЗМЕНЕНО) </span>
 				</template>
 				<template #input>
 					<input
 						type="tel"
-						mask="+7 (999) 999-99-99"
+						placeholder="+7(___)-___-__-__"
+						v-mask="'+7(###)-###-##-##'"
 						autocomplete="off"
 						:class="{ error: false }"
+						v-model="currentPhone.data.name.body"
 					/>
 				</template>
 				<template #error>
 					<span class="error" v-if="false"> Ошибка </span>
+				</template>
+			</container-input-once>
+		</template>
+		<template #footer>
+			<block-buttons>
+				<button-default @click=""> Обновить </button-default>
+			</block-buttons>
+		</template>
+	</admin-sub-modal>
+
+	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
+	<!--|             МОДАЛЬНОЕ ОКНО (ПОЧТА)                |-->
+	<!--|___________________________________________________|-->
+	<admin-sub-modal
+		ref="sub-modal-mail"
+		@touchCloseModal="closeModal('subModalMail')"
+		:modal="subModalMail"
+	>
+		<template #title>ПОЧТА (РЕДАКТИРОВАНИЕ)</template>
+		<template #body>
+			<container-input-once :type="'edit'">
+				<template #title>
+					<span>ЭЛЕКТРОННЫЙ АДРЕС*</span>
+					<span v-if="true"> (ИЗМЕНЕНО) </span>
+				</template>
+				<template #input>
+					<input
+						type="mail"
+						placeholder="Введите почту"
+						autocomplete="off"
+						required
+						:class="{ error: false }"
+						v-model="currentMail.data.name.body"
+						@blur="validateMail(currentMail.data.name.body)"
+					/>
+				</template>
+				<template #error>
+					<span class="error" v-if="!validator.email"> Ошибка </span>
 				</template>
 			</container-input-once>
 		</template>
@@ -122,51 +166,15 @@
 			</template>
 		</block-title>
 
-		<div class="contacts" v-if="loading.sections.clinics">
-			<div class="item" @click="editContact(contact)" v-for="contact in contacts">
-				<div class="head">
-					<div>id: {{ contact.id }}</div>
-					<div>order: {{ contact.order }}</div>
-				</div>
-				<div class="body">
-					<div class="title">{{ contact.name }}</div>
-					<div>
-						Клиника:
-						<span :class="{ empty: contact.clinicId == 'null' || contact.clinicId == null }">
-							{{
-								clinics.find((item) => item.id == contact.clinicId)?.name ?? "Отсутствует"
-							}}
-						</span>
-					</div>
-					<div class="info">
-						<div class="phone">
-							<div>Номера:</div>
-							<ul>
-								<li v-if="contact.phones.length > 0" v-for="phone in contact.phones">
-									{{ phone.name }}
-								</li>
-								<li v-else>
-									<span class="empty"> Отсутствует </span>
-								</li>
-							</ul>
-						</div>
-						<div class="mail">
-							<div>Почта:</div>
-							<ul>
-								<li v-if="contact.mails.length > 0" v-for="mail in contact.mails">
-									{{ mail.name }}
-								</li>
-								<li v-else>
-									<span class="empty"> Отсутствует </span>
-								</li>
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+		<!-- Список элементов -->
+		<AdminContactsList
+			v-if="loading.sections.clinics"
+			:contacts="contacts"
+			:clinics="clinics"
+			@touchEditContact="editContact"
+		/>
 
-		<!-- Загрузка слайдов -->
+		<!-- Загрузка элементов -->
 		<loader-child
 			:isLoading="loading.loader.clinics"
 			:minHeight="300"
@@ -174,7 +182,7 @@
 		/>
 
 		<BlockButtons>
-			<ButtonDefault @click="openSlide(null, 'create')"> Добавить </ButtonDefault>
+			<ButtonDefault @click=""> Добавить </ButtonDefault>
 		</BlockButtons>
 	</block-once>
 </template>
@@ -183,6 +191,8 @@
 import AdminModal from "../../../components/includes/admin/AdminModal.vue";
 import AdminSubModal from "../../../components/includes/admin/AdminSubModal.vue";
 import AdminModalList from "../../../components/includes/admin/AdminModalList.vue";
+
+import AdminContactsList from "./AdminContactsList.vue";
 
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 
@@ -217,6 +227,7 @@ export default {
 		AdminModal,
 		AdminSubModal,
 		AdminModalList,
+		AdminContactsList,
 		InfoBar,
 		LoaderChild,
 		Empty,
@@ -241,6 +252,12 @@ export default {
 	},
 	data() {
 		return {
+			validator: {
+				email: null,
+			},
+			form: {
+				email: null,
+			},
 			loading: {
 				loader: {
 					clinics: true,
@@ -268,7 +285,26 @@ export default {
 					footer: true,
 				},
 			},
-			subModal: {
+			subModalPhone: {
+				title: "",
+				status: false,
+				type: null,
+				style: {
+					create: false,
+					delete: false,
+				},
+				modules: {
+					title: true,
+					buttons: {
+						hide: false,
+						close: true,
+					},
+					images: false,
+					body: true,
+					footer: true,
+				},
+			},
+			subModalMail: {
 				title: "",
 				status: false,
 				type: null,
@@ -348,26 +384,48 @@ export default {
 						edited: false,
 					},
 				},
-				currentPhone: {
-					errors: {
-						id: {
-							body: "",
-							status: false,
-						},
-						name: {
-							body: "",
-							status: false,
-						},
+			},
+			currentPhone: {
+				errors: {
+					id: {
+						body: "",
+						status: false,
 					},
-					data: {
-						id: {
-							body: null,
-							edited: false,
-						},
-						name: {
-							body: null,
-							edited: false,
-						},
+					name: {
+						body: "",
+						status: false,
+					},
+				},
+				data: {
+					id: {
+						body: null,
+						edited: false,
+					},
+					name: {
+						body: null,
+						edited: false,
+					},
+				},
+			},
+			currentMail: {
+				errors: {
+					id: {
+						body: "",
+						status: false,
+					},
+					name: {
+						body: "",
+						status: false,
+					},
+				},
+				data: {
+					id: {
+						body: null,
+						edited: false,
+					},
+					name: {
+						body: null,
+						edited: false,
 					},
 				},
 			},
@@ -396,10 +454,10 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Изменение картинки */
 		editContactMail(selectedMail) {
-			this.openModal("edit", "subModal");
+			this.openModal("edit", "subModalMail");
 		},
-		editContactPhone() {
-			this.closeModal("subModal");
+		editContactPhone(selectedMail) {
+			this.openModal("edit", "subModalPhone");
 		},
 		/* Удаление телефона */
 		deleteContactPhone(selectedPhone) {
@@ -474,6 +532,117 @@ export default {
 				document.body.classList.remove("modal-open");
 			}
 		},
+		/* _____________________________________________________*/
+		/* 2. Работа с полями ввода модального окна             */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* Проверка введенного значения почты */
+		checkInputText(value) {
+			/* Проверка на пустую строку */
+			if (value === "" || value === null) {
+				return {
+					status: true,
+					message: "Поле не может быть пустым.",
+				};
+			}
+
+			/* Проверка на соответствие типу string */
+			if (typeof value != "string") {
+				return {
+					status: true,
+					message: "Тип данных не совпадает.",
+				};
+			}
+
+			return {
+				status: false,
+				message: "Ошибок нет.",
+			};
+		},
+		/* Проверка введенного текстового значения */
+		checkInputEmail(value) {
+			/* Проверка на пустую строку */
+			if (value === "" || value === null) {
+				return {
+					status: true,
+					message: "Поле не может быть пустым.",
+				};
+			}
+
+			/* Проверка на соответствие типу string */
+			if (typeof value != "string") {
+				return {
+					status: true,
+					message: "Тип данных не совпадает.",
+				};
+			}
+
+			/* Проверка на правильность почты */
+			let mailRegexp =
+				/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+			if (!mailRegexp.test(value)) {
+				return {
+					status: true,
+					message: "Почта не прошла проверку.",
+				};
+			}
+
+			return {
+				status: false,
+				message: "Ошибок нет.",
+			};
+		},
+		/* Проверка введенного текстового значения */
+		checkInputNumber(value) {
+			// Проверка на пустую строку
+			if (value === "" || value === null) {
+				return {
+					status: true,
+					message: "Поле не может быть пустым.",
+				};
+			}
+			// Проверка на соответствие типу Number
+			if (Number.isNaN(Number(value))) {
+				return {
+					status: true,
+					message: "Тип данных не совпадает.",
+				};
+			}
+
+			return {
+				status: false,
+				message: "Ошибок нет.",
+			};
+		},
+		// Проверка поля имени
+		checkModalInput(currentName, dataKey, inputType) {
+			let errorLog = {};
+			switch (inputType) {
+				case "text":
+					errorLog = this.checkInputText(this[currentName].data[dataKey].body);
+					break;
+				case "email":
+					errorLog = this.checkInputEmail(this[currentName].data[dataKey].body);
+					break;
+				case "number":
+					errorLog = this.checkInputNumber(this[currentName].data[dataKey].body);
+					break;
+				default:
+					break;
+			}
+
+			if (errorLog.status) {
+				this[currentName].errors[dataKey].body = errorLog.message;
+				this[currentName].errors[dataKey].status = true;
+
+				return true;
+			} else {
+				this[currentName].errors[dataKey].body = "";
+				this[currentName].errors[dataKey].status = false;
+
+				return false;
+			}
+		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                    КОНТАКТЫ                       |*/
 		/* |___________________________________________________|*/
@@ -496,6 +665,17 @@ export default {
 			}
 
 			this.closeModal("modal");
+		},
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                   ВАЛИДАЦИЯ                       |*/
+		/* |___________________________________________________|*/
+		/* Почта */
+		validateMail(mail) {
+			let mailRegexp =
+				/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+			console.log(mailRegexp.test(mail));
+			this.validator.email = mailRegexp.test(mail);
 		},
 	},
 	mounted() {
