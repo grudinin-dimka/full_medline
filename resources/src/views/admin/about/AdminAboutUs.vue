@@ -38,7 +38,7 @@
 						}"
 					></div>
 					<div class="buttons add" v-if="!currentInfoBlock.data.delete.body">
-						<div class="icon create" @click="editImage('imageOne')">
+						<div class="icon create" @click="createImage('imageOne')">
 							<IconCreate :width="24" :height="24" :type="'create'"></IconCreate>
 						</div>
 					</div>
@@ -67,7 +67,7 @@
 						}"
 					></div>
 					<div class="buttons add" v-if="!currentInfoBlock.data.delete.body">
-						<div class="icon create" @click="editImage('imageTwo')">
+						<div class="icon create" @click="createImage('imageTwo')">
 							<IconCreate :width="24" :height="24" :type="'create'"></IconCreate>
 						</div>
 					</div>
@@ -96,7 +96,7 @@
 						}"
 					></div>
 					<div class="buttons add" v-if="!currentInfoBlock.data.delete.body">
-						<div class="icon create" @click="editImage('imageThree')">
+						<div class="icon create" @click="createImage('imageThree')">
 							<IconCreate :width="24" :height="24" :type="'create'"></IconCreate>
 						</div>
 					</div>
@@ -178,7 +178,9 @@
 	<admin-sub-modal ref="sub-modal" @touchCloseModal="closeModal('subModal')" :modal="subModal">
 		<template #title>ЗАГРУЗКА ИЗОБРАЖЕНИЯ</template>
 		<template #body>
-			<container-input-once :type="'edit'">
+			<container-input-once
+				:type="subModal.type == 'create' ? 'create' : subModal.style.delete ? 'delete' : 'edit'"
+			>
 				<template #title>
 					<span>НОВЫЙ ФАЙЛ*</span>
 					<span v-if="currentImage.data.edited"> (ИЗМЕНЕНО) </span>
@@ -201,7 +203,8 @@
 		</template>
 		<template #footer>
 			<block-buttons>
-				<button-default @click="updateImage"> Обновить </button-default>
+				<button-default v-if="subModal.type == 'edit'" @click="updateImage"> Обновить </button-default>
+				<button-claim v-if="subModal.type == 'create'" @click="updateImage"> Добавить </button-claim>
 			</block-buttons>
 		</template>
 	</admin-sub-modal>
@@ -477,7 +480,9 @@ export default {
 						this[name].status = true;
 						this[name].style.create = true;
 						this[name].style.delete = false;
-						this.clearModalData("currentInfoBlock");
+						if (name === "modal") {
+							this.clearModalData("currentInfoBlock");
+						}
 					}
 					document.body.classList.add("modal-open");
 					break;
@@ -542,12 +547,15 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Изменение картинки */
 		editImage(name) {
-			this.currentImage.data.body = name;
-			this.currentImage.data.edited = false;
-			this.currentImage.errors.status = false;
-			this.$refs.fileUpload.value = "";
+			this.clearDataImage(name);
 
 			this.openModal("edit", "subModal");
+		},
+		/* Изменение картинки */
+		createImage(name) {
+			this.clearDataImage(name);
+
+			this.openModal("create", "subModal");
 		},
 		updateImage() {
 			/* Проверка на загруженный файл */
@@ -638,6 +646,13 @@ export default {
 				.catch((error) => {
 					console.log(error);
 				});
+		},
+		/* Очистка */
+		clearDataImage(name) {
+			this.currentImage.data.body = name;
+			this.currentImage.data.edited = false;
+			this.currentImage.errors.status = false;
+			this.$refs.fileUpload.value = "";
 		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |              ИНФОРМАЦИОННЫЕ БЛОКИ                 |*/

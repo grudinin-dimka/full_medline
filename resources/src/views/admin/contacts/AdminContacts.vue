@@ -98,6 +98,7 @@
 						autocomplete="off"
 						:class="{ error: false }"
 						v-model="currentPhone.data.name.body"
+						@input="console.log(currentPhone.data.name.body)"
 					/>
 				</template>
 				<template #error>
@@ -107,7 +108,7 @@
 		</template>
 		<template #footer>
 			<block-buttons>
-				<button-default @click=""> Обновить </button-default>
+				<button-default @click="updateContactPhone"> Обновить </button-default>
 			</block-buttons>
 		</template>
 	</admin-sub-modal>
@@ -133,13 +134,15 @@
 						placeholder="Введите почту"
 						autocomplete="off"
 						required
-						:class="{ error: false }"
+						:class="{ error: currentMail.errors.name.status }"
 						v-model="currentMail.data.name.body"
-						@blur="validateMail(currentMail.data.name.body)"
+						@blur="checkModalInput('currentMail', 'name', 'email')"
 					/>
 				</template>
 				<template #error>
-					<span class="error" v-if="!validator.email"> Ошибка </span>
+					<span class="error" v-if="currentMail.errors.name.status">
+						{{ currentMail.errors.name.body }}
+					</span>
 				</template>
 			</container-input-once>
 		</template>
@@ -447,34 +450,64 @@ export default {
 			this.loading.sections.clinics = true;
 		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |               SUB-МОДАЛЬНОЕ ОКНО                  |*/
+		/* |                      ПОЧТА                        |*/
 		/* |___________________________________________________|*/
 		/* _____________________________________________________*/
 		/* 1. Основные действия                                 */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		/* Изменение картинки */
+		/* Изменение */
 		editContactMail(selectedMail) {
+			this.clearModalErrors("currentMail");
+			this.clearModalEdited("currentMail");
+
+			for (let key in this.currentMail.data) {
+				this.currentMail.data[key].body = selectedMail[key];
+			}
+
 			this.openModal("edit", "subModalMail");
 		},
-		editContactPhone(selectedMail) {
-			this.openModal("edit", "subModalPhone");
-		},
-		/* Удаление телефона */
-		deleteContactPhone(selectedPhone) {
-			this.currentContact.data.phones.body = this.currentContact.data.phones.body.filter(
-				(phone) => {
-					if (selectedPhone.id !== phone.id) {
-						return phone;
-					}
-				}
-			);
-		},
-		/* Удаление почты */
+		/* Удаление */
 		deleteContactMail(selectedMail) {
 			this.currentContact.data.mails.body = this.currentContact.data.mails.body.filter(
 				(mail) => {
 					if (selectedMail.id !== mail.id) {
 						return mail;
+					}
+				}
+			);
+		},
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                     ТЕЛЕФОН                       |*/
+		/* |___________________________________________________|*/
+		/* Изменение */
+		editContactPhone(selectedPhone) {
+			this.clearModalErrors("currentPhone");
+			this.clearModalEdited("currentPhone");
+
+			for (let key in this.currentPhone.data) {
+				this.currentPhone.data[key].body = selectedPhone[key];
+			}
+
+			this.openModal("edit", "subModalPhone");
+		},
+		/* Обновление */
+		updateContactPhone() {
+			let phone = this.currentContact.data.phones.body.find((phone) => {
+				return phone.id == this.currentPhone.data.id.body;
+			});
+
+			for (let key in this.currentPhone.data) {
+				phone[key] = this.currentPhone.data[key].body;
+			}
+
+			this.closeModal("subModalPhone");
+		},
+		/* Удаление */
+		deleteContactPhone(selectedPhone) {
+			this.currentContact.data.phones.body = this.currentContact.data.phones.body.filter(
+				(phone) => {
+					if (selectedPhone.id !== phone.id) {
+						return phone;
 					}
 				}
 			);
@@ -641,6 +674,25 @@ export default {
 				this[currentName].errors[dataKey].status = false;
 
 				return false;
+			}
+		},
+		/* Очистка содержимого модального окна */
+		clearModalData(name = "currentInfoBlock") {
+			for (let key in this[name].data) {
+				this[name].data[key].body = "";
+			}
+		},
+		/* Очистка содержимого модального окна */
+		clearModalEdited(name = "currentInfoBlock") {
+			for (let key in this[name].data) {
+				this[name].data[key].edited = false;
+			}
+		},
+		/* Очистка ошибок */
+		clearModalErrors(name = "currentInfoBlock") {
+			for (let key in this[name].errors) {
+				this[name].errors[key].body = "";
+				this[name].errors[key].status = false;
 			}
 		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/

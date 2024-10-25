@@ -69,6 +69,11 @@ export default {
 	border: 2px solid #44a533;
 }
 
+.container-input-once.create > input::file-selector-button {
+	border: 2px solid #44a533;
+	background-color: #44a533;
+}
+
 .container-input-once.delete > :is(input:focus, select:focus) {
 	border: 2px solid #a53333;
 }
