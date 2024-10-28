@@ -841,16 +841,9 @@ export default {
 				.then((response) => {
 					if (response.data.status) {
 						try {
-							// Обновление id в соответствии с изменениями
 							shared.updateId(this.infoBlocks, response.data.data);
-
-							// Очистка удалённых элементов
 							shared.clearDeletes(this.infoBlocks);
-
-							// Обновление флагов на удаление и сохранение
 							shared.clearFlags(this.infoBlocks);
-
-							// Обновление свойства order в массиве слайдов
 							shared.updateOrders(this.infoBlocks);
 
 							let debbugStory = {
