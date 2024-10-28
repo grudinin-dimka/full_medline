@@ -283,6 +283,7 @@ import ContainerInputOnce from "../../../components/ui/admin/containers/input/Co
 import ContainerTextareaOnce from "../../../components/ui/admin/containers/textarea/ContainerTextareaOnce.vue";
 
 import axios from "axios";
+import shared from "../../../services/shared";
 
 export default {
 	components: {
@@ -841,16 +842,16 @@ export default {
 					if (response.data.status) {
 						try {
 							// Обновление id в соответствии с изменениями
-							this.updateIdFromArray("infoBlocks", response.data.data);
+							shared.updateId(this.infoBlocks, response.data.data);
 
 							// Очистка удалённых элементов
-							this.clearDeletesFromArray("infoBlocks");
+							shared.clearDeletes(this.infoBlocks);
 
 							// Обновление флагов на удаление и сохранение
-							this.clearFlagsFromArray("infoBlocks");
+							shared.clearFlags(this.infoBlocks);
 
 							// Обновление свойства order в массиве слайдов
-							this.updateOrdersFromArray("infoBlocks");
+							shared.updateOrders(this.infoBlocks);
 
 							let debbugStory = {
 								title: "Успешно!",

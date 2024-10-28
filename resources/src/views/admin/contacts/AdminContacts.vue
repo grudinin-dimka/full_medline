@@ -770,10 +770,8 @@ export default {
 			try {
 				if (this.checkModalInput("currentPhone", "name", "phone")) return;
 
-				let maxId = this.getMaxIdFromArray(this.currentContact.data.phones.body);
-
 				this.currentContact.data.phones.body.push({
-					id: maxId + 1,
+					id: shared.getMaxId(this.currentContact.data.phones.body) + 1,
 					name: this.currentPhone.data.name.body,
 				});
 
@@ -860,10 +858,8 @@ export default {
 			try {
 				if (this.checkModalInput("currentMail", "name", "email")) return;
 
-				let maxId = this.getMaxIdFromArray(this.currentContact.data.mails.body);
-
 				this.currentContact.data.mails.body.push({
-					id: maxId + 1,
+					id: shared.getMaxId(this.currentContact.data.mails.body) + 1,
 					name: this.currentMail.data.name.body,
 				});
 
@@ -929,53 +925,6 @@ export default {
 				/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 			this.validator.email = mailRegexp.test(mail);
-		},
-		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                  ОБЩИЕ МЕТОДЫ                     |*/
-		/* |___________________________________________________|*/
-		/* Поиск максимального id */
-		getMaxIdFromArray(array) {
-			try {
-				// Поиск максимального id
-				let maxId = 0;
-
-				array.forEach((item) => {
-					if (item.id > maxId) {
-						maxId = item.id;
-					}
-				});
-
-				return Number(maxId);
-			} catch (error) {
-				let debbugStory = {
-					title: "Ошибка.",
-					body: "Не удалось получить максимальный id.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
-			}
-		},
-		/* Поиск максимального order */
-		getMaxOrderFromArray(array) {
-			try {
-				// Поиск максимального order
-				let maxOrder = 0;
-
-				array.forEach((item) => {
-					if (item.order > maxOrder) {
-						maxOrder = item.order;
-					}
-				});
-
-				return Number(maxOrder);
-			} catch (error) {
-				let debbugStory = {
-					title: "Ошибка.",
-					body: "Не удалось получить максимальный order.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
-			}
 		},
 	},
 	mounted() {
