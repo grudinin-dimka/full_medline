@@ -387,8 +387,6 @@
 </template>
 
 <script>
-import axios from "axios";
-
 import ElementInputLabel from "../../components/ui/admin/elements/ElementInputLabel.vue";
 
 import LoaderChild from "../../components/includes/LoaderChild.vue";
@@ -417,6 +415,9 @@ import IconArrow from "../../components/icons/IconArrow.vue";
 import IconHide from "../../components/icons/IconHide.vue";
 import IconVisible from "../../components/icons/IconVisible.vue";
 import IconSave from "../../components/icons/IconSave.vue";
+
+import axios from "axios";
+import shared from "../../services/shared";
 
 export default {
 	components: {
@@ -911,8 +912,8 @@ export default {
 						if (response.data.status) {
 							try {
 								this.slides.push({
-									id: this.getMaxIdFromArray(this.slides) + 1,
-									order: this.getMaxOrderFromArray(this.slides) + 1,
+									id: shared.getMaxId(this.slides) + 1,
+									order: shared.getMaxOrder(this.slides) + 1,
 									name: this.$refs.inputName.value,
 									link: this.$refs.inputLink.value,
 									path: response.data.data,
@@ -1080,17 +1081,10 @@ export default {
 			})
 				.then((response) => {
 					if (response.data.status) {
-						// Обновление id в соответствии с изменениями
-						this.updateIdFromArray("slides", response.data.data);
-
-						// Очистка удалённых элементов
-						this.clearDeletesFromArray("slides");
-
-						// Обновление флагов на удаление и сохранение
-						this.clearFlagsFromArray("slides");
-
-						// Обновление свойства order в массиве слайдов
-						this.updateOrdersFromArray("slides");
+						shared.updateId(this.slides, response.data.data);
+						shared.clearDeletes(this.slides);
+						shared.clearFlags(this.slides);
+						shared.updateOrders(this.slides);
 
 						let debbugStory = {
 							title: "Успешно!",
@@ -1115,129 +1109,6 @@ export default {
 					};
 					this.$store.commit("debuggerState", debbugStory);
 				});
-		},
-		/* Поиск максимального id */
-		getMaxIdFromArray(array) {
-			try {
-				// Поиск максимального id
-				let maxId = 0;
-
-				array.forEach((item) => {
-					if (item.id > maxId) {
-						maxId = item.id;
-					}
-				});
-
-				return Number(maxId);
-			} catch (error) {
-				let debbugStory = {
-					title: "Ошибка.",
-					body: "Не удалось получить максимальный id.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
-			}
-		},
-		/* Поиск максимального order */
-		getMaxOrderFromArray(array) {
-			try {
-				// Поиск максимального order
-				let maxOrder = 0;
-
-				array.forEach((item) => {
-					if (item.order > maxOrder) {
-						maxOrder = item.order;
-					}
-				});
-
-				return Number(maxOrder);
-			} catch (error) {
-				let debbugStory = {
-					title: "Ошибка.",
-					body: "Не удалось получить максимальный order.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
-			}
-		},
-		/* Обновление значений id */
-		updateIdFromArray(arrayName, arrayId) {
-			try {
-				let elementsCreate = this[arrayName].filter((item) => {
-					if (item.create) return item;
-				});
-
-				// Изменение значений со старых id на новые из б.д.
-				for (let key in elementsCreate) {
-					elementsCreate[key].id = arrayId.find((item) => {
-						if (item.old == elementsCreate[key].id) {
-							return item;
-						}
-					}).new;
-				}
-			} catch (error) {
-				let debbugStory = {
-					title: "Ошибка.",
-					body: "Не удалось обновить id.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
-			}
-		},
-		/* Очистка удалённых элементов */
-		clearDeletesFromArray(arrayName) {
-			try {
-				// Получения нового массива специалистов, помеченных на удаление
-				let elementsDelete = this[arrayName].filter((item) => {
-					if (item.delete == true) {
-						return Object.assign({}, item);
-					}
-				});
-
-				// Повторять, пока не будут удалены все элементы, помеченные на удаление
-				while (elementsDelete.length > 0) {
-					/* Получение индекса элемента, помеченного на удаление из массива специалистов */
-					this[arrayName].splice(this[arrayName].indexOf(elementsDelete[0]), 1);
-					/* Обновление списка с элементами, помеченными на удаление */
-					elementsDelete = this[arrayName].filter((item) => {
-						if (item.delete == true) {
-							return Object.assign({}, item);
-						}
-					});
-				}
-			} catch (error) {
-				let debbugStory = {
-					title: "Ошибка.",
-					body: "Не удалось очистить удалённые элементы.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
-			}
-		},
-		/* Очистка пометок на удаление и сохранение */
-		clearFlagsFromArray(arrayName) {
-			try {
-				// Сброс флагов добавления и удаления
-				this[arrayName].forEach((item) => {
-					item.create = false;
-					item.delete = false;
-				});
-			} catch (error) {
-				let debbugStory = {
-					title: "Ошибка.",
-					body: "Не удалось сбросить флаги.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
-			}
-		},
-		/* Обновление значений order */
-		updateOrdersFromArray(arrayName) {
-			let count = 0;
-			for (let key in this[arrayName]) {
-				count++;
-				this[arrayName][key].order = count;
-			}
 		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                     ФУТЕР                         |*/
