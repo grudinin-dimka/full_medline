@@ -20,6 +20,8 @@ use App\Models\Footer;
 
 use App\Models\About;
 
+use App\Models\Contact;
+
 use App\Models\Specialist;
 use App\Models\Specialization;
 use App\Models\SpecialistSpecialization;
@@ -301,6 +303,58 @@ class AdminController extends Controller
             "data" => null,
          ]);
       }
+
+      return response()->json([
+         "status" => true,
+         "message" => "Данные обновлены.",
+         "data" => $arrayID,
+      ]);
+   }
+   /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+   /* |                     О НАС                         |*/
+   /* |___________________________________________________|*/
+   /* _____________________________________________________*/
+   /* 1. Информационные блоки                              */
+   /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+   public function saveContactsChanges(Request $request) {
+      $contacts = json_decode($request->contacts);
+      $arrayID = [];
+
+      foreach ($contacts as $key => $value) {
+         // Удаление
+         if ($value->delete === true) {
+            $about = Contact::find($value->id);
+            $about->delete();
+            continue;
+         };
+
+         // Добавление
+         if ($value->create === true){
+            $aboutCreate = Contact::create([
+               "name" => $value->name,
+               "order" => $value->order,
+               "clinicId" => $value->clinicId ? $value->clinicId : null,
+            ]);
+
+            /* Запись нового объекта в массив */
+            $arrayID[] = (object) [
+               // Прошлый id
+               'old' => $value->id, 
+               // Новый id
+               'new' => $aboutCreate->id
+            ];
+            continue;
+         };
+
+         // Обновление
+         $about = Contact::find($value->id);
+         $about->update([
+            "name" => $value->name,
+            "order" => $value->order,
+            "clinicId" => $value->clinicId ? $value->clinicId : null,
+         ]);   
+
+      };
 
       return response()->json([
          "status" => true,

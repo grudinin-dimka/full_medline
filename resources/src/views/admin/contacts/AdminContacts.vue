@@ -4,9 +4,9 @@
 	<!--|___________________________________________________|-->
 	<admin-modal ref="modal" @touchCloseModal="closeModal('modal')" :modal="modal">
 		<template #title v-if="!currentContact.data.delete.body && !modal.style.create">
-			<icon-arrow :width="16" :height="16" :rotate="-90" @click="" />
+			<icon-arrow :width="16" :height="16" :rotate="-90" @click="changeContactsOrder('down')" />
 			#{{ currentContact.data.order.body }}
-			<icon-arrow :width="16" :height="16" :rotate="90" @click="" />
+			<icon-arrow :width="16" :height="16" :rotate="90" @click="changeContactsOrder('up')" />
 		</template>
 		<template #title v-else>
 			<span v-if="modal.type == 'create'">КОНТАКТ (СОЗДАНИЕ)</span>
@@ -207,7 +207,7 @@
 		<block-title>
 			<template #title>КОНТАКТЫ</template>
 			<template #buttons>
-				<icon-save :width="28" :height="28" @click="" />
+				<icon-save :width="28" :height="28" @click="saveContact" />
 			</template>
 		</block-title>
 
@@ -268,6 +268,7 @@ import IconCreate from "../../../components/icons/IconCreate.vue";
 import axios from "axios";
 import shared from "../../../services/shared.js";
 import validate from "../../../services/validate.js";
+import sorted from "../../../services/sorted.js";
 
 export default {
 	components: {
@@ -768,6 +769,143 @@ export default {
 					type: "Error",
 				};
 				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
+		/* Сохранение */
+		saveContact() {
+			let formData = new FormData();
+			formData.append("contacts", JSON.stringify(this.contacts));
+
+			axios({
+				method: "post",
+				url: `${this.$store.state.axios.urlApi}` + `save-contacts-changes`,
+				headers: {
+					ContentType: "multipart/form-data",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: formData,
+			})
+				.then((response) => {
+					if (response.data.status) {
+						try {
+							// shared.updateId(this.contacts, response.data.data);
+							// shared.clearDeletes(this.contacts);
+							// shared.clearFlags(this.contacts);
+							// shared.updateOrders(this.contacts);
+
+							let debbugStory = {
+								title: "Успешно!",
+								body: response.data.message,
+								type: "Completed",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+						} catch (error) {
+							let debbugStory = {
+								title: "Ошибка.",
+								body: "Не удалось обновить данные после загрузки изображения.",
+								type: "Error",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+						}
+					} else {
+						let debbugStory = {
+							title: "Ошибка.",
+							body: response.data.message,
+							type: "Error",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					}
+				})
+				.catch((error) => {
+					let debbugStory = {
+						title: "Ошибка.",
+						body: "Не удалось сохранить данные.",
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+				});
+		},
+		/* Изменение порядка */
+		changeContactsOrder(type) {
+			if (this.contacts.length <= 1) {
+				return;
+			}
+
+			// Является ли текущий элемент первым
+			let firstElementStatus = this.currentContact.data.order.body == 1;
+			// Предидущей элемент
+			let elementPrevious = null;
+			if (firstElementStatus) {
+				elementPrevious = this.contacts.find((item) => item.order === this.contacts.length);
+			} else {
+				elementPrevious = this.contacts.find(
+					(item) => item.order === this.currentContact.data.order.body - 1
+				);
+			}
+
+			// Текущий элемент
+			let elementCurrent = this.contacts.find(
+				(item) => item.order === this.currentContact.data.order.body
+			);
+
+			// Является ли текущий элемент последним
+			let lastElementStatus = this.currentContact.data.order.body == this.contacts.length;
+
+			// Следующий элемент
+			let elementNext = null;
+			if (lastElementStatus) {
+				elementNext = this.contacts.find((item) => item.order === 1);
+			} else {
+				elementNext = this.contacts.find(
+					(item) => item.order === this.currentContact.data.order.body + 1
+				);
+			}
+
+			// Изменение порядка
+			switch (type) {
+				case "up":
+					{
+						if (lastElementStatus) {
+							this.currentContact.data.order.body = 1;
+							elementCurrent.order = 1;
+							elementNext.order = this.contacts.length;
+						} else {
+							this.currentContact.data.order.body++;
+							elementCurrent.order++;
+							elementNext.order--;
+						}
+
+						sorted.sortByOrder(this.contacts);
+					}
+					break;
+				case "down":
+					{
+						if (firstElementStatus) {
+							this.currentContact.data.order.body = this.contacts.length;
+							elementCurrent.order = this.contacts.length;
+							elementPrevious.order = 1;
+						} else {
+							this.currentContact.data.order.body--;
+							elementCurrent.order--;
+							elementPrevious.order++;
+						}
+
+						sorted.sortByOrder(this.contacts);
+					}
+					break;
+			}
+		},
+		/* Соритровка */
+		sortContacts(type) {
+			switch (type) {
+				case "id":
+					this.contacts.sort((a, b) => a.id - b.id);
+					break;
+				case "order":
+					this.contacts.sort((a, b) => a.order - b.order);
+					break;
+				default:
+					break;
 			}
 		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/

@@ -865,7 +865,12 @@ export default {
 					}
 				})
 				.catch((error) => {
-					console.log(error);
+					let debbugStory = {
+						title: "Ошибка.",
+						body: "Не удалось сохранить данные.",
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
 				});
 		},
 	},

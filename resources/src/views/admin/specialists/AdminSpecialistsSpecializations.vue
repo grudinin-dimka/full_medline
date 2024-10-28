@@ -105,6 +105,7 @@ import IconSave from "../../../components/icons/IconSave.vue";
 
 import axios from "axios";
 import shared from "../../../services/shared";
+import sorted from "../../../services/sorted";
 
 export default {
 	components: {
@@ -331,48 +332,23 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Фильтрация по столбцу */
 		filterSpecializations(column, type) {
-			// Объявляем объект Intl.Collator, который обеспечивает сравнение строк с учётом языка.
-			const collator = new Intl.Collator("ru");
-
 			switch (column) {
 				case "id":
 					if (type == "default") {
-						this.specializations.sort((a, b) => {
-							if (a.id > b.id) {
-								return 1;
-							}
-							if (a.id < b.id) {
-								return -1;
-							}
-							// a должно быть равным b
-							return 0;
-						});
+						sorted.sortById("up", this.specializations);
 					}
 
 					if (type == "reverse") {
-						this.specializations.sort((a, b) => {
-							if (a.id < b.id) {
-								return 1;
-							}
-							if (a.id > b.id) {
-								return -1;
-							}
-							// a должно быть равным b
-							return 0;
-						});
+						sorted.sortById("down", this.specializations);
 					}
 					break;
 				case "name":
 					if (type == "default") {
-						this.specializations.sort((a, b) => {
-							return collator.compare(a.name, b.name);
-						});
+						sorted.sortByName("up", this.specializations);
 					}
 
 					if (type == "reverse") {
-						this.specializations.reverse((a, b) => {
-							return collator.compare(a.name, b.name);
-						});
+						sorted.sortByName("down", this.specializations);
 					}
 
 					break;

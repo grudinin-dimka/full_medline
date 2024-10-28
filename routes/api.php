@@ -68,6 +68,11 @@ Route::post('/save-footer', [AdminController::class, 'saveFooter'])->middleware(
 /* 1. Информационные блоки                              */
 Route::post('/save-abouts-changes', [AdminController::class, 'saveAboutsChanges'])->middleware('auth:sanctum');
 /* _____________________________________________________*/
+/* Контакты                                             */
+/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+/* 1. Информационные блоки                              */
+Route::post('/save-contacts-changes', [AdminController::class, 'saveContactsChanges'])->middleware('auth:sanctum');
+/* _____________________________________________________*/
 /* Специалисты                                          */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 /* 1. Врачи                                             */
