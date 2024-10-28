@@ -50,6 +50,7 @@ import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue"
 import IconSave from "../../../components/icons/IconSave.vue";
 
 import axios from "axios";
+import sorted from "../../../services/sorted";
 
 import { RouterView, RouterLink } from "vue-router";
 
@@ -99,93 +100,20 @@ export default {
 
 			switch (column) {
 				case "id":
-					if (type == "default") {
-						this.specialists.sort((a, b) => {
-							if (a.id > b.id) {
-								return 1;
-							}
-							if (a.id < b.id) {
-								return -1;
-							}
-							// a должно быть равным b
-							return 0;
-						});
-					}
-
-					if (type == "reverse") {
-						this.specialists.sort((a, b) => {
-							if (a.id < b.id) {
-								return 1;
-							}
-							if (a.id > b.id) {
-								return -1;
-							}
-							// a должно быть равным b
-							return 0;
-						});
-					}
+					if (type == "default") sorted.sortById("up", this.specialists);
+					if (type == "reverse") sorted.sortById("down", this.specialists);
 					break;
 				case "name":
-					if (type == "default") {
-						this.specialists.sort((a, b) => {
-							let aFullName = a.family + " " + a.name + " " + a.surname;
-							let bFullName = b.family + " " + b.name + " " + b.surname;
-
-							return collator.compare(aFullName, bFullName);
-						});
-					}
-
-					if (type == "reverse") {
-						this.specialists.reverse((a, b) => {
-							let aFullName = a.family + " " + a.name + " " + a.surname;
-							let bFullName = b.family + " " + b.name + " " + b.surname;
-
-							return collator.compare(aFullName, bFullName);
-						});
-					}
-
+					if (type == "default") sorted.sortByName("up", this.specialists);
+					if (type == "reverse") sorted.sortByName("down", this.specialists);
 					break;
 				case "specialization":
-					if (type == "default") {
-						this.specialists.sort((a, b) => {
-							return collator.compare(a.specializations, b.specializations);
-						});
-					}
-
-					if (type == "reverse") {
-						this.specialists.reverse((a, b) => {
-							return collator.compare(a.specializations, b.specializations);
-						});
-					}
-
+					if (type == "default") sorted.sortBySpecialization("up", this.specialists);
+					if (type == "reverse") sorted.sortBySpecialization("down", this.specialists);
 					break;
 				case "hide":
-					if (type == "default") {
-						this.specialists.sort((a, b) => {
-							if (a.hide > b.hide) {
-								return 1;
-							}
-							if (a.hide < b.hide) {
-								return -1;
-							}
-							// a должно быть равным b
-							return 0;
-						});
-					}
-
-					if (type == "reverse") {
-						this.specialists.sort((a, b) => {
-							if (a.hide < b.hide) {
-								return 1;
-							}
-							if (a.hide > b.hide) {
-								return -1;
-							}
-							// a должно быть равным b
-							return 0;
-						});
-					}
-
+					if (type == "default") sorted.sortByHide("up", this.specialists);
+					if (type == "reverse") sorted.sortByHide("down", this.specialists);
 					break;
 				default:
 					break;

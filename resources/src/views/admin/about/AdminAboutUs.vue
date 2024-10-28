@@ -284,6 +284,7 @@ import ContainerTextareaOnce from "../../../components/ui/admin/containers/texta
 
 import axios from "axios";
 import shared from "../../../services/shared";
+import sorted from "../../../services/sorted";
 
 export default {
 	components: {
@@ -455,11 +456,6 @@ export default {
 			},
 			infoBlocks: [],
 		};
-	},
-	computed: {
-		getSortedInfoBlocks() {
-			return this.infoBlocks.sort((a, b) => a.order - b.order);
-		},
 	},
 	methods: {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -787,7 +783,7 @@ export default {
 							blockCurrent.order++;
 							blockNext.order--;
 						}
-						this.sortInfoBlocks("order");
+						sorted.sortByOrder("up", this.infoBlocks);
 					}
 					break;
 				case "down":
@@ -801,21 +797,8 @@ export default {
 							blockCurrent.order--;
 							blockPrevious.order++;
 						}
-						this.sortInfoBlocks("order");
+						sorted.sortByOrder("up", this.infoBlocks);
 					}
-					break;
-			}
-		},
-		/* Соритровка */
-		sortInfoBlocks(type) {
-			switch (type) {
-				case "id":
-					this.infoBlocks.sort((a, b) => a.id - b.id);
-					break;
-				case "order":
-					this.infoBlocks.sort((a, b) => a.order - b.order);
-					break;
-				default:
 					break;
 			}
 		},
@@ -891,7 +874,7 @@ export default {
 						item.delete = false;
 					});
 
-					this.infoBlocks.sort((a, b) => a.order - b.order);
+					sorted.sortByOrder("up", this.infoBlocks);
 				} else {
 					let debbugStory = {
 						title: "Ошибка.",

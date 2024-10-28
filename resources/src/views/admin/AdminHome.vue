@@ -417,6 +417,7 @@ import IconSave from "../../components/icons/IconSave.vue";
 
 import axios from "axios";
 import shared from "../../services/shared";
+import sorted from "../../services/sorted";
 
 export default {
 	components: {
@@ -723,10 +724,6 @@ export default {
 		/* _____________________________________________________*/
 		/* 3. Основные действия                                 */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		// Сортировка списка слайдов по порядку
-		sortSlider() {
-			this.slides.sort((a, b) => a.order - b.order);
-		},
 		// Открытие слайда
 		openSlide(selectedSlide, type) {
 			try {
@@ -832,12 +829,12 @@ export default {
 								this.currentSlide.data.order.body = 1;
 								slideCurrent.order = 1;
 								slideNext.order = this.slides.length;
-								this.sortSlider();
+								sorted.sortByOrder("up", this.slides);
 							} else {
 								this.currentSlide.data.order.body++;
 								slideCurrent.order++;
 								slideNext.order--;
-								this.sortSlider();
+								sorted.sortByOrder("up", this.slides);
 							}
 						}
 						break;
@@ -847,12 +844,12 @@ export default {
 								this.currentSlide.data.order.body = this.slides.length;
 								slideCurrent.order = this.slides.length;
 								slidePrevious.order = 1;
-								this.sortSlider();
+								sorted.sortByOrder("up", this.slides);
 							} else {
 								this.currentSlide.data.order.body--;
 								slideCurrent.order--;
 								slidePrevious.order++;
-								this.sortSlider();
+								sorted.sortByOrder("up", this.slides);
 							}
 						}
 						break;
@@ -1205,7 +1202,7 @@ export default {
 					this.slides[key].delete = false;
 					this.slides[key].create = false;
 				}
-				this.sortSlider();
+				sorted.sortByOrder("up", this.slides);
 
 				this.loading.loader.slider = false;
 			})

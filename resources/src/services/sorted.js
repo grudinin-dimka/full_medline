@@ -38,4 +38,32 @@ export default {
 				break;
 		}
 	},
+	/* Сортировка по названию */
+	sortBySpecialization(type = "up", array) {
+		const collator = new Intl.Collator("ru");
+
+		switch (type) {
+			case "up":
+				array.sort((a, b) => {
+					return collator.compare(a.specializations, b.specializations);
+				});
+				break;
+			case "down":
+				array.reverse((a, b) => {
+					return collator.compare(a.specializations, b.specializations);
+				});
+				break;
+		}
+	},
+	/* Сортировка по названию */
+	sortByHide(type = "up", array) {
+		switch (type) {
+			case "up":
+				array.sort((a, b) => a.hide - b.hide);
+				break;
+			case "down":
+				array.sort((a, b) => b.hide - a.hide);
+				break;
+		}
+	},
 };
