@@ -104,6 +104,7 @@ import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 import IconSave from "../../../components/icons/IconSave.vue";
 
 import axios from "axios";
+import shared from "../../../services/shared";
 
 export default {
 	components: {
@@ -404,7 +405,7 @@ export default {
 			if (this.checkModalInputsAll(["name"])) return;
 			try {
 				this.specializations.push({
-					id: this.getMaxIdFromArray(this.specializations) + 1,
+					id: shared.getMaxId(this.specializations) + 1,
 					name: this.currentSpecialization.data.name.body,
 					create: true,
 					delete: false,
@@ -482,40 +483,9 @@ export default {
 			})
 				.then((response) => {
 					try {
-						// Обновление id добавленных элементов на данные из бд
-						for (let key in response.data) {
-							let specialization = this.specializations.filter((item) => {
-								if (item.id === response.data[key].old) {
-									return item;
-								}
-							});
-							specialization[0].id = response.data[key].new;
-						}
-
-						// Получения нового массива специалистов, помеченных на удаление
-						let res = this.specializations.filter((item) => {
-							if (item.delete == true) {
-								return Object.assign({}, item);
-							}
-						});
-
-						// Повторять, пока не будут удалены все элементы, помеченные на удаление
-						while (res.length > 0) {
-							/* Получение индекса элемента, помеченного на удаление из массива специалистов */
-							this.specializations.splice(this.specializations.indexOf(res[0]), 1);
-							/* Обновление списка с элементами, помеченными на удаление */
-							res = this.specializations.filter((item) => {
-								if (item.delete == true) {
-									return Object.assign({}, item);
-								}
-							});
-						}
-
-						// Сброс флагов добавления и удаления
-						for (let key in this.specializations) {
-							this.specializations[key].create = false;
-							this.specializations[key].delete = false;
-						}
+						shared.updateId(this.specializations, response.data);
+						shared.clearDeletes(this.specializations);
+						shared.clearFlags(this.specializations);
 
 						let debbugStory = {
 							title: "Успешно!",
@@ -540,53 +510,6 @@ export default {
 					};
 					this.$store.commit("debuggerState", debbugStory);
 				});
-		},
-		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                  ОБЩИЕ МЕТОДЫ                     |*/
-		/* |___________________________________________________|*/
-		/* Поиск максимального id */
-		getMaxIdFromArray(array) {
-			try {
-				// Поиск максимального id
-				let maxId = 0;
-
-				array.forEach((item) => {
-					if (item.id > maxId) {
-						maxId = item.id;
-					}
-				});
-
-				return Number(maxId);
-			} catch (error) {
-				let debbugStory = {
-					title: "Ошибка.",
-					body: "Не удалось получить максимальный id.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
-			}
-		},
-		/* Поиск максимального order */
-		getMaxOrderFromArray(array) {
-			try {
-				// Поиск максимального order
-				let maxOrder = 0;
-
-				array.forEach((item) => {
-					if (item.order > maxOrder) {
-						maxOrder = item.order;
-					}
-				});
-
-				return Number(maxOrder);
-			} catch (error) {
-				let debbugStory = {
-					title: "Ошибка.",
-					body: "Не удалось получить максимальный order.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
-			}
 		},
 	},
 	mounted() {
