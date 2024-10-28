@@ -274,6 +274,7 @@ import IconCreate from "../../../components/icons/IconCreate.vue";
 
 import axios from "axios";
 import shared from "../../../services/shared.js";
+import validate from "../../../services/validate.js";
 
 export default {
 	components: {
@@ -598,11 +599,7 @@ export default {
 				};
 			}
 
-			/* Проверка на правильность почты */
-			let mailRegexp =
-				/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-			if (!mailRegexp.test(value)) {
+			if (!validate.checkMail(value)) {
 				return {
 					status: true,
 					message: "Почта не прошла проверку.",
@@ -632,10 +629,7 @@ export default {
 				};
 			}
 
-			/* Проверка на правильность номера телефона */
-			let phoneRegexp = /^\+7\(\d{3}\)-\d{3}-\d{2}-\d{2}$/;
-
-			if (!phoneRegexp.test(value)) {
+			if (!validate.checkPhone(value)) {
 				return {
 					status: true,
 					message: "Телефон не прошел проверку.",
@@ -915,16 +909,6 @@ export default {
 					}
 				}
 			);
-		},
-		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                   ВАЛИДАЦИЯ                       |*/
-		/* |___________________________________________________|*/
-		/* Почта */
-		validateMail(mail) {
-			let mailRegexp =
-				/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-			this.validator.email = mailRegexp.test(mail);
 		},
 	},
 	mounted() {
