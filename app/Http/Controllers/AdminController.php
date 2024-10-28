@@ -21,6 +21,10 @@ use App\Models\Footer;
 use App\Models\About;
 
 use App\Models\Contact;
+use App\Models\Phone;
+use App\Models\ContactPhone;
+use App\Models\Mail;
+use App\Models\ContactMail;
 
 use App\Models\Specialist;
 use App\Models\Specialization;
@@ -327,7 +331,12 @@ class AdminController extends Controller
             $about->delete();
             continue;
          };
-
+         /* STOP делал сохранение телефонов, надо сделать дальше: 
+            1) Сначала удалять связанные телфоны
+            2) Затем создавать новые
+            3) Тоже самое сделать с почтами
+            4) Также надо сделать обновление интерфейса на вью после сохранения
+         */
          // Добавление
          if ($value->create === true){
             $aboutCreate = Contact::create([
@@ -335,6 +344,17 @@ class AdminController extends Controller
                "order" => $value->order,
                "clinicId" => $value->clinicId ? $value->clinicId : null,
             ]);
+
+            foreach ($value->phones as $key => $valuePhone) {
+               $phoneCreate = Phone::create([
+                  "name" => $valuePhone->name,
+               ]);
+   
+               ContactPhone::create([
+                  'contactId' => $aboutCreate->id,
+                  'phoneId' => $phoneCreate->id,
+               ]);
+            }   
 
             /* Запись нового объекта в массив */
             $arrayID[] = (object) [
@@ -347,13 +367,23 @@ class AdminController extends Controller
          };
 
          // Обновление
-         $about = Contact::find($value->id);
-         $about->update([
+         $contact = Contact::find($value->id);
+         $contact->update([
             "name" => $value->name,
             "order" => $value->order,
             "clinicId" => $value->clinicId ? $value->clinicId : null,
          ]);   
 
+         foreach ($value->phones as $key => $valuePhone) {
+            $phoneCreate = Phone::create([
+               "name" => $valuePhone->name,
+            ]);
+
+            ContactPhone::create([
+               'contactId' => $contact->id,
+               'phoneId' => $phoneCreate->id,
+            ]);
+         }
       };
 
       return response()->json([

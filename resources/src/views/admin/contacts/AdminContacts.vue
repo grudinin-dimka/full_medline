@@ -1082,13 +1082,21 @@ export default {
 			.then((response) => {
 				if (response.data.status) {
 					this.contacts = response.data.data.contacts;
+
 					this.contacts.forEach((contact) => {
 						contact.create = false;
 						contact.delete = false;
 					});
+					sorted.sortByOrder("up", this.contacts);
 
 					this.clinics = response.data.data.clinics;
 				} else {
+					let debbugStory = {
+						title: "Ошибка.",
+						body: "Не удалось получить данные.",
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
 				}
 			})
 			.catch((error) => {})
