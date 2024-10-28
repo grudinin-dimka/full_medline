@@ -684,11 +684,7 @@ export default {
 					(item) => item.id == this.currentInfoBlock.data.id.body
 				);
 
-				if (block.delete) {
-					block.delete = false;
-				} else {
-					block.delete = true;
-				}
+				block.delete = !block.delete;
 
 				this.closeModal("modal");
 			} catch (error) {

@@ -3,21 +3,14 @@
 	<!--|                  МОДАЛЬНОЕ ОКНО                   |-->
 	<!--|___________________________________________________|-->
 	<admin-modal ref="modal" @touchCloseModal="closeModal('modal')" :modal="modal">
-		<template
-			#title
-			v-if="
-				modal.type == 'edit' ||
-				currentContact.data.create.body !== true ||
-				currentContact.data.delete.body !== true
-			"
-		>
-			<span v-if="modal.type == 'create'">КОНТАКТ (СОЗДАНИЕ)</span>
-			<span v-if="modal.type == 'edit'">КОНТАКТ (РЕДАКТИРОВАНИЕ)</span>
+		<template #title v-if="!currentContact.data.delete.body && !modal.style.create">
+			<icon-arrow :width="16" :height="16" :rotate="-90" @click="" />
+			#{{ currentContact.data.order.body }}
+			<icon-arrow :width="16" :height="16" :rotate="90" @click="" />
 		</template>
 		<template #title v-else>
-			<icon-arrow :width="16" :height="16" :rotate="-90" @click="" />
-			#test
-			<icon-arrow :width="16" :height="16" :rotate="90" @click="" />
+			<span v-if="modal.type == 'create'">КОНТАКТ (СОЗДАНИЕ)</span>
+			<span v-if="modal.type == 'edit'">КОНТАКТ (РЕДАКТИРОВАНИЕ)</span>
 		</template>
 		<template #body>
 			<ContainerInput>
@@ -87,7 +80,7 @@
 			<BlockButtons>
 				<button-claim v-if="modal.type == 'create'" @click="addContact"> Создать </button-claim>
 				<template v-else>
-					<button-remove> Удалить </button-remove>
+					<button-remove @click="deleteContact"> Удалить </button-remove>
 					<ButtonDefault @click="updateContact"> Обновить </ButtonDefault>
 				</template>
 			</BlockButtons>
@@ -142,7 +135,7 @@
 					Обновить
 				</button-default>
 				<button-claim v-if="subModalPhone.type == 'create'" @click="addContactPhone">
-					Добавить
+					Создать
 				</button-claim>
 			</block-buttons>
 		</template>
@@ -196,7 +189,7 @@
 					Обновить
 				</button-default>
 				<button-claim v-if="subModalMail.type == 'create'" @click="addContactMail">
-					Добавить
+					Создать
 				</button-claim>
 			</block-buttons>
 		</template>
@@ -383,6 +376,10 @@ export default {
 						body: null,
 						status: false,
 					},
+					order: {
+						body: null,
+						status: false,
+					},
 					name: {
 						body: null,
 						status: false,
@@ -410,6 +407,10 @@ export default {
 				},
 				data: {
 					id: {
+						body: null,
+						edited: false,
+					},
+					order: {
 						body: null,
 						edited: false,
 					},
@@ -508,6 +509,11 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Открытие */
 		openModal(type = "edit", name = "modal") {
+			if (name === "modal") {
+				this.clearModalErrors("currentContact");
+				this.clearModalEdited("currentContact");
+			}
+
 			switch (type) {
 				case "create":
 					{
@@ -747,6 +753,23 @@ export default {
 
 			this.closeModal("modal");
 		},
+		/* Удаление */
+		deleteContact() {
+			try {
+				let contact = this.contacts.find((item) => item.id == this.currentContact.data.id.body);
+
+				contact.delete = !contact.delete;
+
+				this.closeModal("modal");
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Не удалось пометить блок на удаление.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                     ТЕЛЕФОН                       |*/
 		/* |___________________________________________________|*/
@@ -936,112 +959,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.contacts {
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	gap: 20px;
-
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
-}
-
-.contacts > .item {
-	border: 2px solid var(--input-border-color-inactive);
-	border-radius: 10px;
-}
-
-.contacts > .item {
-	cursor: pointer;
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
-
-	border: 2px solid var(--input-border-color-inactive);
-	border-radius: 10px;
-	padding: 10px;
-
-	font-size: 16px;
-
-	transition: all 0.2s;
-}
-
-.contacts > .item:hover {
-	border: 2px solid var(--input-border-color-active);
-	background-color: #f2feff;
-}
-
-.contacts > .item:hover > .head > div {
-	border: 2px solid var(--input-border-color-active);
-	background-color: #f2feff;
-}
-
-.contacts > .item > .head {
-	display: flex;
-	gap: 10px;
-}
-
-.contacts > .item > .head > div {
-	padding: 5px 10px;
-	border-radius: 7.5px;
-	border: 2px solid var(--input-border-color-inactive);
-
-	transition: all 0.2s;
-}
-
-.contacts > .item > .body {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
-}
-
-.contacts > .item > .body > .title {
-	font-size: 22px;
-	color: var(--primary-color);
-}
-
-.contacts > .item > .body > .info {
-	display: grid;
-	grid-template-columns: repeat(2, minmax(200px, 1fr));
-	gap: 10px;
-}
-
-.contacts > .item > .body > .info > :is(.mail, .phone) > ul {
-	padding: 0px;
-	margin: 10px 10px;
-	inline-size: 80%;
-}
-
-.contacts > .item > .body > .info > :is(.mail, .phone) > ul > li {
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-
-	margin-top: 10px;
-}
-
-.contacts > .item > .body > .info > .mail > ul > li::before {
-	content: "🖂";
-	padding-right: 10px;
-	font-weight: bold;
-}
-
-.contacts > .item > .body > .info > .phone > ul > li::before {
-	content: "☎";
-	padding-right: 10px;
-	font-weight: bold;
-}
-
-.contacts > .item > .body > .phone > ul {
-	padding: 0px 30px;
-	margin: 5px;
-}
-
-.contacts > .item > .body > .phone > ul > li {
-	padding: 10px;
-	margin: 0px;
-}
-
-span.empty {
-	color: #c7c7c7;
-}
-</style>
+<style scoped></style>

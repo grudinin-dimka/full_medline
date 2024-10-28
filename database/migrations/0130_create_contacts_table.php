@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('contacts', function (Blueprint $table) {
             $table->id();
             $table->text('name');
-            $table->text('order');
+            $table->unsignedBigInteger('order');
             $table->foreignId('clinicId')->nullable()->references('id')->on('clinics')->onDelete('cascade')->default(null);
             $table->timestamps();
         });

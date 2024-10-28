@@ -145,6 +145,10 @@ export default {
 	transition: all 0.2s;
 }
 
+.about > .item:hover > .head > div {
+	border: 2px solid var(--input-border-color-active);
+}
+
 .about > .item.create > .head > div {
 	border: 2px solid var(--create-border-color);
 }
@@ -155,14 +159,6 @@ export default {
 
 .about > .item.delete:hover > .head > div {
 	border: 2px solid #f79999;
-}
-
-.about > .item:hover > .head > div {
-	border: 2px solid var(--input-border-color-active);
-}
-
-.about > .item.create > .head > div {
-	border: 2px solid var(--create-border-color);
 }
 
 .about > .item > .body {

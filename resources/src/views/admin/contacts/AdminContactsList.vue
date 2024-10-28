@@ -1,8 +1,13 @@
 <template>
 	<div class="contacts">
-		<div class="item" @click="$emit('touchEditContact', contact)" v-for="contact in contacts">
+		<div
+			class="item"
+			@click="$emit('touchEditContact', contact)"
+			v-for="contact in contacts"
+			:class="{ create: contact.create, delete: contact.delete }"
+		>
 			<div class="head">
-				<div>id: {{ contact.id }}</div>
+				<div>id: {{ contact.create ? "?" : contact.id }}</div>
 				<div>order: {{ contact.order }}</div>
 			</div>
 			<div class="body">
@@ -89,14 +94,39 @@ export default {
 	transition: all 0.2s;
 }
 
+.contacts > .item:hover > .head > div {
+	border: 2px solid var(--input-border-color-active);
+}
+
 .contacts > .item:hover {
 	border: 2px solid var(--input-border-color-active);
 	background-color: #f2feff;
 }
 
-.contacts > .item:hover > .head > div {
-	border: 2px solid var(--input-border-color-active);
-	background-color: #f2feff;
+.contacts > .item.create {
+	border: 2px solid var(--create-border-color);
+}
+
+.contacts > .item.create:hover {
+	background-color: var(--create-background-color);
+	border: 2px solid var(--create-border-color);
+}
+
+.contacts > .item.create > .head > div {
+	border: 2px solid var(--create-border-color);
+}
+
+.contacts > .item.delete {
+	border: 2px solid #ec7b7b;
+}
+
+.contacts > .item.delete:hover {
+	border: 2px solid #f79999;
+	background-color: rgb(255, 240, 240);
+}
+
+.contacts > .item.delete > .head > div {
+	border: 2px solid #ec7b7b;
 }
 
 .contacts > .item > .head {
@@ -121,6 +151,16 @@ export default {
 .contacts > .item > .body > .title {
 	font-size: 22px;
 	color: var(--primary-color);
+
+	transition: all 0.2s;
+}
+
+.contacts > .item.create > .body > .title {
+	color: #44a533;
+}
+
+.contacts > .item.delete > .body > .title {
+	color: #a53333;
 }
 
 .contacts > .item > .body > .info {
@@ -211,5 +251,18 @@ ul::-webkit-scrollbar-thumb:hover {
 
 span.empty {
 	color: #c7c7c7;
+}
+
+@media screen and (width <= 1810px) {
+	.contacts {
+		grid-template-columns: repeat(2, 1fr);
+		grid-auto-rows: none;
+	}
+}
+
+@media screen and (max-width: 1360px) {
+	.contacts {
+		grid-template-columns: repeat(1, 1fr);
+	}
 }
 </style>
