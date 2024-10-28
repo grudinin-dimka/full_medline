@@ -3,36 +3,51 @@
 	<!--|                  МОДАЛЬНОЕ ОКНО                   |-->
 	<!--|___________________________________________________|-->
 	<admin-modal ref="modal" @touchCloseModal="closeModal('modal')" :modal="modal">
-		<template #title v-if="true">
+		<template
+			#title
+			v-if="
+				modal.type == 'edit' ||
+				currentContact.data.create.body !== true ||
+				currentContact.data.delete.body !== true
+			"
+		>
+			<span v-if="modal.type == 'create'">КОНТАКТ (СОЗДАНИЕ)</span>
+			<span v-if="modal.type == 'edit'">КОНТАКТ (РЕДАКТИРОВАНИЕ)</span>
+		</template>
+		<template #title v-else>
 			<icon-arrow :width="16" :height="16" :rotate="-90" @click="" />
 			#test
 			<icon-arrow :width="16" :height="16" :rotate="90" @click="" />
 		</template>
-		<template #title v-if="true">
-			<span v-if="modal.type == 'create'">КОНТАКТ (СОЗДАНИЕ)</span>
-			<span v-if="modal.type == 'edit'">КОНТАКТ (РЕДАКТИРОВАНИЕ)</span>
-		</template>
 		<template #body>
 			<ContainerInput>
-				<container-textarea-once :type="'edit'">
+				<container-textarea-once
+					:type="modal.type == 'create' ? 'create' : modal.style.delete ? 'delete' : 'edit'"
+				>
 					<template #title>
 						<span>ЗАГОЛОВОК</span>
-						<span v-if="false"> (ИЗМЕНЕНО) </span>
+						<span v-if="currentContact.data.name.edited"> (ИЗМЕНЕНО) </span>
 					</template>
 					<template #textarea>
 						<textarea
 							rows="4"
 							placeholder="Введите заголовок"
 							autocomplete="off"
-							:class="{ error: false }"
+							:class="{ error: currentContact.errors.name.status }"
 							v-model="currentContact.data.name.body"
+							@input="currentContact.data.name.edited = true"
+							@blur="checkModalInput('currentContact', 'name', 'text')"
 						></textarea>
 					</template>
 					<template #error>
-						<span class="error" v-if="false"> Ошибка </span>
+						<span class="error" v-if="currentContact.errors.name.status">
+							{{ currentContact.errors.name.body }}
+						</span>
 					</template>
 				</container-textarea-once>
-				<ContainerSelectOnce type="edit">
+				<ContainerSelectOnce
+					:type="modal.type == 'create' ? 'create' : modal.style.delete ? 'delete' : 'edit'"
+				>
 					<template #title>
 						<span>КЛИНИКА</span>
 					</template>
@@ -46,6 +61,7 @@
 					</template>
 				</ContainerSelectOnce>
 				<admin-modal-list
+					:type="modal.type == 'create' ? 'create' : modal.style.delete ? 'delete' : 'edit'"
 					:array="currentContact.data.phones.body"
 					@touchCreate="createContactPhone"
 					@touchEdit="editContactPhone"
@@ -54,6 +70,7 @@
 					<template #title>☎ ТЕЛЕФОНЫ</template>
 				</admin-modal-list>
 				<admin-modal-list
+					:type="modal.type == 'create' ? 'create' : modal.style.delete ? 'delete' : 'edit'"
 					:array="currentContact.data.mails.body"
 					@touchCreate="createContactMail"
 					@touchEdit="editContactMail"
@@ -68,9 +85,11 @@
 		</template>
 		<template #footer>
 			<BlockButtons>
-				<button-claim v-if="false"> Создать </button-claim>
-				<button-remove> Удалить </button-remove>
-				<ButtonDefault @click="updateContact"> Обновить </ButtonDefault>
+				<button-claim v-if="modal.type == 'create'" @click="addContact"> Создать </button-claim>
+				<template v-else>
+					<button-remove> Удалить </button-remove>
+					<ButtonDefault @click="updateContact"> Обновить </ButtonDefault>
+				</template>
 			</BlockButtons>
 		</template>
 	</admin-modal>
@@ -176,7 +195,9 @@
 				<button-default v-if="subModalMail.type == 'edit'" @click="updateContactMail">
 					Обновить
 				</button-default>
-				<button-claim v-if="subModalMail.type == 'create'" @click="addContactMail"> Добавить </button-claim>
+				<button-claim v-if="subModalMail.type == 'create'" @click="addContactMail">
+					Добавить
+				</button-claim>
 			</block-buttons>
 		</template>
 	</admin-sub-modal>
@@ -213,7 +234,7 @@
 		/>
 
 		<BlockButtons>
-			<ButtonDefault @click=""> Добавить </ButtonDefault>
+			<ButtonDefault @click="openModal('create')"> Добавить </ButtonDefault>
 		</BlockButtons>
 	</block-once>
 </template>
@@ -252,6 +273,7 @@ import IconRemove from "../../../components/icons/IconRemove.vue";
 import IconCreate from "../../../components/icons/IconCreate.vue";
 
 import axios from "axios";
+import shared from "../../../services/shared.js";
 
 export default {
 	components: {
@@ -493,7 +515,7 @@ export default {
 						this[name].style.create = true;
 						this[name].style.delete = false;
 						if (name === "modal") {
-							this.clearModalData("currentInfoBlock");
+							this.clearModalData("currentContact");
 						}
 					}
 					document.body.classList.add("modal-open");
@@ -657,7 +679,12 @@ export default {
 		/* Очистка содержимого модального окна */
 		clearModalData(name = "currentInfoBlock") {
 			for (let key in this[name].data) {
-				this[name].data[key].body = "";
+				if (key === "phones" || key === "mails") {
+					this[name].data[key].body = [];
+					continue;
+				}
+
+				this[name].data[key].body = null;
 			}
 		},
 		/* Очистка содержимого модального окна */
@@ -669,13 +696,39 @@ export default {
 		/* Очистка ошибок */
 		clearModalErrors(name = "currentInfoBlock") {
 			for (let key in this[name].errors) {
-				this[name].errors[key].body = "";
+				this[name].errors[key].body = null;
 				this[name].errors[key].status = false;
 			}
 		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                    КОНТАКТЫ                       |*/
 		/* |___________________________________________________|*/
+		/* Добавление */
+		addContact() {
+			try {
+				if (this.checkModalInput("currentContact", "name", "text")) return;
+
+				this.contacts.push({
+					id: shared.getMaxId(this.contacts) + 1,
+					order: shared.getMaxOrder(this.contacts) + 1,
+					name: this.currentContact.data.name.body,
+					clinicId: this.currentContact.data.clinicId.body,
+					phones: [...this.currentContact.data.phones.body],
+					mails: [...this.currentContact.data.mails.body],
+					create: true,
+					delete: false,
+				});
+
+				this.closeModal("modal");
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Не удалось добавить контакт.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
 		/* Изменение */
 		editContact(selectedContact) {
 			for (let key in this.currentContact.data) {
@@ -892,7 +945,7 @@ export default {
 					}
 				});
 
-				return maxId;
+				return Number(maxId);
 			} catch (error) {
 				let debbugStory = {
 					title: "Ошибка.",
@@ -914,7 +967,7 @@ export default {
 					}
 				});
 
-				return maxOrder;
+				return Number(maxOrder);
 			} catch (error) {
 				let debbugStory = {
 					title: "Ошибка.",

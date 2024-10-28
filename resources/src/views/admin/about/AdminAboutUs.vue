@@ -703,15 +703,9 @@ export default {
 		/* Добавление */
 		addInfoBlock() {
 			try {
-				// Поиск максимального id
-				let maxId = this.getMaxIdFromArray(this.infoBlocks);
-
-				// // Поиск максимального order
-				let maxOrder = this.getMaxOrderFromArray(this.infoBlocks);
-
 				this.infoBlocks.push({
-					id: maxId + 1,
-					order: maxOrder + 1,
+					id: this.getMaxIdFromArray(this.infoBlocks) + 1,
+					order: this.getMaxOrderFromArray(this.infoBlocks) + 1,
 					title: this.currentInfoBlock.data.title.body,
 					description: this.currentInfoBlock.data.description.body,
 					imageOne: this.currentInfoBlock.data.imageOne.body,
@@ -897,7 +891,7 @@ export default {
 					}
 				});
 
-				return maxId;
+				return Number(maxId);
 			} catch (error) {
 				let debbugStory = {
 					title: "Ошибка.",
@@ -919,7 +913,7 @@ export default {
 					}
 				});
 
-				return maxOrder;
+				return Number(maxOrder);
 			} catch (error) {
 				let debbugStory = {
 					title: "Ошибка.",

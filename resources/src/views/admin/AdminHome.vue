@@ -910,20 +910,14 @@ export default {
 					.then((response) => {
 						if (response.data.status) {
 							try {
-								// Поиск максимального id
-								let maxId = this.getMaxIdFromArray("slides");
-
-								// // Поиск максимального order
-								let maxOrder = this.getMaxOrderFromArray("slides");
-
 								this.slides.push({
-									id: maxId + 1,
+									id: this.getMaxIdFromArray(this.slides) + 1,
+									order: this.getMaxOrderFromArray(this.slides) + 1,
 									name: this.$refs.inputName.value,
 									link: this.$refs.inputLink.value,
 									path: response.data.data,
 									filename: response.data.data.replace("/storage/slides/", ""),
 									hide: false,
-									order: maxOrder + 1,
 									create: true,
 									delete: false,
 								});
@@ -1123,18 +1117,18 @@ export default {
 				});
 		},
 		/* Поиск максимального id */
-		getMaxIdFromArray(arrayName) {
+		getMaxIdFromArray(array) {
 			try {
 				// Поиск максимального id
 				let maxId = 0;
 
-				this[arrayName].forEach((item) => {
+				array.forEach((item) => {
 					if (item.id > maxId) {
 						maxId = item.id;
 					}
 				});
 
-				return maxId;
+				return Number(maxId);
 			} catch (error) {
 				let debbugStory = {
 					title: "Ошибка.",
@@ -1145,18 +1139,18 @@ export default {
 			}
 		},
 		/* Поиск максимального order */
-		getMaxOrderFromArray(arrayName) {
+		getMaxOrderFromArray(array) {
 			try {
 				// Поиск максимального order
 				let maxOrder = 0;
 
-				this[arrayName].forEach((item) => {
+				array.forEach((item) => {
 					if (item.order > maxOrder) {
 						maxOrder = item.order;
 					}
 				});
 
-				return maxOrder;
+				return Number(maxOrder);
 			} catch (error) {
 				let debbugStory = {
 					title: "Ошибка.",

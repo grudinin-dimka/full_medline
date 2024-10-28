@@ -745,16 +745,8 @@ export default {
 				return;
 
 			try {
-				// Поиск максимального id
-				let maxId = 0;
-				for (let key in this.clinics) {
-					if (this.clinics[key].id > maxId) {
-						maxId = this.clinics[key].id;
-					}
-				}
-
 				this.clinics.push({
-					id: maxId + 1,
+					id: this.getMaxIdFromArray(this.clinics) + 1,
 					name: this.currentClinic.data.name.body,
 					city: this.currentClinic.data.city.body,
 					street: this.currentClinic.data.street.body,
@@ -865,6 +857,53 @@ export default {
 					};
 					this.$store.commit("debuggerState", debbugStory);
 				});
+		},
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                  ОБЩИЕ МЕТОДЫ                     |*/
+		/* |___________________________________________________|*/
+		/* Поиск максимального id */
+		getMaxIdFromArray(array) {
+			try {
+				// Поиск максимального id
+				let maxId = 0;
+
+				array.forEach((item) => {
+					if (item.id > maxId) {
+						maxId = item.id;
+					}
+				});
+
+				return Number(maxId);
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Не удалось получить максимальный id.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
+		/* Поиск максимального order */
+		getMaxOrderFromArray(array) {
+			try {
+				// Поиск максимального order
+				let maxOrder = 0;
+
+				array.forEach((item) => {
+					if (item.order > maxOrder) {
+						maxOrder = item.order;
+					}
+				});
+
+				return Number(maxOrder);
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Не удалось получить максимальный order.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
 		},
 	},
 	mounted() {

@@ -1,5 +1,5 @@
 <template>
-	<div class="modal-list">
+	<div class="modal-list" :class="{ create: type === 'create', delete: type === 'delete' }">
 		<div class="item">
 			<div class="content default">
 				<slot name="title"></slot>
@@ -36,6 +36,11 @@ export default {
 		IconRemove,
 	},
 	props: {
+		type: {
+			type: String,
+			default: "",
+			required: true,
+		},
 		array: {
 			type: Array,
 			required: true,
@@ -82,6 +87,14 @@ export default {
 .modal-list > .item > .content.default {
 	font-size: 18px;
 	font-family: "Rubik";
+}
+
+.modal-list.create > .item > .content.default {
+	color: #44a533;
+}
+
+.modal-list.delete > .item > .content.default {
+	color: #a53333;
 }
 
 .modal-list > .item > .buttons {

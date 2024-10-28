@@ -403,16 +403,8 @@ export default {
 		addSpecialization() {
 			if (this.checkModalInputsAll(["name"])) return;
 			try {
-				// Поиск максимального id
-				let maxId = 0;
-				for (let key in this.specializations) {
-					if (this.specializations[key].id > maxId) {
-						maxId = this.specializations[key].id;
-					}
-				}
-
 				this.specializations.push({
-					id: maxId + 1,
+					id: this.getMaxIdFromArray(this.specializations) + 1,
 					name: this.currentSpecialization.data.name.body,
 					create: true,
 					delete: false,
@@ -548,6 +540,53 @@ export default {
 					};
 					this.$store.commit("debuggerState", debbugStory);
 				});
+		},
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                  ОБЩИЕ МЕТОДЫ                     |*/
+		/* |___________________________________________________|*/
+		/* Поиск максимального id */
+		getMaxIdFromArray(array) {
+			try {
+				// Поиск максимального id
+				let maxId = 0;
+
+				array.forEach((item) => {
+					if (item.id > maxId) {
+						maxId = item.id;
+					}
+				});
+
+				return Number(maxId);
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Не удалось получить максимальный id.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
+		},
+		/* Поиск максимального order */
+		getMaxOrderFromArray(array) {
+			try {
+				// Поиск максимального order
+				let maxOrder = 0;
+
+				array.forEach((item) => {
+					if (item.order > maxOrder) {
+						maxOrder = item.order;
+					}
+				});
+
+				return Number(maxOrder);
+			} catch (error) {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Не удалось получить максимальный order.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			}
 		},
 	},
 	mounted() {
