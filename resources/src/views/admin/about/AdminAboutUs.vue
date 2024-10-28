@@ -569,7 +569,6 @@ export default {
 				this.currentImage.errors.body = "Поле не может быть пустым.";
 				return;
 			}
-			/* STOP остановился на том, что контроллер возвращает ошибку, так как файл не пнг, надо это переделать */
 			/* Проверка на тип загруженного файла */
 			if (
 				this.$refs.fileUpload.files[0].type !== "image/png" &&

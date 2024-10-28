@@ -173,9 +173,8 @@
 		</block-title>
 
 		<template v-if="loading.slider">
-			<div class="slider">
+			<div class="slider" v-if="slides.length > 0">
 				<div
-					v-if="slides.length > 0"
 					v-for="slide in slides"
 					:key="slide.id"
 					class="slider-block"
