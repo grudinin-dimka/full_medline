@@ -7,15 +7,15 @@
 
 	<!-- TODO: Сделать фильтры, в идеале, чтобы при вводе specialists/terapevt выводились врачи -->
 	<!-- <filters v-if="loading.sections.specialists" :filters="filters"></filters> -->
-	<block>
+	<block :minHeight="400">
+		<loader-child
+			:isLoading="loading.loader.specialists"
+			:minHeight="400"
+			@loaderChildAfterLeave="loaderChildAfterLeave"
+		/>
+
 		<specialists-list :specialists="specialists" v-if="loading.sections.specialists" />
 	</block>
-
-	<loader-child
-		:isLoading="loading.loader.specialists"
-		:minHeight="400"
-		@loaderChildAfterLeave="loaderChildAfterLeave"
-	/>
 </template>
 
 <script>
@@ -102,7 +102,7 @@ export default {
 			})
 			.finally(() => {
 				if (this.specialists != null) {
-					this.loading.loader.specialists = false;					
+					this.loading.loader.specialists = false;
 				}
 			});
 	},

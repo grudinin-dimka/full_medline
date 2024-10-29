@@ -1,13 +1,13 @@
 <template>
 	<div class="contacts">
-		<div class="item one">
+		<div class="item" v-for="contact in contacts" :class="{ one: contact.clinicId == null }">
 			<div class="info">
-				<div class="title">Колл-центр</div>
+				<div class="title">{{ contact.name }}</div>
 				<div class="body">
 					<div class="phone">
 						<div class="title">Телефоны:</div>
 						<ul>
-							<li><a href="tel:+79999999999">+7(352)-539-000-9</a></li>
+							<li v-for="phone in contact.phones"><a :href="`tel:${phone.name}}`">+7(352)-539-000-9</a></li>
 						</ul>
 					</div>
 					<div class="mail">
@@ -18,41 +18,30 @@
 					</div>
 				</div>
 			</div>
-		</div>
-		<div class="item">
-			<div class="info">
-				<div class="title">Анализы</div>
-				<div class="body">
-					<div class="phone">
-						<div class="title">Телефоны:</div>
-						<ul>
-							<li><a href="tel:+79999999999">+7(352)-539-000-9</a></li>
-							<li><a href="tel:+79999999999">+7(963)-007-00-17.</a></li>
-							<li><a href="tel:+79999999999">+7(352)-573-99-99</a></li>
-						</ul>
-					</div>
-					<div class="mail">
-						<div class="title">Почта:</div>
-						<ul>
-							<li><a href="mailto:test@mail.ru">qualitycontrol@medline45.ru</a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-			<div class="map">
+			<div class="map" v-if="contact.clinicId != null">
 				<iframe
 					style="border-radius: 10px"
 					src="https://yandex.ru/map-widget/v1/?um=constructor%3A7af7f250778eef37a11601b4f0f7ff863c6091a436469b719e799d859bf99d33&amp;source=constructor"
 					height="100%"
-               width="100%"
-               frameborder="0"
+					width="100%"
+					frameborder="0"
 				></iframe>
 			</div>
 		</div>
 	</div>
 </template>
 
-<script></script>
+<script>
+export default {
+	props: {
+		contacts: {
+			type: Array,
+			required: true,
+			default: [],
+		},
+	},
+};
+</script>
 
 <style scoped>
 .contacts {
@@ -60,6 +49,8 @@
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
+
+	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 .contacts > .item {

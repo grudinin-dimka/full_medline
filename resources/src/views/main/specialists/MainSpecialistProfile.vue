@@ -16,7 +16,7 @@
 		</router-link>
 	</info-bar>
 
-	<block>
+	<block :minHeight="400">
 		<div class="container-specialist-profile" v-if="loading.sections.profile">
 			<img :src="specialist.profile.path" />
 			<div class="specialist-profile">
@@ -94,13 +94,14 @@
 				</table>
 			</div>
 		</div>
+
+		<loader-child
+			:isLoading="loading.loader.profile"
+			:minHeight="400"
+			@loaderChildAfterLeave="loaderChildAfterLeave"
+		/>
 	</block>
 
-	<loader-child
-		:isLoading="loading.loader.profile"
-		:minHeight="400"
-		@loaderChildAfterLeave="loaderChildAfterLeave"
-	/>
 </template>
 
 <script>

@@ -1,21 +1,27 @@
 <template>
-   <section>
-      <slot></slot>
-   </section>
+	<section :style="{ minHeight: `${minHeight}px` }">
+		<slot></slot>
+	</section>
 </template>
 
 <script>
-
+export default {
+   props: {
+      minHeight: {
+         type: Number,
+         default: '400',
+      },
+   },
+}
 </script>
 
 <style scoped>
-   section {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 20px;
+section {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 20px;
 
-      margin: 20px 30px;
-   }
+	margin: 20px 30px;
+}
 </style>

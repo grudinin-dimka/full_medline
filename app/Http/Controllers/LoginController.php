@@ -14,92 +14,96 @@ use App\Models\Footer;
 
 class LoginController extends Controller
 {
-  public function index(Request $request) {
-    return 'Успешно';
-  }
+   /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+   /* |                     ТОКЕНЫ                        |*/
+   /* |___________________________________________________|*/
+   /* _____________________________________________________*/
+   /* 1. Проверки                                          */
+   /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+   public function checkToken(Request $request) {
+      if (!($request->user())) {
+         return response()->json([
+         'status' => false,
+         'message' => 'Токен недействителен.',
+         'data' => null,
+         ]);
+      }
+   }
 
-  public function checkToken(Request $request) {
-    if (!($request->user())) {
-      return response()->json([
-        'status' => false,
+   /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+   /* |                  ПОЛЬЗОВАТЕЛИ                     |*/
+   /* |___________________________________________________|*/
+   /* _____________________________________________________*/
+   /* 1. Основные действия                                 */
+   /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+   /* Авторизация */
+   public function loginUser(Request $request) {
+      // Валидация данных
+      $validated = validator($request->all(), [
+         "name" => "required",
+         "password" => "required"      
       ]);
-    }
-  }
+      if ($validated->fails()) return response()->json([
+         "status" => false,
+         "message" => "Есть ошибки.",
+         "token" => "",
+      ]);
 
-  /*-----------------------------------------*/
-  /*--------Автороизация пользователя--------*/
-  /*-----------------------------------------*/
-  public function loginUser(Request $request) {
-    // Валидация данных
-    $validated = validator($request->all(), [
-      "name" => "required",
-      "password" => "required"      
-    ]);
-    if ($validated->fails()) return response()->json([
-      "status" => false,
-      "message" => "Есть ошибки.",
-      "token" => "",
-    ]);
+      // Поиск пользователя по логину в бд
+      $user = User::where('name', $request->name)->first();    
+      if (!$user) return response()->json([
+         "status" => false,
+         "message" => "Пользователь не найден.",
+         "token" => '',
+      ]);
 
-    // Поиск пользователя по логину в бд
-    $user = User::where('name', $request->name)->first();    
-    if (!$user) return response()->json([
-      "status" => false,
-      "message" => "Пользователь не найден.",
-      "token" => '',
-    ]);
+      // Проверка хешированного пароля
+      $hashPass = Hash::check($request->password, $user->password);      
+      if (!$hashPass) return response()->json([
+         "status" => false,
+         "message" => "Неверный логин или пароль.",
+         "token" => "",
+      ]);
 
-    // Проверка хешированного пароля
-    $hashPass = Hash::check($request->password, $user->password);      
-    if (!$hashPass) return response()->json([
-      "status" => false,
-      "message" => "Неверный логин или пароль.",
-      "token" => "",
-    ]);
+      $user->tokens()->delete();
+      return response()->json([
+         "status" => true,
+         "message" => "Авторизация пройдена.",
+         "result" => (object) [
+         "token" => $user->createToken('auth_token')->plainTextToken,
+         "user" => (object) [
+            "id" => $user->id,
+            "name" => $user->name,
+            "email" => $user->email,
+         ],
+         ],
+      ]);
+   }  
 
-    $user->tokens()->delete();
-    return response()->json([
-      "status" => true,
-      "message" => "Авторизация пройдена.",
-      "result" => (object) [
-        "token" => $user->createToken('auth_token')->plainTextToken,
-        "user" => (object) [
-          "id" => $user->id,
-          "name" => $user->name,
-          "email" => $user->email,
-        ],
-      ],
-    ]);
-  }  
-  
-  /*-----------------------------------------*/
-  /*------------Выход из аккаунта------------*/
-  /*-----------------------------------------*/
-  public function logoutUser(Request $request) {
-    $request->user()->currentAccessToken()->delete();
-    if ($request) {
-      return 'Токен удалён.';
-    } else {
-      return 'Токен не удалён.';
-    };
-  }
+   /* Выход */
+   public function logoutUser(Request $request) {
+      $request->user()->currentAccessToken()->delete();
+      if ($request) {
+         return 'Токен удалён.';
+      } else {
+         return 'Токен не удалён.';
+      };
+   }
 
-  /*-----------------------------------------*/
-  /*--------Регистрация пользователя---------*/
-  /*-----------------------------------------*/
-  public function registerUser(Request $request) {
-    dump($request->all());
+   /* Регистрация */
+   public function registerUser(Request $request) {
+      dump($request->all());
 
-    // Поиск почты в бд
-    $user = User::where('email', $request->email)->first();    
-    if ($user) return 'Пользователь с таккой почтой уже есть.';
+      // Поиск почты в бд
+      $user = User::where('email', $request->email)->first();    
+      if ($user) return 'Пользователь с таккой почтой уже есть.';
 
-    $user = User::create([
-      'name' => 'user', 
-      'email' => 'user@mail.ru', 
-      'password' => Hash::make('123456')
-    ]);
+      $user = User::create([
+         'name' => 'user', 
+         'email' => 'user@mail.ru', 
+         'password' => Hash::make('123456')
+      ]);
 
-    dd($user);
-  }
+      dd($user);
+   }
 }

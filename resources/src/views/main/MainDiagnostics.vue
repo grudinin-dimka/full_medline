@@ -5,7 +5,7 @@
 		<router-link to="/diagnostics">Диагностика</router-link>
 	</info-bar>
 
-	<block>
+	<block :minHeight="400">
 		<loader-child :isLoading="isLoading" />
 	</block>
 </template>

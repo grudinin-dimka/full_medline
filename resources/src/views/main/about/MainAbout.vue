@@ -5,8 +5,13 @@
 		<router-link to="/about">О нас</router-link>
 	</info-bar>
 
-	<block>
-		<MainAboutList v-if="loading.sections.about" :abouts="abouts"/>
+	<block :minHeight="400">
+		<template v-if="loading.sections.about">
+			<MainAboutList :abouts="abouts" />
+
+			<Empty :minHeight="300" v-if="abouts.length == 0"></Empty>
+		</template>
+
 		<loader-child
 			:isLoading="loading.loader.about"
 			@loaderChildAfterLeave="loaderChildAfterLeave"
@@ -20,6 +25,8 @@ import LoaderChild from "../../../components/includes/LoaderChild.vue";
 import Block from "../../../components/ui/main/blocks/Block.vue";
 import MainAboutList from "./MainAboutList.vue";
 
+import Empty from "../../../components/includes/Empty.vue";
+
 import axios from "axios";
 
 export default {
@@ -28,6 +35,7 @@ export default {
 		LoaderChild,
 		Block,
 		MainAboutList,
+		Empty,
 		axios,
 	},
 	methods: {
@@ -65,7 +73,7 @@ export default {
 
 					this.abouts.sort((a, b) => {
 						return a.order - b.order;
-					})
+					});
 				} else {
 					this.specialists = null;
 
