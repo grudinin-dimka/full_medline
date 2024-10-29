@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 // Для загрузки файлов
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 Use Illuminate\Http\UploadedFile;
 
 use Illuminate\Support\Facades\Hash;
@@ -315,11 +316,17 @@ class AdminController extends Controller
       ]);
    }
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-   /* |                     О НАС                         |*/
+   /* |                    КОНТАКТЫ                       |*/
    /* |___________________________________________________|*/
    /* _____________________________________________________*/
    /* 1. Информационные блоки                              */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+      /* STOP делал сохранение телефонов, надо сделать дальше: 
+         1) Сначала удалять связанные телфоны
+         2) Затем создавать новые
+         3) Тоже самое сделать с почтами
+         4) Также надо сделать обновление интерфейса на вью после сохранения
+      */
    public function saveContactsChanges(Request $request) {
       $contacts = json_decode($request->contacts);
       $arrayID = [];
@@ -327,23 +334,24 @@ class AdminController extends Controller
       foreach ($contacts as $key => $value) {
          // Удаление
          if ($value->delete === true) {
-            $about = Contact::find($value->id);
-            $about->delete();
+            $contact = Contact::find($value->id);
+            $contact->delete();
             continue;
          };
-         /* STOP делал сохранение телефонов, надо сделать дальше: 
-            1) Сначала удалять связанные телфоны
-            2) Затем создавать новые
-            3) Тоже самое сделать с почтами
-            4) Также надо сделать обновление интерфейса на вью после сохранения
-         */
          // Добавление
          if ($value->create === true){
-            $aboutCreate = Contact::create([
+            $contactCreate = Contact::create([
                "name" => $value->name,
                "order" => $value->order,
                "clinicId" => $value->clinicId ? $value->clinicId : null,
             ]);
+               
+            // Телефоны
+            $phones = ContactPhone::where('contactId', $value->id)->get();
+            foreach ($phones as $phoneKey => $phoneValue) {
+               $phone = Phone::find($phoneValue->phoneId);
+               $phone->delete();
+            };
 
             foreach ($value->phones as $key => $valuePhone) {
                $phoneCreate = Phone::create([
@@ -351,17 +359,35 @@ class AdminController extends Controller
                ]);
    
                ContactPhone::create([
-                  'contactId' => $aboutCreate->id,
+                  'contactId' => $contactCreate->id,
                   'phoneId' => $phoneCreate->id,
                ]);
-            }   
+            }
 
+            // Почты
+            $emails = ContactMail::where("contactId", $value->id)->get();
+            foreach ($emails as $emailKey => $emailValue) {
+               $email = Mail::find($emailValue->mailId);
+               $email->delete();
+            };
+
+            foreach ($value->mails as $key => $valueEmail) {
+               $emailCreate = Mail::create([
+                  "name" => $valueEmail->name,
+               ]);
+   
+               ContactMail::create([
+                  "contactId" => $contactCreate->id,
+                  "mailId" => $emailCreate->id,
+               ]);
+            }
+            
             /* Запись нового объекта в массив */
             $arrayID[] = (object) [
                // Прошлый id
-               'old' => $value->id, 
+               "old" => $value->id, 
                // Новый id
-               'new' => $aboutCreate->id
+               "new" => $contactCreate->id
             ];
             continue;
          };
@@ -371,8 +397,15 @@ class AdminController extends Controller
          $contact->update([
             "name" => $value->name,
             "order" => $value->order,
-            "clinicId" => $value->clinicId ? $value->clinicId : null,
+            "clinicId" => ($value->clinicId == "null" || $value->clinicId == null) ? null : $value->clinicId,
          ]);   
+
+         // Телефоны
+         $phones = ContactPhone::where("contactId", $value->id)->get();
+         foreach ($phones as $phoneKey => $phoneValue) {
+            $phone = Phone::find($phoneValue->phoneId);
+            $phone->delete();
+         };
 
          foreach ($value->phones as $key => $valuePhone) {
             $phoneCreate = Phone::create([
@@ -380,10 +413,39 @@ class AdminController extends Controller
             ]);
 
             ContactPhone::create([
-               'contactId' => $contact->id,
-               'phoneId' => $phoneCreate->id,
+               "contactId" => $contact->id,
+               "phoneId" => $phoneCreate->id,
             ]);
          }
+
+         // Почты
+         $emails = ContactMail::where('contactId', $value->id)->get();
+         foreach ($emails as $emailKey => $emailValue) {
+            $email = Mail::find($emailValue->mailId);
+            $email->delete();
+         };
+
+         foreach ($value->mails as $key => $valueEmail) {
+            $emailCreate = Mail::create([
+               "name" => $valueEmail->name,
+            ]);
+
+            ContactMail::create([
+               'contactId' => $contact->id,
+               'mailId' => $emailCreate->id,
+            ]);
+         }
+      };
+
+      // Сортировка слайдов по порядку от наименьшего до наибольшого
+      $contactAll = Contact::all()->SortBy('order');
+
+      // Обновление порядковых номеров
+      $count = 0;
+      foreach ($contactAll as $contactKey => $contactValue) {
+         $count++;
+         $contactValue->order = $count;
+         $contactValue->save();
       };
 
       return response()->json([

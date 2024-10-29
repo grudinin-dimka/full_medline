@@ -68,7 +68,7 @@ export default {
 .contacts {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
-	grid-auto-rows: 250px;
+	grid-auto-rows: 300px;
 	gap: 20px;
 
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
@@ -263,6 +263,16 @@ span.empty {
 @media screen and (max-width: 1360px) {
 	.contacts {
 		grid-template-columns: repeat(1, 1fr);
+	}
+}
+
+@media screen and (max-width: 530px) {
+	.contacts > .item > .body > .info {
+		grid-template-columns: minmax(200px, 1fr);
+	}
+
+	.contacts {
+		grid-auto-rows: 400px;
 	}
 }
 </style>

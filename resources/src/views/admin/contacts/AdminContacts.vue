@@ -788,10 +788,10 @@ export default {
 				.then((response) => {
 					if (response.data.status) {
 						try {
-							// shared.updateId(this.contacts, response.data.data);
-							// shared.clearDeletes(this.contacts);
-							// shared.clearFlags(this.contacts);
-							// shared.updateOrders(this.contacts);
+							shared.updateId(this.contacts, response.data.data);
+							shared.clearDeletes(this.contacts);
+							shared.clearFlags(this.contacts);
+							shared.updateOrders(this.contacts);
 
 							let debbugStory = {
 								title: "Успешно!",
@@ -875,7 +875,7 @@ export default {
 							elementNext.order--;
 						}
 
-						sorted.sortByOrder(this.contacts);
+						sorted.sortByOrder("up", this.contacts);
 					}
 					break;
 				case "down":
@@ -890,7 +890,7 @@ export default {
 							elementPrevious.order++;
 						}
 
-						sorted.sortByOrder(this.contacts);
+						sorted.sortByOrder("up", this.contacts);
 					}
 					break;
 			}
