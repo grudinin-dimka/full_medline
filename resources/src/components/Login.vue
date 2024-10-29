@@ -1,5 +1,5 @@
 <template>
-   <debugger/>
+	<debugger />
 
 	<div class="container-login">
 		<div class="login">
@@ -70,7 +70,7 @@ export default {
 		}
 	},
 	components: {
-      Debugger,
+		Debugger,
 		axios,
 		RouterLink,
 		RouterView,
@@ -151,9 +151,7 @@ export default {
 							localStorage.setItem("token", response.data.token);
 
 							axios.defaults.headers.common["Accept"] = "application/json";
-							axios.defaults.headers.common[
-								"Authorization"
-							] = `Bearer ${localStorage.getItem("token")}`;
+							axios.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem("token")}`;
 
 							// Вводим первоначальные данные активной ссылки
 							localStorage.setItem("linkActiveName", "ehome");
@@ -167,7 +165,7 @@ export default {
 							this.errors.name.value = "";
 							this.errors.password.status = false;
 							this.errors.password.value = "";
-                     
+
 							return;
 						} else {
 							let debbugStory = {

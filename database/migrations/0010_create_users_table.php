@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
+            $table->string('email')->unique();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
@@ -38,6 +39,7 @@ return new class extends Migration
    
         DB::table('users')->insert([
             'name' => 'Admin',
+            'email' => 'admin@admin',
             'password' => Hash::make('123456'),
         ]);
         

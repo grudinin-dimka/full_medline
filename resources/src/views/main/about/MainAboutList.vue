@@ -63,7 +63,7 @@ export default {
 }
 
 .about > .item > .title {
-	font-size: 20px;
+	font-size: 22px;
 	font-weight: bold;
 
 	color: var(--primary-color);

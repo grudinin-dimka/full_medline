@@ -171,7 +171,7 @@ export default {
 
 .contacts > .item > .body > .info > :is(.mail, .phone) > ul {
 	padding: 0px;
-	margin: 0px 10px;
+	margin: 0px 0px 0px 20px;
 	inline-size: 80%;
 
 	overflow-y: auto;
@@ -237,16 +237,6 @@ ul::-webkit-scrollbar-thumb:hover {
 	content: "☎";
 	padding-right: 10px;
 	font-weight: bold;
-}
-
-.contacts > .item > .body > .phone > ul {
-	padding: 0px 30px;
-	margin: 5px;
-}
-
-.contacts > .item > .body > .phone > ul > li {
-	padding: 10px;
-	margin: 0px;
 }
 
 span.empty {

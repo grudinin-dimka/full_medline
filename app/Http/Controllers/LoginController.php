@@ -62,6 +62,14 @@ class LoginController extends Controller
       "status" => true,
       "message" => "Авторизация пройдена.",
       "token" => $user->createToken('auth_token')->plainTextToken,
+      "data" => (object) [
+        "token" => $user->createToken('auth_token')->plainTextToken,
+        "user" => (object) [
+          "id" => $user->id,
+          "name" => $user->name,
+          "email" => $user->email
+        ],
+      ],
     ]);
   }  
   

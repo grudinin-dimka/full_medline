@@ -6,7 +6,9 @@
 	</info-bar>
 
 	<block>
-		<loader-child :isLoading="isLoading" />
+		<!-- <loader-child :isLoading="isLoading" /> -->
+		
+		<MainContactsList></MainContactsList>
 	</block>
 </template>
 
@@ -15,11 +17,14 @@ import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
 import Block from "../../../components/ui/main/blocks/Block.vue";
 
+import MainContactsList from "./MainContactsList.vue";
+
 export default {
    components: {
       InfoBar,
 		LoaderChild,
 		Block,
+		MainContactsList,
    },
 	data() {
 		return {
