@@ -212,12 +212,16 @@
 		</block-title>
 
 		<!-- Список элементов -->
-		<AdminContactsList
-			v-if="loading.sections.clinics"
-			:contacts="contacts"
-			:clinics="clinics"
-			@touchEditContact="editContact"
-		/>
+		<template v-if="loading.sections.clinics">
+			<AdminContactsList
+				v-if="contacts.length > 0"
+				:contacts="contacts"
+				:clinics="clinics"
+				@touchEditContact="editContact"
+			/>
+
+			<Empty :minHeight="300" v-else />
+		</template>
 
 		<!-- Загрузка элементов -->
 		<loader-child

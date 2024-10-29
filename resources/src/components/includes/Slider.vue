@@ -38,7 +38,6 @@ import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
 import axios from "axios";
 
 export default {
-	name: "Slider",
 	components: {
 		axios,
 		Carousel,
@@ -46,9 +45,15 @@ export default {
 		Pagination,
 		Navigation,
 	},
+	props: {
+		slides: {
+			type: Array,
+			required: true,
+			default: [],
+		},
+	},
 	data() {
 		return {
-			slides: [],
 			windowWidth: null,
 			carouselSettings: {
 				itemsToShow: 5,
@@ -56,24 +61,6 @@ export default {
 		};
 	},
 	mounted() {
-		// Получение массива слайдов с сервера
-		axios({
-			method: "post",
-			url: `${this.$store.state.axios.urlApi}` + `get-slides-not-hide`,
-		})
-			.then((response) => {
-				this.slides = response.data;
-				this.sortSlider();
-			})
-			.catch((error) => {
-				let debbugStory = {
-					title: "Ошибка.",
-					body: "Произошла ошибка при получении данных о слайдере.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
-			});
-
 		window.addEventListener("resize", this.setWidth);
 		window.addEventListener("load", this.setWidth);
 		window.addEventListener("reload", this.setWidth);
@@ -102,10 +89,6 @@ export default {
 	methods: {
 		setWidth() {
 			this.windowWidth = window.document.documentElement.clientWidth;
-		},
-		/* Сортировка списка слайдов по порядку */
-		sortSlider() {
-			this.slides.sort((a, b) => a.order - b.order);
 		},
 	},
 };
@@ -149,6 +132,14 @@ export default {
 }
 
 .carousel {
+	width: 100%;
+
 	animation: show 0.5s ease-out;
+}
+
+@media screen and (width <= 600px) {
+	.carousel {
+		margin-top: 70px;
+	}
 }
 </style>
