@@ -148,10 +148,15 @@ export default {
 					.then((response) => {
 						if (response.data.status) {
 							// Запись токена в глобальную переменную
-							localStorage.setItem("token", response.data.token);
+							localStorage.setItem("token", response.data.result.token);
+							// Запись пользователя в глобальную переменную
+							localStorage.setItem("userName", response.data.result.user.name);
+							localStorage.setItem("userEmail", response.data.result.user.email);
 
 							axios.defaults.headers.common["Accept"] = "application/json";
-							axios.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem("token")}`;
+							axios.defaults.headers.common[
+								"Authorization"
+							] = `Bearer ${localStorage.getItem("token")}`;
 
 							// Вводим первоначальные данные активной ссылки
 							localStorage.setItem("linkActiveName", "ehome");

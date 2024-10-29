@@ -24,6 +24,16 @@ import AdminContent from "./includes/admin/AdminContent.vue";
 import { compile } from "vue";
 
 export default {
+	components: {
+		Loader,
+		Debugger,
+		RouterLink,
+		RouterView,
+		axios,
+		AdminHeader,
+		AdminAside,
+		AdminContent,
+	},
 	data() {
 		return {
 			loader: {
@@ -52,21 +62,15 @@ export default {
 					this.loader.other = true;
 				})
 				.catch((error) => {
-					this.$router.push({ name: 'login' });
+					this.$router.push({ name: "login" });
 					localStorage.removeItem("token");
 					return;
 				});
 		}
 	},
-	components: {
-		Loader,
-		Debugger,
-		RouterLink,
-		RouterView,
-		axios,
-		AdminHeader,
-		AdminAside,
-		AdminContent,
+	mounted() {
+		this.$store.commit("setUserName", localStorage.getItem("userName"));
+		this.$store.commit("setUserEmail", localStorage.getItem("userEmail"));
 	},
 };
 </script>

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->string('email')->unique();
+            $table->foreignId('rightsId')->references('id')->on('rights')->onDelete('cascade');
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
@@ -40,6 +41,7 @@ return new class extends Migration
         DB::table('users')->insert([
             'name' => 'Admin',
             'email' => 'admin@admin',
+            'rightsId' => 1,
             'password' => Hash::make('123456'),
         ]);
         

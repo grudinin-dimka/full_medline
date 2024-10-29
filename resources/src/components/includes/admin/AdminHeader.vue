@@ -2,15 +2,11 @@
 	<header>
 		<img src="../../../assets/svg/logo.svg" alt="Медлайн" />
 		<div class="user">
-			<p>(Надо исправить)</p>
+			<p>{{ $store.state.user.name }}</p>
 		</div>
 	</header>
 	<!-- Кнопка "бургер" -->
-	<div
-		class="burger"
-		@click="openBurger"
-		:class="{ active: $store.state.burger.status }"
-	>
+	<div class="burger" @click="openBurger" :class="{ active: $store.state.burger.status }">
 		<div></div>
 		<div></div>
 		<div></div>

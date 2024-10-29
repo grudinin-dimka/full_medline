@@ -15,6 +15,11 @@ const store = createStore({
 		burger: {
 			status: false,
 		},
+		user: {
+			token: null,
+			name: "asdada",
+			email: null,
+		},
 		debugger: {
 			click: false,
 			show: false,
@@ -50,6 +55,12 @@ const store = createStore({
 		setToken(state, token) {
 			state.user.token = token;
 			console.log(state.user.token);
+		},
+		setUserName(state, userName) {
+			state.user.name = userName;
+		},
+		setUserEmail(state, userEmail) {
+			state.user.email = userEmail;
 		},
 		/* Отображение деббагера */
 		debuggerState(state, debbugStory) {
