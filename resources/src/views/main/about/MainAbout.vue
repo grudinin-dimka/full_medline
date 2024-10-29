@@ -7,9 +7,8 @@
 
 	<block :minHeight="400">
 		<template v-if="loading.sections.about">
-			<MainAboutList :abouts="abouts" />
-
-			<Empty :minHeight="300" v-if="abouts.length == 0"></Empty>
+			<MainAboutList :abouts="abouts" v-if="abouts.length > 0" />
+			<Empty :minHeight="300" v-else />
 		</template>
 
 		<loader-child

@@ -7,13 +7,23 @@
 					<div class="phone">
 						<div class="title">Телефоны:</div>
 						<ul>
-							<li v-for="phone in contact.phones"><a :href="`tel:${phone.name}}`">+7(352)-539-000-9</a></li>
+							<li v-for="phone in contact.phones" v-if="contact.phones.length > 0">
+								<a :href="`tel:${phone.name}}`" :key="phone.id">{{ phone.name }}</a>
+							</li>
+							<li v-else>
+								<span class="empty"> Отсутствует </span>
+							</li>
 						</ul>
 					</div>
 					<div class="mail">
 						<div class="title">Почта:</div>
 						<ul>
-							<li><a href="mailto:test@mail.ru">qualitycontrol@medline45.ru</a></li>
+							<li v-for="mail in contact.mails" v-if="contact.mails.length > 0">
+								<a :href="`mailto:${mail.name}`">{{ mail.name }}</a>
+							</li>
+							<li v-else>
+								<span class="empty"> Отсутствует </span>
+							</li>
 						</ul>
 					</div>
 				</div>
@@ -153,5 +163,9 @@ ul::-webkit-scrollbar-thumb {
 ul::-webkit-scrollbar-thumb:hover {
 	background-color: rgb(210, 210, 210);
 	cursor: all-scroll;
+}
+
+span.empty {
+	color: rgb(199, 199, 199);
 }
 </style>

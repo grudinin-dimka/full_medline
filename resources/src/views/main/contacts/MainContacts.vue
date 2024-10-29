@@ -7,7 +7,9 @@
 
 	<block :minHeight="400">
 		<template v-if="loading.sections.contacts">
-			<MainContactsList :contacts="contacts"></MainContactsList>
+			<MainContactsList :contacts="contacts" v-if="contacts.length > 0"></MainContactsList>
+
+			<Empty :minHeight="300" v-else />
 		</template>
 
 		<loader-child
@@ -53,13 +55,21 @@ export default {
 					phones: [
 						{
 							id: 1,
-							body: "+7 999 999 99 99",
+							name: "+7 999 999 99 99",
+						},
+						{
+							id: 2,
+							name: "+7 999 999 99 99",
+						},
+						{
+							id: 3,
+							name: "+7 999 999 99 99",
 						},
 					],
 					mails: [
 						{
 							id: 1,
-							body: "u9j6G@example.com",
+							name: "u9j6G@example.com",
 						},
 					],
 				},
@@ -71,15 +81,23 @@ export default {
 					phones: [
 						{
 							id: 2,
-							body: "+7 999 999 99 99",
+							name: "+7 999 999 99 99",
 						},
 					],
 					mails: [
 						{
 							id: 2,
-							body: "u9j6G@example.com",
+							name: "u9j6G@example.com",
 						},
 					],
+				},
+				{
+					id: 3,
+					order: 3,
+					name: "Контакт 3",
+					clinicId: null,
+					phones: [],
+					mails: [],
 				},
 			],
 		};
