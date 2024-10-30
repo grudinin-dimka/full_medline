@@ -1,6 +1,6 @@
 <template>
 	<div class="contacts">
-		<div class="item" v-for="contact in contacts" :class="{ one: contact.clinicId == null }">
+		<div class="item" v-for="contact in contacts" :class="{ one: contact.clinic.id == null }">
 			<div class="info">
 				<div class="title">{{ contact.name }}</div>
 				<div class="body">
@@ -28,26 +28,57 @@
 					</div>
 				</div>
 			</div>
-			<div class="map" v-if="contact.clinicId != null">
-				<iframe
-					style="border-radius: 10px"
-					src="https://yandex.ru/map-widget/v1/?um=constructor%3A7af7f250778eef37a11601b4f0f7ff863c6091a436469b719e799d859bf99d33&amp;source=constructor"
-					height="100%"
-					width="100%"
-					frameborder="0"
-				></iframe>
+			<div class="map" v-if="contact.clinic.id != null" @click="showMap" ref="mapContainer">
+				<div class="title" v-if="mapTitle">Загрузить карту</div>
+				<div
+					class="body"
+					id="map"
+					v-if="mapBody"
+					style="width: 100%; height: 100%; border-radius: 10px"
+				></div>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
+async function initMap(name) {
+	await ymaps3.ready;
+
+	let { YMap, YMapDefaultSchemeLayer } = ymaps3;
+
+	let map = new YMap(document.getElementById(name), {
+		location: {
+			center: [37.588144, 55.733842],
+			zoom: 16,
+		},
+	});
+
+	map.addChild(new YMapDefaultSchemeLayer());
+}
+
 export default {
 	props: {
 		contacts: {
 			type: Array,
 			required: true,
 			default: [],
+		},
+	},
+	data() {
+		return {
+			mapTitle: true,
+			mapBody: false,
+		};
+	},
+	methods: {
+		showMap() {
+			if (this.mapTitle) {
+				this.mapTitle = false;
+				this.mapBody = true;
+
+				initMap("map");
+			}
 		},
 	},
 };
@@ -99,8 +130,27 @@ export default {
 }
 
 .contacts > .item > .map {
-	background-color: rgb(240, 240, 240);
-	border-radius: 10px;
+	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	border: 2px solid var(--input-border-color-inactive);
+
+	color: var(--input-border-color-inactive);
+
+	transition: all 0.2s;
+}
+
+.contacts > .item > .map:hover {
+	border: 2px solid var(--input-border-color-active);
+	color: var(--input-border-color-active);
+}
+
+.contacts > .item > .map > .title {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 :is(.mail, .phone) > ul {

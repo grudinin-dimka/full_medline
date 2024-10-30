@@ -51,7 +51,13 @@ export default {
 					id: 1,
 					order: 1,
 					name: "Контакт 1",
-					clinicId: 1,
+					clinic: {
+						id: 1,
+						coordinates: {
+							width: 37.588144,
+							longitude: 55.733842,
+						},
+					},
 					phones: [
 						{
 							id: 1,
@@ -77,7 +83,10 @@ export default {
 					id: 2,
 					order: 2,
 					name: "Контакт 2",
-					clinicId: null,
+					clinic: {
+						id: null,
+						coordinates: null,
+					},
 					phones: [
 						{
 							id: 2,
@@ -95,7 +104,10 @@ export default {
 					id: 3,
 					order: 3,
 					name: "Контакт 3",
-					clinicId: null,
+					clinic: {
+						id: null,
+						coordinates: null,
+					},
 					phones: [],
 					mails: [],
 				},
