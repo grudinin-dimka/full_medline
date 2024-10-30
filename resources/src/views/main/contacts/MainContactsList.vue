@@ -28,12 +28,17 @@
 					</div>
 				</div>
 			</div>
-			<div class="map" v-if="contact.clinic.id != null" @click="showMap" ref="mapContainer">
-				<div class="title" v-if="mapTitle">Загрузить карту</div>
+			<div
+				class="map"
+				v-if="contact.clinic.id != null"
+				@click="showMap(contact.id)"
+				:id="`map-${contact.id}`"
+			>
+				<!-- <div class="title" v-if="false">Загрузить карту</div> -->
 				<div
 					class="body"
-					id="map"
-					v-if="mapBody"
+					:id="`map-container-${contact.id}`"
+					v-if="true"
 					style="width: 100%; height: 100%; border-radius: 10px"
 				></div>
 			</div>
@@ -42,19 +47,33 @@
 </template>
 
 <script>
-async function initMap(name) {
-	await ymaps3.ready;
+async function initMap(mapId) {
+	ymaps3.ready.then(() => {
+		let { YMap, YMapDefaultSchemeLayer, YMapMarker, YMapDefaultFeaturesLayer } = ymaps3;
 
-	let { YMap, YMapDefaultSchemeLayer } = ymaps3;
+		let map = new YMap(document.querySelector("#map-container-" + mapId), {
+			location: {
+				center: [37.588144, 55.733842],
+				zoom: 16,
+			},
+		});
 
-	let map = new YMap(document.getElementById(name), {
-		location: {
-			center: [37.588144, 55.733842],
-			zoom: 16,
-		},
+		map.addChild(new YMapDefaultSchemeLayer());
+
+		// STOP делал метки
+		const content = document.createElement("div");
+		content.innerHTML = "<p>Draggable paragraph</p>";
+		map.addChild(new YMapDefaultFeaturesLayer({ zIndex: 1800 }));
+		map.addChild(
+			new YMapMarker(
+				{
+					coordinates: [37.588144, 55.733842],
+					draggable: true,
+				},
+				content
+			)
+		);
 	});
-
-	map.addChild(new YMapDefaultSchemeLayer());
 }
 
 export default {
@@ -72,13 +91,11 @@ export default {
 		};
 	},
 	methods: {
-		showMap() {
-			if (this.mapTitle) {
-				this.mapTitle = false;
-				this.mapBody = true;
+		showMap(mapId) {
+			let element = document.querySelector("#map-" + mapId);
+			element.style.cursor = "default";
 
-				initMap("map");
-			}
+			initMap(mapId);
 		},
 	},
 };
@@ -134,6 +151,7 @@ export default {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	height: 300px;
 
 	border: 2px solid var(--input-border-color-inactive);
 

@@ -48,6 +48,27 @@ export default {
 			},
 			contacts: [
 				{
+					id: 2,
+					order: 2,
+					name: "Колл-центр",
+					clinic: {
+						id: null,
+						coordinates: null,
+					},
+					phones: [
+						{
+							id: 2,
+							name: "+7 999 999 99 99",
+						},
+					],
+					mails: [
+						{
+							id: 2,
+							name: "u9j6G@example.com",
+						},
+					],
+				},
+				{
 					id: 1,
 					order: 1,
 					name: "Контакт 1",
@@ -80,33 +101,15 @@ export default {
 					],
 				},
 				{
-					id: 2,
-					order: 2,
-					name: "Контакт 2",
-					clinic: {
-						id: null,
-						coordinates: null,
-					},
-					phones: [
-						{
-							id: 2,
-							name: "+7 999 999 99 99",
-						},
-					],
-					mails: [
-						{
-							id: 2,
-							name: "u9j6G@example.com",
-						},
-					],
-				},
-				{
 					id: 3,
 					order: 3,
 					name: "Контакт 3",
 					clinic: {
-						id: null,
-						coordinates: null,
+						id: 1,
+						coordinates: {
+							width: 37.588144,
+							longitude: 55.733842,
+						},
 					},
 					phones: [],
 					mails: [],
