@@ -13,6 +13,12 @@ const store = createStore({
 			urlApi: "/api/",
 		},
 		burger: {
+			admin: {
+				status: false,
+			},
+			main: {
+				status: false,
+			},
 			status: false,
 		},
 		user: {
@@ -49,6 +55,14 @@ const store = createStore({
 				state.mainNav.status = true;
 			} else {
 				state.mainNav.status = false;
+			}
+		},
+		/* Отображение меню навигации */
+		setBurgerMain(state) {
+			if (state.burger.main.status) {
+				state.burger.main.status = false;
+			} else {
+				state.burger.main.status = true;
 			}
 		},
 		/* Установка токена */

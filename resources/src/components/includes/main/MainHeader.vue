@@ -15,7 +15,11 @@
 						<span>Ф.И.О.*</span>
 					</template>
 					<template #input>
-						<input type="text" placeholder="Введите Ф.И.О." v-model="modalForm.data.name.body" />
+						<input
+							type="text"
+							placeholder="Введите Ф.И.О."
+							v-model="modalForm.data.name.body"
+						/>
 					</template>
 					<template #error>
 						<span class="error" v-if="modalForm.errors.name.status">
@@ -48,7 +52,11 @@
 						<span>ДАТА РОЖДЕНИЯ</span>
 					</template>
 					<template #input>
-						<input type="date" placeholder="Введите дату" v-model="modalForm.data.date.body" />
+						<input
+							type="date"
+							placeholder="Введите дату"
+							v-model="modalForm.data.date.body"
+						/>
 					</template>
 					<template #error>
 						<span class="error" v-if="modalForm.errors.name.status">
@@ -129,8 +137,8 @@
 	<!-- Кнопка "бургер" -->
 	<div
 		class="burger"
-		@click="$store.commit('changeMainNav')"
-		:class="{ active: $store.state.mainNav.status }"
+		@click="$store.commit('setBurgerMain')"
+		:class="{ active: $store.state.burger.main.status }"
 	>
 		<div></div>
 		<div></div>
@@ -276,6 +284,16 @@ export default {
 				this.$store.commit("changeModal", "Вызов врача на дом");
 			}
 		},
+	},
+	methods: {
+		setShadow() {
+			if (window.innerHeight > 200) {
+				
+			}
+		},
+	},
+	mounted() {
+		window.addEventListener("resize", this.setShadow);
 	},
 };
 </script>

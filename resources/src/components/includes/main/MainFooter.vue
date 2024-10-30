@@ -5,11 +5,7 @@
 			<!-- Блок с платёжными системами -->
 			<div class="pay">
 				<a href="/">
-					<img
-						src="../../../assets/svg/logo.svg"
-						width="250"
-						height="150"
-					/>
+					<img src="../../../assets/svg/logo.svg" width="250" height="150" />
 				</a>
 				<p>Мы принимаем к оплате</p>
 				<div class="pay-cards">
@@ -35,18 +31,12 @@
 			</div>
 			<!-- Блок доп. информации -->
 			<div class="more">
-				<div
-					class="button"
-					@click="this.$store.commit('changeModal', 'Записаться на прием')"
-				>
+				<div class="button" @click="this.$store.commit('changeModal', 'Записаться на прием')">
 					Записаться на прием
 				</div>
 				<p>Присоединяйтесь к нам</p>
 				<div class="links">
-					<a
-						href="https://ok.ru/profile/586067527945"
-						style="cursor: pointer"
-					>
+					<a href="https://ok.ru/profile/586067527945" style="cursor: pointer">
 						<img src="../../../assets/svg/odnoklasniki.svg" width="100" />
 					</a>
 					<a href="https://vk.com/med_line45" style="cursor: pointer">
@@ -60,16 +50,33 @@
 		</section>
 
 		<!-- Нижняя секция -->
-		<section class="bottom">
-			<p>{{ footer.title }}</p>
-			<p>{{ footer.titleDesc }}</p>
-			<p>{{ footer.license }}</p>
-			<p>{{ footer.licenseDesc }}</p>
-			<p>{{ footer.footer }}</p>
-		</section>
-		<article>
-			Имеются противопоказания Необходима консультация специалиста
-		</article>
+		<template v-if="loading.sections.footer">
+			<section
+				class="bottom"
+				v-if="
+					footer.title ||
+					footer.titleDesc ||
+					footer.license ||
+					footer.licenseDesc ||
+					footer.footer
+				"
+			>
+				<p v-if="footer.title">{{ footer.title }}</p>
+				<p v-if="footer.titleDesc">{{ footer.titleDesc }}</p>
+				<p v-if="footer.license">{{ footer.license }}</p>
+				<p v-if="footer.licenseDesc">{{ footer.licenseDesc }}</p>
+				<p v-if="footer.footer">{{ footer.footer }}</p>
+			</section>
+
+			<Empty :minHeight="250" v-else />
+		</template>
+		<LoaderChild
+			:isLoading="loading.loader.footer"
+			:minHeight="250"
+			@loaderChildAfterLeave="loaderChildAfterLeave"
+		/>
+
+		<article>Имеются противопоказания Необходима консультация специалиста</article>
 	</footer>
 </template>
 
@@ -80,7 +87,47 @@ import IconVisa from "../../icons/IconVisa.vue";
 import IconMasterCard from "../../icons/IconMasterCard.vue";
 import IconMir from "../../icons/IconMir.vue";
 
+import LoaderChild from "../LoaderChild.vue";
+import Empty from "../Empty.vue";
+
 export default {
+	components: {
+		axios,
+		IconVisa,
+		IconMasterCard,
+		IconMir,
+		LoaderChild,
+		Empty,
+	},
+	data() {
+		return {
+			loading: {
+				loader: {
+					footer: true,
+				},
+				sections: {
+					footer: false,
+				},
+			},
+			nameTitle: "",
+			footer: {
+				title: "",
+				titleDesc: "",
+				license: "",
+				licenseDesc: "",
+				footer: "",
+			},
+		};
+	},
+	methods: {
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                   Загрузчик                       |*/
+		/* |___________________________________________________|*/
+		/* После скрытия элементы */
+		loaderChildAfterLeave() {
+			this.loading.sections.footer = true;
+		},
+	},
 	mounted() {
 		axios({
 			method: "post",
@@ -98,25 +145,10 @@ export default {
 					type: "Error",
 				};
 				this.$store.commit("debuggerState", debbugStory);
+			})
+			.finally(() => {
+				this.loading.loader.footer = false;
 			});
-	},
-	data() {
-		return {
-			nameTitle: "",
-			footer: {
-				title: "",
-				titleDesc: "",
-				license: "",
-				licenseDesc: "",
-				footer: "",
-			},
-		};
-	},
-	components: {
-		axios,
-		IconVisa,
-		IconMasterCard,
-		IconMir,
 	},
 };
 </script>

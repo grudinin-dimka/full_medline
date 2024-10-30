@@ -129,6 +129,7 @@ export default {
 
 :is(.mail, .phone) > ul > li > a:hover {
 	text-decoration: underline;
+	text-decoration-thickness: 1.5px;
 	text-decoration-color: var(--primary-color);
 }
 
