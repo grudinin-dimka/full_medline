@@ -28,6 +28,9 @@ import Block from "../../../components/ui/main/blocks/Block.vue";
 import MainContactsList from "./MainContactsList.vue";
 import Empty from "../../../components/includes/Empty.vue";
 
+import axios from "axios";
+import sorted from "../../../services/sorted.js";
+
 export default {
 	components: {
 		InfoBar,
@@ -35,6 +38,8 @@ export default {
 		Block,
 		MainContactsList,
 		Empty,
+		axios,
+		sorted,
 	},
 	data() {
 		return {
@@ -128,6 +133,38 @@ export default {
 	},
 	mounted() {
 		this.loading.loader.contacts = false;
+
+		axios({
+			method: "post",
+			url: `${this.$store.state.axios.urlApi}` + `get-contacts-clinics-all`,
+		})
+			.then((response) => {
+				if (response.data.status) {
+					console.log(response.data);
+				} else {
+					// this.specialists = null;
+
+					let debbugStory = {
+						title: "Ошибка.",
+						body: response.data.message,
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+				}
+			})
+			.catch((error) => {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Произошла ошибка при получении данных о слайдере.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			})
+			.finally(() => {
+				if (this.specialists != null) {
+					this.loading.loader.specialists = false;
+				}
+			});
 	},
 };
 </script>

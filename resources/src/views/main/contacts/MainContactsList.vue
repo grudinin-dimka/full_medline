@@ -1,5 +1,5 @@
 <template>
-	<div class="contacts">
+	<div class="contacts-main">
 		<div class="item" v-for="contact in contacts" :class="{ one: contact.clinic.id == null }">
 			<div class="info">
 				<div class="title">{{ contact.name }}</div>
@@ -26,21 +26,24 @@
 							</li>
 						</ul>
 					</div>
+					<div class="address" v-if="contact.clinic.id != null">
+						<div class="title">Адрес:</div>
+						<ul>
+							<li>г. Шадринск, ул. Карла Либкнехта, д.10</li>
+						</ul>
+					</div>
 				</div>
 			</div>
-			<div
-				class="map"
-				v-if="contact.clinic.id != null"
-				@click="showMap(contact.id)"
-				:id="`map-${contact.id}`"
-			>
-				<!-- <div class="title" v-if="false">Загрузить карту</div> -->
+			<div class="map" v-if="contact.clinic.id != null" :id="`map-${contact.id}`">
 				<div
 					class="body"
 					:id="`map-container-${contact.id}`"
 					v-if="true"
 					style="width: 100%; height: 100%; border-radius: 10px"
 				></div>
+				<div class="wall" @click="showMap(contact.id)">
+					<div class="title">Показать карту</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -49,30 +52,39 @@
 <script>
 async function initMap(mapId) {
 	ymaps3.ready.then(() => {
-		let { YMap, YMapDefaultSchemeLayer, YMapMarker, YMapDefaultFeaturesLayer } = ymaps3;
+		let { YMap, YMapDefaultSchemeLayer, YMapMarker, YMapDefaultFeaturesLayer, Placemark } =
+			ymaps3;
 
 		let map = new YMap(document.querySelector("#map-container-" + mapId), {
 			location: {
-				center: [37.588144, 55.733842],
-				zoom: 16,
+				center: [63.624617, 56.079427],
+				zoom: 17,
 			},
 		});
-
 		map.addChild(new YMapDefaultSchemeLayer());
 
-		// STOP делал метки
-		const content = document.createElement("div");
-		content.innerHTML = "<p>Draggable paragraph</p>";
+		// Создание маркера
+		const el = document.createElement("div");
+		el.className = "my-marker";
+		el.title = "Маркер";
+
+		// При клике на маркер меняем центр карты на LOCATION с заданным duration
+		el.onclick = () =>
+			map.update({ location: { ["center"]: [63.624617, 56.079427], duration: 400 } });
+
+		// Создание заголовка маркера
+		const markerTitle = document.createElement("span");
+		markerTitle.className = "marker-title";
+
+		// Контейнер для элементов маркера
+		const imgContainer = document.createElement("div");
+		imgContainer.appendChild(el);
+		imgContainer.appendChild(markerTitle);
+
+		const content = document.createElement("span");
+		content.innerHTML = "<span>Мы находимся здесь</span>";
 		map.addChild(new YMapDefaultFeaturesLayer({ zIndex: 1800 }));
-		map.addChild(
-			new YMapMarker(
-				{
-					coordinates: [37.588144, 55.733842],
-					draggable: true,
-				},
-				content
-			)
-		);
+		map.addChild(new YMapMarker({ coordinates: [63.624617, 56.079427] }, imgContainer));
 	});
 }
 
@@ -93,7 +105,8 @@ export default {
 	methods: {
 		showMap(mapId) {
 			let element = document.querySelector("#map-" + mapId);
-			element.style.cursor = "default";
+			let elementWall = element.children[1];
+			elementWall.classList.add("active");
 
 			initMap(mapId);
 		},
@@ -101,8 +114,18 @@ export default {
 };
 </script>
 
-<style scoped>
-.contacts {
+<style>
+.my-marker {
+	background-image: url("../../../assets/svg/map-point.svg");
+	background-size: cover;
+	background-position: center center;
+	background-repeat: no-repeat;
+	width: 30px;
+	height: 30px;
+	cursor: pointer;
+}
+
+.contacts-main {
 	width: 1250px;
 	display: flex;
 	flex-direction: column;
@@ -111,67 +134,104 @@ export default {
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
-.contacts > .item {
+.contacts-main > .item {
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
 	gap: 20px;
 	font-size: 18px;
 }
 
-.contacts > .item.one {
+.contacts-main > .item.one {
 	grid-template-columns: 1fr;
 }
 
-.contacts > .item > .info {
+.contacts-main > .item > .info {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
 }
 
-.contacts > .item > .info > .body {
+.contacts-main > .item > .info > .body {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
 }
 
-.contacts > .item.one > .info > .body {
+.contacts-main > .item.one > .info > .body {
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
 	gap: 20px;
 }
 
-.contacts > .item > .info > .title {
+.contacts-main > .item > .info > .title {
 	font-size: 22px;
 	font-weight: bold;
 	color: var(--primary-color);
 }
 
-.contacts > .item > .map {
-	cursor: pointer;
+.contacts-main > .item > .map {
+	position: relative;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	height: 300px;
+	overflow: hidden;
 
 	border: 2px solid var(--input-border-color-inactive);
-
-	color: var(--input-border-color-inactive);
+	border-radius: 10px;
 
 	transition: all 0.2s;
 }
 
-.contacts > .item > .map:hover {
+.contacts-main > .item > .map:hover {
 	border: 2px solid var(--input-border-color-active);
-	color: var(--input-border-color-active);
 }
 
-.contacts > .item > .map > .title {
+.contacts-main > .item > .map > .wall > .title {
+	padding: 10px;
+	background-color: white;
+	border: 2px solid var(--input-border-color-inactive);
+	border-radius: 10px;
+
+	transition: all 0.5s;
+}
+
+.contacts-main > .item > .map > .wall {
+	cursor: pointer;
+	position: absolute;
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	top: 0px;
+
+	background-image: url("../../../assets/img/map-clear.png");
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: cover;
+
+	color: var(--input-border-color-inactive);
+
+	width: 100%;
+	height: 300px;
+
+	transition: all 0.5s;
 }
 
-:is(.mail, .phone) > ul {
+.contacts-main > .item > .map > .wall:hover {
+	background-color: #f2feff;
+	background-image: url("../../../assets/img/map-hover.png");
+}
+
+.contacts-main > .item > .map > .wall:hover > .title {
+	border: 2px solid var(--input-border-color-active);
+	color: var(--primary-color);
+}
+
+.contacts-main > .item > .map > .wall.active {
+	top: -300px;
+}
+
+.contacts-main > .item > .info > .body > :is(.mail, .phone, .address) > ul {
 	padding: 0px;
 	margin: 0px 0px 0px 20px;
 	inline-size: 80%;
@@ -179,7 +239,7 @@ export default {
 	overflow-y: auto;
 }
 
-:is(.mail, .phone) > ul > li {
+.contacts-main > .item > .info > .body > :is(.mail, .phone, .address) > ul > li {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -187,7 +247,7 @@ export default {
 	margin-top: 10px;
 }
 
-:is(.mail, .phone) > ul > li > a {
+.contacts-main > .item > .info > .body > :is(.mail, .phone, .address) > ul > li > a {
 	text-decoration: none;
 	text-decoration-color: white;
 	color: black;
@@ -195,20 +255,26 @@ export default {
 	transition: all 0.2s;
 }
 
-:is(.mail, .phone) > ul > li > a:hover {
+.contacts-main > .item > .info > .body > :is(.mail, .phone, .address) > ul > li > a:hover {
 	text-decoration: underline;
 	text-decoration-thickness: 1.5px;
 	text-decoration-color: var(--primary-color);
 }
 
-.mail > ul > li::before {
+.contacts-main > .item > .info > .body > .mail > ul > li::before {
 	content: "🖂";
 	padding-right: 10px;
 	font-weight: bold;
 }
 
-.phone > ul > li::before {
+.contacts-main > .item > .info > .body > .phone > ul > li::before {
 	content: "☎";
+	padding-right: 10px;
+	font-weight: bold;
+}
+
+.contacts-main > .item > .info > .body > .address > ul > li::before {
+	content: "🏠︎";
 	padding-right: 10px;
 	font-weight: bold;
 }

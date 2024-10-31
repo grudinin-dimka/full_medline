@@ -44,6 +44,7 @@ Route::post('/get-abouts-all', [HomeController::class, 'getAboutsAll']);
 /* Контакты                                             */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 Route::post('/get-contacts-all', [HomeController::class, 'getContactsAll']);
+Route::post('/get-contacts-clinics-all', [HomeController::class, 'getContactsClinicsAll']);
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 /* |                  АДМИНИСТРАТОР                    |*/
 /* |___________________________________________________|*/

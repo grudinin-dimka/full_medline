@@ -411,6 +411,17 @@ class HomeController extends Controller
          ],
       ]);   
    }
+
+   public function getContactsClinicsAll(Request $request) {
+      $clinics = Clinic::all();
+      if(!$clinics) {
+         return response()->json([
+            "status" => false,
+            "message" => "Не удалось получить контакты.",
+            "data" => [],
+         ]);
+      };
+   }
 };
 
 function makeUrl($url) {

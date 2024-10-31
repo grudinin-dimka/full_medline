@@ -87,7 +87,7 @@ export default {
 			.catch((error) => {
 				let debbugStory = {
 					title: "Ошибка.",
-					body: "Произошла ошибка при получении данных о слайдере.",
+					body: "Произошла ошибка при получении данных о странице.",
 					type: "Error",
 				};
 				this.$store.commit("debuggerState", debbugStory);
