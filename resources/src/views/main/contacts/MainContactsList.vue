@@ -1,6 +1,6 @@
 <template>
 	<div class="contacts-main">
-		<div class="item" v-for="contact in contacts" :class="{ one: contact.clinic.id == null }">
+		<div class="item" v-for="contact in contacts" :class="{ one: contact.clinicId == null }">
 			<div class="info">
 				<div class="title">{{ contact.name }}</div>
 				<div class="body">
@@ -8,7 +8,7 @@
 						<div class="title">Телефоны:</div>
 						<ul>
 							<li v-for="phone in contact.phones" v-if="contact.phones.length > 0">
-								<a :href="`tel:${phone.name}}`" :key="phone.id">{{ phone.name }}</a>
+								<a :href="`tel:${phone.name}`" :key="phone.id">{{ phone.name }}</a>
 							</li>
 							<li v-else>
 								<span class="empty"> Отсутствует </span>
@@ -26,22 +26,29 @@
 							</li>
 						</ul>
 					</div>
-					<div class="address" v-if="contact.clinic.id != null">
+					<div class="address" v-if="contact.clinicId != null">
 						<div class="title">Адрес:</div>
 						<ul>
-							<li>г. Шадринск, ул. Карла Либкнехта, д.10</li>
+							<li>
+								{{
+									`г. ${contact.clinic.city}, ул. ${contact.clinic.street}, д. ${contact.clinic.home}`
+								}}
+							</li>
 						</ul>
 					</div>
 				</div>
 			</div>
-			<div class="map" v-if="contact.clinic.id != null" :id="`map-${contact.id}`">
+			<div class="map" v-if="contact.clinicId != null" :id="`map-${contact.id}`">
 				<div
 					class="body"
 					:id="`map-container-${contact.id}`"
 					v-if="true"
 					style="width: 100%; height: 100%; border-radius: 10px"
 				></div>
-				<div class="wall" @click="showMap(contact.id)">
+				<div
+					class="wall"
+					@click="showMap(contact.id, [contact.clinic.geoLongitude, contact.clinic.geoWidth])"
+				>
 					<div class="title">Показать карту</div>
 				</div>
 			</div>
@@ -50,14 +57,14 @@
 </template>
 
 <script>
-async function initMap(mapId) {
+async function initMap(mapId, coordinates) {
 	ymaps3.ready.then(() => {
 		let { YMap, YMapDefaultSchemeLayer, YMapMarker, YMapDefaultFeaturesLayer, Placemark } =
 			ymaps3;
 
 		let map = new YMap(document.querySelector("#map-container-" + mapId), {
 			location: {
-				center: [63.624617, 56.079427],
+				center: coordinates,
 				zoom: 17,
 			},
 		});
@@ -69,8 +76,7 @@ async function initMap(mapId) {
 		el.title = "Маркер";
 
 		// При клике на маркер меняем центр карты на LOCATION с заданным duration
-		el.onclick = () =>
-			map.update({ location: { ["center"]: [63.624617, 56.079427], duration: 400 } });
+		el.onclick = () => map.update({ location: { ["center"]: coordinates, duration: 400 } });
 
 		// Создание заголовка маркера
 		const markerTitle = document.createElement("span");
@@ -84,7 +90,7 @@ async function initMap(mapId) {
 		const content = document.createElement("span");
 		content.innerHTML = "<span>Мы находимся здесь</span>";
 		map.addChild(new YMapDefaultFeaturesLayer({ zIndex: 1800 }));
-		map.addChild(new YMapMarker({ coordinates: [63.624617, 56.079427] }, imgContainer));
+		map.addChild(new YMapMarker({ coordinates: coordinates }, imgContainer));
 	});
 }
 
@@ -103,12 +109,12 @@ export default {
 		};
 	},
 	methods: {
-		showMap(mapId) {
+		showMap(mapId, coordinates) {
 			let element = document.querySelector("#map-" + mapId);
 			let elementWall = element.children[1];
 			elementWall.classList.add("active");
 
-			initMap(mapId);
+			initMap(mapId, coordinates);
 		},
 	},
 };
@@ -302,5 +308,42 @@ ul::-webkit-scrollbar-thumb:hover {
 
 span.empty {
 	color: rgb(199, 199, 199);
+}
+
+@media screen and (width <= 1330px) {
+	.contacts-main {
+		width: 100%;
+	}
+}
+
+@media screen and (width <= 970px) {
+	.contacts-main > .item {
+		grid-template-columns: repeat(1, 1fr);
+		gap: 20px;
+		font-size: 18px;
+	}
+
+	.contacts-main > .item > .info > .body {
+		/* flex-direction: row;
+		flex-wrap: wrap; */
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.contacts-main > .item.one > .info > .body {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media screen and (width <= 820px) {
+	.contacts-main > .item > .info > .body,
+	.contacts-main > .item.one > .info > .body {
+		grid-template-columns: repeat(1, 1fr);
+	}
+
+	.contacts-main > .item > .map {
+		width: auto;
+		min-width: 100px;
+	}
 }
 </style>

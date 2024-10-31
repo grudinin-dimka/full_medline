@@ -413,14 +413,53 @@ class HomeController extends Controller
    }
 
    public function getContactsClinicsAll(Request $request) {
-      $clinics = Clinic::all();
-      if(!$clinics) {
+      $contacts = Contact::all();
+      if(!$contacts) {
          return response()->json([
             "status" => false,
             "message" => "Не удалось получить контакты.",
             "data" => [],
          ]);
       };
+
+      foreach ($contacts as $contactKey => $contactValue) { 
+         $contactPhones = ContactPhone::where('contactId', $contactValue->id)->get();
+         if(!$contactPhones) {
+            return response()->json([
+               "status" => false,
+               "message" => "Не удалось получить номера контакта.",
+               "data" => [],
+            ]);                  
+         }
+
+         $phones = [];
+         foreach ($contactPhones as $contactPhonesKey => $contactPhonesValue) {
+            $phones[] = Phone::where('id', $contactPhonesValue->phoneId)->first();
+         };
+         $contactValue->phones = $phones; 
+
+         $contactMails = ContactMail::where('contactId', $contactValue->id)->get();
+         if(!$contactMails) {
+            return response()->json([
+               "status" => false,
+               "message" => "Не удалось получить почты контакта.",
+               "data" => [],
+            ]);                  
+         }
+
+         $mails = [];
+         foreach ($contactMails as $contactMailsKey => $contactMailsValue) {
+            $mails[] = Mail::where('id', $contactMailsValue->mailId)->first();
+         };
+         $contactValue->mails = $mails;         
+         $contactValue->clinic = Clinic::where('id', $contactValue->clinicId)->first();
+      }
+
+      return response()->json([
+         "status" => true,
+         "message" => "Успешно.",
+         "data" => $contacts,
+      ]);   
    }
 };
 

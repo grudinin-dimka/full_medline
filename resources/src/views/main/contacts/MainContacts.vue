@@ -140,9 +140,10 @@ export default {
 		})
 			.then((response) => {
 				if (response.data.status) {
-					console.log(response.data);
+					this.contacts = response.data.data;
+					sorted.sortByOrder("up", this.contacts);
 				} else {
-					// this.specialists = null;
+					this.contacts = null;
 
 					let debbugStory = {
 						title: "Ошибка.",
@@ -155,7 +156,7 @@ export default {
 			.catch((error) => {
 				let debbugStory = {
 					title: "Ошибка.",
-					body: "Произошла ошибка при получении данных о слайдере.",
+					body: "Произошла ошибка при получении данных о контактах.",
 					type: "Error",
 				};
 				this.$store.commit("debuggerState", debbugStory);
