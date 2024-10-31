@@ -7,7 +7,7 @@ export default defineConfig({
 	plugins: [
 		vue(),
 		laravel({
-			input: ["resources/css/app.css", "resources/src/main.js"],
+			input: ["resources/src/main.js"],
 			refresh: true,
 		}),
 	],
