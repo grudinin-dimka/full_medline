@@ -230,7 +230,8 @@
 		<block-title>
 			<template #title>Клиники</template>
 			<template #buttons>
-				<icon-save :width="28" :height="28" @click="saveClinicsChanges" />
+				<icon-load :width="28" :height="28" v-if="disabled.clinics.save" />
+				<icon-save :width="28" :height="28" @click="saveClinicsChanges" v-else/>
 			</template>
 		</block-title>
 
@@ -280,6 +281,7 @@ import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue"
 import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 
 import IconSave from "../../../components/icons/IconSave.vue";
+import IconLoad from "../../../components/icons/IconLoad.vue";
 
 import axios from "axios";
 import shared from "../../../services/shared";
@@ -303,6 +305,7 @@ export default {
 		ButtonRemove,
 		ButtonClaim,
 		IconSave,
+		IconLoad,
 		axios,
 	},
 	data() {
@@ -329,6 +332,11 @@ export default {
 			loading: {
 				loader: true,
 				table: false,
+			},
+			disabled: {
+				clinics: {
+					save: false,
+				},
 			},
 			currentClinic: {
 				errors: {
@@ -763,6 +771,8 @@ export default {
 				}
 			});
 
+			this.disabled.clinics.save = true;
+
 			axios({
 				method: "post",
 				url: `${this.$store.state.axios.urlApi}` + `save-clinics-changes`,
@@ -780,6 +790,8 @@ export default {
 						shared.clearDeletes(this.clinics);
 						shared.clearFlags(this.clinics);
 
+						this.disabled.clinics.save = false;
+
 						let debbugStory = {
 							title: "Успешно!",
 							body: "Данные сохранились.",
@@ -787,6 +799,8 @@ export default {
 						};
 						this.$store.commit("debuggerState", debbugStory);
 					} catch (error) {
+						this.disabled.clinics.save = false;
+
 						let debbugStory = {
 							title: "Ошибка.",
 							body: "После сохранения что-то пошло не так.",
@@ -796,7 +810,9 @@ export default {
 					}
 				})
 				.catch((error) => {
-					let debbugStory = {
+					this.disabled.clinics.save = false;
+
+						let debbugStory = {
 						title: "Ошибка.",
 						body: "Данные почему-то не сохранились...",
 						type: "Error",

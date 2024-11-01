@@ -31,7 +31,9 @@
 				</div>
 				<p v-if="errors.server" class="error">Неверный логин или пароль.</p>
 				<div class="buttons">
-					<ButtonDefault @click="loginUser"> Войти </ButtonDefault>
+					<ButtonDefault @click="loginUser" :disabled="disabled.login.update">
+						Войти
+					</ButtonDefault>
 				</div>
 			</form>
 		</div>
@@ -81,6 +83,11 @@ export default {
 		return {
 			name: "",
 			password: "",
+			disabled: {
+				login: {
+					update: false,
+				},
+			},
 			errors: {
 				name: {
 					status: false,
@@ -137,6 +144,8 @@ export default {
 		// Авторизация
 		async loginUser() {
 			if (this.checkAllInputs()) {
+				this.disabled.login.update = true;
+
 				axios({
 					method: "post",
 					url: `${this.$store.state.axios.urlApi}` + `login`,
@@ -171,8 +180,12 @@ export default {
 							this.errors.password.status = false;
 							this.errors.password.value = "";
 
+							this.disabled.login.update = false;
+
 							return;
 						} else {
+							this.disabled.login.update = false;
+
 							let debbugStory = {
 								title: "Ошибка.",
 								body: response.data.message,
@@ -183,6 +196,7 @@ export default {
 					})
 					.catch((error) => {
 						this.errors.server = true;
+						this.disabled.login.update = false;
 
 						let debbugStory = {
 							title: "Ошибка.",

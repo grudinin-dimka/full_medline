@@ -207,7 +207,8 @@
 		<block-title>
 			<template #title>КОНТАКТЫ</template>
 			<template #buttons>
-				<icon-save :width="28" :height="28" @click="saveContact" />
+				<icon-load :width="28" :height="28" v-if="disabled.contacts.save" />
+				<icon-save :width="28" :height="28" @click="saveContact" v-else />
 			</template>
 		</block-title>
 
@@ -268,6 +269,7 @@ import IconSave from "../../../components/icons/IconSave.vue";
 import IconEdit from "../../../components/icons/IconEdit.vue";
 import IconRemove from "../../../components/icons/IconRemove.vue";
 import IconCreate from "../../../components/icons/IconCreate.vue";
+import IconLoad from "../../../components/icons/IconLoad.vue";
 
 import axios from "axios";
 import shared from "../../../services/shared.js";
@@ -300,6 +302,7 @@ export default {
 		IconEdit,
 		IconRemove,
 		IconCreate,
+		IconLoad,
 		axios,
 	},
 	data() {
@@ -316,6 +319,11 @@ export default {
 				},
 				sections: {
 					clinics: false,
+				},
+			},
+			disabled: {
+				contacts: {
+					save: false,
 				},
 			},
 			modal: {
@@ -777,6 +785,8 @@ export default {
 		},
 		/* Сохранение */
 		saveContact() {
+			this.disabled.contacts.save = true;
+
 			let formData = new FormData();
 			formData.append("contacts", JSON.stringify(this.contacts));
 
@@ -792,6 +802,8 @@ export default {
 				.then((response) => {
 					if (response.data.status) {
 						try {
+							this.disabled.contacts.save = false;
+
 							shared.updateId(this.contacts, response.data.data);
 							shared.clearDeletes(this.contacts);
 							shared.clearFlags(this.contacts);
@@ -804,6 +816,8 @@ export default {
 							};
 							this.$store.commit("debuggerState", debbugStory);
 						} catch (error) {
+							this.disabled.contacts.save = false;
+
 							let debbugStory = {
 								title: "Ошибка.",
 								body: "Не удалось обновить данные после загрузки изображения.",
@@ -812,6 +826,8 @@ export default {
 							this.$store.commit("debuggerState", debbugStory);
 						}
 					} else {
+						this.disabled.contacts.save = false;
+
 						let debbugStory = {
 							title: "Ошибка.",
 							body: response.data.message,
@@ -821,6 +837,8 @@ export default {
 					}
 				})
 				.catch((error) => {
+					this.disabled.contacts.save = false;
+
 					let debbugStory = {
 						title: "Ошибка.",
 						body: "Не удалось сохранить данные.",

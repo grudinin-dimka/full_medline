@@ -203,10 +203,18 @@
 		</template>
 		<template #footer>
 			<block-buttons>
-				<button-default v-if="subModal.type == 'edit'" @click="updateImage">
+				<button-default
+					v-if="subModal.type == 'edit'"
+					@click="updateImage"
+					:disabled="disabled.image.update"
+				>
 					Обновить
 				</button-default>
-				<button-claim v-if="subModal.type == 'create'" @click="updateImage">
+				<button-claim
+					v-if="subModal.type == 'create'"
+					@click="updateImage"
+					:disabled="disabled.image.add"
+				>
 					Добавить
 				</button-claim>
 			</block-buttons>
@@ -224,7 +232,8 @@
 		<block-title>
 			<template #title>ИНФОРМАЦИОННЫЕ БЛОКИ</template>
 			<template #buttons>
-				<icon-save :width="28" :height="28" @click="saveInfoBlocks" />
+				<icon-load :width="28" :height="28" v-if="disabled.about.save" />
+				<icon-save :width="28" :height="28" @click="saveInfoBlocks" v-else />
 			</template>
 		</block-title>
 
@@ -273,6 +282,7 @@ import IconVisible from "../../../components/icons/IconVisible.vue";
 import IconEdit from "../../../components/icons/IconEdit.vue";
 import IconRemove from "../../../components/icons/IconRemove.vue";
 import IconCreate from "../../../components/icons/IconCreate.vue";
+import IconLoad from "../../../components/icons/IconLoad.vue";
 
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
 import Empty from "../../../components/includes/Empty.vue";
@@ -305,6 +315,7 @@ export default {
 		IconEdit,
 		IconRemove,
 		IconCreate,
+		IconLoad,
 		LoaderChild,
 		Empty,
 		AdminAboutUsList,
@@ -331,6 +342,19 @@ export default {
 					images: false,
 					body: true,
 					footer: true,
+				},
+			},
+			disabled: {
+				about: {
+					update: false,
+					delete: false,
+					create: false,
+					add: false,
+					save: false,
+				},
+				image: {
+					update: false,
+					add: false,
 				},
 			},
 			subModal: {
@@ -590,6 +614,12 @@ export default {
 			formData.append("type", "abouts");
 			formData.append("formats", ["png", "jpg", "jpeg"]);
 
+			if (this.subModal.type == "create") {
+				this.disabled.image.add = true;
+			} else if (this.subModal.type == "edit") {
+				this.disabled.image.update = true;
+			}
+
 			axios({
 				method: "post",
 				url: `${this.$store.state.axios.urlApi}` + `upload-file`,
@@ -625,6 +655,13 @@ export default {
 									);
 									break;
 							}
+
+							if (this.subModal.type == "create") {
+								this.disabled.image.add = false;
+							} else if (this.subModal.type == "edit") {
+								this.disabled.image.update = false;
+							}
+
 							this.closeModal("subModal");
 						} catch (error) {
 							let debbugStory = {
@@ -644,7 +681,18 @@ export default {
 					}
 				})
 				.catch((error) => {
-					console.log(error);
+					if (this.subModal.type == "create") {
+						this.disabled.image.add = true;
+					} else if (this.subModal.type == "edit") {
+						this.disabled.image.update = true;
+					}
+
+					let debbugStory = {
+						title: "Ошибка.",
+						body: "Не удалось загрузить изображение.",
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
 				});
 		},
 		/* Очистка */
@@ -804,6 +852,8 @@ export default {
 		},
 		/* Сохранение */
 		saveInfoBlocks() {
+			this.disabled.about.save = true;
+
 			let formData = new FormData();
 			formData.append("abouts", JSON.stringify(this.infoBlocks));
 
@@ -819,6 +869,8 @@ export default {
 				.then((response) => {
 					if (response.data.status) {
 						try {
+							this.disabled.about.save = false;
+
 							shared.updateId(this.infoBlocks, response.data.data);
 							shared.clearDeletes(this.infoBlocks);
 							shared.clearFlags(this.infoBlocks);
@@ -831,6 +883,8 @@ export default {
 							};
 							this.$store.commit("debuggerState", debbugStory);
 						} catch (error) {
+							this.disabled.about.save = false;
+
 							let debbugStory = {
 								title: "Ошибка.",
 								body: "Не удалось обновить данные после загрузки изображения.",
@@ -839,6 +893,8 @@ export default {
 							this.$store.commit("debuggerState", debbugStory);
 						}
 					} else {
+						this.disabled.about.save = false;
+
 						let debbugStory = {
 							title: "Ошибка.",
 							body: response.data.message,

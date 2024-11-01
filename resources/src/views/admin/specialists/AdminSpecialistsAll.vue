@@ -8,7 +8,8 @@
 		<block-title>
 			<template #title>Список врачей</template>
 			<template #buttons>
-				<icon-save :width="28" :height="28" @click="saveSpecialistChanges" />
+				<icon-load :width="28" :height="28" v-if="disabled.specialists.save" />
+				<icon-save :width="28" :height="28" @click="saveSpecialistChanges" v-else />
 			</template>
 		</block-title>
 
@@ -48,9 +49,11 @@ import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vu
 import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
 
 import IconSave from "../../../components/icons/IconSave.vue";
+import IconLoad from "../../../components/icons/IconLoad.vue";
 
 import axios from "axios";
 import sorted from "../../../services/sorted";
+import shared from "../../../services/shared";
 
 import { RouterView, RouterLink } from "vue-router";
 
@@ -67,7 +70,10 @@ export default {
 		ButtonDefault,
 		ButtonRemove,
 		IconSave,
+		IconLoad,
 		axios,
+		sorted,
+		shared,
 		RouterView,
 		RouterLink,
 	},
@@ -76,6 +82,11 @@ export default {
 			loading: {
 				loader: true,
 				table: false,
+			},
+			disabled: {
+				specialists: {
+					save: false,
+				},
 			},
 			specialists: [],
 		};
@@ -144,6 +155,8 @@ export default {
 		},
 		// Скрытие выбранного доктора
 		saveSpecialistChanges() {
+			this.disabled.specialists.save = true;
+
 			let newArray = [];
 
 			for (let key in this.specialists) {
@@ -174,24 +187,8 @@ export default {
 			})
 				.then((response) => {
 					try {
-						// Получения нового массива, с данными помеченными на удаление
-						let res = this.specialists.filter((item) => {
-							if (item.delete == true) {
-								return Object.assign({}, item);
-							}
-						});
-
-						// Повторять, пока не будут удалены все элементы, помеченные на удаление
-						while (res.length > 0) {
-							/* Получение индекса элемента, помеченного на удаление из массива специалистов */
-							this.specialists.splice(this.specialists.indexOf(res[0]), 1);
-							/* Обновление списка с элементами, помеченными на удаление */
-							res = this.specialists.filter((item) => {
-								if (item.delete == true) {
-									return Object.assign({}, item);
-								}
-							});
-						}
+						this.disabled.specialists.save = false;
+						shared.clearDeletes(this.specialists);
 
 						let debbugStory = {
 							title: "Успешно!",
@@ -200,6 +197,8 @@ export default {
 						};
 						this.$store.commit("debuggerState", debbugStory);
 					} catch (error) {
+						this.disabled.specialists.save = false;
+
 						let debbugStory = {
 							title: "Ошибка.",
 							body: "После сохранения что-то пошло не так.",
@@ -209,6 +208,8 @@ export default {
 					}
 				})
 				.catch((error) => {
+					this.disabled.specialists.save = false;
+
 					let debbugStory = {
 						title: "Ошибка.",
 						body: "Данные почему-то не сохранились.",

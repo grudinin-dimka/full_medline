@@ -294,6 +294,8 @@ section.bottom {
 	font-size: 20px;
 
 	background-color: rgb(240, 240, 240);
+
+	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 footer article {

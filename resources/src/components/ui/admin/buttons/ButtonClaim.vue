@@ -1,5 +1,5 @@
 <template>
-	<button class="claim">
+	<button class="claim" :disabled="disabled">
 		<span class="loader" v-if="disabled"></span>
 		<slot v-else></slot>
 	</button>
@@ -25,7 +25,7 @@ button.claim {
 
 	padding: 15px 30px;
 	max-height: 54px;
-	min-width: 150px;
+	min-width: 160px;
 	border: 0px solid black;
 	border-radius: 10px;
 

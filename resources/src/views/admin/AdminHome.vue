@@ -143,7 +143,11 @@
 				>
 					Удалить
 				</button-remove>
-				<button-default v-if="!currentSlide.data.delete.body" @click.prevent="updateSlide">
+				<button-default
+					v-if="!currentSlide.data.delete.body"
+					@click.prevent="updateSlide"
+					:disabled="disabled.slider.update"
+				>
 					Обновить
 				</button-default>
 				<button-default v-if="currentSlide.data.delete.body" @click.prevent="markDeleteSlide">
@@ -151,7 +155,9 @@
 				</button-default>
 			</block-buttons>
 			<block-buttons v-if="modal.type == 'create'">
-				<button-claim @click.prevent="addSlide"> Создать </button-claim>
+				<button-claim @click.prevent="addSlide" :disabled="disabled.slider.create">
+					Создать
+				</button-claim>
 			</block-buttons>
 		</template>
 	</modal>
@@ -168,7 +174,8 @@
 		<block-title>
 			<template #title>СЛАЙДЕР</template>
 			<template #buttons>
-				<icon-save :width="28" :height="28" @click="saveSlidesChanges" />
+				<icon-load :width="28" :height="28" v-if="disabled.slider.save" />
+				<icon-save :width="28" :height="28" @click="saveSlidesChanges" v-else />
 			</template>
 		</block-title>
 
@@ -231,7 +238,9 @@
 		/>
 
 		<BlockButtons>
-			<ButtonDefault @click="openSlide(null, 'create')"> Добавить </ButtonDefault>
+			<ButtonDefault @click="openSlide(null, 'create')" :disabled="disabled.slider.add">
+				Добавить
+			</ButtonDefault>
 		</BlockButtons>
 	</block-once>
 
@@ -242,7 +251,8 @@
 		<block-title>
 			<template #title>ФУТЕР</template>
 			<template #buttons>
-				<icon-save :width="28" :height="28" @click="saveFooterChanges" />
+				<icon-load :width="28" :height="28" v-if="disabled.footer.save" />
+				<icon-save :width="28" :height="28" @click="saveFooterChanges" v-else />
 			</template>
 		</block-title>
 
@@ -414,6 +424,7 @@ import IconArrow from "../../components/icons/IconArrow.vue";
 import IconHide from "../../components/icons/IconHide.vue";
 import IconVisible from "../../components/icons/IconVisible.vue";
 import IconSave from "../../components/icons/IconSave.vue";
+import IconLoad from "../../components/icons/IconLoad.vue";
 
 import axios from "axios";
 import shared from "../../services/shared";
@@ -443,6 +454,7 @@ export default {
 		IconHide,
 		IconVisible,
 		IconSave,
+		IconLoad,
 	},
 	data() {
 		return {
@@ -472,6 +484,18 @@ export default {
 					images: true,
 					body: true,
 					footer: true,
+				},
+			},
+			disabled: {
+				slider: {
+					update: false,
+					delete: false,
+					create: false,
+					add: false,
+					save: false,
+				},
+				footer: {
+					save: false,
 				},
 			},
 			currentSlide: {
@@ -895,6 +919,8 @@ export default {
 				formData.append("type", "slide");
 				formData.append("formats", ["png"]);
 
+				this.disabled.slider.create = true;
+
 				axios({
 					method: "post",
 					url: `${this.$store.state.axios.urlApi}` + `upload-file`,
@@ -918,6 +944,8 @@ export default {
 									create: true,
 									delete: false,
 								});
+
+								this.disabled.slider.create = false;
 
 								this.closeSlide();
 
@@ -977,6 +1005,8 @@ export default {
 					return;
 				}
 
+				this.disabled.slider.update = true;
+
 				/* Получение текущего объекта из массива this.slides */
 				let resultSlideCurrent = this.slides.filter(
 					(slide) => slide.order === this.currentSlide.data.order.body
@@ -992,7 +1022,11 @@ export default {
 				}
 
 				// Если файл не загружен, то закрываем модальное окно
-				if (!this.$refs.fileUpload.files[0]) return this.closeSlide();
+				if (!this.$refs.fileUpload.files[0]) {
+					this.disabled.slider.update = false;
+					this.closeSlide();
+					return;
+				}
 
 				// Проверка на заполненность полей ввода
 				if (this.checkModalInputsAll(["file"])) return;
@@ -1013,6 +1047,8 @@ export default {
 					data: formData,
 				})
 					.then((response) => {
+						this.disabled.slider.update = false;
+
 						if (response.data.status) {
 							try {
 								this.currentSlide.data.path.body = response.data.data;
@@ -1021,6 +1057,8 @@ export default {
 									"/storage/slides/",
 									""
 								);
+
+								this.closeSlide();
 							} catch (error) {
 								let debbugStory = {
 									title: "Ошибка.",
@@ -1041,7 +1079,6 @@ export default {
 					.catch((error) => {
 						console.log(error);
 					});
-				this.closeSlide();
 			} catch (error) {
 				let debbugStory = {
 					title: "Ошибка.",
@@ -1053,6 +1090,8 @@ export default {
 		},
 		/* Сохранение изменений в базе данных */
 		saveSlidesChanges() {
+			this.disabled.slider.save = true;
+
 			let dataSlides = [];
 			// Копирование данных слайдов
 			for (let i = 0; i < this.slides.length; i++) {
@@ -1082,6 +1121,8 @@ export default {
 						shared.clearFlags(this.slides);
 						shared.updateOrders(this.slides);
 
+						this.disabled.slider.save = false;
+
 						let debbugStory = {
 							title: "Успешно!",
 							body: response.data.message,
@@ -1089,6 +1130,8 @@ export default {
 						};
 						this.$store.commit("debuggerState", debbugStory);
 					} else {
+						this.disabled.slider.save = false;
+
 						let debbugStory = {
 							title: "Ошибка.",
 							body: response.data.message,
@@ -1098,6 +1141,8 @@ export default {
 					}
 				})
 				.catch((error) => {
+					this.disabled.slider.save = false;
+
 					let debbugStory = {
 						title: "Ошибка.",
 						body: "Что-то помешало сохранить данные о слайдах.",
@@ -1153,7 +1198,8 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		// Сохранение всех полей
 		saveFooterChanges() {
-			this.clearTextareaEdited();
+			this.disabled.footer.save = true;
+
 			// Сохранение данных в базу данных
 			axios({
 				method: "post",
@@ -1171,6 +1217,9 @@ export default {
 				},
 			})
 				.then((response) => {
+					this.clearTextareaEdited();
+					this.disabled.footer.save = false;
+
 					let debbugStory = {
 						title: "Успешно!",
 						body: "Данные о футере сохранены.",
@@ -1179,6 +1228,8 @@ export default {
 					this.$store.commit("debuggerState", debbugStory);
 				})
 				.catch((error) => {
+					this.disabled.footer.save = false;
+
 					let debbugStory = {
 						title: "Ошибка.",
 						body: "Данные о футере почему-то не сохранились.",

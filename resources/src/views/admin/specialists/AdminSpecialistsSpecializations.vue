@@ -57,7 +57,8 @@
 		<block-title>
 			<template #title>Специализации</template>
 			<template #buttons>
-				<icon-save :width="28" :height="28" @click="saveSpecializationsChanges" />
+				<icon-load :width="28" :height="28" v-if="disabled.specializations.save" />
+				<icon-save :width="28" :height="28" @click="saveSpecializationsChanges" v-else />
 			</template>
 		</block-title>
 
@@ -102,6 +103,7 @@ import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue"
 import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 
 import IconSave from "../../../components/icons/IconSave.vue";
+import IconLoad from "../../../components/icons/IconLoad.vue";
 
 import axios from "axios";
 import shared from "../../../services/shared";
@@ -122,6 +124,7 @@ export default {
 		ButtonClaim,
 		ButtonRemove,
 		IconSave,
+		IconLoad,
 		axios,
 	},
 	data() {
@@ -148,6 +151,11 @@ export default {
 			loading: {
 				loader: true,
 				table: false,
+			},
+			disabled: {
+				specializations: {
+					save: false,
+				},
 			},
 			currentSpecialization: {
 				errors: {
@@ -446,6 +454,8 @@ export default {
 				}
 			});
 
+			this.disabled.specializations.save = true;
+
 			axios({
 				method: "post",
 				url: `${this.$store.state.axios.urlApi}` + `save-specializations-changes`,
@@ -463,6 +473,8 @@ export default {
 						shared.clearDeletes(this.specializations);
 						shared.clearFlags(this.specializations);
 
+						this.disabled.specializations.save = false;
+
 						let debbugStory = {
 							title: "Успешно!",
 							body: "Данные сохранились.",
@@ -470,6 +482,8 @@ export default {
 						};
 						this.$store.commit("debuggerState", debbugStory);
 					} catch (error) {
+						this.disabled.specializations.save = false;
+
 						let debbugStory = {
 							title: "Ошибка.",
 							body: "После сохранения что-то пошло не так.",
@@ -479,6 +493,8 @@ export default {
 					}
 				})
 				.catch((error) => {
+					this.disabled.specializations.save = false;
+
 					let debbugStory = {
 						title: "Ошибка.",
 						body: "Данные почему-то не сохранились...",

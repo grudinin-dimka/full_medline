@@ -486,11 +486,16 @@
 				<span v-if="$route.params.id == 'new'" class="create"> (СОЗДАНИЕ)</span>
 			</template>
 			<template #buttons>
+				<icon-load :width="28" :height="28" v-if="disabled.profile.save" />
 				<icon-save
 					:width="28"
 					:height="28"
 					@click="saveSpecialistModular('all')"
-					v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.body !== null"
+					v-if="
+						$route.params.id !== 'new' &&
+						this.specialist.profile.data.id.body !== null &&
+						!disabled.profile.save
+					"
 				/>
 				<icon-add
 					:width="28"
@@ -1159,6 +1164,7 @@ import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 import IconSave from "../../../components/icons/IconSave.vue";
 import IconSaveAll from "../../../components/icons/IconSaveAll.vue";
 import IconAdd from "../../../components/icons/IconAdd.vue";
+import IconLoad from "../../../components/icons/IconLoad.vue";
 
 import axios from "axios";
 
@@ -1195,12 +1201,18 @@ export default {
 		IconSave,
 		IconSaveAll,
 		IconAdd,
+		IconLoad,
 		axios,
 		RouterView,
 		RouterLink,
 	},
 	data() {
 		return {
+			disabled: {
+				profile: {
+					save: false,
+				},
+			},
 			/* Модальные окна */
 			modalSpecializations: {
 				title: "",
@@ -2294,6 +2306,8 @@ export default {
 			}
 
 			try {
+				this.disabled.profile.save = true;
+
 				let formData = new FormData();
 				formData.append("type", "all");
 				// Данные блока профиля
@@ -2356,6 +2370,8 @@ export default {
 								this.clearFlagsFromConnection(block);
 							});
 
+							this.disabled.profile.save = false;
+
 							let debbugStory = {
 								title: "Успешно!",
 								body: response.data.message,
@@ -2363,6 +2379,8 @@ export default {
 							};
 							this.$store.commit("debuggerState", debbugStory);
 						} else {
+							this.disabled.profile.save = false;
+
 							let debbugStory = {
 								title: "Ошибка.",
 								body: response.data.message,
@@ -2372,9 +2390,18 @@ export default {
 						}
 					})
 					.catch((error) => {
-						console.log(error);
+						this.disabled.profile.save = false;
+
+						let debbugStory = {
+							title: "Ошибка.",
+							body: error,
+							type: "Error",
+						};
+						this.$store.commit("debuggerState", debbugStory);
 					});
 			} catch (error) {
+				this.disabled.profile.save = false;
+
 				let debbugStory = {
 					title: "Ошибка.",
 					body: "При сохранении данных специалиста произошла ошибка.",
