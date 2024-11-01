@@ -120,7 +120,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .my-marker {
 	background-image: url("../../../assets/svg/map-point.svg");
 	background-size: cover;
@@ -246,10 +246,8 @@ export default {
 }
 
 .contacts-main > .item > .info > .body > :is(.mail, .phone, .address) > ul > li {
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-
+	word-wrap: break-word;
+	
 	margin-top: 10px;
 }
 
