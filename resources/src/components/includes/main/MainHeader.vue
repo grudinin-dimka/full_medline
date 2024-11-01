@@ -19,6 +19,9 @@
 							type="text"
 							placeholder="Введите Ф.И.О."
 							v-model="modalForm.data.name.body"
+							:class="{ error: modalForm.errors.name.status }"
+							@input="modalForm.data.name.edited = true"
+							@blur="checkModalInput('modalForm', 'name', 'text')"
 						/>
 					</template>
 					<template #error>
@@ -38,11 +41,14 @@
 							v-mask="'+7(###)-###-##-##'"
 							placeholder="+7(___)___-__-__"
 							v-model="modalForm.data.phone.body"
+							:class="{ error: modalForm.errors.phone.status }"
+							@input="modalForm.data.phone.edited = true"
+							@blur="checkModalInput('modalForm', 'phone', 'phone')"
 						/>
 					</template>
 					<template #error>
-						<span class="error" v-if="modalForm.errors.name.status">
-							{{ this.modalForm.errors.name.body }}
+						<span class="error" v-if="modalForm.errors.phone.status">
+							{{ this.modalForm.errors.phone.body }}
 						</span>
 					</template>
 				</container-input-once>
@@ -58,11 +64,7 @@
 							v-model="modalForm.data.date.body"
 						/>
 					</template>
-					<template #error>
-						<span class="error" v-if="modalForm.errors.name.status">
-							{{ this.modalForm.errors.name.body }}
-						</span>
-					</template>
+					<template #error></template>
 				</container-input-once>
 				<!-- Специальность врача -->
 				<container-select-once type="edit">
@@ -79,17 +81,13 @@
 							<option value="Хирург">Хирург</option>
 						</select>
 					</template>
-					<template #error>
-						<span class="error" v-if="modalForm.errors.name.status">
-							{{ this.modalForm.errors.name.body }}
-						</span>
-					</template>
+					<template #error></template>
 				</container-select-once>
 			</container-input>
 		</template>
 		<template #footer>
 			<BlockButtons>
-				<ButtonDefault @click=""> Отправить </ButtonDefault>
+				<ButtonDefault @click="sendRequest"> Отправить </ButtonDefault>
 			</BlockButtons>
 		</template>
 	</admin-modal>
@@ -156,6 +154,8 @@ import ContainerSelectOnce from "../../ui/admin/containers/select/ContainerSelec
 import BlockButtons from "../../ui/admin/blocks/BlockButtons.vue";
 import ButtonDefault from "../../ui/admin/buttons/ButtonDefault.vue";
 
+import validate from "../../../services/validate";
+
 export default {
 	components: {
 		AdminModal,
@@ -164,6 +164,7 @@ export default {
 		ContainerSelectOnce,
 		BlockButtons,
 		ButtonDefault,
+		validate,
 	},
 	data() {
 		return {
@@ -236,7 +237,8 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Открытие */
 		openModal(type, title) {
-			// this.clearModalErrors();
+			this.clearModalData("modalForm");
+			this.clearModalErrors("modalForm");
 			this.modal.title = title;
 
 			switch (type) {
@@ -284,11 +286,161 @@ export default {
 				this.$store.commit("changeModal", "Вызов врача на дом");
 			}
 		},
-	},
-	methods: {
-		setShadow() {
-			if (window.innerHeight > 200) {
+		/* _____________________________________________________*/
+		/* 2. Работа с полями ввода модального окна             */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		// Проверка введенного текстового значения
+		checkInputText(value) {
+			/* Проверка на пустую строку */
+			if (value === "" || value === null) {
+				return {
+					status: true,
+					message: "Поле не может быть пустым.",
+				};
 			}
+
+			/* Проверка на соответствие типу string */
+			if (typeof value != "string") {
+				return {
+					status: true,
+					message: "Тип данных не совпадает.",
+				};
+			}
+
+			return {
+				status: false,
+				message: "Ошибок нет.",
+			};
+		},
+		// Проверка введенного текстового значения
+		checkInputNumber(value) {
+			/* Проверка на пустую строку */
+			if (value === "" || value === null) {
+				return {
+					status: true,
+					message: "Поле не может быть пустым.",
+				};
+			}
+
+			/* Проверка на соответствие типу Number */
+			if (Number.isNaN(Number(value))) {
+				console.log(value, typeof value);
+				return {
+					status: true,
+					message: "Тип данных не совпадает.",
+				};
+			}
+
+			return {
+				status: false,
+				message: "Ошибок нет.",
+			};
+		},
+		/* Проверка введенного текстового значения */
+		checkInputPhone(value) {
+			/* Проверка на пустую строку */
+			if (value === "" || value === null) {
+				return {
+					status: true,
+					message: "Поле не может быть пустым.",
+				};
+			}
+
+			/* Проверка на соответствие типу string */
+			if (typeof value != "string") {
+				return {
+					status: true,
+					message: "Тип данных не совпадает.",
+				};
+			}
+
+			if (!validate.checkPhone(value)) {
+				return {
+					status: true,
+					message: "Телефон не прошел проверку.",
+				};
+			}
+
+			return {
+				status: false,
+				message: "Ошибок нет.",
+			};
+		},
+		// Проверка поля имени
+		checkModalInput(currentName, dataKey, inputType) {
+			let errorLog = {};
+			switch (inputType) {
+				case "text":
+					errorLog = this.checkInputText(this[currentName].data[dataKey].body);
+					break;
+				case "number":
+					errorLog = this.checkInputNumber(this[currentName].data[dataKey].body);
+					break;
+				case "phone":
+					errorLog = this.checkInputPhone(this[currentName].data[dataKey].body);
+					break;
+				default:
+					break;
+			}
+
+			if (errorLog.status) {
+				this[currentName].errors[dataKey].body = errorLog.message;
+				this[currentName].errors[dataKey].status = true;
+
+				return true;
+			} else {
+				this[currentName].errors[dataKey].body = "";
+				this[currentName].errors[dataKey].status = false;
+
+				return false;
+			}
+		},
+		// Проверка всех полей ввода модального окна
+		checkModalInputsAll(inputKeys) {
+			let errorCount = 0;
+			for (let i = 0; i < inputKeys.length; i++) {
+				switch (inputKeys[i]) {
+					case "phone":
+						if (this.checkModalInput("modalForm", inputKeys[i], "phone")) {
+							errorCount++;
+						}
+						break;
+					default:
+						if (this.checkModalInput("modalForm", inputKeys[i], "text")) {
+							errorCount++;
+						}
+						break;
+				}
+			}
+
+			if (errorCount > 0) {
+				return true;
+			} else {
+				return false;
+			}
+		},
+		/* Очистка содержимого модального окна */
+		clearModalData(currentName) {
+			for (let key in this[currentName].data) {
+				this[currentName].data[key].body = "";
+				this[currentName].data[key].edited = false;
+			}
+		},
+		/* Очистка ошибок */
+		clearModalErrors(currentName) {
+			for (let key in this[currentName].errors) {
+				this[currentName].errors[key].body = "";
+				this[currentName].errors[key].status = false;
+			}
+		},
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                 ОТПРАВКА ЗАПРОСА                  |*/
+		/* |___________________________________________________|*/
+		/* Отправка запроса */
+		sendRequest() {
+			if (this.checkModalInputsAll(["name", "phone"])) return;
+
+			console.log("Проверка пройдена.");
 		},
 	},
 	mounted() {
