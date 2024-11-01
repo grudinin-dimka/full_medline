@@ -8,6 +8,7 @@
 						<div class="title">Телефоны:</div>
 						<ul>
 							<li v-for="phone in contact.phones" v-if="contact.phones.length > 0">
+								<IconContactPhone :width="16" :height="16" />
 								<a :href="`tel:${phone.name}`" :key="phone.id">{{ phone.name }}</a>
 							</li>
 							<li v-else>
@@ -19,6 +20,7 @@
 						<div class="title">Почта:</div>
 						<ul>
 							<li v-for="mail in contact.mails" v-if="contact.mails.length > 0">
+								<IconContactMail :width="18" :height="16" />
 								<a :href="`mailto:${mail.name}`">{{ mail.name }}</a>
 							</li>
 							<li v-else>
@@ -30,6 +32,7 @@
 						<div class="title">Адрес:</div>
 						<ul>
 							<li>
+								<IconContactHome :width="18" :height="18" />
 								{{
 									`г. ${contact.clinic.city}, ул. ${contact.clinic.street}, д. ${contact.clinic.home}`
 								}}
@@ -57,6 +60,10 @@
 </template>
 
 <script>
+import IconContactMail from "../../../components/icons/contacts/IconContactMail.vue";
+import IconContactPhone from "../../../components/icons/contacts/IconContactPhone.vue";
+import IconContactHome from "../../../components/icons/contacts/IconContactHome.vue";
+
 async function initMap(mapId, coordinates) {
 	ymaps3.ready.then(() => {
 		let { YMap, YMapDefaultSchemeLayer, YMapMarker, YMapDefaultFeaturesLayer, Placemark } =
@@ -95,6 +102,11 @@ async function initMap(mapId, coordinates) {
 }
 
 export default {
+	components: {
+		IconContactMail,
+		IconContactPhone,
+		IconContactHome,
+	},
 	props: {
 		contacts: {
 			type: Array,
@@ -120,7 +132,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .my-marker {
 	background-image: url("../../../assets/svg/map-point.svg");
 	background-size: cover;
@@ -246,8 +258,11 @@ export default {
 }
 
 .contacts-main > .item > .info > .body > :is(.mail, .phone, .address) > ul > li {
+	display: flex;
+	align-items: center;
 	word-wrap: break-word;
-	
+	gap: 5px;
+
 	margin-top: 10px;
 }
 
@@ -263,24 +278,6 @@ export default {
 	text-decoration: underline;
 	text-decoration-thickness: 1.5px;
 	text-decoration-color: var(--primary-color);
-}
-
-.contacts-main > .item > .info > .body > .mail > ul > li::before {
-	content: "🖂";
-	padding-right: 10px;
-	font-weight: bold;
-}
-
-.contacts-main > .item > .info > .body > .phone > ul > li::before {
-	content: "☎";
-	padding-right: 10px;
-	font-weight: bold;
-}
-
-.contacts-main > .item > .info > .body > .address > ul > li::before {
-	content: "🏠︎";
-	padding-right: 10px;
-	font-weight: bold;
 }
 
 ul::-webkit-scrollbar {

@@ -60,7 +60,10 @@
 					@touchEdit="editContactPhone"
 					@touchDelete="deleteContactPhone"
 				>
-					<template #title>☎ ТЕЛЕФОНЫ</template>
+					<template #title>
+						<IconContactPhone :width="16" :height="14" :type="'modal'" />
+						ТЕЛЕФОНЫ
+					</template>
 				</admin-modal-list>
 				<admin-modal-list
 					:type="modal.type == 'create' ? 'create' : modal.style.delete ? 'delete' : 'edit'"
@@ -70,7 +73,7 @@
 					@touchDelete="deleteContactMail"
 				>
 					<template #title>
-						<span style="font-weight: bold">🖂</span>
+						<IconContactMail :width="20" :height="14" :type="'modal'" />
 						ПОЧТА
 					</template>
 				</admin-modal-list>
@@ -270,6 +273,9 @@ import IconEdit from "../../../components/icons/IconEdit.vue";
 import IconRemove from "../../../components/icons/IconRemove.vue";
 import IconCreate from "../../../components/icons/IconCreate.vue";
 import IconLoad from "../../../components/icons/IconLoad.vue";
+import IconContactHome from "../../../components/icons/contacts/IconContactHome.vue";
+import IconContactMail from "../../../components/icons/contacts/IconContactMail.vue";
+import IconContactPhone from "../../../components/icons/contacts/IconContactPhone.vue";
 
 import axios from "axios";
 import shared from "../../../services/shared.js";
@@ -303,6 +309,9 @@ export default {
 		IconRemove,
 		IconCreate,
 		IconLoad,
+		IconContactHome,
+		IconContactMail,
+		IconContactPhone,
 		axios,
 	},
 	data() {

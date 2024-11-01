@@ -23,9 +23,11 @@
 						<div>Номера:</div>
 						<ul>
 							<li v-if="contact.phones.length > 0" v-for="phone in contact.phones">
+								<IconContactPhone :width="14" :height="14" />
 								{{ phone.name }}
 							</li>
 							<li v-else>
+								<IconContactPhone :width="14" :height="14" />
 								<span class="empty"> Отсутствует </span>
 							</li>
 						</ul>
@@ -34,9 +36,11 @@
 						<div>Почта:</div>
 						<ul>
 							<li v-if="contact.mails.length > 0" v-for="mail in contact.mails">
+								<IconContactMail :width="16" :height="14" />
 								{{ mail.name }}
 							</li>
 							<li v-else>
+								<IconContactMail :width="16" :height="14" />
 								<span class="empty"> Отсутствует </span>
 							</li>
 						</ul>
@@ -48,7 +52,16 @@
 </template>
 
 <script>
+import IconContactHome from "../../../components/icons/contacts/IconContactHome.vue";
+import IconContactMail from "../../../components/icons/contacts/IconContactMail.vue";
+import IconContactPhone from "../../../components/icons/contacts/IconContactPhone.vue";
+
 export default {
+	components: {
+		IconContactHome,
+		IconContactMail,
+		IconContactPhone,
+	},
 	props: {
 		contacts: {
 			type: Array,
@@ -222,21 +235,8 @@ ul::-webkit-scrollbar-thumb:hover {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	font-family: "Azeret Mono";
 
 	margin-top: 10px;
-}
-
-.contacts > .item > .body > .info > .mail > ul > li::before {
-	content: "🖂";
-	padding-right: 10px;
-	font-weight: bold;
-}
-
-.contacts > .item > .body > .info > .phone > ul > li::before {
-	content: "☎";
-	padding-right: 10px;
-	font-weight: bold;
 }
 
 span.empty {
