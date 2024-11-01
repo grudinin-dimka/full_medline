@@ -288,7 +288,6 @@ export default {
 	methods: {
 		setShadow() {
 			if (window.innerHeight > 200) {
-				
 			}
 		},
 	},

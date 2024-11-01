@@ -31,9 +31,7 @@
 			</div>
 			<!-- Блок доп. информации -->
 			<div class="more">
-				<div class="button" @click="this.$store.commit('changeModal', 'Записаться на прием')">
-					Записаться на прием
-				</div>
+				<div class="button" @click="">Записаться на прием</div>
 				<p>Присоединяйтесь к нам</p>
 				<div class="links">
 					<a href="https://ok.ru/profile/586067527945" style="cursor: pointer">

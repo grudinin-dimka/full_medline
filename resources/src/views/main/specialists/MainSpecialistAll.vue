@@ -8,13 +8,17 @@
 	<!-- TODO: Сделать фильтры, в идеале, чтобы при вводе specialists/terapevt выводились врачи -->
 	<!-- <filters v-if="loading.sections.specialists" :filters="filters"></filters> -->
 	<block :minHeight="400">
+		<template v-if="loading.sections.specialists">
+			<specialists-list :specialists="specialists" v-if="specialists.length > 0" />
+
+			<Empty :minHeight="300" v-else />
+		</template>
+
 		<loader-child
 			:isLoading="loading.loader.specialists"
 			:minHeight="400"
 			@loaderChildAfterLeave="loaderChildAfterLeave"
 		/>
-
-		<specialists-list :specialists="specialists" v-if="loading.sections.specialists" />
 	</block>
 </template>
 
@@ -22,20 +26,24 @@
 import Block from "../../../components/ui/main/blocks/Block.vue";
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import Filters from "../../../components/ui/main/Filters.vue";
-import { RouterLink } from "vue-router";
-import axios from "axios";
+
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
 import SpecialistsList from "./MainSpecialistsAllList.vue";
+import Empty from "../../../components/includes/Empty.vue";
+
+import { RouterLink } from "vue-router";
+import axios from "axios";
 
 export default {
 	components: {
 		Block,
 		InfoBar,
 		Filters,
-		RouterLink,
-		axios,
 		LoaderChild,
 		SpecialistsList,
+		RouterLink,
+		axios,
+		Empty,
 	},
 	data() {
 		return {
@@ -82,8 +90,6 @@ export default {
 				if (response.data.status) {
 					this.specialists = response.data.data;
 				} else {
-					this.specialists = null;
-
 					let debbugStory = {
 						title: "Ошибка.",
 						body: response.data.message,
@@ -101,9 +107,7 @@ export default {
 				this.$store.commit("debuggerState", debbugStory);
 			})
 			.finally(() => {
-				if (this.specialists != null) {
-					this.loading.loader.specialists = false;
-				}
+				this.loading.loader.specialists = false;
 			});
 	},
 };

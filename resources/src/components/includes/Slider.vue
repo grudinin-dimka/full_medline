@@ -56,7 +56,7 @@ export default {
 		return {
 			windowWidth: null,
 			carouselSettings: {
-				itemsToShow: 5,
+				itemsToShow: 1,
 			},
 		};
 	},
@@ -73,6 +73,8 @@ export default {
 	computed: {
 		/* Изменение настроек слайдера */
 		calcItemsToShow() {
+			this.windowWidth = window.document.documentElement.clientWidth;
+
 			if (this.windowWidth >= 1600 || this.windowWidth == null) {
 				return 5;
 			} else if ((this.windowWidth >= 1300) & (this.windowWidth <= 1600)) {
