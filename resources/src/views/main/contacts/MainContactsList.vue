@@ -226,7 +226,7 @@ export default {
 	border: 2px solid var(--input-border-color-inactive);
 	border-radius: 10px;
 
-	transition: all 0.5s;
+	transition: all 0.2s;
 }
 
 .contacts-main > .item > .map:hover {
@@ -241,7 +241,7 @@ export default {
 	border: 2px solid var(--input-border-color-inactive);
 	border-radius: 10px;
 
-	transition: all 0.5s;
+	transition: all 0.2s;
 }
 
 .contacts-main > .item > .map > .wall {
@@ -254,11 +254,12 @@ export default {
 
 	overflow: hidden;
 	color: var(--input-border-color-inactive);
+	background-color: white;
 
 	width: 100%;
 	height: 300px;
 
-	transition: all 0.5s;
+	transition: top 1s, background-color 0.2s;
 }
 
 .contacts-main > .item > .map > .wall:hover {
@@ -272,7 +273,7 @@ export default {
 	min-height: 100%;
 
 	fill: #f2f2f2;
-	transition: all 0.5s;
+	transition: all 0.2s;
 }
 
 .contacts-main > .item > .map > .wall:hover > svg {
