@@ -5,7 +5,8 @@
 		viewBox="0 0 28 22"
 		xmlns="http://www.w3.org/2000/svg"
 		:class="{
-			modal: type == 'modal',
+			edit: type == 'edit',
+			create: type == 'create',
 		}"
 	>
 		<path
@@ -42,7 +43,11 @@ svg:hover {
 	fill: black;
 }
 
-svg.modal {
+svg.edit {
 	fill: var(--primary-color);
+}
+
+svg.create {
+	fill: #44a533;
 }
 </style>

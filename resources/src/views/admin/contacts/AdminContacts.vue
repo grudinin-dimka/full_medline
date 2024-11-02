@@ -61,7 +61,11 @@
 					@touchDelete="deleteContactPhone"
 				>
 					<template #title>
-						<IconContactPhone :width="16" :height="14" :type="'modal'" />
+						<IconContactPhone
+							:width="16"
+							:height="14"
+							:type="modal.type == 'create' ? 'create' : 'edit'"
+						/>
 						ТЕЛЕФОНЫ
 					</template>
 				</admin-modal-list>
@@ -73,7 +77,11 @@
 					@touchDelete="deleteContactMail"
 				>
 					<template #title>
-						<IconContactMail :width="20" :height="14" :type="'modal'" />
+						<IconContactMail
+							:width="20"
+							:height="14"
+							:type="modal.type == 'create' ? 'create' : 'edit'"
+						/>
 						ПОЧТА
 					</template>
 				</admin-modal-list>
