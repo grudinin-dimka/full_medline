@@ -54,6 +54,32 @@
 					class="wall"
 					@click="showMap(contact.id, [contact.clinic.geoLongitude, contact.clinic.geoWidth])"
 				>
+					<svg viewBox="0 0 640 313" xmlns="http://www.w3.org/2000/svg">
+						<rect x="104" width="12" height="313" />
+						<rect x="313" y="135" width="12" height="98" />
+						<rect x="232" width="12" height="123" />
+						<rect x="475" width="12" height="123" />
+						<rect y="186" width="12" height="313" transform="rotate(-90 0 186)" />
+						<rect x="232" y="135" width="12" height="255" transform="rotate(-90 232 135)" />
+						<rect x="313" y="245" width="12" height="327" transform="rotate(-90 313 245)" />
+						<rect x="126" y="196" width="54" height="54" rx="5" />
+						<rect x="65" y="196" width="29" height="100" rx="5" />
+						<rect x="26" y="195" width="29" height="100" rx="5" />
+						<rect x="147" y="36" width="75" height="35" rx="5" />
+						<rect x="335" y="145" width="54" height="78" rx="5" />
+						<rect x="20" y="8" width="74" height="115" rx="5" />
+						<rect x="497" y="10" width="54" height="125" rx="5" />
+						<rect x="561" y="10" width="54" height="125" rx="5" />
+						<rect x="190" y="81" width="32" height="83" rx="5" />
+						<rect x="148" y="81" width="32" height="83" rx="5" />
+						<rect x="190" y="196" width="113" height="54" rx="5" />
+						<rect x="126" y="259" width="187" height="17" rx="5" />
+						<rect x="126" y="286" width="187" height="17" rx="5" />
+						<rect x="232" y="145" width="71" height="19" rx="5" />
+						<rect x="399" y="169" width="165" height="54" rx="5" />
+						<rect x="335" y="255" width="280" height="48" rx="5" />
+						<rect x="254" y="31" width="188" height="82" rx="5" />
+					</svg>
 					<div class="title">Показать карту</div>
 				</div>
 			</div>
@@ -194,7 +220,7 @@ export default {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	height: 300px;
+	min-height: 300px;
 	overflow: hidden;
 
 	border: 2px solid var(--input-border-color-inactive);
@@ -208,6 +234,8 @@ export default {
 }
 
 .contacts-main > .item > .map > .wall > .title {
+	position: absolute;
+
 	padding: 10px;
 	background-color: white;
 	border: 2px solid var(--input-border-color-inactive);
@@ -224,11 +252,7 @@ export default {
 	align-items: center;
 	top: 0px;
 
-	background-image: url("../../../assets/img/map-clear.png");
-	background-position: center center;
-	background-repeat: no-repeat;
-	background-size: cover;
-
+	overflow: hidden;
 	color: var(--input-border-color-inactive);
 
 	width: 100%;
@@ -239,7 +263,20 @@ export default {
 
 .contacts-main > .item > .map > .wall:hover {
 	background-color: #f2feff;
-	background-image: url("../../../assets/img/map-hover.png");
+}
+
+.contacts-main > .item > .map > .wall > svg {
+	width: 100%;
+	min-width: 600px;
+	height: 300px;
+	min-height: 100%;
+
+	fill: #f2f2f2;
+	transition: all 0.5s;
+}
+
+.contacts-main > .item > .map > .wall:hover > svg {
+	fill: #dbf1f3;
 }
 
 .contacts-main > .item > .map > .wall:hover > .title {
@@ -321,14 +358,17 @@ span.empty {
 	}
 
 	.contacts-main > .item > .info > .body {
-		/* flex-direction: row;
-		flex-wrap: wrap; */
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);
 	}
 
 	.contacts-main > .item.one > .info > .body {
 		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.contacts-main > .item > .map > .wall > svg {
+		min-width: 600;
+		min-height: 500px;
 	}
 }
 

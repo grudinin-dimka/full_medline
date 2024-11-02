@@ -54,7 +54,7 @@ nav {
 
 	padding: 10px;
 	margin: 0px 30px;
-	gap: 5px;
+	gap: 10px;
 
 	background-color: #00abbd;
 	color: white;
