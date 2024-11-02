@@ -630,12 +630,46 @@ export default {
 				message: "Ошибок нет.",
 			};
 		},
+		// Проверка введенного значения
+		checkInputFile(value) {
+			/* Проверка на загрузку файла пользователем */
+			if (!value) {
+				return {
+					status: true,
+					message: "Поле не может быть пустым.",
+				};
+			}
+
+			/* Проверка на тип загруженного файла */
+			if (value.type !== "image/png") {
+				return {
+					status: true,
+					message: "Разрешённые типы файлов: png.",
+				};
+			}
+
+			/* Проверка на размер загруженного файла */
+			if (value.size / 1024 / 1024 > 10) {
+				return {
+					status: true,
+					message: "Разрешённые размер файлов: не более 10 МБ.",
+				};
+			}
+
+			return {
+				status: false,
+				message: "Ошибок нет.",
+			};
+		},
 		// Проверка поля имени
 		checkModalInput(dataKey, inputType) {
 			let errorLog = {};
 			switch (inputType) {
 				case "text":
 					errorLog = this.checkInputText(this.currentSlide.data[dataKey].body);
+					break;
+				case "file":
+					errorLog = this.checkInputFile(this.$refs.fileUpload.files[0]);
 					break;
 				default:
 					break;
@@ -660,27 +694,9 @@ export default {
 				switch (inputKeys[i]) {
 					// Для поля файл
 					case "file":
-						/* Проверка на тип загруженного файла */
-						if (this.$refs.fileUpload.files[0].type !== "image/png") {
-							this.currentSlide.errors.file.status = true;
-							this.currentSlide.errors.file.value = "Разрешенный формат файла: png.";
+						if (this.checkModalInput(inputKeys[i], "file")) {
 							errorCount++;
-
-							continue;
 						}
-
-						/* Проверка на размер загруженного файла */
-						let fileSize = this.$refs.fileUpload.files[0].size / 1024 / 1024;
-						if (fileSize > 10) {
-							this.currentSlide.errors.file.status = true;
-							this.currentSlide.errors.file.value = "Размер файла более 10 МБ.";
-							errorCount++;
-
-							continue;
-						}
-
-						this.currentSlide.errors.file.status = false;
-
 						break;
 					// Для всех остальных полей
 					default:
@@ -893,24 +909,7 @@ export default {
 		// Создание нового слайда
 		addSlide() {
 			try {
-				/* Присваивание данных поля ввода файла пользователем в переменную */
-				this.currentSlide.file = this.$refs.fileUpload.files[0];
-
-				/* Проверка на загрузку файла пользователем */
-				if (!this.$refs.fileUpload.files[0]) {
-					this.currentSlide.errors.file.status = true;
-					this.currentSlide.errors.file.value = "Вы не загрузили изображение.";
-
-					// Проверка на заполненность полей ввода
-					if (this.checkModalInputsAll(["name", "link"])) {
-						return;
-					}
-				} else {
-					// Проверка на заполненность полей ввода
-					if (this.checkModalInputsAll(["name", "link", "file"])) {
-						return;
-					}
-				}
+				if (this.checkModalInputsAll(["name", "link", "file"])) return;
 
 				/* Загрузка файла */
 				this.currentSlide.file = this.$refs.fileUpload.files[0];
@@ -1000,36 +999,34 @@ export default {
 		// Обновление данных слайда по данным из модального окна
 		updateSlide() {
 			try {
-				// Проверка на заполненность полей ввода
-				if (this.checkModalInputsAll(["name", "link"])) {
-					return;
-				}
-
-				this.disabled.slider.update = true;
-
 				/* Получение текущего объекта из массива this.slides */
-				let resultSlideCurrent = this.slides.filter(
+				let slideCurrent = this.slides.find(
 					(slide) => slide.order === this.currentSlide.data.order.body
 				);
-				let filteredSlideCurrent = resultSlideCurrent[0];
-
-				for (let key in filteredSlideCurrent) {
-					if (key == "name" || key == "link") {
-						filteredSlideCurrent[key] = this.currentSlide.data[key].body;
-					} else if (key == "hide") {
-						filteredSlideCurrent[key] = this.currentSlide.data[key].body;
-					}
-				}
 
 				// Если файл не загружен, то закрываем модальное окно
 				if (!this.$refs.fileUpload.files[0]) {
-					this.disabled.slider.update = false;
+					// Проверка на заполненность полей ввода
+					if (this.checkModalInputsAll(["name", "link"])) {
+						return;
+					}
+
+					for (let key in slideCurrent) {
+						if (key == "name" || key == "link") {
+							slideCurrent[key] = this.currentSlide.data[key].body;
+						} else if (key == "hide") {
+							slideCurrent[key] = this.currentSlide.data[key].body;
+						}
+					}
+
 					this.closeSlide();
 					return;
 				}
 
 				// Проверка на заполненность полей ввода
-				if (this.checkModalInputsAll(["file"])) return;
+				if (this.checkModalInputsAll(["name", "link", "file"])) return;
+
+				this.disabled.slider.update = true;
 
 				/* Загрузка файла */
 				let formData = new FormData();
@@ -1052,11 +1049,8 @@ export default {
 						if (response.data.status) {
 							try {
 								this.currentSlide.data.path.body = response.data.data;
-								filteredSlideCurrent.path = response.data.data;
-								filteredSlideCurrent.filename = response.data.data.replace(
-									"/storage/slides/",
-									""
-								);
+								slideCurrent.path = response.data.data;
+								slideCurrent.filename = response.data.data.replace("/storage/slides/", "");
 
 								this.closeSlide();
 							} catch (error) {
