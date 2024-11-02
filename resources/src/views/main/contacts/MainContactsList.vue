@@ -12,6 +12,7 @@
 								<a :href="`tel:${phone.name}`" :key="phone.id">{{ phone.name }}</a>
 							</li>
 							<li v-else>
+								<IconContactPhone :width="16" :height="16" />
 								<span class="empty"> Отсутствует </span>
 							</li>
 						</ul>
@@ -24,6 +25,7 @@
 								<a :href="`mailto:${mail.name}`">{{ mail.name }}</a>
 							</li>
 							<li v-else>
+								<IconContactMail :width="18" :height="16" />
 								<span class="empty"> Отсутствует </span>
 							</li>
 						</ul>
@@ -198,7 +200,7 @@ export default {
 	border: 2px solid var(--input-border-color-inactive);
 	border-radius: 10px;
 
-	transition: all 0.2s;
+	transition: all 0.5s;
 }
 
 .contacts-main > .item > .map:hover {

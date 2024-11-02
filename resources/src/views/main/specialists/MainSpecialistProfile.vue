@@ -52,7 +52,10 @@
 						<tr>
 							<td>
 								<ul>
-									<li>У детей:</li>
+									<li>
+										<IconSpecialistChild :width="18" :height="18" />
+										У детей:
+									</li>
 								</ul>
 							</td>
 							<td v-if="specialist.profile.childrenDoctor">
@@ -63,7 +66,10 @@
 						<tr>
 							<td>
 								<ul>
-									<li>У взрослых:</li>
+									<li>
+										<IconSpecialistAdult :width="18" :height="18" />
+										У взрослых:
+									</li>
 								</ul>
 							</td>
 							<td>{{ specialist.profile.adultDoctor ? "Да." : "Нет." }}</td>
@@ -101,23 +107,29 @@
 			@loaderChildAfterLeave="loaderChildAfterLeave"
 		/>
 	</block>
-
 </template>
 
 <script>
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import Block from "../../../components/ui/main/blocks/Block.vue";
-import axios from "axios";
+
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
 import LoadText from "../../../components/ui/main/LoadText.vue";
+
+import IconSpecialistChild from "../../../components/icons/specialists/IconSpecialistChild.vue";
+import IconSpecialistAdult from "../../../components/icons/specialists/IconSpecialistAdult.vue";
+
+import axios from "axios";
 
 export default {
 	components: {
 		InfoBar,
 		Block,
-		axios,
 		LoaderChild,
 		LoadText,
+		IconSpecialistChild,
+		IconSpecialistAdult,
+		axios,
 	},
 	data() {
 		return {
@@ -224,8 +236,6 @@ export default {
 	grid-template-columns: 500px 1fr;
 	gap: 20px;
 
-	margin: 0px 30px;
-
 	min-height: 300px;
 	width: 1250px;
 
@@ -263,6 +273,14 @@ export default {
 
 .specialist-profile-head td ul {
 	margin: 0px;
+	list-style: none;
+	padding-left: 15px;
+}
+
+.specialist-profile-head td ul li {
+	display: flex;
+	gap: 5px;
+	align-items: center;
 }
 
 a.prodoctorov {
@@ -293,34 +311,28 @@ a.prodoctorov .blue {
 	color: #117cc0;
 }
 
-@media screen and (width <= 1000px) {
+@media screen and (width <= 1250px) {
 	.container-specialist-profile {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: center;
+		grid-template-columns: 1fr 1fr;
 
-		width: calc(100% - 60px);
-	}
-}
-
-@media screen and (max-width: 460px) {
-	.container-specialist-profile {
-		margin: 0px 0px;
-		display: flex;
-		gap: 20px;
-		max-width: 1000px;
-
-		animation: transform 0.5s ease-out;
+		width: 100%;
 	}
 
 	.container-specialist-profile > img {
-		width: 100%;
-		max-width: 300px;
+		align-self: center;
+		justify-self: center;
 	}
+}
 
-	.specialist-profile-head > .item {
-		font-size: 16px;
-		grid-template-columns: 1fr 1fr;
+@media screen and (width <= 900px) {
+	.container-specialist-profile {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media screen and (width <= 420px) {
+	.container-specialist-profile > img {
+		width: 100%;
 	}
 }
 </style>

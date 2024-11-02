@@ -35,7 +35,6 @@ export default {
 
 <style scoped>
 svg {
-	cursor: pointer;
 	fill: black;
 }
 
