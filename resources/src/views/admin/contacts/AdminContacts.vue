@@ -762,8 +762,9 @@ export default {
 		/* Изменение */
 		editContact(selectedContact) {
 			for (let key in this.currentContact.data) {
-				if (key == "phones" || key == "mails") {
-					this.currentContact.data[key].body = [...selectedContact[key]];
+				if (key === "phones" || key === "mails") {
+					this.currentContact.data[key].body = Array.from(selectedContact[key]);
+					continue;
 				}
 
 				this.currentContact.data[key].body = selectedContact[key];

@@ -39,10 +39,24 @@ return new class extends Migration
         });
    
         DB::table('users')->insert([
-            'name' => 'Admin',
-            'email' => 'admin@admin',
+            'name' => 'sveta',
+            'email' => 'sveta@admin',
             'rightsId' => 1,
-            'password' => Hash::make('123456'),
+            'password' => Hash::make('zBkvUoXKZ3ib-m6n'),
+        ]);
+
+        DB::table('users')->insert([
+            'name' => 'danil',
+            'email' => 'danil@admin',
+            'rightsId' => 1,
+            'password' => Hash::make('quwG7G_UR0iVktB7'),
+        ]);
+
+        DB::table('users')->insert([
+            'name' => 'dima',
+            'email' => 'dima@admin',
+            'rightsId' => 1,
+            'password' => Hash::make('DFKEhwCA4H-s7CoZ'),
         ]);
         
     }

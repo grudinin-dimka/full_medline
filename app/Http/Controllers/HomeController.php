@@ -118,6 +118,14 @@ class HomeController extends Controller
          $stringReplace = str_replace(" ", "-", $stringUnderCase);
          
          if ($request->url == $stringReplace) {
+            if ($specialists[$key]->hide == true) {
+               return response()->json([
+                  "status" => false,
+                  "message" => "Специалист не найден.",
+                  "data" => null,
+               ]);
+            };
+
             $specialists[$key]->path= Storage::url('specialists/' . $specialists[$key]->filename);
 
             $specialistsSpecializations = SpecialistSpecialization::where('id_specialist', $specialists[$key]->id)->get();
@@ -170,7 +178,7 @@ class HomeController extends Controller
 
       return response()->json([
          "status" => false,
-         "message" => "Специалист не найден.",
+         "message" => "Данного специалиста не существует.",
          "data" => null,
       ]);            
    }

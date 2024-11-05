@@ -220,7 +220,7 @@ export default {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	min-height: 300px;
+	height: 300px;
 	overflow: hidden;
 
 	border: 2px solid var(--input-border-color-inactive);

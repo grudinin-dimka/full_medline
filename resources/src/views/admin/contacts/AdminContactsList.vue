@@ -188,7 +188,7 @@ export default {
 	inline-size: 80%;
 
 	overflow-y: auto;
-	height: 95px;
+	height: 145px;
 }
 
 /* STOP делал цвета скролла, надо дальше сделать по идее добавление нового контакта */
@@ -263,6 +263,10 @@ span.empty {
 
 	.contacts {
 		grid-auto-rows: 400px;
+	}
+
+	.contacts > .item > .body > .info > :is(.mail, .phone) > ul {
+		height: 100px;
 	}
 }
 </style>
