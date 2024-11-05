@@ -18,14 +18,15 @@ export default {
 		return {
 			isActiv: true,
 			menu: [
-				{ id: "1", title: "О Нас", name: "about", href: "about" },
-				{ id: "2", title: "Специалисты", name: "all", href: "/specialists" },
-				{ id: "3", title: "Цены", name: "prices", href: "/prices" },
-				{ id: "4", title: "Направления", name: "directions", href: "/directions" },
-				{ id: "5", title: "Диагностика", name: "diagnostics", href: "/diagnostics" },
-				{ id: "6", title: "Лицензии", name: "licenses", href: "/licenses" },
-				{ id: "7", title: "Видео", name: "videos", href: "/videos" },
-				{ id: "8", title: "Контакты", name: "contacts", href: "/contacts" },
+				{ id: "1", title: "Главная", name: "home", href: "home" },
+				{ id: "2", title: "О Нас", name: "about", href: "about" },
+				{ id: "3", title: "Специалисты", name: "all", href: "/specialists" },
+				// { id: "3", title: "Цены", name: "prices", href: "/prices" },
+				// { id: "4", title: "Направления", name: "directions", href: "/directions" },
+				// { id: "5", title: "Диагностика", name: "diagnostics", href: "/diagnostics" },
+				// { id: "6", title: "Лицензии", name: "licenses", href: "/licenses" },
+				// { id: "7", title: "Видео", name: "videos", href: "/videos" },
+				{ id: "4", title: "Контакты", name: "contacts", href: "/contacts" },
 			],
 		};
 	},
@@ -50,7 +51,7 @@ export default {
 <style scoped>
 nav {
 	display: grid;
-	grid-template-columns: repeat(8, 1fr);
+	grid-template-columns: repeat(4, 1fr);
 
 	padding: 10px;
 	margin: 0px 30px;
