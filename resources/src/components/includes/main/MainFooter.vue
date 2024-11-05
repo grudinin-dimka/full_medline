@@ -25,13 +25,11 @@
 			</div>
 			<!-- Блок с кнопками -->
 			<div class="buttons">
-				<div>Обратная связь</div>
-				<div>Контакты</div>
-				<div>Вакансии</div>
+				<div @click="$router.push({ name: 'contacts' })">Контакты</div>
 			</div>
 			<!-- Блок доп. информации -->
 			<div class="more">
-				<div class="button" @click="">Записаться на прием</div>
+				<!-- <div class="button" @click="">Записаться на прием</div> -->
 				<p>Присоединяйтесь к нам</p>
 				<div class="links">
 					<a href="https://ok.ru/profile/586067527945" style="cursor: pointer">

@@ -13,6 +13,7 @@
 				<container-input-once type="edit">
 					<template #title>
 						<span>Ф.И.О.*</span>
+						<span v-if="modalForm.data.name.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #input>
 						<input
@@ -34,6 +35,7 @@
 				<container-input-once type="edit">
 					<template #title>
 						<span>НОМЕР ТЕЛЕФОНА*</span>
+						<span v-if="modalForm.data.phone.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #input>
 						<input
@@ -56,34 +58,65 @@
 				<container-input-once type="edit">
 					<template #title>
 						<span>ДАТА РОЖДЕНИЯ</span>
+						<span v-if="modalForm.data.date.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #input>
 						<input
 							type="date"
 							placeholder="Введите дату"
 							v-model="modalForm.data.date.body"
+							@input="modalForm.data.date.edited = true"
 						/>
 					</template>
 					<template #error></template>
 				</container-input-once>
 				<!-- Специальность врача -->
-				<container-select-once type="edit">
+				<container-input-once type="edit">
 					<template #title>
 						<span>СПЕЦИАЛИЗАЦИЯ ВРАЧА</span>
+						<span v-if="modalForm.data.specialization.edited"> (ИЗМЕНЕНО)</span>
 					</template>
-					<template #select>
-						<!-- TODO: Сделать подгрузку специализаций специаилстов -->
-						<select name="spec" v-model="modalForm.data.specialization.body">
-							<option value="" disabled selected>Выберите специализацию</option>
-							<option value="Терапевт">Терапевт</option>
-							<option value="Невролог">Невролог</option>
-							<option value="Уролог">Уролог</option>
-							<option value="Хирург">Хирург</option>
-						</select>
+					<template #input>
+						<input
+							type="text"
+							placeholder="Введите специализацию"
+							v-model="modalForm.data.specialization.body"
+							:class="{ error: modalForm.errors.specialization.status }"
+							@input="modalForm.data.specialization.edited = true"
+						/>
 					</template>
 					<template #error></template>
-				</container-select-once>
+				</container-input-once>
 			</container-input>
+			<div class="captcha">
+				<div class="content">
+					<div class="text">
+						{{ captcha }}
+						<div class="line" ref="line"></div>
+					</div>
+					<div class="update" @click="reloadCaptcha">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							height="26px"
+							viewBox="0 -960 960 960"
+							width="26px"
+						>
+							<path
+								d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-110h80v280H520v-80h168q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q77 0 139-44t87-116h84q-28 106-114 173t-196 67Z"
+							/>
+						</svg>
+					</div>
+				</div>
+				<div class="input">
+					<input
+						placeholder="Введите текст"
+						autocomplete="off"
+						v-model="modalForm.data.captcha.body"
+						:class="{ error: modalForm.errors.captcha.status }"
+					/>
+					<div class="input-error">{{ modalForm.errors.captcha.body }}</div>
+				</div>
+			</div>
 		</template>
 		<template #footer>
 			<BlockButtons>
@@ -123,7 +156,7 @@
 				<a href="tel:+79630070006">+7 (963) 007-00-06</a>
 			</div>
 		</div>
-		<div class="buttons">
+		<div class="header-buttons">
 			<button class="button" @click="openModal('edit', 'ЗАПИСЬ НА ПРИЁМ')">
 				Записаться на прием
 			</button>
@@ -146,6 +179,7 @@
 
 <script>
 import AdminModal from "../admin/AdminModal.vue";
+import Captcha from "../Captcha.vue";
 
 import ContainerInput from "../../ui/admin/containers/ContainerInput.vue";
 import ContainerInputOnce from "../../ui/admin/containers/input/ContainerInputOnce.vue";
@@ -154,16 +188,19 @@ import ContainerSelectOnce from "../../ui/admin/containers/select/ContainerSelec
 import BlockButtons from "../../ui/admin/blocks/BlockButtons.vue";
 import ButtonDefault from "../../ui/admin/buttons/ButtonDefault.vue";
 
+import axios from "axios";
 import validate from "../../../services/validate";
 
 export default {
 	components: {
 		AdminModal,
+		Captcha,
 		ContainerInput,
 		ContainerInputOnce,
 		ContainerSelectOnce,
 		BlockButtons,
 		ButtonDefault,
+		axios,
 		validate,
 	},
 	data() {
@@ -191,19 +228,23 @@ export default {
 			modalForm: {
 				data: {
 					name: {
-						body: "",
+						body: null,
 						edited: false,
 					},
 					phone: {
-						body: "",
+						body: null,
 						edited: false,
 					},
 					date: {
-						body: "",
+						body: null,
 						edited: false,
 					},
 					specialization: {
-						body: "",
+						body: null,
+						edited: false,
+					},
+					captcha: {
+						body: null,
 						edited: false,
 					},
 				},
@@ -224,8 +265,14 @@ export default {
 						body: "",
 						status: false,
 					},
+					captcha: {
+						body: "",
+						status: false,
+					},
 				},
 			},
+			captcha: null,
+			rotate: 0,
 		};
 	},
 	methods: {
@@ -239,6 +286,7 @@ export default {
 		openModal(type, title) {
 			this.clearModalData("modalForm");
 			this.clearModalErrors("modalForm");
+			this.reloadCaptcha();
 			this.modal.title = title;
 
 			switch (type) {
@@ -366,6 +414,35 @@ export default {
 				message: "Ошибок нет.",
 			};
 		},
+		checkInputCaptcha(value) {
+			/* Проверка на пустую строку */
+			if (value === "" || value === null) {
+				return {
+					status: true,
+					message: "Поле не может быть пустым.",
+				};
+			}
+
+			/* Проверка на соответствие типу string */
+			if (typeof value != "string") {
+				return {
+					status: true,
+					message: "Тип данных не совпадает.",
+				};
+			}
+
+			if (value != this.captcha) {
+				return {
+					status: true,
+					message: "Значение не совпадает.",
+				};
+			}
+
+			return {
+				status: false,
+				message: "Ошибок нет.",
+			};
+		},
 		// Проверка поля имени
 		checkModalInput(currentName, dataKey, inputType) {
 			let errorLog = {};
@@ -378,6 +455,9 @@ export default {
 					break;
 				case "phone":
 					errorLog = this.checkInputPhone(this[currentName].data[dataKey].body);
+					break;
+				case "captcha":
+					errorLog = this.checkInputCaptcha(this[currentName].data[dataKey].body);
 					break;
 				default:
 					break;
@@ -402,6 +482,11 @@ export default {
 				switch (inputKeys[i]) {
 					case "phone":
 						if (this.checkModalInput("modalForm", inputKeys[i], "phone")) {
+							errorCount++;
+						}
+						break;
+					case "captcha":
+						if (this.checkModalInput("modalForm", inputKeys[i], "captcha")) {
 							errorCount++;
 						}
 						break;
@@ -434,12 +519,98 @@ export default {
 			}
 		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                     КАПТЧА                        |*/
+		/* |___________________________________________________|*/
+		/* _____________________________________________________*/
+		/* 1. Основные действия                                 */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* Обновление */
+		reloadCaptcha() {
+			this.generateCaptcha();
+			this.generateRotate();
+		},
+		/* Генерация каптчи */
+		generateCaptcha() {
+			// Создание алгоритма генерации каптчи из символов 0-9, a-z, A-Z
+			let chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+			let captcha = "";
+			for (let i = 0; i < 9; i++) {
+				captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+			}
+
+			this.captcha = captcha;
+		},
+		/* Генерация угла */
+		generateRotate() {
+			let chance = Math.floor(Math.random() * 10);
+			if (chance >= 5) {
+				this.rotate = Math.floor(Math.random() * 25);
+			} else {
+				this.rotate = Math.floor(Math.random() * -25);
+			}
+			this.$refs.line.style.transform = `rotate(${this.rotate}deg)`;
+		},
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                 ОТПРАВКА ЗАПРОСА                  |*/
 		/* |___________________________________________________|*/
 		/* Отправка запроса */
 		sendRequest() {
-			if (this.checkModalInputsAll(["name", "phone"])) return;
+			if (this.checkModalInputsAll(["name", "phone", "captcha"])) return;
 
+			// axios({
+			// 	method: "post",
+			// 	url: `${this.$store.state.axios.urlApi}` + `save-abouts-changes`,
+			// 	headers: {
+			// 		"Content-Type": "multipart/form-data",
+			// 		Authorization: `Bearer ${localStorage.getItem("token")}`,
+			// 	},
+			// 	data: formData,
+			// })
+			// 	.then((response) => {
+			// 		if (response.data.status) {
+			// 			try {
+			// 				this.disabled.about.save = false;
+
+			// 				shared.updateId(this.infoBlocks, response.data.data);
+			// 				shared.clearDeletes(this.infoBlocks);
+			// 				shared.clearFlags(this.infoBlocks);
+			// 				shared.updateOrders(this.infoBlocks);
+
+			// 				let debbugStory = {
+			// 					title: "Успешно!",
+			// 					body: response.data.message,
+			// 					type: "Completed",
+			// 				};
+			// 				this.$store.commit("debuggerState", debbugStory);
+			// 			} catch (error) {
+			// 				this.disabled.about.save = false;
+
+			// 				let debbugStory = {
+			// 					title: "Ошибка.",
+			// 					body: "Не удалось обновить данные после загрузки изображения.",
+			// 					type: "Error",
+			// 				};
+			// 				this.$store.commit("debuggerState", debbugStory);
+			// 			}
+			// 		} else {
+			// 			this.disabled.about.save = false;
+
+			// 			let debbugStory = {
+			// 				title: "Ошибка.",
+			// 				body: response.data.message,
+			// 				type: "Error",
+			// 			};
+			// 			this.$store.commit("debuggerState", debbugStory);
+			// 		}
+			// 	})
+			// 	.catch((error) => {
+			// 		let debbugStory = {
+			// 			title: "Ошибка.",
+			// 			body: "Не удалось сохранить данные.",
+			// 			type: "Error",
+			// 		};
+			// 		this.$store.commit("debuggerState", debbugStory);
+			// 	});
 			console.log("Проверка пройдена.");
 		},
 	},
@@ -509,7 +680,7 @@ header {
 	color: var(--button-default-color);
 }
 
-.buttons {
+.header-buttons {
 	display: flex;
 	flex-wrap: wrap;
 }
@@ -592,14 +763,101 @@ header {
 	box-shadow: -5px 0px 20px rgba(0, 0, 0, 0.3);
 }
 
-@media screen and (max-width: 1600px) {
-	.buttons {
-		flex-direction: column;
-	}
+.captcha {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
 }
 
-@media screen and (max-width: 1400px) {
-	.buttons {
+.captcha > .input > input {
+	box-sizing: border-box;
+	outline: none;
+	text-align: center;
+
+	padding: 10px;
+	border: 2px solid var(--input-border-color-inactive);
+	border-radius: 10px;
+
+	width: 300px;
+	height: 58px;
+
+	font-size: 20px;
+	caret-color: var(--input-border-color-active);
+	background-color: white;
+
+	transition: all 0.2s;
+}
+
+.captcha > .input > input.error {
+	background-color: var(--input-background-color-error);
+	border: 2px solid var(--input-border-color-error);
+
+	caret-color: red;
+}
+
+.captcha > .input > input:focus {
+	border: 2px solid var(--input-border-color-active);
+}
+
+.captcha > .input > input.error:focus {
+	border: 2px solid var(--input-border-color-error);
+}
+
+.captcha > .input > .input-error {
+	margin-top: 5px;
+	color: var(--span-color-error);
+}
+
+.captcha > .content {
+	position: relative;
+}
+
+.captcha > .content > .text {
+	box-sizing: border-box;
+	overflow: hidden;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	user-select: none;
+	border: 2px solid var(--input-border-color-inactive);
+
+	border-radius: 10px;
+	background-color: rgb(245, 245, 245);
+
+	width: 300px;
+	height: 58px;
+
+	font-family: "Azeret Mono";
+	font-style: italic;
+	font-weight: 100;
+	font-size: 22px;
+}
+
+.captcha > .content > .text > .line {
+	position: absolute;
+	width: 130px;
+	height: 1px;
+
+	background-color: rgb(0, 0, 0);
+}
+
+.captcha > .content > .update {
+	position: absolute;
+	cursor: pointer;
+
+	top: 16px;
+	right: 5px;
+}
+
+.captcha > .content > .update > svg {
+	fill: rgb(201, 201, 201);
+}
+
+@media screen and (max-width: 1650px) {
+	.header-buttons {
 		display: none;
 	}
 }
@@ -642,6 +900,13 @@ header {
 		width: 100%;
 		margin: 0px;
 		background-color: white;
+	}
+
+	.captcha > .content,
+	.captcha > .input,
+	.captcha > .input > input,
+	.captcha > .content > .text {
+		width: 100%;
 	}
 }
 </style>
