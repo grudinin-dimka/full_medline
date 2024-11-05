@@ -1,7 +1,9 @@
 <template>
 	<debugger />
 
-	<div class="container-login">
+	<Loader :isLoading="loader.loading" />
+
+	<div class="container-login" v-if="loader.other">
 		<div class="login">
 			<div class="logo">
 				<Logo />
@@ -41,9 +43,8 @@
 </template>
 
 <script>
-import { RouterLink, RouterView } from "vue-router";
-
 import Debugger from "./includes/Debugger.vue";
+import Loader from "./includes/loader.vue";
 
 import axios from "axios";
 
@@ -51,36 +52,19 @@ import Logo from "./icons/logo.vue";
 import ButtonDefault from "./ui/admin/buttons/ButtonDefault.vue";
 
 export default {
-	beforeCreate() {
-		if (localStorage.getItem("token")) {
-			// Проверка токена
-			axios({
-				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `check-token`,
-				headers: {
-					Accept: "application/json",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-			}).catch((error) => {
-				localStorage.removeItem("token");
-				return;
-			});
-
-			// Перевод на страницу админки
-			this.$router.push("/admin/ehome");
-			return;
-		}
-	},
 	components: {
 		Debugger,
+		Loader,
 		axios,
-		RouterLink,
-		RouterView,
 		Logo,
 		ButtonDefault,
 	},
 	data() {
 		return {
+			loader: {
+				loading: true,
+				other: false,
+			},
 			name: "",
 			password: "",
 			disabled: {
@@ -197,7 +181,7 @@ export default {
 					.catch((error) => {
 						this.errors.server = true;
 						this.disabled.login.update = false;
-
+						j;
 						let debbugStory = {
 							title: "Ошибка.",
 							body: "Отсутствует соединение с сервером.",
@@ -205,9 +189,38 @@ export default {
 						};
 						this.$store.commit("debuggerState", debbugStory);
 						return;
+					})
+					.finally(() => {
+						this.loader.loading = false;
 					});
 			}
 		},
+	},
+	mounted() {
+		if (localStorage.getItem("token")) {
+			// Проверка токена
+			axios({
+				method: "post",
+				url: `${this.$store.state.axios.urlApi}` + `check-token`,
+				headers: {
+					Accept: "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+			})
+				.then((response) => {
+					// Перевод на страницу админки
+					this.$router.push({ name: "ehome" });
+				})
+				.catch((error) => {
+					localStorage.removeItem("token");
+
+					this.loader.loading = false;
+					this.loader.other = true;
+				});
+		} else {
+			this.loader.loading = false;
+			this.loader.other = true;
+		}
 	},
 };
 </script>

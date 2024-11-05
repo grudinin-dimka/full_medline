@@ -95,7 +95,7 @@
 	<!-- Шапка страницы -->
 	<header>
 		<div class="header-block">
-			<a href="/" class="header-logo-avatar">
+			<a href="/" class="header-logo-avatar" @click.prevent="$router.push({ name: 'home' })">
 				<img src="../../../assets/svg/logo.svg" width="100" />
 			</a>
 		</div>

@@ -206,7 +206,7 @@ export default {
 .contacts-main > .item.one > .info > .body {
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
-	gap: 20px;
+	gap: 10px;
 }
 
 .contacts-main > .item > .info > .title {

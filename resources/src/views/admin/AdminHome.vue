@@ -1467,14 +1467,4 @@ export default {
 		margin-bottom: 10px;
 	}
 }
-
-@media screen and (max-width: 460px) {
-	textarea {
-		font-size: 3.45vw;
-	}
-
-	.slider-block-info > article > label {
-		font-size: 3.45vw;
-	}
-}
 </style>

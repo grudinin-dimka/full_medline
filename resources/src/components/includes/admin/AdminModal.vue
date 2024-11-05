@@ -114,7 +114,7 @@ export default {
 	border-radius: 10px;
 	width: 100%;
 	max-width: 1000px;
-	max-height: 100%;
+	max-height: calc(100% - 60px);
 }
 
 .modal-head {
@@ -265,6 +265,7 @@ export default {
 		margin: 0px;
 		height: 100%;
 		border-radius: 0px;
+		max-height: 100%;
 	}
 }
 </style>

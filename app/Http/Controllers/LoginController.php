@@ -23,11 +23,17 @@ class LoginController extends Controller
    public function checkToken(Request $request) {
       if (!($request->user())) {
          return response()->json([
-         'status' => false,
-         'message' => 'Токен недействителен.',
-         'data' => null,
+            'status' => false,
+            'message' => 'Токен недействителен.',
+            'data' => null,
          ]);
       }
+
+      return response()->json([
+         'status' => true,
+         'message' => 'Токен существует.',
+         'data' => null,
+      ]);
    }
 
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
