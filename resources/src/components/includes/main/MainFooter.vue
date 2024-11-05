@@ -194,7 +194,7 @@ section.up {
 
 	text-transform: uppercase;
 
-	margin: 0px 30px 30px 30px;
+	margin: 0px 30px 20px 30px;
 }
 
 section.up .pay {
@@ -344,7 +344,7 @@ section.up .more .links > a:hover > svg {
 
 section.bottom {
 	padding: 30px;
-	margin: 30px;
+	margin: 0px 30px 20px 30px;
 	border-radius: 10px;
 
 	font-size: 20px;
