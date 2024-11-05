@@ -5,6 +5,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
+
+/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+/* |                   БОТ ТЕЛЕГРАММ                   |*/
+/* |___________________________________________________|*/
+/* 1. Отправка заявки                                   */
+Route::post('/request-telegram-bot', [HomeController::class, 'requestTelegramBot']);
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 /* |              ПОЛУЧЕНИЕ ДАННЫХ ИЗ БД               |*/
 /* |___________________________________________________|*/

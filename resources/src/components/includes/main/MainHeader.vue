@@ -113,6 +113,7 @@
 						autocomplete="off"
 						v-model="modalForm.data.captcha.body"
 						:class="{ error: modalForm.errors.captcha.status }"
+						@blur="checkModalInput('modalForm', 'captcha', 'captcha')"
 					/>
 					<div class="input-error">{{ modalForm.errors.captcha.body }}</div>
 				</div>
@@ -120,7 +121,9 @@
 		</template>
 		<template #footer>
 			<BlockButtons>
-				<ButtonDefault @click="sendRequest"> Отправить </ButtonDefault>
+				<ButtonDefault @click="sendRequest" :disabled="disabled.modalForm.request">
+					Отправить
+				</ButtonDefault>
 			</BlockButtons>
 		</template>
 	</admin-modal>
@@ -269,6 +272,11 @@ export default {
 						body: "",
 						status: false,
 					},
+				},
+			},
+			disabled: {
+				modalForm: {
+					request: false,
 				},
 			},
 			captcha: null,
@@ -557,61 +565,58 @@ export default {
 		sendRequest() {
 			if (this.checkModalInputsAll(["name", "phone", "captcha"])) return;
 
-			// axios({
-			// 	method: "post",
-			// 	url: `${this.$store.state.axios.urlApi}` + `save-abouts-changes`,
-			// 	headers: {
-			// 		"Content-Type": "multipart/form-data",
-			// 		Authorization: `Bearer ${localStorage.getItem("token")}`,
-			// 	},
-			// 	data: formData,
-			// })
-			// 	.then((response) => {
-			// 		if (response.data.status) {
-			// 			try {
-			// 				this.disabled.about.save = false;
+			this.disabled.modalForm.request = true;
 
-			// 				shared.updateId(this.infoBlocks, response.data.data);
-			// 				shared.clearDeletes(this.infoBlocks);
-			// 				shared.clearFlags(this.infoBlocks);
-			// 				shared.updateOrders(this.infoBlocks);
+			axios({
+				method: "post",
+				url: `${this.$store.state.axios.urlApi}` + `request-telegram-bot`,
+				headers: {
+					ContentType: "application/json",
+				},
+				data: JSON.stringify({
+					title: this.modal.title,
+					name: this.modalForm.data.name.body,
+					phone: this.modalForm.data.phone.body,
+					date: this.modalForm.data.date.body,
+					specialization: this.modalForm.data.specialization.body,
+				}),
+			})
+				.then((response) => {
+					if (response.data.status) {
+						try {
+							this.disabled.modalForm.request = false;
+							this.closeModal();
+						} catch (error) {
+							this.disabled.modalForm.request = false;
 
-			// 				let debbugStory = {
-			// 					title: "Успешно!",
-			// 					body: response.data.message,
-			// 					type: "Completed",
-			// 				};
-			// 				this.$store.commit("debuggerState", debbugStory);
-			// 			} catch (error) {
-			// 				this.disabled.about.save = false;
+							let debbugStory = {
+								title: "Ошибка.",
+								body: "После отправки запроса произошла ошибка.",
+								type: "Error",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+						}
+					} else {
+						this.disabled.modalForm.request = false;
 
-			// 				let debbugStory = {
-			// 					title: "Ошибка.",
-			// 					body: "Не удалось обновить данные после загрузки изображения.",
-			// 					type: "Error",
-			// 				};
-			// 				this.$store.commit("debuggerState", debbugStory);
-			// 			}
-			// 		} else {
-			// 			this.disabled.about.save = false;
+						let debbugStory = {
+							title: "Ошибка.",
+							body: response.data.message,
+							type: "Error",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					}
+				})
+				.catch((error) => {
+					this.disabled.modalForm.request = false;
 
-			// 			let debbugStory = {
-			// 				title: "Ошибка.",
-			// 				body: response.data.message,
-			// 				type: "Error",
-			// 			};
-			// 			this.$store.commit("debuggerState", debbugStory);
-			// 		}
-			// 	})
-			// 	.catch((error) => {
-			// 		let debbugStory = {
-			// 			title: "Ошибка.",
-			// 			body: "Не удалось сохранить данные.",
-			// 			type: "Error",
-			// 		};
-			// 		this.$store.commit("debuggerState", debbugStory);
-			// 	});
-			console.log("Проверка пройдена.");
+					let debbugStory = {
+						title: "Ошибка.",
+						body: "Не удалось запросить данные у сервера.",
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+				});
 		},
 	},
 	mounted() {
