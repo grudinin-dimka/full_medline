@@ -146,9 +146,9 @@
 		<div class="header-block">
 			<img src="../../../assets/svg/home.svg" width="50" />
 			<div class="header-block-list">
-				<p>ул. Комсомольская, 16</p>
-				<p>ул. Карла Либкнехта, 10</p>
-				<p>ул. Октябрьская, 3</p>
+				<a href="https://yandex.ru/maps/-/CDtEvOl2">ул. Комсомольская, 16</a>
+				<a href="https://yandex.ru/maps/-/CDtEvSjk">ул. Карла Либкнехта, 10</a>
+				<a href="https://yandex.ru/maps/-/CDtEvS~W">ул. Октябрьская, 3</a>
 			</div>
 		</div>
 		<div class="header-block">
@@ -567,23 +567,30 @@ export default {
 
 			this.disabled.modalForm.request = true;
 
-			axios({
-				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `request-telegram-bot`,
-				headers: {
-					ContentType: "application/json",
-				},
-				data: JSON.stringify({
+			let formData = new FormData();
+			formData.append(
+				"formData",
+				JSON.stringify({
 					title: this.modal.title,
 					name: this.modalForm.data.name.body,
 					phone: this.modalForm.data.phone.body,
 					date: this.modalForm.data.date.body,
 					specialization: this.modalForm.data.specialization.body,
-				}),
+				})
+			);
+
+			axios({
+				method: "post",
+				url: `${this.$store.state.axios.urlApi}` + `request-telegram-bot`,
+				headers: {
+					"Content-Type": "multipart/form-data",
+				},
+				data: formData,
 			})
 				.then((response) => {
 					if (response.data.status) {
 						try {
+							console.log(response.data);
 							this.disabled.modalForm.request = false;
 							this.closeModal();
 						} catch (error) {

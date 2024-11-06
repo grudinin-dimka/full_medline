@@ -99,11 +99,11 @@ p {
 
 .section-info-title {
 	color: #00abbd;
-	font-size: 50px;
+	font-size: 55px;
 }
 
 .section-info-sub-title {
-	font-size: 30px;
+	font-size: 35px;
 }
 
 @media screen and (max-width: 900px) {

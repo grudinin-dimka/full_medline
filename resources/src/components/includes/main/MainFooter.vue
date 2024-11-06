@@ -25,7 +25,7 @@
 			</div>
 			<!-- Блок с кнопками -->
 			<div class="buttons">
-				<div @click="$router.push({ name: 'contacts' })">Контакты</div>
+				<div @click="goToContacts">Контакты</div>
 			</div>
 			<!-- Блок доп. информации -->
 			<div class="more">
@@ -34,8 +34,8 @@
 				<div class="links">
 					<a href="https://ok.ru/profile/586067527945" class="ok">
 						<svg
-							width="60"
-							height="60"
+							width="45"
+							height="45"
 							viewBox="0 0 198 342"
 							xmlns="http://www.w3.org/2000/svg"
 						>
@@ -46,8 +46,8 @@
 					</a>
 					<a href="https://vk.com/med_line45" class="vk">
 						<svg
-							width="60"
-							height="60"
+							width="45"
+							height="45"
 							viewBox="0 0 317 181"
 							xmlns="http://www.w3.org/2000/svg"
 						>
@@ -60,8 +60,8 @@
 					</a>
 					<a href="https://t.me/medlinegroup_ru" class="telegram">
 						<svg
-							width="60"
-							height="60"
+							width="45"
+							height="45"
 							viewBox="0 0 259 214"
 							xmlns="http://www.w3.org/2000/svg"
 						>
@@ -151,6 +151,16 @@ export default {
 		/* После скрытия элементы */
 		loaderChildAfterLeave() {
 			this.loading.sections.footer = true;
+		},
+		goToContacts() {
+			this.$router.push({ name: "contacts" });
+
+			// скролл к верху
+			window.scrollTo({
+				top: 0,
+				left: 0,
+				behavior: "instant",
+			});
 		},
 	},
 	mounted() {
