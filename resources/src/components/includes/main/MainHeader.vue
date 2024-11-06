@@ -88,6 +88,15 @@
 					<template #error></template>
 				</container-input-once>
 			</container-input>
+			<div class="checkbox" :class="{ error: modalForm.errors.checkbox.status }">
+				<div class="content">
+					<input type="checkbox" id="checkboxApprove" v-model="modalForm.data.checkbox.body" />
+					<label for="checkboxApprove"
+						>Согласие на обработку персональных данных в соответствии с законодательством
+						Российской Федерации.</label
+					>
+				</div>
+			</div>
 			<div class="captcha">
 				<div class="content">
 					<div class="text">
@@ -146,17 +155,17 @@
 		<div class="header-block">
 			<img src="../../../assets/svg/home.svg" width="50" />
 			<div class="header-block-list">
-				<a href="https://yandex.ru/maps/-/CDtEvOl2">ул. Комсомольская, 16</a>
-				<a href="https://yandex.ru/maps/-/CDtEvSjk">ул. Карла Либкнехта, 10</a>
-				<a href="https://yandex.ru/maps/-/CDtEvS~W">ул. Октябрьская, 3</a>
+				<a href="https://yandex.ru/maps/-/CDtEvOl2" target="_blank">ул. Комсомольская, 16</a>
+				<a href="https://yandex.ru/maps/-/CDtEvSjk" target="_blank">ул. Карла Либкнехта, 10</a>
+				<a href="https://yandex.ru/maps/-/CDtEvS~W" target="_blank">ул. Октябрьская, 3</a>
 			</div>
 		</div>
 		<div class="header-block">
 			<img src="../../../assets/svg/phone.svg" width="50" />
 			<div class="header-block-list">
-				<a href="tel:+73525390009">+7 (35253) 9-000-9</a>
-				<a href="tel:+73525332936">+7 (35253) 3-29-36</a>
-				<a href="tel:+79630070006">+7 (963) 007-00-06</a>
+				<a href="tel:+73525390009" target="_blank">+7 (35253) 9-000-9</a>
+				<a href="tel:+73525332936" target="_blank">+7 (35253) 3-29-36</a>
+				<a href="tel:+79630070006" target="_blank">+7 (963) 007-00-06</a>
 			</div>
 		</div>
 		<div class="header-buttons">
@@ -246,6 +255,10 @@ export default {
 						body: null,
 						edited: false,
 					},
+					checkbox: {
+						body: null,
+						edited: false,
+					},
 					captcha: {
 						body: null,
 						edited: false,
@@ -265,6 +278,10 @@ export default {
 						status: false,
 					},
 					specialization: {
+						body: "",
+						status: false,
+					},
+					checkbox: {
 						body: "",
 						status: false,
 					},
@@ -380,7 +397,6 @@ export default {
 
 			/* Проверка на соответствие типу Number */
 			if (Number.isNaN(Number(value))) {
-				console.log(value, typeof value);
 				return {
 					status: true,
 					message: "Тип данных не совпадает.",
@@ -451,6 +467,20 @@ export default {
 				message: "Ошибок нет.",
 			};
 		},
+		checkInputCheckbox(value) {
+			/* Проверка на пустую строку */
+			if (!value) {
+				return {
+					status: true,
+					message: "Поле не может быть пустым.",
+				};
+			}
+
+			return {
+				status: false,
+				message: "Ошибок нет.",
+			};
+		},
 		// Проверка поля имени
 		checkModalInput(currentName, dataKey, inputType) {
 			let errorLog = {};
@@ -466,6 +496,9 @@ export default {
 					break;
 				case "captcha":
 					errorLog = this.checkInputCaptcha(this[currentName].data[dataKey].body);
+					break;
+				case "checkbox":
+					errorLog = this.checkInputCheckbox(this[currentName].data[dataKey].body);
 					break;
 				default:
 					break;
@@ -495,6 +528,11 @@ export default {
 						break;
 					case "captcha":
 						if (this.checkModalInput("modalForm", inputKeys[i], "captcha")) {
+							errorCount++;
+						}
+						break;
+					case "checkbox":
+						if (this.checkModalInput("modalForm", inputKeys[i], "checkbox")) {
 							errorCount++;
 						}
 						break;
@@ -542,7 +580,7 @@ export default {
 			// Создание алгоритма генерации каптчи из символов 0-9, a-z, A-Z
 			let chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 			let captcha = "";
-			for (let i = 0; i < 9; i++) {
+			for (let i = 0; i < 5; i++) {
 				captcha += chars.charAt(Math.floor(Math.random() * chars.length));
 			}
 
@@ -563,7 +601,7 @@ export default {
 		/* |___________________________________________________|*/
 		/* Отправка запроса */
 		sendRequest() {
-			if (this.checkModalInputsAll(["name", "phone", "captcha"])) return;
+			if (this.checkModalInputsAll(["name", "phone", "captcha", "checkbox"])) return;
 
 			this.disabled.modalForm.request = true;
 
@@ -590,7 +628,6 @@ export default {
 				.then((response) => {
 					if (response.data.status) {
 						try {
-							console.log(response.data);
 							this.disabled.modalForm.request = false;
 							this.closeModal();
 						} catch (error) {
@@ -775,6 +812,25 @@ header {
 	box-shadow: -5px 0px 20px rgba(0, 0, 0, 0.3);
 }
 
+.checkbox > .content {
+	display: flex;
+	justify-content: center;
+	font-size: 18px;
+}
+
+.checkbox.error > .content > label {
+	color: var(--span-color-error);
+}
+
+.checkbox > .content > input {
+	width: 17.5px;
+	height: 17.5px;
+}
+
+.checkbox > .content > input:checked {
+	accent-color: #8fe5ee;
+}
+
 .captcha {
 	display: flex;
 	flex-direction: column;
@@ -850,7 +906,7 @@ header {
 
 .captcha > .content > .text > .line {
 	position: absolute;
-	width: 130px;
+	width: 100px;
 	height: 1px;
 
 	background-color: rgb(0, 0, 0);
