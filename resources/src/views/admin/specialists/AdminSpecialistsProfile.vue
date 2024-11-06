@@ -501,8 +501,9 @@
 					:width="28"
 					:height="28"
 					@click="addSpecialist"
-					v-if="$route.params.id === 'new'"
+					v-if="$route.params.id === 'new' && !disabled.profile.create"
 				></icon-add>
+				<icon-load :width="28" :height="28" v-if="disabled.profile.create" :type="'create'" />
 			</template>
 		</block-title>
 
@@ -1211,6 +1212,7 @@ export default {
 			disabled: {
 				profile: {
 					save: false,
+					create: false,
 				},
 			},
 			/* Модальные окна */
@@ -2205,6 +2207,7 @@ export default {
 						"category",
 						"adultDoctor",
 						"childrenDoctor",
+						"startWorkAge",
 					])
 				)
 					return;
@@ -2218,6 +2221,7 @@ export default {
 						"category",
 						"adultDoctor",
 						"childrenDoctor",
+						"startWorkAge",
 						"file",
 					])
 				)
@@ -2235,6 +2239,8 @@ export default {
 				formData.append("formats", ["png"]);
 				formData.append("profile", JSON.stringify(this.specialist.profile.data));
 
+				this.disabled.profile.create = true;
+
 				// Сохранение данных
 				await axios({
 					method: "post",
@@ -2250,6 +2256,8 @@ export default {
 						this.$refs.fileUpload.value = "";
 
 						if (response.data.status) {
+							this.disabled.profile.create = false;
+
 							this.specialist.profile.data.id.body = response.data.data.id;
 
 							this.specialist.profile.data.path.body = response.data.data.path;
@@ -2267,6 +2275,8 @@ export default {
 							};
 							this.$store.commit("debuggerState", debbugStory);
 						} else {
+							this.disabled.profile.create = false;
+
 							let debbugStory = {
 								title: "Ошибка.",
 								body: response.data.message,
@@ -2276,7 +2286,14 @@ export default {
 						}
 					})
 					.catch((error) => {
-						console.log(error);
+						this.disabled.profile.create = false;
+
+						let debbugStory = {
+							title: "Ошибка.",
+							body: "Не удалось добавить специалиста.",
+							type: "Error",
+						};
+						this.$store.commit("debuggerState", debbugStory);
 					});
 			}
 		},

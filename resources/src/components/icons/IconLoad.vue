@@ -1,6 +1,6 @@
 <template>
 	<div class="icon-load">
-		<span class="loader"></span>
+		<span class="loader" :class="{ create: type === 'create' }"></span>
 	</div>
 </template>
 
@@ -14,6 +14,10 @@ export default {
 		height: {
 			type: Number,
 			default: 30,
+		},
+		type: {
+			type: String,
+			default: "default",
 		},
 	},
 };
@@ -30,6 +34,17 @@ export default {
 	width: 28px;
 	height: 28px;
 	border: 3px solid var(--primary-color);
+	border-bottom-color: transparent;
+	border-radius: 50%;
+	display: inline-block;
+	box-sizing: border-box;
+	animation: rotation 1s linear infinite;
+}
+
+.loader.create {
+	width: 28px;
+	height: 28px;
+	border: 3px solid #44a533;
 	border-bottom-color: transparent;
 	border-radius: 50%;
 	display: inline-block;
