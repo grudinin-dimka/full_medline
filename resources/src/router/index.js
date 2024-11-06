@@ -51,11 +51,22 @@ const router = createRouter({
 					component: () => import("../views/main/MainPrices.vue"),
 				},
 				{
-					path: "directions",
-					name: "directions",
-					meta: { title: "Направления" },
-					redirect: { name: "home" },
-					component: () => import("../views/main/MainDirection.vue"),
+					path: "schedule",
+					name: "schedule",
+					meta: { title: "Расписание" },
+					component: () => import("../views/main/shedule/MainSchedule.vue"),
+					children: [
+						{
+							path: "",
+							name: "schedule-all",
+							component: () => import("../views/main/shedule/MainScheduleAll.vue"),
+						},
+						{
+							path: "specialist",
+							name: "schedule-specialist",
+							component: () => import("../views/main/shedule/MainScheduleSpecialist.vue"),
+						},
+					],
 				},
 				{
 					path: "diagnostics",
