@@ -21,7 +21,7 @@ export default {
 				{ id: "1", title: "Главная", name: "home", href: "home" },
 				{ id: "2", title: "О Нас", name: "about", href: "about" },
 				{ id: "3", title: "Специалисты", name: "all", href: "/specialists" },
-				{ id: "4", title: "Расписание", name: "schedule", href: "/schedule" },
+				{ id: "4", title: "Расписание", name: "schedule-all", href: "/schedule" },
 				{ id: "5", title: "Контакты", name: "contacts", href: "/contacts" },
 			],
 		};
