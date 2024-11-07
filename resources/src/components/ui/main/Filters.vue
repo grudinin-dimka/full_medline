@@ -1,9 +1,13 @@
 <template>
 	<div class="filters">
-		<div class="filters-body" ref="filters">
-			<div class="filters-body-item" v-for="filter in filters" :key="filter.id">
-				<div>{{ filter.name }}</div>
-			</div>
+		<div
+			class="item"
+			v-for="(filter, index) in filters"
+			:key="filter.id"
+			:class="{ active: filter.status }"
+			@click="this.$emit('changeActiveFilter', filter)"
+		>
+			<div>{{ filter.name }}</div>
 		</div>
 	</div>
 </template>
@@ -16,36 +20,42 @@ export default {
 			required: true,
 			default: [],
 		},
-		minWidth: {
-			type: Number,
-			required: true,
-			default: 1250,
-		},
 	},
-	mounted() {
-		this.$refs.filters.style.minWidth = `${this.minWidth}px`;
+	// computed: {
+	// 	getFiltersActivity() {
+	// 		let filtersActivity = [...this.filters];
+	// 		filtersActivity.forEach((filter) => (filter.status = false));
+	// 		return [...filtersActivity];
+	// 	},
+	// },
+	methods: {
+		// changeActiveFilter(index) {
+		// 	this.getFiltersActivity.forEach((filter, filterIndex) => {
+		// 		if (filterIndex === index) {
+		// 			filter.status = !filter.status;
+		// 		} else {
+		// 			filter.status = false;
+		// 		}
+		// 	});
+		// 	this.$emit("change", index);
+		// },
 	},
 };
 </script>
 
 <style scoped>
 .filters {
-	display: flex;
-	justify-content: center;
-	align-items: center;
+	display: inline-flex;
+	flex-wrap: wrap;
+	gap: 10px;
+
+	width: 100%;
+	max-width: 1250px;
 
 	animation: show 0.5s ease-out;
 }
 
-.filters-body {
-	margin: 0px 30px;
-	min-width: 1250px;
-	display: inline-flex;
-	flex-wrap: wrap;
-	gap: 10px;
-}
-
-.filters-body-item {
+.filters > .item {
 	cursor: pointer;
 
 	padding: 5px;
@@ -57,7 +67,12 @@ export default {
 	transition: all 0.15s;
 }
 
-.filters-body-item:hover {
+.filters > .item:hover {
+	border: 2px solid var(--input-border-color-active);
+	background-color: #f2feff;
+}
+
+.filters > .item.active {
 	border: 2px solid var(--input-border-color-active);
 	background-color: #f2feff;
 }
@@ -70,4 +85,10 @@ export default {
 		opacity: 1;
 	}
 }
+
+/* @media screen and (width <= 1330px) {
+	.filters-body {
+		width: 100%;
+	}
+} */
 </style>
