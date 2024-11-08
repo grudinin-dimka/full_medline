@@ -107,7 +107,7 @@ export default {
 	flex-direction: column;
 	gap: 20px;
 
-	width: 1250px;
+	width: 1350px;
 	font-size: 18px;
 
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
@@ -143,9 +143,9 @@ export default {
 	background-size: cover;
 }
 
-@media screen and (width <= 1080px) {
+@media screen and (width <= 1425px) {
 	.about {
-		width: auto;
+		width: 100%;
 	}
 }
 </style>

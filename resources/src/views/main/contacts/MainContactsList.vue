@@ -172,7 +172,7 @@ export default {
 }
 
 .contacts-main {
-	width: 1250px;
+	width: 1350px;
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
@@ -345,7 +345,7 @@ span.empty {
 	color: rgb(199, 199, 199);
 }
 
-@media screen and (width <= 1330px) {
+@media screen and (width <= 1430px) {
 	.contacts-main {
 		width: 100%;
 	}

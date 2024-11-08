@@ -104,7 +104,7 @@ export default {
 	border-radius: 20px;
 	padding: 20px;
 
-	width: 1250px;
+	width: 1350px;
 
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
 	transition: all 0.2s;
@@ -173,7 +173,7 @@ export default {
 	text-decoration: underline;
 }
 
-@media screen and (max-width: 1080px) {
+@media screen and (max-width: 1425px) {
 	.specialist {
 		width: 100%;
 	}

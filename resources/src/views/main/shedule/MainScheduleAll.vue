@@ -13,7 +13,7 @@
 					<tr>
 						<th width="300px">Ф.И.О.</th>
 						<th>Специализация</th>
-						<th width="110px" v-for="day in week">{{ day.date + " " + day.name }}</th>
+						<th v-for="day in week">{{ day.date + " " + day.name }}</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -1264,6 +1264,8 @@ table {
 	border-collapse: collapse;
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
 
+	width: 1350px;
+
 	font-size: 16px;
 }
 
@@ -1273,9 +1275,9 @@ th {
 	text-align: center;
 }
 
-th:first-of-type {
+/* th:first-of-type {
 	min-width: 300px;
-}
+} */
 
 td {
 	text-align: left;
@@ -1367,23 +1369,23 @@ tr.create:hover > td {
 }
 
 .days > .item.all:nth-child(1) > .time {
-	border: 1px solid #c0c089;
-	background-color: #ffffe0;
+	border: 1px solid #ffad00;
+	background-color: rgba(255, 229, 172, 0.3);
 }
 
 .days > .item.all:nth-child(2) > .time {
-	border: 1px solid #c08d8d;
-	background-color: #ffe2e2;
+	border: 1px solid #ff534a;
+	background-color: rgba(255, 186, 183, 0.3);
 }
 
 .days > .item.all:nth-child(3) > .time {
-	border: 1px solid #97c49f;
-	background-color: #e2ffe7;
+	border: 1px solid #1bc724;
+	background-color: rgba(211, 255, 211, 0.3);
 }
 
 .days > .item.all:nth-child(4) > .time {
-	border: 1px solid #af9cca;
-	background-color: #eee2ff;
+	border: 1px solid #3d6cec;
+	background-color: rgba(180, 200, 255, 0.3);
 }
 
 .days > .item.all > .time.clear {
@@ -1396,8 +1398,9 @@ tr.empty > td {
 	color: #90cad1;
 }
 
-@media screen and (max-width: 1250px) {
+@media screen and (max-width: 1400px) {
 	table {
+		width: auto;
 		display: block;
 		overflow-x: scroll;
 	}
