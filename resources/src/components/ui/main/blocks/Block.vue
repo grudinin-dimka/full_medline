@@ -6,13 +6,13 @@
 
 <script>
 export default {
-   props: {
-      minHeight: {
-         type: Number,
-         default: '400',
-      },
-   },
-}
+	props: {
+		minHeight: {
+			type: Number,
+			default: "400",
+		},
+	},
+};
 </script>
 
 <style scoped>

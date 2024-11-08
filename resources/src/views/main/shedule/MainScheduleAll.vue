@@ -4,13 +4,14 @@
 		<span class="link-arrow"> / </span>
 		<router-link to="/schedule">Расписание</router-link>
 	</info-bar>
-	<block :minHeight="400">
+
+	<block-hide :minHeight="400">
 		<template v-if="loading.sections.schedule">
 			<filters :filters="clinics" @changeActiveFilter="changeActiveClinic"></filters>
-			<table class="schedule">
+			<table>
 				<thead>
 					<tr>
-						<th width="250px">Ф.И.О.</th>
+						<th width="300px">Ф.И.О.</th>
 						<th>Специализация</th>
 						<th width="110px" v-for="day in week">{{ day.date + " " + day.name }}</th>
 					</tr>
@@ -28,7 +29,7 @@
 							<div class="days">
 								<!-- Вывод расписания на несколько -->
 								<div
-									class="item"
+									class="item all"
 									v-for="clinic in getClinicsWithoutAll"
 									:key="clinic.id"
 									v-if="activeClinic.id === 0"
@@ -36,13 +37,14 @@
 									<div
 										class="time"
 										v-for="blob in getDayTime(shedule.id, day.id, clinic.id)"
+										:class="{ clear: blob === '-' }"
 									>
-										{{ blob }}
+										{{ blob !== "-" ? blob : "" }}
 									</div>
 								</div>
 								<div class="item" v-if="activeClinic.id > 0">
-									<div class="time" v-for="blob in getDayTime(shedule.id, day.id, 1)">
-										test
+									<div class="time">
+										{{ getDayTime(shedule.id, day.id, activeClinic.id) }}
 									</div>
 								</div>
 							</div>
@@ -60,13 +62,14 @@
 			:minHeight="397"
 			@loaderChildAfterLeave="loaderChildAfterLeave"
 		/>
-	</block>
+	</block-hide>
 </template>
 
 <script>
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
 import Block from "../../../components/ui/main/blocks/Block.vue";
+import BlockHide from "../../../components/ui/main/blocks/BlockHide.vue";
 
 import Filters from "../../../components/ui/main/Filters.vue";
 
@@ -75,6 +78,7 @@ export default {
 		InfoBar,
 		LoaderChild,
 		Block,
+		BlockHide,
 		Filters,
 	},
 	data() {
@@ -91,6 +95,7 @@ export default {
 				id: 0,
 				name: "Все",
 			},
+			// Клиники
 			clinics: [
 				{
 					id: 0,
@@ -118,6 +123,7 @@ export default {
 					status: false,
 				},
 			],
+			// Дни на неделе
 			week: [
 				{
 					id: 1,
@@ -158,7 +164,7 @@ export default {
 			shedules: [
 				{
 					id: 1,
-					name: "Сидоров Сидор Сидорович",
+					name: "Розенбергер Дмитрий Александрович",
 					specialization: "Хирург",
 					weeks: [
 						{
@@ -168,27 +174,27 @@ export default {
 								{
 									id: 1,
 									name: "Понедельник",
-									time: ["08:00-17:00"],
+									time: ["08:00-09:00"],
 								},
 								{
 									id: 2,
 									name: "Вторник",
-									time: ["08:00-17:00"],
+									time: ["08:00-09:00"],
 								},
 								{
 									id: 3,
 									name: "Среда",
-									time: ["08:00-17:00"],
+									time: ["08:00-09:00"],
 								},
 								{
 									id: 4,
 									name: "Четверг",
-									time: ["08:00-17:00"],
+									time: ["08:00-09:00"],
 								},
 								{
 									id: 5,
 									name: "Пятница",
-									time: ["08:00-17:00"],
+									time: ["08:00-09:00"],
 								},
 								{
 									id: 6,
@@ -214,7 +220,7 @@ export default {
 								{
 									id: 2,
 									name: "Вторник",
-									time: ["-"],
+									time: ["06:00-07:00"],
 								},
 								{
 									id: 3,
@@ -250,12 +256,12 @@ export default {
 								{
 									id: 1,
 									name: "Понедельник",
-									time: ["08:00-17:00"],
+									time: ["09:00-10:00"],
 								},
 								{
 									id: 2,
 									name: "Вторник",
-									time: ["08:00-17:00"],
+									time: ["09:00-10:00"],
 								},
 								{
 									id: 3,
@@ -265,12 +271,12 @@ export default {
 								{
 									id: 4,
 									name: "Четверг",
-									time: ["08:00-17:00"],
+									time: ["09:00-10:00"],
 								},
 								{
 									id: 5,
 									name: "Пятница",
-									time: ["08:00-17:00"],
+									time: ["09:00-10:00"],
 								},
 								{
 									id: 6,
@@ -339,27 +345,27 @@ export default {
 								{
 									id: 1,
 									name: "Понедельник",
-									time: ["08:00-17:00"],
+									time: ["10:00-11:00"],
 								},
 								{
 									id: 2,
 									name: "Вторник",
-									time: ["08:00-17:00"],
+									time: ["10:00-11:00"],
 								},
 								{
 									id: 3,
 									name: "Среда",
-									time: ["08:00-17:00"],
+									time: ["10:00-11:00"],
 								},
 								{
 									id: 4,
 									name: "Четверг",
-									time: ["08:00-17:00"],
+									time: ["10:00-11:00"],
 								},
 								{
 									id: 5,
 									name: "Пятница",
-									time: ["08:00-17:00"],
+									time: ["10:00-11:00"],
 								},
 								{
 									id: 6,
@@ -421,27 +427,27 @@ export default {
 								{
 									id: 1,
 									name: "Понедельник",
-									time: ["08:00-17:00"],
+									time: ["11:00-12:00"],
 								},
 								{
 									id: 2,
 									name: "Вторник",
-									time: ["08:00-17:00"],
+									time: ["11:00-12:00"],
 								},
 								{
 									id: 3,
 									name: "Среда",
-									time: ["08:00-17:00"],
+									time: ["11:00-12:00"],
 								},
 								{
 									id: 4,
 									name: "Четверг",
-									time: ["08:00-17:00"],
+									time: ["11:00-12:00"],
 								},
 								{
 									id: 5,
 									name: "Пятница",
-									time: ["08:00-17:00"],
+									time: ["11:00-12:00"],
 								},
 								{
 									id: 6,
@@ -462,27 +468,27 @@ export default {
 								{
 									id: 1,
 									name: "Понедельник",
-									time: ["08:00-17:00"],
+									time: ["12:00-13:00"],
 								},
 								{
 									id: 2,
 									name: "Вторник",
-									time: ["08:00-17:00"],
+									time: ["12:00-13:00"],
 								},
 								{
 									id: 3,
 									name: "Среда",
-									time: ["08:00-17:00"],
+									time: ["12:00-13:00"],
 								},
 								{
 									id: 4,
 									name: "Четверг",
-									time: ["08:00-17:00"],
+									time: ["12:00-13:00"],
 								},
 								{
 									id: 5,
 									name: "Пятница",
-									time: ["08:00-17:00"],
+									time: ["12:00-13:00"],
 								},
 								{
 									id: 6,
@@ -551,27 +557,27 @@ export default {
 								{
 									id: 1,
 									name: "Понедельник",
-									time: ["00:08-17:00"],
+									time: ["13:00-14:00"],
 								},
 								{
 									id: 2,
 									name: "Вторник",
-									time: ["00:08-17:00"],
+									time: ["13:00-14:00"],
 								},
 								{
 									id: 3,
 									name: "Среда",
-									time: ["00:08-17:00"],
+									time: ["13:00-14:00"],
 								},
 								{
 									id: 4,
 									name: "Четверг",
-									time: ["00:08-17:00"],
+									time: ["13:00-14:00"],
 								},
 								{
 									id: 5,
 									name: "Пятница",
-									time: ["00:08-17:00"],
+									time: ["13:00-14:00"],
 								},
 								{
 									id: 6,
@@ -633,27 +639,540 @@ export default {
 								{
 									id: 1,
 									name: "Понедельник",
-									time: ["08:00-17:00"],
+									time: ["14:00-15:00"],
 								},
 								{
 									id: 2,
 									name: "Вторник",
-									time: ["08:00-17:00"],
+									time: ["14:00-15:00"],
 								},
 								{
 									id: 3,
 									name: "Среда",
-									time: ["08:00-17:00"],
+									time: ["14:00-15:00"],
 								},
 								{
 									id: 4,
 									name: "Четверг",
-									time: ["08:00-17:00"],
+									time: ["14:00-15:00"],
 								},
 								{
 									id: 5,
 									name: "Пятница",
-									time: ["08:00-17:00"],
+									time: ["14:00-15:00"],
+								},
+								{
+									id: 6,
+									name: "Суббота",
+									time: ["-"],
+								},
+								{
+									id: 7,
+									name: "Воскресенье",
+									time: ["-"],
+								},
+							],
+						},
+					],
+				},
+				{
+					id: 4,
+					name: "Петров Петр Петрович",
+					specialization: "Терапевт",
+					weeks: [
+						{
+							clinicId: 1,
+							status: false,
+							content: [
+								{
+									id: 1,
+									name: "Понедельник",
+									time: ["-"],
+								},
+								{
+									id: 2,
+									name: "Вторник",
+									time: ["-"],
+								},
+								{
+									id: 3,
+									name: "Среда",
+									time: ["-"],
+								},
+								{
+									id: 4,
+									name: "Четверг",
+									time: ["-"],
+								},
+								{
+									id: 5,
+									name: "Пятница",
+									time: ["-"],
+								},
+								{
+									id: 6,
+									name: "Суббота",
+									time: ["-"],
+								},
+								{
+									id: 7,
+									name: "Воскресенье",
+									time: ["-"],
+								},
+							],
+						},
+						{
+							clinicId: 2,
+							status: true,
+							content: [
+								{
+									id: 1,
+									name: "Понедельник",
+									time: ["13:00-14:00"],
+								},
+								{
+									id: 2,
+									name: "Вторник",
+									time: ["13:00-14:00"],
+								},
+								{
+									id: 3,
+									name: "Среда",
+									time: ["13:00-14:00"],
+								},
+								{
+									id: 4,
+									name: "Четверг",
+									time: ["13:00-14:00"],
+								},
+								{
+									id: 5,
+									name: "Пятница",
+									time: ["13:00-14:00"],
+								},
+								{
+									id: 6,
+									name: "Суббота",
+									time: ["-"],
+								},
+								{
+									id: 7,
+									name: "Воскресенье",
+									time: ["-"],
+								},
+							],
+						},
+						{
+							clinicId: 3,
+							status: false,
+							content: [
+								{
+									id: 1,
+									name: "Понедельник",
+									time: ["-"],
+								},
+								{
+									id: 2,
+									name: "Вторник",
+									time: ["-"],
+								},
+								{
+									id: 3,
+									name: "Среда",
+									time: ["-"],
+								},
+								{
+									id: 4,
+									name: "Четверг",
+									time: ["-"],
+								},
+								{
+									id: 5,
+									name: "Пятница",
+									time: ["-"],
+								},
+								{
+									id: 6,
+									name: "Суббота",
+									time: ["-"],
+								},
+								{
+									id: 7,
+									name: "Воскресенье",
+									time: ["-"],
+								},
+							],
+						},
+						{
+							clinicId: 4,
+							status: true,
+							content: [
+								{
+									id: 1,
+									name: "Понедельник",
+									time: ["14:00-15:00"],
+								},
+								{
+									id: 2,
+									name: "Вторник",
+									time: ["14:00-15:00"],
+								},
+								{
+									id: 3,
+									name: "Среда",
+									time: ["14:00-15:00"],
+								},
+								{
+									id: 4,
+									name: "Четверг",
+									time: ["14:00-15:00"],
+								},
+								{
+									id: 5,
+									name: "Пятница",
+									time: ["14:00-15:00"],
+								},
+								{
+									id: 6,
+									name: "Суббота",
+									time: ["-"],
+								},
+								{
+									id: 7,
+									name: "Воскресенье",
+									time: ["-"],
+								},
+							],
+						},
+					],
+				},
+				{
+					id: 5,
+					name: "Петров Петр Петрович",
+					specialization: "Терапевт",
+					weeks: [
+						{
+							clinicId: 1,
+							status: false,
+							content: [
+								{
+									id: 1,
+									name: "Понедельник",
+									time: ["-"],
+								},
+								{
+									id: 2,
+									name: "Вторник",
+									time: ["-"],
+								},
+								{
+									id: 3,
+									name: "Среда",
+									time: ["-"],
+								},
+								{
+									id: 4,
+									name: "Четверг",
+									time: ["-"],
+								},
+								{
+									id: 5,
+									name: "Пятница",
+									time: ["-"],
+								},
+								{
+									id: 6,
+									name: "Суббота",
+									time: ["-"],
+								},
+								{
+									id: 7,
+									name: "Воскресенье",
+									time: ["-"],
+								},
+							],
+						},
+						{
+							clinicId: 2,
+							status: true,
+							content: [
+								{
+									id: 1,
+									name: "Понедельник",
+									time: ["13:00-14:00"],
+								},
+								{
+									id: 2,
+									name: "Вторник",
+									time: ["13:00-14:00"],
+								},
+								{
+									id: 3,
+									name: "Среда",
+									time: ["13:00-14:00"],
+								},
+								{
+									id: 4,
+									name: "Четверг",
+									time: ["13:00-14:00"],
+								},
+								{
+									id: 5,
+									name: "Пятница",
+									time: ["13:00-14:00"],
+								},
+								{
+									id: 6,
+									name: "Суббота",
+									time: ["-"],
+								},
+								{
+									id: 7,
+									name: "Воскресенье",
+									time: ["-"],
+								},
+							],
+						},
+						{
+							clinicId: 3,
+							status: false,
+							content: [
+								{
+									id: 1,
+									name: "Понедельник",
+									time: ["-"],
+								},
+								{
+									id: 2,
+									name: "Вторник",
+									time: ["-"],
+								},
+								{
+									id: 3,
+									name: "Среда",
+									time: ["-"],
+								},
+								{
+									id: 4,
+									name: "Четверг",
+									time: ["-"],
+								},
+								{
+									id: 5,
+									name: "Пятница",
+									time: ["-"],
+								},
+								{
+									id: 6,
+									name: "Суббота",
+									time: ["-"],
+								},
+								{
+									id: 7,
+									name: "Воскресенье",
+									time: ["-"],
+								},
+							],
+						},
+						{
+							clinicId: 4,
+							status: true,
+							content: [
+								{
+									id: 1,
+									name: "Понедельник",
+									time: ["14:00-15:00"],
+								},
+								{
+									id: 2,
+									name: "Вторник",
+									time: ["14:00-15:00"],
+								},
+								{
+									id: 3,
+									name: "Среда",
+									time: ["14:00-15:00"],
+								},
+								{
+									id: 4,
+									name: "Четверг",
+									time: ["14:00-15:00"],
+								},
+								{
+									id: 5,
+									name: "Пятница",
+									time: ["14:00-15:00"],
+								},
+								{
+									id: 6,
+									name: "Суббота",
+									time: ["-"],
+								},
+								{
+									id: 7,
+									name: "Воскресенье",
+									time: ["-"],
+								},
+							],
+						},
+					],
+				},
+				{
+					id: 6,
+					name: "Петров Петр Петрович",
+					specialization: "Терапевт",
+					weeks: [
+						{
+							clinicId: 1,
+							status: false,
+							content: [
+								{
+									id: 1,
+									name: "Понедельник",
+									time: ["-"],
+								},
+								{
+									id: 2,
+									name: "Вторник",
+									time: ["-"],
+								},
+								{
+									id: 3,
+									name: "Среда",
+									time: ["-"],
+								},
+								{
+									id: 4,
+									name: "Четверг",
+									time: ["-"],
+								},
+								{
+									id: 5,
+									name: "Пятница",
+									time: ["-"],
+								},
+								{
+									id: 6,
+									name: "Суббота",
+									time: ["-"],
+								},
+								{
+									id: 7,
+									name: "Воскресенье",
+									time: ["-"],
+								},
+							],
+						},
+						{
+							clinicId: 2,
+							status: true,
+							content: [
+								{
+									id: 1,
+									name: "Понедельник",
+									time: ["13:00-14:00"],
+								},
+								{
+									id: 2,
+									name: "Вторник",
+									time: ["13:00-14:00"],
+								},
+								{
+									id: 3,
+									name: "Среда",
+									time: ["13:00-14:00"],
+								},
+								{
+									id: 4,
+									name: "Четверг",
+									time: ["13:00-14:00"],
+								},
+								{
+									id: 5,
+									name: "Пятница",
+									time: ["13:00-14:00"],
+								},
+								{
+									id: 6,
+									name: "Суббота",
+									time: ["-"],
+								},
+								{
+									id: 7,
+									name: "Воскресенье",
+									time: ["-"],
+								},
+							],
+						},
+						{
+							clinicId: 3,
+							status: false,
+							content: [
+								{
+									id: 1,
+									name: "Понедельник",
+									time: ["-"],
+								},
+								{
+									id: 2,
+									name: "Вторник",
+									time: ["-"],
+								},
+								{
+									id: 3,
+									name: "Среда",
+									time: ["-"],
+								},
+								{
+									id: 4,
+									name: "Четверг",
+									time: ["-"],
+								},
+								{
+									id: 5,
+									name: "Пятница",
+									time: ["-"],
+								},
+								{
+									id: 6,
+									name: "Суббота",
+									time: ["-"],
+								},
+								{
+									id: 7,
+									name: "Воскресенье",
+									time: ["-"],
+								},
+							],
+						},
+						{
+							clinicId: 4,
+							status: true,
+							content: [
+								{
+									id: 1,
+									name: "Понедельник",
+									time: ["14:00-15:00"],
+								},
+								{
+									id: 2,
+									name: "Вторник",
+									time: ["14:00-15:00"],
+								},
+								{
+									id: 3,
+									name: "Среда",
+									time: ["14:00-15:00"],
+								},
+								{
+									id: 4,
+									name: "Четверг",
+									time: ["14:00-15:00"],
+								},
+								{
+									id: 5,
+									name: "Пятница",
+									time: ["14:00-15:00"],
 								},
 								{
 									id: 6,
@@ -723,15 +1242,15 @@ export default {
 		/* |___________________________________________________|*/
 		/* После скрытия элементы */
 		getDayTime(sheduleId, dayId, clinicId) {
-			if (this.activeClinic.id === 0) {
-				let shedule = this.shedules.find((item) => item.id === sheduleId);
-				let week = shedule.weeks.find((item) => item.clinicId === clinicId);
-				let day = week.content.find((item) => item.id === dayId);
+			let shedule = this.shedules.find((item) => item.id === sheduleId);
+			let week = shedule.weeks.find((item) => item.clinicId === clinicId);
+			let day = week.content.find((item) => item.id === dayId);
 
+			if (this.activeClinic.id === 0) {
 				return day.time;
 			} else {
-				return ["-"];
-			};
+				return day.time[0];
+			}
 		},
 	},
 	mounted() {
@@ -745,12 +1264,7 @@ table {
 	border-collapse: collapse;
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
 
-	width: 100%;
-	max-width: 1350px;
-	border: 1px solid black;
 	font-size: 16px;
-
-	overflow: scroll;
 }
 
 th {
@@ -759,8 +1273,13 @@ th {
 	text-align: center;
 }
 
+th:first-of-type {
+	min-width: 300px;
+}
+
 td {
 	text-align: left;
+	word-wrap: break-word;
 }
 
 th,
@@ -788,7 +1307,7 @@ tr.delete > td {
 tr > th {
 	position: relative;
 	font-weight: 400;
-	border: 1px solid #3fbecd;
+	border: 1px solid #2d9aa7;
 	background-color: #3fbecd;
 	color: white;
 }
@@ -820,20 +1339,67 @@ tr.create:hover > td {
 .days {
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
 }
 
 .days > .item {
 	text-align: center;
 
-	width: 110px;
+	width: 115px;
 	color: rgb(10, 49, 53);
 	border-radius: 10px;
-	background-color: rgba(63, 190, 205, 0.3);
+}
+
+.days > .item > .time {
+	cursor: default;
+	border-radius: 10px;
+}
+
+.days > .item.all > .time {
+	color: black;
+	cursor: default;
+	border-radius: 10px;
+
+	margin: 5px 0px;
+}
+
+.days > .item.all > .time.clear {
+	margin: 0px;
+}
+
+.days > .item.all:nth-child(1) > .time {
+	border: 1px solid #c0c089;
+	background-color: #ffffe0;
+}
+
+.days > .item.all:nth-child(2) > .time {
+	border: 1px solid #c08d8d;
+	background-color: #ffe2e2;
+}
+
+.days > .item.all:nth-child(3) > .time {
+	border: 1px solid #97c49f;
+	background-color: #e2ffe7;
+}
+
+.days > .item.all:nth-child(4) > .time {
+	border: 1px solid #af9cca;
+	background-color: #eee2ff;
+}
+
+.days > .item.all > .time.clear {
+	border: 0px solid #d2f2f5;
+	background-color: rgba(255, 255, 255, 0);
 }
 
 tr.empty > td {
 	text-align: center;
 	color: #90cad1;
+}
+
+@media screen and (max-width: 1250px) {
+	table {
+		display: block;
+		overflow-x: scroll;
+	}
 }
 </style>

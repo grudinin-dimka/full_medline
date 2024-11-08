@@ -204,7 +204,7 @@ tr > th {
 	position: relative;
 	font-weight: 400;
 	text-align: left;
-	border: 1px solid #3fbecd;
+	border: 1px solid #2d9aa7;
 	background-color: #3fbecd;
 	color: white;
 }
