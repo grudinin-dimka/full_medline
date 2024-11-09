@@ -42,7 +42,16 @@
 										{{ blob !== "-" ? blob : "" }}
 									</div>
 								</div>
-								<div class="item" v-if="activeClinic.id > 0">
+								<div
+									class="item"
+									v-if="activeClinic.id > 0"
+									:class="{
+										one: activeClinic.id === 1,
+										two: activeClinic.id === 2,
+										three: activeClinic.id === 3,
+										four: activeClinic.id === 4,
+									}"
+								>
 									<div class="time">
 										{{ getDayTime(shedule.id, day.id, activeClinic.id) }}
 									</div>
@@ -1368,22 +1377,26 @@ tr.create:hover > td {
 	margin: 0px;
 }
 
-.days > .item.all:nth-child(1) > .time {
+.days > .item.all:nth-child(1) > .time,
+.days > .item.one > .time {
 	border: 1px solid #ffad00;
 	background-color: rgba(255, 229, 172, 0.3);
 }
 
-.days > .item.all:nth-child(2) > .time {
+.days > .item.all:nth-child(2) > .time,
+.days > .item.two > .time {
 	border: 1px solid #ff534a;
 	background-color: rgba(255, 186, 183, 0.3);
 }
 
-.days > .item.all:nth-child(3) > .time {
+.days > .item.all:nth-child(3) > .time,
+.days > .item.three > .time {
 	border: 1px solid #1bc724;
 	background-color: rgba(211, 255, 211, 0.3);
 }
 
-.days > .item.all:nth-child(4) > .time {
+.days > .item.all:nth-child(4) > .time,
+.days > .item.four > .time {
 	border: 1px solid #3d6cec;
 	background-color: rgba(180, 200, 255, 0.3);
 }

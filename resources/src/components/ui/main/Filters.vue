@@ -122,9 +122,34 @@ export default {
 	border-style: solid;
 }
 
-.container > .item.active {
-	border-radius: 10px;
-	border-color: var(--input-border-color-active);
+.container > .item:nth-of-type(1).active {
+	border-top: 2px;
+	border-top-color: white;
+	border-right: 2px;
+	border-right-color: white;
+	border-bottom: 2px;
+	border-bottom-color: var(--primary-color);
+	border-left: 2px;
+	border-left-color: white;
+	border-style: solid;
+
+	color: var(--primary-color);
+}
+
+.container > .item:nth-of-type(2).active {
+	color: #ffad00;
+}
+
+.container > .item:nth-of-type(3).active {
+	color: #ff0d00;
+}
+
+.container > .item:nth-of-type(4).active {
+	color: #49d369;
+}
+
+.container > .item:nth-of-type(5).active {
+	color: #0036c8;
 }
 
 @keyframes show {
