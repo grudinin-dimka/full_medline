@@ -63,9 +63,6 @@ export default {
 }
 
 .container > .item:nth-of-type(2) {
-	/* border: 2px solid #c5c569;
-	background-color: #ffffe0; */
-
 	border-top: 2px;
 	border-top-color: rgba(255, 255, 255, 0);
 	border-right: 2px;
@@ -78,9 +75,6 @@ export default {
 }
 
 .container > .item:nth-of-type(3) {
-	/* border: 2px solid #c39090;
-	background-color: #ffe2e2; */
-
 	border-top: 2px;
 	border-top-color: rgba(255, 255, 255, 0);
 	border-right: 2px;
@@ -93,9 +87,6 @@ export default {
 }
 
 .container > .item:nth-of-type(4) {
-	/* border: 2px solid #8ac397;
-	background-color: #e2ffe7; */
-
 	border-top: 2px;
 	border-top-color: rgba(255, 255, 255, 0);
 	border-right: 2px;
@@ -108,9 +99,6 @@ export default {
 }
 
 .container > .item:nth-of-type(5) {
-	/* border: 2px solid #b49acb;
-	background-color: #f0e2ff; */
-
 	border-top: 2px;
 	border-top-color: rgba(255, 255, 255, 0);
 	border-right: 2px;
