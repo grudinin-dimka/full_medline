@@ -8,6 +8,7 @@
 	<block-hide :minHeight="400">
 		<template v-if="loading.sections.schedule">
 			<filters :filters="clinics" @changeActiveFilter="changeActiveClinic"></filters>
+			<!-- TODO надо бы сделать вывод значений в одну строку, которые одинаковые по типу -->
 			<table>
 				<thead>
 					<tr>
