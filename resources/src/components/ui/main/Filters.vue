@@ -52,7 +52,7 @@ export default {
 	border-right: 2px;
 	border-right-color: white;
 	border-bottom: 2px;
-	border-bottom-color: var(--input-border-color-inactive);
+	border-bottom-color: var(--input-border-color-active);
 	border-left: 2px;
 	border-left-color: white;
 	border-style: solid;
@@ -67,13 +67,13 @@ export default {
 	background-color: #ffffe0; */
 
 	border-top: 2px;
-	border-top-color: white;
+	border-top-color: rgba(255, 255, 255, 0);
 	border-right: 2px;
-	border-right-color: white;
+	border-right-color: rgba(255, 255, 255, 0);
 	border-bottom: 2px;
 	border-bottom-color: #ffad00;
 	border-left: 2px;
-	border-left-color: white;
+	border-left-color: rgba(255, 255, 255, 0);
 	border-style: solid;
 }
 
@@ -82,13 +82,13 @@ export default {
 	background-color: #ffe2e2; */
 
 	border-top: 2px;
-	border-top-color: white;
+	border-top-color: rgba(255, 255, 255, 0);
 	border-right: 2px;
-	border-right-color: white;
+	border-right-color: rgba(255, 255, 255, 0);
 	border-bottom: 2px;
 	border-bottom-color: #ff0d00;
 	border-left: 2px;
-	border-left-color: white;
+	border-left-color: rgba(255, 255, 255, 0);
 	border-style: solid;
 }
 
@@ -97,13 +97,13 @@ export default {
 	background-color: #e2ffe7; */
 
 	border-top: 2px;
-	border-top-color: white;
+	border-top-color: rgba(255, 255, 255, 0);
 	border-right: 2px;
-	border-right-color: white;
+	border-right-color: rgba(255, 255, 255, 0);
 	border-bottom: 2px;
 	border-bottom-color: #49d369;
 	border-left: 2px;
-	border-left-color: white;
+	border-left-color: rgba(255, 255, 255, 0);
 	border-style: solid;
 }
 
@@ -112,25 +112,25 @@ export default {
 	background-color: #f0e2ff; */
 
 	border-top: 2px;
-	border-top-color: white;
+	border-top-color: rgba(255, 255, 255, 0);
 	border-right: 2px;
-	border-right-color: white;
+	border-right-color: rgba(255, 255, 255, 0);
 	border-bottom: 2px;
 	border-bottom-color: #0036c8;
 	border-left: 2px;
-	border-left-color: white;
+	border-left-color: rgba(255, 255, 255, 0);
 	border-style: solid;
 }
 
 .container > .item:nth-of-type(1).active {
 	border-top: 2px;
-	border-top-color: white;
+	border-top-color: rgba(255, 255, 255, 0);
 	border-right: 2px;
-	border-right-color: white;
+	border-right-color: rgba(255, 255, 255, 0);
 	border-bottom: 2px;
 	border-bottom-color: var(--primary-color);
 	border-left: 2px;
-	border-left-color: white;
+	border-left-color: rgba(255, 255, 255, 0);
 	border-style: solid;
 
 	color: var(--primary-color);

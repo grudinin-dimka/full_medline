@@ -345,7 +345,7 @@ export default {
 				{
 					id: 2,
 					name: "Иванов Иван Иванович",
-					specialization: "Терапевт",
+					specialization: "Отоларингологывффыв",
 					weeks: [
 						{
 							clinicId: 1,
@@ -1325,6 +1325,10 @@ tr > th {
 
 tr > td {
 	border: 1px solid #3fbecd;
+}
+
+tr > td:nth-child(2) {
+	word-break: break-all;
 }
 
 tr:hover > td {
