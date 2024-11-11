@@ -1,5 +1,5 @@
 <template>
-	<div class="filters">
+	<div class="filter-list">
 		<div class="container">
 			<div
 				class="item"
@@ -27,13 +27,13 @@ export default {
 </script>
 
 <style scoped>
-.filters {
+.filter-list {
 	display: flex;
 	justify-content: center;
 	width: 100%;
 }
 
-.container {
+.filters .container {
 	display: inline-flex;
 	flex-wrap: wrap;
 	gap: 10px;
@@ -43,7 +43,7 @@ export default {
 	animation: show 0.5s ease-out;
 }
 
-.container > .item {
+.filters .container > .item {
 	cursor: pointer;
 
 	padding: 5px;
@@ -62,7 +62,7 @@ export default {
 	transition: all 0.15s;
 }
 
-.container > .item:nth-of-type(2) {
+.filters .container > .item:nth-of-type(2) {
 	border-top: 2px;
 	border-top-color: rgba(255, 255, 255, 0);
 	border-right: 2px;
@@ -74,7 +74,7 @@ export default {
 	border-style: solid;
 }
 
-.container > .item:nth-of-type(3) {
+.filters .container > .item:nth-of-type(3) {
 	border-top: 2px;
 	border-top-color: rgba(255, 255, 255, 0);
 	border-right: 2px;
@@ -86,7 +86,7 @@ export default {
 	border-style: solid;
 }
 
-.container > .item:nth-of-type(4) {
+.filters .container > .item:nth-of-type(4) {
 	border-top: 2px;
 	border-top-color: rgba(255, 255, 255, 0);
 	border-right: 2px;
@@ -98,7 +98,7 @@ export default {
 	border-style: solid;
 }
 
-.container > .item:nth-of-type(5) {
+.filters .container > .item:nth-of-type(5) {
 	border-top: 2px;
 	border-top-color: rgba(255, 255, 255, 0);
 	border-right: 2px;
@@ -110,7 +110,7 @@ export default {
 	border-style: solid;
 }
 
-.container > .item:nth-of-type(1).active {
+.filters .container > .item:nth-of-type(1).active {
 	border-top: 2px;
 	border-top-color: rgba(255, 255, 255, 0);
 	border-right: 2px;
@@ -124,19 +124,19 @@ export default {
 	color: var(--primary-color);
 }
 
-.container > .item:nth-of-type(2).active {
+.filters .container > .item:nth-of-type(2).active {
 	color: #ffad00;
 }
 
-.container > .item:nth-of-type(3).active {
+.filters .container > .item:nth-of-type(3).active {
 	color: #ff0d00;
 }
 
-.container > .item:nth-of-type(4).active {
+.filters .container > .item:nth-of-type(4).active {
 	color: #49d369;
 }
 
-.container > .item:nth-of-type(5).active {
+.filters .container > .item:nth-of-type(5).active {
 	color: #0036c8;
 }
 
@@ -150,7 +150,7 @@ export default {
 }
 
 @media screen and (width <= 600px) {
-	.container > .item {
+	.filters .container > .item {
 		flex: 1 0 250px;
 	}
 }

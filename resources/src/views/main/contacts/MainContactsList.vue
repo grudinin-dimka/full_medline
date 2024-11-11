@@ -384,6 +384,7 @@ span.empty {
 	color: rgb(199, 199, 199);
 }
 
+/* Анимации */
 @keyframes load-map {
 	0%,
 	50%,
@@ -440,6 +441,7 @@ span.empty {
 	}
 }
 
+/* Адаптив */
 @media screen and (width <= 1430px) {
 	.contacts-main {
 		width: 100%;

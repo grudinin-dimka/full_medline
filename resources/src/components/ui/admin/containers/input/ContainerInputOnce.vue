@@ -1,5 +1,12 @@
 <template>
-	<div class="container-input-once" :class="{ create: type === 'create', delete: type === 'delete' }">
+	<div
+		class="container-input-once"
+		:class="{
+			create: type === 'create',
+			delete: type === 'delete',
+			disabled: type === 'disabled',
+		}"
+	>
 		<label>
 			<slot name="title"></slot>
 		</label>
@@ -30,6 +37,8 @@ export default {
 .container-input-once > label > span {
 	font-size: 18px;
 	color: var(--primary-color);
+
+	transition: all 0.2s;
 }
 
 .container-input-once > :is(input, select) {
@@ -48,6 +57,15 @@ export default {
 	background-color: white;
 
 	transition: all 0.2s;
+}
+
+.container-input-once.disabled > :is(input, select) {
+	border: 2px solid var(--input-border-color-inactive);
+	background-color: rgba(240, 240, 240, 1);
+}
+
+.container-input-once.disabled > label > span {
+	color: #969696;
 }
 
 .container-input-once > input::file-selector-button {
