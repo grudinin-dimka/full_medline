@@ -39,6 +39,7 @@
 										class="time"
 										v-for="blob in getDayTime(shedule.id, day.id, clinic.id)"
 										:class="{ clear: blob === '-' }"
+										v-if="getClinicStatus(shedule.id, clinic.id)"
 									>
 										{{ blob !== "-" ? blob : "" }}
 									</div>
@@ -220,7 +221,7 @@ export default {
 						},
 						{
 							clinicId: 2,
-							status: false,
+							status: true,
 							content: [
 								{
 									id: 1,
@@ -307,7 +308,7 @@ export default {
 								{
 									id: 1,
 									name: "Понедельник",
-									time: ["-"],
+									time: ["08:00-09:00"],
 								},
 								{
 									id: 2,
@@ -322,7 +323,7 @@ export default {
 								{
 									id: 4,
 									name: "Четверг",
-									time: ["-"],
+									time: ["08:00-09:00"],
 								},
 								{
 									id: 5,
@@ -350,7 +351,7 @@ export default {
 					weeks: [
 						{
 							clinicId: 1,
-							status: true,
+							status: false,
 							content: [
 								{
 									id: 1,
@@ -391,12 +392,12 @@ export default {
 						},
 						{
 							clinicId: 2,
-							status: false,
+							status: true,
 							content: [
 								{
 									id: 1,
 									name: "Понедельник",
-									time: ["-"],
+									time: ["08:00-09:00"],
 								},
 								{
 									id: 2,
@@ -411,12 +412,12 @@ export default {
 								{
 									id: 4,
 									name: "Четверг",
-									time: ["-"],
+									time: ["08:00-09:00"],
 								},
 								{
 									id: 5,
 									name: "Пятница",
-									time: ["-"],
+									time: ["08:00-09:00"],
 								},
 								{
 									id: 6,
@@ -432,7 +433,7 @@ export default {
 						},
 						{
 							clinicId: 3,
-							status: true,
+							status: false,
 							content: [
 								{
 									id: 1,
@@ -521,32 +522,32 @@ export default {
 					weeks: [
 						{
 							clinicId: 1,
-							status: false,
+							status: true,
 							content: [
 								{
 									id: 1,
 									name: "Понедельник",
-									time: ["-"],
+									time: ["08:00-09:00"],
 								},
 								{
 									id: 2,
 									name: "Вторник",
-									time: ["-"],
+									time: ["08:00-09:00"],
 								},
 								{
 									id: 3,
 									name: "Среда",
-									time: ["-"],
+									time: ["08:00-09:00"],
 								},
 								{
 									id: 4,
 									name: "Четверг",
-									time: ["-"],
+									time: ["08:00-09:00"],
 								},
 								{
 									id: 5,
 									name: "Пятница",
-									time: ["-"],
+									time: ["08:00-09:00"],
 								},
 								{
 									id: 6,
@@ -562,7 +563,7 @@ export default {
 						},
 						{
 							clinicId: 2,
-							status: true,
+							status: false,
 							content: [
 								{
 									id: 1,
@@ -649,12 +650,12 @@ export default {
 								{
 									id: 1,
 									name: "Понедельник",
-									time: ["14:00-15:00"],
+									time: ["-"],
 								},
 								{
 									id: 2,
 									name: "Вторник",
-									time: ["14:00-15:00"],
+									time: ["-"],
 								},
 								{
 									id: 3,
@@ -815,7 +816,7 @@ export default {
 						},
 						{
 							clinicId: 4,
-							status: true,
+							status: false,
 							content: [
 								{
 									id: 1,
@@ -904,7 +905,7 @@ export default {
 						},
 						{
 							clinicId: 2,
-							status: true,
+							status: false,
 							content: [
 								{
 									id: 1,
@@ -945,32 +946,32 @@ export default {
 						},
 						{
 							clinicId: 3,
-							status: false,
+							status: true,
 							content: [
 								{
 									id: 1,
 									name: "Понедельник",
-									time: ["-"],
+									time: ["08:00-09:00"],
 								},
 								{
 									id: 2,
 									name: "Вторник",
-									time: ["-"],
+									time: ["08:00-09:00"],
 								},
 								{
 									id: 3,
 									name: "Среда",
-									time: ["-"],
+									time: ["08:00-09:00"],
 								},
 								{
 									id: 4,
 									name: "Четверг",
-									time: ["-"],
+									time: ["08:00-09:00"],
 								},
 								{
 									id: 5,
 									name: "Пятница",
-									time: ["-"],
+									time: ["08:00-09:00"],
 								},
 								{
 									id: 6,
@@ -986,7 +987,7 @@ export default {
 						},
 						{
 							clinicId: 4,
-							status: true,
+							status: false,
 							content: [
 								{
 									id: 1,
@@ -1262,6 +1263,14 @@ export default {
 				return day.time[0];
 			}
 		},
+		getClinicStatus(sheduleId, clinicId) {
+			let shedule = this.shedules.find((item) => item.id === sheduleId);
+			let week = shedule.weeks.find((item) => item.clinicId === clinicId);
+			if (week.status === true) {
+				return true;				
+			}			
+			return false;
+		},
 	},
 	mounted() {
 		this.loading.loader.schedule = false;
@@ -1284,10 +1293,6 @@ th {
 	word-wrap: break-word;
 	text-align: center;
 }
-
-/* th:first-of-type {
-	min-width: 300px;
-} */
 
 td {
 	text-align: left;
@@ -1380,6 +1385,7 @@ tr.create:hover > td {
 
 .days > .item.all > .time.clear {
 	margin: 0px;
+	height: 30px;
 }
 
 .days > .item.all:nth-child(1) > .time,

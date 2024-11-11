@@ -149,12 +149,35 @@ export default {
 		};
 	},
 	methods: {
-		showMap(mapId, coordinates) {
-			let element = document.querySelector("#map-" + mapId);
-			let elementWall = element.children[1];
-			elementWall.classList.add("active");
+		async showMap(mapId, coordinates) {
+			let map = document.querySelector("#map-" + mapId);
+			let mapWall = map.children[1];
+			let svgMapWall = mapWall.children[0];
+			let titleMapWall = mapWall.children[1];
 
-			initMap(mapId, coordinates);
+			map.classList.add("load");
+			mapWall.classList.add("load");
+			svgMapWall.classList.add("load");
+			titleMapWall.classList.add("load");
+
+			await initMap(mapId, coordinates)
+				.catch(() => {
+					let debbugStory = {
+						title: "Ошибка.",
+						body: "Карта не загрузилась.",
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+					return;
+				})
+				.finally(() => {
+					map.classList.remove("load");
+					mapWall.classList.remove("load");
+					svgMapWall.classList.remove("load");
+					titleMapWall.classList.remove("load");
+
+					mapWall.classList.add("active");
+				});
 		},
 	},
 };
@@ -285,8 +308,24 @@ export default {
 	color: var(--primary-color);
 }
 
+.contacts-main > .item > .map.load {
+	animation: load-map 2s infinite ease-in-out;
+}
+
+.contacts-main > .item > .map > .wall.load {
+	animation: load-map-wall 2s infinite ease-in-out;
+}
+
 .contacts-main > .item > .map > .wall.active {
 	top: -300px;
+}
+
+.contacts-main > .item > .map > .wall > svg.load {
+	animation: load-map-svg 2s infinite ease-in-out;
+}
+
+.contacts-main > .item > .map > .wall > .title.load {
+	animation: load-map-title 2s infinite ease-in-out;
 }
 
 .contacts-main > .item > .info > .body > :is(.mail, .phone, .address) > ul {
@@ -343,6 +382,62 @@ ul::-webkit-scrollbar-thumb:hover {
 
 span.empty {
 	color: rgb(199, 199, 199);
+}
+
+@keyframes load-map {
+	0%,
+	50%,
+	100% {
+		border-color: var(--input-border-color-active);
+	}
+
+	25%,
+	75% {
+		border-color: var(--input-border-color-inactive);
+	}
+}
+
+@keyframes load-map-wall {
+	0%,
+	50%,
+	100% {
+		background-color: #f2feff;
+	}
+
+	25%,
+	75% {
+		background-color: white;
+	}
+}
+
+@keyframes load-map-svg {
+	0%,
+	50%,
+	100% {
+		fill: #dbf1f3;
+	}
+
+	25%,
+	75% {
+		fill: #f2f2f2;
+	}
+}
+
+@keyframes load-map-title {
+	0%,
+	50%,
+	100% {
+		color: var(--primary-color);
+		border-color: var(--input-border-color-active);
+		background-color: #f2feff;
+	}
+
+	25%,
+	75% {
+		color: var(--input-border-color-inactive);
+		border-color: var(--input-border-color-inactive);
+		background-color: white;
+	}
 }
 
 @media screen and (width <= 1430px) {
