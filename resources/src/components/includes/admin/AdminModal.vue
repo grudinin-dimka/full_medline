@@ -90,7 +90,7 @@ export default {
 .modal {
 	position: fixed;
 	display: flex;
-	justify-content: center;
+	justify-content: safe center;
 	align-items: center;
 	z-index: 500;
 	top: 0px;
@@ -167,7 +167,7 @@ export default {
 
 .modal-img {
 	display: flex;
-	justify-content: center;
+	justify-content: safe center;
 }
 
 .modal-body {
