@@ -291,8 +291,8 @@ export default {
 
 .contacts-main > .item > .map > .wall > svg {
 	width: 100%;
-	min-width: 600px;
-	height: 300px;
+	min-width: 620px;
+	height: 350px;
 	min-height: 100%;
 
 	fill: #f2f2f2;

@@ -281,125 +281,17 @@ export default {
 						{
 							clinicId: 1,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["-"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 2,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["-"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 3,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["-"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 4,
@@ -452,125 +344,17 @@ export default {
 						{
 							clinicId: 1,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["-"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 2,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["-"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 3,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["-"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 4,
@@ -623,125 +407,17 @@ export default {
 						{
 							clinicId: 1,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["-"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 2,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["-"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 3,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["-"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 4,
@@ -794,125 +470,17 @@ export default {
 						{
 							clinicId: 1,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["-"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 2,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["-"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 3,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["-"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 4,
@@ -965,43 +533,7 @@ export default {
 						{
 							clinicId: 1,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["-"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 2,
@@ -1088,43 +620,7 @@ export default {
 						{
 							clinicId: 4,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["-"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["10:00-13:00"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 					],
 				},
@@ -1136,43 +632,7 @@ export default {
 						{
 							clinicId: 1,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["-"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 2,
@@ -1218,84 +678,12 @@ export default {
 						{
 							clinicId: 3,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["-"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["10:00-13:00"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 4,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["-"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["10:00-13:00"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 					],
 				},
@@ -1307,84 +695,12 @@ export default {
 						{
 							clinicId: 1,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["-"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 2,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["10:00-13:00"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["10:00-13:00"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["10:00-13:00"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 3,
@@ -1430,43 +746,7 @@ export default {
 						{
 							clinicId: 4,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["-"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["10:00-13:00"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 					],
 				},
@@ -1478,125 +758,17 @@ export default {
 						{
 							clinicId: 1,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["-"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 2,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["10:00-13:00"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["10:00-13:00"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["10:00-13:00"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 3,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["-"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["10:00-13:00"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 4,
@@ -1649,125 +821,17 @@ export default {
 						{
 							clinicId: 1,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["-"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 2,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["10:00-13:00"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["10:00-13:00"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["10:00-13:00"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 3,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["-"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["10:00-13:00"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 4,
@@ -1861,125 +925,17 @@ export default {
 						{
 							clinicId: 2,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["10:00-13:00"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["10:00-13:00"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["10:00-13:00"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 3,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["-"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["10:00-13:00"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 4,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["14:40-17:00"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 					],
 				},
@@ -1991,43 +947,7 @@ export default {
 						{
 							clinicId: 1,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["09:00-16:00"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["09:00-16:00"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["09:00-16:00"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["09:00-16:00"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 2,
@@ -2073,84 +993,12 @@ export default {
 						{
 							clinicId: 3,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["-"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["10:00-13:00"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 4,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["14:40-17:00"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 					],
 				},
@@ -2162,43 +1010,7 @@ export default {
 						{
 							clinicId: 1,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["09:00-16:00"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["09:00-16:00"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["09:00-16:00"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["09:00-16:00"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 2,
@@ -2244,84 +1056,12 @@ export default {
 						{
 							clinicId: 3,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["-"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["10:00-13:00"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 4,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["14:40-17:00"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 					],
 				},
@@ -2333,125 +1073,17 @@ export default {
 						{
 							clinicId: 1,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["09:00-16:00"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["09:00-16:00"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["09:00-16:00"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["09:00-16:00"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 2,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["09:00-16:00"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["09:00-16:00"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["09:00-16:00"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["09:00-16:00"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["09:00-16:00"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 3,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["-"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["10:00-13:00"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 4,
@@ -2504,43 +1136,7 @@ export default {
 						{
 							clinicId: 1,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["09:00-16:00"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["09:00-16:00"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["09:00-16:00"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["09:00-16:00"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 2,
@@ -2586,84 +1182,12 @@ export default {
 						{
 							clinicId: 3,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["-"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["10:00-13:00"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 4,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["08:00-12:00"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["08:00-12:00"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["08:00-12:00"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["08:00-12:00"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["08:00-12:00"],
-								},
-							],
+							content: [],
 						},
 					],
 				},
@@ -2675,43 +1199,7 @@ export default {
 						{
 							clinicId: 1,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["09:00-16:00"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["09:00-16:00"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["09:00-16:00"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["09:00-16:00"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 2,
@@ -2757,84 +1245,12 @@ export default {
 						{
 							clinicId: 3,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["-"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["10:00-13:00"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 4,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["08:00-12:00"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["08:00-12:00"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["08:00-12:00"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["08:00-12:00"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["08:00-12:00"],
-								},
-							],
+							content: [],
 						},
 					],
 				},
@@ -2846,43 +1262,7 @@ export default {
 						{
 							clinicId: 1,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["09:00-16:00"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["09:00-16:00"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["09:00-16:00"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["09:00-16:00"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 2,
@@ -2928,84 +1308,12 @@ export default {
 						{
 							clinicId: 3,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["-"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["10:00-13:00"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 4,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["08:00-12:00"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["08:00-12:00"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["08:00-12:00"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["08:00-12:00"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["08:00-12:00"],
-								},
-							],
+							content: [],
 						},
 					],
 				},
@@ -3017,43 +1325,7 @@ export default {
 						{
 							clinicId: 1,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["09:00-16:00"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["09:00-16:00"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["09:00-16:00"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["09:00-16:00"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 2,
@@ -3099,84 +1371,12 @@ export default {
 						{
 							clinicId: 3,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["-"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["-"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["-"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["-"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["10:00-13:00"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["-"],
-								},
-							],
+							content: [],
 						},
 						{
 							clinicId: 4,
 							status: false,
-							content: [
-								{
-									id: 1,
-									name: "Вторник",
-									time: ["08:00-12:00"],
-								},
-								{
-									id: 2,
-									name: "Среда",
-									time: ["08:00-12:00"],
-								},
-								{
-									id: 3,
-									name: "Четверг",
-									time: ["08:00-12:00"],
-								},
-								{
-									id: 4,
-									name: "Пятница",
-									time: ["08:00-12:00"],
-								},
-								{
-									id: 5,
-									name: "Суббота",
-									time: ["-"],
-								},
-								{
-									id: 6,
-									name: "Воскресенье",
-									time: ["-"],
-								},
-								{
-									id: 7,
-									name: "Понедельник",
-									time: ["08:00-12:00"],
-								},
-							],
+							content: [],
 						},
 					],
 				},
