@@ -3484,6 +3484,7 @@ export default {
 	gap: 10px;
 
 	width: 1350px;
+	animation: show 0.5s ease-out;
 }
 
 .filter-blocks > .item {
