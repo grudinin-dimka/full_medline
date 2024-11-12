@@ -7,13 +7,12 @@
 
 	<block-hide :minHeight="400">
 		<template v-if="loading.sections.schedule">
-			<div class="title-table">Расписание на неделю</div>
 			<div class="filter-list">
 				<div class="container">
 					<div class="body">
 						<div
 							class="item"
-							v-for="(filter, index) in clinics"
+							v-for="filter in clinics"
 							:key="filter.id"
 							:class="{ active: filter.status }"
 							@click="changeActiveClinic(filter)"
@@ -21,81 +20,48 @@
 							<div>{{ filter.name }}</div>
 						</div>
 					</div>
-					<div class="footer">
-						<div
-							class="filter-button"
-							@click="filters.options.status = !filters.options.status"
-							:class="{ active: filters.options.status }"
-						>
-							<svg
-								width="18"
-								height="12"
-								viewBox="0 0 18 12"
-								fill="none"
-								xmlns="http://www.w3.org/2000/svg"
-								v-if="getActiveFilters === 0"
-							>
-								<path d="M7 12V10H11V12H7ZM3 7V5H15V7H3ZM0 2V0H18V2H0Z" fill="black" />
-							</svg>
-							<span v-else>{{
-								getActiveFilters !== 0 ? "(" + getActiveFilters + ")" : ""
-							}}</span>
-							Фильтры
-						</div>
-					</div>
 				</div>
 			</div>
-			<div class="filter-blocks" v-show="filters.options.status">
-				<div class="item" :class="{ active: filters.sections.fio.status }">
+			<div class="filter-blocks">
+				<div class="item">
 					<div
-						class="check"
-						@click="filters.sections.fio.status = !filters.sections.fio.status"
+						class="clear-filter"
+						v-if="filters.sections.fio.status"
+						@click="clearFilter('fio')"
 					>
-						<div
-							class="point"
-							:class="{
-								default: !filters.sections.fio.status,
-								active: filters.sections.fio.status,
-							}"
-						></div>
+						Очистить
 					</div>
-					<container-input-once :type="filters.sections.fio.status ? 'default' : 'disabled'">
+					<container-input-once :type="'default'">
 						<template #title>
-							<span>Ф.И.О.</span>
+							<span>Врач (Ф.И.О.)</span>
 						</template>
 						<template #input>
 							<input
 								type="text"
 								placeholder="Введите Ф.И.О."
 								v-model="filters.sections.fio.data.body"
+								@input="filters.sections.fio.status = true"
 							/>
 						</template>
 					</container-input-once>
 				</div>
-				<div class="item" :class="{ active: filters.sections.specialization.status }">
+				<div class="item">
 					<div
-						class="check"
-						@click="
-							filters.sections.specialization.status =
-								!filters.sections.specialization.status
-						"
+						class="clear-filter"
+						v-if="filters.sections.specialization.status"
+						@click="clearFilter('specialization')"
 					>
-						<div
-							class="point"
-							:class="{
-								default: !filters.sections.specialization.status,
-								active: filters.sections.specialization.status,
-							}"
-						></div>
+						Очистить
 					</div>
-					<container-input-once
-						:type="filters.sections.specialization.status ? 'default' : 'disabled'"
-					>
+					<container-input-once :type="'default'">
 						<template #title>
 							<span>СПЕЦИАЛИЗАЦИЯ</span>
 						</template>
 						<template #input>
-							<select v-model="filters.sections.specialization.data.body">
+							<select
+								v-model="filters.sections.specialization.data.body"
+								@input="filters.sections.specialization.status = true"
+							>
 								<option value="" selected>Ничего не выбрано</option>
 								<option
 									:value="specialization"
@@ -215,9 +181,6 @@ export default {
 			},
 			// Фильтры
 			filters: {
-				options: {
-					status: false,
-				},
 				sections: {
 					fio: {
 						status: false,
@@ -3232,6 +3195,7 @@ export default {
 				if (!specializations.includes(shedule.specializations))
 					specializations.push(shedule.specializations);
 			});
+			sorted.sortString("up", specializations);
 			return specializations;
 		},
 		/* Получение количества активных фильтров */
@@ -3255,35 +3219,7 @@ export default {
 			switch (this.activeClinic.name) {
 				case "Все":
 					filteredShedules = [...this.shedules];
-
-					if (this.filters.sections.fio.status) {
-						if (this.filters.sections.fio.data.body !== "") {
-							filteredShedules = filteredShedules.filter((item) => {
-								if (item.name.indexOf(this.filters.sections.fio.data.body) !== -1) {
-									return item;
-								}
-							});
-						} else {
-							// sorted.sortByName("up", filteredShedules);
-						}
-					}
-
-					if (this.filters.sections.specialization.status) {
-						if (this.filters.sections.specialization.data.body !== "") {
-							filteredShedules = filteredShedules.filter((item) => {
-								if (
-									item.specializations.indexOf(
-										this.filters.sections.specialization.data.body
-									) !== -1
-								) {
-									return item;
-								}
-							});
-						} else {
-							// sorted.sortBySpecialization("up", filteredShedules);
-						}
-					}
-
+					sorted.sortByName("up", filteredShedules);
 					break;
 				default:
 					filteredShedules = this.shedules.filter((item) =>
@@ -3292,6 +3228,30 @@ export default {
 						)
 					);
 					break;
+			}
+
+			if (this.filters.sections.fio.status) {
+				if (this.filters.sections.fio.data.body !== "") {
+					filteredShedules = filteredShedules.filter((item) => {
+						if (item.name.indexOf(this.filters.sections.fio.data.body) !== -1) {
+							return item;
+						}
+					});
+				}
+			}
+
+			if (this.filters.sections.specialization.status) {
+				if (this.filters.sections.specialization.data.body !== "") {
+					filteredShedules = filteredShedules.filter((item) => {
+						if (
+							item.specializations.indexOf(
+								this.filters.sections.specialization.data.body
+							) !== -1
+						) {
+							return item;
+						}
+					});
+				}
 			}
 
 			return [...filteredShedules];
@@ -3319,6 +3279,11 @@ export default {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                   РАСПИСАНИЕ                      |*/
 		/* |___________________________________________________|*/
+		/* Очистка фильтра */
+		clearFilter(filterName) {
+			this.filters.sections[filterName].status = false;
+			this.filters.sections[filterName].data.body = "";
+		},
 		/* Получение текущего дня и связка с таблицей недели */
 		getDateNow() {
 			let date = new Date();
@@ -3525,18 +3490,17 @@ export default {
 	position: relative;
 	flex: 1 0 350px;
 
-	border: 2px solid var(--input-border-color-inactive);
 	border-radius: 10px;
 	padding: 20px;
 
-	background-color: rgba(240, 240, 240, 1);
+	border: 2px solid var(--input-border-color-inactive);
+	background-color: rgba(235, 235, 235, 0);
 
 	transition: all 0.2s;
 }
 
 .filter-blocks > .item.active {
-	border: 2px solid var(--input-border-color-inactive);
-	background-color: rgba(235, 235, 235, 0);
+	border: 2px solid #44a533;
 }
 
 .filter-button.active {
@@ -3544,21 +3508,20 @@ export default {
 	border: 2px solid var(--input-border-color-active);
 }
 
-.check {
+.clear-filter {
 	position: absolute;
 	cursor: pointer;
 
 	top: 12px;
 	right: 20px;
-
-	width: 50px;
-	height: 20px;
-	border: 2px solid var(--input-border-color-inactive);
-	background-color: white;
-	border-radius: 20px;
+	color: var(--button-remove-color);
 }
 
-.check > .point {
+.clear-filter:hover {
+	text-decoration: underline;
+}
+
+.clear-filter > .point {
 	position: absolute;
 	top: 2px;
 
@@ -3568,12 +3531,12 @@ export default {
 	height: 16px;
 }
 
-.check > .point.default {
+.clear-filter > .point.default {
 	left: 2px;
 	background-color: #b6b6b6;
 }
 
-.check > .point.active {
+.clear-filter > .point.active {
 	right: 2px;
 	background-color: var(--primary-color);
 }
@@ -3756,6 +3719,12 @@ tr.empty > td {
 @media screen and (width <= 600px) {
 	.filter-list .container > .item {
 		flex: 1 0 250px;
+	}
+}
+
+@media screen and (width <= 480px) {
+	.filter-blocks > .item {
+		flex: 1 0 200px;
 	}
 }
 </style>

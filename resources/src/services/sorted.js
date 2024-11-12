@@ -1,4 +1,20 @@
 export default {
+	sortString(type = "up", array) {
+		const collator = new Intl.Collator("ru");
+
+		switch (type) {
+			case "up":
+				array.sort((a, b) => {
+					return collator.compare(a, b);
+				});
+				break;
+			case "down":
+				array.reverse((a, b) => {
+					return collator.compare(a, b);
+				});
+				break;
+		}
+	},
 	/* Сортировка по id */
 	sortById(type = "up", array) {
 		switch (type) {
