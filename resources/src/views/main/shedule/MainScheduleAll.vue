@@ -7,7 +7,7 @@
 
 	<block-hide :minHeight="400">
 		<template v-if="loading.sections.schedule">
-			<div class="title-table">Расписание на {{ getDateNow() }}</div>
+			<div class="title-table">Расписание на неделю</div>
 			<div class="filter-list">
 				<div class="container">
 					<div class="body">
@@ -3264,7 +3264,7 @@ export default {
 								}
 							});
 						} else {
-							sorted.sortByName("up", filteredShedules);
+							// sorted.sortByName("up", filteredShedules);
 						}
 					}
 
@@ -3280,7 +3280,7 @@ export default {
 								}
 							});
 						} else {
-							sorted.sortBySpecialization("up", filteredShedules);
+							// sorted.sortBySpecialization("up", filteredShedules);
 						}
 					}
 
