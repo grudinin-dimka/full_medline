@@ -117,6 +117,12 @@ const router = createRouter({
 					redirect: { name: "ehome" },
 				},
 				{
+					path: "profile",
+					name: "profile",
+					meta: { title: "Профиль" },
+					component: () => import("../views/admin/profile/AdminProfile.vue"),
+				},
+				{
 					path: "ehome",
 					name: "ehome",
 					meta: { title: "(e) Главная" },
