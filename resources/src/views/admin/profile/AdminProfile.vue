@@ -99,21 +99,41 @@ export default {
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
+.profile-info > .item {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
 .profile-info > .item:not(.avatar) {
-   padding: 20px;
-   background-color: rgb(230, 252, 255);
+	padding: 20px;
+	/* background-color: rgb(230, 252, 255); */
 	border-radius: 10px;
 }
 
 .item.fio > .title {
-   font-size: 22px;
+	font-size: 22px;
 }
 
 .item.fio > .body {
 	display: flex;
 	flex-direction: column;
-	justify-content: space-evenly;
-	gap: 10px;
-   height: 100%;
+	/* justify-content: space-evenly; */
+	gap: 20px;
+	height: 100%;
+}
+
+.item.fio > .body > .block {
+   display: flex;
+   flex-direction: column;
+   gap: 5px;
+}
+
+.item.fio > .body > .block > .title {
+   color: rgb(200, 200, 200);
+}
+
+.item.fio > .body > .block > .title {
+   color: rgb(200, 200, 200);
 }
 </style>
