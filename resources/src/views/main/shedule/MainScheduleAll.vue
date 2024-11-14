@@ -207,71 +207,9 @@ export default {
 				},
 			},
 			// Клиники
-			clinics: [
-				{
-					id: 0,
-					name: "Все",
-					status: true,
-				},
-				{
-					id: 1,
-					name: "ул. Карла Либкнехта, д. 10",
-					status: false,
-				},
-				{
-					id: 2,
-					name: "ул. Комсомольская, д. 16",
-					status: false,
-				},
-				{
-					id: 3,
-					name: "р.п. Каргаполье, ул. Мира, 5Г",
-					status: false,
-				},
-				{
-					id: 4,
-					name: "ул. Октябрьская, 3",
-					status: false,
-				},
-			],
+			clinics: [],
 			// Дни на неделе
-			week: [
-				{
-					id: 1,
-					name: "Вторник",
-					date: "12 ноября",
-				},
-				{
-					id: 2,
-					name: "Среда",
-					date: "13 ноября",
-				},
-				{
-					id: 3,
-					name: "Четверг",
-					date: "14 ноября",
-				},
-				{
-					id: 4,
-					name: "Пятница",
-					date: "15 ноября",
-				},
-				{
-					id: 5,
-					name: "Суббота",
-					date: "16 ноября",
-				},
-				{
-					id: 6,
-					name: "Воскресенье",
-					date: "17 ноября",
-				},
-				{
-					id: 7,
-					name: "Понедельник",
-					date: "18 ноября",
-				},
-			],
+			week: [],
 			shedules: [
 				{
 					id: 1,
@@ -1524,6 +1462,82 @@ export default {
 	},
 	mounted() {
 		this.loading.loader.schedule = false;
+
+		let clinics = JSON.stringify([
+			{
+				id: 0,
+				name: "Все",
+				status: true,
+			},
+			{
+				id: 1,
+				name: "ул. Карла Либкнехта, д. 10",
+				status: false,
+			},
+			{
+				id: 2,
+				name: "ул. Комсомольская, д. 16",
+				status: false,
+			},
+			{
+				id: 3,
+				name: "р.п. Каргаполье, ул. Мира, 5Г",
+				status: false,
+			},
+			{
+				id: 4,
+				name: "ул. Октябрьская, 3",
+				status: false,
+			},
+		]);
+
+		let week = JSON.stringify([
+			{
+				id: 1,
+				name: "Вторник",
+				date: "12 ноября",
+			},
+			{
+				id: 2,
+				name: "Среда",
+				date: "13 ноября",
+			},
+			{
+				id: 3,
+				name: "Четверг",
+				date: "14 ноября",
+			},
+			{
+				id: 4,
+				name: "Пятница",
+				date: "15 ноября",
+			},
+			{
+				id: 5,
+				name: "Суббота",
+				date: "16 ноября",
+			},
+			{
+				id: 6,
+				name: "Воскресенье",
+				date: "17 ноября",
+			},
+			{
+				id: 7,
+				name: "Понедельник",
+				date: "18 ноября",
+			},
+		]);
+
+		console.log("Клиники----------------------");
+		console.log(clinics);
+		console.log("-----------------------------");
+		console.log("Недели-----------------------");
+		console.log(week);
+		console.log("-----------------------------");
+
+		this.clinics = JSON.parse(clinics);
+		this.week = JSON.parse(week);
 	},
 };
 </script>

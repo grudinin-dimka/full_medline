@@ -6,30 +6,63 @@
 		<block-title>
 			<template #title>ПРОФИЛЬ</template>
 		</block-title>
-
+		<!-- TODO Доделать этот раздел с профилем -->
 		<div class="profile-info" v-if="loading.sections.profile">
 			<div class="item avatar">
-				<img src="../../../assets/img/map-clear.png" alt="" />
+				<div
+					class="img"
+					:style="{
+						backgroundImage: `url(/storage/users/avatar.png)`,
+					}"
+				></div>
 			</div>
 			<div class="item fio">
 				<div class="title">Контактная информация</div>
 				<div class="body">
 					<div class="block">
 						<div class="title">Фамилия</div>
-						<div class="content">Иванов</div>
+						<div class="content">Отстутствует</div>
 					</div>
 					<div class="block">
 						<div class="title">Имя</div>
-						<div class="content">Иван</div>
+						<div class="content">Отстутствует</div>
 					</div>
 					<div class="block">
 						<div class="title">Отчество</div>
-						<div class="content">Иванович</div>
+						<div class="content">Отстутствует</div>
+					</div>
+					<div class="block">
+						<div class="title">Возраст</div>
+						<div class="content">Отстутствует</div>
 					</div>
 				</div>
 			</div>
-			<div class="item advanced">информация</div>
-			<div class="item">информация</div>
+			<div class="item">
+				<div class="title">Пользовательская информация</div>
+				<div class="body">
+					<div class="block">
+						<div class="title">Псевдоним</div>
+						<div class="content">Отстутствует</div>
+					</div>
+					<div class="block">
+						<div class="title">Почта</div>
+						<div class="content">Отстутствует</div>
+					</div>
+				</div>
+			</div>
+			<div class="item advanced">
+				<div class="title">Расширенная информация</div>
+				<div class="body">
+					<div class="block">
+						<div class="title">Статус</div>
+						<div class="content">Отстутствует</div>
+					</div>
+					<div class="block">
+						<div class="title">Права</div>
+						<div class="content">Отстутствует</div>
+					</div>
+				</div>
+			</div>
 		</div>
 
 		<LoaderChild
@@ -93,8 +126,9 @@ export default {
 
 <style scoped>
 .profile-info {
-	display: grid;
-	grid-template: 1fr 1fr / 1fr 1fr;
+	display: flex;
+	flex-wrap: wrap;
+
 	gap: 20px;
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
@@ -105,35 +139,51 @@ export default {
 	gap: 20px;
 }
 
+.profile-info > .item.avatar {
+	width: 400px;
+	height: 400px;
+	padding: 20px 50px;
+}
+
+.profile-info > .item.avatar > .img {
+	width: 100%;
+	height: 100%;
+	border-radius: 10px;
+	background-size: contain;
+	background-position: center center;
+	background-repeat: no-repeat;
+}
+
 .profile-info > .item:not(.avatar) {
+	flex: 1 0 400px;
 	padding: 20px;
-	/* background-color: rgb(230, 252, 255); */
+	background-color: rgb(245, 245, 245);
 	border-radius: 10px;
 }
 
-.item.fio > .title {
+.item > .title {
 	font-size: 22px;
 }
 
-.item.fio > .body {
+.item > .body {
 	display: flex;
 	flex-direction: column;
-	/* justify-content: space-evenly; */
 	gap: 20px;
 	height: 100%;
 }
 
-.item.fio > .body > .block {
-   display: flex;
-   flex-direction: column;
-   gap: 5px;
+.item > .body > .block {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
 }
 
-.item.fio > .body > .block > .title {
-   color: rgb(200, 200, 200);
+.item > .body > .block > .title {
+	font-size: 16px;
+	color: rgb(180, 180, 180);
 }
 
-.item.fio > .body > .block > .title {
-   color: rgb(200, 200, 200);
+.item > .body > .block > .content {
+	font-size: 20px;
 }
 </style>
