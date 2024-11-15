@@ -38,9 +38,89 @@ use App\Models\Education;
 use App\Models\SpecialistEducation;
 use App\Models\Work;
 use App\Models\SpecialistWork;
+use App\Models\Shedule;
+use App\Models\ShedulesClinic;
+use App\Models\ShedulesCurrentDay;
+use App\Models\ShedulesDay;
+use App\Models\ShedulesDaysTime;
 
 class AdminController extends Controller
 {
+   public function saveShedulesAll(Request $request) {
+      $shedules = json_decode($request->shedules);
+      $clinics = json_decode($request->clinics);
+      $week = json_decode($request->week);
+      
+      // Сбрасываю ограничения внешнего ключа, чтобы очистить таблицы
+      DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+
+      // Очищаю таблицы
+      Shedule::truncate();
+      ShedulesClinic::truncate();
+      ShedulesCurrentDay::truncate();
+      ShedulesDay::truncate();
+
+      // Возвращаю ограничения внешнего ключа 
+      DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+
+      $clinicId = [];
+      foreach ($clinics as $clinicsKey => $clinicsValue) {
+         $clinic = ShedulesClinic::create([
+            "name" => $clinicsValue->name,
+         ]);
+
+         $clinicId['' . $clinicsValue->id . ''] = $clinic->id;
+      };
+
+      $currentDays = [];
+      foreach ($week as $weekKey => $weekValue) {
+         $day = ShedulesCurrentDay::create([
+            "date" => $weekValue->date,
+         ]);
+
+         $currentDays[] = (object) [
+            "id" => $day->id,
+            "date" => $weekValue->date,
+         ];
+      };
+
+      foreach ($shedules as $shedulesKey => $shedulesValue) {
+         $shedule = Shedule::create([
+            "name" => $shedulesValue->name,
+            "specializations" => $shedulesValue->specializations,
+         ]);
+
+         foreach ($shedulesValue->weeks as $sheduleWeekKey => $sheduleWeekValue) {
+            if ($sheduleWeekValue->status) {
+               foreach ($sheduleWeekValue->content as $sheduleWeekContentKey => $sheduleWeekContentValue) {
+                  $day = ShedulesDay::create([
+                     "date" => $sheduleWeekContentValue->date,
+                     "sheduleId" => $shedule->id,
+                     "clinicId" => $clinicId[$sheduleWeekValue->clinicId],
+                  ]);
+
+                  foreach ($sheduleWeekContentValue->time as $ContentValueTimeKey => $ContentValueTimeValue) {
+                     $time = ShedulesDaysTime::create([
+                        "name" => $ContentValueTimeValue,
+                        "dayId" => $day->id,
+                     ]);
+                  };
+               };
+            };
+         };
+      };
+
+      return response()->json([
+         "status" => true,
+         "message" => "График успешно сохранён.",
+         "data" => date("Y-m-d"),
+         // "data" => (object) [
+         //    "clinicsId" => $clinicId,
+         //    "currentDays" => $currentDays,
+         //    "shedules" => Shedule::all(),
+         // ],
+      ]);
+   }
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                     ОБЩИЕ                         |*/
    /* |___________________________________________________|*/

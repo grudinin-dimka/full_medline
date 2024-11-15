@@ -102,3 +102,4 @@ Route::post('/save-certificates-changes', [AdminController::class, 'saveCertific
 
 
 
+Route::post('/save-shedules-all', [AdminController::class, 'saveShedulesAll']);

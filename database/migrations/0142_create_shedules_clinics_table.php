@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('shedules_clinics', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable()->default("-");
+            $table->string('name');
             $table->timestamps();
         });
     }

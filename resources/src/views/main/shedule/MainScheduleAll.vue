@@ -5,6 +5,16 @@
 		<router-link to="/schedule">Расписание</router-link>
 	</info-bar>
 
+	<button
+		:style="{
+			position: 'absolute',
+			right: '300px',
+		}"
+		@click="test"
+	>
+		тест
+	</button>
+
 	<block-hide :minHeight="400">
 		<template v-if="loading.sections.schedule">
 			<div class="filter-list">
@@ -80,7 +90,9 @@
 					<tr>
 						<th width="300px">Ф.И.О.</th>
 						<th>Специализация</th>
-						<th width="110px" v-for="day in week">{{ day.date + " " + day.name }}</th>
+						<th width="110px" v-for="day in week">
+							{{ getDateDayNumberMonth(day.date) + " " + getDateDayWeekName(day.date) }}
+						</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -154,6 +166,7 @@ import BlockHide from "../../../components/ui/main/blocks/BlockHide.vue";
 
 import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
 
+import axios from "axios";
 import sorted from "../../../services/sorted.js";
 
 export default {
@@ -163,6 +176,7 @@ export default {
 		Block,
 		BlockHide,
 		ContainerInputOnce,
+		axios,
 		sorted,
 	},
 	data() {
@@ -207,9 +221,64 @@ export default {
 				},
 			},
 			// Клиники
-			clinics: [],
+			clinics: [
+				{
+					id: 100,
+					name: "Все",
+					status: true,
+				},
+				{
+					id: 101,
+					name: "ул. Карла Либкнехта, д. 10",
+					status: false,
+				},
+				{
+					id: 102,
+					name: "ул. Комсомольская, д. 16",
+					status: false,
+				},
+				{
+					id: 103,
+					name: "р.п. Каргаполье, ул. Мира, 5Г",
+					status: false,
+				},
+				{
+					id: 104,
+					name: "ул. Октябрьская, 3",
+					status: false,
+				},
+			],
 			// Дни на неделе
-			week: [],
+			week: [
+				{
+					id: 1,
+					date: "2024-11-12",
+				},
+				{
+					id: 2,
+					date: "2024-11-13",
+				},
+				{
+					id: 3,
+					date: "2024-11-14",
+				},
+				{
+					id: 4,
+					date: "2024-11-15",
+				},
+				{
+					id: 5,
+					date: "2024-11-16",
+				},
+				{
+					id: 6,
+					date: "2024-11-17",
+				},
+				{
+					id: 7,
+					date: "2024-11-18",
+				},
+			],
 			shedules: [
 				{
 					id: 1,
@@ -237,37 +306,37 @@ export default {
 							content: [
 								{
 									id: 1,
-									name: "Вторник",
+									date: "2024-11-12",
 									time: ["13:00-15:00"],
 								},
 								{
 									id: 2,
-									name: "Среда",
+									date: "2024-11-13",
 									time: ["13:30-15:00"],
 								},
 								{
 									id: 3,
-									name: "Четверг",
+									date: "2024-11-14",
 									time: ["14:00-15:30"],
 								},
 								{
 									id: 4,
-									name: "Пятница",
+									date: "2024-11-15",
 									time: ["13:30-15:00"],
 								},
 								{
 									id: 5,
-									name: "Суббота",
+									date: "2024-11-16",
 									time: ["-"],
 								},
 								{
 									id: 6,
-									name: "Воскресенье",
+									date: "2024-11-17",
 									time: ["-"],
 								},
 								{
 									id: 7,
-									name: "Понедельник",
+									date: "2024-11-18",
 									time: ["12:30-15:00"],
 								},
 							],
@@ -300,37 +369,37 @@ export default {
 							content: [
 								{
 									id: 1,
-									name: "Вторник",
+									date: "2024-11-12",
 									time: ["09:00-15:00"],
 								},
 								{
 									id: 2,
-									name: "Среда",
+									date: "2024-11-13",
 									time: ["09:00-15:00"],
 								},
 								{
 									id: 3,
-									name: "Четверг",
+									date: "2024-11-14",
 									time: ["09:00-15:00"],
 								},
 								{
 									id: 4,
-									name: "Пятница",
+									date: "2024-11-15",
 									time: ["09:00-15:00"],
 								},
 								{
 									id: 5,
-									name: "Суббота",
+									date: "2024-11-16",
 									time: ["-"],
 								},
 								{
 									id: 6,
-									name: "Воскресенье",
+									date: "2024-11-17",
 									time: ["-"],
 								},
 								{
 									id: 7,
-									name: "Понедельник",
+									date: "2024-11-18",
 									time: ["09:00-15:00"],
 								},
 							],
@@ -363,37 +432,37 @@ export default {
 							content: [
 								{
 									id: 1,
-									name: "Вторник",
+									date: "2024-11-12",
 									time: ["08:00-12:00"],
 								},
 								{
 									id: 2,
-									name: "Среда",
+									date: "2024-11-13",
 									time: ["08:00-12:00"],
 								},
 								{
 									id: 3,
-									name: "Четверг",
+									date: "2024-11-14",
 									time: ["08:00-12:00"],
 								},
 								{
 									id: 4,
-									name: "Пятница",
+									date: "2024-11-15",
 									time: ["08:00-12:00"],
 								},
 								{
 									id: 5,
-									name: "Суббота",
+									date: "2024-11-16",
 									time: ["-"],
 								},
 								{
 									id: 6,
-									name: "Воскресенье",
+									date: "2024-11-17",
 									time: ["-"],
 								},
 								{
 									id: 7,
-									name: "Понедельник",
+									date: "2024-11-18",
 									time: ["08:00-12:00"],
 								},
 							],
@@ -426,37 +495,37 @@ export default {
 							content: [
 								{
 									id: 1,
-									name: "Вторник",
+									date: "2024-11-12",
 									time: ["08:05-17:30"],
 								},
 								{
 									id: 2,
-									name: "Среда",
+									date: "2024-11-13",
 									time: ["08:05-17:30"],
 								},
 								{
 									id: 3,
-									name: "Четверг",
+									date: "2024-11-14",
 									time: ["08:05-17:30"],
 								},
 								{
 									id: 4,
-									name: "Пятница",
+									date: "2024-11-15",
 									time: ["08:05-17:30"],
 								},
 								{
 									id: 5,
-									name: "Суббота",
+									date: "2024-11-16",
 									time: ["-"],
 								},
 								{
 									id: 6,
-									name: "Воскресенье",
+									date: "2024-11-17",
 									time: ["-"],
 								},
 								{
 									id: 7,
-									name: "Понедельник",
+									date: "2024-11-18",
 									time: ["08:05-17:30"],
 								},
 							],
@@ -479,37 +548,37 @@ export default {
 							content: [
 								{
 									id: 1,
-									name: "Вторник",
+									date: "2024-11-12",
 									time: ["-"],
 								},
 								{
 									id: 2,
-									name: "Среда",
+									date: "2024-11-13",
 									time: ["-"],
 								},
 								{
 									id: 3,
-									name: "Четверг",
+									date: "2024-11-14",
 									time: ["-"],
 								},
 								{
 									id: 4,
-									name: "Пятница",
+									date: "2024-11-15",
 									time: ["-"],
 								},
 								{
 									id: 5,
-									name: "Суббота",
+									date: "2024-11-16",
 									time: ["10:00-13:00"],
 								},
 								{
 									id: 6,
-									name: "Воскресенье",
+									date: "2024-11-17",
 									time: ["-"],
 								},
 								{
 									id: 7,
-									name: "Понедельник",
+									date: "2024-11-18",
 									time: ["-"],
 								},
 							],
@@ -520,37 +589,37 @@ export default {
 							content: [
 								{
 									id: 1,
-									name: "Вторник",
+									date: "2024-11-12",
 									time: ["-"],
 								},
 								{
 									id: 2,
-									name: "Среда",
+									date: "2024-11-13",
 									time: ["-"],
 								},
 								{
 									id: 3,
-									name: "Четверг",
+									date: "2024-11-14",
 									time: ["-"],
 								},
 								{
 									id: 4,
-									name: "Пятница",
+									date: "2024-11-15",
 									time: ["-"],
 								},
 								{
 									id: 5,
-									name: "Суббота",
+									date: "2024-11-16",
 									time: ["10:00-13:00"],
 								},
 								{
 									id: 6,
-									name: "Воскресенье",
+									date: "2024-11-17",
 									time: ["-"],
 								},
 								{
 									id: 7,
-									name: "Понедельник",
+									date: "2024-11-18",
 									time: ["-"],
 								},
 							],
@@ -578,37 +647,37 @@ export default {
 							content: [
 								{
 									id: 1,
-									name: "Вторник",
+									date: "2024-11-12",
 									time: ["10:00-13:00"],
 								},
 								{
 									id: 2,
-									name: "Среда",
+									date: "2024-11-13",
 									time: ["10:00-13:00"],
 								},
 								{
 									id: 3,
-									name: "Четверг",
+									date: "2024-11-14",
 									time: ["10:00-13:00"],
 								},
 								{
 									id: 4,
-									name: "Пятница",
+									date: "2024-11-15",
 									time: ["-"],
 								},
 								{
 									id: 5,
-									name: "Суббота",
+									date: "2024-11-16",
 									time: ["-"],
 								},
 								{
 									id: 6,
-									name: "Воскресенье",
+									date: "2024-11-17",
 									time: ["-"],
 								},
 								{
 									id: 7,
-									name: "Понедельник",
+									date: "2024-11-18",
 									time: ["-"],
 								},
 							],
@@ -646,37 +715,37 @@ export default {
 							content: [
 								{
 									id: 1,
-									name: "Вторник",
+									date: "2024-11-12",
 									time: ["-"],
 								},
 								{
 									id: 2,
-									name: "Среда",
+									date: "2024-11-13",
 									time: ["-"],
 								},
 								{
 									id: 3,
-									name: "Четверг",
+									date: "2024-11-14",
 									time: ["-"],
 								},
 								{
 									id: 4,
-									name: "Пятница",
+									date: "2024-11-15",
 									time: ["-"],
 								},
 								{
 									id: 5,
-									name: "Суббота",
+									date: "2024-11-16",
 									time: ["-"],
 								},
 								{
 									id: 6,
-									name: "Воскресенье",
+									date: "2024-11-17",
 									time: ["10:00-13:00"],
 								},
 								{
 									id: 7,
-									name: "Понедельник",
+									date: "2024-11-18",
 									time: ["-"],
 								},
 							],
@@ -714,37 +783,37 @@ export default {
 							content: [
 								{
 									id: 1,
-									name: "Вторник",
+									date: "2024-11-12",
 									time: ["09:00-17:30"],
 								},
 								{
 									id: 2,
-									name: "Среда",
+									date: "2024-11-13",
 									time: ["09:00-17:30"],
 								},
 								{
 									id: 3,
-									name: "Четверг",
+									date: "2024-11-14",
 									time: ["09:00-17:30"],
 								},
 								{
 									id: 4,
-									name: "Пятница",
+									date: "2024-11-15",
 									time: ["09:00-17:30"],
 								},
 								{
 									id: 5,
-									name: "Суббота",
+									date: "2024-11-16",
 									time: ["-"],
 								},
 								{
 									id: 6,
-									name: "Воскресенье",
+									date: "2024-11-17",
 									time: ["-"],
 								},
 								{
 									id: 7,
-									name: "Понедельник",
+									date: "2024-11-18",
 									time: ["09:00-17:30"],
 								},
 							],
@@ -777,37 +846,37 @@ export default {
 							content: [
 								{
 									id: 1,
-									name: "Вторник",
+									date: "2024-11-12",
 									time: ["-"],
 								},
 								{
 									id: 2,
-									name: "Среда",
+									date: "2024-11-13",
 									time: ["14:40-17:00"],
 								},
 								{
 									id: 3,
-									name: "Четверг",
+									date: "2024-11-14",
 									time: ["-"],
 								},
 								{
 									id: 4,
-									name: "Пятница",
+									date: "2024-11-15",
 									time: ["-"],
 								},
 								{
 									id: 5,
-									name: "Суббота",
+									date: "2024-11-16",
 									time: ["-"],
 								},
 								{
 									id: 6,
-									name: "Воскресенье",
+									date: "2024-11-17",
 									time: ["-"],
 								},
 								{
 									id: 7,
-									name: "Понедельник",
+									date: "2024-11-18",
 									time: ["-"],
 								},
 							],
@@ -825,37 +894,37 @@ export default {
 							content: [
 								{
 									id: 1,
-									name: "Вторник",
+									date: "2024-11-12",
 									time: ["09:00-16:00"],
 								},
 								{
 									id: 2,
-									name: "Среда",
+									date: "2024-11-13",
 									time: ["09:00-16:00"],
 								},
 								{
 									id: 3,
-									name: "Четверг",
+									date: "2024-11-14",
 									time: ["09:00-16:00"],
 								},
 								{
 									id: 4,
-									name: "Пятница",
+									date: "2024-11-15",
 									time: ["09:00-16:00"],
 								},
 								{
 									id: 5,
-									name: "Суббота",
+									date: "2024-11-16",
 									time: ["-"],
 								},
 								{
 									id: 6,
-									name: "Воскресенье",
+									date: "2024-11-17",
 									time: ["-"],
 								},
 								{
 									id: 7,
-									name: "Понедельник",
+									date: "2024-11-18",
 									time: ["-"],
 								},
 							],
@@ -893,37 +962,37 @@ export default {
 							content: [
 								{
 									id: 1,
-									name: "Вторник",
+									date: "2024-11-12",
 									time: ["09:00-16:00"],
 								},
 								{
 									id: 2,
-									name: "Среда",
+									date: "2024-11-13",
 									time: ["09:00-16:00"],
 								},
 								{
 									id: 3,
-									name: "Четверг",
+									date: "2024-11-14",
 									time: ["09:00-16:00"],
 								},
 								{
 									id: 4,
-									name: "Пятница",
+									date: "2024-11-15",
 									time: ["09:00-16:00"],
 								},
 								{
 									id: 5,
-									name: "Суббота",
+									date: "2024-11-16",
 									time: ["-"],
 								},
 								{
 									id: 6,
-									name: "Воскресенье",
+									date: "2024-11-17",
 									time: ["-"],
 								},
 								{
 									id: 7,
-									name: "Понедельник",
+									date: "2024-11-18",
 									time: ["09:00-16:00"],
 								},
 							],
@@ -956,37 +1025,37 @@ export default {
 							content: [
 								{
 									id: 1,
-									name: "Вторник",
+									date: "2024-11-12",
 									time: ["09:00-16:00"],
 								},
 								{
 									id: 2,
-									name: "Среда",
+									date: "2024-11-13",
 									time: ["09:00-16:00"],
 								},
 								{
 									id: 3,
-									name: "Четверг",
+									date: "2024-11-14",
 									time: ["09:00-16:00"],
 								},
 								{
 									id: 4,
-									name: "Пятница",
+									date: "2024-11-15",
 									time: ["09:00-16:00"],
 								},
 								{
 									id: 5,
-									name: "Суббота",
+									date: "2024-11-16",
 									time: ["-"],
 								},
 								{
 									id: 6,
-									name: "Воскресенье",
+									date: "2024-11-17",
 									time: ["-"],
 								},
 								{
 									id: 7,
-									name: "Понедельник",
+									date: "2024-11-18",
 									time: ["09:00-16:00"],
 								},
 							],
@@ -1029,37 +1098,37 @@ export default {
 							content: [
 								{
 									id: 1,
-									name: "Вторник",
+									date: "2024-11-12",
 									time: ["08:00-12:00"],
 								},
 								{
 									id: 2,
-									name: "Среда",
+									date: "2024-11-13",
 									time: ["08:00-12:00"],
 								},
 								{
 									id: 3,
-									name: "Четверг",
+									date: "2024-11-14",
 									time: ["08:00-12:00"],
 								},
 								{
 									id: 4,
-									name: "Пятница",
+									date: "2024-11-15",
 									time: ["08:00-12:00"],
 								},
 								{
 									id: 5,
-									name: "Суббота",
+									date: "2024-11-16",
 									time: ["-"],
 								},
 								{
 									id: 6,
-									name: "Воскресенье",
+									date: "2024-11-17",
 									time: ["-"],
 								},
 								{
 									id: 7,
-									name: "Понедельник",
+									date: "2024-11-18",
 									time: ["08:00-12:00"],
 								},
 							],
@@ -1082,37 +1151,37 @@ export default {
 							content: [
 								{
 									id: 1,
-									name: "Вторник",
+									date: "2024-11-12",
 									time: ["-"],
 								},
 								{
 									id: 2,
-									name: "Среда",
+									date: "2024-11-13",
 									time: ["-"],
 								},
 								{
 									id: 3,
-									name: "Четверг",
+									date: "2024-11-14",
 									time: ["-"],
 								},
 								{
 									id: 4,
-									name: "Пятница",
+									date: "2024-11-15",
 									time: ["-"],
 								},
 								{
 									id: 5,
-									name: "Суббота",
+									date: "2024-11-16",
 									time: ["09:00-16:00"],
 								},
 								{
 									id: 6,
-									name: "Воскресенье",
+									date: "2024-11-17",
 									time: ["-"],
 								},
 								{
 									id: 7,
-									name: "Понедельник",
+									date: "2024-11-18",
 									time: ["-"],
 								},
 							],
@@ -1145,37 +1214,37 @@ export default {
 							content: [
 								{
 									id: 1,
-									name: "Вторник",
+									date: "2024-11-12",
 									time: ["-"],
 								},
 								{
 									id: 2,
-									name: "Среда",
+									date: "2024-11-13",
 									time: ["-"],
 								},
 								{
 									id: 3,
-									name: "Четверг",
+									date: "2024-11-14",
 									time: ["09:00-16:00"],
 								},
 								{
 									id: 4,
-									name: "Пятница",
+									date: "2024-11-15",
 									time: ["-"],
 								},
 								{
 									id: 5,
-									name: "Суббота",
+									date: "2024-11-16",
 									time: ["-"],
 								},
 								{
 									id: 6,
-									name: "Воскресенье",
+									date: "2024-11-17",
 									time: ["-"],
 								},
 								{
 									id: 7,
-									name: "Понедельник",
+									date: "2024-11-18",
 									time: ["-"],
 								},
 							],
@@ -1208,37 +1277,37 @@ export default {
 							content: [
 								{
 									id: 1,
-									name: "Вторник",
+									date: "2024-11-12",
 									time: ["-"],
 								},
 								{
 									id: 2,
-									name: "Среда",
+									date: "2024-11-13",
 									time: ["-"],
 								},
 								{
 									id: 3,
-									name: "Четверг",
+									date: "2024-11-14",
 									time: ["-"],
 								},
 								{
 									id: 4,
-									name: "Пятница",
+									date: "2024-11-15",
 									time: ["-"],
 								},
 								{
 									id: 5,
-									name: "Суббота",
+									date: "2024-11-16",
 									time: ["-"],
 								},
 								{
 									id: 6,
-									name: "Воскресенье",
+									date: "2024-11-17",
 									time: ["-"],
 								},
 								{
 									id: 7,
-									name: "Понедельник",
+									date: "2024-11-18",
 									time: ["09:00-16:00"],
 								},
 							],
@@ -1271,37 +1340,37 @@ export default {
 							content: [
 								{
 									id: 1,
-									name: "Вторник",
+									date: "2024-11-12",
 									time: ["-"],
 								},
 								{
 									id: 2,
-									name: "Среда",
+									date: "2024-11-13",
 									time: ["-"],
 								},
 								{
 									id: 3,
-									name: "Четверг",
+									date: "2024-11-14",
 									time: ["-"],
 								},
 								{
 									id: 4,
-									name: "Пятница",
+									date: "2024-11-15",
 									time: ["-"],
 								},
 								{
 									id: 5,
-									name: "Суббота",
+									date: "2024-11-16",
 									time: ["-"],
 								},
 								{
 									id: 6,
-									name: "Воскресенье",
+									date: "2024-11-17",
 									time: ["-"],
 								},
 								{
 									id: 7,
-									name: "Понедельник",
+									date: "2024-11-18",
 									time: ["09:00-16:00"],
 								},
 							],
@@ -1417,6 +1486,26 @@ export default {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                   РАСПИСАНИЕ                      |*/
 		/* |___________________________________________________|*/
+		getDateDayNumberMonth(date) {
+			let dayDate = new Date(date);
+
+			let options = {
+				month: "long",
+				day: "numeric",
+				// weekday: "long",
+			};
+
+			return dayDate.toLocaleString("ru", options);
+		},
+		getDateDayWeekName(date) {
+			let dayDate = new Date(date);
+
+			let options = {
+				weekday: "long",
+			};
+
+			return dayDate.toLocaleString("ru", options);
+		},
 		/* Очистка фильтра */
 		clearFilter(filterName) {
 			this.filters.sections[filterName].status = false;
@@ -1459,78 +1548,42 @@ export default {
 			}
 			return false;
 		},
+		test() {
+			let formData = new FormData();
+			formData.append(
+				"clinics",
+				JSON.stringify([...this.clinics.filter((item) => item.name !== "Все")])
+			);
+			formData.append("week", JSON.stringify(this.week));
+			formData.append("shedules", JSON.stringify(this.shedules));
+
+			axios({
+				method: "post",
+				url: `${this.$store.state.axios.urlApi}` + `save-shedules-all`,
+				headers: {
+					ContentType: "multipart/form-data",
+				},
+				data: formData,
+			})
+				.then((response) => {
+					if (response.data.status) {
+						console.log(response.data.data);
+					} else {
+						let debbugStory = {
+							title: "Ошибка.",
+							body: response.data.message,
+							type: "Error",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					}
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		},
 	},
 	mounted() {
 		this.loading.loader.schedule = false;
-
-		let clinics = JSON.stringify([
-			{
-				id: 100,
-				name: "Все",
-				status: true,
-			},
-			{
-				id: 101,
-				name: "ул. Карла Либкнехта, д. 10",
-				status: false,
-			},
-			{
-				id: 102,
-				name: "ул. Комсомольская, д. 16",
-				status: false,
-			},
-			{
-				id: 103,
-				name: "р.п. Каргаполье, ул. Мира, 5Г",
-				status: false,
-			},
-			{
-				id: 104,
-				name: "ул. Октябрьская, 3",
-				status: false,
-			},
-		]);
-
-		let week = JSON.stringify([
-			{
-				id: 1,
-				name: "Вторник",
-				date: "12 ноября",
-			},
-			{
-				id: 2,
-				name: "Среда",
-				date: "13 ноября",
-			},
-			{
-				id: 3,
-				name: "Четверг",
-				date: "14 ноября",
-			},
-			{
-				id: 4,
-				name: "Пятница",
-				date: "15 ноября",
-			},
-			{
-				id: 5,
-				name: "Суббота",
-				date: "16 ноября",
-			},
-			{
-				id: 6,
-				name: "Воскресенье",
-				date: "17 ноября",
-			},
-			{
-				id: 7,
-				name: "Понедельник",
-				date: "18 ноября",
-			},
-		]);
-
-		this.clinics = JSON.parse(clinics);
-		this.week = JSON.parse(week);
 	},
 };
 </script>

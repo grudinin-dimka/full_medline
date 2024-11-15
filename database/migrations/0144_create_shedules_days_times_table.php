@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('shedules', function (Blueprint $table) {
+        Schema::create('shedules_days_times', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('specializations');
+            $table->foreignId('dayId')->references('id')->on('shedules_days')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('shedules');
+        Schema::dropIfExists('shedules_days_times');
     }
 };
