@@ -30,11 +30,105 @@ use App\Models\Phone;
 use App\Models\ContactPhone;
 use App\Models\Mail;
 use App\Models\ContactMail;
+use App\Models\Shedule;
+use App\Models\ShedulesDay;
+use App\Models\ShedulesDaysTime;
+use App\Models\ShedulesClinic;
+use App\Models\ShedulesCurrentDay;
 
 use Illuminate\Support\Facades\Storage;
 
 class HomeController extends Controller
 {
+   /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+   /* |                   РАСПИСАНИЕ                      |*/
+   /* |___________________________________________________|*/
+   /* Получение расписания */
+   public function getShedulesAll(Request $request) {
+      $shedules = Shedule::all();
+      $sheduleClinics = ShedulesClinic::all();
+      $currentDays = ShedulesCurrentDay::all();
+
+      foreach ($shedules as $sheduleKey => $sheduleValue) {
+         $weeks = [];         
+         
+         foreach ($sheduleClinics as $sheduleClinicsKey => $sheduleClinicsValue) {
+            if ($sheduleClinicsValue->name === "Все") {
+               continue;
+            };
+
+            $shedileClinicDays = ShedulesDay::where('sheduleId', $sheduleValue->id)->where('clinicId', $sheduleClinicsValue->id)->get();
+
+            if (count($shedileClinicDays) > 0) {
+               $content = [];
+
+               // foreach ($currentDays as $currentDaysKey => $currentDaysValue) {
+               // };
+               
+               $weeks[] = (object) [
+                  "clinicId" => $sheduleClinicsValue->id,
+                  "status" => true,
+                  // "content" => $content,
+                  "content" => [
+                     (object) [
+                        "id" => 1,
+                        "date" => "2024-11-12", 
+                        "time" => ["-"],
+                     ],
+                     (object) [
+                        "id" => 2,
+                        "date" => "2024-11-13", 
+                        "time" => ["09:00-16:00"],
+                     ],
+                     (object) [
+                        "id" => 3,
+                        "date" => "2024-11-14", 
+                        "time" => ["09:00-16:00"],
+                     ],
+                     (object) [
+                        "id" => 4,
+                        "date" => "2024-11-15", 
+                        "time" => ["-"],
+                     ],
+                     (object) [
+                        "id" => 5,
+                        "date" => "2024-11-16", 
+                        "time" => ["-"],
+                     ],
+                     (object) [
+                        "id" => 6,
+                        "date" => "2024-11-17", 
+                        "time" => ["-"],
+                     ],
+                     (object) [
+                        "id" => 7,
+                        "date" => "2024-11-18", 
+                        "time" => ["-"],
+                     ],
+                  ],
+               ];
+            } else {
+               $weeks[] = (object) [
+                  "clinicId" => $sheduleClinicsValue->id,
+                  "status" => false,
+                  "content" => [],
+               ];
+
+            };
+
+            $sheduleValue->weeks = $weeks;
+         };
+      };
+
+      return response()->json([
+         "status" => true,
+         "message" => "Успешно!",
+         "data" => (object) [
+            "shedules" => $shedules,
+            "sheduleClinics" => $sheduleClinics,
+         ],
+      ]);
+   }
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                 БОТ ТЕЛЕГРАММ                     |*/
    /* |___________________________________________________|*/

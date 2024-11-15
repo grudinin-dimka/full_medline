@@ -36,7 +36,7 @@
 				<div class="item">
 					<div
 						class="clear-filter"
-						v-if="filters.sections.fio.status"
+						v-if="filters.sections.fio.status && filters.sections.fio.data.body !== ''"
 						@click="clearFilter('fio')"
 					>
 						Очистить
@@ -58,7 +58,10 @@
 				<div class="item">
 					<div
 						class="clear-filter"
-						v-if="filters.sections.specialization.status"
+						v-if="
+							filters.sections.specialization.status &&
+							filters.sections.specialization.data.body !== ''
+						"
 						@click="clearFilter('specialization')"
 					>
 						Очистить
@@ -223,7 +226,7 @@ export default {
 			// Клиники
 			clinics: [
 				{
-					id: 100,
+					id: 0,
 					name: "Все",
 					status: true,
 				},
@@ -1550,10 +1553,7 @@ export default {
 		},
 		test() {
 			let formData = new FormData();
-			formData.append(
-				"clinics",
-				JSON.stringify([...this.clinics.filter((item) => item.name !== "Все")])
-			);
+			formData.append("clinics", JSON.stringify(this.clinics));
 			formData.append("week", JSON.stringify(this.week));
 			formData.append("shedules", JSON.stringify(this.shedules));
 
@@ -1584,6 +1584,39 @@ export default {
 	},
 	mounted() {
 		this.loading.loader.schedule = false;
+
+		axios({
+			method: "post",
+			url: `${this.$store.state.axios.urlApi}` + `get-shedules-all`,
+		})
+			.then((response) => {
+				if (response.data.status) {
+					// this.clinics = response.data.data.sheduleClinics;
+
+					// for (let key in this.clinics) {
+					// 	if (this.clinics[key].name === "Все") {
+					// 		this.clinics[key].status = true;
+					// 	}
+
+					// 	this.clinics[key].status = false;
+					// }
+
+					// this.shedules = response.data.data.shedules;
+
+					console.log(response.data.data.sheduleClinics);
+					console.log(response.data.data.shedules);
+				} else {
+					let debbugStory = {
+						title: "Ошибка.",
+						body: response.data.message,
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+				}
+			})
+			.catch((error) => {
+				console.log(error);
+			});
 	},
 };
 </script>

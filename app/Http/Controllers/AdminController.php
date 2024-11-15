@@ -46,6 +46,10 @@ use App\Models\ShedulesDaysTime;
 
 class AdminController extends Controller
 {
+   /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+   /* |                   РАСПИСАНИЕ                      |*/
+   /* |___________________________________________________|*/
+   /* Сохранение расписания */
    public function saveShedulesAll(Request $request) {
       $shedules = json_decode($request->shedules);
       $clinics = json_decode($request->clinics);
@@ -113,12 +117,12 @@ class AdminController extends Controller
       return response()->json([
          "status" => true,
          "message" => "График успешно сохранён.",
-         "data" => date("Y-m-d"),
-         // "data" => (object) [
-         //    "clinicsId" => $clinicId,
-         //    "currentDays" => $currentDays,
-         //    "shedules" => Shedule::all(),
-         // ],
+         "data" => (object) [
+            "clinicsId" => $clinicId,
+            "currentDays" => $currentDays,
+            "shedules" => Shedule::all(),
+            "shedulesDays" => ShedulesDay::all(),
+         ],
       ]);
    }
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
