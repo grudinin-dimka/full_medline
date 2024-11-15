@@ -22,15 +22,17 @@
 			<div class="specialist-profile">
 				<table class="specialist-profile-head">
 					<thead>
-						<th colspan="2">
-							{{
-								specialist.profile.family +
-								" " +
-								specialist.profile.name +
-								" " +
-								specialist.profile.surname
-							}}
-						</th>
+						<tr>
+							<th colspan="2">
+								{{
+									specialist.profile.family +
+									" " +
+									specialist.profile.name +
+									" " +
+									specialist.profile.surname
+								}}
+							</th>
+						</tr>
 					</thead>
 					<tbody>
 						<tr v-if="specialist.specializations.length">

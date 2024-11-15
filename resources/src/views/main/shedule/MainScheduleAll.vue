@@ -99,7 +99,7 @@
 									class="item all"
 									v-for="clinic in getClinicsWithoutAll"
 									:key="clinic.id"
-									v-if="activeClinic.id === 0"
+									v-if="activeClinic.name === 'Все'"
 								>
 									<div
 										class="time"
@@ -112,12 +112,12 @@
 								</div>
 								<div
 									class="item"
-									v-if="activeClinic.id > 0"
+									v-else
 									:class="{
-										one: activeClinic.id === 1,
-										two: activeClinic.id === 2,
-										three: activeClinic.id === 3,
-										four: activeClinic.id === 4,
+										one: activeClinic.id === clinics[1].id,
+										two: activeClinic.id === clinics[2].id,
+										three: activeClinic.id === clinics[3].id,
+										four: activeClinic.id === clinics[4].id,
 									}"
 								>
 									<div
@@ -217,22 +217,22 @@ export default {
 					specializations: "Хирург",
 					weeks: [
 						{
-							clinicId: 1,
+							clinicId: 101,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 2,
+							clinicId: 102,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 3,
+							clinicId: 103,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 4,
+							clinicId: 104,
 							status: true,
 							content: [
 								{
@@ -280,22 +280,22 @@ export default {
 					specializations: "Хирург",
 					weeks: [
 						{
-							clinicId: 1,
+							clinicId: 101,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 2,
+							clinicId: 102,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 3,
+							clinicId: 103,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 4,
+							clinicId: 104,
 							status: true,
 							content: [
 								{
@@ -343,22 +343,22 @@ export default {
 					specializations: "Хирург",
 					weeks: [
 						{
-							clinicId: 1,
+							clinicId: 101,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 2,
+							clinicId: 102,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 3,
+							clinicId: 103,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 4,
+							clinicId: 104,
 							status: true,
 							content: [
 								{
@@ -406,22 +406,22 @@ export default {
 					specializations: "Хирург",
 					weeks: [
 						{
-							clinicId: 1,
+							clinicId: 101,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 2,
+							clinicId: 102,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 3,
+							clinicId: 103,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 4,
+							clinicId: 104,
 							status: true,
 							content: [
 								{
@@ -469,12 +469,12 @@ export default {
 					specializations: "Онколог",
 					weeks: [
 						{
-							clinicId: 1,
+							clinicId: 101,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 2,
+							clinicId: 102,
 							status: true,
 							content: [
 								{
@@ -515,7 +515,7 @@ export default {
 							],
 						},
 						{
-							clinicId: 3,
+							clinicId: 103,
 							status: true,
 							content: [
 								{
@@ -556,7 +556,7 @@ export default {
 							],
 						},
 						{
-							clinicId: 4,
+							clinicId: 104,
 							status: false,
 							content: [],
 						},
@@ -568,12 +568,12 @@ export default {
 					specializations: "Терапевт",
 					weeks: [
 						{
-							clinicId: 1,
+							clinicId: 101,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 2,
+							clinicId: 102,
 							status: true,
 							content: [
 								{
@@ -614,12 +614,12 @@ export default {
 							],
 						},
 						{
-							clinicId: 3,
+							clinicId: 103,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 4,
+							clinicId: 104,
 							status: false,
 							content: [],
 						},
@@ -631,17 +631,17 @@ export default {
 					specializations: "Акушер-гинеколог",
 					weeks: [
 						{
-							clinicId: 1,
+							clinicId: 101,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 2,
+							clinicId: 102,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 3,
+							clinicId: 103,
 							status: true,
 							content: [
 								{
@@ -682,7 +682,7 @@ export default {
 							],
 						},
 						{
-							clinicId: 4,
+							clinicId: 104,
 							status: false,
 							content: [],
 						},
@@ -694,22 +694,22 @@ export default {
 					specializations: "Врач",
 					weeks: [
 						{
-							clinicId: 1,
+							clinicId: 101,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 2,
+							clinicId: 102,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 3,
+							clinicId: 103,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 4,
+							clinicId: 104,
 							status: true,
 							content: [
 								{
@@ -757,22 +757,22 @@ export default {
 					specializations: "Врач",
 					weeks: [
 						{
-							clinicId: 1,
+							clinicId: 101,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 2,
+							clinicId: 102,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 3,
+							clinicId: 103,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 4,
+							clinicId: 104,
 							status: true,
 							content: [
 								{
@@ -820,7 +820,7 @@ export default {
 					specializations: "Врач-узи",
 					weeks: [
 						{
-							clinicId: 1,
+							clinicId: 101,
 							status: true,
 							content: [
 								{
@@ -861,17 +861,17 @@ export default {
 							],
 						},
 						{
-							clinicId: 2,
+							clinicId: 102,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 3,
+							clinicId: 103,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 4,
+							clinicId: 104,
 							status: false,
 							content: [],
 						},
@@ -883,12 +883,12 @@ export default {
 					specializations: "Врач-узи",
 					weeks: [
 						{
-							clinicId: 1,
+							clinicId: 101,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 2,
+							clinicId: 102,
 							status: true,
 							content: [
 								{
@@ -929,12 +929,12 @@ export default {
 							],
 						},
 						{
-							clinicId: 3,
+							clinicId: 103,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 4,
+							clinicId: 104,
 							status: false,
 							content: [],
 						},
@@ -946,12 +946,12 @@ export default {
 					specializations: "Гинеколог",
 					weeks: [
 						{
-							clinicId: 1,
+							clinicId: 101,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 2,
+							clinicId: 102,
 							status: true,
 							content: [
 								{
@@ -992,12 +992,12 @@ export default {
 							],
 						},
 						{
-							clinicId: 3,
+							clinicId: 103,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 4,
+							clinicId: 104,
 							status: false,
 							content: [],
 						},
@@ -1009,22 +1009,22 @@ export default {
 					specializations: "Гинеколог",
 					weeks: [
 						{
-							clinicId: 1,
+							clinicId: 101,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 2,
+							clinicId: 102,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 3,
+							clinicId: 103,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 4,
+							clinicId: 104,
 							status: true,
 							content: [
 								{
@@ -1072,12 +1072,12 @@ export default {
 					specializations: "Дерматовенеролог",
 					weeks: [
 						{
-							clinicId: 1,
+							clinicId: 101,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 2,
+							clinicId: 102,
 							status: true,
 							content: [
 								{
@@ -1118,12 +1118,12 @@ export default {
 							],
 						},
 						{
-							clinicId: 3,
+							clinicId: 103,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 4,
+							clinicId: 104,
 							status: false,
 							content: [],
 						},
@@ -1135,12 +1135,12 @@ export default {
 					specializations: "Детский невролог",
 					weeks: [
 						{
-							clinicId: 1,
+							clinicId: 101,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 2,
+							clinicId: 102,
 							status: true,
 							content: [
 								{
@@ -1181,12 +1181,12 @@ export default {
 							],
 						},
 						{
-							clinicId: 3,
+							clinicId: 103,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 4,
+							clinicId: 104,
 							status: false,
 							content: [],
 						},
@@ -1198,12 +1198,12 @@ export default {
 					specializations: "Детский офтальмолог",
 					weeks: [
 						{
-							clinicId: 1,
+							clinicId: 101,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 2,
+							clinicId: 102,
 							status: true,
 							content: [
 								{
@@ -1244,12 +1244,12 @@ export default {
 							],
 						},
 						{
-							clinicId: 3,
+							clinicId: 103,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 4,
+							clinicId: 104,
 							status: false,
 							content: [],
 						},
@@ -1261,12 +1261,12 @@ export default {
 					specializations: "Кардиолог",
 					weeks: [
 						{
-							clinicId: 1,
+							clinicId: 101,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 2,
+							clinicId: 102,
 							status: true,
 							content: [
 								{
@@ -1307,12 +1307,12 @@ export default {
 							],
 						},
 						{
-							clinicId: 3,
+							clinicId: 103,
 							status: false,
 							content: [],
 						},
 						{
-							clinicId: 4,
+							clinicId: 104,
 							status: false,
 							content: [],
 						},
@@ -1465,27 +1465,27 @@ export default {
 
 		let clinics = JSON.stringify([
 			{
-				id: 0,
+				id: 100,
 				name: "Все",
 				status: true,
 			},
 			{
-				id: 1,
+				id: 101,
 				name: "ул. Карла Либкнехта, д. 10",
 				status: false,
 			},
 			{
-				id: 2,
+				id: 102,
 				name: "ул. Комсомольская, д. 16",
 				status: false,
 			},
 			{
-				id: 3,
+				id: 103,
 				name: "р.п. Каргаполье, ул. Мира, 5Г",
 				status: false,
 			},
 			{
-				id: 4,
+				id: 104,
 				name: "ул. Октябрьская, 3",
 				status: false,
 			},
@@ -1528,13 +1528,6 @@ export default {
 				date: "18 ноября",
 			},
 		]);
-
-		console.log("Клиники----------------------");
-		console.log(clinics);
-		console.log("-----------------------------");
-		console.log("Недели-----------------------");
-		console.log(week);
-		console.log("-----------------------------");
 
 		this.clinics = JSON.parse(clinics);
 		this.week = JSON.parse(week);
