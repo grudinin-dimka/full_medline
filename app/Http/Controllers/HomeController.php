@@ -49,9 +49,11 @@ class HomeController extends Controller
       $sheduleClinics = ShedulesClinic::all();
       $currentDays = ShedulesCurrentDay::all();
 
+      // Перебор массива с выбранными расписаниями
       foreach ($shedules as $sheduleKey => $sheduleValue) {
          $weeks = [];         
          
+         // Перебор массива с выбранными клиниками 
          foreach ($sheduleClinics as $sheduleClinicsKey => $sheduleClinicsValue) {
             if ($sheduleClinicsValue->name === "Все") {
                continue;
@@ -59,53 +61,47 @@ class HomeController extends Controller
 
             $shedileClinicDays = ShedulesDay::where('sheduleId', $sheduleValue->id)->where('clinicId', $sheduleClinicsValue->id)->get();
 
+            // Если есть дни
             if (count($shedileClinicDays) > 0) {
                $content = [];
 
-               // foreach ($currentDays as $currentDaysKey => $currentDaysValue) {
-               // };
-               
+               // Перебор массива с выбранными днями
+               foreach ($currentDays as $currentDaysKey => $currentDaysValue) {
+                  $status = false;
+
+                  foreach ($shedileClinicDays as $shedileClinicDaysKey => $shedileClinicDaysValue) {
+                     if ($currentDaysValue->date === $shedileClinicDaysValue->date) {
+                        $times = [];
+                        
+                        $shedulesDaysTimes = ShedulesDaysTime::where('dayId', $shedileClinicDaysValue->id)->get();
+                        foreach ($shedulesDaysTimes as $shedulesDaysTimesKey => $shedulesDaysTimesValue) {
+                           $times[] = $shedulesDaysTimesValue->name;
+                        };
+
+                        $content[] = [
+                           "id" => $currentDaysValue->id,
+                           "date" => $shedileClinicDaysValue->date,
+                           "time" => $times,
+                        ];
+
+                        $status = true;
+                        if ($status) break;
+                     };
+                  };
+
+                  if (!$status) {
+                     $content[] = [
+                        "id" => $currentDaysValue->id,
+                        "date" => $currentDaysValue->date,
+                        "time" => [],
+                     ];
+                  };
+               };
+
                $weeks[] = (object) [
                   "clinicId" => $sheduleClinicsValue->id,
                   "status" => true,
-                  // "content" => $content,
-                  "content" => [
-                     (object) [
-                        "id" => 1,
-                        "date" => "2024-11-12", 
-                        "time" => ["-"],
-                     ],
-                     (object) [
-                        "id" => 2,
-                        "date" => "2024-11-13", 
-                        "time" => ["09:00-16:00"],
-                     ],
-                     (object) [
-                        "id" => 3,
-                        "date" => "2024-11-14", 
-                        "time" => ["09:00-16:00"],
-                     ],
-                     (object) [
-                        "id" => 4,
-                        "date" => "2024-11-15", 
-                        "time" => ["-"],
-                     ],
-                     (object) [
-                        "id" => 5,
-                        "date" => "2024-11-16", 
-                        "time" => ["-"],
-                     ],
-                     (object) [
-                        "id" => 6,
-                        "date" => "2024-11-17", 
-                        "time" => ["-"],
-                     ],
-                     (object) [
-                        "id" => 7,
-                        "date" => "2024-11-18", 
-                        "time" => ["-"],
-                     ],
-                  ],
+                  "content" => $content,
                ];
             } else {
                $weeks[] = (object) [
@@ -124,6 +120,7 @@ class HomeController extends Controller
          "status" => true,
          "message" => "Успешно!",
          "data" => (object) [
+            "currentDays" => $currentDays,
             "shedules" => $shedules,
             "sheduleClinics" => $sheduleClinics,
          ],

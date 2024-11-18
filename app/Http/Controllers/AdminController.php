@@ -63,6 +63,7 @@ class AdminController extends Controller
       ShedulesClinic::truncate();
       ShedulesCurrentDay::truncate();
       ShedulesDay::truncate();
+      ShedulesDaysTime::truncate();
 
       // Возвращаю ограничения внешнего ключа 
       DB::statement('SET FOREIGN_KEY_CHECKS = 1');
