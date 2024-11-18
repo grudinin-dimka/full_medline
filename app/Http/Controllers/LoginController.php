@@ -56,7 +56,7 @@ class LoginController extends Controller
       ]);
 
       // Поиск пользователя по логину в бд
-      $user = User::where('name', $request->name)->first();    
+      $user = User::where('nickname', $request->name)->first();    
       if (!$user) return response()->json([
          "status" => false,
          "message" => "Пользователь не найден.",
@@ -79,7 +79,7 @@ class LoginController extends Controller
          "token" => $user->createToken('auth_token')->plainTextToken,
          "user" => (object) [
             "id" => $user->id,
-            "name" => $user->name,
+            "nickname" => $user->nickname,
             "email" => $user->email,
          ],
          ],

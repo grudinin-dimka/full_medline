@@ -15,7 +15,12 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
+            $table->string('family');
+            $table->string('name');
+            $table->string('surname');
+            $table->date('dateOfBirth');
+            $table->string('status')->foreignId('statusId')->references('id')->on('statuses')->onDelete('cascade');
+            $table->string('nickname')->unique();
             $table->string('email')->unique();
             $table->foreignId('rightsId')->references('id')->on('rights')->onDelete('cascade');
             $table->string('password');
@@ -39,21 +44,36 @@ return new class extends Migration
         });
    
         DB::table('users')->insert([
-            'name' => 'sveta',
+            'family' => 'Лебедь',
+            'name' => 'Светлана',
+            'surname' => 'Неизвестно',
+            'dateOfBirth' => date('Y-m-d'),
+            'status' => 1,
+            'nickname' => 'sveta',
             'email' => 'sveta@admin',
-            'rightsId' => 1,
+            'rightsId' => 2,
             'password' => Hash::make('zBkvUoXKZ3ib-m6n'),
         ]);
 
         DB::table('users')->insert([
-            'name' => 'danil',
+            'family' => 'Филиппенок',
+            'name' => 'Данил',
+            'surname' => 'Сергеевич',
+            'dateOfBirth' => date('Y-m-d'),
+            'status' => 1,
+            'nickname' => 'danil',
             'email' => 'danil@admin',
-            'rightsId' => 1,
+            'rightsId' => 2,
             'password' => Hash::make('quwG7G_UR0iVktB7'),
         ]);
 
         DB::table('users')->insert([
-            'name' => 'dima',
+            'family' => 'Грудинин',
+            'name' => 'Дмитрий',
+            'surname' => 'Викторович',
+            'dateOfBirth' => date('Y-m-d'),
+            'status' => 1,
+            'nickname' => 'dima',
             'email' => 'dima@admin',
             'rightsId' => 1,
             'password' => Hash::make('DFKEhwCA4H-s7CoZ'),

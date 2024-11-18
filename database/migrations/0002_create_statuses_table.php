@@ -12,24 +12,24 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rights', function (Blueprint $table) {
+        Schema::create('statuses', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->timestamps();
         });
 
-        DB::table('rights')->insert([
-            ['name' => 'creator'],
-            ['name' => 'admin'],
-            ['name' => 'user'],
+        DB::table('statuses')->insert([
+            ['name' => 'active'],
+            ['name' => 'passive'],
         ]);
     }
+
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('rights');
+        Schema::dropIfExists('statuses');
     }
 };

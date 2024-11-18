@@ -22,8 +22,8 @@ return new class extends Migration
       // 5) name - название работы
       Schema::create('works', function (Blueprint $table) {
          $table->id();
-         $table->date('startWork')->default(date('c'));
-         $table->date('endWork')->default(date('c'));
+         $table->date('startWork')->default(date('Y-m-d'));
+         $table->date('endWork')->default(date('Y-m-d'));
          $table->string('organization', 1000);
          $table->string('name', 1000);
          $table->timestamps();

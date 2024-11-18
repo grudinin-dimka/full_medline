@@ -23,6 +23,7 @@ const store = createStore({
 		},
 		user: {
 			token: null,
+			nickname: "",
 			name: "asdada",
 			email: null,
 		},
@@ -75,6 +76,9 @@ const store = createStore({
 		},
 		setUserEmail(state, userEmail) {
 			state.user.email = userEmail;
+		},
+		setUserNickname(state, userNickname) {
+			state.user.nickname = userNickname;
 		},
 		/* Отображение деббагера */
 		debuggerState(state, debbugStory) {

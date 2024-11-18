@@ -22,7 +22,7 @@ return new class extends Migration
       Schema::create('certificates', function (Blueprint $table) {
          $table->id();
          $table->string('organization', 1000);
-         $table->date('endEducation')->default(date('c'));
+         $table->date('endEducation')->default(date('Y-m-d'));
          $table->string('name', 1000);
          $table->timestamps();
       });
