@@ -41,92 +41,6 @@ use Illuminate\Support\Facades\Storage;
 class HomeController extends Controller
 {
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-   /* |                   РАСПИСАНИЕ                      |*/
-   /* |___________________________________________________|*/
-   /* Получение расписания */
-   public function getShedulesAll(Request $request) {
-      $shedules = Shedule::all();
-      $sheduleClinics = ShedulesClinic::all();
-      $currentDays = ShedulesCurrentDay::all();
-
-      // Перебор массива с выбранными расписаниями
-      foreach ($shedules as $sheduleKey => $sheduleValue) {
-         $weeks = [];         
-         
-         // Перебор массива с выбранными клиниками 
-         foreach ($sheduleClinics as $sheduleClinicsKey => $sheduleClinicsValue) {
-            if ($sheduleClinicsValue->name === "Все") {
-               continue;
-            };
-
-            $shedileClinicDays = ShedulesDay::where('sheduleId', $sheduleValue->id)->where('clinicId', $sheduleClinicsValue->id)->get();
-
-            // Если есть дни
-            if (count($shedileClinicDays) > 0) {
-               $content = [];
-
-               // Перебор массива с выбранными днями
-               foreach ($currentDays as $currentDaysKey => $currentDaysValue) {
-                  $status = false;
-
-                  foreach ($shedileClinicDays as $shedileClinicDaysKey => $shedileClinicDaysValue) {
-                     if ($currentDaysValue->date === $shedileClinicDaysValue->date) {
-                        $times = [];
-                        
-                        $shedulesDaysTimes = ShedulesDaysTime::where('dayId', $shedileClinicDaysValue->id)->get();
-                        foreach ($shedulesDaysTimes as $shedulesDaysTimesKey => $shedulesDaysTimesValue) {
-                           $times[] = $shedulesDaysTimesValue->name;
-                        };
-
-                        $content[] = [
-                           "id" => $currentDaysValue->id,
-                           "date" => $shedileClinicDaysValue->date,
-                           "time" => $times,
-                        ];
-
-                        $status = true;
-                        if ($status) break;
-                     };
-                  };
-
-                  if (!$status) {
-                     $content[] = [
-                        "id" => $currentDaysValue->id,
-                        "date" => $currentDaysValue->date,
-                        "time" => [],
-                     ];
-                  };
-               };
-
-               $weeks[] = (object) [
-                  "clinicId" => $sheduleClinicsValue->id,
-                  "status" => true,
-                  "content" => $content,
-               ];
-            } else {
-               $weeks[] = (object) [
-                  "clinicId" => $sheduleClinicsValue->id,
-                  "status" => false,
-                  "content" => [],
-               ];
-
-            };
-
-            $sheduleValue->weeks = $weeks;
-         };
-      };
-
-      return response()->json([
-         "status" => true,
-         "message" => "Успешно!",
-         "data" => (object) [
-            "currentDays" => $currentDays,
-            "shedules" => $shedules,
-            "sheduleClinics" => $sheduleClinics,
-         ],
-      ]);
-   }
-   /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                 БОТ ТЕЛЕГРАММ                     |*/
    /* |___________________________________________________|*/
    /* _____________________________________________________*/
@@ -602,6 +516,93 @@ class HomeController extends Controller
          "message" => "Успешно.",
          "data" => $contacts,
       ]);   
+   }
+
+   /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+   /* |                   РАСПИСАНИЕ                      |*/
+   /* |___________________________________________________|*/
+   /* Получение расписания */
+   public function getShedulesAll(Request $request) {
+      $shedules = Shedule::all();
+      $sheduleClinics = ShedulesClinic::all();
+      $currentDays = ShedulesCurrentDay::all();
+
+      // Перебор массива с выбранными расписаниями
+      foreach ($shedules as $sheduleKey => $sheduleValue) {
+         $weeks = [];         
+         
+         // Перебор массива с выбранными клиниками 
+         foreach ($sheduleClinics as $sheduleClinicsKey => $sheduleClinicsValue) {
+            if ($sheduleClinicsValue->name === "Все") {
+               continue;
+            };
+
+            $shedileClinicDays = ShedulesDay::where('sheduleId', $sheduleValue->id)->where('clinicId', $sheduleClinicsValue->id)->get();
+
+            // Если есть дни
+            if (count($shedileClinicDays) > 0) {
+               $content = [];
+
+               // Перебор массива с выбранными днями
+               foreach ($currentDays as $currentDaysKey => $currentDaysValue) {
+                  $status = false;
+
+                  foreach ($shedileClinicDays as $shedileClinicDaysKey => $shedileClinicDaysValue) {
+                     if ($currentDaysValue->date === $shedileClinicDaysValue->date) {
+                        $times = [];
+                        
+                        $shedulesDaysTimes = ShedulesDaysTime::where('dayId', $shedileClinicDaysValue->id)->get();
+                        foreach ($shedulesDaysTimes as $shedulesDaysTimesKey => $shedulesDaysTimesValue) {
+                           $times[] = $shedulesDaysTimesValue->name;
+                        };
+
+                        $content[] = [
+                           "id" => $currentDaysValue->id,
+                           "date" => $shedileClinicDaysValue->date,
+                           "time" => $times,
+                        ];
+
+                        $status = true;
+                        if ($status) break;
+                     };
+                  };
+
+                  if (!$status) {
+                     $content[] = [
+                        "id" => $currentDaysValue->id,
+                        "date" => $currentDaysValue->date,
+                        "time" => [],
+                     ];
+                  };
+               };
+
+               $weeks[] = (object) [
+                  "clinicId" => $sheduleClinicsValue->id,
+                  "status" => true,
+                  "content" => $content,
+               ];
+            } else {
+               $weeks[] = (object) [
+                  "clinicId" => $sheduleClinicsValue->id,
+                  "status" => false,
+                  "content" => [],
+               ];
+
+            };
+
+            $sheduleValue->weeks = $weeks;
+         };
+      };
+
+      return response()->json([
+         "status" => true,
+         "message" => "Успешно!",
+         "data" => (object) [
+            "currentDays" => $currentDays,
+            "shedules" => $shedules,
+            "sheduleClinics" => $sheduleClinics,
+         ],
+      ]);
    }
 };
 

@@ -18,10 +18,11 @@ return new class extends Migration
             $table->string('family');
             $table->string('name');
             $table->string('surname');
+            $table->text('filename');
             $table->date('dateOfBirth');
-            $table->string('status')->foreignId('statusId')->references('id')->on('statuses')->onDelete('cascade');
             $table->string('nickname')->unique();
             $table->string('email')->unique();
+            $table->foreignId('statusId')->foreignId('statusId')->references('id')->on('statuses')->onDelete('cascade');
             $table->foreignId('rightsId')->references('id')->on('rights')->onDelete('cascade');
             $table->string('password');
             $table->rememberToken();
@@ -47,10 +48,11 @@ return new class extends Migration
             'family' => 'Лебедь',
             'name' => 'Светлана',
             'surname' => 'Неизвестно',
+            'filename' => 'sveta.jpg',
             'dateOfBirth' => date('Y-m-d'),
-            'status' => 1,
             'nickname' => 'sveta',
             'email' => 'sveta@admin',
+            'statusId' => 1,
             'rightsId' => 2,
             'password' => Hash::make('zBkvUoXKZ3ib-m6n'),
         ]);
@@ -59,10 +61,11 @@ return new class extends Migration
             'family' => 'Филиппенок',
             'name' => 'Данил',
             'surname' => 'Сергеевич',
+            'filename' => 'danil.jpg',
             'dateOfBirth' => date('Y-m-d'),
-            'status' => 1,
             'nickname' => 'danil',
             'email' => 'danil@admin',
+            'statusId' => 1,
             'rightsId' => 2,
             'password' => Hash::make('quwG7G_UR0iVktB7'),
         ]);
@@ -71,10 +74,11 @@ return new class extends Migration
             'family' => 'Грудинин',
             'name' => 'Дмитрий',
             'surname' => 'Викторович',
+            'filename' => 'avatar.png',
             'dateOfBirth' => date('Y-m-d'),
-            'status' => 1,
             'nickname' => 'dima',
             'email' => 'dima@admin',
+            'statusId' => 1,
             'rightsId' => 1,
             'password' => Hash::make('DFKEhwCA4H-s7CoZ'),
         ]);

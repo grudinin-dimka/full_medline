@@ -12,7 +12,7 @@
 				<div
 					class="img"
 					:style="{
-						backgroundImage: `url(/storage/users/avatar.png)`,
+						backgroundImage: `url(${profile.path})`,
 					}"
 				></div>
 			</div>
@@ -21,19 +21,19 @@
 				<div class="body">
 					<div class="block">
 						<div class="title">Фамилия</div>
-						<div class="content">Отстутствует</div>
+						<div class="content">{{ profile.family }}</div>
 					</div>
 					<div class="block">
 						<div class="title">Имя</div>
-						<div class="content">Отстутствует</div>
+						<div class="content">{{ profile.name }}</div>
 					</div>
 					<div class="block">
 						<div class="title">Отчество</div>
-						<div class="content">Отстутствует</div>
+						<div class="content">{{ profile.surname }}</div>
 					</div>
 					<div class="block">
 						<div class="title">Возраст</div>
-						<div class="content">Отстутствует</div>
+						<div class="content">{{ getDateAges(profile.dateOfBirth) }}</div>
 					</div>
 				</div>
 			</div>
@@ -42,11 +42,11 @@
 				<div class="body">
 					<div class="block">
 						<div class="title">Псевдоним</div>
-						<div class="content">Отстутствует</div>
+						<div class="content">{{ profile.nickname }}</div>
 					</div>
 					<div class="block">
 						<div class="title">Почта</div>
-						<div class="content">Отстутствует</div>
+						<div class="content">{{ profile.email }}</div>
 					</div>
 				</div>
 			</div>
@@ -55,11 +55,11 @@
 				<div class="body">
 					<div class="block">
 						<div class="title">Статус</div>
-						<div class="content">Отстутствует</div>
+						<div class="content">{{ profile.status }}</div>
 					</div>
 					<div class="block">
 						<div class="title">Права</div>
-						<div class="content">Отстутствует</div>
+						<div class="content">{{ profile.rights }}</div>
 					</div>
 				</div>
 			</div>
@@ -86,6 +86,8 @@ import ContainerInput from "../../../components/ui/admin/containers/ContainerInp
 import ContainerInputTwo from "../../../components/ui/admin/containers/input/ContainerInputTwo.vue";
 import ContainerInputThree from "../../../components/ui/admin/containers/input/ContainerInputThree.vue";
 
+import axios from "axios";
+
 export default {
 	components: {
 		LoaderChild,
@@ -96,6 +98,7 @@ export default {
 		ContainerInput,
 		ContainerInputTwo,
 		ContainerInputThree,
+		axios,
 	},
 	data() {
 		return {
@@ -107,6 +110,17 @@ export default {
 					profile: false,
 				},
 			},
+			profile: {
+				family: "Отсутствует",
+				name: "Отсутствует",
+				surname: "Отсутствует",
+				dateOfBirth: "Отсутствует",
+				nickname: "Отсутствует",
+				email: "Отсутствует",
+				status: "Отсутствует",
+				rights: "Отсутствует",
+				path: "/storage/users/avatar.png",
+			},
 		};
 	},
 	methods: {
@@ -117,9 +131,38 @@ export default {
 		loaderChildAfterLeave() {
 			this.loading.sections.profile = true;
 		},
+		getDateAges(date) {
+			let dateNow = new Date();
+			let dateAges = dateNow.getFullYear() - new Date(date).getFullYear();
+			return dateAges;
+		},
 	},
 	mounted() {
 		this.loading.loader.profile = false;
+
+		let formData = new FormData();
+
+		axios({
+			method: "post",
+			headers: {
+				Accept: "application/json",
+				Authorization: `Bearer ${localStorage.getItem("token")}`,
+			},
+			url: `${this.$store.state.axios.urlApi}` + `get-profile-info`,
+		})
+			.then((response) => {
+				for (let key in this.profile) {
+					this.profile[key] = response.data.data[key];
+				}
+			})
+			.catch((error) => {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Произошла ошибка при загрузке профиля.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			});
 	},
 };
 </script>
@@ -148,8 +191,8 @@ export default {
 .profile-info > .item.avatar > .img {
 	width: 100%;
 	height: 100%;
-	border-radius: 10px;
-	background-size: contain;
+	border-radius: 300px;
+	background-size: cover;
 	background-position: center center;
 	background-repeat: no-repeat;
 }

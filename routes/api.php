@@ -62,6 +62,7 @@ Route::post('/check-token', [LoginController::class, 'checkToken'])->middleware(
 Route::post('/logout', [LoginController::class, 'logoutUser'])->middleware('auth:sanctum');
 Route::post('/create', [LoginController::class, 'createUser']);
 Route::post('/upload-file', [AdminController::class, 'uploadFile'])->middleware('auth:sanctum');
+Route::post('/get-profile-info', [AdminController::class, 'getProfileInfo'])->middleware('auth:sanctum');
 /* _____________________________________________________*/
 /* Главная                                              */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/

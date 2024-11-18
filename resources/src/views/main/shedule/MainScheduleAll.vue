@@ -22,12 +22,12 @@
 					<div class="body">
 						<div
 							class="item"
-							v-for="filter in clinics"
-							:key="filter.id"
-							:class="{ active: filter.status }"
-							@click="changeActiveClinic(filter)"
+							v-for="clinic in clinics"
+							:key="clinic.id"
+							:class="{ active: clinic.status }"
+							@click="changeActiveClinic(clinic)"
 						>
-							<div>{{ filter.name }}</div>
+							<div>{{ clinic.name }}</div>
 						</div>
 					</div>
 				</div>
@@ -224,64 +224,9 @@ export default {
 				},
 			},
 			// Клиники
-			clinics: [
-				{
-					id: 0,
-					name: "Все",
-					status: true,
-				},
-				{
-					id: 1,
-					name: "ул. Карла Либкнехта, д. 10",
-					status: false,
-				},
-				{
-					id: 2,
-					name: "ул. Комсомольская, д. 16",
-					status: false,
-				},
-				{
-					id: 3,
-					name: "р.п. Каргаполье, ул. Мира, 5Г",
-					status: false,
-				},
-				{
-					id: 4,
-					name: "ул. Октябрьская, 3",
-					status: false,
-				},
-			],
+			clinics: [],
 			// Дни на неделе
-			week: [
-				{
-					id: 1,
-					date: "2024-11-12",
-				},
-				{
-					id: 2,
-					date: "2024-11-13",
-				},
-				{
-					id: 3,
-					date: "2024-11-14",
-				},
-				{
-					id: 4,
-					date: "2024-11-15",
-				},
-				{
-					id: 5,
-					date: "2024-11-16",
-				},
-				{
-					id: 6,
-					date: "2024-11-17",
-				},
-				{
-					id: 7,
-					date: "2024-11-18",
-				},
-			],
+			week: [],
 			shedules: [],
 			sections: {
 				clinics: [],
@@ -471,8 +416,6 @@ export default {
 		},
 	},
 	mounted() {
-		this.loading.loader.schedule = false;
-
 		axios({
 			method: "post",
 			url: `${this.$store.state.axios.urlApi}` + `get-shedules-all`,
@@ -499,7 +442,8 @@ export default {
 			})
 			.catch((error) => {
 				console.log(error);
-			});
+			})
+			.finally(() => (this.loading.loader.schedule = false));
 	},
 };
 </script>
