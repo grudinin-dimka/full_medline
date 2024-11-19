@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CreatorController;
 
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 /* |                   БОТ ТЕЛЕГРАММ                   |*/
@@ -100,8 +101,12 @@ Route::post('/save-educations-changes', [AdminController::class, 'saveEducations
 Route::post('/save-works-changes', [AdminController::class, 'saveWorkChanges'])->middleware('auth:sanctum');
 /* 5. Прошлые работы                                    */
 Route::post('/save-certificates-changes', [AdminController::class, 'saveCertificatesChanges'])->middleware('auth:sanctum');
-
-
-
+/* _____________________________________________________*/
+/* Расписание                                          */
+/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 Route::post('/save-shedules-all', [AdminController::class, 'saveShedulesAll']);
 Route::post('/get-shedules-all', [HomeController::class, 'getShedulesAll']);
+/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+/* |                    СОЗДАТЕЛЬ                      |*/
+/* |___________________________________________________|*/
+Route::post('/get-users-all', [CreatorController::class, 'getUsersAll'])->middleware('auth:sanctum');

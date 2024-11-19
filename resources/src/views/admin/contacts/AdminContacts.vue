@@ -38,13 +38,13 @@
 						</span>
 					</template>
 				</container-textarea-once>
-				<ContainerSelectOnce
+				<ContainerInputOnce
 					:type="modal.type == 'create' ? 'create' : modal.style.delete ? 'delete' : 'edit'"
 				>
 					<template #title>
 						<span>КЛИНИКА</span>
 					</template>
-					<template #select>
+					<template #input>
 						<select v-model="currentContact.data.clinicId.body">
 							<option value="null" selected>Ничего не выбрано</option>
 							<option v-for="clinic in clinics" :key="clinic.id" :value="clinic.id">
@@ -52,7 +52,7 @@
 							</option>
 						</select>
 					</template>
-				</ContainerSelectOnce>
+				</ContainerInputOnce>
 				<admin-modal-list
 					:type="modal.type == 'create' ? 'create' : modal.style.delete ? 'delete' : 'edit'"
 					:array="currentContact.data.phones.body"
@@ -90,10 +90,16 @@
 		<template #footer>
 			<BlockButtons>
 				<button-claim v-if="modal.type == 'create'" @click="addContact"> Создать </button-claim>
-				<template v-else>
+				<template v-if="modal.type == 'edit' && !currentContact.data.delete.body">
 					<button-remove @click="deleteContact"> Удалить </button-remove>
 					<ButtonDefault @click="updateContact"> Обновить </ButtonDefault>
 				</template>
+				<ButtonDefault
+					v-if="modal.type == 'edit' && currentContact.data.delete.body"
+					@click="deleteContact"
+				>
+					Восстановить
+				</ButtonDefault>
 			</BlockButtons>
 		</template>
 	</admin-modal>
@@ -564,7 +570,7 @@ export default {
 						this[name].style.delete = false;
 						this[name].style.create = false;
 
-						if (false) {
+						if (name === "modal" && this.currentContact.data.delete.body) {
 							this[name].style.delete = true;
 						} else {
 							this[name].style.delete = false;
