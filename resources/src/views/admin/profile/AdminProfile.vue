@@ -138,10 +138,6 @@ export default {
 		},
 	},
 	mounted() {
-		this.loading.loader.profile = false;
-
-		let formData = new FormData();
-
 		axios({
 			method: "post",
 			headers: {
@@ -162,6 +158,9 @@ export default {
 					type: "Error",
 				};
 				this.$store.commit("debuggerState", debbugStory);
+			})
+			.finally(() => {
+				this.loading.loader.profile = false;
 			});
 	},
 };

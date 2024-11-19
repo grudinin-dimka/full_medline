@@ -227,11 +227,8 @@ export default {
 			clinics: [],
 			// Дни на неделе
 			week: [],
+			// Расписания
 			shedules: [],
-			sections: {
-				clinics: [],
-				days: [],
-			},
 		};
 	},
 	computed: {
@@ -332,7 +329,6 @@ export default {
 			let options = {
 				month: "long",
 				day: "numeric",
-				// weekday: "long",
 			};
 
 			return dayDate.toLocaleString("ru", options);

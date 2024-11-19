@@ -196,6 +196,12 @@ const router = createRouter({
 					meta: { title: "(e) Контакты" },
 					component: () => import("../views/admin/contacts/AdminContacts.vue"),
 				},
+				{
+					path: "users",
+					name: "users",
+					meta: { title: "Пользователи" },
+					component: () => import("../views/admin/users/AdminUsers.vue"),
+				},
 			],
 		},
 		// Роутер для не найденных страниц

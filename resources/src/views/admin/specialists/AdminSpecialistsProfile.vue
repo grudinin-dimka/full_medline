@@ -479,7 +479,7 @@
 	</info-bar>
 
 	<!-- Основные данные врача -->
-	<block-once>
+	<block-once :minHeight="400">
 		<block-title>
 			<template #title>
 				<span :class="{ create: $route.params.id == 'new' }">ПРОФИЛЬ</span>
@@ -984,7 +984,7 @@
 	<!--____________________________________________________-->
 	<!--4. Сертификаты                                      -->
 	<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
-	<block-once v-if="$route.params.id !== 'new'">
+	<block-once v-if="$route.params.id !== 'new'" :minHeight="200">
 		<block-title>
 			<template #title>
 				СЕРТИФИКАТЫ
@@ -1032,7 +1032,7 @@
 	<!--____________________________________________________-->
 	<!--5. Образование                                      -->
 	<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
-	<block-once v-if="$route.params.id !== 'new'">
+	<block-once v-if="$route.params.id !== 'new'" :minHeight="200">
 		<block-title>
 			<template #title>
 				ОБРАЗОВАНИЕ
@@ -1080,7 +1080,7 @@
 	<!--____________________________________________________-->
 	<!--6. Места работы                                     -->
 	<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
-	<block-once v-if="$route.params.id !== 'new'">
+	<block-once v-if="$route.params.id !== 'new'" :minHeight="200">
 		<block-title>
 			<template #title>
 				МЕСТА РАБОТЫ

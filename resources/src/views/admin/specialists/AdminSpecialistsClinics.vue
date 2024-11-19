@@ -226,12 +226,12 @@
 		<template v-slot:addreas>specialists</template>
 	</info-bar>
 
-	<block-once>
+	<block-once :minHeight="200">
 		<block-title>
 			<template #title>Клиники</template>
 			<template #buttons>
 				<icon-load :width="28" :height="28" v-if="disabled.clinics.save" />
-				<icon-save :width="28" :height="28" @click="saveClinicsChanges" v-else/>
+				<icon-save :width="28" :height="28" @click="saveClinicsChanges" v-else />
 			</template>
 		</block-title>
 
@@ -812,7 +812,7 @@ export default {
 				.catch((error) => {
 					this.disabled.clinics.save = false;
 
-						let debbugStory = {
+					let debbugStory = {
 						title: "Ошибка.",
 						body: "Данные почему-то не сохранились...",
 						type: "Error",

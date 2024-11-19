@@ -1,11 +1,18 @@
 <template>
-	<div class="block-once" ref="blockOnce">
+	<div class="block-once" ref="blockOnce" :style="{ minHeight: `${minHeight}px` }">
 		<slot></slot>
 	</div>
 </template>
 
 <script>
-export default {};
+export default {
+	props: {
+		minHeight: {
+			type: Number,
+			default: "200",
+		},
+	},
+};
 </script>
 
 <style>

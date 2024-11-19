@@ -229,7 +229,7 @@
 		<template v-slot:addreas>about</template>
 	</info-bar>
 
-	<block-once>
+	<block-once :minHeight="400">
 		<block-title>
 			<template #title>ИНФОРМАЦИОННЫЕ БЛОКИ</template>
 			<template #buttons>

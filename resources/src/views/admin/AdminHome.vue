@@ -170,7 +170,7 @@
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                      СЛАЙДЕР                      |-->
 	<!--|___________________________________________________|-->
-	<block-once>
+	<block-once :minHeight="400">
 		<block-title>
 			<template #title>СЛАЙДЕР</template>
 			<template #buttons>
@@ -247,7 +247,7 @@
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                       ФУТЕР                       |-->
 	<!--|___________________________________________________|-->
-	<block-once>
+	<block-once :minHeight="400">
 		<block-title>
 			<template #title>ФУТЕР</template>
 			<template #buttons>
@@ -389,7 +389,7 @@
 		<!-- Загрузка футера -->
 		<loader-child
 			:isLoading="loading.loader.footer"
-			:minHeight="300"
+			:minHeight="400"
 			@loaderChildAfterLeave="loaderChildAfterLeave"
 		/>
 	</block-once>
