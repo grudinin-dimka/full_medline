@@ -144,10 +144,12 @@
 				<!-- Первый -->
 				<template #title-one> АВАТАР <span v-if="false">(ИЗМЕНЕНО)</span> </template>
 				<template #input-one>
-					<input type="file" autocomplete="off" />
+					<input type="file" autocomplete="off" ref="fileUpload" />
 				</template>
 				<template #error-one>
-					<span class="error" v-if="false"> Ошибка </span>
+					<span class="error" v-if="currentUser.errors.file.status">
+						{{ currentUser.errors.file.body }}
+					</span>
 				</template>
 				<!-- Второй -->
 				<template #title-two>
@@ -404,8 +406,6 @@ import LoaderChild from "../../../components/includes/LoaderChild.vue";
 import AdminModal from "../../../components/includes/admin/AdminModal.vue";
 import AdminSubModal from "../../../components/includes/admin/AdminSubModal.vue";
 
-import AdminUsersTable from "./AdminUsersTable.vue";
-
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTitle from "../../../components/ui/admin/blocks/BlockTitle.vue";
 
@@ -438,7 +438,6 @@ export default {
 		LoaderChild,
 		AdminModal,
 		AdminSubModal,
-		AdminUsersTable,
 		BlockOnce,
 		BlockTitle,
 		IconLoad,
@@ -580,6 +579,10 @@ export default {
 						status: false,
 					},
 					path: {
+						body: "",
+						status: false,
+					},
+					file: {
 						body: "",
 						status: false,
 					},
@@ -793,6 +796,7 @@ export default {
 		/* _____________________________________________________*/
 		/* 1. Основные действия                                 */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* Редактирование блокировки пользователя */
 		editUserBlock(user) {
 			for (let key in this.currentUser.data) {
 				this.currentUser.data[key].body = user[key];
@@ -800,6 +804,7 @@ export default {
 
 			this.openModal("edit", "subModalBlock");
 		},
+		/* Редактирование удаления пользователя */
 		editUserDelete(user) {
 			this.subModalDelete.style.delete = true;
 
@@ -809,6 +814,7 @@ export default {
 
 			this.openModal("edit", "subModalDelete");
 		},
+		/* Редактирование информации пользователя */
 		editUser(user) {
 			this.captcha = shared.generateRandomString(16, true, true, true);
 
@@ -832,6 +838,21 @@ export default {
 				])
 			) {
 				return;
+			}
+
+			if (this.$refs.fileUpload.files[0]) {
+				let checkFile = validate.checkInputFile(this.$refs.fileUpload.files[0], [
+					"image/jpeg",
+					"image/png",
+				]);
+
+				if (checkFile.status) {
+					this.currentUser.errors.file.status = true;
+					this.currentUser.errors.file.body = checkFile.message;
+					return;
+				} else {
+					this.currentUser.errors.file.status = false;
+				}
 			}
 
 			let user = {};

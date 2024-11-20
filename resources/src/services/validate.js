@@ -87,7 +87,7 @@ export default {
 		};
 	},
 	/* Проверка введенного файла */
-	checkInputFile(value) {
+	checkInputFile(value, types = ["image/png"]) {
 		/* Проверка на загрузку файла пользователем */
 		if (!value) {
 			return {
@@ -97,10 +97,12 @@ export default {
 		}
 
 		/* Проверка на тип загруженного файла */
-		if (value.type !== "image/png") {
+		if (!types.includes(value.type)) {
+			let typesStr = types.join(", ");
+
 			return {
 				status: true,
-				message: "Разрешённые типы файлов: png.",
+				message: `Разрешённые типы файлов: ${typesStr}.`,
 			};
 		}
 
