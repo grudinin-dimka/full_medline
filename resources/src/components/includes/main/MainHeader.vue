@@ -202,6 +202,7 @@ import ButtonDefault from "../../ui/admin/buttons/ButtonDefault.vue";
 
 import axios from "axios";
 import validate from "../../../services/validate";
+import shared from "../../../services/shared";
 
 export default {
 	components: {
@@ -214,6 +215,7 @@ export default {
 		ButtonDefault,
 		axios,
 		validate,
+		shared,
 	},
 	data() {
 		return {
@@ -572,29 +574,8 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Обновление */
 		reloadCaptcha() {
-			this.generateCaptcha();
-			this.generateRotate();
-		},
-		/* Генерация каптчи */
-		generateCaptcha() {
-			// Создание алгоритма генерации каптчи из символов 0-9, a-z, A-Z
-			let chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-			let captcha = "";
-			for (let i = 0; i < 5; i++) {
-				captcha += chars.charAt(Math.floor(Math.random() * chars.length));
-			}
-
-			this.captcha = captcha;
-		},
-		/* Генерация угла */
-		generateRotate() {
-			let chance = Math.floor(Math.random() * 10);
-			if (chance >= 5) {
-				this.rotate = Math.floor(Math.random() * 25);
-			} else {
-				this.rotate = Math.floor(Math.random() * -25);
-			}
-			this.$refs.line.style.transform = `rotate(${this.rotate}deg)`;
+			this.captcha = shared.generateRandomString(5);
+			this.$refs.line.style.transform = `rotate(${shared.generateRandomAngle(25)}deg)`;
 		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                 ОТПРАВКА ЗАПРОСА                  |*/
@@ -921,7 +902,7 @@ header {
 }
 
 .captcha > .content > .update > svg {
-	fill: rgb(201, 201, 201);
+	fill: rgb(150, 150, 150);
 }
 
 @media screen and (max-width: 1650px) {

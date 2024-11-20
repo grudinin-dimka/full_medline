@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('family');
             $table->string('name');
-            $table->string('surname');
+            $table->string('surname')->nullable();
             $table->text('filename');
             $table->date('dateOfBirth');
             $table->string('nickname')->unique();
@@ -47,9 +47,8 @@ return new class extends Migration
         DB::table('users')->insert([
             'family' => 'Лебедь',
             'name' => 'Светлана',
-            'surname' => 'Неизвестно',
             'filename' => 'sveta.jpg',
-            'dateOfBirth' => date('Y-m-d'),
+            'dateOfBirth' => "1987-06-08",
             'nickname' => 'sveta',
             'email' => 'sveta@admin',
             'statusId' => 1,
@@ -62,7 +61,7 @@ return new class extends Migration
             'name' => 'Данил',
             'surname' => 'Сергеевич',
             'filename' => 'danil.jpg',
-            'dateOfBirth' => date('Y-m-d'),
+            'dateOfBirth' => "2002-03-19",
             'nickname' => 'danil',
             'email' => 'danil@admin',
             'statusId' => 1,
@@ -75,7 +74,7 @@ return new class extends Migration
             'name' => 'Дмитрий',
             'surname' => 'Викторович',
             'filename' => 'avatar.png',
-            'dateOfBirth' => date('Y-m-d'),
+            'dateOfBirth' => '1987-04-13',
             'nickname' => 'dima',
             'email' => 'dima@admin',
             'statusId' => 1,

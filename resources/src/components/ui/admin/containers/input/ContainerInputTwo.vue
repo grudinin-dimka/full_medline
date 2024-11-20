@@ -65,7 +65,6 @@ fieldset > legend {
 }
 
 fieldset.container-input-two {
-	margin-top: 5px;
 	border: 2px solid rgba(0, 0, 0, 0.2);
 	border-radius: 15px;
 	padding: 10px;
@@ -144,6 +143,26 @@ fieldset.container-input-two.delete > legend > span {
 	border: 2px solid var(--input-border-color-error);
 
 	caret-color: red;
+}
+
+.container-input-two > .item > input::file-selector-button {
+	cursor: pointer;
+
+	background-color: var(--button-default-color);
+	border: 0px;
+	border-radius: 5px;
+	color: white;
+	padding: 5px;
+}
+
+.container-input-two > .item > input.error::file-selector-button {
+	background-color: var(--input-border-color-error);
+	border: 2px solid var(--input-border-color-error);
+}
+
+.container-input-two.create > .item > input::file-selector-button {
+	border: 2px solid #44a533;
+	background-color: #44a533;
 }
 
 @media screen and (max-width: 450px) {

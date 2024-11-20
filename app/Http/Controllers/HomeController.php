@@ -540,7 +540,7 @@ class HomeController extends Controller
             $shedileClinicDays = ShedulesDay::where('sheduleId', $sheduleValue->id)->where('clinicId', $sheduleClinicsValue->id)->get();
 
             // Если есть дни
-            if (!empty($shedileClinicDays)) {
+            if (count($shedileClinicDays) > 0) {
                $content = [];
 
                // Перебор массива с выбранными днями

@@ -69,7 +69,6 @@ export default {
 
 <style>
 fieldset.container-select-three {
-	margin-top: 5px;
 	border: 2px solid var(--input-border-color-inactive);
 	border-radius: 15px;
 	padding: 10px;

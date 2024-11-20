@@ -108,6 +108,7 @@ import IconLoad from "../../../components/icons/IconLoad.vue";
 import axios from "axios";
 import shared from "../../../services/shared";
 import sorted from "../../../services/sorted";
+import validate from "../../../services/validate";
 
 export default {
 	components: {
@@ -248,35 +249,12 @@ export default {
 		/* _____________________________________________________*/
 		/* 2. Работа с полями ввода модального окна             */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		// Проверка введенного значения
-		checkInputText(value) {
-			/* Проверка на пустую строку */
-			if (value == "" || value == null) {
-				return {
-					status: true,
-					message: "Поле не может быть пустым.",
-				};
-			}
-
-			/* Проверка на соответствие типу string */
-			if (typeof value !== "string") {
-				return {
-					status: true,
-					message: "Тип данных не совпадает.",
-				};
-			}
-
-			return {
-				status: false,
-				message: "Ошибок нет.",
-			};
-		},
 		// Проверка поля имени
 		checkModalInput(dataKey, inputType) {
 			let errorLog = {};
 			switch (inputType) {
 				case "text":
-					errorLog = this.checkInputText(this.currentSpecialization.data[dataKey].body);
+					errorLog = validate.checkInputText(this.currentSpecialization.data[dataKey].body);
 					break;
 				default:
 					break;

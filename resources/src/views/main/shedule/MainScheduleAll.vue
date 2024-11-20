@@ -5,7 +5,7 @@
 		<router-link to="/schedule">Расписание</router-link>
 	</info-bar>
 
-	<button
+	<!-- <button
 		:style="{
 			position: 'absolute',
 			right: '300px',
@@ -13,7 +13,7 @@
 		@click="test"
 	>
 		тест
-	</button>
+	</button> -->
 
 	<block-hide :minHeight="400">
 		<template v-if="loading.sections.schedule">
@@ -223,12 +223,1174 @@ export default {
 					},
 				},
 			},
-			// Клиники
-			clinics: [],
-			// Дни на неделе
-			week: [],
-			// Расписания
-			shedules: [],
+	// Клиники
+	clinics: [
+		{
+			id: 1,
+			name: "Все",
+			status: true,
+		},
+		{
+			id: 2,
+			name: "ул. Карла Либкнехта, д. 10",
+			status: false,
+		},
+		{
+			id: 3,
+			name: "ул. Комсомольская, д. 16",
+			status: false,
+		},
+		{
+			id: 4,
+			name: "р.п. Каргаполье, ул. Мира, 5Г",
+			status: false,
+		},
+		{
+			id: 5,
+			name: "ул. Октябрьская, 3",
+			status: false,
+		},
+	],
+	// Дни на неделе
+	week: [
+		{
+			id: 1,
+			date: "2024-11-12",
+		},
+		{
+			id: 2,
+			date: "2024-11-13",
+		},
+		{
+			id: 3,
+			date: "2024-11-14",
+		},
+		{
+			id: 4,
+			date: "2024-11-15",
+		},
+		{
+			id: 5,
+			date: "2024-11-16",
+		},
+		{
+			id: 6,
+			date: "2024-11-17",
+		},
+		{
+			id: 7,
+			date: "2024-11-18",
+		},
+	],
+	shedules: [
+		{
+			id: 1,
+			name: "Бурмистрова Дарья Юрьевна",
+			specializations: "Хирург",
+			weeks: [
+				{
+					clinicId: 2,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 3,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 4,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 5,
+					status: true,
+					content: [
+						{
+							id: 1,
+							date: "2024-11-12",
+							time: ["13:00-15:00"],
+						},
+						{
+							id: 2,
+							date: "2024-11-13",
+							time: ["13:30-15:00"],
+						},
+						{
+							id: 3,
+							date: "2024-11-14",
+							time: ["14:00-15:30"],
+						},
+						{
+							id: 4,
+							date: "2024-11-15",
+							time: ["13:30-15:00"],
+						},
+						{
+							id: 5,
+							date: "2024-11-16",
+							time: ["-"],
+						},
+						{
+							id: 6,
+							date: "2024-11-17",
+							time: ["-"],
+						},
+						{
+							id: 7,
+							date: "2024-11-18",
+							time: ["12:30-15:00"],
+						},
+					],
+				},
+			],
+		},
+		{
+			id: 2,
+			name: "Колчина Ольга Афонасьевна",
+			specializations: "Хирург",
+			weeks: [
+				{
+					clinicId: 2,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 3,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 4,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 5,
+					status: true,
+					content: [
+						{
+							id: 1,
+							date: "2024-11-12",
+							time: ["09:00-15:00"],
+						},
+						{
+							id: 2,
+							date: "2024-11-13",
+							time: ["09:00-15:00"],
+						},
+						{
+							id: 3,
+							date: "2024-11-14",
+							time: ["09:00-15:00"],
+						},
+						{
+							id: 4,
+							date: "2024-11-15",
+							time: ["09:00-15:00"],
+						},
+						{
+							id: 5,
+							date: "2024-11-16",
+							time: ["-"],
+						},
+						{
+							id: 6,
+							date: "2024-11-17",
+							time: ["-"],
+						},
+						{
+							id: 7,
+							date: "2024-11-18",
+							time: ["09:00-15:00"],
+						},
+					],
+				},
+			],
+		},
+		{
+			id: 3,
+			name: "Прокопьева Марина Николаевна",
+			specializations: "Хирург",
+			weeks: [
+				{
+					clinicId: 2,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 3,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 4,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 5,
+					status: true,
+					content: [
+						{
+							id: 1,
+							date: "2024-11-12",
+							time: ["08:00-12:00"],
+						},
+						{
+							id: 2,
+							date: "2024-11-13",
+							time: ["08:00-12:00"],
+						},
+						{
+							id: 3,
+							date: "2024-11-14",
+							time: ["08:00-12:00"],
+						},
+						{
+							id: 4,
+							date: "2024-11-15",
+							time: ["08:00-12:00"],
+						},
+						{
+							id: 5,
+							date: "2024-11-16",
+							time: ["-"],
+						},
+						{
+							id: 6,
+							date: "2024-11-17",
+							time: ["-"],
+						},
+						{
+							id: 7,
+							date: "2024-11-18",
+							time: ["08:00-12:00"],
+						},
+					],
+				},
+			],
+		},
+		{
+			id: 4,
+			name: "Худорожков Владислав Андреевич",
+			specializations: "Хирург",
+			weeks: [
+				{
+					clinicId: 2,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 3,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 4,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 5,
+					status: true,
+					content: [
+						{
+							id: 1,
+							date: "2024-11-12",
+							time: ["08:05-17:30"],
+						},
+						{
+							id: 2,
+							date: "2024-11-13",
+							time: ["08:05-17:30"],
+						},
+						{
+							id: 3,
+							date: "2024-11-14",
+							time: ["08:05-17:30"],
+						},
+						{
+							id: 4,
+							date: "2024-11-15",
+							time: ["08:05-17:30"],
+						},
+						{
+							id: 5,
+							date: "2024-11-16",
+							time: ["-"],
+						},
+						{
+							id: 6,
+							date: "2024-11-17",
+							time: ["-"],
+						},
+						{
+							id: 7,
+							date: "2024-11-18",
+							time: ["08:05-17:30"],
+						},
+					],
+				},
+			],
+		},
+		{
+			id: 5,
+			name: "Ганяева Ирина Александровна",
+			specializations: "Онколог",
+			weeks: [
+				{
+					clinicId: 2,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 3,
+					status: true,
+					content: [
+						{
+							id: 1,
+							date: "2024-11-12",
+							time: ["-"],
+						},
+						{
+							id: 2,
+							date: "2024-11-13",
+							time: ["-"],
+						},
+						{
+							id: 3,
+							date: "2024-11-14",
+							time: ["-"],
+						},
+						{
+							id: 4,
+							date: "2024-11-15",
+							time: ["-"],
+						},
+						{
+							id: 5,
+							date: "2024-11-16",
+							time: ["10:00-13:00"],
+						},
+						{
+							id: 6,
+							date: "2024-11-17",
+							time: ["-"],
+						},
+						{
+							id: 7,
+							date: "2024-11-18",
+							time: ["-"],
+						},
+					],
+				},
+				{
+					clinicId: 4,
+					status: true,
+					content: [
+						{
+							id: 1,
+							date: "2024-11-12",
+							time: ["-"],
+						},
+						{
+							id: 2,
+							date: "2024-11-13",
+							time: ["-"],
+						},
+						{
+							id: 3,
+							date: "2024-11-14",
+							time: ["-"],
+						},
+						{
+							id: 4,
+							date: "2024-11-15",
+							time: ["-"],
+						},
+						{
+							id: 5,
+							date: "2024-11-16",
+							time: ["10:00-13:00"],
+						},
+						{
+							id: 6,
+							date: "2024-11-17",
+							time: ["-"],
+						},
+						{
+							id: 7,
+							date: "2024-11-18",
+							time: ["-"],
+						},
+					],
+				},
+				{
+					clinicId: 5,
+					status: false,
+					content: [],
+				},
+			],
+		},
+		{
+			id: 6,
+			name: "Калякина Анастасия Александровна",
+			specializations: "Терапевт",
+			weeks: [
+				{
+					clinicId: 2,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 3,
+					status: true,
+					content: [
+						{
+							id: 1,
+							date: "2024-11-12",
+							time: ["10:00-13:00"],
+						},
+						{
+							id: 2,
+							date: "2024-11-13",
+							time: ["10:00-13:00"],
+						},
+						{
+							id: 3,
+							date: "2024-11-14",
+							time: ["10:00-13:00"],
+						},
+						{
+							id: 4,
+							date: "2024-11-15",
+							time: ["-"],
+						},
+						{
+							id: 5,
+							date: "2024-11-16",
+							time: ["-"],
+						},
+						{
+							id: 6,
+							date: "2024-11-17",
+							time: ["-"],
+						},
+						{
+							id: 7,
+							date: "2024-11-18",
+							time: ["-"],
+						},
+					],
+				},
+				{
+					clinicId: 4,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 5,
+					status: false,
+					content: [],
+				},
+			],
+		},
+		{
+			id: 7,
+			name: "Нецветова Галина Михайловна",
+			specializations: "Акушер-гинеколог",
+			weeks: [
+				{
+					clinicId: 2,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 3,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 4,
+					status: true,
+					content: [
+						{
+							id: 1,
+							date: "2024-11-12",
+							time: ["-"],
+						},
+						{
+							id: 2,
+							date: "2024-11-13",
+							time: ["-"],
+						},
+						{
+							id: 3,
+							date: "2024-11-14",
+							time: ["-"],
+						},
+						{
+							id: 4,
+							date: "2024-11-15",
+							time: ["-"],
+						},
+						{
+							id: 5,
+							date: "2024-11-16",
+							time: ["-"],
+						},
+						{
+							id: 6,
+							date: "2024-11-17",
+							time: ["10:00-13:00"],
+						},
+						{
+							id: 7,
+							date: "2024-11-18",
+							time: ["-"],
+						},
+					],
+				},
+				{
+					clinicId: 5,
+					status: false,
+					content: [],
+				},
+			],
+		},
+		{
+			id: 8,
+			name: "Карибуллин Ильфат Фаатович",
+			specializations: "Врач",
+			weeks: [
+				{
+					clinicId: 2,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 3,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 4,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 5,
+					status: true,
+					content: [
+						{
+							id: 1,
+							date: "2024-11-12",
+							time: ["09:00-17:30"],
+						},
+						{
+							id: 2,
+							date: "2024-11-13",
+							time: ["09:00-17:30"],
+						},
+						{
+							id: 3,
+							date: "2024-11-14",
+							time: ["09:00-17:30"],
+						},
+						{
+							id: 4,
+							date: "2024-11-15",
+							time: ["09:00-17:30"],
+						},
+						{
+							id: 5,
+							date: "2024-11-16",
+							time: ["-"],
+						},
+						{
+							id: 6,
+							date: "2024-11-17",
+							time: ["-"],
+						},
+						{
+							id: 7,
+							date: "2024-11-18",
+							time: ["09:00-17:30"],
+						},
+					],
+				},
+			],
+		},
+		{
+			id: 9,
+			name: "Лазарева Антонина Владимировна",
+			specializations: "Врач",
+			weeks: [
+				{
+					clinicId: 2,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 3,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 4,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 5,
+					status: true,
+					content: [
+						{
+							id: 1,
+							date: "2024-11-12",
+							time: ["-"],
+						},
+						{
+							id: 2,
+							date: "2024-11-13",
+							time: ["14:40-17:00"],
+						},
+						{
+							id: 3,
+							date: "2024-11-14",
+							time: ["-"],
+						},
+						{
+							id: 4,
+							date: "2024-11-15",
+							time: ["-"],
+						},
+						{
+							id: 5,
+							date: "2024-11-16",
+							time: ["-"],
+						},
+						{
+							id: 6,
+							date: "2024-11-17",
+							time: ["-"],
+						},
+						{
+							id: 7,
+							date: "2024-11-18",
+							time: ["-"],
+						},
+					],
+				},
+			],
+		},
+		{
+			id: 10,
+			name: "Умеренкова Алефтина Николаевна",
+			specializations: "Врач-узи",
+			weeks: [
+				{
+					clinicId: 2,
+					status: true,
+					content: [
+						{
+							id: 1,
+							date: "2024-11-12",
+							time: ["09:00-16:00"],
+						},
+						{
+							id: 2,
+							date: "2024-11-13",
+							time: ["09:00-16:00"],
+						},
+						{
+							id: 3,
+							date: "2024-11-14",
+							time: ["09:00-16:00"],
+						},
+						{
+							id: 4,
+							date: "2024-11-15",
+							time: ["09:00-16:00"],
+						},
+						{
+							id: 5,
+							date: "2024-11-16",
+							time: ["-"],
+						},
+						{
+							id: 6,
+							date: "2024-11-17",
+							time: ["-"],
+						},
+						{
+							id: 7,
+							date: "2024-11-18",
+							time: ["-"],
+						},
+					],
+				},
+				{
+					clinicId: 3,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 4,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 5,
+					status: false,
+					content: [],
+				},
+			],
+		},
+		{
+			id: 11,
+			name: "Дымшакова Наталья Юрьевна",
+			specializations: "Врач-узи",
+			weeks: [
+				{
+					clinicId: 2,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 3,
+					status: true,
+					content: [
+						{
+							id: 1,
+							date: "2024-11-12",
+							time: ["09:00-16:00"],
+						},
+						{
+							id: 2,
+							date: "2024-11-13",
+							time: ["09:00-16:00"],
+						},
+						{
+							id: 3,
+							date: "2024-11-14",
+							time: ["09:00-16:00"],
+						},
+						{
+							id: 4,
+							date: "2024-11-15",
+							time: ["09:00-16:00"],
+						},
+						{
+							id: 5,
+							date: "2024-11-16",
+							time: ["-"],
+						},
+						{
+							id: 6,
+							date: "2024-11-17",
+							time: ["-"],
+						},
+						{
+							id: 7,
+							date: "2024-11-18",
+							time: ["09:00-16:00"],
+						},
+					],
+				},
+				{
+					clinicId: 4,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 5,
+					status: false,
+					content: [],
+				},
+			],
+		},
+		{
+			id: 12,
+			name: "Горшкова Марина Вячеславовна",
+			specializations: "Гинеколог",
+			weeks: [
+				{
+					clinicId: 2,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 3,
+					status: true,
+					content: [
+						{
+							id: 1,
+							date: "2024-11-12",
+							time: ["09:00-16:00"],
+						},
+						{
+							id: 2,
+							date: "2024-11-13",
+							time: ["09:00-16:00"],
+						},
+						{
+							id: 3,
+							date: "2024-11-14",
+							time: ["09:00-16:00"],
+						},
+						{
+							id: 4,
+							date: "2024-11-15",
+							time: ["09:00-16:00"],
+						},
+						{
+							id: 5,
+							date: "2024-11-16",
+							time: ["-"],
+						},
+						{
+							id: 6,
+							date: "2024-11-17",
+							time: ["-"],
+						},
+						{
+							id: 7,
+							date: "2024-11-18",
+							time: ["09:00-16:00"],
+						},
+					],
+				},
+				{
+					clinicId: 4,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 5,
+					status: false,
+					content: [],
+				},
+			],
+		},
+		{
+			id: 13,
+			name: "Куницын Анатолий Михайлович",
+			specializations: "Гинеколог",
+			weeks: [
+				{
+					clinicId: 2,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 3,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 4,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 5,
+					status: true,
+					content: [
+						{
+							id: 1,
+							date: "2024-11-12",
+							time: ["08:00-12:00"],
+						},
+						{
+							id: 2,
+							date: "2024-11-13",
+							time: ["08:00-12:00"],
+						},
+						{
+							id: 3,
+							date: "2024-11-14",
+							time: ["08:00-12:00"],
+						},
+						{
+							id: 4,
+							date: "2024-11-15",
+							time: ["08:00-12:00"],
+						},
+						{
+							id: 5,
+							date: "2024-11-16",
+							time: ["-"],
+						},
+						{
+							id: 6,
+							date: "2024-11-17",
+							time: ["-"],
+						},
+						{
+							id: 7,
+							date: "2024-11-18",
+							time: ["08:00-12:00"],
+						},
+					],
+				},
+			],
+		},
+		{
+			id: 14,
+			name: "Закирова Светлана Владимировна",
+			specializations: "Дерматовенеролог",
+			weeks: [
+				{
+					clinicId: 2,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 3,
+					status: true,
+					content: [
+						{
+							id: 1,
+							date: "2024-11-12",
+							time: ["-"],
+						},
+						{
+							id: 2,
+							date: "2024-11-13",
+							time: ["-"],
+						},
+						{
+							id: 3,
+							date: "2024-11-14",
+							time: ["-"],
+						},
+						{
+							id: 4,
+							date: "2024-11-15",
+							time: ["-"],
+						},
+						{
+							id: 5,
+							date: "2024-11-16",
+							time: ["09:00-16:00"],
+						},
+						{
+							id: 6,
+							date: "2024-11-17",
+							time: ["-"],
+						},
+						{
+							id: 7,
+							date: "2024-11-18",
+							time: ["-"],
+						},
+					],
+				},
+				{
+					clinicId: 4,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 5,
+					status: false,
+					content: [],
+				},
+			],
+		},
+		{
+			id: 15,
+			name: "Ротермель Татьяна Петровна",
+			specializations: "Детский невролог",
+			weeks: [
+				{
+					clinicId: 2,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 3,
+					status: true,
+					content: [
+						{
+							id: 1,
+							date: "2024-11-12",
+							time: ["-"],
+						},
+						{
+							id: 2,
+							date: "2024-11-13",
+							time: ["-"],
+						},
+						{
+							id: 3,
+							date: "2024-11-14",
+							time: ["09:00-16:00"],
+						},
+						{
+							id: 4,
+							date: "2024-11-15",
+							time: ["-"],
+						},
+						{
+							id: 5,
+							date: "2024-11-16",
+							time: ["-"],
+						},
+						{
+							id: 6,
+							date: "2024-11-17",
+							time: ["-"],
+						},
+						{
+							id: 7,
+							date: "2024-11-18",
+							time: ["-"],
+						},
+					],
+				},
+				{
+					clinicId: 4,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 5,
+					status: false,
+					content: [],
+				},
+			],
+		},
+		{
+			id: 16,
+			name: "Мамонтова Олеся Олеговна",
+			specializations: "Детский офтальмолог",
+			weeks: [
+				{
+					clinicId: 2,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 3,
+					status: true,
+					content: [
+						{
+							id: 1,
+							date: "2024-11-12",
+							time: ["-"],
+						},
+						{
+							id: 2,
+							date: "2024-11-13",
+							time: ["-"],
+						},
+						{
+							id: 3,
+							date: "2024-11-14",
+							time: ["-"],
+						},
+						{
+							id: 4,
+							date: "2024-11-15",
+							time: ["-"],
+						},
+						{
+							id: 5,
+							date: "2024-11-16",
+							time: ["-"],
+						},
+						{
+							id: 6,
+							date: "2024-11-17",
+							time: ["-"],
+						},
+						{
+							id: 7,
+							date: "2024-11-18",
+							time: ["09:00-16:00"],
+						},
+					],
+				},
+				{
+					clinicId: 4,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 5,
+					status: false,
+					content: [],
+				},
+			],
+		},
+		{
+			id: 17,
+			name: "Оболдин Игорь Михайлович",
+			specializations: "Кардиолог",
+			weeks: [
+				{
+					clinicId: 2,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 3,
+					status: true,
+					content: [
+						{
+							id: 1,
+							date: "2024-11-12",
+							time: ["-"],
+						},
+						{
+							id: 2,
+							date: "2024-11-13",
+							time: ["-"],
+						},
+						{
+							id: 3,
+							date: "2024-11-14",
+							time: ["-"],
+						},
+						{
+							id: 4,
+							date: "2024-11-15",
+							time: ["-"],
+						},
+						{
+							id: 5,
+							date: "2024-11-16",
+							time: ["-"],
+						},
+						{
+							id: 6,
+							date: "2024-11-17",
+							time: ["-"],
+						},
+						{
+							id: 7,
+							date: "2024-11-18",
+							time: ["09:00-16:00"],
+						},
+					],
+				},
+				{
+					clinicId: 4,
+					status: false,
+					content: [],
+				},
+				{
+					clinicId: 5,
+					status: false,
+					content: [],
+				},
+			],
+		},
+	],
 		};
 	},
 	computed: {
@@ -418,15 +1580,15 @@ export default {
 		})
 			.then((response) => {
 				if (response.data.status) {
-					this.clinics = response.data.data.sheduleClinics;
-					this.week = response.data.data.currentDays;
-					for (let key in this.clinics) {
-						if (this.clinics[key].name === "Все") {
-							this.clinics[key].status = true;
-						}
-						this.clinics[key].status = false;
-					}
-					this.shedules = response.data.data.shedules;
+					// this.clinics = response.data.data.sheduleClinics;
+					// this.week = response.data.data.currentDays;
+					// for (let key in this.clinics) {
+					// 	if (this.clinics[key].name === "Все") {
+					// 		this.clinics[key].status = true;
+					// 	}
+					// 	this.clinics[key].status = false;
+					// }
+					// this.shedules = response.data.data.shedules;
 				} else {
 					let debbugStory = {
 						title: "Ошибка.",

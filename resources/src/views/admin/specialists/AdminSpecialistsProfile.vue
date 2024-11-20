@@ -1170,6 +1170,7 @@ import IconLoad from "../../../components/icons/IconLoad.vue";
 import axios from "axios";
 
 import { RouterView, RouterLink } from "vue-router";
+import validate from "../../../services/validate";
 
 export default {
 	components: {
@@ -1834,54 +1835,8 @@ export default {
 		/* _____________________________________________________*/
 		/* 2. Работа с полями ввода модального окна             */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		// Проверка введенного текстового значения
-		checkInputText(value) {
-			/* Проверка на пустую строку */
-			if (value === "" || value === null) {
-				return {
-					status: true,
-					message: "Поле не может быть пустым.",
-				};
-			}
-
-			/* Проверка на соответствие типу string */
-			if (typeof value != "string") {
-				return {
-					status: true,
-					message: "Тип данных не совпадает.",
-				};
-			}
-
-			return {
-				status: false,
-				message: "Ошибок нет.",
-			};
-		},
-		// Проверка введенного текстового значения
-		checkInputNumber(value) {
-			/* Проверка на пустую строку */
-			if (value === "" || value === null) {
-				return {
-					status: true,
-					message: "Поле не может быть пустым.",
-				};
-			}
-			/* Проверка на соответствие типу Number */
-			if (Number.isNaN(Number(value))) {
-				return {
-					status: true,
-					message: "Тип данных не совпадает.",
-				};
-			}
-
-			return {
-				status: false,
-				message: "Ошибок нет.",
-			};
-		},
 		checkSelect(value) {
-			/* Проверка на пустую строку */
-			if (value === "" || value === "null") {
+			if (validate.checkEmpty(value)) {
 				return {
 					status: true,
 					message: "Поле не может быть пустым.",
@@ -1898,10 +1853,10 @@ export default {
 			let errorLog = {};
 			switch (inputType) {
 				case "text":
-					errorLog = this.checkInputText(this[currentName].data[dataKey].body);
+					errorLog = validate.checkInputText(this[currentName].data[dataKey].body);
 					break;
 				case "number":
-					errorLog = this.checkInputNumber(this[currentName].data[dataKey].body);
+					errorLog = validate.checkInputNumber(this[currentName].data[dataKey].body);
 					break;
 				case "select":
 					errorLog = this.checkSelect(this[currentName].data[dataKey].body);
@@ -1953,10 +1908,10 @@ export default {
 			let errorLog = {};
 			switch (inputType) {
 				case "text":
-					errorLog = this.checkInputText(this.specialist.profile.data[dataKey].body);
+					errorLog = validate.checkInputText(this.specialist.profile.data[dataKey].body);
 					break;
 				case "number":
-					errorLog = this.checkInputNumber(this.specialist.profile.data[dataKey].body);
+					errorLog = validate.checkInputNumber(this.specialist.profile.data[dataKey].body);
 					break;
 				case "select":
 					errorLog = this.checkSelect(this.specialist.profile.data[dataKey].body);

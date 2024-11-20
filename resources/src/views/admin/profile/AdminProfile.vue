@@ -29,7 +29,7 @@
 					</div>
 					<div class="block">
 						<div class="title">Отчество</div>
-						<div class="content">{{ profile.surname }}</div>
+						<div class="content">{{ profile.surname === null ? "-" : profile.surname }}</div>
 					</div>
 					<div class="block">
 						<div class="title">Возраст</div>

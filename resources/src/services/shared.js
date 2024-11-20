@@ -1,4 +1,7 @@
 export default {
+	/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+	/* |               ПОЛУЧЕНИЕ ЗНАЧЕНИЙ                  |*/
+	/* |___________________________________________________|*/
 	/* Поиск максимального id */
 	getMaxId(array) {
 		let maxId = 0;
@@ -23,6 +26,9 @@ export default {
 
 		return Number(maxOrder);
 	},
+	/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+	/* |              ОБНОВЛЕНИЕ ЗНАЧЕНИЙ                  |*/
+	/* |___________________________________________________|*/
 	/* Обновление значений id */
 	updateId(array, arrayId) {
 		let elementsCreate = array.filter((item) => {
@@ -38,6 +44,18 @@ export default {
 			}).new;
 		}
 	},
+	/* Обновление значений order */
+	updateOrders(array) {
+		let count = 0;
+
+		array.forEach((item) => {
+			count++;
+			item.order = count;
+		});
+	},
+	/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+	/* |                ОЧИСТКА ЗНАЧЕНИЙ                   |*/
+	/* |___________________________________________________|*/
 	/* Удаление элементов */
 	clearDeletes(array) {
 		let elementsDelete = array.filter((item) => {
@@ -63,13 +81,32 @@ export default {
 			item.delete = false;
 		});
 	},
-	/* Обновление значений order */
-	updateOrders(array) {
-		let count = 0;
+	/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+	/* |               ГЕНЕРАЦИЯ ЗНАЧЕНИЙ                  |*/
+	/* |___________________________________________________|*/
+	/* Генерация каптчи */
+	generateRandomString(length = 5, numbers = true, letters = true, symbols = false) {
+		let chars = "";
+		let captcha = "";
 
-		array.forEach((item) => {
-			count++;
-			item.order = count;
-		});
+		if (numbers) chars += "0123456789";
+		if (letters) chars += "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		if (symbols) chars += "!@#$%^&*()_+-=[]{}|;:,.<>?/";
+
+		for (let i = 0; i < length; i++) {
+			captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+		}
+
+		return captcha;
+	},
+	/* Генерация угла */
+	generateRandomAngle(range = 25) {
+		let chance = Math.floor(Math.random() * 10);
+
+		if (chance >= 5) {
+			return Math.floor(Math.random() * Math.abs(range));
+		} else {
+			return Math.floor(Math.random() * -Math.abs(range));
+		}
 	},
 };

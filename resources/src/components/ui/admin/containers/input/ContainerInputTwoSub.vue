@@ -114,7 +114,6 @@ export default {
 
 <style>
 fieldset.container-input-two-sub-sub {
-	margin-top: 5px;
 	border: 2px solid rgba(0, 0, 0, 0.2);
 	border-radius: 15px;
 	padding: 10px;

@@ -286,6 +286,7 @@ import IconLoad from "../../../components/icons/IconLoad.vue";
 import axios from "axios";
 import shared from "../../../services/shared";
 import sorted from "../../../services/sorted";
+import validate from "../../../services/validate";
 
 export default {
 	components: {
@@ -492,62 +493,15 @@ export default {
 		/* _____________________________________________________*/
 		/* 2. Работа с полями ввода модального окна             */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		// Проверка введенного текстового значения
-		checkInputText(value) {
-			/* Проверка на пустую строку */
-			if (value === "" || value === null) {
-				return {
-					status: true,
-					message: "Поле не может быть пустым.",
-				};
-			}
-
-			/* Проверка на соответствие типу string */
-			if (typeof value != "string") {
-				return {
-					status: true,
-					message: "Тип данных не совпадает.",
-				};
-			}
-
-			return {
-				status: false,
-				message: "Ошибок нет.",
-			};
-		},
-		// Проверка введенного текстового значения
-		checkInputNumber(value) {
-			/* Проверка на пустую строку */
-			if (value === "" || value === null) {
-				return {
-					status: true,
-					message: "Поле не может быть пустым.",
-				};
-			}
-
-			/* Проверка на соответствие типу Number */
-			if (Number.isNaN(Number(value))) {
-				console.log(value, typeof value);
-				return {
-					status: true,
-					message: "Тип данных не совпадает.",
-				};
-			}
-
-			return {
-				status: false,
-				message: "Ошибок нет.",
-			};
-		},
-		// Проверка поля имени
+		// Проверка поля ввода
 		checkModalInput(dataKey, inputType) {
 			let errorLog = {};
 			switch (inputType) {
 				case "text":
-					errorLog = this.checkInputText(this.currentClinic.data[dataKey].body);
+					errorLog = validate.checkInputText(this.currentClinic.data[dataKey].body);
 					break;
 				case "number":
-					errorLog = this.checkInputNumber(this.currentClinic.data[dataKey].body);
+					errorLog = validate.checkInputNumber(this.currentClinic.data[dataKey].body);
 					break;
 				default:
 					break;

@@ -32,9 +32,6 @@ class CreatorController extends Controller
             $rights = Rights::where('id', $userValue->rightsId)->first();
             $status = Status::where('id', $userValue->statusId)->first();
 
-            $userValue->rights = $rights->name;
-            $userValue->status = $status->name;
-
             $userValue->path = Storage::url('users/' . $userValue->filename);
         };
 

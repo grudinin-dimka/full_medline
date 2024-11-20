@@ -102,48 +102,50 @@
 					</div>
 				</div>
 			</div>
-			<container-textarea-once
-				:type="modal.type == 'create' ? 'create' : modal.style.delete ? 'delete' : 'edit'"
-			>
-				<template #title>
-					<span>ЗАГОЛОВОК</span>
-					<span v-if="currentInfoBlock.data.title.edited"> (ИЗМЕНЕНО) </span>
-				</template>
-				<template #textarea>
-					<textarea
-						rows="4"
-						placeholder="Введите заголовок"
-						autocomplete="off"
-						:class="{ error: false }"
-						v-model="currentInfoBlock.data.title.body"
-						@input="currentInfoBlock.data.title.edited = true"
-					></textarea>
-				</template>
-				<template #error>
-					<span class="error" v-if="false"> Ошибка </span>
-				</template>
-			</container-textarea-once>
-			<container-textarea-once
-				:type="modal.type == 'create' ? 'create' : modal.style.delete ? 'delete' : 'edit'"
-			>
-				<template #title>
-					<span>ОПИСАНИЕ</span>
-					<span v-if="currentInfoBlock.data.description.edited"> (ИЗМЕНЕНО) </span>
-				</template>
-				<template #textarea>
-					<textarea
-						rows="8"
-						placeholder="Введите заголовок"
-						autocomplete="off"
-						:class="{ error: false }"
-						v-model="currentInfoBlock.data.description.body"
-						@input="currentInfoBlock.data.description.edited = true"
-					></textarea>
-				</template>
-				<template #error>
-					<span class="error" v-if="false"> Ошибка </span>
-				</template>
-			</container-textarea-once>
+			<ContainerInput>
+				<container-textarea-once
+					:type="modal.type == 'create' ? 'create' : modal.style.delete ? 'delete' : 'edit'"
+				>
+					<template #title>
+						<span>ЗАГОЛОВОК</span>
+						<span v-if="currentInfoBlock.data.title.edited"> (ИЗМЕНЕНО) </span>
+					</template>
+					<template #textarea>
+						<textarea
+							rows="4"
+							placeholder="Введите заголовок"
+							autocomplete="off"
+							:class="{ error: false }"
+							v-model="currentInfoBlock.data.title.body"
+							@input="currentInfoBlock.data.title.edited = true"
+						></textarea>
+					</template>
+					<template #error>
+						<span class="error" v-if="false"> Ошибка </span>
+					</template>
+				</container-textarea-once>
+				<container-textarea-once
+					:type="modal.type == 'create' ? 'create' : modal.style.delete ? 'delete' : 'edit'"
+				>
+					<template #title>
+						<span>ОПИСАНИЕ</span>
+						<span v-if="currentInfoBlock.data.description.edited"> (ИЗМЕНЕНО) </span>
+					</template>
+					<template #textarea>
+						<textarea
+							rows="8"
+							placeholder="Введите заголовок"
+							autocomplete="off"
+							:class="{ error: false }"
+							v-model="currentInfoBlock.data.description.body"
+							@input="currentInfoBlock.data.description.edited = true"
+						></textarea>
+					</template>
+					<template #error>
+						<span class="error" v-if="false"> Ошибка </span>
+					</template>
+				</container-textarea-once>
+			</ContainerInput>
 		</template>
 		<template #footer>
 			<BlockButtons>
@@ -290,6 +292,7 @@ import Empty from "../../../components/includes/Empty.vue";
 
 import AdminAboutUsList from "./AdminAboutUsList.vue";
 
+import ContainerInput from "../../../components/ui/admin/containers/ContainerInput.vue";
 import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
 import ContainerTextareaOnce from "../../../components/ui/admin/containers/textarea/ContainerTextareaOnce.vue";
 
@@ -320,6 +323,7 @@ export default {
 		LoaderChild,
 		Empty,
 		AdminAboutUsList,
+		ContainerInput,
 		ContainerInputOnce,
 		ContainerTextareaOnce,
 		axios,

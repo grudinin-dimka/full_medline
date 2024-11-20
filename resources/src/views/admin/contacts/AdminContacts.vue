@@ -600,101 +600,18 @@ export default {
 		/* _____________________________________________________*/
 		/* 2. Работа с полями ввода модального окна             */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		/* Проверка введенного значения почты */
-		checkInputText(value) {
-			/* Проверка на пустую строку */
-			if (value === "" || value === null) {
-				return {
-					status: true,
-					message: "Поле не может быть пустым.",
-				};
-			}
-
-			/* Проверка на соответствие типу string */
-			if (typeof value != "string") {
-				return {
-					status: true,
-					message: "Тип данных не совпадает.",
-				};
-			}
-
-			return {
-				status: false,
-				message: "Ошибок нет.",
-			};
-		},
-		/* Проверка введенного текстового значения */
-		checkInputEmail(value) {
-			/* Проверка на пустую строку */
-			if (value === "" || value === null) {
-				return {
-					status: true,
-					message: "Поле не может быть пустым.",
-				};
-			}
-
-			/* Проверка на соответствие типу string */
-			if (typeof value != "string") {
-				return {
-					status: true,
-					message: "Тип данных не совпадает.",
-				};
-			}
-
-			if (!validate.checkMail(value)) {
-				return {
-					status: true,
-					message: "Почта не прошла проверку.",
-				};
-			}
-
-			return {
-				status: false,
-				message: "Ошибок нет.",
-			};
-		},
-		/* Проверка введенного текстового значения */
-		checkInputPhone(value) {
-			/* Проверка на пустую строку */
-			if (value === "" || value === null) {
-				return {
-					status: true,
-					message: "Поле не может быть пустым.",
-				};
-			}
-
-			/* Проверка на соответствие типу string */
-			if (typeof value != "string") {
-				return {
-					status: true,
-					message: "Тип данных не совпадает.",
-				};
-			}
-
-			if (!validate.checkPhone(value)) {
-				return {
-					status: true,
-					message: "Телефон не прошел проверку.",
-				};
-			}
-
-			return {
-				status: false,
-				message: "Ошибок нет.",
-			};
-		},
-		// Проверка поля имени
+		// Проверка поля ввода
 		checkModalInput(currentName, dataKey, inputType) {
 			let errorLog = {};
 			switch (inputType) {
 				case "text":
-					errorLog = this.checkInputText(this[currentName].data[dataKey].body);
+					errorLog = validate.checkInputText(this[currentName].data[dataKey].body);
 					break;
 				case "email":
-					errorLog = this.checkInputEmail(this[currentName].data[dataKey].body);
+					errorLog = validate.checkInputEmail(this[currentName].data[dataKey].body);
 					break;
 				case "phone":
-					errorLog = this.checkInputPhone(this[currentName].data[dataKey].body);
+					errorLog = validate.checkInputPhone(this[currentName].data[dataKey].body);
 					break;
 				default:
 					break;

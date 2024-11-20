@@ -429,6 +429,7 @@ import IconLoad from "../../components/icons/IconLoad.vue";
 import axios from "axios";
 import shared from "../../services/shared";
 import sorted from "../../services/sorted";
+import validate from "../../services/validate";
 
 export default {
 	components: {
@@ -602,74 +603,20 @@ export default {
 			}
 		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                    СЛАЙДЕР                        |*/
+		/* |                 МОДАЛЬНОЕ ОКНО                    |*/
 		/* |___________________________________________________|*/
 		/* _____________________________________________________*/
 		/* 1. Работа с полями ввода                             */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		// Проверка введенного значения
-		checkInputText(value) {
-			/* Проверка на пустую строку */
-			if (value == "" || value == null) {
-				return {
-					status: true,
-					message: "Поле не может быть пустым.",
-				};
-			}
-
-			/* Проверка на соответствие типу string */
-			if (typeof value !== "string") {
-				return {
-					status: true,
-					message: "Тип данных не совпадает.",
-				};
-			}
-
-			return {
-				status: false,
-				message: "Ошибок нет.",
-			};
-		},
-		// Проверка введенного значения
-		checkInputFile(value) {
-			/* Проверка на загрузку файла пользователем */
-			if (!value) {
-				return {
-					status: true,
-					message: "Поле не может быть пустым.",
-				};
-			}
-
-			/* Проверка на тип загруженного файла */
-			if (value.type !== "image/png") {
-				return {
-					status: true,
-					message: "Разрешённые типы файлов: png.",
-				};
-			}
-
-			/* Проверка на размер загруженного файла */
-			if (value.size / 1024 / 1024 > 10) {
-				return {
-					status: true,
-					message: "Разрешённые размер файлов: не более 10 МБ.",
-				};
-			}
-
-			return {
-				status: false,
-				message: "Ошибок нет.",
-			};
-		},
-		// Проверка поля имени
+		/* Проверка поля ввода */
 		checkModalInput(dataKey, inputType) {
 			let errorLog = {};
 			switch (inputType) {
 				case "text":
-					errorLog = this.checkInputText(this.currentSlide.data[dataKey].body);
+					errorLog = validate.checkInputText(this.currentSlide.data[dataKey].body);
 					break;
 				case "file":
-					errorLog = this.checkInputFile(this.$refs.fileUpload.files[0]);
+					errorLog = validate.checkInputFile(this.$refs.fileUpload.files[0]);
 					break;
 				default:
 					break;
@@ -687,7 +634,7 @@ export default {
 				return false;
 			}
 		},
-		// Проверка всех полей ввода модального окна
+		/* Проверка массива полей ввода */
 		checkModalInputsAll(inputKeys) {
 			let errorCount = 0;
 			for (let i = 0; i < inputKeys.length; i++) {
@@ -726,7 +673,7 @@ export default {
 			}
 		},
 		/* _____________________________________________________*/
-		/* 2. Модальное окно                                    */
+		/* 2. Основные действия                                 */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		// Открытие модального окна
 		openModal(type) {
@@ -761,8 +708,11 @@ export default {
 			this.clearSlideEdited();
 			this.clearSlideErrors();
 		},
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                     СЛАЙДЕР                       |*/
+		/* |___________________________________________________|*/
 		/* _____________________________________________________*/
-		/* 3. Основные действия                                 */
+		/* 1. Основные действия                                 */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		// Открытие слайда
 		openSlide(selectedSlide, type) {
@@ -821,7 +771,7 @@ export default {
 			}
 		},
 		/* _____________________________________________________*/
-		/* 4. Изменение состояний                               */
+		/* 2. Изменение состояний                               */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		// Изменение порядка выбранного слайда
 		changeSlideOrder(type) {
@@ -904,7 +854,7 @@ export default {
 			}
 		},
 		/* _____________________________________________________*/
-		/* 5. Сохранение, обновление, удаление                  */
+		/* 3. Сохранение, обновление, удаление                  */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		// Создание нового слайда
 		addSlide() {

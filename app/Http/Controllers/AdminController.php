@@ -1320,7 +1320,7 @@ class AdminController extends Controller
          ]);
 
          foreach ($shedulesValue->weeks as $sheduleWeekKey => $sheduleWeekValue) {
-            if ($sheduleWeekValue->status) {
+            if ($sheduleWeekValue->status === true) {
                foreach ($sheduleWeekValue->content as $sheduleWeekContentKey => $sheduleWeekContentValue) {
                   $day = ShedulesDay::create([
                      "date" => $sheduleWeekContentValue->date,

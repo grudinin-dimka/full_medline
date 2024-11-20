@@ -27,7 +27,6 @@ export default {
 .container-textarea-once {
 	display: flex;
 	flex-direction: column;
-	gap: 5px;
 }
 
 .container-textarea-once > label > span {

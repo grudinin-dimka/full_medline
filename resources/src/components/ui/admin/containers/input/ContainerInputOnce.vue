@@ -31,7 +31,6 @@ export default {
 .container-input-once {
 	display: flex;
 	flex-direction: column;
-	gap: 5px;
 }
 
 .container-input-once > label > span {
