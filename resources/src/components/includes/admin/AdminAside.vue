@@ -2,7 +2,7 @@
 	<aside :class="{ active: $store.state.burger.status }">
 		<div class="aside-body">
 			<template v-if="loading.sections.aside">
-				<div class="item">
+				<div class="item active">
 					<a class="item-title" href="#" @click.prevent="insertPage('profile')">
 						<svg
 							width="22"
@@ -17,7 +17,7 @@
 						ПРОФИЛЬ
 					</a>
 				</div>
-				<div class="item" v-if="isCreator">
+				<div class="item active" v-if="isCreator">
 					<a class="item-title" href="#" @click.prevent="insertPage('users')">
 						<svg
 							width="26"
@@ -32,7 +32,7 @@
 						ПОЛЬЗОВАТЕЛИ
 					</a>
 				</div>
-				<div class="item">
+				<div class="item active">
 					<a class="item-title" href="#" @click.prevent="insertPage('ehome')">
 						<svg
 							width="20"
@@ -47,7 +47,7 @@
 						ГЛАВНАЯ
 					</a>
 				</div>
-				<div class="item">
+				<div class="item active">
 					<a class="item-title" href="#" @click.prevent="insertPage('eabout')">
 						<svg
 							width="22"
@@ -62,7 +62,7 @@
 						О НАС
 					</a>
 				</div>
-				<div class="item">
+				<div class="item active">
 					<a
 						class="item-title"
 						:class="{ active: links.specialists.status }"
@@ -94,7 +94,7 @@
 						<a href="#" @click.prevent="insertSubPage('especialists-clinics')"> КЛИНИКИ </a>
 					</div>
 				</div>
-				<div class="item">
+				<div class="item active">
 					<a class="item-title" href="#" @click.prevent="insertPage('econtacts')">
 						<svg
 							width="26"
@@ -109,7 +109,7 @@
 						ЦЕНЫ
 					</a>
 				</div>
-				<div class="item">
+				<div class="item active">
 					<a class="item-title" href="#" @click.prevent="insertPage('econtacts')">
 						<svg
 							width="25"
@@ -123,6 +123,23 @@
 						</svg>
 						КОНТАКТЫ
 					</a>
+				</div>
+			</template>
+			<template v-else>
+				<div class="item load">
+					<a class="item-title" href="#">&nbsp;</a>
+				</div>
+				<div class="item load">
+					<a class="item-title" href="#">&nbsp;</a>
+				</div>
+				<div class="item load">
+					<a class="item-title" href="#">&nbsp;</a>
+				</div>
+				<div class="item load">
+					<a class="item-title" href="#">&nbsp;</a>
+				</div>
+				<div class="item load">
+					<a class="item-title" href="#">&nbsp;</a>
 				</div>
 			</template>
 		</div>
@@ -312,10 +329,23 @@ aside.active {
 	box-sizing: border-box;
 	display: flex;
 	flex-direction: column;
+}
 
+.aside-body > .item.active {
 	opacity: 0;
-
 	animation: show-bottom-to-top-15 0.3s linear forwards;
+}
+
+.aside-body > .item.load {
+	background: linear-gradient(
+		110deg,
+		rgba(236, 236, 236, 0.3) 8%,
+		rgba(245, 245, 245, 0.4) 18%,
+		rgba(236, 236, 236, 0.3) 33%
+	);
+	background-size: 200% 100%;
+	border-radius: 10px;
+	animation: 1.5s shine linear infinite;
 }
 
 .aside-body > .item:nth-child(1) {
@@ -460,6 +490,12 @@ aside a:hover {
 	}
 	100% {
 		opacity: 1;
+	}
+}
+
+@keyframes shine {
+	to {
+		background-position-x: -200%;
 	}
 }
 
