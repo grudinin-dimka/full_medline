@@ -144,7 +144,12 @@
 				<!-- Первый -->
 				<template #title-one> АВАТАР <span v-if="false">(ИЗМЕНЕНО)</span> </template>
 				<template #input-one>
-					<input type="file" autocomplete="off" ref="fileUpload" />
+					<input
+						type="file"
+						autocomplete="off"
+						ref="fileUpload"
+						:class="{ error: currentUser.errors.file.status }"
+					/>
 				</template>
 				<template #error-one>
 					<span class="error" v-if="currentUser.errors.file.status">
@@ -717,6 +722,27 @@ export default {
 		/* _____________________________________________________*/
 		/* 2. Работа с полями ввода модального окна             */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* STOP Делал проверку файла модульной, надо бы ещё сделать одновременную проверку файла, если он загружен!! */
+		chekInputFile() {
+			let checkFile = validate.checkInputFile(this.$refs.fileUpload.files[0], [
+				"image/jpeg",
+				"image/png",
+			]);
+
+			if (checkFile.status) {
+				this.currentUser.errors.file.status = true;
+				this.currentUser.errors.file.body = checkFile.message;
+
+				return checkFile;
+			} else {
+				this.currentUser.errors.file.status = false;
+
+				return {
+					status: false,
+					message: "Ошибок нет.",
+				};
+			}
+		},
 		// Проверка поля имени
 		checkModalInput(currentName, dataKey, inputType) {
 			let errorLog = {};
@@ -730,6 +756,8 @@ export default {
 				case "phone":
 					errorLog = validate.checkInputPhone(this[currentName].data[dataKey].body);
 					break;
+				case "file":
+					errorLog = this.chekInputFile();
 				default:
 					break;
 			}
@@ -751,6 +779,11 @@ export default {
 			let errorCount = 0;
 			for (let i = 0; i < inputKeys.length; i++) {
 				switch (inputKeys[i]) {
+					case "file":
+						if (this.checkModalInput(currentName, inputKeys[i], "file")) {
+							errorCount++;
+						}
+						break;
 					// Для всех остальных полей
 					default:
 						if (this.checkModalInput(currentName, inputKeys[i], "text")) {
@@ -828,43 +861,60 @@ export default {
 			this.openModal("edit", "modal");
 		},
 		saveUser() {
-			if (
-				this.checkModalInputsAll("currentUser", [
-					"family",
-					"name",
-					"dateOfBirth",
-					"email",
-					"nickname",
-				])
-			) {
-				return;
-			}
+			let checkArray = ["family", "name", "dateOfBirth", "email", "nickname"];
 
+			let formData = new FormData();
 			if (this.$refs.fileUpload.files[0]) {
-				let checkFile = validate.checkInputFile(this.$refs.fileUpload.files[0], [
-					"image/jpeg",
-					"image/png",
-				]);
-
-				if (checkFile.status) {
-					this.currentUser.errors.file.status = true;
-					this.currentUser.errors.file.body = checkFile.message;
-					return;
-				} else {
-					this.currentUser.errors.file.status = false;
-				}
+				checkArray.push("file");
+				formData.append("file", this.$refs.fileUpload.files[0]);
 			}
+
+			if (this.checkModalInputsAll("currentUser", checkArray)) return;
 
 			let user = {};
-
 			for (let key in this.currentUser.data) {
 				user[key] = this.currentUser.data[key].body;
 			}
-
-			let formData = new FormData();
 			formData.append("user", JSON.stringify(user));
 
-			this.closeModal("modal");
+			axios({
+				method: "post",
+				url: `${this.$store.state.axios.urlApi}` + `save-user`,
+				headers: {
+					Accept: "multipart/form-data",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: formData,
+			})
+				.then((response) => {
+					if (response.data.status) {
+						console.log(response.data);
+						// if (response.data.data) {
+						// 	this.specialist.profile.data.path.body = response.data.data;
+						// 	this.specialist.profile.data.filename.body = response.data.data.replace(
+						// 		"/storage/specialists/",
+						// 		""
+						// 	);
+						// }
+
+						let debbugStory = {
+							title: "Успешно!",
+							body: response.data.message,
+							type: "Completed",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					} else {
+						let debbugStory = {
+							title: "Ошибка.",
+							body: response.data.message,
+							type: "Error",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					}
+				})
+				.catch((error) => {
+					console.log(error);
+				});
 		},
 	},
 	mounted() {
@@ -877,9 +927,18 @@ export default {
 			url: `${this.$store.state.axios.urlApi}` + `get-users-all`,
 		})
 			.then((response) => {
-				this.users = response.data.data.users;
-				this.rights = response.data.data.rights;
-				this.statuses = response.data.data.statuses;
+				if (response.data.status) {
+					this.users = response.data.data.users;
+					this.rights = response.data.data.rights;
+					this.statuses = response.data.data.statuses;
+				} else {
+					let debbugStory = {
+						title: "Ошибка.",
+						body: response.data.message,
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+				}
 			})
 			.catch((error) => {
 				let debbugStory = {
@@ -892,6 +951,27 @@ export default {
 			.finally(() => {
 				this.loading.loader.users = false;
 			});
+	},
+	beforeCreate() {
+		if (localStorage.getItem("userRights") !== "creator") {
+			this.$router.push("/404");
+		} else {
+			axios({
+				method: "post",
+				headers: {
+					Accept: "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				url: `${this.$store.state.axios.urlApi}` + `chek-user-rigths`,
+			}).then((response) => {
+				if (response.data.status) {
+					if (response.data.data !== "creator") {
+						localStorage.setItem("userRights", response.data.data);
+						this.$router.push("/404");
+					}
+				}
+			});
+		}
 	},
 };
 </script>

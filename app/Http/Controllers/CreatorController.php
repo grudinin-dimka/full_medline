@@ -17,7 +17,72 @@ use App\Models\Status;
 
 class CreatorController extends Controller
 {
+    /* Проверка прав пользователя */
+    public function chekUserRigths(Request $request) {
+        if ($this->isCreator($request)) {
+            return response()->json([
+                "status" => true,
+                "message" => "Всё хорошо.",
+                "data" => "creator",
+            ]);
+        };
+
+        if ($this->isAdmin($request)) {
+            return response()->json([
+                "status" => true,
+                "message" => "Всё хорошо.",
+                "data" => "admin",
+            ]);
+        };
+
+        if ($this->isAdmin($request)) {
+            return response()->json([
+                "status" => true,
+                "message" => "Всё хорошо.",
+                "data" => "user",
+            ]);
+        };
+    }
+    /* Проверка на создателя */
+    public function isCreator(Request $request) {
+        $user = $request->user();
+
+        if (Rights::find($user->rightsId)->name === 'creator') {
+            return true;
+        } else {
+            return false;
+        };
+    }
+    /* Проверка на администратора */
+    public function isAdmin(Request $request) {
+        $user = $request->user();
+
+        if (Rights::find($user->rightsId)->name === 'admin') {
+            return true;
+        } else {
+            return false;
+        };
+    }
+    /* Проверка на обычного пользователя */
+    public function isUser(Request $request) {
+        $user = $request->user();
+
+        if (Rights::find($user->rightsId)->name === 'user') {
+            return true;
+        } else {
+            return false;
+        };
+    }
+    /* Получение списка пользователей */
     public function getUsersAll(Request $request) {
+        if (!$this->isCreator($request)) {
+            return response()->json([
+                "status" => false,
+                "message" => "Недостаточно прав.",
+                "data" => [],
+            ]);
+        };
+
         $users = User::all();
         
         if(empty($users)) {
@@ -44,5 +109,23 @@ class CreatorController extends Controller
                 "statuses" => Status::all(),
             ],
         ]);
+    }
+    /* Сохранение информации о пользователе */
+    public function saveUser(Request $request) {
+        $check = $this->isCreator($request);
+
+        if (!$check) {
+            return response()->json([
+                "status" => false,
+                "message" => "Недостаточно прав.",
+                "data" => [],   
+            ]);
+        } else {
+            return response()->json([
+                "status" => true,
+                "message" => "Всё хорошо.",
+                "data" => [],
+            ]);
+        };
     }
 }

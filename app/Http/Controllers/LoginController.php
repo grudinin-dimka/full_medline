@@ -11,6 +11,7 @@ use Illuminate\Validation\ValidationException;
 use App\Models\User;
 use App\Models\Slide;
 use App\Models\Footer;
+use App\Models\Rights;
 
 class LoginController extends Controller
 {
@@ -76,12 +77,13 @@ class LoginController extends Controller
          "status" => true,
          "message" => "Авторизация пройдена.",
          "result" => (object) [
-         "token" => $user->createToken('auth_token')->plainTextToken,
-         "user" => (object) [
-            "id" => $user->id,
-            "nickname" => $user->nickname,
-            "email" => $user->email,
-         ],
+            "token" => $user->createToken('auth_token')->plainTextToken,
+            "user" => (object) [
+               "id" => $user->id,
+               "nickname" => $user->nickname,
+               "email" => $user->email,
+               "rights" => Rights::find($user->rightsId)->name,
+            ],
          ],
       ]);
    }  

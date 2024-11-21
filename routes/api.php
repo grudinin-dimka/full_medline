@@ -109,4 +109,7 @@ Route::post('/get-shedules-all', [HomeController::class, 'getShedulesAll']);
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 /* |                    СОЗДАТЕЛЬ                      |*/
 /* |___________________________________________________|*/
+Route::post('/chek-user-rigths', [CreatorController::class, 'chekUserRigths'])->middleware('auth:sanctum');
+Route::post('/is-creator', [CreatorController::class, 'isCreator'])->middleware('auth:sanctum');
 Route::post('/get-users-all', [CreatorController::class, 'getUsersAll'])->middleware('auth:sanctum');
+Route::post('/save-user', [CreatorController::class, 'saveUser'])->middleware('auth:sanctum');

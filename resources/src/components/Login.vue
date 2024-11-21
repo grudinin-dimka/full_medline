@@ -146,6 +146,7 @@ export default {
 							localStorage.setItem("userNickname", response.data.result.user.nickname);
 							localStorage.setItem("userName", response.data.result.user.name);
 							localStorage.setItem("userEmail", response.data.result.user.email);
+							localStorage.setItem("userRights", response.data.result.user.rights);
 
 							axios.defaults.headers.common["Accept"] = "application/json";
 							axios.defaults.headers.common[
