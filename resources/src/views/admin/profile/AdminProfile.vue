@@ -182,14 +182,18 @@ export default {
 }
 
 .profile-info > .item.avatar {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
 	width: 400px;
 	height: 400px;
 	padding: 20px 50px;
 }
 
 .profile-info > .item.avatar > .img {
-	width: 100%;
-	height: 100%;
+	width: 400px;
+	height: 400px;
 	border-radius: 300px;
 	background-size: cover;
 	background-position: center center;
@@ -227,5 +231,28 @@ export default {
 
 .item > .body > .block > .content {
 	font-size: 20px;
+}
+
+@media screen and (width <= 1425px) {
+	.profile-info > .item.avatar {
+		width: 100%;
+	}
+}
+
+@media screen and (width <= 600px) {
+	.profile-info > .item.avatar {
+		width: 100%;
+		height: auto;
+		padding: 20px 0px;
+	}
+
+	.profile-info > .item.avatar > .img {
+		width: 300px;
+		height: 300px;
+	}
+
+	.profile-info > .item:not(.avatar) {
+		flex: 1 0 200px;
+	}
 }
 </style>

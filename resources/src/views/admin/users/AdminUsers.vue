@@ -194,7 +194,7 @@
 						:class="{ error: currentUser.errors.email.status }"
 						v-model="currentUser.data.email.body"
 						@input="currentUser.data.email.edited = true"
-						@blur="checkModalInput('currentUser', 'email', 'text')"
+						@blur="checkModalInput('currentUser', 'email', 'email')"
 					/>
 				</template>
 				<template #error-one>
@@ -252,7 +252,9 @@
 		</template>
 		<template #footer>
 			<BlockButtons>
-				<ButtonDefault @click="saveUser"> Сохранить </ButtonDefault>
+				<ButtonDefault @click="saveUser" :disabled="disabled.users.save">
+					Сохранить
+				</ButtonDefault>
 			</BlockButtons>
 		</template>
 	</admin-modal>
@@ -266,13 +268,13 @@
 		:modal="subModalPassword"
 	>
 		<template #title></template>
-		<template #body> </template>
+		<template #body></template>
 		<template #footer>
 			<block-buttons-wide>
-				<button-remove-wide :type="'default'">Обновить пароль</button-remove-wide>
-				<button-remove-wide :type="'other'" @click="closeModal('subModalDelete')">
-					Отменить
-				</button-remove-wide>
+				<button-password-wide :type="'default'">Сбросить</button-password-wide>
+				<button-password-wide :type="'other'" @click="closeModal('subModalPassword')">
+					Закрыть
+				</button-password-wide>
 			</block-buttons-wide>
 		</template>
 	</admin-sub-modal>
@@ -383,7 +385,7 @@
 						<IconLockClose
 							:width="22"
 							:height="22"
-							:type="'default'"
+							:type="'delete'"
 							v-if="user.statusId === 2"
 						></IconLockClose>
 					</div>
@@ -433,6 +435,7 @@ import BlockButtonsWide from "../../../components/ui/admin/blocks/BlockButtonsWi
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 import ButtonRemoveWide from "../../../components/ui/admin/buttons/ButtonRemoveWide.vue";
 import ButtonDefaultWide from "../../../components/ui/admin/buttons/ButtonDefaultWide.vue";
+import ButtonPasswordWide from "../../../components/ui/admin/buttons/ButtonPasswordWide.vue";
 
 import axios from "axios";
 import shared from "../../../services/shared";
@@ -461,10 +464,18 @@ export default {
 		ButtonDefault,
 		ButtonRemoveWide,
 		ButtonDefaultWide,
+		ButtonPasswordWide,
 		axios,
 	},
 	data() {
 		return {
+			disabled: {
+				users: {
+					save: false,
+					delete: false,
+					create: false,
+				},
+			},
 			modal: {
 				title: "",
 				status: false,
@@ -583,6 +594,10 @@ export default {
 						body: "",
 						status: false,
 					},
+					filename: {
+						body: "",
+						status: false,
+					},
 					path: {
 						body: "",
 						status: false,
@@ -593,6 +608,10 @@ export default {
 					},
 				},
 				data: {
+					id: {
+						body: "",
+						edited: false,
+					},
 					family: {
 						body: "",
 						edited: false,
@@ -784,6 +803,11 @@ export default {
 							errorCount++;
 						}
 						break;
+					case "email":
+						if (this.checkModalInput(currentName, inputKeys[i], "email")) {
+							errorCount++;
+						}
+						break;
 					// Для всех остальных полей
 					default:
 						if (this.checkModalInput(currentName, inputKeys[i], "text")) {
@@ -866,7 +890,8 @@ export default {
 			let formData = new FormData();
 			if (this.$refs.fileUpload.files[0]) {
 				checkArray.push("file");
-				formData.append("file", this.$refs.fileUpload.files[0]);
+				formData.append("image", this.$refs.fileUpload.files[0]);
+				formData.append("formats", ["png", "jpg", "jpeg"]);
 			}
 
 			if (this.checkModalInputsAll("currentUser", checkArray)) return;
@@ -876,6 +901,8 @@ export default {
 				user[key] = this.currentUser.data[key].body;
 			}
 			formData.append("user", JSON.stringify(user));
+
+			this.disabled.users.save = true;
 
 			axios({
 				method: "post",
@@ -888,14 +915,24 @@ export default {
 			})
 				.then((response) => {
 					if (response.data.status) {
-						console.log(response.data);
-						// if (response.data.data) {
-						// 	this.specialist.profile.data.path.body = response.data.data;
-						// 	this.specialist.profile.data.filename.body = response.data.data.replace(
-						// 		"/storage/specialists/",
-						// 		""
-						// 	);
-						// }
+						let currentUser = this.users.find((user) => {
+							if (user.id === this.currentUser.data.id.body) {
+								return user;
+							}
+						});
+
+						for (let key in currentUser) {
+							if (key === "created_at" || key === "updated_at") continue;
+							currentUser[key] = this.currentUser.data[key].body;
+						}
+
+						if (response.data.data.path) {
+							currentUser.path = response.data.data.path;
+							currentUser.filename = response.data.data.path.replace("/storage/users/", "");
+						}
+
+						this.closeModal("modal");
+						this.disabled.users.save = false;
 
 						let debbugStory = {
 							title: "Успешно!",
@@ -904,6 +941,8 @@ export default {
 						};
 						this.$store.commit("debuggerState", debbugStory);
 					} else {
+						this.disabled.users.save = false;
+
 						let debbugStory = {
 							title: "Ошибка.",
 							body: response.data.message,
@@ -913,7 +952,14 @@ export default {
 					}
 				})
 				.catch((error) => {
-					console.log(error);
+					this.disabled.users.save = false;
+
+					let debbugStory = {
+						title: "Ошибка.",
+						body: "Не удалось сохранить изменения...",
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
 				});
 		},
 	},

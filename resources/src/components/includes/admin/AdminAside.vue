@@ -333,7 +333,7 @@ aside.active {
 
 .aside-body > .item.active {
 	opacity: 0;
-	animation: show-bottom-to-top-15 0.3s linear forwards;
+	animation: show-bottom-to-top-15 0.15s ease-out forwards;
 }
 
 .aside-body > .item.load {
@@ -353,27 +353,30 @@ aside.active {
 }
 
 .aside-body > .item:nth-child(2) {
-	animation-delay: 0.1s;
+	animation-delay: 0.05s;
 }
 
 .aside-body > .item:nth-child(3) {
-	animation-delay: 0.2s;
+	animation-delay: 0.1s;
 }
 
 .aside-body > .item:nth-child(4) {
-	animation-delay: 0.3s;
+	animation-delay: 0.15s;
 }
 
 .aside-body > .item:nth-child(5) {
-	animation-delay: 0.4s;
+	animation: show-bottom-to-top-15 0.25s ease-out forwards;
+	animation-delay: 0.2s;
 }
 
 .aside-body > .item:nth-child(6) {
-	animation-delay: 0.5s;
+	animation: show-bottom-to-top-15 0.4s ease-out forwards;
+	animation-delay: 0.25s;
 }
 
 .aside-body > .item:nth-child(7) {
-	animation-delay: 0.6s;
+	animation: show-bottom-to-top-15 0.55s ease-out forwards;
+	animation-delay: 0.3s;
 }
 
 .item-title {

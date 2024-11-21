@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\Slide;
 use App\Models\Footer;
 use App\Models\Rights;
+use App\Models\Status;
 
 class LoginController extends Controller
 {
@@ -70,6 +71,12 @@ class LoginController extends Controller
          "status" => false,
          "message" => "Неверный логин или пароль.",
          "token" => "",
+      ]);
+
+      if (Status::find($user->statusId)->name == 'passive' ) return response()->json([
+         "status" => false,
+         "message" => "Пользователь заблокирован.",
+         "data" => [],
       ]);
 
       $user->tokens()->delete();

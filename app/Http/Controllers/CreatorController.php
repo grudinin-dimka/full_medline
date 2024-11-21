@@ -121,10 +121,45 @@ class CreatorController extends Controller
                 "data" => [],   
             ]);
         } else {
+            if ($request->hasFile('image')) {
+                $validated = validator($request->all(), [
+                   'image' => [
+                      'required',
+                      File::types($request->formats)->max(10 * 1024),
+                   ],
+                ]);
+                if ($validated->fails()) return response()->json([
+                   "status" => false,
+                   "message" => "Файл не прошёл проверку.",
+                   "data" => null,
+                ]);
+                $path = $request->file('image')->store(
+                   'public/users'
+                );
+            } else {
+                $path = null;
+            };
+
+            $userData = json_decode($request->user);
+            $user = User::find($userData->id);
+            $user->family = $userData->family;
+            $user->name = $userData->name;
+            $user->surname = $userData->surname;
+            $user->dateOfBirth = $userData->dateOfBirth;
+            $user->nickname = $userData->nickname;
+            $user->email = $userData->email;
+            $user->statusId = $userData->statusId;
+            $user->rightsId = $userData->rightsId;
+            if ($path) $user->filename = basename($path);
+            if (!empty($userData->password)) $user->password = Hash::make($userData->password);
+            $user->save();            
+            
             return response()->json([
                 "status" => true,
-                "message" => "Всё хорошо.",
-                "data" => [],
+                "message" => "Данные обновлены.",
+                "data" => (object) [
+                    "path" => $path ? Storage::url($path) : null,
+                ],
             ]);
         };
     }
