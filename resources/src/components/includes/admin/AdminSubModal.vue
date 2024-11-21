@@ -55,7 +55,6 @@ export default {
 			required: true,
 			default: () => {},
 		},
-		required: true,
 		default: () => {
 			return {
 				status: false,

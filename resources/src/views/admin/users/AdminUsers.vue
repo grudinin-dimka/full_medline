@@ -286,10 +286,10 @@
 		@touchCloseModal="closeModal('subModalDelete')"
 		:modal="subModalDelete"
 	>
-		<template #title> <span>УДАЛЕНИЕ</span> </template>
+		<template #title>УДАЛЕНИЕ</template>
 		<template #body>
 			<div class="sub-modal-text">
-				Вы действительно хотите удалить пользователя "
+				Вы действительно хотите <span class="delete">удалить</span> пользователя "
 				<span class="delete">
 					{{
 						currentUser.data.family.body +
@@ -321,7 +321,11 @@
 		<template #title>БЛОКИРОВКА</template>
 		<template #body>
 			<div class="sub-modal-text">
-				Вы действительно хотите заблокировать пользователя "
+				Вы действительно хотите
+				<span class="block">
+					{{ currentUser.data.statusId.body === 1 ? "заблокировать" : "разблокировать" }}
+				</span>
+				пользователя "
 				<span class="block">
 					{{
 						currentUser.data.family.body +
@@ -501,10 +505,10 @@ export default {
 				type: null,
 				style: {
 					create: false,
-					delete: false,
+					delete: true,
 				},
 				modules: {
-					title: true,
+					title: false,
 					buttons: {
 						hide: false,
 						close: true,
@@ -517,13 +521,13 @@ export default {
 			subModalDelete: {
 				title: "",
 				status: false,
-				type: null,
+				type: "delete",
 				style: {
 					create: false,
 					delete: true,
 				},
 				modules: {
-					title: true,
+					title: false,
 					buttons: {
 						hide: false,
 						close: true,
@@ -542,7 +546,7 @@ export default {
 					delete: false,
 				},
 				modules: {
-					title: true,
+					title: false,
 					buttons: {
 						hide: false,
 						close: true,
