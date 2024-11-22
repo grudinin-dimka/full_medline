@@ -351,33 +351,33 @@ aside.active {
 	animation: 1.5s shine linear infinite;
 }
 
-.aside-body > .item:nth-child(1) {
+.aside-body > .item.active:nth-child(1) {
 	animation-delay: 0s;
 }
 
-.aside-body > .item:nth-child(2) {
+.aside-body > .item.active:nth-child(2) {
 	animation-delay: 0.05s;
 }
 
-.aside-body > .item:nth-child(3) {
+.aside-body > .item.active:nth-child(3) {
 	animation-delay: 0.1s;
 }
 
-.aside-body > .item:nth-child(4) {
+.aside-body > .item.active:nth-child(4) {
 	animation-delay: 0.15s;
 }
 
-.aside-body > .item:nth-child(5) {
+.aside-body > .item.active:nth-child(5) {
 	animation: show-bottom-to-top-15 0.25s ease-out forwards;
 	animation-delay: 0.2s;
 }
 
-.aside-body > .item:nth-child(6) {
+.aside-body > .item.active:nth-child(6) {
 	animation: show-bottom-to-top-15 0.4s ease-out forwards;
 	animation-delay: 0.25s;
 }
 
-.aside-body > .item:nth-child(7) {
+.aside-body > .item.active:nth-child(7) {
 	animation: show-bottom-to-top-15 0.55s ease-out forwards;
 	animation-delay: 0.3s;
 }

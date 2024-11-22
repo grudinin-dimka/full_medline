@@ -47,8 +47,7 @@ const router = createRouter({
 					path: "prices",
 					name: "prices",
 					meta: { title: "Цены" },
-					redirect: { name: "home" },
-					component: () => import("../views/main/MainPrices.vue"),
+					component: () => import("../views/main/prices/MainPrices.vue"),
 				},
 				{
 					path: "schedule",

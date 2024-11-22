@@ -164,7 +164,7 @@
 
 	<info-bar>
 		<template #title>Главная</template>
-		<template #addreas>home</template>
+		<template #addreas></template>
 	</info-bar>
 
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->

@@ -415,9 +415,9 @@
 		></LoaderChild>
 
 		<!-- TODO Добавить создание пользователя -->
-		<!-- <BlockButtons>
-			<ButtonDefault @click=""> Добавить </ButtonDefault>
-		</BlockButtons> -->
+		<BlockButtons>
+			<ButtonDefault @click="openModal('create', 'modal')"> Добавить </ButtonDefault>
+		</BlockButtons>
 	</block-once>
 </template>
 

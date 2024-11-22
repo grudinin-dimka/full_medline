@@ -21,8 +21,9 @@ export default {
 				{ id: "1", title: "Главная", name: "home", href: "home" },
 				{ id: "2", title: "О Нас", name: "about", href: "about" },
 				{ id: "3", title: "Специалисты", name: "all", href: "/specialists" },
-				{ id: "4", title: "Расписание", name: "schedule-all", href: "/schedule" },
-				{ id: "5", title: "Контакты", name: "contacts", href: "/contacts" },
+				{ id: "4", title: "Цены", name: "prices", href: "/prices" },
+				{ id: "5", title: "Расписание", name: "schedule-all", href: "/schedule" },
+				{ id: "6", title: "Контакты", name: "contacts", href: "/contacts" },
 			],
 		};
 	},
@@ -47,7 +48,7 @@ export default {
 <style scoped>
 nav {
 	display: grid;
-	grid-template-columns: repeat(5, 1fr);
+	grid-template-columns: repeat(6, 1fr);
 
 	padding: 10px;
 	margin: 0px 30px;

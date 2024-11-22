@@ -1770,7 +1770,7 @@ export default {
 	flex: 1 0 350px;
 
 	border-radius: 10px;
-	padding: 20px;
+	padding: 15px;
 
 	border: 2px solid var(--input-border-color-inactive);
 	background-color: rgba(235, 235, 235, 0);
