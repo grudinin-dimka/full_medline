@@ -199,6 +199,8 @@ export default {
 		},
 	},
 	mounted() {
+		this.$store.commit("setDebuggerClose");
+
 		if (localStorage.getItem("token")) {
 			// Проверка токена
 			axios({

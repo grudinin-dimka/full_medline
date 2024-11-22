@@ -23,7 +23,7 @@ export default {
 
 <style scoped>
 button {
-   flex: 1 0 160px;
+	flex: 1 0 160px;
 	cursor: pointer;
 	display: flex;
 	justify-content: center;
@@ -58,8 +58,8 @@ button.other:hover {
 }
 
 .loader {
-	width: 30px;
-	height: 30px;
+	width: 26px;
+	height: 26px;
 	border: 3px solid #fff;
 	border-bottom-color: transparent;
 	border-radius: 50%;

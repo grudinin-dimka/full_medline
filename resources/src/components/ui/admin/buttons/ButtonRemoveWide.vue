@@ -55,8 +55,8 @@ button.other:hover {
 }
 
 .loader {
-	width: 30px;
-	height: 30px;
+	width: 26px;
+	height: 26px;
 	border: 3px solid #fff;
 	border-bottom-color: transparent;
 	border-radius: 50%;

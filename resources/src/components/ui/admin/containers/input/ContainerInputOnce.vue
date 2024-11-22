@@ -5,6 +5,7 @@
 			create: type === 'create',
 			delete: type === 'delete',
 			disabled: type === 'disabled',
+			password: type === 'password',
 		}"
 	>
 		<label>
@@ -63,6 +64,12 @@ export default {
 	background-color: rgba(240, 240, 240, 1);
 }
 
+.container-input-once.password > :is(input, select):focus {
+	border: 2px solid #cebc40;
+	caret-color: #cebc40;
+	background-color: white;
+}
+
 .container-input-once.disabled > label > span {
 	color: #969696;
 }
@@ -107,7 +114,7 @@ export default {
 	border: 2px solid var(--input-border-color-active);
 }
 
-.container-input-once > input.error {
+.container-input-once:is(.create, .delete, .disabled, .password) > input.error {
 	background-color: var(--input-background-color-error);
 	border: 2px solid var(--input-border-color-error);
 

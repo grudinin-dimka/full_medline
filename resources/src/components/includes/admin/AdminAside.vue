@@ -141,6 +141,9 @@
 				<div class="item load">
 					<a class="item-title" href="#">&nbsp;</a>
 				</div>
+				<div class="item load">
+					<a class="item-title" href="#">&nbsp;</a>
+				</div>
 			</template>
 		</div>
 		<div class="aside-footer">

@@ -84,12 +84,9 @@ Route::post('/save-contacts-changes', [AdminController::class, 'saveContactsChan
 /* _____________________________________________________*/
 /* Специалисты                                          */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-/* 1. Врачи                                             */
-// Общее сохранение                                    
+/* 1. Специалисты                                       */
 Route::post('/save-specialists-changes', [AdminController::class, 'saveSpecialistsChanges'])->middleware('auth:sanctum');
-// Модульное сохранение                                    
 Route::post('/save-specialist-modular', [AdminController::class, 'saveSpecialistModular'])->middleware('auth:sanctum');
-// Добавление нового специалиста                                    
 Route::post('/add-specialist', [AdminController::class, 'addSpecialist'])->middleware('auth:sanctum');
 /* 2. Специализации                                     */
 Route::post('/save-specializations-changes', [AdminController::class, 'saveSpecializationsChanges'])->middleware('auth:sanctum');
@@ -99,17 +96,24 @@ Route::post('/save-clinics-changes', [AdminController::class, 'saveClinicsChange
 Route::post('/save-educations-changes', [AdminController::class, 'saveEducationsChanges'])->middleware('auth:sanctum');
 /* 5. Прошлые работы                                    */
 Route::post('/save-works-changes', [AdminController::class, 'saveWorkChanges'])->middleware('auth:sanctum');
-/* 5. Прошлые работы                                    */
+/* 6. Прошлые работы                                    */
 Route::post('/save-certificates-changes', [AdminController::class, 'saveCertificatesChanges'])->middleware('auth:sanctum');
 /* _____________________________________________________*/
-/* Расписание                                          */
+/* Расписание                                           */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 Route::post('/save-shedules-all', [AdminController::class, 'saveShedulesAll']);
 Route::post('/get-shedules-all', [HomeController::class, 'getShedulesAll']);
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 /* |                    СОЗДАТЕЛЬ                      |*/
 /* |___________________________________________________|*/
+/* 1. Права                                             */
 Route::post('/chek-user-rigths', [CreatorController::class, 'chekUserRigths'])->middleware('auth:sanctum');
 Route::post('/is-creator', [CreatorController::class, 'isCreator'])->middleware('auth:sanctum');
+/* 2. Пользователи                                      */
 Route::post('/get-users-all', [CreatorController::class, 'getUsersAll'])->middleware('auth:sanctum');
 Route::post('/save-user', [CreatorController::class, 'saveUser'])->middleware('auth:sanctum');
+Route::post('/set-user-password', [CreatorController::class, 'setUserPassword'])->middleware('auth:sanctum');
+Route::post('/set-user-status', [CreatorController::class, 'setUserStatus'])->middleware('auth:sanctum');
+
+
+

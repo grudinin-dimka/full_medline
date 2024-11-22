@@ -45,18 +45,18 @@ button.default:hover {
 }
 
 button.other {
-	color: #bbab30;
-	background-color: #fff9cb;
+	color: #cf913e;
+	background-color: #ffe9cd;
 }
 
 button.other:hover {
-	color: #bbab30;
-	background-color: #f5efc2;
+	color: #cf913e;
+	background-color: #f5e1c6;
 }
 
 .loader {
-	width: 30px;
-	height: 30px;
+	width: 26px;
+	height: 26px;
 	border: 3px solid #fff;
 	border-bottom-color: transparent;
 	border-radius: 50%;

@@ -72,6 +72,8 @@ export default {
 		this.$store.commit("setUserNickname", localStorage.getItem("userNickname"));
 		this.$store.commit("setUserName", localStorage.getItem("userName"));
 		this.$store.commit("setUserEmail", localStorage.getItem("userEmail"));
+
+		this.$store.commit("setDebuggerClose");
 	},
 };
 </script>

@@ -104,33 +104,7 @@
 				<!-- Второй -->
 				<template #title-two>ГЕНЕРАТОР</template>
 				<template #input-two>
-					<div class="password-generator">
-						<div class="password">{{ captcha }}</div>
-						<div class="copy" @click="copyCaptcha(captcha)">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								height="24px"
-								viewBox="0 -960 960 960"
-								width="24px"
-							>
-								<path
-									d="M360-240q-33 0-56.5-23.5T280-320v-480q0-33 23.5-56.5T360-880h360q33 0 56.5 23.5T800-800v480q0 33-23.5 56.5T720-240H360Zm0-80h360v-480H360v480ZM200-80q-33 0-56.5-23.5T120-160v-560h80v560h440v80H200Zm160-240v-480 480Z"
-								/>
-							</svg>
-						</div>
-						<div class="generator" @click="setCaptcha(captcha)">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								height="24px"
-								viewBox="0 -960 960 960"
-								width="24px"
-							>
-								<path
-									d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-110h80v280H520v-80h168q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q77 0 139-44t87-116h84q-28 106-114 173t-196 67Z"
-								/>
-							</svg>
-						</div>
-					</div>
+					<PasswordGenerator />
 				</template>
 				<template #error-two>
 					<span class="error" v-if="false"> Ошибка </span>
@@ -268,10 +242,37 @@
 		:modal="subModalPassword"
 	>
 		<template #title></template>
-		<template #body></template>
+		<template #body>
+			<container-input>
+				<PasswordGenerator />
+				<container-input-once :type="'password'">
+					<template #title></template>
+					<template #input>
+						<input
+							type="text"
+							placeholder="Введите пароль"
+							:class="{ error: userPassword.errors.password.status }"
+							v-model="userPassword.data.password.body"
+							@blur="checkModalInput('userPassword', 'password', 'text')"
+						/>
+					</template>
+					<template #error>
+						<span class="error" v-if="userPassword.errors.password.status">
+							{{ userPassword.errors.password.body }}
+						</span>
+					</template>
+				</container-input-once>
+			</container-input>
+		</template>
 		<template #footer>
 			<block-buttons-wide>
-				<button-password-wide :type="'default'">Сбросить</button-password-wide>
+				<button-password-wide
+					:type="'default'"
+					@click="saveUserPassword"
+					:disabled="disabled.userPassword.save"
+				>
+					Сбросить
+				</button-password-wide>
 				<button-password-wide :type="'other'" @click="closeModal('subModalPassword')">
 					Закрыть
 				</button-password-wide>
@@ -339,7 +340,13 @@
 		</template>
 		<template #footer>
 			<block-buttons-wide>
-				<ButtonDefaultWide :type="'default'">Да</ButtonDefaultWide>
+				<ButtonDefaultWide
+					:type="'default'"
+					@click="saveUserBlock"
+					:disabled="disabled.userBlock.save"
+				>
+					Да
+				</ButtonDefaultWide>
 				<ButtonDefaultWide :type="'other'" @click="closeModal('subModalBlock')">
 					Нет
 				</ButtonDefaultWide>
@@ -372,7 +379,7 @@
 					<div class="icon edit" @click="editUser(user)">
 						<IconEdit :width="24" :height="24" :type="'edit'"></IconEdit>
 					</div>
-					<div class="icon admin" @click="openModal('edit', 'subModalPassword')">
+					<div class="icon admin" @click="editUserPassword(user)">
 						<IconPassword :width="22" :height="22" :type="'admin'"></IconPassword>
 					</div>
 					<div
@@ -393,9 +400,10 @@
 							v-if="user.statusId === 2"
 						></IconLockClose>
 					</div>
-					<div class="icon delete" @click="editUserDelete(user)">
+					<!-- TODO Добавить удаление пользователя -->
+					<!-- <div class="icon delete" @click="editUserDelete(user)">
 						<IconRemove :width="24" :height="24" :type="'delete'"></IconRemove>
-					</div>
+					</div> -->
 				</div>
 			</div>
 		</div>
@@ -406,9 +414,10 @@
 			@loaderChildAfterLeave="loaderChildAfterLeave"
 		></LoaderChild>
 
-		<BlockButtons>
+		<!-- TODO Добавить создание пользователя -->
+		<!-- <BlockButtons>
 			<ButtonDefault @click=""> Добавить </ButtonDefault>
-		</BlockButtons>
+		</BlockButtons> -->
 	</block-once>
 </template>
 
@@ -416,6 +425,7 @@
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
 import AdminModal from "../../../components/includes/admin/AdminModal.vue";
 import AdminSubModal from "../../../components/includes/admin/AdminSubModal.vue";
+import PasswordGenerator from "../../../components/includes/PasswordGenerator.vue";
 
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTitle from "../../../components/ui/admin/blocks/BlockTitle.vue";
@@ -442,7 +452,6 @@ import ButtonDefaultWide from "../../../components/ui/admin/buttons/ButtonDefaul
 import ButtonPasswordWide from "../../../components/ui/admin/buttons/ButtonPasswordWide.vue";
 
 import axios from "axios";
-import shared from "../../../services/shared";
 import validate from "../../../services/validate";
 
 export default {
@@ -450,6 +459,7 @@ export default {
 		LoaderChild,
 		AdminModal,
 		AdminSubModal,
+		PasswordGenerator,
 		BlockOnce,
 		BlockTitle,
 		IconLoad,
@@ -478,6 +488,12 @@ export default {
 					save: false,
 					delete: false,
 					create: false,
+				},
+				userPassword: {
+					save: false,
+				},
+				userBlock: {
+					save: false,
 				},
 			},
 			modal: {
@@ -662,7 +678,20 @@ export default {
 					},
 				},
 			},
-			captcha: null,
+			userPassword: {
+				errors: {
+					password: {
+						body: "",
+						status: false,
+					},
+				},
+				data: {
+					password: {
+						body: "",
+						edited: false,
+					},
+				},
+			},
 			users: [],
 			rights: [],
 			statuses: [],
@@ -719,28 +748,6 @@ export default {
 		closeModal(name = "modal") {
 			this[name].status = false;
 			document.body.classList.remove("modal-open");
-		},
-		/* Копирование капчи */
-		copyCaptcha(captcha) {
-			if (navigator.clipboard.writeText(captcha)) {
-				let debbugStory = {
-					title: "Успешно!",
-					body: "Пароль скопирован в буфер обмена.",
-					type: "Completed",
-				};
-				this.$store.commit("debuggerState", debbugStory);
-			} else {
-				let debbugStory = {
-					title: "Ошибка.",
-					body: "Не удалось скопировать пароль...",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
-			}
-		},
-		/* Установка новой капчи */
-		setCaptcha() {
-			this.captcha = shared.generateRandomString(16, true, true, true);
 		},
 		/* _____________________________________________________*/
 		/* 2. Работа с полями ввода модального окна             */
@@ -830,7 +837,7 @@ export default {
 		/* Очистка содержимого модального окна */
 		clearModalData(name = "currentInfoBlock") {
 			for (let key in this[name].data) {
-				if (key === "phones" || key === "mails") {
+				if (typeof this[name].data[key].body === "array") {
 					this[name].data[key].body = [];
 					continue;
 				}
@@ -857,6 +864,16 @@ export default {
 		/* _____________________________________________________*/
 		/* 1. Основные действия                                 */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		editUserPassword(user) {
+			for (let key in this.currentUser.data) {
+				this.currentUser.data[key].body = user[key];
+			}
+
+			this.clearModalErrors("userPassword");
+			this.clearModalData("userPassword");
+
+			this.openModal("edit", "subModalPassword");
+		},
 		/* Редактирование блокировки пользователя */
 		editUserBlock(user) {
 			for (let key in this.currentUser.data) {
@@ -877,8 +894,6 @@ export default {
 		},
 		/* Редактирование информации пользователя */
 		editUser(user) {
-			this.captcha = shared.generateRandomString(16, true, true, true);
-
 			for (let key in this.currentUser.data) {
 				this.currentUser.data[key].body = user[key];
 			}
@@ -887,6 +902,112 @@ export default {
 			this.clearModalEdited("currentUser");
 
 			this.openModal("edit", "modal");
+		},
+		saveUserBlock() {
+			let formData = new FormData();
+			formData.append("userId", JSON.stringify(this.currentUser.data.id.body));
+
+			this.disabled.userBlock.save = true;
+
+			axios({
+				method: "post",
+				url: `${this.$store.state.axios.urlApi}` + `set-user-status`,
+				headers: {
+					Accept: "multipart/form-data",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: formData,
+			})
+				.then((response) => {
+					if (response.data.status) {
+						let currentUser = this.users.find((user) => {
+							if (user.id === this.currentUser.data.id.body) {
+								return user;
+							}
+						});
+						currentUser.statusId = response.data.data;
+
+						this.closeModal("subModalBlock");
+						this.disabled.userBlock.save = false;
+
+						let debbugStory = {
+							title: "Успешно!",
+							body: response.data.message,
+							type: "Completed",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					} else {
+						this.disabled.userBlock.save = false;
+
+						let debbugStory = {
+							title: "Ошибка.",
+							body: response.data.message,
+							type: "Error",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					}
+				})
+				.catch((error) => {
+					this.disabled.userBlock.save = false;
+
+					let debbugStory = {
+						title: "Ошибка.",
+						body: "Не удалось обновить статус...",
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+				});
+		},
+		saveUserPassword() {
+			if (this.checkModalInput("userPassword", "password", "text")) return;
+
+			let formData = new FormData();
+			formData.append("password", JSON.stringify(this.userPassword.data.password.body));
+			formData.append("userId", JSON.stringify(this.currentUser.data.id.body));
+
+			this.disabled.userPassword.save = true;
+
+			axios({
+				method: "post",
+				url: `${this.$store.state.axios.urlApi}` + `set-user-password`,
+				headers: {
+					Accept: "multipart/form-data",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: formData,
+			})
+				.then((response) => {
+					if (response.data.status) {
+						this.closeModal("subModalPassword");
+						this.disabled.userBlock.save = false;
+
+						let debbugStory = {
+							title: "Успешно!",
+							body: response.data.message,
+							type: "Completed",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					} else {
+						this.disabled.userBlock.save = false;
+
+						let debbugStory = {
+							title: "Ошибка.",
+							body: response.data.message,
+							type: "Error",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					}
+				})
+				.catch((error) => {
+					this.disabled.userBlock.save = false;
+
+					let debbugStory = {
+						title: "Ошибка.",
+						body: "Не удалось обновить пароль...",
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+				});
 		},
 		saveUser() {
 			let checkArray = ["family", "name", "dateOfBirth", "email", "nickname"];
@@ -982,6 +1103,11 @@ export default {
 					this.rights = response.data.data.rights;
 					this.statuses = response.data.data.statuses;
 				} else {
+					if (response.data.message === "Недостаточно прав.") {
+						this.$router.push("/404");
+						return;
+					}
+
 					let debbugStory = {
 						title: "Ошибка.",
 						body: response.data.message,
@@ -1156,39 +1282,6 @@ export default {
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: center center;
-}
-
-.password-generator {
-	position: relative;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-
-	border: 2px solid var(--input-border-color-inactive);
-	border-radius: 10px;
-
-	font-size: 18px;
-	height: 54px;
-
-	background-color: #f5f5f5;
-}
-
-.password-generator > .copy {
-	position: absolute;
-	cursor: pointer;
-	top: 16px;
-	right: 5px;
-
-	fill: rgb(150, 150, 150);
-}
-
-.password-generator > .generator {
-	position: absolute;
-	cursor: pointer;
-	top: 16px;
-	right: 34px;
-
-	fill: rgb(150, 150, 150);
 }
 
 @media screen and (width <= 860px) {

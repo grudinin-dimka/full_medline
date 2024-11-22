@@ -16,7 +16,7 @@ export default {};
 }
 
 @media screen and (max-width: 460px) {
-	.buttons {
+	.buttons-wide {
 		flex-direction: column;
 	}
 }

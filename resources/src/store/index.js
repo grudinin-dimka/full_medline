@@ -80,6 +80,9 @@ const store = createStore({
 		setUserNickname(state, userNickname) {
 			state.user.nickname = userNickname;
 		},
+		setDebuggerClose(state) {
+			state.debugger.show = false;
+		},
 		/* Отображение деббагера */
 		debuggerState(state, debbugStory) {
 			/* Проверка на существующее обращение */
