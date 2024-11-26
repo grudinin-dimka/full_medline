@@ -155,14 +155,14 @@ fieldset.container-input-two.delete > legend > span {
 	padding: 5px;
 }
 
-.container-input-two > .item > input.error::file-selector-button {
-	background-color: var(--input-border-color-error);
-	border: 2px solid var(--input-border-color-error);
-}
-
 .container-input-two.create > .item > input::file-selector-button {
 	border: 2px solid #44a533;
 	background-color: #44a533;
+}
+
+.container-input-two > .item > input.error::file-selector-button {
+	background-color: var(--input-border-color-error);
+	border: 2px solid var(--input-border-color-error);
 }
 
 @media screen and (max-width: 450px) {

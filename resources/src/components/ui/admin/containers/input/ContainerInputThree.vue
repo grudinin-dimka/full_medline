@@ -76,6 +76,15 @@ fieldset.container-input-three {
 	background-color: rgb(255, 255, 255);
 }
 
+fieldset.container-input-three.create > legend {
+	font-size: 18px;
+	color: var(--primary-color);
+}
+
+fieldset.container-input-three.create > legend {
+	color: #44a533;
+}
+
 fieldset.container-input-three:focus-within {
 	border: 2px solid var(--input-border-color-active);
 }
@@ -99,6 +108,10 @@ fieldset.container-input-three.create:focus-within {
 
 .container-input-three > .item > label {
 	font-size: 18px;
+}
+
+.container-input-three.create > .item > label {
+	color: #44a533;
 }
 
 .container-input-three > .item > input {

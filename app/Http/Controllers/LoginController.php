@@ -23,7 +23,9 @@ class LoginController extends Controller
    /* 1. Проверки                                          */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
    public function checkToken(Request $request) {
-      if (!($request->user())) {
+      $user = $request->user();
+
+      if (!$user) {
          return response()->json([
             'status' => false,
             'message' => 'Токен недействителен.',
@@ -34,7 +36,12 @@ class LoginController extends Controller
       return response()->json([
          'status' => true,
          'message' => 'Токен существует.',
-         'data' => null,
+         'data' => (object) [
+            "nickname" => $user->nickname,
+            "email" => $user->email,
+            "status" => Status::find($user->statusId)->name,
+            "rights" => Rights::find($user->rightsId)->name,
+         ],
       ]);
    }
 
@@ -85,12 +92,6 @@ class LoginController extends Controller
          "message" => "Авторизация пройдена.",
          "result" => (object) [
             "token" => $user->createToken('auth_token')->plainTextToken,
-            "user" => (object) [
-               "id" => $user->id,
-               "nickname" => $user->nickname,
-               "email" => $user->email,
-               "rights" => Rights::find($user->rightsId)->name,
-            ],
          ],
       ]);
    }  

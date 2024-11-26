@@ -22,10 +22,10 @@ const store = createStore({
 			status: false,
 		},
 		user: {
-			token: null,
-			nickname: "",
-			name: "asdada",
+			nickname: null,
 			email: null,
+			status: null,
+			rights: null,
 		},
 		debugger: {
 			click: false,
@@ -71,21 +71,20 @@ const store = createStore({
 			state.user.token = token;
 			console.log(state.user.token);
 		},
-		setUserName(state, userName) {
-			state.user.name = userName;
+		/* Установка данных пользователя */
+		setUser(state, user) {
+			state.user.nickname = user.nickname;
+			state.user.email = user.email;
+			state.user.status = user.status;
+			state.user.rights = user.rights;
 		},
-		setUserEmail(state, userEmail) {
-			state.user.email = userEmail;
-		},
-		setUserNickname(state, userNickname) {
-			state.user.nickname = userNickname;
-		},
+		/* Закрытие деббагера */
 		setDebuggerClose(state) {
 			state.debugger.show = false;
 		},
 		/* Отображение деббагера */
 		debuggerState(state, debbugStory) {
-			/* Проверка на существующее обращение */
+			// Проверка на существующее обращение
 			if (state.debugger.show === true) {
 				state.debugger.show = false;
 

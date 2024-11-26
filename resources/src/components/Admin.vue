@@ -1,15 +1,9 @@
 <template>
-	<!-- Дебагер -->
 	<debugger></debugger>
-
-	<!-- Загрузка страницы -->
 	<Loader :isLoading="loader.loading" />
 
-	<!-- Шапка страницы -->
 	<AdminHeader v-if="loader.other" />
-	<!-- Боковая панель страницы -->
 	<AdminAside v-if="loader.other" />
-	<!-- Основное содержимое страницы -->
 	<AdminContent v-if="loader.other" />
 </template>
 
@@ -58,21 +52,24 @@ export default {
 				},
 			})
 				.then((response) => {
-					this.loader.loading = false;
-					this.loader.other = true;
+					if (response.data.status) {
+						this.$store.commit("setUser", response.data.data);
+
+						this.loader.loading = false;
+						this.loader.other = true;
+					} else {
+						localStorage.removeItem("token");
+						this.$router.push({ name: "login" });
+					}
 				})
 				.catch((error) => {
-					this.$router.push({ name: "login" });
 					localStorage.removeItem("token");
+					this.$router.push({ name: "login" });
 					return;
 				});
 		}
 	},
 	mounted() {
-		this.$store.commit("setUserNickname", localStorage.getItem("userNickname"));
-		this.$store.commit("setUserName", localStorage.getItem("userName"));
-		this.$store.commit("setUserEmail", localStorage.getItem("userEmail"));
-
 		this.$store.commit("setDebuggerClose");
 	},
 };

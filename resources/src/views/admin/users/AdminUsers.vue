@@ -10,13 +10,21 @@
 		<template #body>
 			<div class="img-fio">
 				<div class="img">
-					<div :style="{ backgroundImage: `url(${currentUser.data.path.body})` }"></div>
+					<div
+						v-if="currentUser.data.path.body"
+						:style="{ backgroundImage: `url(${currentUser.data.path.body})` }"
+					></div>
+					<div
+						v-if="!currentUser.data.path.body"
+						:style="{ backgroundImage: `url(/storage/default/avatar.png)` }"
+					></div>
 				</div>
 				<!-- Фамилия, имя, отчество -->
-				<container-input-three :fieldset="true" :type="'edit'">
-					<template #legend>
-						<span>Ф.И.О.</span>
-					</template>
+				<container-input-three
+					:fieldset="true"
+					:type="modal.type == 'create' ? 'create' : 'edit'"
+				>
+					<template #legend> Ф.И.О. </template>
 					<!-- Первая -->
 					<template #title-one>
 						<span>ФАМИЛИЯ*</span>
@@ -81,7 +89,7 @@
 				</container-input-three>
 			</div>
 			<!-- Пароль и генератор пароля -->
-			<container-input-two :fieldset="true" :type="'default'">
+			<container-input-two :fieldset="true" :type="modal.type == 'create' ? 'create' : 'edit'">
 				<template #legend>
 					<span>ПАРОЛЬ И ГЕНЕРАТОР</span>
 				</template>
@@ -94,12 +102,16 @@
 						type="text"
 						placeholder="Введите пароль"
 						autocomplete="off"
+						:class="{ error: currentUser.errors.password.status }"
 						v-model="currentUser.data.password.body"
 						@input="currentUser.data.password.edited = true"
+						@blur="checkModalInput('currentUser', 'password', 'text')"
 					/>
 				</template>
 				<template #error-one>
-					<span class="error" v-if="false"> Ошибка </span>
+					<span class="error" v-if="currentUser.errors.password.status">
+						{{ currentUser.errors.password.body }}
+					</span>
 				</template>
 				<!-- Второй -->
 				<template #title-two>ГЕНЕРАТОР</template>
@@ -111,7 +123,7 @@
 				</template>
 			</container-input-two>
 			<!-- Аватар и дата рождения -->
-			<container-input-two :fieldset="true" :type="'default'">
+			<container-input-two :fieldset="true" :type="modal.type == 'create' ? 'create' : 'edit'">
 				<template #legend>
 					<span>АВАТАР И ДАТА РОЖДЕНИЯ</span>
 				</template>
@@ -152,7 +164,7 @@
 				</template>
 			</container-input-two>
 			<!-- Почта и псевдоним -->
-			<container-input-two :fieldset="true" :type="'default'">
+			<container-input-two :fieldset="true" :type="modal.type == 'create' ? 'create' : 'edit'">
 				<template #legend>
 					<span>ПОЧТА И ПСЕВДОНИМ</span>
 				</template>
@@ -163,7 +175,7 @@
 				<template #input-one>
 					<input
 						type="text"
-						placeholder="Введите отчество"
+						placeholder="Введите почту"
 						autocomplete="off"
 						:class="{ error: currentUser.errors.email.status }"
 						v-model="currentUser.data.email.body"
@@ -183,7 +195,7 @@
 				<template #input-two>
 					<input
 						type="text"
-						placeholder="Введите отчество"
+						placeholder="Введите псевдоним"
 						autocomplete="off"
 						:class="{ error: currentUser.errors.nickname.status }"
 						v-model="currentUser.data.nickname.body"
@@ -198,37 +210,62 @@
 				</template>
 			</container-input-two>
 			<!-- Статус и права -->
-			<container-input-two :fieldset="true" :type="'default'">
+			<container-input-two :fieldset="true" :type="modal.type == 'create' ? 'create' : 'edit'">
 				<template #legend>
 					<span>СТАТУС И ПРАВА</span>
 				</template>
 				<!-- Первый -->
 				<template #title-one> СТАТУС <span v-if="false">(ИЗМЕНЕНО)</span> </template>
 				<template #input-one>
-					<select v-model="currentUser.data.statusId.body">
+					<select
+						v-model="currentUser.data.statusId.body"
+						:class="{ error: currentUser.errors.statusId.status }"
+						@blur="checkModalInput('currentUser', 'statusId', 'select')"
+					>
+						<option :value="null" disabled>Выберите статус</option>
 						<option :value="status.id" v-for="status in statuses">{{ status.name }}</option>
 					</select>
 				</template>
 				<template #error-one>
-					<span class="error" v-if="false"> Ошибка </span>
+					<span class="error" v-if="currentUser.errors.statusId.status">
+						{{ currentUser.errors.statusId.body }}
+					</span>
 				</template>
 				<!-- Второй -->
 				<template #title-two> ПРАВА <span v-if="false">(ИЗМЕНЕНО)</span> </template>
 				<template #input-two>
-					<select v-model="currentUser.data.rightsId.body">
+					<select
+						v-model="currentUser.data.rightsId.body"
+						:class="{ error: currentUser.errors.rightsId.status }"
+						@blur="checkModalInput('currentUser', 'rightsId', 'select')"
+					>
+						<option :value="null" disabled>Выберите права</option>
 						<option :value="right.id" v-for="right in rights">{{ right.name }}</option>
 					</select>
 				</template>
 				<template #error-two>
-					<span class="error" v-if="false"> Ошибка </span>
+					<span class="error" v-if="currentUser.errors.rightsId.status">
+						{{ currentUser.errors.rightsId.body }}
+					</span>
 				</template>
 			</container-input-two>
 		</template>
 		<template #footer>
 			<BlockButtons>
-				<ButtonDefault @click="saveUser" :disabled="disabled.users.save">
+				<ButtonDefault
+					@click="saveUser"
+					:disabled="disabled.users.save"
+					v-if="modal.type === 'edit'"
+				>
 					Сохранить
 				</ButtonDefault>
+				<ButtonClaim
+					@click="addUser"
+					:disabled="disabled.users.create"
+					v-if="modal.type === 'create'"
+				>
+					Создать
+				</ButtonClaim>
 			</BlockButtons>
 		</template>
 	</admin-modal>
@@ -416,7 +453,7 @@
 
 		<!-- TODO Добавить создание пользователя -->
 		<BlockButtons>
-			<ButtonDefault @click="openModal('create', 'modal')"> Добавить </ButtonDefault>
+			<ButtonDefault @click="createUser"> Добавить </ButtonDefault>
 		</BlockButtons>
 	</block-once>
 </template>
@@ -446,6 +483,7 @@ import IconPassword from "../../../components/icons/users/IconPassword.vue";
 
 import BlockButtons from "../../../components/ui/admin/blocks/BlockButtons.vue";
 import BlockButtonsWide from "../../../components/ui/admin/blocks/BlockButtonsWide.vue";
+import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 import ButtonRemoveWide from "../../../components/ui/admin/buttons/ButtonRemoveWide.vue";
 import ButtonDefaultWide from "../../../components/ui/admin/buttons/ButtonDefaultWide.vue";
@@ -475,6 +513,7 @@ export default {
 		IconPassword,
 		BlockButtons,
 		BlockButtonsWide,
+		ButtonClaim,
 		ButtonDefault,
 		ButtonRemoveWide,
 		ButtonDefaultWide,
@@ -594,6 +633,10 @@ export default {
 						body: "",
 						status: false,
 					},
+					password: {
+						body: "",
+						status: false,
+					},
 					dateOfBirth: {
 						body: "",
 						status: false,
@@ -606,11 +649,11 @@ export default {
 						body: "",
 						status: false,
 					},
-					status: {
+					statusId: {
 						body: "",
 						status: false,
 					},
-					rights: {
+					rightsId: {
 						body: "",
 						status: false,
 					},
@@ -752,7 +795,19 @@ export default {
 		/* _____________________________________________________*/
 		/* 2. Работа с полями ввода модального окна             */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		/* STOP Делал проверку файла модульной, надо бы ещё сделать одновременную проверку файла, если он загружен!! */
+		checkSelect(value) {
+			if (validate.checkEmpty(value)) {
+				return {
+					status: true,
+					message: "Поле не может быть пустым.",
+				};
+			}
+
+			return {
+				status: false,
+				message: "Ошибок нет.",
+			};
+		},
 		chekInputFile() {
 			let checkFile = validate.checkInputFile(this.$refs.fileUpload.files[0], [
 				"image/jpeg",
@@ -788,6 +843,10 @@ export default {
 					break;
 				case "file":
 					errorLog = this.chekInputFile();
+					break;
+				case "select":
+					errorLog = this.checkSelect(this[currentName].data[dataKey].body);
+					break;
 				default:
 					break;
 			}
@@ -819,6 +878,12 @@ export default {
 							errorCount++;
 						}
 						break;
+					case "statusId":
+					case "rightsId":
+						if (this.checkModalInput(currentName, inputKeys[i], "select")) {
+							errorCount++;
+						}
+						break;
 					// Для всех остальных полей
 					default:
 						if (this.checkModalInput(currentName, inputKeys[i], "text")) {
@@ -835,7 +900,7 @@ export default {
 			}
 		},
 		/* Очистка содержимого модального окна */
-		clearModalData(name = "currentInfoBlock") {
+		clearModalData(name = "currentUser") {
 			for (let key in this[name].data) {
 				if (typeof this[name].data[key].body === "array") {
 					this[name].data[key].body = [];
@@ -846,13 +911,13 @@ export default {
 			}
 		},
 		/* Очистка содержимого модального окна */
-		clearModalEdited(name = "currentInfoBlock") {
+		clearModalEdited(name = "currentUser") {
 			for (let key in this[name].data) {
 				this[name].data[key].edited = false;
 			}
 		},
 		/* Очистка ошибок */
-		clearModalErrors(name = "currentInfoBlock") {
+		clearModalErrors(name = "currentUser") {
 			for (let key in this[name].errors) {
 				this[name].errors[key].body = null;
 				this[name].errors[key].status = false;
@@ -864,6 +929,12 @@ export default {
 		/* _____________________________________________________*/
 		/* 1. Основные действия                                 */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		createUser() {
+			this.clearModalErrors("currentUser");
+			this.clearModalData("currentUser");
+
+			this.openModal("create", "modal");
+		},
 		editUserPassword(user) {
 			for (let key in this.currentUser.data) {
 				this.currentUser.data[key].body = user[key];
@@ -1087,6 +1158,79 @@ export default {
 					this.$store.commit("debuggerState", debbugStory);
 				});
 		},
+		addUser() {
+			let checkArray = [
+				"family",
+				"name",
+				"dateOfBirth",
+				"email",
+				"nickname",
+				"password",
+				"file",
+				"rightsId",
+				"statusId",
+			];
+
+			if (this.checkModalInputsAll("currentUser", checkArray)) return;
+
+			let formData = new FormData();
+			formData.append("image", this.$refs.fileUpload.files[0]);
+			formData.append("formats", ["png", "jpg", "jpeg"]);
+			let user = {};
+			for (let key in this.currentUser.data) {
+				user[key] = this.currentUser.data[key].body;
+			}
+			formData.append("user", JSON.stringify(user));
+
+			this.disabled.users.create = true;
+
+			axios({
+				method: "post",
+				url: `${this.$store.state.axios.urlApi}` + `create-user`,
+				headers: {
+					Accept: "multipart/form-data",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: formData,
+			})
+				.then((response) => {
+					if (response.data.status) {
+						if (response.data.data.path) {
+							currentUser.path = response.data.data.path;
+							currentUser.filename = response.data.data.path.replace("/storage/users/", "");
+						}
+
+						this.closeModal("modal");
+						this.disabled.users.create = false;
+
+						let debbugStory = {
+							title: "Успешно!",
+							body: response.data.message,
+							type: "Completed",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					} else {
+						this.disabled.users.create = false;
+
+						let debbugStory = {
+							title: "Ошибка.",
+							body: response.data.message,
+							type: "Error",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					}
+				})
+				.catch((error) => {
+					this.disabled.users.create = false;
+
+					let debbugStory = {
+						title: "Ошибка.",
+						body: "Не удалось создать пользователя...",
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+				});
+		},
 	},
 	mounted() {
 		axios({
@@ -1129,24 +1273,8 @@ export default {
 			});
 	},
 	beforeCreate() {
-		if (localStorage.getItem("userRights") !== "creator") {
+		if (this.$store.state.user.rights !== "creator") {
 			this.$router.push("/404");
-		} else {
-			axios({
-				method: "post",
-				headers: {
-					Accept: "application/json",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-				url: `${this.$store.state.axios.urlApi}` + `chek-user-rigths`,
-			}).then((response) => {
-				if (response.data.status) {
-					if (response.data.data !== "creator") {
-						localStorage.setItem("userRights", response.data.data);
-						this.$router.push("/404");
-					}
-				}
-			});
 		}
 	},
 };

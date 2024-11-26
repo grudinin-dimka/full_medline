@@ -191,7 +191,6 @@ export default {
 	height: 145px;
 }
 
-/* STOP делал цвета скролла, надо дальше сделать по идее добавление нового контакта */
 .contacts > .item:hover > .body > .info > :is(.mail, .phone) > ul::-webkit-scrollbar-thumb {
 	background-color: rgb(220, 220, 220);
 	border: 6px solid #f2feff;
