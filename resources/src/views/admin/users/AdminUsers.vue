@@ -341,7 +341,13 @@
 		</template>
 		<template #footer>
 			<block-buttons-wide>
-				<button-remove-wide :type="'default'">Да</button-remove-wide>
+				<button-remove-wide
+					:type="'default'"
+					@click="deleteUser"
+					:disabled="disabled.users.delete"
+				>
+					Да
+				</button-remove-wide>
 				<button-remove-wide :type="'other'" @click="closeModal('subModalDelete')">
 					Нет
 				</button-remove-wide>
@@ -437,10 +443,9 @@
 							v-if="user.statusId === 2"
 						></IconLockClose>
 					</div>
-					<!-- TODO Добавить удаление пользователя -->
-					<!-- <div class="icon delete" @click="editUserDelete(user)">
+					<div class="icon delete" @click="editUserDelete(user)">
 						<IconRemove :width="24" :height="24" :type="'delete'"></IconRemove>
-					</div> -->
+					</div>
 				</div>
 			</div>
 		</div>
@@ -451,7 +456,6 @@
 			@loaderChildAfterLeave="loaderChildAfterLeave"
 		></LoaderChild>
 
-		<!-- TODO Добавить создание пользователя -->
 		<BlockButtons>
 			<ButtonDefault @click="createUser"> Добавить </ButtonDefault>
 		</BlockButtons>
@@ -1080,6 +1084,7 @@ export default {
 					this.$store.commit("debuggerState", debbugStory);
 				});
 		},
+		/* Редактирование информации пользователя */
 		saveUser() {
 			let checkArray = ["family", "name", "dateOfBirth", "email", "nickname"];
 
@@ -1158,6 +1163,7 @@ export default {
 					this.$store.commit("debuggerState", debbugStory);
 				});
 		},
+		/* Добавление пользователя */
 		addUser() {
 			let checkArray = [
 				"family",
@@ -1195,10 +1201,19 @@ export default {
 			})
 				.then((response) => {
 					if (response.data.status) {
-						if (response.data.data.path) {
-							currentUser.path = response.data.data.path;
-							currentUser.filename = response.data.data.path.replace("/storage/users/", "");
-						}
+						this.users.push({
+							id: response.data.data.id,
+							family: response.data.data.family,
+							name: response.data.data.name,
+							surname: response.data.data.surname,
+							dateOfBirth: response.data.data.dateOfBirth,
+							email: response.data.data.email,
+							nickname: response.data.data.nickname,
+							path: response.data.data.path,
+							filename: response.data.data.filename,
+							rightsId: response.data.data.rightsId,
+							statusId: response.data.data.statusId,
+						});
 
 						this.closeModal("modal");
 						this.disabled.users.create = false;
@@ -1226,6 +1241,59 @@ export default {
 					let debbugStory = {
 						title: "Ошибка.",
 						body: "Не удалось создать пользователя...",
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+				});
+		},
+		/* Удаление пользователя */
+		deleteUser() {
+			this.disabled.users.delete = true;
+
+			let formData = new FormData();
+			formData.append("userId", JSON.stringify(this.currentUser.data.id.body));
+
+			axios({
+				method: "post",
+				url: `${this.$store.state.axios.urlApi}` + `delete-user`,
+				headers: {
+					Accept: "multipart/form-data",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: formData,
+			})
+				.then((response) => {
+					if (response.data.status) {
+						this.users = this.users.filter(
+							(user) => user.id !== this.currentUser.data.id.body
+						);
+
+						this.closeModal("subModalDelete");
+						this.disabled.users.delete = false;
+
+						let debbugStory = {
+							title: "Успешно!",
+							body: response.data.message,
+							type: "Completed",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					} else {
+						this.disabled.users.delete = false;
+
+						let debbugStory = {
+							title: "Ошибка.",
+							body: response.data.message,
+							type: "Error",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					}
+				})
+				.catch((error) => {
+					this.disabled.users.delete = false;
+
+					let debbugStory = {
+						title: "Ошибка.",
+						body: "Не удалось удалить пользователя...",
 						type: "Error",
 					};
 					this.$store.commit("debuggerState", debbugStory);

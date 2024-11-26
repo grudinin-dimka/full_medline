@@ -112,6 +112,8 @@ Route::post('/is-creator', [CreatorController::class, 'isCreator'])->middleware(
 /* 2. Пользователи                                      */
 Route::post('/get-users-all', [CreatorController::class, 'getUsersAll'])->middleware('auth:sanctum');
 Route::post('/save-user', [CreatorController::class, 'saveUser'])->middleware('auth:sanctum');
+Route::post('/create-user', [CreatorController::class, 'createUser'])->middleware('auth:sanctum');
+Route::post('/delete-user', [CreatorController::class, 'deleteUser'])->middleware('auth:sanctum');
 Route::post('/set-user-password', [CreatorController::class, 'setUserPassword'])->middleware('auth:sanctum');
 Route::post('/set-user-status', [CreatorController::class, 'setUserStatus'])->middleware('auth:sanctum');
 

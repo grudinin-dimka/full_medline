@@ -18,8 +18,11 @@ use App\Models\Status;
 class CreatorController extends Controller
 {
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-   /* |                      ПРАВА                        |*/
+   /* |                    ПРОВЕРКИ                       |*/
    /* |___________________________________________________|*/
+   /* _____________________________________________________*/
+   /* 1. Права                                             */
+   /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
    /* Проверка прав пользователя */
    public function chekUserRigths(Request $request) {
       if ($this->isCreator($request)) {
@@ -76,6 +79,41 @@ class CreatorController extends Controller
             return false;
       };
    }
+   /* _____________________________________________________*/
+   /* 2. Информация о пользователе                         */
+   /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+   /* Проверка на наличие почты */
+   public function isUserEmail($email) {
+      if (User::where('email', $email)->first()) {
+            return true;
+      } else {
+            return false;
+      };
+   }
+   /* Проверка на наличие никнейма */
+   public function isUserEmailWithout($email, $id) {
+      if (User::where('email', $email)->where('id', '!=', $id)->first()) {
+            return true;
+      } else {
+            return false;
+      };
+   }
+   /* Проверка на наличие никнейма */
+   public function isUserNickname($nickname) {
+      if (User::where('nickname', $nickname)->first()) {
+            return true;
+      } else {
+            return false;
+      };
+   }
+   /* Проверка на наличие никнейма */
+   public function isUserNicknameWithout($nickname, $id) {
+      if (User::where('nickname', $nickname)->where('id', '!=', $id)->first()) {
+            return true;
+      } else {
+            return false;
+      };
+   }
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                 ПОЛЬЗОВАТЕЛИ                      |*/
    /* |___________________________________________________|*/
@@ -117,6 +155,92 @@ class CreatorController extends Controller
       ]);
    }
    /* Сохранение информации о пользователе */
+   public function createUser(Request $request) {
+      $check = $this->isCreator($request);
+
+      if (!$check) {
+            return response()->json([
+               "status" => false,
+               "message" => "Недостаточно прав.",
+               "data" => [],   
+            ]);
+      } else {
+         $userData = json_decode($request->user);
+
+         // Проверка на наличие почты
+         if ($this->isUserEmail($userData->email)) {
+            return response()->json([
+               "status" => false,
+               "message" => "Пользователь с такой почтой уже есть.",
+               "data" => [],   
+            ]);
+         };
+
+         // Проверка на наличие никнейма
+         if ($this->isUserNickname($userData->nickname)) {
+            return response()->json([
+               "status" => false,
+               "message" => "Пользователь с таким никнеймом уже есть.",
+               "data" => [],   
+            ]);
+         };
+
+         if ($request->hasFile('image')) {
+            $validated = validator($request->all(), [
+               'image' => [
+                  'required',
+                  File::types($request->formats)->max(10 * 1024),
+               ],
+            ]);
+
+            if ($validated->fails()) return response()->json([
+               "status" => false,
+               "message" => "Файл не прошёл проверку.",
+               "data" => null,
+            ]);
+
+            $path = $request->file('image')->store(
+               'public/users'
+            );
+         } else {
+            return response()->json([
+               "status" => false,
+               "message" => "Отсутствует изображение.",
+               "data" => null,
+            ]);
+         };
+
+         $user = User::create([
+            'family' => $userData->family,
+            'name' => $userData->name,
+            'surname' => $userData->surname ? $userData->surname : null,
+            'nickname' => $userData->nickname,
+            'dateOfBirth' => $userData->dateOfBirth,
+            'email' => $userData->email,
+            'statusId' => $userData->statusId,
+            'rightsId' => $userData->rightsId,
+            'password' => Hash::make($userData->password),
+            'filename' => basename($path),
+         ]);
+
+         if(!$user) {
+            return response()->json([
+               "status" => false,
+               "message" => "Не удалось создать нового пользователя...",
+               "data" => null,
+            ]);
+         };
+         
+         $user->path = Storage::url($path);
+
+         return response()->json([
+            "status" => true,
+            "message" => "Пользователь создан.",
+            "data" => $user,
+         ]);
+      };
+   }
+   /* Сохранение информации о пользователе */
    public function saveUser(Request $request) {
       $check = $this->isCreator($request);
 
@@ -127,6 +251,8 @@ class CreatorController extends Controller
                "data" => [],   
             ]);
       } else {
+         $userData = json_decode($request->user);
+
          if ($request->hasFile('image')) {
             $validated = validator($request->all(), [
                'image' => [
@@ -148,8 +274,25 @@ class CreatorController extends Controller
             $path = null;
          };
 
-         $userData = json_decode($request->user);
          $user = User::find($userData->id);
+         // Проверка на наличие никнейма
+         if ($this->isUserNicknameWithout($userData->nickname, $user->id)) {
+            return response()->json([
+               "status" => false,
+               "message" => "Пользователь с таким никнеймом уже есть.",
+               "data" => [],   
+            ]);
+         };
+
+         // Проверка на наличие почты
+         if ($this->isUserEmailWithout($userData->email, $user->id)) {
+            return response()->json([
+               "status" => false,
+               "message" => "Пользователь с такой почтой уже есть.",
+               "data" => [],   
+            ]);
+         };
+
          $user->family = $userData->family;
          $user->name = $userData->name;
          $user->surname = $userData->surname;
@@ -170,6 +313,28 @@ class CreatorController extends Controller
             ],
          ]);
       };
+   }
+   /* Установка нового пароля */
+   public function deleteUser(Request $request) {
+      $userId = json_decode($request->userId);
+
+      $user = User::find($userId);
+
+      if (!$user) {
+         return response()->json([
+            "status" => false,
+            "message" => "Пользователь не найден.",
+            "data" => [],
+         ]);
+      };
+
+      $user->delete();
+
+      return response()->json([
+         "status" => true,
+         "message" => "Пользователь удалён.",
+         "data" => [],
+      ]);
    }
    /* Установка нового пароля */
    public function setUserPassword(Request $request) {
@@ -235,5 +400,5 @@ class CreatorController extends Controller
             "data" => $user->statusId,
          ]);
       };
-   }
+   }    
 }
