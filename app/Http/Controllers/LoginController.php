@@ -17,25 +17,32 @@ use App\Models\Status;
 class LoginController extends Controller
 {
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-   /* |                     ТОКЕНЫ                        |*/
+   /* |                    ПРОВЕРКИ                       |*/
    /* |___________________________________________________|*/
    /* _____________________________________________________*/
-   /* 1. Проверки                                          */
+   /* 1. Пользователя                                      */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-   public function checkToken(Request $request) {
-      $user = $request->user();
-
-      if (!$user) {
+   public function checkUser(Request $request) {
+      if ($this->isUserTokenNull($request)) {
          return response()->json([
-            'status' => false,
-            'message' => 'Токен недействителен.',
-            'data' => null,
+            "status" => false,
+            "message" => "Токен недействителен.",
+            "data" => null,
          ]);
-      }
+      };
 
+      if ($this->isUserStatusPassive($request)) {
+         return response()->json([
+            "status" => false,
+            "message" => "Пользователь заблокирован.",
+            "data" => null,
+         ]);
+      };
+
+      $user = $request->user();
       return response()->json([
          'status' => true,
-         'message' => 'Токен существует.',
+         'message' => 'Проверка пройдена.',
          'data' => (object) [
             "nickname" => $user->nickname,
             "email" => $user->email,
@@ -43,6 +50,24 @@ class LoginController extends Controller
             "rights" => Rights::find($user->rightsId)->name,
          ],
       ]);
+   }
+   public function isUserStatusPassive(Request $request) {
+      $user = $request->user();
+
+      if (Status::find($user->statusId)->name === 'passive') {
+         return true;
+      } else {
+         return false;
+      };   
+   }
+   public function isUserTokenNull(Request $request) {
+      $user = $request->user();
+
+      if (!$user) {
+         return true;
+      } else {
+         return false;
+      }
    }
 
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -104,22 +129,5 @@ class LoginController extends Controller
       } else {
          return 'Токен не удалён.';
       };
-   }
-
-   /* Регистрация */
-   public function registerUser(Request $request) {
-      dump($request->all());
-
-      // Поиск почты в бд
-      $user = User::where('email', $request->email)->first();    
-      if ($user) return 'Пользователь с таккой почтой уже есть.';
-
-      $user = User::create([
-         'name' => 'user', 
-         'email' => 'user@mail.ru', 
-         'password' => Hash::make('123456')
-      ]);
-
-      dd($user);
    }
 }

@@ -59,7 +59,7 @@ Route::post('/get-contacts-clinics-all', [HomeController::class, 'getContactsCli
 /* Общие                                                */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 Route::post('/login', [LoginController::class, 'loginUser']);
-Route::post('/check-token', [LoginController::class, 'checkToken'])->middleware('auth:sanctum');
+Route::post('/check-user', [LoginController::class, 'checkUser'])->middleware('auth:sanctum');
 Route::post('/logout', [LoginController::class, 'logoutUser'])->middleware('auth:sanctum');
 Route::post('/create', [LoginController::class, 'createUser']);
 Route::post('/upload-file', [AdminController::class, 'uploadFile'])->middleware('auth:sanctum');
