@@ -242,9 +242,7 @@ class CreatorController extends Controller
    }
    /* Сохранение информации о пользователе */
    public function saveUser(Request $request) {
-      $check = $this->isCreator($request);
-
-      if (!$check) {
+      if (!$this->isCreator($request)) {
             return response()->json([
                "status" => false,
                "message" => "Недостаточно прав.",
@@ -292,6 +290,18 @@ class CreatorController extends Controller
                "data" => [],   
             ]);
          };
+
+         if ($user->rightsId !== $userData->rightsId) {
+            $users = User::where('rightsId', $user->rightsId)->get();
+
+            if ((count($users) - 1) < 1) {
+               return response()->json([
+                  "status" => false,
+                  "message" => "В системе должен быть хотя бы 1 создатель.",
+                  "data" => [],   
+               ]);
+            }
+         }        
 
          $user->family = $userData->family;
          $user->name = $userData->name;

@@ -27,7 +27,7 @@
 					</template>
 					<template #error>
 						<span class="error" v-if="modalForm.errors.name.status">
-							{{ this.modalForm.errors.name.body }}
+							{{ modalForm.errors.name.body }}
 						</span>
 					</template>
 				</container-input-once>
@@ -50,7 +50,7 @@
 					</template>
 					<template #error>
 						<span class="error" v-if="modalForm.errors.phone.status">
-							{{ this.modalForm.errors.phone.body }}
+							{{ modalForm.errors.phone.body }}
 						</span>
 					</template>
 				</container-input-once>
@@ -91,10 +91,10 @@
 			<div class="checkbox" :class="{ error: modalForm.errors.checkbox.status }">
 				<div class="content">
 					<input type="checkbox" id="checkboxApprove" v-model="modalForm.data.checkbox.body" />
-					<label for="checkboxApprove"
-						>Согласие на обработку персональных данных в соответствии с законодательством
-						Российской Федерации.</label
-					>
+					<label for="checkboxApprove">
+						Согласие на обработку указанных персональных данных в соответствии с
+						законодательством Российской Федерации.
+					</label>
 				</div>
 			</div>
 			<div class="captcha">
