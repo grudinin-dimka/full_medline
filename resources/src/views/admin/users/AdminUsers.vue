@@ -400,7 +400,7 @@
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                   БЛОК ПРОФИЛЯ                    |-->
 	<!--|___________________________________________________|-->
-	<block-once :minHeight="400">
+	<block-once :minHeight="100">
 		<block-title>
 			<template #title>
 				ПОЛЬЗОВАТЕЛИ
@@ -410,13 +410,15 @@
 
 		<div class="users" v-if="loading.sections.users">
 			<div class="item" v-for="user in users">
-				<div class="id">#{{ user.id }}</div>
-				<div class="img" :style="{ backgroundImage: `url(${user.path}` }"></div>
-				<div class="info">
-					<div class="fio">
-						{{ user.family + " " + user.name + " " }}
+				<div class="user-container">
+					<div class="id">#{{ user.id }}</div>
+					<div class="img" :style="{ backgroundImage: `url(${user.path}` }"></div>
+					<div class="info">
+						<div class="fio">
+							{{ user.family + " " + user.name + " " }}
+						</div>
+						<div class="nickname">{{ user.nickname }}</div>
 					</div>
-					<div class="nickname">{{ user.nickname }}</div>
 				</div>
 				<div class="buttons">
 					<div class="icon edit" @click="editUser(user)">
@@ -1053,8 +1055,8 @@ export default {
 			})
 				.then((response) => {
 					if (response.data.status) {
+						this.disabled.userPassword.save = false;
 						this.closeModal("subModalPassword");
-						this.disabled.userBlock.save = false;
 
 						let debbugStory = {
 							title: "Успешно!",
@@ -1063,7 +1065,7 @@ export default {
 						};
 						this.$store.commit("debuggerState", debbugStory);
 					} else {
-						this.disabled.userBlock.save = false;
+						this.disabled.userPassword.save = false;
 
 						let debbugStory = {
 							title: "Ошибка.",
@@ -1074,7 +1076,7 @@ export default {
 					}
 				})
 				.catch((error) => {
-					this.disabled.userBlock.save = false;
+					this.disabled.userPassword.save = false;
 
 					let debbugStory = {
 						title: "Ошибка.",
@@ -1361,8 +1363,8 @@ export default {
 
 .users > .item {
 	display: flex;
-	align-items: center;
 	gap: 20px;
+	align-items: center;
 
 	border: 2px solid var(--input-border-color-inactive);
 	border-radius: 30px;
@@ -1370,11 +1372,17 @@ export default {
 	transition: all 0.2s;
 }
 
-.users > .item > .id {
+.users > .item > .user-container {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+}
+
+.users > .item > .user-container > .id {
 	font-size: 22px;
 }
 
-.users > .item > .img {
+.users > .item > .user-container > .img {
 	width: 70px;
 	height: 70px;
 	border-radius: 50%;
@@ -1383,7 +1391,7 @@ export default {
 	background-position: center center;
 }
 
-.users > .item > .info > .fio {
+.users > .item > .user-container > .info > .fio {
 	color: var(--primary-color);
 }
 
@@ -1487,6 +1495,13 @@ export default {
 
 	.img-fio > .img {
 		height: 300px;
+	}
+}
+
+@media screen and (width <= 750px) {
+	.users > .item {
+		flex-direction: column;
+		align-items: flex-start;
 	}
 }
 </style>

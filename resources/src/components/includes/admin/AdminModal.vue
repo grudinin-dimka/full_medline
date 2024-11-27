@@ -198,40 +198,6 @@ export default {
 	cursor: all-scroll;
 }
 
-/* Скролбар блока со стилем "create" */
-.modal.create .modal-body::-webkit-scrollbar-track {
-	background-color: #f3fff0;
-}
-
-.modal.create .modal-body::-webkit-scrollbar-thumb {
-	background-color: rgb(220, 220, 220);
-	border-left: 10px;
-	border-color: #f3fff0;
-	border-style: solid;
-}
-
-.modal.create .modal-body::-webkit-scrollbar-thumb:hover {
-	background-color: rgb(230, 230, 230);
-	cursor: all-scroll;
-}
-
-/* Скролбар блока со стилем "delete" */
-.modal.delete .modal-body::-webkit-scrollbar-track {
-	background-color: #f3fff0;
-}
-
-.modal.delete .modal-body::-webkit-scrollbar-thumb {
-	background-color: rgb(220, 220, 220);
-	border-left: 10px;
-	border-color: #f3fff0;
-	border-style: solid;
-}
-
-.modal.delete .modal-body::-webkit-scrollbar-thumb:hover {
-	background-color: rgb(230, 230, 230);
-	cursor: all-scroll;
-}
-
 @media screen and (max-width: 1000px) {
 	.modal-container {
 		margin: 20px;
