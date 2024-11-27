@@ -4,8 +4,6 @@
 /* Импорт шрифтов */
 @import url("./fonts.css");
 
-/* @import url("https://fonts.googleapis.com/css2?family=Azeret+Mono:ital,wght@0,100..900;1,100..900&display=swap"); */
-
 * {
 	font-family: "Rubik", sans-serif;
 }
