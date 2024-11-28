@@ -3,7 +3,7 @@ import "./assets/css/main.css";
 import { createApp } from "vue";
 import App from "./App.vue";
 // Импорт роутера
-import router from "./router";
+import router from "./router/index.js";
 // Импорт для создания масок у полей ввода
 import VueTheMask from "vue-the-mask";
 // Импорт глобальных переменных

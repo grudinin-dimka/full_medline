@@ -7,13 +7,13 @@ export default defineConfig({
 	plugins: [
 		vue(),
 		laravel({
-			input: ["resources/src/main.js"],
+			input: ["resources/vue/main.js"],
 			refresh: true,
 		}),
 	],
 	resolve: {
 		alias: {
-			"@": fileURLToPath(new URL("/resources/src/", import.meta.url)),
+			"@": fileURLToPath(new URL("/resources/vue/", import.meta.url)),
 		},
 	},
 });

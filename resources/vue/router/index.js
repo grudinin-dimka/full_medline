@@ -184,10 +184,23 @@ const router = createRouter({
 					],
 				},
 				{
-					path: "eprice",
-					name: "eprice",
+					path: "eprices",
+					name: "eprices",
 					meta: { title: "(e) Цены" },
-					component: () => import("../views/admin/AdminPrice.vue"),
+					redirect: { name: "eprices-all" },
+					component: () => import("../views/admin/prices/AdminPrices.vue"),
+					children: [
+						{
+							path: "",
+							name: "eprices-all",
+							component: () => import("../views/admin/prices/AdminPricesAll.vue"),
+						},
+						{
+							path: "rules",
+							name: "eprices-rules",
+							component: () => import("../views/admin/prices/AdminPricesRools.vue"),
+						},
+					],
 				},
 				{
 					path: "econtacts",

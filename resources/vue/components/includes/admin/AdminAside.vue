@@ -46,7 +46,7 @@
 					class="item-title"
 					:class="{ active: links.specialists.status }"
 					href="#"
-					@click.prevent="openListEspecialists"
+					@click.prevent="openList('specialists')"
 				>
 					<svg width="24" height="24" viewBox="0 0 30 27" xmlns="http://www.w3.org/2000/svg">
 						<path
@@ -65,14 +65,24 @@
 				</div>
 			</div>
 			<div class="item active">
-				<a class="item-title" href="#" @click.prevent="insertPage('econtacts')">
+				<a
+					class="item-title"
+					:class="{ active: links.prices.status }"
+					href="#"
+					@click.prevent="openList('prices')"
+				>
 					<svg width="26" height="20" viewBox="0 0 33 24" xmlns="http://www.w3.org/2000/svg">
 						<path
 							d="M19.5 13.5C18.25 13.5 17.1875 13.0625 16.3125 12.1875C15.4375 11.3125 15 10.25 15 9C15 7.75 15.4375 6.6875 16.3125 5.8125C17.1875 4.9375 18.25 4.5 19.5 4.5C20.75 4.5 21.8125 4.9375 22.6875 5.8125C23.5625 6.6875 24 7.75 24 9C24 10.25 23.5625 11.3125 22.6875 12.1875C21.8125 13.0625 20.75 13.5 19.5 13.5ZM9 18C8.175 18 7.46875 17.7063 6.88125 17.1188C6.29375 16.5313 6 15.825 6 15V3C6 2.175 6.29375 1.46875 6.88125 0.88125C7.46875 0.29375 8.175 0 9 0H30C30.825 0 31.5313 0.29375 32.1188 0.88125C32.7063 1.46875 33 2.175 33 3V15C33 15.825 32.7063 16.5313 32.1188 17.1188C31.5313 17.7063 30.825 18 30 18H9ZM12 15H27C27 14.175 27.2938 13.4688 27.8813 12.8813C28.4688 12.2938 29.175 12 30 12V6C29.175 6 28.4688 5.70625 27.8813 5.11875C27.2938 4.53125 27 3.825 27 3H12C12 3.825 11.7063 4.53125 11.1188 5.11875C10.5313 5.70625 9.825 6 9 6V12C9.825 12 10.5313 12.2938 11.1188 12.8813C11.7063 13.4688 12 14.175 12 15ZM28.5 24H3C2.175 24 1.46875 23.7063 0.88125 23.1188C0.29375 22.5313 0 21.825 0 21V4.5H3V21H28.5V24Z"
 						/>
 					</svg>
+					<IconArrowWhite :width="20" :height="20" :rotate="180" class="item-arrow" />
 					ЦЕНЫ
 				</a>
+				<div class="item-list" ref="eprices" :class="{ active: links.prices.status }">
+					<a href="#" @click.prevent="insertSubPage('eprices-all')"> СПИСОК ЦЕН </a>
+					<a href="#" @click.prevent="insertSubPage('eprices-rules')"> ПРАВИЛА </a>
+				</div>
 			</div>
 			<div class="item active">
 				<a class="item-title" href="#" @click.prevent="insertPage('econtacts')">
@@ -132,10 +142,13 @@ export default {
 						certificates: false,
 					},
 				},
-				price: {
-					name: "eprice",
+				prices: {
+					name: "eprices",
 					status: false,
-					list: null,
+					list: {
+						download: false,
+						rules: false,
+					},
 				},
 				specialists: {
 					name: "admin-settings",
@@ -154,11 +167,11 @@ export default {
 	},
 	methods: {
 		// Открыть список специалистов
-		openListEspecialists() {
-			this.links.specialists.status = !this.links.specialists.status;
+		openList(page) {
+			this.links[page].status = !this.links[page].status;
 
 			for (let key in this.links) {
-				if (key != "specialists") {
+				if (key != page) {
 					this.links[key].status = false;
 				}
 			}

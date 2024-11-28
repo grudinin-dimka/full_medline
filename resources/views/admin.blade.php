@@ -10,6 +10,6 @@
     </head>
     <body>
         <div id="app"></div>
-        @vite('resources/src/main.js')
+        @vite('resources/vue/main.js')
     </body>
 </html>
