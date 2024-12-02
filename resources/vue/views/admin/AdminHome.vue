@@ -616,7 +616,11 @@ export default {
 					errorLog = validate.checkInputText(this.currentSlide.data[dataKey].body);
 					break;
 				case "file":
-					errorLog = validate.checkInputFile(this.$refs.fileUpload.files[0]);
+					errorLog = validate.checkInputFile(this.$refs.fileUpload.files[0], [
+						"image/jpeg",
+						"image/jpg",
+						"image/png",
+					]);
 					break;
 				default:
 					break;
@@ -866,7 +870,7 @@ export default {
 				let formData = new FormData();
 				formData.append("image", this.currentSlide.file);
 				formData.append("type", "slide");
-				formData.append("formats", ["png"]);
+				formData.append("formats", ["png", "jpg", "jpeg"]);
 
 				this.disabled.slider.create = true;
 
@@ -982,7 +986,7 @@ export default {
 				let formData = new FormData();
 				formData.append("image", this.$refs.fileUpload.files[0]);
 				formData.append("type", "slide");
-				formData.append("formats", ["png"]);
+				formData.append("formats", ["png", "jpg", "jpeg"]);
 
 				axios({
 					method: "post",

@@ -1,11 +1,12 @@
 <?php
 namespace App\Http\Controllers;
 
+/* Подключения */
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 
-// Для загрузки файлов
+/* Помощники */
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 Use Illuminate\Http\UploadedFile;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Rules\File;
 
+/* Модели */
 use App\Models\Rights;
 use App\Models\Status;
 use App\Models\User;
@@ -47,6 +49,14 @@ use App\Models\ShedulesDay;
 use App\Models\ShedulesDaysTime;
 use App\Models\PriceFile;
 
+/* Для работы с табличными файлами */
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use \PhpOffice\PhpSpreadsheet\Reader\IReader;
+use \PhpOffice\PhpSpreadsheet\Reader\Ods;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+
 class AdminController extends Controller
 {
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -68,6 +78,9 @@ class AdminController extends Controller
             "data" => null,
          ]);;
 
+         $file = $request->file('image');
+         $originalName = $file->getClientOriginalName();
+
          switch ($request->type) {
             case 'slide':
                $path = $request->file('image')->store(
@@ -82,6 +95,13 @@ class AdminController extends Controller
             case 'abouts':
                $path = $request->file('image')->store(
                   'public/abouts'
+               );
+               break;
+            case 'prices':
+               $path = $request->file('image')->storeAs(
+                  'public/prices',
+                  $originalName, 
+                  'local'
                );
                break;
          }
@@ -1377,5 +1397,88 @@ class AdminController extends Controller
             "data" => $pricesFiles,
          ]);   
       };
+   }
+   
+   public function savePricesChanges(Request $request) {
+      $pricesFiles = json_decode($request->pricesFiles);
+      
+      $arrayID = [];
+
+      foreach ($pricesFiles as $key => $value) {
+         // Удаление
+         if ($value->delete === true){
+            if ($value->status) {
+               return response()->json([
+                  "status" => false,
+                  "message" => "Нельзя удалить активный файл.",
+                  "data" => null,
+               ]);
+            };
+
+            $priceFile = PriceFile::find($value->id);
+            $priceFile->delete();
+            continue;                  
+         }         
+
+         // Создание
+         if ($value->create === true) {
+            $priceFileCreate = PriceFile::create([
+               "filename" => $value->filename,
+               "status" => $value->status,
+            ]);
+
+            $arrayID[] = (object) [
+               // Прошлый id
+               'old' => $value->id, 
+               // Новый id
+               'new' => $priceFileCreate->id
+            ];            
+            continue;
+         };       
+
+         // Обновление
+         $priceFile = PriceFile::find($value->id);
+         $priceFileUpdate = $priceFile->update([
+            "filename" => $value->filename,
+            "status" => $value->status,
+         ]);      
+         
+         if(!$priceFileUpdate) {
+            return (object) [
+               "status" => false,
+               "message" => "Не удалось обновить значение.",
+               "data" => null,
+            ];      
+         }
+      }
+
+      $priceFiles = PriceFile::all();
+      // Получение всех файлов
+      $filesPrices = Storage::files('public/prices');
+      if($filesPrices) {
+         foreach ($filesPrices as $fileKey => $fileValue) {
+            $useFile = false;
+            /* Проверка на использование файла */
+            foreach ($priceFiles as $priceFilesKey => $priceFilesValue) {
+               /* Обрезание значения $fileValue до названия файла */
+               $str = str_replace('public/prices/', '', $fileValue);
+               /* Проверка значения названия файла на совпадение */
+               if ($priceFilesValue->filename == $str) {
+                  $useFile = true;
+               };
+            };
+   
+            /* Удаление файла, если не используется */
+            if (!$useFile) {
+               Storage::delete($fileValue);
+            };
+         };
+      }
+
+      return response()->json([
+         "status" => true,
+         "message" => "Цены успешно сохранены.",
+         "data" => $arrayID,
+      ]);
    }
 }

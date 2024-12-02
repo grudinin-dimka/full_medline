@@ -176,7 +176,7 @@
 							@click="$emit('touchRemoveSpecialist', specialist.id)"
 							v-if="specialist.delete"
 						>
-							Восстановить
+							Вернуть
 						</table-button-default>
 					</table-container-buttons>
 				</td>

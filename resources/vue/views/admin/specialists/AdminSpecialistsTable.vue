@@ -94,7 +94,7 @@
 							v-if="value.delete"
 							@click="$emit('touchRemoveArrValue', value.id)"
 						>
-							Восстановить
+							Вернуть
 						</table-button-default>
 					</table-container-buttons>
 				</td>

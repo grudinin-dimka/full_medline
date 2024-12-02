@@ -20,18 +20,22 @@
 						type="file"
 						ref="fileUpload"
 						:class="{
-							error: false,
+							error: currentPrice.errors.file.status,
 						}"
 					/>
 				</template>
 				<template #error>
-					<span class="error" v-if="false"> Ошибка. </span>
+					<span class="error" v-if="currentPrice.errors.file.status">
+						{{ currentPrice.errors.file.body }}
+					</span>
 				</template>
 			</container-input-once>
 		</template>
 		<template #footer>
 			<block-buttons>
-				<ButtonClaim @click="test"> Загрузить </ButtonClaim>
+				<ButtonClaim @click="createPrice" :disabled="disabled.prices.create">
+					Загрузить
+				</ButtonClaim>
 			</block-buttons>
 		</template>
 	</admin-modal>
@@ -48,15 +52,19 @@
 		<block-title>
 			<template #title>СПИСОК ЦЕН</template>
 			<template #buttons>
-				<icon-load :width="28" :height="28" v-if="false" />
-				<icon-save :width="28" :height="28" @click="" v-else />
+				<icon-load :width="28" :height="28" v-if="disabled.prices.save" />
+				<icon-save :width="28" :height="28" @click="savePricesFiles" v-else />
 			</template>
 		</block-title>
 
 		<div class="eprices" v-if="loading.sections.prices">
 			<div
 				class="item"
-				:class="{ active: price.id === getActivePriceid, delete: price.delete }"
+				:class="{
+					active: price.id === getActivePriceid,
+					create: price.create,
+					delete: price.delete,
+				}"
 				v-for="price in prices"
 				:key="price.id"
 			>
@@ -74,10 +82,21 @@
 					<div class="date">{{ formatDate(price.created_at) }}</div>
 				</div>
 				<div class="buttons">
-					<a :href="price.path" download>
-						<TableButtonDefault>Скачать</TableButtonDefault>
-					</a>
-					<TableButtonRemove @click="updateDeleteElement(price)">Удалить</TableButtonRemove>
+					<template v-if="radioPrice == price.id">
+						<a :href="price.path" download>
+							<TableButtonDefault>Скачать</TableButtonDefault>
+						</a>
+						<TableButtonDisabled>Удалить</TableButtonDisabled>
+					</template>
+					<template v-else>
+						<a :href="price.path" download>
+							<TableButtonDefault>Скачать</TableButtonDefault>
+						</a>
+						<TableButtonRemove @click="updateDeleteElement(price)" v-if="!price.create"
+							>Удалить</TableButtonRemove
+						>
+						<TableButtonDisabled v-if="price.create">Удалить</TableButtonDisabled>
+					</template>
 				</div>
 			</div>
 		</div>
@@ -104,6 +123,7 @@ import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 
 import TableButtonDefault from "../../../components/ui/admin/tables/TableButtonDefault.vue";
 import TableButtonRemove from "../../../components/ui/admin/tables/TableButtonRemove.vue";
+import TableButtonDisabled from "../../../components/ui/admin/tables/TableButtonDisabled.vue";
 
 import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
 
@@ -114,6 +134,8 @@ import BlockButtons from "../../../components/ui/admin/blocks/BlockButtons.vue";
 import IconSave from "../../../components/icons/IconSave.vue";
 import IconLoad from "../../../components/icons/IconLoad.vue";
 
+import validate from "../../../services/validate";
+import shared from "../../../services/shared";
 import axios from "axios";
 
 export default {
@@ -125,12 +147,15 @@ export default {
 		InfoBar,
 		TableButtonDefault,
 		TableButtonRemove,
+		TableButtonDisabled,
 		ContainerInputOnce,
 		BlockButtons,
 		ButtonClaim,
 		ButtonDefault,
 		IconSave,
 		IconLoad,
+		validate,
+		shared,
 		axios,
 	},
 	data() {
@@ -154,12 +179,32 @@ export default {
 					footer: true,
 				},
 			},
+			disabled: {
+				prices: {
+					save: false,
+					create: false,
+				},
+			},
 			loading: {
 				loader: {
 					prices: true,
 				},
 				sections: {
 					prices: false,
+				},
+			},
+			currentPrice: {
+				errors: {
+					file: {
+						body: "",
+						status: false,
+					},
+				},
+				data: {
+					file: {
+						body: "",
+						edited: false,
+					},
 				},
 			},
 			radioPrice: null,
@@ -235,18 +280,25 @@ export default {
 				case "text":
 					errorLog = validate.checkInputText(this.currentSpecialization.data[dataKey].body);
 					break;
+				case "file":
+					errorLog = validate.checkInputFile(this.$refs.fileUpload.files[0], [
+						"application/vnd.oasis.opendocument.spreadsheet",
+						"application/vnd.ms-excel",
+						"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+					]);
+					break;
 				default:
 					break;
 			}
 
 			if (errorLog.status) {
-				this.currentSpecialization.errors[dataKey].body = errorLog.message;
-				this.currentSpecialization.errors[dataKey].status = true;
+				this.currentPrice.errors[dataKey].body = errorLog.message;
+				this.currentPrice.errors[dataKey].status = true;
 
 				return true;
 			} else {
-				this.currentSpecialization.errors[dataKey].body = "";
-				this.currentSpecialization.errors[dataKey].status = false;
+				this.currentPrice.errors[dataKey].body = "";
+				this.currentPrice.errors[dataKey].status = false;
 
 				return false;
 			}
@@ -258,7 +310,9 @@ export default {
 				switch (inputKeys[i]) {
 					// Для поля файл
 					case "file":
-						console.log("Функция в разработке");
+						if (this.checkModalInput(inputKeys[i], "file")) {
+							errorCount++;
+						}
 						break;
 					// Для всех остальных полей
 					default:
@@ -284,6 +338,7 @@ export default {
 				if (item.id === price.id) {
 					this.radioPrice = price.id;
 					item.status = true;
+					item.delete = false;
 				} else {
 					item.status = false;
 				}
@@ -307,12 +362,140 @@ export default {
 
 			return date.toLocaleString("ru", options);
 		},
-		test() {
-			console.log(this.$refs.fileUpload.files[0]);
+		createPrice() {
+			if (this.checkModalInputsAll(["file"])) {
+				return;
+			}
 
-			// .ods - application/vnd.oasis.opendocument.spreadsheet
-			// .xls - application/vnd.ms-excel
-			// .xlsx - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+			/* Загрузка файла */
+			let formData = new FormData();
+			formData.append("image", this.$refs.fileUpload.files[0]);
+			formData.append("type", "prices");
+			formData.append("formats", ["ods", "xls", "xlsx"]);
+
+			this.disabled.prices.create = true;
+
+			axios({
+				method: "post",
+				url: `${this.$store.state.axios.urlApi}` + `upload-file`,
+				headers: {
+					"Content-Type": "multipart/form-data",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: formData,
+			})
+				.then((response) => {
+					if (response.data.status) {
+						try {
+							this.prices.push({
+								id: shared.getMaxId(this.prices) + 1,
+								filename: response.data.data.replace("/storage/prices/", ""),
+								path: response.data.data,
+								status: false,
+								created_at: new Date(),
+								delete: false,
+								create: true,
+							});
+
+							this.updateStatus(this.prices[this.prices.length - 1]);
+
+							this.disabled.prices.create = false;
+
+							this.closeModal("modal");
+						} catch (error) {
+							this.disabled.prices.create = false;
+
+							let debbugStory = {
+								title: "Ошибка.",
+								body: "Не удалось обновить данные после загрузки файла.",
+								type: "Error",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+						}
+					} else {
+						this.disabled.prices.create = false;
+
+						let debbugStory = {
+							title: "Ошибка.",
+							body: response.data.message,
+							type: "Error",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					}
+				})
+				.catch((error) => {
+					this.disabled.prices.create = false;
+
+					let debbugStory = {
+						title: "Ошибка.",
+						body: "Не удалось загрузить изображение.",
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+				});
+		},
+		savePricesFiles() {
+			let formData = new FormData();
+			formData.append("pricesFiles", JSON.stringify(this.prices));
+
+			this.disabled.prices.save = true;
+
+			axios({
+				method: "post",
+				url: `${this.$store.state.axios.urlApi}` + `save-prices-changes`,
+				headers: {
+					ContentType: "multipart/form-data",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: formData,
+			})
+				.then((response) => {
+					if (response.data.status) {
+						try {
+							shared.updateId(this.prices, response.data.data);
+							shared.clearDeletes(this.prices);
+							shared.clearFlags(this.prices);
+							shared.updateOrders(this.prices);
+
+							this.disabled.prices.save = false;
+
+							let debbugStory = {
+								title: "Успешно!",
+								body: response.data.message,
+								type: "Completed",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+						} catch (error) {
+							this.disabled.prices.save = false;
+
+							let debbugStory = {
+								title: "Ошибка.",
+								body: "Не удалось обновить данные после загрузки изображения.",
+								type: "Error",
+							};
+							this.$store.commit("debuggerState", debbugStory);
+						}
+					} else {
+						this.disabled.prices.save = false;
+
+						let debbugStory = {
+							title: "Ошибка.",
+							body: response.data.message,
+							type: "Error",
+						};
+						this.$store.commit("debuggerState", debbugStory);
+					}
+				})
+				.catch((error) => {
+					this.disabled.prices.save = false;
+
+					let debbugStory = {
+						title: "Ошибка.",
+						body: "Не удалось сохранить данные.",
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+				});
 		},
 	},
 	mounted() {
@@ -401,6 +584,15 @@ export default {
 .eprices > .item.delete:has(.info > .radio) {
 	border: 2px solid #ec7b7b;
 	background-color: #fff2f2;
+}
+
+.eprices > .item.create {
+	border: 2px solid var(--create-border-color);
+}
+
+.eprices > .item.create:has(.info > .radio) {
+	border: 2px solid var(--create-border-color);
+	background-color: var(--create-background-color);
 }
 
 .eprices > .item > .buttons {

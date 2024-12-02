@@ -107,6 +107,7 @@ Route::post('/get-shedules-all', [HomeController::class, 'getShedulesAll']);
 /* Цены                                                 */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 Route::post('/get-prices-files-all', [AdminController::class, 'getPricesFilesAll'])->middleware('auth:sanctum');
+Route::post('/save-prices-changes', [AdminController::class, 'savePricesChanges'])->middleware('auth:sanctum');
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 /* |                    СОЗДАТЕЛЬ                      |*/
 /* |___________________________________________________|*/

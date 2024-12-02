@@ -114,11 +114,16 @@ export default {
 	border: 2px solid var(--input-border-color-active);
 }
 
-.container-input-once > input.error {
+.container-input-once:is(.create, .delete) > input.error {
 	background-color: var(--input-background-color-error);
 	border: 2px solid var(--input-border-color-error);
 
 	caret-color: red;
+}
+
+.container-input-once:is(.create, .delete) > input.error::file-selector-button {
+	background-color: var(--input-border-color-error);
+	border: 2px solid var(--input-border-color-error);
 }
 
 .container-input-once > input::placeholder {
