@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Rules\File;
 
+use Exception;
+
 /* Модели */
 use App\Models\Rights;
 use App\Models\Status;
@@ -1475,10 +1477,61 @@ class AdminController extends Controller
          };
       }
 
+      $activeFile = PriceFile::where('status', true)->first();
+      $dataFromFile = $this->updatePrices('./storage/prices/' . $activeFile->filename);
+
       return response()->json([
          "status" => true,
          "message" => "Цены успешно сохранены.",
          "data" => $arrayID,
+         "file" => $dataFromFile,
       ]);
+   }
+
+   protected function updatePrices($path) {
+      try {
+         // Проверка существования файла
+         if (!file_exists($path)) {
+            return "Файл $path не найден.";
+         }
+
+         // Загрузка файла
+         $spreadsheet = IOFactory::load('./' . $path . '');         
+         // Получение всех листов файла
+         $sheetsAll = $spreadsheet->getAllSheets();
+         
+         $sheetsAlldata = [];
+         foreach ($sheetsAll as $sheet) {         
+            // Получение названия листа
+            $sheetName = $sheet->getTitle();
+
+            // Получение данных из листа
+            $sheetData = [];
+
+            // Получение всех данных при помощи итератора
+            $rowIterator = $sheet->getRowIterator();
+            
+            foreach ($sheet->getRowIterator() as $row) {
+               // Получение итератора ячейки 
+               $cellIterator = $row->getCellIterator();
+      
+               // Установите это значение в TRUE, если хотите пропускать пустые ячейки
+               $cellIterator->setIterateOnlyExistingCells(TRUE); 
+               
+               $rowData = [];
+               foreach ($cellIterator as $cell) {
+                  $rowData[] = $cell->getValue();
+               }
+
+               $sheetData[] = $rowData;
+            }
+            
+            $sheetsAlldata[$sheetName] = $sheetData;
+         }  
+
+         return $sheetsAlldata;         
+      } catch (Exception $e) {
+         return false;
+      };
    }
 }

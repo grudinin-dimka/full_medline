@@ -89,13 +89,26 @@
 						<TableButtonDisabled>Удалить</TableButtonDisabled>
 					</template>
 					<template v-else>
-						<a :href="price.path" download>
-							<TableButtonDefault>Скачать</TableButtonDefault>
-						</a>
-						<TableButtonRemove @click="updateDeleteElement(price)" v-if="!price.create"
-							>Удалить</TableButtonRemove
-						>
-						<TableButtonDisabled v-if="price.create">Удалить</TableButtonDisabled>
+						<template v-if="price.create">
+							<a :href="price.path" download>
+								<TableButtonDefault>Скачать</TableButtonDefault>
+							</a>
+							<TableButtonDisabled> Удалить </TableButtonDisabled>
+						</template>
+						<template v-if="price.delete">
+							<TableButtonDisabled> Скачать </TableButtonDisabled>
+							<TableButtonDefault @click="updateDeleteElement(price)">
+								Вернуть
+							</TableButtonDefault>
+						</template>
+						<template v-if="!price.delete && !price.create">
+							<a :href="price.path" download>
+								<TableButtonDefault>Скачать</TableButtonDefault>
+							</a>
+							<TableButtonRemove @click="updateDeleteElement(price)">
+								Вернуть
+							</TableButtonRemove>
+						</template>
 					</template>
 				</div>
 			</div>
@@ -452,10 +465,19 @@ export default {
 				.then((response) => {
 					if (response.data.status) {
 						try {
+							console.log(response.data);
+
 							shared.updateId(this.prices, response.data.data);
 							shared.clearDeletes(this.prices);
 							shared.clearFlags(this.prices);
 							shared.updateOrders(this.prices);
+
+							for (let key in response.data.data) {
+								if (response.data.data[key].old === this.radioPrice) {
+									this.radioPrice = response.data.data[key].new;
+									break;
+								}
+							}
 
 							this.disabled.prices.save = false;
 
