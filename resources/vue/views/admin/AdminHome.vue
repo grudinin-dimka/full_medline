@@ -1198,8 +1198,6 @@ export default {
 					this.slides[key].create = false;
 				}
 				sorted.sortByOrder("up", this.slides);
-
-				this.loading.loader.slider = false;
 			})
 			.catch((error) => {
 				let debbugStory = {
@@ -1208,6 +1206,9 @@ export default {
 					type: "Error",
 				};
 				this.$store.commit("debuggerState", debbugStory);
+			})
+			.finally(() => {
+				this.loading.loader.slider = false;
 			});
 
 		// Получение массива данных о футере с сервера
@@ -1224,8 +1225,6 @@ export default {
 						this.footer[key].symbolsCount = response.data[key].length;
 					}
 				}
-
-				this.loading.loader.footer = false;
 			})
 			.catch((error) => {
 				let debbugStory = {
@@ -1234,6 +1233,9 @@ export default {
 					type: "Error",
 				};
 				this.$store.commit("debuggerState", debbugStory);
+			})
+			.finally(() => {
+				this.loading.loader.footer = false;
 			});
 	},
 };

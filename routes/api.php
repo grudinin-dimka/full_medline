@@ -103,6 +103,10 @@ Route::post('/save-certificates-changes', [AdminController::class, 'saveCertific
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 Route::post('/save-shedules-all', [AdminController::class, 'saveShedulesAll']);
 Route::post('/get-shedules-all', [HomeController::class, 'getShedulesAll']);
+/* _____________________________________________________*/
+/* Цены                                                 */
+/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+Route::post('/get-prices-files-all', [AdminController::class, 'getPricesFilesAll'])->middleware('auth:sanctum');
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 /* |                    СОЗДАТЕЛЬ                      |*/
 /* |___________________________________________________|*/

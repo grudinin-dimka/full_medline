@@ -45,6 +45,7 @@ use App\Models\ShedulesClinic;
 use App\Models\ShedulesCurrentDay;
 use App\Models\ShedulesDay;
 use App\Models\ShedulesDaysTime;
+use App\Models\PriceFile;
 
 class AdminController extends Controller
 {
@@ -1349,5 +1350,32 @@ class AdminController extends Controller
             "shedulesDays" => ShedulesDay::all(),
          ],
       ]);
+   }
+   /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+   /* |                      ЦЕНЫ                         |*/
+   /* |___________________________________________________|*/
+   /* _____________________________________________________*/
+   /* 1. Файлы с ценами                                    */
+   /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+   public function getPricesFilesAll(Request $request) {
+      $pricesFiles = PriceFile::all();
+      
+      if ($pricesFiles->isEmpty()) {
+         return response()->json([
+            "status" => false,
+            "message" => "Цены не найдены.",
+            "data" => null,
+         ]);
+      } else {
+         foreach ($pricesFiles as $pricesFilesKey => $pricesFilesValue) {
+            $pricesFiles[$pricesFilesKey]->path = Storage::url('prices/' . $pricesFilesValue->filename);
+         };
+
+         return response()->json([
+            "status" => true,
+            "message" => "Цены успешно получены.",
+            "data" => $pricesFiles,
+         ]);   
+      };
    }
 }

@@ -1036,8 +1036,6 @@ export default {
 		},
 	},
 	mounted() {
-		this.loading.loader.clinics = false;
-
 		axios({
 			method: "post",
 			url: `${this.$store.state.axios.urlApi}` + `get-contacts-all`,
@@ -1063,7 +1061,9 @@ export default {
 				}
 			})
 			.catch((error) => {})
-			.finally(() => {});
+			.finally(() => {
+				this.loading.loader.clinics = false;
+			});
 	},
 };
 </script>

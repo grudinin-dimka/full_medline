@@ -14,18 +14,8 @@ return new class extends Migration
     {
         Schema::create('prices', function (Blueprint $table) {
             $table->id();
-            $table->boolean('status')->default(false);
-            $table->string('filename');            
             $table->timestamps();
         });
-
-        DB::table('prices')->insert(
-            [
-                ['status' => false, 'filename' => 'price1.ods'],
-                ['status' => false, 'filename' => 'price2.ods'],
-                ['status' => true, 'filename' => 'price3.ods'],
-            ]
-        );
     }
 
 

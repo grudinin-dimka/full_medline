@@ -1,4 +1,6 @@
 <template>
+	<!-- STOP делал подгрузку цен -->
+
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                  МОДАЛЬНОЕ ОКНО                   |-->
 	<!--|___________________________________________________|-->
@@ -112,6 +114,8 @@ import BlockButtons from "../../../components/ui/admin/blocks/BlockButtons.vue";
 import IconSave from "../../../components/icons/IconSave.vue";
 import IconLoad from "../../../components/icons/IconLoad.vue";
 
+import axios from "axios";
+
 export default {
 	components: {
 		LoaderChild,
@@ -127,6 +131,7 @@ export default {
 		ButtonDefault,
 		IconSave,
 		IconLoad,
+		axios,
 	},
 	data() {
 		return {
@@ -158,35 +163,7 @@ export default {
 				},
 			},
 			radioPrice: null,
-			prices: [
-				{
-					id: 1,
-					created_at: "2024-01-01",
-					status: true,
-					filename: "price1.ods",
-					path: "/storage/files/price1.ods",
-					create: false,
-					delete: false,
-				},
-				{
-					id: 2,
-					created_at: "2024-01-02",
-					status: false,
-					filename: "price2.ods",
-					path: "/storage/files/price2.ods",
-					create: false,
-					delete: false,
-				},
-				{
-					id: 3,
-					created_at: "2024-01-03",
-					status: false,
-					filename: "price3.ods",
-					path: "/storage/files/price3.ods",
-					create: false,
-					delete: false,
-				},
-			],
+			prices: [],
 		};
 	},
 	computed: {
@@ -339,9 +316,42 @@ export default {
 		},
 	},
 	mounted() {
-		this.loading.loader.prices = false;
+		axios({
+			method: "post",
+			headers: {
+				Accept: "application/json",
+				Authorization: `Bearer ${localStorage.getItem("token")}`,
+			},
+			url: `${this.$store.state.axios.urlApi}` + `get-prices-files-all`,
+		})
+			.then((response) => {
+				if (response.data.status) {
+					this.prices = response.data.data;
 
-		this.radioPrice = 1;
+					let priceActive = this.prices.find((item) => item.status == true);
+					if (priceActive) {
+						this.radioPrice = priceActive.id;
+					}
+
+					this.prices.forEach((item) => {
+						item.create = false;
+						item.delete = false;
+					});
+				} else {
+					let debbugStory = {
+						title: "Ошибка.",
+						body: response.data.message,
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+				}
+			})
+			.catch((error) => {
+				console.log(error);
+			})
+			.finally(() => {
+				this.loading.loader.prices = false;
+			});
 	},
 };
 </script>
