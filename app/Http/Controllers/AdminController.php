@@ -1379,6 +1379,7 @@ class AdminController extends Controller
    /* _____________________________________________________*/
    /* 1. Файлы с ценами                                    */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+   /* Получение всех файлов с ценами */
    public function getPricesFilesAll(Request $request) {
       $pricesFiles = PriceFile::all();
       
@@ -1400,7 +1401,7 @@ class AdminController extends Controller
          ]);   
       };
    }
-   
+   /* Сохранение изменений */
    public function savePricesChanges(Request $request) {
       $pricesFiles = json_decode($request->pricesFiles);
       
@@ -1480,10 +1481,10 @@ class AdminController extends Controller
       $activeFile = PriceFile::where('status', true)->first();
       $dataFromFile = $this->updatePrices('./storage/prices/' . $activeFile->filename);
 
-      if (!$dataFromFile) {
+      if (!$dataFromFile->status) {
          return response()->json([
             "status" => false,
-            "message" => "Не удалось считать данные из файла.",
+            "message" => $dataFromFile->message,
             "data" => null,
          ]);
       };
@@ -1492,19 +1493,24 @@ class AdminController extends Controller
          "status" => true,
          "message" => "Цены успешно сохранены.",
          "data" => $arrayID,
-         "file" => $dataFromFile,
+         "file" => $dataFromFile->data,
       ]);
    }
-
+   /* Считывание данных с файла .ods, .xls, .xlsx */
    protected function updatePrices($path) {
+      // Проверка существования файла
+      if (!file_exists($path)) {
+         return (object) [
+            "status" => false,
+            "message" => "Файл не существует.",
+            "data" => null,
+         ];
+      }
+
       try {
-         // Проверка существования файла
-         if (!file_exists($path)) {
-            return "Файл $path не найден.";
-         }
 
          // Загрузка файла
-         $spreadsheet = IOFactory::load('./' . $path . '');         
+         $spreadsheet = IOFactory::load($path);         
          // Получение всех листов файла
          $sheetsAll = $spreadsheet->getAllSheets();
          
@@ -1534,10 +1540,14 @@ class AdminController extends Controller
                $sheetData[] = $rowData;
             }
             
-            $sheetsAlldata[$sheetName] = $sheetData;
+            $sheetsAlldata[] = $sheetData;
          }  
 
-         return $sheetsAlldata;         
+         return (object) [
+            "status" => true,
+            "message" => "Данные с файла считаны.",
+            "data" => $sheetsAlldata,
+         ];
       } catch (Exception $e) {
          return false;
       };
