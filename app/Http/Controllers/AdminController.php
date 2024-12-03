@@ -1480,6 +1480,14 @@ class AdminController extends Controller
       $activeFile = PriceFile::where('status', true)->first();
       $dataFromFile = $this->updatePrices('./storage/prices/' . $activeFile->filename);
 
+      if (!$dataFromFile) {
+         return response()->json([
+            "status" => false,
+            "message" => "Не удалось считать данные из файла.",
+            "data" => null,
+         ]);
+      };
+
       return response()->json([
          "status" => true,
          "message" => "Цены успешно сохранены.",

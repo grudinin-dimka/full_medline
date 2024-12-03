@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Price extends Model
+class PriceCategory extends Model
 {
     use HasFactory;
 
-    protected $table = "prices";
+    protected $table = "price_categories";
     protected $guarded = [];
-    protected $hidden = ['updated_at'];
+    protected $hidden = ['created_at, updated_at'];
 }

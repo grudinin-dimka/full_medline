@@ -106,7 +106,7 @@
 								<TableButtonDefault>Скачать</TableButtonDefault>
 							</a>
 							<TableButtonRemove @click="updateDeleteElement(price)">
-								Вернуть
+								Удалить
 							</TableButtonRemove>
 						</template>
 					</template>
