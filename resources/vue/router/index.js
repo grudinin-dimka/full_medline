@@ -223,6 +223,14 @@ const router = createRouter({
 			component: NotFound,
 		},
 	],
+	/* Отмотка страницы */
+	scrollBehavior(to, from, savedPosition) {
+		if (savedPosition) {
+			return savedPosition;
+		} else {
+			return { top: 0 };
+		}
+	},
 });
 
 router.beforeEach((to, from, next) => {

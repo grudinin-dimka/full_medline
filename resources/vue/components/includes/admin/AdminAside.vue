@@ -185,13 +185,6 @@ export default {
 
 			// смена статуса закрытия бургера
 			this.$store.state.burger.status = false;
-
-			// скролл к верху
-			window.scrollTo({
-				top: 0,
-				left: 0,
-				behavior: "instant",
-			});
 		},
 		insertSubPage(subPage) {
 			this.$router.push({ name: `${subPage}` });

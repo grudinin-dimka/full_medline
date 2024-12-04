@@ -33,13 +33,6 @@ export default {
 
 			// смена статуса закрытия бургера
 			this.$store.state.burger.main.status = false;
-
-			// скролл к верху
-			window.scrollTo({
-				top: 0,
-				left: 0,
-				behavior: "instant",
-			});
 		},
 	},
 };
