@@ -8,7 +8,53 @@
 			<div class="logo">
 				<Logo />
 			</div>
-			<form @submit.prevent>
+			<container-input>
+				<container-input-once :type="'edit'">
+					<template #title>
+						<span>ЛОГИН</span>
+					</template>
+					<template #input>
+						<input
+							type="text"
+							placeholder="Введите логин"
+							v-model="currentLogin.data.name.body"
+							:class="{ error: currentLogin.errors.name.status }"
+							@blur="checkModalInput('currentLogin', 'name', 'text')"
+						/>
+					</template>
+					<template #error>
+						<span class="error" v-if="currentLogin.errors.name.status">
+							{{ currentLogin.errors.name.body }}
+						</span>
+					</template>
+				</container-input-once>
+				<container-input-once :type="'edit'">
+					<template #title>
+						<span>ПАРОЛЬ</span>
+					</template>
+					<template #input>
+						<input
+							type="password"
+							placeholder="Введите пароль"
+							v-model="currentLogin.data.password.body"
+							:class="{ error: currentLogin.errors.password.status }"
+							@blur="checkModalInput('currentLogin', 'password', 'text')"
+						/>
+					</template>
+					<template #error>
+						<span class="error" v-if="currentLogin.errors.password.status">
+							{{ currentLogin.errors.password.body }}
+						</span>
+					</template>
+				</container-input-once>
+				<div class="buttons">
+					<ButtonDefault @click="loginUser" :disabled="disabled.login.update">
+						Войти
+					</ButtonDefault>
+				</div>
+			</container-input>
+
+			<!-- <form @submit.prevent>
 				<div class="block">
 					<label>Логин</label>
 					<input
@@ -37,7 +83,7 @@
 						Войти
 					</ButtonDefault>
 				</div>
-			</form>
+			</form> -->
 		</div>
 	</div>
 </template>
@@ -49,7 +95,12 @@ import Loader from "./includes/loader.vue";
 import axios from "axios";
 
 import Logo from "./icons/logo.vue";
+
+import ContainerInput from "./ui/admin/containers/ContainerInput.vue";
+import ContainerInputOnce from "./ui/admin/containers/input/ContainerInputOnce.vue";
 import ButtonDefault from "./ui/admin/buttons/ButtonDefault.vue";
+
+import validate from "../services/validate";
 
 export default {
 	components: {
@@ -57,7 +108,10 @@ export default {
 		Loader,
 		axios,
 		Logo,
+		ContainerInput,
+		ContainerInputOnce,
 		ButtonDefault,
+		validate,
 	},
 	data() {
 		return {
@@ -70,6 +124,28 @@ export default {
 			disabled: {
 				login: {
 					update: false,
+				},
+			},
+			currentLogin: {
+				errors: {
+					name: {
+						body: "",
+						status: false,
+					},
+					password: {
+						body: "",
+						status: false,
+					},
+				},
+				data: {
+					name: {
+						body: "",
+						edited: false,
+					},
+					password: {
+						body: "",
+						edited: false,
+					},
 				},
 			},
 			errors: {
@@ -86,112 +162,150 @@ export default {
 		};
 	},
 	methods: {
-		// Проверка поля email
-		checkName() {
-			// Пустота
-			if (this.name === "") {
-				this.errors.name.status = true;
-				this.errors.name.value = "Поле не может быть пустым";
-				return false;
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                     ПРОВЕРКИ                      |*/
+		/* |___________________________________________________|*/
+		/* Проверка поля имени */
+		checkModalInput(currentName, dataKey, inputType) {
+			let errorLog = {};
+			switch (inputType) {
+				case "text":
+					errorLog = validate.checkInputText(this[currentName].data[dataKey].body);
+					break;
+				case "email":
+					errorLog = validate.checkInputEmail(this[currentName].data[dataKey].body);
+					break;
+				case "phone":
+					errorLog = validate.checkInputPhone(this[currentName].data[dataKey].body);
+					break;
+				case "file":
+					errorLog = this.chekInputFile();
+					break;
+				case "select":
+					errorLog = this.checkSelect(this[currentName].data[dataKey].body);
+					break;
+				default:
+					break;
 			}
 
-			this.errors.name.status = false;
-			this.errors.name.value = "";
-			return true;
-		},
+			if (errorLog.status) {
+				this[currentName].errors[dataKey].body = errorLog.message;
+				this[currentName].errors[dataKey].status = true;
 
-		// Проверка поля email
-		checkPassword() {
-			// Пустота
-			if (this.password === "") {
-				this.errors.password.status = true;
-				this.errors.password.value = "Поле не может быть пустым";
+				return true;
+			} else {
+				this[currentName].errors[dataKey].body = "";
+				this[currentName].errors[dataKey].status = false;
+
 				return false;
 			}
-
-			this.errors.password.status = false;
-			this.errors.password.value = "";
-			return true;
 		},
-
-		// Проверка всех полей
-		checkAllInputs() {
-			let errors = 0;
-
-			if (!this.checkName()) errors++;
-			if (!this.checkPassword()) errors++;
-
-			if (errors !== 0) return false;
-			else return true;
-		},
-
-		// Авторизация
-		async loginUser() {
-			if (this.checkAllInputs()) {
-				this.disabled.login.update = true;
-
-				axios({
-					method: "post",
-					url: `${this.$store.state.axios.urlApi}` + `login`,
-					data: {
-						name: this.name,
-						password: this.password,
-					},
-				})
-					.then((response) => {
-						if (response.data.status) {
-							// Запись токена в глобальную переменную
-							localStorage.setItem("token", response.data.result.token);
-							// Запись пользователя в глобальную переменную
-
-							axios.defaults.headers.common["Accept"] = "application/json";
-							axios.defaults.headers.common[
-								"Authorization"
-							] = `Bearer ${localStorage.getItem("token")}`;
-
-							// Вводим первоначальные данные активной ссылки
-							localStorage.setItem("linkActiveName", "ehome");
-							localStorage.setItem("linkPreviosName", "ehome");
-
-							// Перевод на страницу админки
-							this.$router.push({ name: "ehome" });
-
-							// Очистка ошибок
-							this.errors.name.status = false;
-							this.errors.name.value = "";
-							this.errors.password.status = false;
-							this.errors.password.value = "";
-
-							this.disabled.login.update = false;
-
-							return;
-						} else {
-							this.disabled.login.update = false;
-
-							let debbugStory = {
-								title: "Ошибка.",
-								body: response.data.message,
-								type: "Error",
-							};
-							this.$store.commit("debuggerState", debbugStory);
+		/* Проверка всех полей ввода модального окна */
+		checkModalInputsAll(currentName, inputKeys) {
+			let errorCount = 0;
+			for (let i = 0; i < inputKeys.length; i++) {
+				switch (inputKeys[i]) {
+					case "file":
+						if (this.checkModalInput(currentName, inputKeys[i], "file")) {
+							errorCount++;
 						}
-					})
-					.catch((error) => {
-						this.errors.server = true;
+						break;
+					case "email":
+						if (this.checkModalInput(currentName, inputKeys[i], "email")) {
+							errorCount++;
+						}
+						break;
+					case "statusId":
+					case "rightsId":
+						if (this.checkModalInput(currentName, inputKeys[i], "select")) {
+							errorCount++;
+						}
+						break;
+					// Для всех остальных полей
+					default:
+						if (this.checkModalInput(currentName, inputKeys[i], "text")) {
+							errorCount++;
+						}
+						break;
+				}
+			}
+
+			if (errorCount > 0) {
+				return true;
+			} else {
+				return false;
+			}
+		},
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                   АВТОРИЗАЦИЯ                     |*/
+		/* |___________________________________________________|*/
+		/* Авторизация */
+		async loginUser() {
+			if (this.checkModalInputsAll("currentLogin", ["name", "password"])) return;
+
+			this.disabled.login.update = true;
+
+			axios({
+				method: "post",
+				url: `${this.$store.state.axios.urlApi}` + `login`,
+				data: {
+					name: this.currentLogin.data.name.body,
+					password: this.currentLogin.data.password.body,
+				},
+			})
+				.then((response) => {
+					if (response.data.status) {
+						// Запись токена в глобальную переменную
+						localStorage.setItem("token", response.data.result.token);
+						// Запись пользователя в глобальную переменную
+
+						axios.defaults.headers.common["Accept"] = "application/json";
+						axios.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem(
+							"token"
+						)}`;
+
+						// Вводим первоначальные данные активной ссылки
+						localStorage.setItem("linkActiveName", "ehome");
+						localStorage.setItem("linkPreviosName", "ehome");
+
+						// Перевод на страницу админки
+						this.$router.push({ name: "ehome" });
+
+						// Очистка ошибок
+						this.errors.name.status = false;
+						this.errors.name.value = "";
+						this.errors.password.status = false;
+						this.errors.password.value = "";
+
 						this.disabled.login.update = false;
-						j;
+
+						return;
+					} else {
+						this.disabled.login.update = false;
+
 						let debbugStory = {
 							title: "Ошибка.",
-							body: "Отсутствует соединение с сервером.",
+							body: response.data.message,
 							type: "Error",
 						};
 						this.$store.commit("debuggerState", debbugStory);
-						return;
-					})
-					.finally(() => {
-						this.loader.loading = false;
-					});
-			}
+					}
+				})
+				.catch((error) => {
+					this.errors.server = true;
+					this.disabled.login.update = false;
+					j;
+					let debbugStory = {
+						title: "Ошибка.",
+						body: "Отсутствует соединение с сервером.",
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+					return;
+				})
+				.finally(() => {
+					this.loader.loading = false;
+				});
 		},
 	},
 	mounted() {
@@ -266,51 +380,11 @@ export default {
 	font-size: 20px;
 }
 
-.block input {
-	box-sizing: border-box;
-	outline: none;
-
-	padding: 10px;
-	border: 2px solid var(--input-border-color-inactive);
-	border-radius: 10px;
-
-	height: 58px;
-
-	font-size: 20px;
-	caret-color: var(--input-border-color-active);
-
-	transition: all 0.2s;
-}
-
-.block input:focus {
-	border: 2px solid var(--input-border-color-active);
-}
-
-.block input.error {
-	background-color: var(--input-background-color-error);
-	border: 2px solid var(--input-border-color-error);
-
-	caret-color: red;
-}
-
-span {
-	margin-top: 5px;
-	margin-left: 5px;
-	color: var(--span-color-error);
-}
-
 .buttons {
 	display: flex;
 	justify-content: center;
 
 	margin-top: 30px;
-}
-
-p.error {
-	padding: 15px;
-	border-radius: 10px;
-	background-color: var(--input-background-color-error);
-	border: 2px solid var(--input-border-color-error);
 }
 
 @media screen and (max-width: 620px) {

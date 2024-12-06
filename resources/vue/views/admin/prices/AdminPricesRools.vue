@@ -7,7 +7,7 @@
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                      ПРАВИЛА                      |-->
 	<!--|___________________________________________________|-->
-	<block-once :minHeight="300">
+	<block-once :minHeight="200">
 		<block-title>
 			<template #title>1. Структура</template>
 		</block-title>
@@ -17,7 +17,7 @@
 			<div class="details-content">
 				<p>
 					На строках с 1-10 должны быть расположена следующая информация:
-					<img src="../../../assets/img/prices-rools-1-10.jpg" alt="" />
+					<img :src="`/storage/other/prices-rools-1-10.jpg`" alt="" />
 					В левой части расположен логотип мед. центра. В правой части информация о главном
 					враче, дате и название мед. центра.
 				</p>
@@ -27,30 +27,40 @@
 			<summary class="details-title">1.2. Заголовок, адрес, телефон</summary>
 			<div class="details-content">
 				<p>
-					На строках с 1-10 должны быть расположена следующая информация:
-					<img src="../../../assets/img/prices-rools-11-14.jpg" alt="" />
-					В левой части расположен логотип мед. центра. В правой части информация о главном
-					враче, дате и название мед. центра.
+					На строках с 11-13 должны быть расположена следующая информация:
+					<img :src="`/storage/other/prices-rools-11-13.jpg`" alt="" />
+					11 строка - заголовок, 12 строка - адрес, 13 строка - телефон.
 				</p>
 			</div>
 		</details>
 		<details class="details">
-			<summary class="details-title">1.3. Что-то</summary>
+			<summary class="details-title">1.3. Заголовки таблицы с услугами</summary>
 			<div class="details-content">
 				<p>
-					Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum omnis beatae itaque!
-					Maxime consequuntur architecto, voluptatibus iste aliquid quaerat dolores, culpa
-					repellendus optio omnis rem saepe quisquam incidunt, numquam molestias?
+					На строках с 14-15 должны быть расположена следующая информация:
+					<img :src="`/storage/other/prices-rools-14-15.jpg`" alt="" />
+					14 строка - пустая, 15 строка - заголовки для таблицы (№, Наименование услуги, Цена).
 				</p>
 			</div>
 		</details>
 		<details class="details">
-			<summary class="details-title">1.4. Что-то</summary>
+			<summary class="details-title">1.4. Категории</summary>
 			<div class="details-content">
 				<p>
-					Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum omnis beatae itaque!
-					Maxime consequuntur architecto, voluptatibus iste aliquid quaerat dolores, culpa
-					repellendus optio omnis rem saepe quisquam incidunt, numquam molestias?
+					Начиная со строки 16 (включительно) можно начинать заполнять таблицу. Для того, чтобы
+					указать категорию нужно объеденить все столбцы в данной строке, которые используются.
+					<img :src="`/storage/other/prices-rools-category.jpg`" alt="" />
+				</p>
+			</div>
+		</details>
+		<details class="details">
+			<summary class="details-title">1.5. Услуги</summary>
+			<div class="details-content">
+				<p>
+					Услуги заполняются только На строках с 14-15 должны быть расположена следующая
+					информация:
+					<img :src="`/storage/other/prices-rools-14-15.jpg`" alt="" />
+					14 строка - пустая, 15 строка - заголовки для таблицы (№, Наименование услуги, Цена).
 				</p>
 			</div>
 		</details>
