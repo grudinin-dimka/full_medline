@@ -11,13 +11,24 @@
 		<block-title>
 			<template #title>1. Структура</template>
 		</block-title>
-
+		<details class="details">
+			<summary class="details-title">1.0. Общий шаблон.</summary>
+			<div class="details-content">
+				<div class="details-content-img">
+					<img :src="`/storage/other/prices-rools.png`" alt="" />
+					<span>рис. 1</span>
+				</div>
+			</div>
+		</details>
 		<details class="details">
 			<summary class="details-title">1.1. Основная информация</summary>
 			<div class="details-content">
-				<p>
-					На строках с 1-10 должны быть расположена следующая информация:
+				<p>На строках с 1-10 должны быть расположена следующая информация (рис. 2):</p>
+				<div class="details-content-img">
 					<img :src="`/storage/other/prices-rools-1-10.jpg`" alt="" />
+					<span>рис. 2</span>
+				</div>
+				<p>
 					В левой части расположен логотип мед. центра. В правой части информация о главном
 					враче, дате и название мед. центра.
 				</p>
@@ -26,19 +37,26 @@
 		<details class="details">
 			<summary class="details-title">1.2. Заголовок, адрес, телефон</summary>
 			<div class="details-content">
-				<p>
-					На строках с 11-13 должны быть расположена следующая информация:
+				<p>На строках с 11-13 должны быть расположена следующая информация (рис. 3):</p>
+				<div class="details-content-img">
 					<img :src="`/storage/other/prices-rools-11-13.jpg`" alt="" />
-					11 строка - заголовок, 12 строка - адрес, 13 строка - телефон.
-				</p>
+					<span>рис. 3</span>
+				</div>
+				<p>11 строка - заголовок, 12 строка - адрес, 13 строка - телефон.</p>
 			</div>
 		</details>
 		<details class="details">
-			<summary class="details-title">1.3. Заголовки таблицы с услугами</summary>
+			<summary class="details-title">1.3. Заголовки таблицы с категориями и услугами</summary>
 			<div class="details-content">
 				<p>
-					На строках с 14-15 должны быть расположена следующая информация:
+					На строках с 14-15 должны быть расположена следующая информация (рис. 4): 14 строка -
+					пустая, 15 строка - заголовки для таблицы (№, Наименование услуги, Цена).
+				</p>
+				<div class="details-content-img">
 					<img :src="`/storage/other/prices-rools-14-15.jpg`" alt="" />
+					<span>рис. 4</span>
+				</div>
+				<p>
 					14 строка - пустая, 15 строка - заголовки для таблицы (№, Наименование услуги, Цена).
 				</p>
 			</div>
@@ -48,78 +66,41 @@
 			<div class="details-content">
 				<p>
 					Начиная со строки 16 (включительно) можно начинать заполнять таблицу. Для того, чтобы
-					указать категорию нужно объеденить все столбцы в данной строке, которые используются.
-					<img :src="`/storage/other/prices-rools-category.jpg`" alt="" />
+					указать категорию нужно объеденить все столбцы в данной строке, которые используются
+					(кроме столбца с порядковым номером).
 				</p>
+				<div class="details-content-img">
+					<img :src="`/storage/other/prices-rools-16.jpg`" alt="" />
+					<span>рис. 5</span>
+				</div>
+				<p>
+					Для обозначение категории нужно в столбце с порядковым номером вписать # (рис. 5).
+					Бывают случаи, когда нужно сделать одну общую категорию для других категорий, для
+					этого достаточно добавить # к исходному значению в ячейке с порядковым номер для
+					каждой новой вложенный категории (рис. 6).
+				</p>
+				<div class="details-content-img">
+					<img :src="`/storage/other/prices-rools-16-categories.jpg`" alt="" />
+					<span>рис. 6</span>
+				</div>
 			</div>
 		</details>
 		<details class="details">
 			<summary class="details-title">1.5. Услуги</summary>
 			<div class="details-content">
 				<p>
-					Услуги заполняются только На строках с 14-15 должны быть расположена следующая
-					информация:
-					<img :src="`/storage/other/prices-rools-14-15.jpg`" alt="" />
-					14 строка - пустая, 15 строка - заголовки для таблицы (№, Наименование услуги, Цена).
+					Начиная со строки 16 (включительно) можно начинать заполнять таблицу услугами.
+					Однако, важно учитывать главное условие: "Услуга всегда идёт только после указания
+					выше где-либо категории услуг" (рис. 7-8).
 				</p>
-			</div>
-		</details>
-
-		<LoaderChild
-			:isLoading="loading.loader.rools"
-			:minHeight="300"
-			@loaderChildAfterLeave=""
-		></LoaderChild>
-	</block-once>
-
-	<block-once :minHeight="300">
-		<block-title>
-			<template #title>2. Оформление</template>
-		</block-title>
-
-		<details class="details">
-			<summary class="details-title">2.1. Объеденение ячеек</summary>
-			<div class="details-content">
-				<p>
-					Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum omnis beatae itaque!
-					Maxime consequuntur architecto, voluptatibus iste aliquid quaerat dolores, culpa
-					repellendus optio omnis rem saepe quisquam incidunt, numquam molestias?
-				</p>
-				<p>
-					Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum omnis beatae itaque!
-					Maxime consequuntur architecto, voluptatibus iste aliquid quaerat dolores, culpa
-					repellendus optio omnis rem saepe quisquam incidunt, numquam molestias?
-				</p>
-			</div>
-		</details>
-		<details class="details">
-			<summary class="details-title">2.2. Что-то</summary>
-			<div class="details-content">
-				<p>
-					Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum omnis beatae itaque!
-					Maxime consequuntur architecto, voluptatibus iste aliquid quaerat dolores, culpa
-					repellendus optio omnis rem saepe quisquam incidunt, numquam molestias?
-				</p>
-			</div>
-		</details>
-		<details class="details">
-			<summary class="details-title">2.3. Что-то</summary>
-			<div class="details-content">
-				<p>
-					Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum omnis beatae itaque!
-					Maxime consequuntur architecto, voluptatibus iste aliquid quaerat dolores, culpa
-					repellendus optio omnis rem saepe quisquam incidunt, numquam molestias?
-				</p>
-			</div>
-		</details>
-		<details class="details">
-			<summary class="details-title">2.4. Что-то</summary>
-			<div class="details-content">
-				<p>
-					Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum omnis beatae itaque!
-					Maxime consequuntur architecto, voluptatibus iste aliquid quaerat dolores, culpa
-					repellendus optio omnis rem saepe quisquam incidunt, numquam molestias?
-				</p>
+				<div class="details-content-img">
+					<img :src="`/storage/other/prices-rools-usligi-1.png`" alt="" />
+					<span>рис. 7</span>
+				</div>
+				<div class="details-content-img">
+					<img :src="`/storage/other/prices-rools-usligi-2.png`" alt="" />
+					<span>рис. 8</span>
+				</div>
 			</div>
 		</details>
 
@@ -235,20 +216,23 @@ body {
 }
 
 .details-content {
-	padding: 0 24px;
-	font-size: 18px;
-	margin-bottom: -30px;
-}
-
-.details-content > p {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
 
+	padding: 0 24px;
+	margin-bottom: -30px;
+
+	font-size: 18px;
+}
+
+.details-content > p {
+	text-indent: 48px;
+	line-height: 1.5;
 	padding-left: 24px;
 }
 
-.details-content > p > img {
+.details-content > img {
 	margin: auto;
 }
 
@@ -258,5 +242,19 @@ body {
 
 .details-content p:first-child {
 	margin-top: 0;
+}
+
+.details-content-img {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
+	margin: 10px;
+}
+
+.details-content-img > span {
+	margin-top: 10px;
+	color: rgb(170, 170, 170);
 }
 </style>

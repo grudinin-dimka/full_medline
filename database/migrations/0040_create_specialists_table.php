@@ -44,49 +44,49 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        DB::table('specialists')->insert([
-            "link" => "https://prodoctorov.ru/shadrinsk/vrach/871312-vlasov/",
-            "family" => "Власов",
-            "name" => "Павел",
-            "surname" => "Александрович",
-            "category" => "Вторая",
-            "degree" => "Кандидат медицинских наук",
-            "rank" => "Доцент",
-            "startWorkAge" => date('Y-m-d'),
-            "startWorkCity" => "Москва",
-            "adultDoctor" => true,
-            "childrenDoctor" => false,
-            "filename" => "vlasov.png"
-        ]);
-        DB::table('specialists')->insert([
-            "link" => "https://prodoctorov.ru/shadrinsk/vrach/513584-dymshakova/",
-            "family" => "Дымшакова",
-            "name" => "Наталья",
-            "surname" => "Юрьевна",
-            "category" => "Первая",
-            "degree" => "Кандидат медицинских наук",
-            "rank" => "Доцент",
-            "startWorkAge" => date('Y-m-d'),
-            "startWorkCity" => "Москва",
-            "adultDoctor" => true,
-            "childrenDoctor" => false,
-            "filename" => "dimshakova.png"
-        ]);
-        DB::table('specialists')->insert([
-            "link" => "https://prodoctorov.ru/shadrinsk/vrach/649542-kuzovnikova/",
-            "family" => "Кузовникова",
-            "name" => "Тамара",
-            "surname" => "Георгиевна",
-            "category" => "Первая",
-            "degree" => "Доктор медицинских наук",
-            "rank" => "Эмерит",
-            "startWorkAge" => date('Y-m-d'),
-            "startWorkCity" => "Москва",
-            "adultDoctor" => true,
-            "childrenDoctor" => true,
-            "childrenDoctorAge" => 3,
-            "filename" => "kuzovnikova.png"
-        ]);
+        // DB::table('specialists')->insert([
+        //     "link" => "https://prodoctorov.ru/shadrinsk/vrach/871312-vlasov/",
+        //     "family" => "Власов",
+        //     "name" => "Павел",
+        //     "surname" => "Александрович",
+        //     "category" => "Вторая",
+        //     "degree" => "Кандидат медицинских наук",
+        //     "rank" => "Доцент",
+        //     "startWorkAge" => date('Y-m-d'),
+        //     "startWorkCity" => "Москва",
+        //     "adultDoctor" => true,
+        //     "childrenDoctor" => false,
+        //     "filename" => "vlasov.png"
+        // ]);
+        // DB::table('specialists')->insert([
+        //     "link" => "https://prodoctorov.ru/shadrinsk/vrach/513584-dymshakova/",
+        //     "family" => "Дымшакова",
+        //     "name" => "Наталья",
+        //     "surname" => "Юрьевна",
+        //     "category" => "Первая",
+        //     "degree" => "Кандидат медицинских наук",
+        //     "rank" => "Доцент",
+        //     "startWorkAge" => date('Y-m-d'),
+        //     "startWorkCity" => "Москва",
+        //     "adultDoctor" => true,
+        //     "childrenDoctor" => false,
+        //     "filename" => "dimshakova.png"
+        // ]);
+        // DB::table('specialists')->insert([
+        //     "link" => "https://prodoctorov.ru/shadrinsk/vrach/649542-kuzovnikova/",
+        //     "family" => "Кузовникова",
+        //     "name" => "Тамара",
+        //     "surname" => "Георгиевна",
+        //     "category" => "Первая",
+        //     "degree" => "Доктор медицинских наук",
+        //     "rank" => "Эмерит",
+        //     "startWorkAge" => date('Y-m-d'),
+        //     "startWorkCity" => "Москва",
+        //     "adultDoctor" => true,
+        //     "childrenDoctor" => true,
+        //     "childrenDoctorAge" => 3,
+        //     "filename" => "kuzovnikova.png"
+        // ]);
     }
 
     /**

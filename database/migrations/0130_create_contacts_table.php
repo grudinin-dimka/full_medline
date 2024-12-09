@@ -20,21 +20,20 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        DB::table('contacts')->insert(
-            [
-                "name" => "Колл-центр",
-                "order" => 1,
-                "clinicId" => 2,
-            ]
-        );
+        // DB::table('contacts')->insert(
+        //     [
+        //         "name" => "Колл-центр",
+        //         "order" => 1,
+        //         "clinicId" => 2,
+        //     ]
+        // );
 
-        DB::table('contacts')->insert(
-            [
-                "name" => "На Комсомольской",
-                "order" => 2,
-            ]
-        );
-
+        // DB::table('contacts')->insert(
+        //     [
+        //         "name" => "На Комсомольской",
+        //         "order" => 2,
+        //     ]
+        // );
     }
 
     /**

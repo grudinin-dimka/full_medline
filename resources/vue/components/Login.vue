@@ -53,37 +53,6 @@
 					</ButtonDefault>
 				</div>
 			</container-input>
-
-			<!-- <form @submit.prevent>
-				<div class="block">
-					<label>Логин</label>
-					<input
-						v-model="name"
-						@blur="checkName"
-						type="text"
-						placeholder="Ваш логин"
-						:class="{ error: errors.name.status }"
-					/>
-					<span v-if="errors.name.status">{{ errors.name.value }}</span>
-				</div>
-				<div class="block">
-					<label>Пароль</label>
-					<input
-						v-model="password"
-						@blur="checkPassword"
-						type="password"
-						placeholder="Ваш пароль"
-						:class="{ error: errors.password.status }"
-					/>
-					<span v-if="errors.password.status">{{ errors.password.value }}</span>
-				</div>
-				<p v-if="errors.server" class="error">Неверный логин или пароль.</p>
-				<div class="buttons">
-					<ButtonDefault @click="loginUser" :disabled="disabled.login.update">
-						Войти
-					</ButtonDefault>
-				</div>
-			</form> -->
 		</div>
 	</div>
 </template>

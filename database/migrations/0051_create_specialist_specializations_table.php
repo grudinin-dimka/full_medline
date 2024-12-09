@@ -25,19 +25,19 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        DB::table('specialist_specializations')->insert(
-            [
-                "id_specialist" => 1,
-                "id_specialization" => 1,
-            ]
-        );
+        // DB::table('specialist_specializations')->insert(
+        //     [
+        //         "id_specialist" => 1,
+        //         "id_specialization" => 1,
+        //     ]
+        // );
 
-        DB::table('specialist_specializations')->insert(
-            [
-                "id_specialist" => 1,
-                "id_specialization" => 2,
-            ]
-        );
+        // DB::table('specialist_specializations')->insert(
+        //     [
+        //         "id_specialist" => 1,
+        //         "id_specialization" => 2,
+        //     ]
+        // );
     }
 
     /**

@@ -37,40 +37,40 @@ return new class extends Migration
             $table->timestamps(); 
         });
 
-        DB::table('clinics')->insert(
-            [
-                "name" => "На Комсомольской",
-                "city" => "Шадринск",
-                "street" => "Комсомольская",
-                "home" => "16",
-                "index" => "641870",
-                "geoWidth" => 56.082351,
-                "geoLongitude" => 63.631975,
-            ]
-        );
-        DB::table('clinics')->insert(
-            [
-                "name" => "На Карла Либкнехта",
-                "city" => "Шадринск",
-                "street" => "Карла Либкнехта",
-                "home" => "10",
-                "index" => "641870",
-                "geoWidth" => 56.079427,
-                "geoLongitude" => 63.624617,
-            ]
-        );
-        DB::table('clinics')->insert(
-            [
-                "name" => "На Октябрьской",
-                "city" => "Шадринск",
-                "street" => "Октябрьская",
-                "home" => "3",
+        // DB::table('clinics')->insert(
+        //     [
+        //         "name" => "На Комсомольской",
+        //         "city" => "Шадринск",
+        //         "street" => "Комсомольская",
+        //         "home" => "16",
+        //         "index" => "641870",
+        //         "geoWidth" => 56.082351,
+        //         "geoLongitude" => 63.631975,
+        //     ]
+        // );
+        // DB::table('clinics')->insert(
+        //     [
+        //         "name" => "На Карла Либкнехта",
+        //         "city" => "Шадринск",
+        //         "street" => "Карла Либкнехта",
+        //         "home" => "10",
+        //         "index" => "641870",
+        //         "geoWidth" => 56.079427,
+        //         "geoLongitude" => 63.624617,
+        //     ]
+        // );
+        // DB::table('clinics')->insert(
+        //     [
+        //         "name" => "На Октябрьской",
+        //         "city" => "Шадринск",
+        //         "street" => "Октябрьская",
+        //         "home" => "3",
 
-                "index" => "641882",
-                "geoWidth" => 56.079829,
-                "geoLongitude" => 63.607307,
-            ]
-        );
+        //         "index" => "641882",
+        //         "geoWidth" => 56.079829,
+        //         "geoLongitude" => 63.607307,
+        //     ]
+        // );
     }
 
     /**

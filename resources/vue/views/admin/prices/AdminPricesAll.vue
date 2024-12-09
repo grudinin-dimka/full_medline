@@ -67,6 +67,7 @@
 				}"
 				v-for="price in prices"
 				:key="price.id"
+				v-if="prices.length > 0"
 			>
 				<div class="info">
 					<div class="radio" @click="updateStatus(price)">
@@ -112,6 +113,8 @@
 					</template>
 				</div>
 			</div>
+
+			<Empty :minHeight="300" v-else />
 		</div>
 
 		<LoaderChild
@@ -129,6 +132,7 @@
 <script>
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
 import AdminModal from "../../../components/includes/admin/AdminModal.vue";
+import Empty from "../../../components/includes/Empty.vue";
 
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTitle from "../../../components/ui/admin/blocks/BlockTitle.vue";
@@ -155,6 +159,7 @@ export default {
 	components: {
 		LoaderChild,
 		AdminModal,
+		Empty,
 		BlockOnce,
 		BlockTitle,
 		InfoBar,
@@ -532,6 +537,9 @@ export default {
 			.then((response) => {
 				if (response.data.status) {
 					this.prices = response.data.data;
+
+					// Проверка на существование файлов
+					if (this.prices.length === 0) return;
 
 					let priceActive = this.prices.find((item) => item.status == true);
 					if (priceActive) {

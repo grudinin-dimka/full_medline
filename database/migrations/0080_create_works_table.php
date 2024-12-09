@@ -29,22 +29,22 @@ return new class extends Migration
          $table->timestamps();
       });
 
-      DB::table('works')->insert(
-         [
-            "startWork" => '2010.03.19',
-            "endWork" => '2020.03.19',
-            "organization" => "ООО 'Медицинский центр'",
-            "name" => "Врач-педиатр"
-         ]
-      );
-      DB::table('works')->insert(
-         [
-            "startWork" => '2021.01.20',
-            "endWork" => '2022.06.13',
-            "organization" => "ООО 'Медики рулят'",
-            "name" => "Директор"
-         ]
-     );
+   //    DB::table('works')->insert(
+   //       [
+   //          "startWork" => '2010.03.19',
+   //          "endWork" => '2020.03.19',
+   //          "organization" => "ООО 'Медицинский центр'",
+   //          "name" => "Врач-педиатр"
+   //       ]
+   //    );
+   //    DB::table('works')->insert(
+   //       [
+   //          "startWork" => '2021.01.20',
+   //          "endWork" => '2022.06.13',
+   //          "organization" => "ООО 'Медики рулят'",
+   //          "name" => "Директор"
+   //       ]
+   //   );
    }
 
    /**

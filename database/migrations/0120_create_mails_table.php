@@ -18,16 +18,16 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        DB::table('mails')->insert(
-            [
-                "name" => "medline-address@mail.ru",
-            ]
-        );
-        DB::table('mails')->insert(
-            [
-                "name" => "medline-address@mail.ru",
-            ]
-        );
+        // DB::table('mails')->insert(
+        //     [
+        //         "name" => "medline-address@mail.ru",
+        //     ]
+        // );
+        // DB::table('mails')->insert(
+        //     [
+        //         "name" => "medline-address@mail.ru",
+        //     ]
+        // );
     }
 
     /**

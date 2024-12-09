@@ -1385,9 +1385,9 @@ class AdminController extends Controller
       
       if ($pricesFiles->isEmpty()) {
          return response()->json([
-            "status" => false,
-            "message" => "Цены не найдены.",
-            "data" => null,
+            "status" => true,
+            "message" => "Цен нет.",
+            "data" => [],
          ]);
       } else {
          foreach ($pricesFiles as $pricesFilesKey => $pricesFilesValue) {

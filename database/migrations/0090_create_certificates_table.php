@@ -27,20 +27,20 @@ return new class extends Migration
          $table->timestamps();
       });
       
-      DB::table('certificates')->insert(
-         [
-             "organization" => "Какой-то центр сертификации",
-             "endEducation" => date("Y-m-d"),
-             "name" => "Ультразвуковая дигностика",
-         ]
-      );
-      DB::table('certificates')->insert(
-         [
-             "organization" => "Какой-то центр сертификации",
-             "endEducation" => date("Y-m-d"),
-             "name" => "Узи брюшной полости",
-         ]
-      );
+      // DB::table('certificates')->insert(
+      //    [
+      //        "organization" => "Какой-то центр сертификации",
+      //        "endEducation" => date("Y-m-d"),
+      //        "name" => "Ультразвуковая дигностика",
+      //    ]
+      // );
+      // DB::table('certificates')->insert(
+      //    [
+      //        "organization" => "Какой-то центр сертификации",
+      //        "endEducation" => date("Y-m-d"),
+      //        "name" => "Узи брюшной полости",
+      //    ]
+      // );
    }
 
    /**

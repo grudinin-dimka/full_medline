@@ -29,14 +29,14 @@ return new class extends Migration
          $table->timestamps();
       });
 
-      DB::table('educations')->insert(
-         [
-            "name" => "Высшее образование",
-            "organization" => "Российский национальный исследовательский медицинский университет имени Н. И. Пирогова",
-            "date" => date("Y-m-d"),
-            "speсialization" => "Медецинское дело",
-         ]
-      );
+      // DB::table('educations')->insert(
+      //    [
+      //       "name" => "Высшее образование",
+      //       "organization" => "Российский национальный исследовательский медицинский университет имени Н. И. Пирогова",
+      //       "date" => date("Y-m-d"),
+      //       "speсialization" => "Медецинское дело",
+      //    ]
+      // );
    }
 
    /**

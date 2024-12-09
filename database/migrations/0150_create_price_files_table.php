@@ -19,13 +19,13 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        DB::table('price_files')->insert(
-            [
-                ['filename' => 'price1.ods', 'status' => false, 'created_at' => now(), 'updated_at' => now()],
-                ['filename' => 'price2.ods', 'status' => false, 'created_at' => now(), 'updated_at' => now()],
-                ['filename' => 'price3.ods', 'status' => true, 'created_at' => now(), 'updated_at' => now()],
-            ]
-        );
+        // DB::table('price_files')->insert(
+        //     [
+        //         ['filename' => 'price1.ods', 'status' => false, 'created_at' => now(), 'updated_at' => now()],
+        //         ['filename' => 'price2.ods', 'status' => false, 'created_at' => now(), 'updated_at' => now()],
+        //         ['filename' => 'price3.ods', 'status' => true, 'created_at' => now(), 'updated_at' => now()],
+        //     ]
+        // );
     }
 
     /**

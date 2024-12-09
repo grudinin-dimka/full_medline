@@ -25,13 +25,13 @@ return new class extends Migration
          $table->timestamps();
       });
 
-      DB::table('specialist_clinics')->insert(
-         [
-             "id_specialist" => 1,
-             "id_clinic" => 1,
-             "priem" => false,
-         ]
-     );
+   //    DB::table('specialist_clinics')->insert(
+   //       [
+   //           "id_specialist" => 1,
+   //           "id_clinic" => 1,
+   //           "priem" => false,
+   //       ]
+   //   );
    }
 
    /**
