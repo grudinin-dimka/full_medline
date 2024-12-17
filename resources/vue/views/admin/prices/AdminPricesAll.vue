@@ -227,6 +227,8 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Открытие */
 		openModal(type = "edit", name = "modal") {
+			this.$refs.fileUpload.value = null;
+
 			switch (type) {
 				case "create":
 					{

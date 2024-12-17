@@ -96,7 +96,7 @@ fieldset.container-input-three.create:focus-within {
 .container-input-three {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 10px;
+	gap: 5px;
 }
 
 .container-input-three > .item {

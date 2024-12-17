@@ -97,6 +97,10 @@
 					<img :src="`/storage/other/prices-rools-usligi-1.png`" alt="" />
 					<span>рис. 7</span>
 				</div>
+				<p>
+					Очень важно, чтобы ваши услуши соответствовали формату заполнения (Номер,
+					Наименование, Цена).
+				</p>
 				<div class="details-content-img">
 					<img :src="`/storage/other/prices-rools-usligi-2.png`" alt="" />
 					<span>рис. 8</span>

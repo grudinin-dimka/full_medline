@@ -1,5 +1,8 @@
 <template>
-	<div class="container-textarea-once" :class="{ create: type === 'create', delete: type === 'delete' }">
+	<div
+		class="container-textarea-once"
+		:class="{ create: type === 'create', delete: type === 'delete' }"
+	>
 		<label>
 			<slot name="title"></slot>
 		</label>
@@ -27,6 +30,7 @@ export default {
 .container-textarea-once {
 	display: flex;
 	flex-direction: column;
+	gap: 5px;
 }
 
 .container-textarea-once > label > span {
