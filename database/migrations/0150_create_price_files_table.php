@@ -15,17 +15,8 @@ return new class extends Migration
         Schema::create('price_files', function (Blueprint $table) {
             $table->id();
             $table->string('filename');
-            $table->boolean('status');
             $table->timestamps();
         });
-
-        // DB::table('price_files')->insert(
-        //     [
-        //         ['filename' => 'price1.ods', 'status' => false, 'created_at' => now(), 'updated_at' => now()],
-        //         ['filename' => 'price2.ods', 'status' => false, 'created_at' => now(), 'updated_at' => now()],
-        //         ['filename' => 'price3.ods', 'status' => true, 'created_at' => now(), 'updated_at' => now()],
-        //     ]
-        // );
     }
 
     /**

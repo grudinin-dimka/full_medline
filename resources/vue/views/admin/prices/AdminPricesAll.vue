@@ -61,7 +61,6 @@
 			<div
 				class="item"
 				:class="{
-					active: price.id === getActivePriceid,
 					create: price.create,
 					delete: price.delete,
 				}"
@@ -70,46 +69,29 @@
 				v-if="prices.length > 0"
 			>
 				<div class="info">
-					<div class="radio" @click="updateStatus(price)">
-						<input
-							class="radio-input"
-							type="radio"
-							:id="'radio' + price.id"
-							v-model="radioPrice"
-							:value="price.id"
-						/>
-						<label class="radio-label" :for="'radio' + price.id">{{ price.filename }}</label>
-					</div>
-					<div class="date">{{ formatDate(price.created_at) }}</div>
+					<div>{{ price.filename }}</div>
+					<div>{{ formatDate(price.created_at) }}</div>
 				</div>
 				<div class="buttons">
-					<template v-if="radioPrice == price.id">
+					<template v-if="price.create">
 						<a :href="price.path" download>
 							<TableButtonDefault>Скачать</TableButtonDefault>
 						</a>
-						<TableButtonDisabled>Удалить</TableButtonDisabled>
+						<TableButtonDisabled> Удалить </TableButtonDisabled>
 					</template>
-					<template v-else>
-						<template v-if="price.create">
-							<a :href="price.path" download>
-								<TableButtonDefault>Скачать</TableButtonDefault>
-							</a>
-							<TableButtonDisabled> Удалить </TableButtonDisabled>
-						</template>
-						<template v-if="price.delete">
-							<TableButtonDisabled> Скачать </TableButtonDisabled>
-							<TableButtonDefault @click="updateDeleteElement(price)">
-								Вернуть
-							</TableButtonDefault>
-						</template>
-						<template v-if="!price.delete && !price.create">
-							<a :href="price.path" download>
-								<TableButtonDefault>Скачать</TableButtonDefault>
-							</a>
-							<TableButtonRemove @click="updateDeleteElement(price)">
-								Удалить
-							</TableButtonRemove>
-						</template>
+					<template v-if="price.delete">
+						<TableButtonDisabled> Скачать </TableButtonDisabled>
+						<TableButtonDefault @click="updateDeleteElement(price)">
+							Вернуть
+						</TableButtonDefault>
+					</template>
+					<template v-if="!price.delete && !price.create">
+						<a :href="price.path" download>
+							<TableButtonDefault>Скачать</TableButtonDefault>
+						</a>
+						<TableButtonRemove @click="updateDeleteElement(price)">
+							Удалить
+						</TableButtonRemove>
 					</template>
 				</div>
 			</div>
@@ -228,11 +210,6 @@ export default {
 			radioPrice: null,
 			prices: [],
 		};
-	},
-	computed: {
-		getActivePriceid() {
-			return this.prices.find((price) => price.status).id;
-		},
 	},
 	methods: {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -409,13 +386,10 @@ export default {
 								id: shared.getMaxId(this.prices) + 1,
 								filename: response.data.data.replace("/storage/prices/", ""),
 								path: response.data.data,
-								status: false,
 								created_at: new Date(),
 								delete: false,
 								create: true,
 							});
-
-							this.updateStatus(this.prices[this.prices.length - 1]);
 
 							this.disabled.prices.create = false;
 
@@ -477,13 +451,6 @@ export default {
 							shared.clearFlags(this.prices);
 							shared.updateOrders(this.prices);
 
-							for (let key in response.data.data) {
-								if (response.data.data[key].old === this.radioPrice) {
-									this.radioPrice = response.data.data[key].new;
-									break;
-								}
-							}
-
 							this.disabled.prices.save = false;
 
 							let debbugStory = {
@@ -503,6 +470,13 @@ export default {
 							this.$store.commit("debuggerState", debbugStory);
 						}
 					} else {
+						if (response.data.data) {
+							shared.updateId(this.prices, response.data.data);
+							shared.clearDeletes(this.prices);
+							shared.clearFlags(this.prices);
+							shared.updateOrders(this.prices);
+						}
+
 						this.disabled.prices.save = false;
 
 						let debbugStory = {
@@ -540,11 +514,6 @@ export default {
 
 					// Проверка на существование файлов
 					if (this.prices.length === 0) return;
-
-					let priceActive = this.prices.find((item) => item.status == true);
-					if (priceActive) {
-						this.radioPrice = priceActive.id;
-					}
 
 					this.prices.forEach((item) => {
 						item.create = false;
@@ -602,25 +571,12 @@ export default {
 	align-items: center;
 }
 
-.eprices > .item.active {
-	background-color: #f2feff;
-	border: 2px solid var(--input-border-color-active);
-}
-
 .eprices > .item.delete {
-	border: 2px solid #ec7b7b;
-}
-
-.eprices > .item.delete:has(.info > .radio) {
 	border: 2px solid #ec7b7b;
 	background-color: #fff2f2;
 }
 
 .eprices > .item.create {
-	border: 2px solid var(--create-border-color);
-}
-
-.eprices > .item.create:has(.info > .radio) {
 	border: 2px solid var(--create-border-color);
 	background-color: var(--create-background-color);
 }
@@ -629,63 +585,5 @@ export default {
 	display: flex;
 	align-items: center;
 	gap: 10px;
-}
-
-/* radio */
-.radio {
-	width: fit-content;
-	display: flex;
-	align-items: center;
-}
-
-.radio-label {
-	margin-top: 3px;
-	padding-left: 5px;
-}
-
-.radio-input {
-	appearance: none;
-	position: relative;
-	width: 20px;
-	height: 20px;
-	background: #ffffff;
-	border-radius: 10px;
-	border: 2px solid #9a9a9a;
-}
-
-.radio-input {
-	border-radius: 50%;
-}
-
-.radio-input::after {
-	content: "\2714";
-	position: absolute;
-	top: 2px;
-	left: 2px;
-	width: 0px;
-	height: 0px;
-	font-size: 26px;
-	overflow: hidden;
-}
-
-.radio-input::after {
-	content: "\1F78B";
-	color: white;
-}
-
-.radio-input::after {
-	content: "";
-	position: absolute;
-	width: 0px;
-	height: 0px;
-	font-size: 20px;
-	background: var(--primary-color);
-	border-radius: 100px;
-	background-repeat: no-repeat;
-}
-
-.radio-input:checked::after {
-	width: 12px;
-	height: 12px;
 }
 </style>

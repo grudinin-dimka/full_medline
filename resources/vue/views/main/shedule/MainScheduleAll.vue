@@ -227,8 +227,11 @@ export default {
 					},
 				},
 			},
+			clinics: [],
+			week: [],
+			shedules: [],
 			// Клиники
-			clinics: [
+			clinicsDefault: [
 				{
 					id: 1,
 					name: "Все",
@@ -256,7 +259,7 @@ export default {
 				},
 			],
 			// Дни на неделе
-			week: [
+			weekDefault: [
 				{
 					id: 1,
 					date: "2024-11-12",
@@ -286,7 +289,7 @@ export default {
 					date: "2024-11-18",
 				},
 			],
-			shedules: [
+			shedulesDefault: [
 				{
 					id: 1,
 					name: "Бурмистрова Дарья Юрьевна",
@@ -1548,9 +1551,9 @@ export default {
 		},
 		test() {
 			let formData = new FormData();
-			formData.append("clinics", JSON.stringify(this.clinics));
-			formData.append("week", JSON.stringify(this.week));
-			formData.append("shedules", JSON.stringify(this.shedules));
+			formData.append("clinics", JSON.stringify(this.clinicsDefault));
+			formData.append("week", JSON.stringify(this.weekDefault));
+			formData.append("shedules", JSON.stringify(this.shedulesDefault));
 
 			axios({
 				method: "post",

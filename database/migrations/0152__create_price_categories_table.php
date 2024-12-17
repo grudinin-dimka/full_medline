@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->text('name');
             $table->foreignId('addressId')->references('id')->on('price_addresses')->onDelete('cascade');
-            $table->foreignId('categoryId')->references('id')->on('price_categories')->onDelete('cascade');
+            $table->foreignId('categoryId')->nullable()->default(null)->references('id')->on('price_categories')->onDelete('cascade');
             $table->timestamps();
         });
     }

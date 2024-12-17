@@ -50,6 +50,9 @@ use App\Models\ShedulesCurrentDay;
 use App\Models\ShedulesDay;
 use App\Models\ShedulesDaysTime;
 use App\Models\PriceFile;
+use App\Models\PriceAddress;
+use App\Models\PriceCategory;
+use App\Models\PriceValue;
 
 /* Для работы с табличными файлами */
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -58,6 +61,8 @@ use \PhpOffice\PhpSpreadsheet\Reader\IReader;
 use \PhpOffice\PhpSpreadsheet\Reader\Ods;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+
+use function PHPUnit\Framework\isEmpty;
 
 class AdminController extends Controller
 {
@@ -1402,7 +1407,9 @@ class AdminController extends Controller
       };
    }
    /* Сохранение изменений */
-   public function savePricesChanges(Request $request) {
+   public function savePricesChanges(Request $request) {   
+      $generateCategories = [];
+      
       $pricesFiles = json_decode($request->pricesFiles);
       
       $arrayID = [];
@@ -1410,14 +1417,6 @@ class AdminController extends Controller
       foreach ($pricesFiles as $key => $value) {
          // Удаление
          if ($value->delete === true){
-            if ($value->status) {
-               return response()->json([
-                  "status" => false,
-                  "message" => "Нельзя удалить активный файл.",
-                  "data" => null,
-               ]);
-            };
-
             $priceFile = PriceFile::find($value->id);
             $priceFile->delete();
             continue;                  
@@ -1427,7 +1426,6 @@ class AdminController extends Controller
          if ($value->create === true) {
             $priceFileCreate = PriceFile::create([
                "filename" => $value->filename,
-               "status" => $value->status,
             ]);
 
             $arrayID[] = (object) [
@@ -1438,22 +1436,7 @@ class AdminController extends Controller
             ];            
             continue;
          };       
-
-         // Обновление
-         $priceFile = PriceFile::find($value->id);
-         $priceFileUpdate = $priceFile->update([
-            "filename" => $value->filename,
-            "status" => $value->status,
-         ]);      
-         
-         if(!$priceFileUpdate) {
-            return (object) [
-               "status" => false,
-               "message" => "Не удалось обновить значение.",
-               "data" => null,
-            ];      
-         }
-      }
+      };
 
       $priceFiles = PriceFile::all();
       // Получение всех файлов
@@ -1461,61 +1444,152 @@ class AdminController extends Controller
       if($filesPrices) {
          foreach ($filesPrices as $fileKey => $fileValue) {
             $useFile = false;
-            /* Проверка на использование файла */
+            // Проверка на использование файла
             foreach ($priceFiles as $priceFilesKey => $priceFilesValue) {
-               /* Обрезание значения $fileValue до названия файла */
+               // Обрезание значения $fileValue до названия файла
                $str = str_replace('public/prices/', '', $fileValue);
-               /* Проверка значения названия файла на совпадение */
+               // Проверка значения названия файла на совпадение
                if ($priceFilesValue->filename == $str) {
                   $useFile = true;
                };
             };
    
-            /* Удаление файла, если не используется */
             if (!$useFile) {
                Storage::delete($fileValue);
             };
          };
-      }
+      };
 
-      $activeFile = PriceFile::where('status', true)->first();
-      $dataFromFile = $this->updatePrices('./storage/prices/' . $activeFile->filename);
+      if (count($pricesFiles) > 0) {
+         $filesPrices = Storage::files('public/prices');
 
-      if (!$dataFromFile->status) {
-         return response()->json([
-            "status" => false,
-            "message" => $dataFromFile->message,
-            "data" => null,
-         ]);
+         // Очищение таблиц
+         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+
+         PriceValue::truncate();
+         PriceCategory::truncate();
+         PriceAddress::truncate();
+         
+         DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+
+         // Считывание данных с файлов в дериктории
+         foreach ($filesPrices as $filesPricesKey => $filesPricesValue) {
+            // Получение массивов
+            $dataFromFile = $this->getDataFromFile(Storage::path($filesPricesValue));
+
+            if (!$dataFromFile->status) {
+               return response()->json([
+                  "status" => false,
+                  "message" => $dataFromFile->message,
+                  "data" => $arrayID,
+               ]);
+            }; 
+
+            // Перебор полученных массивов            
+            foreach ($dataFromFile->data as $dataFromFileKey => $dataFromFileValue) { 
+               $index = 0;
+               $currentAddress = null;
+               $categorys = [];
+               $currentCategory = null;
+               
+               foreach ($dataFromFileValue as $dataKey => $dataValue) {
+                  if ($index === 11) {
+                     // Проверка на пустой адресс
+                     if (empty($dataValue[0])) {
+                        return response()->json([
+                           "status" => false,
+                           "message" => "Название адреса в файле " . basename(Storage::path($filesPricesValue)) . " не может быть пустым.",
+                           "data" => $arrayID,
+                        ]) ;
+                     };
+                     
+                     $currentAddress = PriceAddress::create([
+                        "name" => $dataValue[0],
+                     ]);
+                  }
+                  
+                  // Заполнение данных из таблицы 
+                  if ($index > 14) {
+                     $levelClear = trim($dataValue[0], " ");
+
+                     // Проверка на категорию
+                     if (str_contains($levelClear, '#')) {
+                        if (empty($dataValue[1])) {
+                              return response()->json([
+                              "status" => false,
+                              "message" => "Название категории (строка " . ($index + 1) . ") в файле " . basename(Storage::path($filesPricesValue)) . " не может быть пустым.",
+                              "data" => $arrayID,
+                           ]);
+                        };
+
+                        // Проверка на подкатегорию
+                        if (strlen($levelClear) > 1) {
+                           if ($currentCategory === null) {
+                              return response()->json([
+                                 "status" => false,
+                                 "message" => "Нельзя создать подкатегорию без общей категории (строка " . ($index + 1) . ") в файле " . basename(Storage::path($filesPricesValue)) . ".",
+                                 "data" => $arrayID,
+                              ]);                                 
+                           };
+                        };
+                        
+                        // Создание новой категории
+                        $currentCategory = PriceCategory::create([
+                           "name" => $dataValue[1],
+                           "addressId" => $currentAddress->id,
+                           "categoryId" => $this->getMainCategory($categorys, trim($levelClear)),
+                        ]);
+
+                        // Заполнение массива с категориями
+                        $categorys[] = (object) [
+                           "id" => $currentCategory->id,
+                           "level" => $levelClear,
+                        ];
+                                            
+                        continue;
+                     };        
+                  };
+
+                  $index++;
+               };
+            };
+         };   
       };
 
       return response()->json([
          "status" => true,
          "message" => "Цены успешно сохранены.",
-         "data" => $arrayID,
-         "file" => $dataFromFile->data,
+         "data" => count($arrayID) > 0 ? $arrayID : null,
       ]);
    }
    /* Считывание данных с файла .ods, .xls, .xlsx */
-   protected function updatePrices($path) {
-      // Проверка существования файла
-      if (!file_exists($path)) {
-         return (object) [
-            "status" => false,
-            "message" => "Файл не существует.",
-            "data" => null,
-         ];
-      }
-
+   protected function getDataFromFile($path) {
       try {
+         // Существует ли файл
+         if (!file_exists($path)) {
+            return (object) [
+               "status" => false,
+               "message" => "Файл '" . basename($path) . "' не существует.",
+               "data" => null,
+            ];
+         }
 
          // Загрузка файла
          $spreadsheet = IOFactory::load($path);         
          // Получение всех листов файла
          $sheetsAll = $spreadsheet->getAllSheets();
-         
+         // Данные всех листов
          $sheetsAlldata = [];
+         
          foreach ($sheetsAll as $sheet) {         
+            if ($this->isExcelEmpty($sheet)) {
+               return (object) [
+                  "status" => false,
+                  "message" => "Раздел '" . $sheet->getTitle() . "' в файле '" . basename($path) . "' пустой.",
+                  "data" => null,
+               ];
+            };
+
             // Получение названия листа
             $sheetName = $sheet->getTitle();
 
@@ -1541,7 +1615,7 @@ class AdminController extends Controller
             }
             
             $sheetsAlldata[] = $sheetData;
-         }  
+         };
 
          return (object) [
             "status" => true,
@@ -1549,7 +1623,46 @@ class AdminController extends Controller
             "data" => $sheetsAlldata,
          ];
       } catch (Exception $e) {
-         return false;
+         return (object) [
+            "status" => false,
+            "message" => "Не удалось считать данные.",
+            "data" => null,
+         ];
       };
+   }
+   /* Проверка на пустой лист */
+   function isExcelEmpty($sheet) {
+      $highestRow = $sheet->getHighestRow();
+      $highestColumn = $sheet->getHighestColumn();
+
+      for ($row = 1; $row <= $highestRow; $row++) {
+         for ($col = 'A'; $col <= $highestColumn; $col++) {
+               $cellValue = $sheet->getCell($col . $row)->getValue();
+               if (!empty(trim($cellValue))) {
+                  return false;
+               }
+         }
+      }
+
+      return true; 
+   }
+   /* Поиск общей категории */
+   function getMainCategory($categories, $categorylevel) {
+      $lentghCurrentCategory = strlen($categorylevel);
+      if ($lentghCurrentCategory === 1) {
+         return null;
+      };
+
+      // Поиск общей категории
+      for ($i = count($categories) - 1; $i >= 0; $i--) {
+         $lentghCategory = strlen(trim($categories[$i]->level, " "));
+         
+         if ($lentghCategory < $lentghCurrentCategory) {
+            return $categories[$i]->id;         
+            continue;
+         };
+      };
+
+      return $categories[count($categories) - 1]->id;
    }
 }
