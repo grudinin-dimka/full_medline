@@ -1493,6 +1493,7 @@ class AdminController extends Controller
                $currentCategory = null;
                
                foreach ($dataFromFileValue as $dataKey => $dataValue) {
+                  // Заполнение адреса 
                   if ($index === 11) {
                      // Проверка на пустой адресс
                      if (empty($dataValue[0])) {
@@ -1522,15 +1523,13 @@ class AdminController extends Controller
                            ]);
                         };
 
-                        // Проверка на подкатегорию
-                        if (strlen($levelClear) > 1) {
-                           if ($currentCategory === null) {
-                              return response()->json([
-                                 "status" => false,
-                                 "message" => "Нельзя создать подкатегорию без общей категории (строка " . ($index + 1) . ") в файле " . basename(Storage::path($filesPricesValue)) . ".",
-                                 "data" => $arrayID,
-                              ]);                                 
-                           };
+                        // Проверка на пустую общую категорию
+                        if (strlen($levelClear) > 1 && $currentCategory === null) {
+                           return response()->json([
+                              "status" => false,
+                              "message" => "Нельзя создать подкатегорию без общей категории (строка " . ($index + 1) . ") в файле " . basename(Storage::path($filesPricesValue)) . ".",
+                              "data" => $arrayID,
+                           ]);                                 
                         };
                         
                         // Создание новой категории
@@ -1544,10 +1543,16 @@ class AdminController extends Controller
                         $categorys[] = (object) [
                            "id" => $currentCategory->id,
                            "level" => $levelClear,
-                        ];
-                                            
-                        continue;
-                     };        
+                        ];                                            
+                     };
+                     
+                     if (is_numeric($levelClear)) {
+                        PriceValue::create([
+                           "name" => $dataValue[1],
+                           "price" => $dataValue[2],
+                           "categoryId" => $currentCategory->id,
+                        ]);
+                     };
                   };
 
                   $index++;
