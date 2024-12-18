@@ -7,67 +7,26 @@
 
 	<block :minHeight="400">
 		<template v-if="loading.sections.prices">
+			<!-- <div class="container-input">
+				<input type="text" name="" id="" />
+				<div>X</div>
+				<div>ПОИСК</div>
+			</div> -->
 			<div class="filter-blocks">
-				<div class="filter" :class="{ active: true }">
-					<div class="filter-title">
-						<div class="name">Адрес клиники</div>
-						<div class="arrow">></div>
-					</div>
-					<div class="filter-body">
-						<input type="text" placeholder="Введите адрес" />
-						<ol>
-							<li>г. Тест, ул. Тестовая, д. Тестовый</li>
-							<li>г. Тест, ул. Тестовая, д. Тестовый</li>
-							<li>г. Тест, ул. Тестовая, д. Тестовый</li>
-							<li>г. Тест, ул. Тестовая, д. Тестовый</li>
-							<li>г. Тест, ул. Тестовая, д. Тестовый</li>
-						</ol>
-					</div>
-				</div>
-
-				<!-- <div class="item">
-					<div class="clear-filter" v-if="false">Очистить</div>
-					<container-input-once :type="'default'">
-						<template #title>
-							<span>АДРЕС КЛИНИКИ</span>
-						</template>
-						<template #input>
-							<select v-model="filters.address.data.body">
-								<option value="" disabled selected>Ничего не выбрано</option>
-								<option :value="address.id" v-for="address in addresses">
-									{{ address.name }}
-								</option>
-							</select>
-						</template>
-					</container-input-once>
-				</div>
-				<div class="item">
-					<div class="clear-filter" v-if="false">Очистить</div>
-					<container-input-once :type="'default'">
-						<template #title>
-							<span>КАТЕГОРИЯ</span>
-						</template>
-						<template #input>
-							<select v-model="filters.category.data.body">
-								<option value="" disabled selected>Ничего не выбрано</option>
-								<option :value="category.id" v-for="category in getCurrentCategories">
-									{{ category.name }}
-								</option>
-							</select>
-						</template>
-					</container-input-once>
-				</div>
-				<div class="item search">
-					<div class="clear-filter" v-if="false">Очистить</div>
-					<container-input-once :type="'default'">
-						<template #title>
-							<span>НАЗВАНИЕ УСЛУГИ</span>
-						</template>
-						<template #input>
-							<input type="text" placeholder="Введите услугу" />
-						</template>
-					</container-input-once>
-				</div> -->
+				<Filter
+					:filter="filters.address"
+					:list="addresses"
+					@changeFilterStatus="changeFilterStatus('address')"
+				>
+					<template #title>Адрес клиники</template>
+				</Filter>
+				<Filter
+					:filter="filters.category"
+					:list="categories"
+					@changeFilterStatus="changeFilterStatus('category')"
+				>
+					<template #title>Категории</template>
+				</Filter>
 			</div>
 
 			<div class="prices" v-if="getCurrentCategories.length > 0">
@@ -98,6 +57,7 @@ import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
 import Block from "../../../components/ui/main/blocks/Block.vue";
 import Empty from "../../../components/includes/Empty.vue";
+import Filter from "../../../components/includes/Filter.vue";
 
 import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
 
@@ -109,6 +69,7 @@ export default {
 		LoaderChild,
 		Block,
 		Empty,
+		Filter,
 		ContainerInputOnce,
 		axios,
 	},
@@ -146,19 +107,13 @@ export default {
 	computed: {
 		getCurrentCategories() {
 			return this.categories.filter((category) => {
-				if (category.addressId === 1) {
+				if (
+					category.addressId === this.filters.address.data.body &&
+					category.categoryId !== null
+				) {
 					return category;
 				}
 			});
-
-			// return this.categories.filter((category) => {
-			// 	if (
-			// 		category.addressId === this.filters.address.data.body &&
-			// 		category.categoryId !== null
-			// 	) {
-			// 		return category;
-			// 	}
-			// });
 		},
 	},
 	methods: {
@@ -175,6 +130,19 @@ export default {
 					return price;
 				}
 			});
+		},
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                    ФИЛЬТРЫ                        |*/
+		/* |___________________________________________________|*/
+		/* После скрытия элементы */
+		changeFilterStatus(filterName) {
+			for (let key in this.filters) {
+				if (key !== filterName) {
+					this.filters[key].status = false;
+				} else {
+					this.filters[key].status = !this.filters[key].status;
+				}
+			}
 		},
 	},
 	mounted() {
@@ -214,144 +182,12 @@ export default {
 </script>
 
 <style scoped>
-/* Блоки фильтров */
 .filter-blocks {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	grid-row: repeat(2, 1fr);
+	display: flex;
 	gap: 10px;
 
 	width: 1350px;
 	animation: show 0.5s ease-out;
-}
-
-.filter-blocks > .filter {
-	position: relative;
-
-	display: flex;
-	flex-direction: column;
-
-	padding: 20px 0px;
-}
-
-.filter-blocks > .filter > .filter-title {
-	display: flex;
-	justify-content: space-between;
-	gap: 10px;
-
-	padding: 10px;
-	border-radius: 10px;
-
-	font-size: 1.125rem;
-	width: 200px;
-}
-
-.filter-blocks > .filter.active > .filter-title {
-	background-color: rgba(0, 0, 0, 0.1);
-}
-
-.filter-blocks > .filter > .filter-body {
-	position: absolute;
-	top: 75px;
-	left: 0px;
-	display: flex;
-	flex-direction: column;
-
-	padding: 10px;
-	border-radius: 10px;
-
-	background-color: white;
-	box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, 0.1);
-}
-
-.filter-blocks > .filter > .filter-body > input {
-	box-sizing: border-box;
-
-	outline: none;
-	padding: 10px;
-	border: 0px solid white;
-	border-radius: 10px;
-
-	font-size: 1.125rem;
-
-	background-color: rgba(0, 0, 0, 0.05);
-}
-
-.filter-blocks > .filter > .filter-body > ol {
-	list-style: none;
-	display: flex;
-	flex-direction: column;
-	gap: 5px;
-
-	font-size: 1.125rem;
-
-	padding: 0px;
-	margin: 10px 0px 0px 0px;
-}
-
-.filter-blocks > .filter > .filter-body > ol > li {
-	cursor: pointer;
-	padding: 10px;
-}
-
-.filter-blocks > .filter > .filter-body > ol > li:hover {
-	padding: 10px;
-	border-radius: 10px;
-	background-color: rgba(0, 0, 0, 0.05);
-}
-
-.filter-blocks > .search {
-	grid-column-start: 1;
-	grid-column-end: 3;
-}
-
-.filter-blocks > .item {
-	position: relative;
-	flex: 1 0 350px;
-
-	transition: all 0.2s;
-}
-
-.filter-blocks > .item.active {
-	border: 2px solid #44a533;
-}
-
-.filter-button.active {
-	background-color: #f2feff;
-	border: 2px solid var(--input-border-color-active);
-}
-
-.clear-filter {
-	position: absolute;
-	cursor: pointer;
-
-	top: 12px;
-	right: 20px;
-	color: var(--button-remove-color);
-}
-
-.clear-filter:hover {
-	text-decoration: underline;
-}
-
-.clear-filter > .point {
-	position: absolute;
-	top: 2px;
-
-	border-radius: 30px;
-
-	width: 16px;
-	height: 16px;
-}
-
-.clear-filter > .point.default {
-	left: 2px;
-	background-color: #b6b6b6;
-}
-
-.clear-filter > .point.active {
-	right: 2px;
-	background-color: var(--primary-color);
 }
 
 .adresses {
