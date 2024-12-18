@@ -35,6 +35,9 @@ use App\Models\ShedulesDay;
 use App\Models\ShedulesDaysTime;
 use App\Models\ShedulesClinic;
 use App\Models\ShedulesCurrentDay;
+use App\Models\PriceAddress;
+use App\Models\PriceCategory;
+use App\Models\PriceValue;
 
 use Illuminate\Support\Facades\Storage;
 
@@ -383,19 +386,7 @@ class HomeController extends Controller
    /* |___________________________________________________|*/
    public function getAboutsAll(Request $request) {
       $about = About::all();
-      if($about) {
-         foreach ($about as $key => $value) {
-            $value->pathOne = Storage::url('abouts/' . $value->imageOne);
-            $value->pathTwo = Storage::url('abouts/' . $value->imageTwo);
-            $value->pathThree = Storage::url('abouts/' . $value->imageThree);
-         };
-
-         return response()->json([
-            "status" => true,
-            "message" => "Успешно.",
-            "data" => $about,
-         ]);
-      } else {
+      if(!$about) {
          return response()->json([
             "status" => false,
             "message" => "Не удалось получить данные.",
@@ -403,6 +394,58 @@ class HomeController extends Controller
          ]);
       }
 
+      foreach ($about as $key => $value) {
+         $value->pathOne = Storage::url('abouts/' . $value->imageOne);
+         $value->pathTwo = Storage::url('abouts/' . $value->imageTwo);
+         $value->pathThree = Storage::url('abouts/' . $value->imageThree);
+      };
+
+      return response()->json([
+         "status" => true,
+         "message" => "Успешно.",
+         "data" => $about,
+      ]);
+   }
+   /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+   /* |                      ЦЕНЫ                         |*/
+   /* |___________________________________________________|*/
+   public function getPricesAll(Request $request) {
+      $priceAddresses = PriceAddress::all();
+      if (!$priceAddresses) {
+         return response()->json([
+            "status" => false,
+            "message" => "Не удалось получить адреса.",
+            "data" => null,
+         ]);
+      }
+      
+      $priceCategories = PriceCategory::all();
+      if (!$priceCategories) {
+         return response()->json([
+            "status" => false,
+            "message" => "Не удалось получить категории.",
+            "data" => null,
+         ]);
+      }
+
+      $priceValues = PriceValue::all();
+      if (!$priceValues) {
+         return response()->json([
+            "status" => false,
+            "message" => "Не удалось получить услуги и цены.",
+            "data" => null,
+         ]);
+      }
+
+      return response()->json([
+         "status" => true,
+         "message" => "Успешно.",
+         "data" => (object) [
+            "adresses" => $priceAddresses,
+            "categories" => $priceCategories,
+            "prices" => $priceValues,
+         ],
+      ]);
    }
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                    КОНТАКТЫ                       |*/
@@ -467,7 +510,7 @@ class HomeController extends Controller
          ],
       ]);   
    }
-
+   /* Получение контактов и клиник */
    public function getContactsClinicsAll(Request $request) {
       $contacts = Contact::all();
       if(!$contacts) {
@@ -517,7 +560,6 @@ class HomeController extends Controller
          "data" => $contacts,
       ]);   
    }
-
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                   РАСПИСАНИЕ                      |*/
    /* |___________________________________________________|*/

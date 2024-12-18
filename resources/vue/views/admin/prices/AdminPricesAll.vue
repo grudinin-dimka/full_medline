@@ -446,8 +446,6 @@ export default {
 				.then((response) => {
 					if (response.data.status) {
 						try {
-							console.log(response.data);
-
 							shared.updateId(this.prices, response.data.data);
 							shared.clearDeletes(this.prices);
 							shared.clearFlags(this.prices);

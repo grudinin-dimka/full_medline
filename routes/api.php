@@ -25,6 +25,10 @@ Route::post('/get-slides-not-hide', [HomeController::class, 'getSlidesNotHide'])
 /* 3. Футер                                             */
 Route::post('/get-footer', [HomeController::class, 'getFooter']);
 /* _____________________________________________________*/
+/* О нас                                                */
+/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+Route::post('/get-abouts-all', [HomeController::class, 'getAboutsAll']);
+/* _____________________________________________________*/
 /* Специалисты                                          */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 /* 1. Врачи                                             */
@@ -44,9 +48,9 @@ Route::post('/get-works-all', [HomeController::class, 'getWorksAll']);
 /* 6. Сертификаты                                       */
 Route::post('/get-certificates-all', [HomeController::class, 'getCertificatesAll']);
 /* _____________________________________________________*/
-/* О нас                                                */
+/* Цены                                                 */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-Route::post('/get-abouts-all', [HomeController::class, 'getAboutsAll']);
+Route::post('/get-prices-all', [HomeController::class, 'getPricesAll']);
 /* _____________________________________________________*/
 /* Контакты                                             */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/

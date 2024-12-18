@@ -1606,7 +1606,12 @@ export default {
 				}
 			})
 			.catch((error) => {
-				console.log(error);
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Произошла ошибка при получении данных.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
 			})
 			.finally(() => (this.loading.loader.schedule = false));
 	},
@@ -1793,12 +1798,6 @@ export default {
 .filter-blocks > .item {
 	position: relative;
 	flex: 1 0 350px;
-
-	border-radius: 10px;
-	padding: 15px;
-
-	border: 2px solid var(--input-border-color-inactive);
-	background-color: rgba(235, 235, 235, 0);
 
 	transition: all 0.2s;
 }

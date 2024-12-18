@@ -6,18 +6,37 @@
 	</info-bar>
 
 	<block :minHeight="400">
-		<div class="prices">
+		<template v-if="loading.sections.prices">
 			<div class="filter-blocks">
-				<div class="item">
+				<div class="filter" :class="{ active: true }">
+					<div class="filter-title">
+						<div class="name">Адрес клиники</div>
+						<div class="arrow">></div>
+					</div>
+					<div class="filter-body">
+						<input type="text" placeholder="Введите адрес" />
+						<ol>
+							<li>г. Тест, ул. Тестовая, д. Тестовый</li>
+							<li>г. Тест, ул. Тестовая, д. Тестовый</li>
+							<li>г. Тест, ул. Тестовая, д. Тестовый</li>
+							<li>г. Тест, ул. Тестовая, д. Тестовый</li>
+							<li>г. Тест, ул. Тестовая, д. Тестовый</li>
+						</ol>
+					</div>
+				</div>
+
+				<!-- <div class="item">
 					<div class="clear-filter" v-if="false">Очистить</div>
 					<container-input-once :type="'default'">
 						<template #title>
 							<span>АДРЕС КЛИНИКИ</span>
 						</template>
 						<template #input>
-							<select>
-								<option value="" selected>Ничего не выбрано</option>
-								<option value="1">Делаю что-то</option>
+							<select v-model="filters.address.data.body">
+								<option value="" disabled selected>Ничего не выбрано</option>
+								<option :value="address.id" v-for="address in addresses">
+									{{ address.name }}
+								</option>
 							</select>
 						</template>
 					</container-input-once>
@@ -29,95 +48,48 @@
 							<span>КАТЕГОРИЯ</span>
 						</template>
 						<template #input>
-							<select>
-								<option value="" selected>Ничего не выбрано</option>
+							<select v-model="filters.category.data.body">
+								<option value="" disabled selected>Ничего не выбрано</option>
+								<option :value="category.id" v-for="category in getCurrentCategories">
+									{{ category.name }}
+								</option>
 							</select>
 						</template>
 					</container-input-once>
 				</div>
+				<div class="item search">
+					<div class="clear-filter" v-if="false">Очистить</div>
+					<container-input-once :type="'default'">
+						<template #title>
+							<span>НАЗВАНИЕ УСЛУГИ</span>
+						</template>
+						<template #input>
+							<input type="text" placeholder="Введите услугу" />
+						</template>
+					</container-input-once>
+				</div> -->
 			</div>
 
-			<div class="prices-item">
-				<div class="title">Компьютерная томография (КТ)</div>
-				<ol>
-					<li>
-						<div class="name">Виртуальная эндоскопия</div>
-						<div class="price">3000 руб.</div>
-					</li>
-					<li>
-						<div class="name">КТ головы</div>
-						<div class="price">3000 руб.</div>
-					</li>
-					<li>
-						<div class="name">КТ мягких тканей</div>
-						<div class="price">3000 руб.</div>
-					</li>
-					<li>
-						<div class="name">КТ сосудов</div>
-						<div class="price">3000 руб.</div>
-					</li>
-					<li>
-						<div class="name">КТ шеи</div>
-						<div class="price">3000 руб.</div>
-					</li>
-					<li>
-						<div class="name">КТ брюшной полости и малого таза</div>
-						<div class="price">3000 руб.</div>
-					</li>
-					<li>
-						<div class="name">КТ грудной клетки</div>
-						<div class="price">3000 руб.</div>
-					</li>
-					<li>
-						<div class="name">КТ позвоночника</div>
-						<div class="price">3000 руб.</div>
-					</li>
-					<li>
-						<div class="name">КТ суставов</div>
-						<div class="price">3000 руб.</div>
-					</li>
-				</ol>
+			<div class="prices" v-if="getCurrentCategories.length > 0">
+				<div class="prices-item" v-for="category in getCurrentCategories" :key="category.id">
+					<div class="title">{{ category.name }}</div>
+					<ol>
+						<li v-for="price in getCurrentPrices(category.id)" :key="price.id">
+							<div class="name">{{ price.name }}</div>
+							<div class="price">{{ price.price }}</div>
+							<div class="valute">руб.</div>
+						</li>
+					</ol>
+				</div>
 			</div>
-			<div class="prices-item">
-				<div class="title">Магнитно-резонансная томография (МРТ)</div>
-				<ol>
-					<li>
-						<div class="name">Виртуальная эндоскопия</div>
-						<div class="price">3000 руб.</div>
-					</li>
-					<li>
-						<div class="name">Виртуальная эндоскопия</div>
-						<div class="price">3000 руб.</div>
-					</li>
-					<li>
-						<div class="name">Виртуальная эндоскопия</div>
-						<div class="price">3000 руб.</div>
-					</li>
-					<li>
-						<div class="name">Виртуальная эндоскопия</div>
-						<div class="price">3000 руб.</div>
-					</li>
-					<li>
-						<div class="name">Виртуальная эндоскопия</div>
-						<div class="price">3000 руб.</div>
-					</li>
-					<li>
-						<div class="name">Виртуальная эндоскопия</div>
-						<div class="price">3000 руб.</div>
-					</li>
-					<li>
-						<div class="name">Виртуальная эндоскопия</div>
-						<div class="price">3000 руб.</div>
-					</li>
-					<li>
-						<div class="name">Виртуальная эндоскопия</div>
-						<div class="price">3000 руб.</div>
-					</li>
-				</ol>
-			</div>
-		</div>
+			<Empty :minHeight="300" v-else />
+		</template>
 
-		<!-- <loader-child :isLoading="loading.loader.about" /> -->
+		<loader-child
+			:isLoading="loading.loader.prices"
+			:minHeight="397"
+			@loaderChildAfterLeave="loaderChildAfterLeave"
+		/>
 	</block>
 </template>
 
@@ -125,27 +97,118 @@
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
 import Block from "../../../components/ui/main/blocks/Block.vue";
+import Empty from "../../../components/includes/Empty.vue";
 
 import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
+
+import axios from "axios";
 
 export default {
 	components: {
 		InfoBar,
 		LoaderChild,
 		Block,
+		Empty,
 		ContainerInputOnce,
+		axios,
 	},
 	data() {
 		return {
 			loading: {
 				loader: {
-					about: true,
+					prices: true,
 				},
 				sections: {
-					about: false,
+					prices: false,
 				},
 			},
+			filters: {
+				address: {
+					status: false,
+					data: {
+						body: "",
+						edited: false,
+					},
+				},
+				category: {
+					status: false,
+					data: {
+						body: "",
+						edited: false,
+					},
+				},
+			},
+			prices: [],
+			addresses: [],
+			categories: [],
 		};
+	},
+	computed: {
+		getCurrentCategories() {
+			return this.categories.filter((category) => {
+				if (category.addressId === 1) {
+					return category;
+				}
+			});
+
+			// return this.categories.filter((category) => {
+			// 	if (
+			// 		category.addressId === this.filters.address.data.body &&
+			// 		category.categoryId !== null
+			// 	) {
+			// 		return category;
+			// 	}
+			// });
+		},
+	},
+	methods: {
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                   ЗАГРУЗЧИК                       |*/
+		/* |___________________________________________________|*/
+		/* После скрытия элементы */
+		loaderChildAfterLeave() {
+			this.loading.sections.prices = true;
+		},
+		getCurrentPrices(categoryId) {
+			return this.prices.filter((price) => {
+				if (price.categoryId == categoryId) {
+					return price;
+				}
+			});
+		},
+	},
+	mounted() {
+		this.loading.loader.prices = false;
+
+		axios({
+			method: "post",
+			url: `${this.$store.state.axios.urlApi}` + `get-prices-all`,
+		})
+			.then((response) => {
+				if (response.data.status) {
+					this.addresses = response.data.data.adresses;
+					this.categories = response.data.data.categories;
+					this.prices = response.data.data.prices;
+
+					console.log(response.data);
+				} else {
+					let debbugStory = {
+						title: "Ошибка.",
+						body: response.data.message,
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+				}
+			})
+			.catch((error) => {
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "Произошла ошибка при получении данных.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			})
+			.finally(() => (this.loading.loader.schedule = false));
 	},
 };
 </script>
@@ -153,23 +216,98 @@ export default {
 <style scoped>
 /* Блоки фильтров */
 .filter-blocks {
-	display: flex;
-	flex-wrap: wrap;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-row: repeat(2, 1fr);
 	gap: 10px;
 
 	width: 1350px;
 	animation: show 0.5s ease-out;
 }
 
+.filter-blocks > .filter {
+	position: relative;
+
+	display: flex;
+	flex-direction: column;
+
+	padding: 20px 0px;
+}
+
+.filter-blocks > .filter > .filter-title {
+	display: flex;
+	justify-content: space-between;
+	gap: 10px;
+
+	padding: 10px;
+	border-radius: 10px;
+
+	font-size: 1.125rem;
+	width: 200px;
+}
+
+.filter-blocks > .filter.active > .filter-title {
+	background-color: rgba(0, 0, 0, 0.1);
+}
+
+.filter-blocks > .filter > .filter-body {
+	position: absolute;
+	top: 75px;
+	left: 0px;
+	display: flex;
+	flex-direction: column;
+
+	padding: 10px;
+	border-radius: 10px;
+
+	background-color: white;
+	box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, 0.1);
+}
+
+.filter-blocks > .filter > .filter-body > input {
+	box-sizing: border-box;
+
+	outline: none;
+	padding: 10px;
+	border: 0px solid white;
+	border-radius: 10px;
+
+	font-size: 1.125rem;
+
+	background-color: rgba(0, 0, 0, 0.05);
+}
+
+.filter-blocks > .filter > .filter-body > ol {
+	list-style: none;
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+
+	font-size: 1.125rem;
+
+	padding: 0px;
+	margin: 10px 0px 0px 0px;
+}
+
+.filter-blocks > .filter > .filter-body > ol > li {
+	cursor: pointer;
+	padding: 10px;
+}
+
+.filter-blocks > .filter > .filter-body > ol > li:hover {
+	padding: 10px;
+	border-radius: 10px;
+	background-color: rgba(0, 0, 0, 0.05);
+}
+
+.filter-blocks > .search {
+	grid-column-start: 1;
+	grid-column-end: 3;
+}
+
 .filter-blocks > .item {
 	position: relative;
 	flex: 1 0 350px;
-
-	border-radius: 10px;
-	padding: 15px;
-
-	border: 2px solid var(--input-border-color-inactive);
-	background-color: rgba(235, 235, 235, 0);
 
 	transition: all 0.2s;
 }
@@ -223,11 +361,14 @@ export default {
 	width: 1350px;
 }
 
+/* Цены */
 .prices {
 	width: 1350px;
 	display: grid;
 	grid-template-columns: repeat(1, 1fr);
-	gap: 20px;
+	gap: 40px;
+
+	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 .prices-item > .title {
@@ -238,8 +379,6 @@ export default {
 
 .prices-item > ol {
 	list-style: none;
-	display: grid;
-	grid-template-columns: repeat(2, 1fr);
 
 	padding: 0px;
 	margin: 0px;
@@ -248,8 +387,9 @@ export default {
 }
 
 .prices-item > ol > li {
-	display: flex;
-	justify-content: space-between;
+	display: grid;
+	grid-template-columns: 1fr 50px 40px;
+	gap: 5px;
 
 	border-top: 0px;
 	border-right: 0px;
@@ -258,8 +398,12 @@ export default {
 	border-style: solid;
 	border-color: #d2d2d2;
 
-	padding: 10px;
+	padding: 15px 10px;
 
 	font-size: 1.125rem;
+}
+
+.prices-item > ol > li > .price {
+	text-align: right;
 }
 </style>
