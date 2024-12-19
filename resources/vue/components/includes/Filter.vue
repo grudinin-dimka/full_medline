@@ -1,8 +1,8 @@
 <template>
-	<div class="filter">
+	<div class="filter" ref="filter">
 		<div
 			class="filter-title"
-			@click="$emit('changeFilterStatus')"
+			@click="$emit('changeFilterStatus', filter.status ? false : true, filter.name)"
 			:class="{ active: filter.status }"
 		>
 			<div class="name">
@@ -20,11 +20,30 @@
 		</div>
 		<div class="filter-body" :class="{ active: filter.status }">
 			<div class="container-input">
-				<input type="text" placeholder="Введите название" />
+				<input type="text" placeholder="Введите название" v-model="name" />
 			</div>
 			<ol>
-				<li v-for="item in list">{{ item?.name }}</li>
+				<li v-if="getFilteredList.length > 0" v-for="item in getFilteredList">
+					<div class="check">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							height="26px"
+							viewBox="0 -960 960 960"
+							width="26px"
+						>
+							<path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z" />
+						</svg>
+					</div>
+					{{ item?.name }}
+				</li>
+				<li v-else class="empty">Ничего не найдено.</li>
 			</ol>
+			<div class="container-buttons">
+				<button class="cleaer">Очистить</button>
+				<button class="create" @click="$emit('changeFilterStatus', false, filter.name)">
+					Сохранить
+				</button>
+			</div>
 		</div>
 	</div>
 </template>
@@ -43,23 +62,37 @@ export default {
 			default: [],
 		},
 	},
+	computed: {
+		getFilteredList() {
+			return this.list.filter((item) =>
+				item.name.toLowerCase().includes(this.name.toLowerCase())
+			);
+		},
+	},
+	data() {
+		return {
+			name: "",
+		};
+	},
+	mounted() {
+		document.addEventListener("click", this.handleClickOutside);
+	},
+	beforeDestroy() {
+		document.removeEventListener("click", this.handleClickOutside);
+	},
+	methods: {
+		handleClickOutside(event) {
+			if (this.$refs.filter && !this.$refs.filter.contains(event.target)) {
+				this.$emit("changeFilterStatus", false, this.filter.name);
+			}
+		},
+	},
 };
 </script>
 
 <style>
 .filter {
 	position: relative;
-}
-
-.filter-body {
-	position: absolute;
-	top: 60px;
-	min-width: 160px;
-	box-shadow: 0px 5px 15px 5px rgba(0, 0, 0, 0.1);
-	z-index: 1;
-
-	padding: 10px;
-	border-radius: 10px;
 }
 
 .filter > .filter-title {
@@ -69,7 +102,6 @@ export default {
 	align-items: center;
 	gap: 10px;
 
-	border: 2px solid var(--input-border-color-inactive);
 	padding: 10px;
 	border-radius: 10px;
 
@@ -80,8 +112,7 @@ export default {
 }
 
 .filter > .filter-title:is(:hover, .active) {
-	background-color: #f2feff;
-	border: 2px solid var(--input-border-color-active);
+	background-color: rgba(0, 0, 0, 0.05);
 }
 
 .filter > .filter-body {
@@ -91,11 +122,12 @@ export default {
 	left: 0px;
 	display: flex;
 	flex-direction: column;
+	gap: 10px;
 
 	padding: 10px;
 	border-radius: 10px;
 	min-width: 300px;
-	max-width: 600px;
+	max-width: 650px;
 
 	opacity: 0;
 	visibility: hidden;
@@ -122,6 +154,35 @@ export default {
 	background-color: rgba(0, 0, 0, 0.05);
 }
 
+.filter > .filter-body > .container-buttons {
+	display: flex;
+	justify-content: flex-end;
+	gap: 10px;
+}
+
+.filter > .filter-body > .container-buttons > button {
+	cursor: pointer;
+	padding: 10px;
+	font-size: 1.125rem;
+	border-radius: 10px;
+	border: 0px solid white;
+	background-color: rgba(0, 0, 0, 0.05);
+}
+
+.filter > .filter-body > .container-buttons > button:hover {
+	background-color: rgba(0, 0, 0, 0.1);
+}
+
+.filter > .filter-body > .container-buttons > button.create {
+	background-color: var(--button-default-color);
+	color: white;
+}
+
+.filter > .filter-body > .container-buttons > button.create:hover {
+	background-color: var(--button-default-color-hover);
+	color: white;
+}
+
 .filter > .filter-body.active {
 	opacity: 1;
 	visibility: visible;
@@ -134,13 +195,13 @@ export default {
 	gap: 5px;
 
 	width: auto;
-	max-height: 420px;
+	max-height: 430px;
 	overflow-y: auto;
 
 	font-size: 1.125rem;
 
 	padding: 0px;
-	margin: 10px 0px 0px 0px;
+	margin: 0px;
 }
 
 /* Скролбар блока с контентом. */
@@ -168,6 +229,10 @@ export default {
 
 .filter > .filter-body > ol > li {
 	cursor: pointer;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+
 	padding: 10px;
 	white-space: nowrap;
 }
@@ -176,5 +241,29 @@ export default {
 	padding: 10px;
 	border-radius: 10px;
 	background-color: rgba(0, 0, 0, 0.05);
+}
+
+.filter > .filter-body > ol > li.empty {
+	color: rgb(150, 150, 150);
+	text-align: center;
+}
+
+.filter > .filter-body > ol > li > .check {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	width: 20px;
+	height: 20px;
+
+	border: 2px solid var(--input-border-color-inactive);
+	border-radius: 5px;
+}
+
+.filter > .filter-body > ol > li > .check > svg {
+	position: absolute;
+
+	fill: var(--button-default-color);
 }
 </style>

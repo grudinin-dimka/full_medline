@@ -7,26 +7,27 @@
 
 	<block :minHeight="400">
 		<template v-if="loading.sections.prices">
-			<!-- <div class="container-input">
-				<input type="text" name="" id="" />
-				<div>X</div>
-				<div>ПОИСК</div>
-			</div> -->
 			<div class="filter-blocks">
-				<Filter
-					:filter="filters.address"
-					:list="addresses"
-					@changeFilterStatus="changeFilterStatus('address')"
-				>
-					<template #title>Адрес клиники</template>
-				</Filter>
-				<Filter
-					:filter="filters.category"
-					:list="categories"
-					@changeFilterStatus="changeFilterStatus('category')"
-				>
-					<template #title>Категории</template>
-				</Filter>
+				<div class="container-input">
+					<input type="text" placeholder="Введите название" />
+					<button>ПОИСК</button>
+				</div>
+				<div class="container-filters">
+					<Filter
+						:filter="filters.address"
+						:list="addresses"
+						@changeFilterStatus="changeFilterStatus"
+					>
+						<template #title>Адрес клиники</template>
+					</Filter>
+					<Filter
+						:filter="filters.category"
+						:list="categories"
+						@changeFilterStatus="changeFilterStatus"
+					>
+						<template #title>Категории</template>
+					</Filter>
+				</div>
 			</div>
 
 			<div class="prices" v-if="getCurrentCategories.length > 0">
@@ -86,6 +87,7 @@ export default {
 			filters: {
 				address: {
 					status: false,
+					name: "address",
 					data: {
 						body: "",
 						edited: false,
@@ -93,6 +95,7 @@ export default {
 				},
 				category: {
 					status: false,
+					name: "category",
 					data: {
 						body: "",
 						edited: false,
@@ -135,14 +138,8 @@ export default {
 		/* |                    ФИЛЬТРЫ                        |*/
 		/* |___________________________________________________|*/
 		/* После скрытия элементы */
-		changeFilterStatus(filterName) {
-			for (let key in this.filters) {
-				if (key !== filterName) {
-					this.filters[key].status = false;
-				} else {
-					this.filters[key].status = !this.filters[key].status;
-				}
-			}
+		changeFilterStatus(status, name) {
+			this.filters[name].status = status;
 		},
 	},
 	mounted() {
@@ -155,6 +152,10 @@ export default {
 			.then((response) => {
 				if (response.data.status) {
 					this.addresses = response.data.data.adresses;
+					this.addresses.forEach((address) => {
+						address.status = false;
+					});
+
 					this.categories = response.data.data.categories;
 					this.prices = response.data.data.prices;
 
@@ -184,10 +185,47 @@ export default {
 <style scoped>
 .filter-blocks {
 	display: flex;
+	flex-direction: column;
 	gap: 10px;
 
 	width: 1350px;
 	animation: show 0.5s ease-out;
+}
+
+.filter-blocks > .container-input {
+	display: grid;
+	grid-template-columns: 1fr 100px;
+	gap: 10px;
+}
+
+.filter-blocks > .container-input > input {
+	box-sizing: border-box;
+
+	padding: 15px 10px;
+	border-radius: 10px;
+	border: 0px solid white;
+	outline: none;
+
+	font-size: 1.125rem;
+
+	background-color: rgba(0, 0, 0, 0.05);
+}
+
+.filter-blocks > .container-input > button {
+	cursor: pointer;
+
+	padding: 10px;
+	border-radius: 10px;
+	border: 0px solid white;
+
+	font-size: 1.125rem;
+	color: white;
+	background-color: var(--button-default-color);
+}
+
+.filter-blocks > .container-filters {
+	display: flex;
+	gap: 10px;
 }
 
 .adresses {
