@@ -8,15 +8,18 @@
 	<block :minHeight="400">
 		<template v-if="loading.sections.prices">
 			<div class="filter-blocks">
-				<div class="container-input">
-					<input type="text" placeholder="Введите название" />
-					<button>ПОИСК</button>
+				<div class="container-filters">
+					<div class="filter-subject">Адрес: г. Шадринск, ул. Спартака, д. 8</div>
+					<div class="filter-subject">Категория: Прием врача11231</div>
 				</div>
 				<div class="container-filters">
 					<Filter
 						:filter="filters.address"
 						:list="addresses"
 						@changeFilterStatus="changeFilterStatus"
+						@touchItem="addSelectedItem"
+						@saveSelectedItems="changeSelectedItems"
+						@clearSelectedItems="clearSelectedItems"
 					>
 						<template #title>Адрес клиники</template>
 					</Filter>
@@ -24,6 +27,8 @@
 						:filter="filters.category"
 						:list="categories"
 						@changeFilterStatus="changeFilterStatus"
+						@touchItem="addSelectedItem"
+						@saveSelectedItems="changeSelectedItems"
 					>
 						<template #title>Категории</template>
 					</Filter>
@@ -88,6 +93,7 @@ export default {
 				address: {
 					status: false,
 					name: "address",
+					selected: [],
 					data: {
 						body: "",
 						edited: false,
@@ -96,6 +102,7 @@ export default {
 				category: {
 					status: false,
 					name: "category",
+					selected: [],
 					data: {
 						body: "",
 						edited: false,
@@ -141,6 +148,17 @@ export default {
 		changeFilterStatus(status, name) {
 			this.filters[name].status = status;
 		},
+		addSelectedItem(id, name) {
+			this.filters[name].selected.push(id);
+		},
+		changeSelectedItems(name, array) {
+			this.filters[name].selected = array;
+			this.filters[name].status = false;
+		},
+		clearSelectedItems(name) {
+			this.filters[name].selected = [];
+			this.filters[name].status = false;
+		},
 	},
 	mounted() {
 		this.loading.loader.prices = false;
@@ -158,8 +176,6 @@ export default {
 
 					this.categories = response.data.data.categories;
 					this.prices = response.data.data.prices;
-
-					console.log(response.data);
 				} else {
 					let debbugStory = {
 						title: "Ошибка.",
@@ -194,14 +210,14 @@ export default {
 
 .filter-blocks > .container-input {
 	display: grid;
-	grid-template-columns: 1fr 100px;
+	grid-template-columns: 1fr auto;
 	gap: 10px;
 }
 
 .filter-blocks > .container-input > input {
 	box-sizing: border-box;
 
-	padding: 15px 10px;
+	padding: 15px;
 	border-radius: 10px;
 	border: 0px solid white;
 	outline: none;
@@ -213,6 +229,9 @@ export default {
 
 .filter-blocks > .container-input > button {
 	cursor: pointer;
+	display: flex;
+	align-items: center;
+	gap: 5px;
 
 	padding: 10px;
 	border-radius: 10px;

@@ -23,8 +23,12 @@
 				<input type="text" placeholder="Введите название" v-model="name" />
 			</div>
 			<ol>
-				<li v-if="getFilteredList.length > 0" v-for="item in getFilteredList">
-					<div class="check">
+				<li
+					v-if="getFilteredList.length > 0"
+					v-for="item in getFilteredList"
+					@click="selectItem(item.id)"
+				>
+					<div class="check" :class="{ active: selected.includes(item.id) }">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							height="26px"
@@ -38,12 +42,17 @@
 				</li>
 				<li v-else class="empty">Ничего не найдено.</li>
 			</ol>
-			<div class="container-buttons">
-				<button class="cleaer">Очистить</button>
-				<button class="create" @click="$emit('changeFilterStatus', false, filter.name)">
+			<!-- <div class="container-buttons">
+				<button
+					:class="{ clear: selected.length > 0 }"
+					@click="$emit('clearSelectedItems', filter.name)"
+				>
+					Очистить
+				</button>
+				<button class="create" @click="$emit('saveSelectedItems', filter.name, selected)">
 					Сохранить
 				</button>
-			</div>
+			</div> -->
 		</div>
 	</div>
 </template>
@@ -68,23 +77,38 @@ export default {
 				item.name.toLowerCase().includes(this.name.toLowerCase())
 			);
 		},
+		getSelectedItems() {
+			return [...this.filter.selected];
+		},
 	},
 	data() {
 		return {
 			name: "",
+			selected: [],
 		};
 	},
 	mounted() {
+		// Добавляем обработчик клика вне компонента
 		document.addEventListener("click", this.handleClickOutside);
 	},
 	beforeDestroy() {
+		// Удаляем обработчик клика вне компонента
 		document.removeEventListener("click", this.handleClickOutside);
 	},
 	methods: {
 		handleClickOutside(event) {
+			// Проверка клика вне компонента
 			if (this.$refs.filter && !this.$refs.filter.contains(event.target)) {
 				this.$emit("changeFilterStatus", false, this.filter.name);
 			}
+		},
+		selectItem(id) {
+			if (this.selected.includes(id)) {
+				this.selected = this.selected.filter((item) => item !== id);
+				return;
+			}
+
+			this.selected.push(id);
 		},
 	},
 };
@@ -126,7 +150,7 @@ export default {
 
 	padding: 10px;
 	border-radius: 10px;
-	min-width: 300px;
+	min-width: 400px;
 	max-width: 650px;
 
 	opacity: 0;
@@ -145,7 +169,7 @@ export default {
 	box-sizing: border-box;
 
 	outline: none;
-	padding: 10px;
+	padding: 15px;
 	border: 0px solid white;
 	border-radius: 10px;
 
@@ -176,6 +200,16 @@ export default {
 .filter > .filter-body > .container-buttons > button.create {
 	background-color: var(--button-default-color);
 	color: white;
+}
+
+.filter > .filter-body > .container-buttons > button.create:hover {
+	background-color: var(--button-default-color-hover);
+	color: white;
+}
+
+.filter > .filter-body > .container-buttons > button.clear {
+	background-color: rgba(255, 0, 0, 0.1);
+	color: rgb(255, 94, 94);
 }
 
 .filter > .filter-body > .container-buttons > button.create:hover {
@@ -245,7 +279,7 @@ export default {
 
 .filter > .filter-body > ol > li.empty {
 	color: rgb(150, 150, 150);
-	text-align: center;
+	margin: auto;
 }
 
 .filter > .filter-body > ol > li > .check {
@@ -264,6 +298,14 @@ export default {
 .filter > .filter-body > ol > li > .check > svg {
 	position: absolute;
 
+	opacity: 0;
+	visibility: hidden;
+
 	fill: var(--button-default-color);
+}
+
+.filter > .filter-body > ol > li > .check.active > svg {
+	opacity: 1;
+	visibility: visible;
 }
 </style>
