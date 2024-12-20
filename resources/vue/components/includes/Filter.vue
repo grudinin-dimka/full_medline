@@ -26,9 +26,9 @@
 				<li
 					v-if="getFilteredList.length > 0"
 					v-for="item in getFilteredList"
-					@click="selectItem(item.id)"
+					@click="$emit('selectItem', item, filter.name)"
 				>
-					<div class="check" :class="{ active: selected.includes(item.id) }">
+					<div class="check" :class="{ active: filter.selected.includes(item) }">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							height="26px"
@@ -73,18 +73,20 @@ export default {
 	},
 	computed: {
 		getFilteredList() {
-			return this.list.filter((item) =>
-				item.name.toLowerCase().includes(this.name.toLowerCase())
-			);
-		},
-		getSelectedItems() {
-			return [...this.filter.selected];
+			let filteredList = this.list;
+
+			filteredList = this.list.filter((item) => {
+				if (item.name.toLowerCase().includes(this.name.toLowerCase())) {
+					return item;
+				}
+			});
+
+			return filteredList;
 		},
 	},
 	data() {
 		return {
 			name: "",
-			selected: [],
 		};
 	},
 	mounted() {
@@ -127,6 +129,7 @@ export default {
 	gap: 10px;
 
 	padding: 10px;
+	border: 2px solid var(--input-border-color-inactive);
 	border-radius: 10px;
 
 	font-size: 1.125rem;
@@ -135,8 +138,23 @@ export default {
 	transition: all 0.2s;
 }
 
+.filter > .filter-title > .name {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 5px;
+}
+
 .filter > .filter-title:is(:hover, .active) {
 	background-color: rgba(0, 0, 0, 0.05);
+}
+
+.filter > .filter-title > svg {
+	transition: all 0.2s;
+}
+
+.filter > .filter-title.active > svg {
+	transform: rotate(180deg);
 }
 
 .filter > .filter-body {
@@ -170,12 +188,10 @@ export default {
 
 	outline: none;
 	padding: 15px;
-	border: 0px solid white;
+	border: 2px solid var(--input-border-color-inactive);
 	border-radius: 10px;
 
 	font-size: 1.125rem;
-
-	background-color: rgba(0, 0, 0, 0.05);
 }
 
 .filter > .filter-body > .container-buttons {

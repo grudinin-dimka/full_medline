@@ -248,7 +248,7 @@ section.up .buttons div {
 	text-align: center;
 
 	border: none;
-	border-radius: 5px;
+	border-radius: 10px;
 	margin: 5px;
 
 	text-transform: uppercase;

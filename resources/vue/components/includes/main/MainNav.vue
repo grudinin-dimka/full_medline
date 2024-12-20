@@ -29,7 +29,17 @@ export default {
 	},
 	methods: {
 		insertPage(page) {
-			this.$router.push({ name: `${page}` });
+			if (page === "prices") {
+				this.$router.push({
+					name: `${page}`,
+					query: {
+						address: "none",
+						category: "none",
+					},
+				});
+			} else {
+				this.$router.push({ name: `${page}` });
+			}
 
 			// смена статуса закрытия бургера
 			this.$store.state.burger.main.status = false;
@@ -49,7 +59,7 @@ nav {
 
 	background-color: #00abbd;
 	color: white;
-	border-radius: 10px;
+	border-radius: 15px;
 
 	transition: all 0.5s ease-out;
 }
