@@ -11,20 +11,6 @@
 				<!-- Поле ввода -->
 				<div class="container-input">
 					<input type="text" placeholder="Введите название" />
-					<button>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							height="24px"
-							viewBox="0 -960 960 960"
-							width="24px"
-							fill="white"
-						>
-							<path
-								d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"
-							/>
-						</svg>
-						ПОИСК
-					</button>
 				</div>
 				<!-- Фильтры -->
 				<div class="container-filters">
@@ -170,19 +156,28 @@
 				</div>
 			</div>
 
-			<div class="prices" v-if="getCurrentCategories.length > 0">
-				<div class="prices-item" v-for="category in getCurrentCategories" :key="category.id">
-					<div class="title">{{ category.name }}</div>
-					<ol>
-						<li v-for="price in getCurrentPrices(category.id)" :key="price.id">
-							<div class="name">{{ price.name }}</div>
-							<div class="price">{{ price.price }}</div>
-							<div class="valute">руб.</div>
-						</li>
-					</ol>
+			<div class="prices">
+				<div class="container-address" v-for="address in getCurrentAddresses" :key="address.id">
+					<div class="title">
+						{{ address.name }}
+					</div>
+					<div
+						class="container-category"
+						v-for="category in getCurrentCategories(address.id)"
+						:key="category.id"
+					>
+						<div class="title">{{ category.name }}</div>
+						<ol class="container-price">
+							<li v-for="price in getCurrentPrices(category.id)" :key="price.id">
+								<div class="name">{{ price.name }}</div>
+								<div class="price">{{ price.price }}</div>
+								<div class="valute">руб.</div>
+							</li>
+						</ol>
+					</div>
 				</div>
 			</div>
-			<Empty :minHeight="300" v-else />
+			<!-- <Empty :minHeight="300" v-else /> -->
 		</template>
 
 		<loader-child
@@ -255,20 +250,27 @@ export default {
 			categories: [],
 		};
 	},
+	watch: {
+		"$route.query": {
+			handler(newQuery) {
+				console.log("query.address: " + newQuery.category);
+				console.log("query.address: " + newQuery.address);
+			},
+			immediate: true,
+		},
+	},
 	computed: {
-		getCurrentCategories() {
-			return this.categories.filter((category) => {
-				if (
-					category.addressId === this.filters.address.data.body &&
-					category.categoryId !== null
-				) {
-					return category;
-				}
-			});
+		getCurrentAddresses() {
+			let currentAddresses = [];
+
+			if (this.filters.address.all) currentAddresses = this.addresses;
+
+			return currentAddresses;
 		},
 		getActiveFilters() {
 			return this.filters.address.selected.length + this.filters.category.selected.length;
 		},
+		checkFilters() {},
 	},
 	methods: {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -288,6 +290,16 @@ export default {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                    ФИЛЬТРЫ                        |*/
 		/* |___________________________________________________|*/
+		getCurrentCategories(addressId) {
+			return this.categories.filter((category) => {
+				if (
+					category.addressId == addressId &&
+					this.prices.find((price) => price.categoryId == category.id)
+				) {
+					return category;
+				}
+			});
+		},
 		/* После скрытия элементы */
 		changeFilterStatus(status, name) {
 			this.filters[name].status = status;
@@ -383,12 +395,10 @@ export default {
 
 				if (this.$route.query.address == "all") {
 					this.filters.address.all = true;
-					console.log("address all");
 				}
 
 				if (this.$route.query.category == "all") {
 					this.filters.category.all = true;
-					console.log("category all");
 				}
 			});
 	},
@@ -516,44 +526,91 @@ export default {
 	width: 1350px;
 	display: grid;
 	grid-template-columns: repeat(1, 1fr);
-	gap: 40px;
+	gap: 20px;
 
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
-.prices-item > .title {
+.prices > .container-address {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.prices > .container-address > .title {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+
+	font-size: 1.5rem;
+	font-weight: 600;
+	color: black;
+}
+
+.prices > .container-address > .title > svg {
+	fill: var(--button-default-color);
+}
+
+.prices > .container-address > .container-category {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+
+	border-radius: 20px;
+	background-color: #d2f2f5;
+}
+
+.prices > .container-address > .container-category > .title {
 	font-size: 1.25rem;
 	font-weight: 600;
-	color: #00abbd;
+	color: white;
+	padding: 20px;
+
+	border-radius: 20px 20px 0px 0px;
+	background-color: #3fbecd;
+
+	border: 0px solid #2d9aa7;
 }
 
-.prices-item > ol {
-	list-style: none;
+.prices > .container-address > .container-category > .container-price {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
 
-	padding: 0px;
+	padding: 0px 0px 0px 0px;
 	margin: 0px;
 
-	column-gap: 40px;
+	font-size: 1.125rem;
 }
 
-.prices-item > ol > li {
+.prices > .container-address > .container-category > .container-price > li {
+	list-style: none;
 	display: grid;
-	grid-template-columns: 1fr 50px 40px;
+	grid-template-columns: 1fr 100px 50px;
 	gap: 5px;
+
+	padding: 10px 20px 20px 20px;
+	margin: 0px 0px 0px 0px;
 
 	border-top: 0px;
 	border-right: 0px;
 	border-bottom: 1px;
 	border-left: 0px;
 	border-style: solid;
-	border-color: #d2d2d2;
-
-	padding: 15px 10px;
-
-	font-size: 1.125rem;
+	border-color: #3fbecd;
 }
 
-.prices-item > ol > li > .price {
+.prices > .container-address > .container-category > .container-price > li:last-child {
+	border-top: 0px;
+	border-right: 0px;
+	border-bottom: 0px;
+	border-left: 0px;
+	border-style: solid;
+	border-color: #3fbecd;
+}
+
+.prices > .container-address > .container-category > .container-price > li > .price {
 	text-align: right;
 }
 </style>

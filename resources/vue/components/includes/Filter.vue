@@ -166,6 +166,7 @@ export default {
 .filter > .filter-body {
 	box-sizing: border-box;
 	position: absolute;
+	z-index: 1;
 	top: 55px;
 	left: 0px;
 	display: flex;
