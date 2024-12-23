@@ -23,12 +23,29 @@
 				<input type="text" placeholder="Введите название" v-model="name" />
 			</div>
 			<ol>
+				<li @click="$emit('selectAll')">
+					<div class="check" :class="{ active: filter.all }">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							height="26px"
+							viewBox="0 -960 960 960"
+							width="26px"
+						>
+							<path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z" />
+						</svg>
+					</div>
+					Все
+				</li>
 				<li
 					v-if="getFilteredList.length > 0"
 					v-for="item in getFilteredList"
+					:class="{ all: filter.all }"
 					@click="$emit('selectItem', item, filter.name)"
 				>
-					<div class="check" :class="{ active: filter.selected.includes(item) }">
+					<div
+						class="check"
+						:class="{ active: filter.selected.includes(item), all: filter.all }"
+					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							height="26px"
@@ -42,17 +59,6 @@
 				</li>
 				<li v-else class="empty">Ничего не найдено.</li>
 			</ol>
-			<!-- <div class="container-buttons">
-				<button
-					:class="{ clear: selected.length > 0 }"
-					@click="$emit('clearSelectedItems', filter.name)"
-				>
-					Очистить
-				</button>
-				<button class="create" @click="$emit('saveSelectedItems', filter.name, selected)">
-					Сохранить
-				</button>
-			</div> -->
 		</div>
 	</div>
 </template>
@@ -323,5 +329,13 @@ export default {
 .filter > .filter-body > ol > li > .check.active > svg {
 	opacity: 1;
 	visibility: visible;
+}
+
+.filter > .filter-body > ol > li.all {
+	color: rgba(0, 0, 0, 0.5);
+}
+
+.filter > .filter-body > ol > li.all .check > svg {
+	fill: rgb(150, 150, 150);
 }
 </style>

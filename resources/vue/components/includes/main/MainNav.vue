@@ -33,8 +33,8 @@ export default {
 				this.$router.push({
 					name: `${page}`,
 					query: {
-						address: "none",
-						category: "none",
+						address: "all",
+						category: "all",
 					},
 				});
 			} else {

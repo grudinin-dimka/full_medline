@@ -33,7 +33,7 @@
 						:list="addresses"
 						@changeFilterStatus="changeFilterStatus"
 						@selectItem="changeSelectedItem"
-						@saveSelectedItems="changeSelectedItems"
+						@selectAll="filters.address.all = !filters.address.all"
 					>
 						<template #title>
 							<svg
@@ -59,6 +59,7 @@
 						@changeFilterStatus="changeFilterStatus"
 						@selectItem="changeSelectedItem"
 						@saveSelectedItems="changeSelectedItems"
+						@selectAll="filters.category.all = !filters.category.all"
 					>
 						<template #title>
 							<svg
@@ -230,6 +231,7 @@ export default {
 			filters: {
 				address: {
 					status: false,
+					all: false,
 					name: "address",
 					selected: [],
 					data: {
@@ -239,6 +241,7 @@ export default {
 				},
 				category: {
 					status: false,
+					all: false,
 					name: "category",
 					selected: [],
 					data: {
@@ -294,11 +297,11 @@ export default {
 				this.filters[name].selected = this.filters[name].selected.filter(
 					(item) => item !== selectedItem
 				);
-
-				return;
+			} else {
+				this.filters[name].selected.push(selectedItem);
 			}
 
-			this.filters[name].selected.push(selectedItem);
+			this.changeQuery();
 		},
 		changeSelectedItems(name, array) {
 			this.filters[name].selected = array;
@@ -308,6 +311,28 @@ export default {
 			for (let key in items) {
 				this.filters[items[key]].selected = [];
 			}
+		},
+		changeQuery() {
+			let activeAddresses = [];
+			this.filters.address.selected.forEach((address) => {
+				if (this.addresses.includes(address)) {
+					activeAddresses.push(address.name);
+				}
+			});
+
+			let activeCategories = [];
+			this.filters.category.selected.forEach((category) => {
+				if (this.categories.includes(category)) {
+					activeCategories.push(category.name);
+				}
+			});
+
+			this.$router.push({
+				query: {
+					address: activeAddresses.join(", "),
+					category: activeCategories.join(", "),
+				},
+			});
 		},
 	},
 	setup() {
@@ -353,7 +378,19 @@ export default {
 				};
 				this.$store.commit("debuggerState", debbugStory);
 			})
-			.finally(() => (this.loading.loader.schedule = false));
+			.finally(() => {
+				this.loading.loader.schedule = false;
+
+				if (this.$route.query.address == "all") {
+					this.filters.address.all = true;
+					console.log("address all");
+				}
+
+				if (this.$route.query.category == "all") {
+					this.filters.category.all = true;
+					console.log("category all");
+				}
+			});
 	},
 };
 </script>
