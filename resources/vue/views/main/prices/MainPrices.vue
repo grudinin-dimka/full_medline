@@ -10,7 +10,7 @@
 			<div class="filter-blocks">
 				<!-- Поле ввода -->
 				<div class="container-input">
-					<input type="text" placeholder="Введите название" />
+					<input type="text" placeholder="Введите услугу" />
 				</div>
 				<!-- Фильтры -->
 				<div class="container-filters">
@@ -73,7 +73,11 @@
 				>
 					<div
 						class="filter-subject"
-						v-for="filter in filters.address.selected"
+						:class="{
+							disabled: filters.address.all,
+						}"
+						v-for="filter in getAddressSelected"
+						:key="filter.id"
 						@click="changeSelectedItem(filter, 'address')"
 					>
 						<div class="title">
@@ -106,7 +110,11 @@
 					</div>
 					<div
 						class="filter-subject"
-						v-for="filter in filters.category.selected"
+						:class="{
+							disabled: filters.category.all,
+						}"
+						v-for="filter in getCategorySelected"
+						:key="filter.id"
 						@click="changeSelectedItem(filter, 'category')"
 					>
 						<div class="title">
@@ -157,7 +165,12 @@
 			</div>
 
 			<div class="prices">
-				<div class="container-address" v-for="address in getCurrentAddresses" :key="address.id">
+				<div
+					class="container-address"
+					v-if="getCurrentAddresses.length > 0 && getCurrentCategories.length > 0"
+					v-for="address in getCurrentAddresses"
+					:key="address.id"
+				>
 					<div class="title">
 						{{ address.name }}
 					</div>
@@ -176,8 +189,8 @@
 						</ol>
 					</div>
 				</div>
+				<Empty :minHeight="300" v-else />
 			</div>
-			<!-- <Empty :minHeight="300" v-else /> -->
 		</template>
 
 		<loader-child
@@ -201,6 +214,7 @@ import IconContactHome from "../../../components/icons/contacts/IconContactHome.
 
 import axios from "axios";
 import { useRoute } from "vue-router";
+import sorted from "../../../services/sorted.js";
 
 export default {
 	components: {
@@ -212,6 +226,7 @@ export default {
 		ContainerInputOnce,
 		IconContactHome,
 		axios,
+		sorted,
 	},
 	data() {
 		return {
@@ -253,24 +268,48 @@ export default {
 	watch: {
 		"$route.query": {
 			handler(newQuery) {
-				console.log("query.address: " + newQuery.category);
-				console.log("query.address: " + newQuery.address);
+				// ...
 			},
 			immediate: true,
 		},
+		"filters.address.all"(newValue) {
+			this.changeQuery();
+		},
+		"filters.category.all"(newValue) {
+			this.changeQuery();
+		},
 	},
 	computed: {
+		getAddressSelected() {
+			let selected = this.filters.address.selected;
+			sorted.sortByName("up", this.filters.address.selected);
+
+			return selected;
+		},
+		getCategorySelected() {
+			let selected = this.filters.category.selected;
+			sorted.sortByName("up", this.filters.category.selected);
+
+			return selected;
+		},
 		getCurrentAddresses() {
 			let currentAddresses = [];
 
-			if (this.filters.address.all) currentAddresses = this.addresses;
+			if (this.filters.address.all) {
+				currentAddresses = this.addresses;
+			} else {
+				currentAddresses = this.filters.address.selected.filter((address) => {
+					return this.addresses.includes(address);
+				});
+			}
 
-			return currentAddresses;
+			sorted.sortByName("up", currentAddresses);
+
+			return currentAddresses ?? [];
 		},
 		getActiveFilters() {
 			return this.filters.address.selected.length + this.filters.category.selected.length;
 		},
-		checkFilters() {},
 	},
 	methods: {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -290,8 +329,14 @@ export default {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                    ФИЛЬТРЫ                        |*/
 		/* |___________________________________________________|*/
+		/* _____________________________________________________*/
+		/* 1. Изменение значений фильтров                       */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* Получение текущих категорий */
 		getCurrentCategories(addressId) {
-			return this.categories.filter((category) => {
+			let currentCategories = [];
+
+			currentCategories = this.categories.filter((category) => {
 				if (
 					category.addressId == addressId &&
 					this.prices.find((price) => price.categoryId == category.id)
@@ -299,6 +344,14 @@ export default {
 					return category;
 				}
 			});
+
+			// if (!this.filters.category.all) {
+			// 	currentCategories = this.filters.category.selected.filter((category) => {
+			// 		return this.categories.includes(category);
+			// 	});
+			// }
+
+			return currentCategories;
 		},
 		/* После скрытия элементы */
 		changeFilterStatus(status, name) {
@@ -324,27 +377,61 @@ export default {
 				this.filters[items[key]].selected = [];
 			}
 		},
+		/* _____________________________________________________*/
+		/* 2. Изменение query в строке                          */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		changeQuery() {
-			let activeAddresses = [];
-			this.filters.address.selected.forEach((address) => {
-				if (this.addresses.includes(address)) {
-					activeAddresses.push(address.name);
-				}
-			});
+			let urlAddress = "none";
+			let urlCategory = "none";
 
-			let activeCategories = [];
-			this.filters.category.selected.forEach((category) => {
-				if (this.categories.includes(category)) {
-					activeCategories.push(category.name);
-				}
-			});
+			if (this.filters.address.all) {
+				urlAddress = "all";
+			} else {
+				urlAddress = this.calculateFilterAddress();
+			}
+
+			if (this.filters.category.all) {
+				urlCategory = "all";
+			} else {
+				urlCategory = this.calculateFilterCategory();
+			}
 
 			this.$router.push({
 				query: {
-					address: activeAddresses.join(", "),
-					category: activeCategories.join(", "),
+					address: urlAddress,
+					category: urlCategory,
 				},
 			});
+		},
+		calculateFilterAddress() {
+			let activeAddresses = [];
+
+			if (this.filters.address.selected.length > 0) {
+				this.filters.address.selected.forEach((address) => {
+					if (this.addresses.includes(address)) {
+						activeAddresses.push(address.name);
+					}
+				});
+
+				return activeAddresses.join(", ");
+			} else {
+				return "none";
+			}
+		},
+		calculateFilterCategory() {
+			let activeCategories = [];
+
+			if (this.filters.category.selected.length > 0) {
+				this.filters.category.selected.forEach((category) => {
+					if (this.categories.includes(category)) {
+						activeCategories.push(category.name);
+					}
+				});
+
+				return activeCategories.join(", ");
+			} else {
+				return "none";
+			}
 		},
 	},
 	setup() {
@@ -432,6 +519,7 @@ export default {
 	font-size: 1.125rem;
 
 	transition: all 0.2s;
+	caret-color: var(--input-border-color-active);
 }
 
 .filter-blocks > .container-input > input:focus {
@@ -477,6 +565,8 @@ export default {
 	background-color: var(--button-default-color);
 	border-radius: 10px;
 	color: white;
+
+	transition: all 0.2s;
 }
 
 .filter-blocks > .container-filters > .filter-subject:hover {
@@ -514,6 +604,11 @@ export default {
 	border-radius: 50px;
 }
 
+.filter-blocks > .container-filters > .filter-subject.disabled {
+	background-color: rgb(150, 150, 150);
+	color: white;
+}
+
 .adresses {
 	display: flex;
 	overflow-x: auto;
@@ -526,9 +621,7 @@ export default {
 	width: 1350px;
 	display: grid;
 	grid-template-columns: repeat(1, 1fr);
-	gap: 20px;
-
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
+	gap: 40px;
 }
 
 .prices > .container-address {
@@ -555,10 +648,12 @@ export default {
 .prices > .container-address > .container-category {
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: 0px;
 
 	border-radius: 20px;
 	background-color: #d2f2f5;
+
+	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 .prices > .container-address > .container-category > .title {
@@ -570,13 +665,13 @@ export default {
 	border-radius: 20px 20px 0px 0px;
 	background-color: #3fbecd;
 
-	border: 0px solid #2d9aa7;
+	border: 1px solid #2d9aa7;
 }
 
 .prices > .container-address > .container-category > .container-price {
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: 0px;
 
 	padding: 0px 0px 0px 0px;
 	margin: 0px;
@@ -590,24 +685,31 @@ export default {
 	grid-template-columns: 1fr 100px 50px;
 	gap: 5px;
 
-	padding: 10px 20px 20px 20px;
+	padding: 20px 20px 20px 20px;
 	margin: 0px 0px 0px 0px;
 
 	border-top: 0px;
-	border-right: 0px;
+	border-right: 1px;
 	border-bottom: 1px;
-	border-left: 0px;
+	border-left: 1px;
 	border-style: solid;
 	border-color: #3fbecd;
+
+	transition: all 0.2s;
+}
+
+.prices > .container-address > .container-category > .container-price > li:hover {
+	background-color: rgba(255, 255, 255, 0.3);
 }
 
 .prices > .container-address > .container-category > .container-price > li:last-child {
 	border-top: 0px;
-	border-right: 0px;
-	border-bottom: 0px;
-	border-left: 0px;
+	border-right: 1px;
+	border-bottom: 1px;
+	border-left: 1px;
 	border-style: solid;
 	border-color: #3fbecd;
+	border-radius: 0px 0px 20px 20px;
 }
 
 .prices > .container-address > .container-category > .container-price > li > .price {

@@ -110,7 +110,7 @@ export default {
 	box-sizing: border-box;
 
 	background: #fff;
-	border-radius: 10px;
+	border-radius: 15px;
 	width: 100%;
 	max-width: 700px;
 	max-height: 100%;

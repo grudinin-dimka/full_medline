@@ -64,7 +64,12 @@
 </template>
 
 <script>
+import sorted from "../../services/sorted";
+
 export default {
+	components: {
+		sorted,
+	},
 	props: {
 		filter: {
 			type: Object,
@@ -81,11 +86,19 @@ export default {
 		getFilteredList() {
 			let filteredList = this.list;
 
-			filteredList = this.list.filter((item) => {
+			/* Фильтрация повторений по названия */
+			filteredList = this.list.filter(
+				(item, index, arr) => index === arr.findIndex((t) => t.name === item.name)
+			);
+
+			/* Фильтрация по вводу значения */
+			filteredList = filteredList.filter((item) => {
 				if (item.name.toLowerCase().includes(this.name.toLowerCase())) {
 					return item;
 				}
 			});
+
+			sorted.sortByName("up", filteredList);
 
 			return filteredList;
 		},
@@ -151,8 +164,8 @@ export default {
 	gap: 5px;
 }
 
-.filter > .filter-title:is(:hover, .active) {
-	background-color: rgba(0, 0, 0, 0.05);
+.filter > .filter-title:is(.active) {
+	border: 2px solid var(--input-border-color-active);
 }
 
 .filter > .filter-title > svg {
@@ -174,15 +187,19 @@ export default {
 	gap: 10px;
 
 	padding: 10px;
-	border-radius: 10px;
+	border-radius: 15px;
 	min-width: 400px;
 	max-width: 650px;
 
 	opacity: 0;
 	visibility: hidden;
+	transform: scale(0.7);
+	transform: translateY(-10px);
 
 	background-color: white;
 	box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, 0.1);
+
+	transition: all 0.2s;
 }
 
 .filter > .filter-body > .container-input {
@@ -243,6 +260,7 @@ export default {
 .filter > .filter-body.active {
 	opacity: 1;
 	visibility: visible;
+	transform: translateY(0px);
 }
 
 .filter > .filter-body > ol {
