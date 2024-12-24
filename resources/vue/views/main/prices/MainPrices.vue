@@ -34,7 +34,8 @@
 								/>
 							</svg>
 							Адрес клиники
-							<span v-if="filters.address.selected.length > 0">
+							<span v-if="filters.address.all"> (все) </span>
+							<span v-if="filters.address.selected.length > 0 && !filters.address.all">
 								({{ filters.address.selected.length }})
 							</span>
 						</template>
@@ -60,7 +61,8 @@
 								/>
 							</svg>
 							Категории
-							<span v-if="filters.category.selected.length > 0">
+							<span v-if="filters.category.all"> (все) </span>
+							<span v-if="filters.category.selected.length > 0 && !filters.category.all">
 								({{ filters.category.selected.length }})
 							</span>
 						</template>
@@ -176,15 +178,56 @@
 					</div>
 					<div
 						class="container-category"
+						v-if="getCurrentCategories(address.id).length > 0"
 						v-for="category in getCurrentCategories(address.id)"
 						:key="category.id"
 					>
-						<div class="title">{{ category.name }}</div>
+						<div class="title">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								height="30px"
+								viewBox="0 -960 960 960"
+								width="30px"
+								fill="#00abbd"
+							>
+								<path
+									d="m260-520 220-360 220 360H260ZM700-80q-75 0-127.5-52.5T520-260q0-75 52.5-127.5T700-440q75 0 127.5 52.5T880-260q0 75-52.5 127.5T700-80Zm-580-20v-320h320v320H120Zm580-60q42 0 71-29t29-71q0-42-29-71t-71-29q-42 0-71 29t-29 71q0 42 29 71t71 29Zm-500-20h160v-160H200v160Zm202-420h156l-78-126-78 126Zm78 0ZM360-340Zm340 80Z"
+								/>
+							</svg>
+							{{ category.name }}
+						</div>
 						<ol class="container-price">
 							<li v-for="price in getCurrentPrices(category.id)" :key="price.id">
-								<div class="name">{{ price.name }}</div>
-								<div class="price">{{ price.price }}</div>
-								<div class="valute">руб.</div>
+								<div class="text">
+									<div class="name">{{ price.name }}</div>
+									<div class="price">{{ price.price }}</div>
+									<div class="valute">руб.</div>
+								</div>
+							</li>
+						</ol>
+					</div>
+					<div class="container-category" v-else v-for="category in getCategorySelected">
+						<div class="title">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								height="30px"
+								viewBox="0 -960 960 960"
+								width="30px"
+								fill="#00abbd"
+							>
+								<path
+									d="m260-520 220-360 220 360H260ZM700-80q-75 0-127.5-52.5T520-260q0-75 52.5-127.5T700-440q75 0 127.5 52.5T880-260q0 75-52.5 127.5T700-80Zm-580-20v-320h320v320H120Zm580-60q42 0 71-29t29-71q0-42-29-71t-71-29q-42 0-71 29t-29 71q0 42 29 71t71 29Zm-500-20h160v-160H200v160Zm202-420h156l-78-126-78 126Zm78 0ZM360-340Zm340 80Z"
+								/>
+							</svg>
+							{{ category.name }}
+						</div>
+						<ol class="container-price">
+							<li>
+								<div class="text">
+									<div class="name">Отсутствует...</div>
+									<div class="price"></div>
+									<div class="valute"></div>
+								</div>
 							</li>
 						</ol>
 					</div>
@@ -345,11 +388,19 @@ export default {
 				}
 			});
 
-			// if (!this.filters.category.all) {
-			// 	currentCategories = this.filters.category.selected.filter((category) => {
-			// 		return this.categories.includes(category);
-			// 	});
-			// }
+			if (!this.filters.category.all) {
+				currentCategories = currentCategories.filter((category) => {
+					let bool = false;
+
+					this.filters.category.selected.forEach((item) => {
+						if (item.name == category.name) {
+							bool = true;
+						}
+					});
+
+					return bool;
+				});
+			}
 
 			return currentCategories;
 		},
@@ -375,6 +426,7 @@ export default {
 		clearSelectedItems(items) {
 			for (let key in items) {
 				this.filters[items[key]].selected = [];
+				this.filters[items[key]].all = true;
 			}
 		},
 		/* _____________________________________________________*/
@@ -621,7 +673,6 @@ export default {
 	width: 1350px;
 	display: grid;
 	grid-template-columns: repeat(1, 1fr);
-	gap: 40px;
 }
 
 .prices > .container-address {
@@ -634,11 +685,18 @@ export default {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	gap: 10px;
+
+	margin-top: 30px;
 
 	font-size: 1.5rem;
 	font-weight: 600;
 	color: black;
+
+	animation: show-bottom-to-top-15 0.5s ease-in-out;
+}
+
+.prices > .container-address:first-child > .title {
+	margin-top: 10px;
 }
 
 .prices > .container-address > .title > svg {
@@ -651,28 +709,27 @@ export default {
 	gap: 0px;
 
 	border-radius: 20px;
-	background-color: #d2f2f5;
 
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 .prices > .container-address > .container-category > .title {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+
 	font-size: 1.25rem;
 	font-weight: 600;
-	color: white;
-	padding: 20px;
+	color: #2d9aa7;
+	padding: 10px 0px;
 
 	border-radius: 20px 20px 0px 0px;
-	background-color: #3fbecd;
+	background-color: white;
 
-	border: 1px solid #2d9aa7;
+	border: 0px solid #2d9aa7;
 }
 
 .prices > .container-address > .container-category > .container-price {
-	display: flex;
-	flex-direction: column;
-	gap: 0px;
-
 	padding: 0px 0px 0px 0px;
 	margin: 0px;
 
@@ -680,39 +737,28 @@ export default {
 }
 
 .prices > .container-address > .container-category > .container-price > li {
-	list-style: none;
-	display: grid;
-	grid-template-columns: 1fr 100px 50px;
-	gap: 5px;
+	list-style: decimal-leading-zero;
 
-	padding: 20px 20px 20px 20px;
-	margin: 0px 0px 0px 0px;
+	padding: 20px 0px;
+	margin: 0px 0px 0px 70px;
 
 	border-top: 0px;
-	border-right: 1px;
+	border-right: 0px;
 	border-bottom: 1px;
-	border-left: 1px;
+	border-left: 0px;
 	border-style: solid;
-	border-color: #3fbecd;
+	border-color: #c3c3c3;
 
 	transition: all 0.2s;
 }
 
-.prices > .container-address > .container-category > .container-price > li:hover {
-	background-color: rgba(255, 255, 255, 0.3);
+.prices > .container-address > .container-category > .container-price > li > .text {
+	display: grid;
+	grid-template-columns: 1fr 100px 50px;
+	gap: 5px;
 }
 
-.prices > .container-address > .container-category > .container-price > li:last-child {
-	border-top: 0px;
-	border-right: 1px;
-	border-bottom: 1px;
-	border-left: 1px;
-	border-style: solid;
-	border-color: #3fbecd;
-	border-radius: 0px 0px 20px 20px;
-}
-
-.prices > .container-address > .container-category > .container-price > li > .price {
+.prices > .container-address > .container-category > .container-price > li > .text > .price {
 	text-align: right;
 }
 </style>
