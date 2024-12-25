@@ -1367,7 +1367,7 @@ export default {
 	align-items: center;
 
 	border: 2px solid var(--input-border-color-inactive);
-	border-radius: 30px;
+	border-radius: 15px;
 	padding: 10px 20px;
 	transition: all 0.2s;
 }

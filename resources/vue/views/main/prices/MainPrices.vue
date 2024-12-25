@@ -5,12 +5,12 @@
 		<router-link to="/prices">Цены</router-link>
 	</info-bar>
 
-	<BlockHide :minHeight="400">
+	<Block :minHeight="400">
 		<template v-if="loading.sections.prices">
 			<div class="filter-blocks">
 				<!-- Поле ввода -->
 				<div class="container-input">
-					<input type="text" placeholder="Введите услугу" />
+					<input type="text" placeholder="Введите услугу" v-model="filters.name" />
 				</div>
 
 				<!-- Фильтры -->
@@ -220,7 +220,7 @@
 							</li>
 						</ol>
 					</div>
-					<div class="container-category-none" v-else>Категория не выбрана...</div>
+					<div class="container-category-none" v-else>Ничего нет...</div>
 				</div>
 				<Empty :minHeight="300" v-else />
 			</div>
@@ -231,7 +231,7 @@
 			:minHeight="397"
 			@loaderChildAfterLeave="loaderChildAfterLeave"
 		/>
-	</BlockHide>
+	</Block>
 </template>
 
 <script>
@@ -274,6 +274,7 @@ export default {
 				},
 			},
 			filters: {
+				name: "",
 				address: {
 					status: false,
 					all: false,
@@ -306,6 +307,9 @@ export default {
 				// ...
 			},
 			immediate: true,
+		},
+		"filters.name"(newValue) {
+			this.changeQuery();
 		},
 		"filters.address.all"(newValue) {
 			this.changeQuery();
@@ -363,6 +367,14 @@ export default {
 				}
 			});
 
+			if (this.filters.name !== "") {
+				currentPrices = currentPrices.filter((price) => {
+					if (price.name.toLowerCase().includes(this.filters.name.toLowerCase())) {
+						return price;
+					}
+				});
+			}
+
 			sorted.sortNumberByKey("up", currentPrices, "price");
 
 			return currentPrices;
@@ -384,6 +396,24 @@ export default {
 				) {
 					return category;
 				}
+			});
+
+			currentCategories = currentCategories.filter((category) => {
+				let bool = false;
+
+				let currentPrices = this.prices.filter((price) => {
+					if (price.categoryId == category.id) {
+						return price;
+					}
+				});
+
+				currentPrices.forEach((price) => {
+					if (price.name.toLowerCase().includes(this.filters.name.toLowerCase())) {
+						bool = true;
+					}
+				});
+
+				return bool;
 			});
 
 			if (!this.filters.category.all) {
@@ -450,8 +480,13 @@ export default {
 		/* 2. Изменение query в строке                          */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		changeQuery() {
+			let urlName = "none";
 			let urlAddress = "none";
 			let urlCategory = "none";
+
+			if (this.filters.name !== "") {
+				urlName = this.filters.name;
+			}
 
 			if (this.filters.address.all) {
 				urlAddress = "all";
@@ -467,6 +502,7 @@ export default {
 
 			this.$router.push({
 				query: {
+					name: urlName,
 					address: urlAddress,
 					category: urlCategory,
 				},
@@ -505,10 +541,12 @@ export default {
 	},
 	setup() {
 		const route = useRoute();
+		const nameRoute = route.query.name;
 		const addressRoute = route.query.address;
 		const categoryRoute = route.query.category;
 
 		return {
+			nameRoute,
 			addressRoute,
 			categoryRoute,
 		};
