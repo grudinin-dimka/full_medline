@@ -23,7 +23,7 @@
 				<input type="text" placeholder="Введите название" v-model="name" />
 			</div>
 			<ol>
-				<li @click="$emit('selectAll')">
+				<li @click="$emit('selectAll')" :class="{ active: filter.all }">
 					<div class="check" :class="{ active: filter.all }">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -301,7 +301,6 @@ export default {
 	cursor: all-scroll;
 }
 /* Конец. */
-
 .filter > .filter-body > ol > li {
 	cursor: pointer;
 	display: flex;
@@ -310,12 +309,7 @@ export default {
 
 	padding: 10px;
 	white-space: nowrap;
-}
-
-.filter > .filter-body > ol > li:hover {
-	padding: 10px;
-	border-radius: 10px;
-	background-color: rgba(0, 0, 0, 0.05);
+	background-color: rgba(255, 255, 255, 1);
 }
 
 .filter > .filter-body > ol > li.empty {
@@ -323,8 +317,12 @@ export default {
 	margin: auto;
 }
 
+.filter > .filter-body > ol > li.active {
+	position: sticky;
+	top: 0px;
+}
+
 .filter > .filter-body > ol > li > .check {
-	position: relative;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -337,8 +335,6 @@ export default {
 }
 
 .filter > .filter-body > ol > li > .check > svg {
-	position: absolute;
-
 	opacity: 0;
 	visibility: hidden;
 
@@ -356,5 +352,11 @@ export default {
 
 .filter > .filter-body > ol > li.all .check > svg {
 	fill: rgb(150, 150, 150);
+}
+
+.filter > .filter-body > ol > li:hover {
+	padding: 10px;
+	border-radius: 10px;
+	background-color: rgb(242, 242, 242);
 }
 </style>

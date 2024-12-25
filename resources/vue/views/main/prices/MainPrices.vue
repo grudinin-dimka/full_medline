@@ -5,13 +5,14 @@
 		<router-link to="/prices">Цены</router-link>
 	</info-bar>
 
-	<block :minHeight="400">
+	<BlockHide :minHeight="400">
 		<template v-if="loading.sections.prices">
 			<div class="filter-blocks">
 				<!-- Поле ввода -->
 				<div class="container-input">
 					<input type="text" placeholder="Введите услугу" />
 				</div>
+
 				<!-- Фильтры -->
 				<div class="container-filters">
 					<Filter
@@ -68,6 +69,7 @@
 						</template>
 					</Filter>
 				</div>
+
 				<!-- Субъекты фильтров -->
 				<div
 					class="container-filters"
@@ -166,6 +168,7 @@
 				</div>
 			</div>
 
+			<!-- Цены -->
 			<div class="prices">
 				<div
 					class="container-address"
@@ -178,8 +181,11 @@
 					</div>
 					<div
 						class="container-category"
-						v-if="getCurrentCategories(address.id).length > 0"
+						:class="{
+							disabled: category.id === null,
+						}"
 						v-for="category in getCurrentCategories(address.id)"
+						v-if="getCurrentCategories(address.id).length > 0"
 						:key="category.id"
 					>
 						<div class="title">
@@ -188,7 +194,6 @@
 								height="30px"
 								viewBox="0 -960 960 960"
 								width="30px"
-								fill="#00abbd"
 							>
 								<path
 									d="m260-520 220-360 220 360H260ZM700-80q-75 0-127.5-52.5T520-260q0-75 52.5-127.5T700-440q75 0 127.5 52.5T880-260q0 75-52.5 127.5T700-80Zm-580-20v-320h320v320H120Zm580-60q42 0 71-29t29-71q0-42-29-71t-71-29q-42 0-71 29t-29 71q0 42 29 71t71 29Zm-500-20h160v-160H200v160Zm202-420h156l-78-126-78 126Zm78 0ZM360-340Zm340 80Z"
@@ -196,32 +201,16 @@
 							</svg>
 							{{ category.name }}
 						</div>
-						<ol class="container-price">
+						<ol class="container-price" v-if="category.id !== null">
 							<li v-for="price in getCurrentPrices(category.id)" :key="price.id">
 								<div class="text">
 									<div class="name">{{ price.name }}</div>
-									<div class="price">{{ price.price }}</div>
+									<div class="price">{{ formatPrice(price.price) }}</div>
 									<div class="valute">руб.</div>
 								</div>
 							</li>
 						</ol>
-					</div>
-					<div class="container-category" v-else v-for="category in getCategorySelected">
-						<div class="title">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								height="30px"
-								viewBox="0 -960 960 960"
-								width="30px"
-								fill="#00abbd"
-							>
-								<path
-									d="m260-520 220-360 220 360H260ZM700-80q-75 0-127.5-52.5T520-260q0-75 52.5-127.5T700-440q75 0 127.5 52.5T880-260q0 75-52.5 127.5T700-80Zm-580-20v-320h320v320H120Zm580-60q42 0 71-29t29-71q0-42-29-71t-71-29q-42 0-71 29t-29 71q0 42 29 71t71 29Zm-500-20h160v-160H200v160Zm202-420h156l-78-126-78 126Zm78 0ZM360-340Zm340 80Z"
-								/>
-							</svg>
-							{{ category.name }}
-						</div>
-						<ol class="container-price">
+						<ol class="container-price" v-if="category.id === null">
 							<li>
 								<div class="text">
 									<div class="name">Отсутствует...</div>
@@ -231,6 +220,7 @@
 							</li>
 						</ol>
 					</div>
+					<div class="container-category-none" v-else>Категория не выбрана...</div>
 				</div>
 				<Empty :minHeight="300" v-else />
 			</div>
@@ -241,13 +231,14 @@
 			:minHeight="397"
 			@loaderChildAfterLeave="loaderChildAfterLeave"
 		/>
-	</block>
+	</BlockHide>
 </template>
 
 <script>
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
 import Block from "../../../components/ui/main/blocks/Block.vue";
+import BlockHide from "../../../components/ui/main/blocks/BlockHide.vue";
 import Empty from "../../../components/includes/Empty.vue";
 import Filter from "../../../components/includes/Filter.vue";
 
@@ -264,6 +255,7 @@ export default {
 		InfoBar,
 		LoaderChild,
 		Block,
+		BlockHide,
 		Empty,
 		Filter,
 		ContainerInputOnce,
@@ -363,11 +355,17 @@ export default {
 			this.loading.sections.prices = true;
 		},
 		getCurrentPrices(categoryId) {
-			return this.prices.filter((price) => {
+			let currentPrices = [];
+
+			currentPrices = this.prices.filter((price) => {
 				if (price.categoryId == categoryId) {
 					return price;
 				}
 			});
+
+			sorted.sortNumberByKey("up", currentPrices, "price");
+
+			return currentPrices;
 		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                    ФИЛЬТРЫ                        |*/
@@ -389,18 +387,34 @@ export default {
 			});
 
 			if (!this.filters.category.all) {
-				currentCategories = currentCategories.filter((category) => {
-					let bool = false;
+				let resultCategories = [];
 
-					this.filters.category.selected.forEach((item) => {
-						if (item.name == category.name) {
+				this.filters.category.selected.forEach((item) => {
+					let bool = false;
+					let categoryName = item.name;
+					let selectedCategory = null;
+
+					currentCategories.forEach((category) => {
+						if (item.name === category.name) {
 							bool = true;
+							selectedCategory = category;
 						}
 					});
 
-					return bool;
+					if (bool) {
+						resultCategories.push(selectedCategory);
+					} else {
+						resultCategories.push({
+							id: null,
+							name: categoryName,
+						});
+					}
 				});
+
+				return resultCategories;
 			}
+
+			sorted.sortByName("up", currentCategories);
 
 			return currentCategories;
 		},
@@ -428,6 +442,9 @@ export default {
 				this.filters[items[key]].selected = [];
 				this.filters[items[key]].all = true;
 			}
+		},
+		formatPrice(price) {
+			return price.toLocaleString("ru-RU");
 		},
 		/* _____________________________________________________*/
 		/* 2. Изменение query в строке                          */
@@ -557,7 +574,6 @@ export default {
 .filter-blocks > .container-input {
 	display: grid;
 	grid-template-columns: 1fr auto;
-	gap: 10px;
 }
 
 .filter-blocks > .container-input > input {
@@ -661,13 +677,6 @@ export default {
 	color: white;
 }
 
-.adresses {
-	display: flex;
-	overflow-x: auto;
-
-	width: 1350px;
-}
-
 /* Цены */
 .prices {
 	width: 1350px;
@@ -713,6 +722,18 @@ export default {
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
+.prices > .container-address > .container-category-none {
+	display: flex;
+	justify-content: center;
+
+	padding: 20px;
+
+	font-size: 1.125rem;
+	color: rgb(150, 150, 150);
+
+	animation: show-bottom-to-top-15 0.5s ease-in-out;
+}
+
 .prices > .container-address > .container-category > .title {
 	display: flex;
 	align-items: center;
@@ -720,13 +741,24 @@ export default {
 
 	font-size: 1.25rem;
 	font-weight: 600;
-	color: #2d9aa7;
+	color: var(--button-default-color);
 	padding: 10px 0px;
 
 	border-radius: 20px 20px 0px 0px;
-	background-color: white;
 
 	border: 0px solid #2d9aa7;
+}
+
+.prices > .container-address > .container-category > .title > svg {
+	fill: var(--button-default-color);
+}
+
+.prices > .container-address > .container-category.disabled > .title {
+	color: rgb(150, 150, 150);
+}
+
+.prices > .container-address > .container-category.disabled > .title > svg {
+	fill: rgb(150, 150, 150);
 }
 
 .prices > .container-address > .container-category > .container-price {
@@ -759,6 +791,18 @@ export default {
 }
 
 .prices > .container-address > .container-category > .container-price > li > .text > .price {
+	font-family: "Roboto", sans-serif;
 	text-align: right;
+	color: var(--button-default-color);
+}
+
+@media screen and (width <= 1450px) {
+	.prices {
+		width: auto;
+	}
+
+	.filter-blocks {
+		width: 100%;
+	}
 }
 </style>
