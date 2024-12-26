@@ -382,7 +382,7 @@ aside.active {
 	border-radius: 10px;
 
 	text-align: center;
-	font-size: 22px;
+	font-size: 20px;
 	text-decoration: none;
 
 	color: white;
@@ -401,7 +401,7 @@ a {
 	outline: white;
 
 	text-align: center;
-	font-size: 22px;
+	font-size: 20px;
 	text-decoration: none;
 
 	color: white;

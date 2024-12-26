@@ -73,8 +73,28 @@
 				<!-- Субъекты фильтров -->
 				<div
 					class="container-filters"
-					v-if="filters.address.selected.length > 0 || filters.category.selected.length > 0"
+					v-if="
+						filters.address.selected.length > 0 ||
+						filters.category.selected.length > 0 ||
+						filters.name
+					"
 				>
+					<div class="filter-subject" @click="filters.name = ''" v-if="filters.name">
+						<div class="title">{{ filters.name }}</div>
+						<div class="close">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="16px"
+								height="16px"
+								viewBox="0 -960 960 960"
+								fill="white"
+							>
+								<path
+									d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
+								/>
+							</svg>
+						</div>
+					</div>
 					<div
 						class="filter-subject"
 						:class="{
@@ -472,6 +492,8 @@ export default {
 				this.filters[items[key]].selected = [];
 				this.filters[items[key]].all = true;
 			}
+
+			this.filters.name = "";
 		},
 		formatPrice(price) {
 			return price.toLocaleString("ru-RU");

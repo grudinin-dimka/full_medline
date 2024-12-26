@@ -65,6 +65,7 @@
 
 <script>
 import sorted from "../../services/sorted";
+import { nextTick } from "vue";
 
 export default {
 	components: {
@@ -80,6 +81,18 @@ export default {
 			type: Array,
 			required: true,
 			default: [],
+		},
+	},
+	data() {
+		return {
+			name: "",
+		};
+	},
+	watch: {
+		"filter.status"(newQuery) {
+			nextTick(() => {
+				this.changeFilterBodyPosition();
+			});
 		},
 	},
 	computed: {
@@ -103,34 +116,48 @@ export default {
 			return filteredList;
 		},
 	},
-	data() {
-		return {
-			name: "",
-		};
-	},
-	mounted() {
-		// Добавляем обработчик клика вне компонента
-		document.addEventListener("click", this.handleClickOutside);
-	},
-	beforeDestroy() {
-		// Удаляем обработчик клика вне компонента
-		document.removeEventListener("click", this.handleClickOutside);
-	},
 	methods: {
+		/* Обработка клика вне компонента */
 		handleClickOutside(event) {
 			// Проверка клика вне компонента
 			if (this.$refs.filter && !this.$refs.filter.contains(event.target)) {
 				this.$emit("changeFilterStatus", false, this.filter.name);
 			}
 		},
-		selectItem(id) {
-			if (this.selected.includes(id)) {
-				this.selected = this.selected.filter((item) => item !== id);
-				return;
-			}
+		/* Изменение позиции компонента */
+		changeFilterBodyPosition() {
+			let filterTitle = this.$refs.filter.children[0];
+			let filterTitlePosition = filterTitle.getBoundingClientRect();
 
-			this.selected.push(id);
+			let filterBody = this.$refs.filter.children[1];
+			let filterBodyWidth = filterBody.offsetWidth;
+
+			let windowWidth = window.document.documentElement.clientWidth;
+
+			let result = windowWidth - (filterTitlePosition.x + filterBodyWidth);
+
+			if (result > 0) {
+				filterBody.classList.add("left");
+				filterBody.classList.remove("rigth");
+			} else {
+				filterBody.classList.add("rigth");
+				filterBody.classList.remove("left");
+			}
 		},
+	},
+	mounted() {
+		document.addEventListener("click", this.handleClickOutside);
+
+		window.addEventListener("reload", this.changeFilterBodyPosition);
+		window.addEventListener("load", this.changeFilterBodyPosition);
+		window.addEventListener("resize", this.changeFilterBodyPosition);
+	},
+	unmounted() {
+		document.removeEventListener("click", this.handleClickOutside);
+
+		window.removeEventListener("reload", this.changeFilterBodyPosition);
+		window.removeEventListener("load", this.changeFilterBodyPosition);
+		window.removeEventListener("resize", this.changeFilterBodyPosition);
 	},
 };
 </script>
@@ -181,7 +208,6 @@ export default {
 	position: absolute;
 	z-index: 1;
 	top: 55px;
-	left: 0px;
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
@@ -200,6 +226,14 @@ export default {
 	box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, 0.1);
 
 	transition: all 0.2s;
+}
+
+.filter > .filter-body.left {
+	left: 0px;
+}
+
+.filter > .filter-body.rigth {
+	right: 0px;
 }
 
 .filter > .filter-body > .container-input {
@@ -339,9 +373,10 @@ export default {
 	visibility: hidden;
 
 	fill: var(--button-default-color);
+	transition: all 0.2s;
 }
 
-.filter > .filter-body > ol > li > .check.active > svg {
+.filter > .filter-body.active > ol > li > .check.active > svg {
 	opacity: 1;
 	visibility: visible;
 }
@@ -358,5 +393,23 @@ export default {
 	padding: 10px;
 	border-radius: 10px;
 	background-color: rgb(242, 242, 242);
+}
+
+@media screen and (width <= 1000px) {
+	.filter {
+		flex: 1 0 300px;
+	}
+}
+
+@media screen and (width <= 710px) {
+	.filter > .filter-body {
+		min-width: none;
+		max-width: none;
+		width: 100%;
+	}
+
+	.filter > .filter-body > ol > li {
+		white-space: normal;
+	}
 }
 </style>
