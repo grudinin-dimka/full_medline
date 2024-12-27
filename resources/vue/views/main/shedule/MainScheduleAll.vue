@@ -19,7 +19,7 @@
 		</svg>
 	</button>
 
-	<block-hide :minHeight="400">
+	<block-hide>
 		<template v-if="loading.sections.schedule">
 			<div class="filter-list">
 				<div class="container">
@@ -159,7 +159,6 @@
 
 		<loader-child
 			:isLoading="loading.loader.schedule"
-			:minHeight="397"
 			@loaderChildAfterLeave="loaderChildAfterLeave"
 		/>
 	</block-hide>

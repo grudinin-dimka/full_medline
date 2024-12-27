@@ -5,7 +5,7 @@
 		<router-link to="/prices">Цены</router-link>
 	</info-bar>
 
-	<Block :minHeight="400">
+	<Block>
 		<template v-if="loading.sections.prices">
 			<div class="filter-blocks">
 				<!-- Поле ввода -->
@@ -248,7 +248,6 @@
 
 		<loader-child
 			:isLoading="loading.loader.prices"
-			:minHeight="397"
 			@loaderChildAfterLeave="loaderChildAfterLeave"
 		/>
 	</Block>
@@ -863,6 +862,21 @@ export default {
 
 	.filter-blocks {
 		width: 100%;
+	}
+}
+
+@media screen and (width <= 850px) {
+	.prices > .container-address > .container-category > .container-price > li {
+		margin: 0px 0px 0px 30px;
+	}
+
+	.prices > .container-address > .container-category > .container-price > li > .text {
+		grid-template-columns: 1fr 50px 50px;
+	}
+
+	.prices > .container-address > .container-category > .container-price > li > .text > .name {
+		text-overflow: ellipsis;
+		word-break: break-all;
 	}
 }
 </style>

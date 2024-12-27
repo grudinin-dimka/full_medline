@@ -1,11 +1,5 @@
 <template>
-	<div
-		v-if="status"
-		class="container-empty"
-		:style="{
-			minHeight: `${minHeight}px`,
-		}"
-	>
+	<div v-if="status" class="container-empty" ref="empty">
 		<div>Пока здесь ничего нет...</div>
 	</div>
 </template>
@@ -19,8 +13,13 @@ export default {
 		},
 		minHeight: {
 			type: Number,
-			default: 400,
+			default: null,
 		},
+	},
+	mounted() {
+		if (this.minHeight) {
+			this.$refs.empty.style.minHeight = `${this.minHeight}px`;
+		}
 	},
 };
 </script>
@@ -33,6 +32,8 @@ export default {
 	justify-content: center;
 	align-items: center;
 	text-align: center;
+
+	margin: auto;
 
 	font-size: 20px;
 	color: #c7c7c7;

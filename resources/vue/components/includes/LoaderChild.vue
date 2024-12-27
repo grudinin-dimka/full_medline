@@ -3,13 +3,7 @@
 		@after-enter="$emit('loaderChildAfterEnter')"
 		@after-leave="$emit('loaderChildAfterLeave')"
 	>
-		<div
-			v-show="isLoading"
-			class="container-loader"
-			:style="{
-				minHeight: `${minHeight}px`,
-			}"
-		>
+		<div v-show="isLoading" class="container-loader" ref="loaderChild">
 			<span class="loader"></span>
 		</div>
 	</transition>
@@ -24,8 +18,13 @@ export default {
 		},
 		minHeight: {
 			type: Number,
-			default: 400,
+			default: null,
 		},
+	},
+	mounted() {
+		if (this.minHeight) {
+			this.$refs.loaderChild.style.minHeight = `${this.minHeight}px`;
+		}
 	},
 };
 </script>
@@ -58,6 +57,8 @@ export default {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+
+	margin: auto;
 }
 
 .loader {

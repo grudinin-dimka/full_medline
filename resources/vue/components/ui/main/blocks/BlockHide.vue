@@ -1,5 +1,5 @@
 <template>
-	<div class="block-hide" ref="blockHide" :style="{ minHeight: `${minHeight}px` }">
+	<div class="block-hide" ref="blockHide">
 		<slot></slot>
 	</div>
 </template>
@@ -9,8 +9,13 @@ export default {
 	props: {
 		minHeight: {
 			type: Number,
-			default: "400",
+			default: null,
 		},
+	},
+	mounted() {
+		if (this.minHeight) {
+			this.$refs.blockHide.style.minHeight = `${this.minHeight}px`;
+		}
 	},
 };
 </script>
@@ -29,6 +34,7 @@ export default {
 
 	margin: 20px 30px;
 
+	min-height: max(60dvh, 400px);
 	max-width: 100%;
 
 	transition: all 0.5s;

@@ -403,13 +403,21 @@ export default {
 
 @media screen and (width <= 710px) {
 	.filter > .filter-body {
-		min-width: none;
+		min-width: 0px;
 		max-width: none;
 		width: 100%;
 	}
 
 	.filter > .filter-body > ol > li {
 		white-space: normal;
+		text-overflow: ellipsis;
+		word-break: break-all;
+	}
+}
+
+@media screen and (width <= 500px) {
+	.filter {
+		flex: 1 0 200px;
 	}
 }
 </style>

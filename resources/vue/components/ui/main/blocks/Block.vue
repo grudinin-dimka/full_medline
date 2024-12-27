@@ -1,5 +1,5 @@
 <template>
-	<section :style="{ minHeight: `${minHeight}px` }">
+	<section ref="block">
 		<slot></slot>
 	</section>
 </template>
@@ -9,8 +9,13 @@ export default {
 	props: {
 		minHeight: {
 			type: Number,
-			default: "400",
+			default: null,
 		},
+	},
+	mounted() {
+		if (this.minHeight) {
+			this.$refs.block.style.minHeight = `${this.minHeight}px`;
+		}
 	},
 };
 </script>
@@ -23,5 +28,6 @@ section {
 	gap: 20px;
 
 	margin: 20px 30px;
+	min-height: max(60dvh, 400px);
 }
 </style>

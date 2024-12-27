@@ -5,18 +5,15 @@
 		<router-link to="/specialists">Специалисты</router-link>
 	</info-bar>
 
-	<!-- TODO: Сделать фильтры, в идеале, чтобы при вводе specialists/terapevt выводились врачи -->
-	<!-- <filters v-if="loading.sections.specialists" :filters="filters"></filters> -->
-	<block :minHeight="400">
+	<block>
 		<template v-if="loading.sections.specialists">
 			<specialists-list :specialists="specialists" v-if="specialists.length > 0" />
 
-			<Empty :minHeight="300" v-else />
+			<Empty v-else />
 		</template>
 
 		<loader-child
 			:isLoading="loading.loader.specialists"
-			:minHeight="400"
 			@loaderChildAfterLeave="loaderChildAfterLeave"
 		/>
 	</block>

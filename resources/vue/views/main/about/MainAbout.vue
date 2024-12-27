@@ -5,10 +5,10 @@
 		<router-link to="/about">О нас</router-link>
 	</info-bar>
 
-	<block :minHeight="400">
+	<block>
 		<template v-if="loading.sections.about">
 			<MainAboutList :abouts="abouts" v-if="abouts.length > 0" />
-			<Empty :minHeight="300" v-else />
+			<Empty v-else />
 		</template>
 
 		<loader-child
