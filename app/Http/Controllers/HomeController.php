@@ -428,6 +428,13 @@ class HomeController extends Controller
          ]);
       }
 
+      $priceCategoriesFormat = [];
+      foreach($priceCategories as $priceCategoriesKey => $priceCategoriesValue) {
+         if ($priceCategoriesValue->categoryId != null) continue;
+         
+         $priceCategoriesFormat[] = $this->getCategoryArray($priceCategoriesValue);
+      }
+
       $priceValues = PriceValue::all();
       if (!$priceValues) {
          return response()->json([
@@ -442,10 +449,30 @@ class HomeController extends Controller
          "message" => "Успешно.",
          "data" => (object) [
             "adresses" => $priceAddresses,
-            "categories" => $priceCategories,
+            // "categories" => $priceCategories,
+            "categories" => $priceCategoriesFormat,
             "prices" => $priceValues,
          ],
       ]);
+   }
+   public function getCategoryArray($category) {
+      $categoryFormat = (object) [
+         "id" => $category->id,
+         "name" => $category->name,
+         "children" => [],
+      ];
+
+      // Проверяем наличие подкатегорий
+      $innerCategories = PriceCategory::where('categoryId', $category->id)->get();
+      if (count($innerCategories) > 0) {
+         foreach ($innerCategories as $innerCategoriesKey => $innerCategoriesValue) {
+            $innerCategories[$innerCategoriesKey] = $this->getCategoryArray($innerCategoriesValue);
+         }
+
+         $categoryFormat->children = $innerCategories;
+      }
+      
+      return $categoryFormat;
    }
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                    КОНТАКТЫ                       |*/

@@ -36,27 +36,35 @@
 					</div>
 					Все
 				</li>
-				<li
-					v-if="getFilteredList.length > 0"
-					v-for="item in getFilteredList"
-					:class="{ all: filter.all }"
-					@click="$emit('selectItem', item, filter.name)"
-				>
-					<div
-						class="check"
-						:class="{ active: filter.selected.includes(item), all: filter.all }"
-					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							height="26px"
-							viewBox="0 -960 960 960"
-							width="26px"
+				<!-- Если массив не пустой -->
+				<template v-if="getFilteredList.length > 0">
+					<template v-for="item in getFilteredList">
+						<!-- Если  -->
+						<li
+							:class="{ all: filter.all }"
+							@click="$emit('selectItem', item, filter.name)"
+							v-if="!isInner(item)"
 						>
-							<path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z" />
-						</svg>
-					</div>
-					{{ item?.name }}
-				</li>
+							<div
+								class="check"
+								:class="{ active: filter.selected.includes(item), all: filter.all }"
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									height="26px"
+									viewBox="0 -960 960 960"
+									width="26px"
+								>
+									<path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z" />
+								</svg>
+							</div>
+							{{ item?.name }}
+						</li>
+						<li :class="{ all: filter.all }" v-else>
+							{{ item?.name }}
+						</li>
+					</template>
+				</template>
 				<li v-else class="empty">Ничего не найдено.</li>
 			</ol>
 		</div>
@@ -64,11 +72,14 @@
 </template>
 
 <script>
+import FIlterList from "./FIlterList.vue";
+
 import sorted from "../../services/sorted";
 import { nextTick } from "vue";
 
 export default {
 	components: {
+		FIlterList,
 		sorted,
 	},
 	props: {
@@ -119,9 +130,33 @@ export default {
 	methods: {
 		/* Обработка клика вне компонента */
 		handleClickOutside(event) {
-			// Проверка клика вне компонента
 			if (this.$refs.filter && !this.$refs.filter.contains(event.target)) {
 				this.$emit("changeFilterStatus", false, this.filter.name);
+			}
+		},
+		/* Проверка вхождений котегории */
+		isInner(item) {
+			// Фильтровать по ключу или нет
+			if (this.filter.key === null) {
+				return false;
+			}
+
+			if (item[this.filter.key] === null) {
+				// Проверка на наличие подкатегорий
+				if (this.list.some((listItem) => listItem[this.filter.key] === item.id)) {
+					return true;
+				}
+
+				return false;
+			}
+
+			if (item[this.filter.key] !== null) {
+				// Проверка на наличие подкатегорий
+				if (this.list.some((listItem) => listItem[this.filter.key] === item.id)) {
+					return true;
+				}
+
+				return false;
 			}
 		},
 		/* Изменение позиции компонента */

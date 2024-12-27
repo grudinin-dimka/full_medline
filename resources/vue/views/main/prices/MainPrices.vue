@@ -7,14 +7,14 @@
 
 	<Block>
 		<template v-if="loading.sections.prices">
-			<div class="filter-blocks">
-				<!-- Поле ввода -->
-				<div class="container-input">
+			<!-- <div class="filter-blocks"> -->
+			<!-- Поле ввода -->
+			<!-- <div class="container-input">
 					<input type="text" placeholder="Введите услугу" v-model="filters.name" />
-				</div>
+				</div> -->
 
-				<!-- Фильтры -->
-				<div class="container-filters">
+			<!-- Фильтры -->
+			<!-- <div class="container-filters">
 					<Filter
 						:filter="filters.address"
 						:list="addresses"
@@ -68,10 +68,10 @@
 							</span>
 						</template>
 					</Filter>
-				</div>
+				</div> -->
 
-				<!-- Субъекты фильтров -->
-				<div
+			<!-- Субъекты фильтров -->
+			<!-- <div
 					class="container-filters"
 					v-if="
 						filters.address.selected.length > 0 ||
@@ -186,10 +186,10 @@
 						</div>
 					</div>
 				</div>
-			</div>
+			</div> -->
 
 			<!-- Цены -->
-			<div class="prices">
+			<!-- <div class="prices">
 				<div
 					class="container-address"
 					v-if="getCurrentAddresses.length > 0 && getCurrentCategories.length > 0"
@@ -243,7 +243,7 @@
 					<div class="container-category-none" v-else>Ничего нет...</div>
 				</div>
 				<Empty :minHeight="300" v-else />
-			</div>
+			</div> -->
 		</template>
 
 		<loader-child
@@ -298,6 +298,7 @@ export default {
 					status: false,
 					all: false,
 					name: "address",
+					key: null,
 					selected: [],
 					data: {
 						body: "",
@@ -308,6 +309,7 @@ export default {
 					status: false,
 					all: false,
 					name: "category",
+					key: "categoryId",
 					selected: [],
 					data: {
 						body: "",
@@ -588,6 +590,8 @@ export default {
 
 					this.categories = response.data.data.categories;
 					this.prices = response.data.data.prices;
+
+					console.log(this.categories);
 				} else {
 					let debbugStory = {
 						title: "Ошибка.",
