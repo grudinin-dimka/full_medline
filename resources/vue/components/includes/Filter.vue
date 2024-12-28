@@ -23,7 +23,11 @@
 				<input type="text" placeholder="Введите название" v-model="name" />
 			</div>
 			<ol>
-				<li @click="$emit('selectAll')" :class="{ active: filter.all }">
+				<li
+					@click="$emit('selectAll')"
+					:class="{ active: filter.all }"
+					:style="{ color: 'var(--button-default-color)' }"
+				>
 					<div>Все</div>
 					<div class="check" :class="{ active: filter.all }">
 						<svg
@@ -389,6 +393,15 @@ export default {
 	padding: 10px;
 	border-radius: 10px;
 	background-color: rgb(242, 242, 242);
+}
+
+.filter > .filter-body > ol > li.parent {
+	cursor: default;
+	color: var(--button-default-color);
+}
+
+.filter > .filter-body > ol > li.parent:hover {
+	background-color: white;
 }
 
 @media screen and (width <= 1000px) {

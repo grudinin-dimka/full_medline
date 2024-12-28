@@ -1,5 +1,15 @@
 <template>
-	<li :style="nodeMargin" @click="$emit('select', node)" :class="{ all: disabled }">
+	<li
+		:style="nodeMargin"
+		@click="
+			() => {
+				if (!hasChildren) {
+					$emit('select', node);
+				}
+			}
+		"
+		:class="{ all: disabled, parent: hasChildren }"
+	>
 		<div>{{ node.name }}</div>
 		<div class="check" :class="{ active: selected.includes(node) }" v-if="!hasChildren">
 			<svg
@@ -24,6 +34,8 @@
 </template>
 
 <script>
+import { h } from "vue";
+
 export default {
 	name: "FilterList",
 	emits: ["select"],
