@@ -417,7 +417,7 @@ class HomeController extends Controller
             "message" => "Не удалось получить адреса.",
             "data" => null,
          ]);
-      }
+      };
       
       $priceCategories = PriceCategory::all();
       if (!$priceCategories) {
@@ -428,6 +428,7 @@ class HomeController extends Controller
          ]);
       }
 
+      // Форматируем категории
       $priceCategoriesFormat = [];
       foreach($priceCategories as $priceCategoriesKey => $priceCategoriesValue) {
          if ($priceCategoriesValue->categoryId != null) continue;
@@ -449,8 +450,8 @@ class HomeController extends Controller
          "message" => "Успешно.",
          "data" => (object) [
             "adresses" => $priceAddresses,
-            // "categories" => $priceCategories,
             "categories" => $priceCategoriesFormat,
+            "categoriesList" => $priceCategories,
             "prices" => $priceValues,
          ],
       ]);

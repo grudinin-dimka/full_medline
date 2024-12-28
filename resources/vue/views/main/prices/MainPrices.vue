@@ -7,14 +7,14 @@
 
 	<Block>
 		<template v-if="loading.sections.prices">
-			<!-- <div class="filter-blocks"> -->
-			<!-- Поле ввода -->
-			<!-- <div class="container-input">
+			<div class="filter-blocks">
+				<!-- Поле ввода -->
+				<div class="container-input">
 					<input type="text" placeholder="Введите услугу" v-model="filters.name" />
-				</div> -->
+				</div>
 
-			<!-- Фильтры -->
-			<!-- <div class="container-filters">
+				<!-- Фильтры -->
+				<div class="container-filters">
 					<Filter
 						:filter="filters.address"
 						:list="addresses"
@@ -68,10 +68,10 @@
 							</span>
 						</template>
 					</Filter>
-				</div> -->
+				</div>
 
-			<!-- Субъекты фильтров -->
-			<!-- <div
+				<!-- Субъекты фильтров -->
+				<div
 					class="container-filters"
 					v-if="
 						filters.address.selected.length > 0 ||
@@ -186,10 +186,10 @@
 						</div>
 					</div>
 				</div>
-			</div> -->
+			</div>
 
 			<!-- Цены -->
-			<!-- <div class="prices">
+			<div class="prices" v-if="getCurrentAddresses.length > 0 && getCurrentCategories.length > 0">
 				<div
 					class="container-address"
 					v-if="getCurrentAddresses.length > 0 && getCurrentCategories.length > 0"
@@ -242,8 +242,8 @@
 					</div>
 					<div class="container-category-none" v-else>Ничего нет...</div>
 				</div>
-				<Empty :minHeight="300" v-else />
-			</div> -->
+			</div>
+			<Empty :minHeight="300" v-else />
 		</template>
 
 		<loader-child
@@ -254,6 +254,8 @@
 </template>
 
 <script>
+import FIlterList from "../../../components/includes/FIlterList.vue";
+
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
 import Block from "../../../components/ui/main/blocks/Block.vue";
@@ -271,6 +273,7 @@ import sorted from "../../../services/sorted.js";
 
 export default {
 	components: {
+		FIlterList,
 		InfoBar,
 		LoaderChild,
 		Block,
@@ -300,10 +303,6 @@ export default {
 					name: "address",
 					key: null,
 					selected: [],
-					data: {
-						body: "",
-						edited: false,
-					},
 				},
 				category: {
 					status: false,
@@ -311,15 +310,12 @@ export default {
 					name: "category",
 					key: "categoryId",
 					selected: [],
-					data: {
-						body: "",
-						edited: false,
-					},
 				},
 			},
 			prices: [],
 			addresses: [],
 			categories: [],
+			categoriesList: [],
 		};
 	},
 	watch: {
@@ -340,18 +336,21 @@ export default {
 		},
 	},
 	computed: {
+		/* Вывод выбранных адрессов */
 		getAddressSelected() {
 			let selected = this.filters.address.selected;
 			sorted.sortByName("up", this.filters.address.selected);
 
 			return selected;
 		},
+		/* Вывод выбранных категорий */
 		getCategorySelected() {
 			let selected = this.filters.category.selected;
 			sorted.sortByName("up", this.filters.category.selected);
 
 			return selected;
 		},
+		/* Вывод текущих адрессов */
 		getCurrentAddresses() {
 			let currentAddresses = [];
 
@@ -410,7 +409,7 @@ export default {
 		getCurrentCategories(addressId) {
 			let currentCategories = [];
 
-			currentCategories = this.categories.filter((category) => {
+			currentCategories = this.categoriesList.filter((category) => {
 				if (
 					category.addressId == addressId &&
 					this.prices.find((price) => price.categoryId == category.id)
@@ -551,7 +550,7 @@ export default {
 
 			if (this.filters.category.selected.length > 0) {
 				this.filters.category.selected.forEach((category) => {
-					if (this.categories.includes(category)) {
+					if (this.categoriesList.includes(category)) {
 						activeCategories.push(category.name);
 					}
 				});
@@ -561,6 +560,9 @@ export default {
 				return "none";
 			}
 		},
+		/* _____________________________________________________*/
+		/* 3. Другое                                            */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 	},
 	setup() {
 		const route = useRoute();
@@ -584,14 +586,11 @@ export default {
 			.then((response) => {
 				if (response.data.status) {
 					this.addresses = response.data.data.adresses;
-					this.addresses.forEach((address) => {
-						address.status = false;
-					});
 
 					this.categories = response.data.data.categories;
-					this.prices = response.data.data.prices;
+					this.categoriesList = response.data.data.categoriesList;
 
-					console.log(this.categories);
+					this.prices = response.data.data.prices;
 				} else {
 					let debbugStory = {
 						title: "Ошибка.",
