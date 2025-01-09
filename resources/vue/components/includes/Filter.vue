@@ -48,7 +48,8 @@
 						:key="child.id"
 						:disabled="filter.all"
 						:selected="filter.selected"
-						@select="selectItem"
+						@selectChild="selectChild"
+						@selectParent="selectParent"
 					/>
 				</template>
 				<li v-else class="empty">Ничего не найдено.</li>
@@ -140,8 +141,11 @@ export default {
 				filterBody.classList.remove("left");
 			}
 		},
-		selectItem(item) {
-			this.$emit("selectItem", item, this.filter.name);
+		selectChild(item) {
+			this.$emit("selectItemChild", item, this.filter.name);
+		},
+		selectParent(item) {
+			this.$emit("selectItemParent", item, this.filter.name);
 		},
 	},
 	mounted() {
@@ -396,12 +400,7 @@ export default {
 }
 
 .filter > .filter-body > ol > li.parent {
-	cursor: default;
 	color: var(--button-default-color);
-}
-
-.filter > .filter-body > ol > li.parent:hover {
-	background-color: white;
 }
 
 @media screen and (width <= 1000px) {

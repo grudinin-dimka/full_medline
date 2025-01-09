@@ -33,6 +33,7 @@ export default {
 				this.$router.push({
 					name: `${page}`,
 					query: {
+						name: "none",
 						address: "all",
 						category: "all",
 					},

@@ -47,7 +47,7 @@
 					</div>
 					<container-input-once :type="'default'">
 						<template #title>
-							<span>Врач (Ф.И.О.)</span>
+							<span>ВРАЧ (Ф.И.О.)</span>
 						</template>
 						<template #input>
 							<input
@@ -1814,8 +1814,8 @@ export default {
 	position: absolute;
 	cursor: pointer;
 
-	top: 12px;
-	right: 20px;
+	top: 0px;
+	right: 0px;
 	color: var(--button-remove-color);
 }
 

@@ -19,7 +19,8 @@
 						:filter="filters.address"
 						:list="addresses"
 						@changeFilterStatus="changeFilterStatus"
-						@selectItem="changeSelectedItem"
+						@selectItemChild="changeSelectedItemChild"
+						@selectItemParent="changeSelectedItemParent"
 						@selectAll="filters.address.all = !filters.address.all"
 					>
 						<template #title>
@@ -45,8 +46,8 @@
 						:filter="filters.category"
 						:list="categories"
 						@changeFilterStatus="changeFilterStatus"
-						@selectItem="changeSelectedItem"
-						@saveSelectedItems="changeSelectedItems"
+						@selectItemChild="changeSelectedItemChild"
+						@selectItemParent="changeSelectedItemParent"
 						@selectAll="filters.category.all = !filters.category.all"
 					>
 						<template #title>
@@ -102,7 +103,7 @@
 						}"
 						v-for="filter in getAddressSelected"
 						:key="filter.id"
-						@click="changeSelectedItem(filter, 'address')"
+						@click="changeSelectedItemChild(filter, 'address')"
 					>
 						<div class="title">
 							<svg
@@ -139,7 +140,7 @@
 						}"
 						v-for="filter in getCategorySelected"
 						:key="filter.id"
-						@click="changeSelectedItem(filter, 'category')"
+						@click="changeSelectedItemChild(filter, 'category')"
 					>
 						<div class="title">
 							<svg
@@ -189,13 +190,11 @@
 			</div>
 
 			<!-- Цены -->
-			<div class="prices" v-if="getCurrentAddresses.length > 0 && getCurrentCategories.length > 0">
-				<div
-					class="container-address"
-					v-if="getCurrentAddresses.length > 0 && getCurrentCategories.length > 0"
-					v-for="address in getCurrentAddresses"
-					:key="address.id"
-				>
+			<div
+				class="prices"
+				v-if="getCurrentAddresses.length > 0 && getCurrentCategories.length > 0"
+			>
+				<div class="container-address" v-for="address in getCurrentAddresses" :key="address.id">
 					<div class="title">
 						{{ address.name }}
 					</div>
@@ -472,7 +471,8 @@ export default {
 		changeFilterStatus(status, name) {
 			this.filters[name].status = status;
 		},
-		changeSelectedItem(selectedItem, name) {
+		/* Изменение выбранного дочернего элемента */
+		changeSelectedItemChild(selectedItem, name) {
 			if (this.filters[name].selected.includes(selectedItem)) {
 				this.filters[name].selected = this.filters[name].selected.filter(
 					(item) => item !== selectedItem
@@ -482,6 +482,42 @@ export default {
 			}
 
 			this.changeQuery();
+		},
+		/* Изменение выбранного родительского элемента */
+		changeSelectedItemParent(selectedItem, name) {
+			let childItems = this.getChildItemFromParent(selectedItem);
+
+			for (let i = 0; i < childItems.length; i++) {
+				if (this.filters[name].selected.includes(childItems[i])) {
+					this.filters[name].selected = this.filters[name].selected.filter(
+						(item) => item !== childItems[i]
+					);
+				} else {
+					this.filters[name].selected.push(childItems[i]);
+				}
+			}
+
+			this.changeQuery();
+		},
+		/* Получение дочерних элементов */
+		getChildItemFromParent(parent) {
+			let childs = [];
+
+			if (parent.children && parent.children.length > 0) {
+				for (let i = 0; i < parent.children.length; i++) {
+					if (parent.children[i].children && parent.children[i].children.length > 0) {
+						let innerChild = this.getChildItemFromParent(parent.children[i]);
+
+						for (let j = 0; j < innerChild.length; j++) {
+							childs.push(innerChild[j]);
+						}
+					} else {
+						childs.push(parent.children[i]);
+					}
+				}
+			}
+
+			return childs;
 		},
 		changeSelectedItems(name, array) {
 			this.filters[name].selected = array;
@@ -513,13 +549,13 @@ export default {
 			if (this.filters.address.all) {
 				urlAddress = "all";
 			} else {
-				urlAddress = this.calculateFilterAddress();
+				urlAddress = this.calculateQueryFilterAddress();
 			}
 
 			if (this.filters.category.all) {
 				urlCategory = "all";
 			} else {
-				urlCategory = this.calculateFilterCategory();
+				urlCategory = this.calculateQueryFilterCategory();
 			}
 
 			this.$router.push({
@@ -530,7 +566,7 @@ export default {
 				},
 			});
 		},
-		calculateFilterAddress() {
+		calculateQueryFilterAddress() {
 			let activeAddresses = [];
 
 			if (this.filters.address.selected.length > 0) {
@@ -540,29 +576,84 @@ export default {
 					}
 				});
 
-				return activeAddresses.join(", ");
+				return activeAddresses.join("%");
 			} else {
 				return "none";
 			}
 		},
-		calculateFilterCategory() {
+		calculateQueryFilterCategory() {
 			let activeCategories = [];
 
 			if (this.filters.category.selected.length > 0) {
-				this.filters.category.selected.forEach((category) => {
-					if (this.categoriesList.includes(category)) {
-						activeCategories.push(category.name);
-					}
-				});
+				for (let i = 0; i < this.categoriesList.length; i++) {
+					this.filters.category.selected.forEach((category) => {
+						if (activeCategories.includes(this.categoriesList[i].name)) {
+							return;
+						}
 
-				return activeCategories.join(", ");
+						if (this.categoriesList[i].name == category.name) {
+							activeCategories.push(category.name);
+						}
+					});
+				}
+
+				return activeCategories.join("%");
 			} else {
 				return "none";
 			}
 		},
 		/* _____________________________________________________*/
-		/* 3. Другое                                            */
+		/* 3. Считываение query из строки                       */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		getQuery() {
+			if (this.$route.query.address == "all") {
+				this.filters.address.all = true;
+			} else {
+				this.filters.address.all = false;
+
+				let queryAddresses = this.$route.query.address.split("%");
+
+				for (let i = 0; i < queryAddresses.length; i++) {
+					for (let j = 0; j < this.addresses.length; j++) {
+						if (queryAddresses[i] == this.addresses[j].name) {
+							this.filters.address.selected.forEach((category) => {
+								if (category.name == this.categoriesList[j].name) {
+									return;
+								}
+							});
+
+							this.filters.address.selected.push(this.addresses[j]);
+						}
+					}
+				}
+			}
+
+			if (this.$route.query.category == "all") {
+				this.filters.category.all = true;
+			} else {
+				this.filters.category.all = false;
+
+				let queryCategories = this.$route.query.category.split("%");
+
+				for (let i = 0; i < queryCategories.length; i++) {
+					for (let j = 0; j < this.categoriesList.length; j++) {
+						if (queryCategories[i] == this.categoriesList[j].name) {
+							this.filters.category.selected.forEach((category) => {
+								if (category.name == this.categoriesList[j].name) {
+									return;
+								}
+							});
+
+							this.filters.category.selected.push(this.categoriesList[j]);
+						}
+					}
+				}
+			}
+
+			if (this.nameRoute !== "none") {
+				this.filters.name = this.nameRoute;
+			}
+		},
 	},
 	setup() {
 		const route = useRoute();
@@ -577,8 +668,6 @@ export default {
 		};
 	},
 	mounted() {
-		this.loading.loader.prices = false;
-
 		axios({
 			method: "post",
 			url: `${this.$store.state.axios.urlApi}` + `get-prices-all`,
@@ -609,15 +698,8 @@ export default {
 				this.$store.commit("debuggerState", debbugStory);
 			})
 			.finally(() => {
-				this.loading.loader.schedule = false;
-
-				if (this.$route.query.address == "all") {
-					this.filters.address.all = true;
-				}
-
-				if (this.$route.query.category == "all") {
-					this.filters.category.all = true;
-				}
+				this.getQuery();
+				this.loading.loader.prices = false;
 			});
 	},
 };

@@ -4,7 +4,9 @@
 		@click="
 			() => {
 				if (!hasChildren) {
-					$emit('select', node);
+					$emit('selectChild', node);
+				} else {
+					$emit('selectParent', node);
 				}
 			}
 		"
@@ -29,7 +31,8 @@
 		:selected="selected"
 		:disabled="disabled"
 		:spacing="spacing + 30"
-		@select="selectNode"
+		@selectChild="selectNodeChild"
+		@selectParent="selectNodeParent"
 	/>
 </template>
 
@@ -38,7 +41,7 @@ import { h } from "vue";
 
 export default {
 	name: "FilterList",
-	emits: ["select"],
+	emits: ["selectChild", "selectParent"],
 	props: {
 		node: {
 			type: Object,
@@ -74,8 +77,11 @@ export default {
 		},
 	},
 	methods: {
-		selectNode(node) {
-			this.$emit("select", node);
+		selectNodeChild(node) {
+			this.$emit("selectChild", node);
+		},
+		selectNodeParent(node) {
+			this.$emit("selectParent", node);
 		},
 	},
 };
