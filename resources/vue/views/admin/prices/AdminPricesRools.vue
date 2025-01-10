@@ -113,6 +113,12 @@
 			:minHeight="300"
 			@loaderChildAfterLeave=""
 		></LoaderChild>
+
+		<BlockButtons>
+			<a :href="`/storage/other/shablon.ods`" download>
+				<ButtonDefault>Скачать шаблон </ButtonDefault>
+			</a>
+		</BlockButtons>
 	</block-once>
 </template>
 
@@ -123,12 +129,18 @@ import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTitle from "../../../components/ui/admin/blocks/BlockTitle.vue";
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 
+import BlockButtons from "../../../components/ui/admin/blocks/BlockButtons.vue";
+
+import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
+
 export default {
 	components: {
 		LoaderChild,
 		BlockOnce,
 		BlockTitle,
 		InfoBar,
+		BlockButtons,
+		ButtonDefault,
 	},
 	data() {
 		return {
@@ -260,5 +272,9 @@ body {
 .details-content-img > span {
 	margin-top: 10px;
 	color: rgb(170, 170, 170);
+}
+
+a {
+	text-decoration: none;
 }
 </style>

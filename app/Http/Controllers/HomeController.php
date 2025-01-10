@@ -603,10 +603,6 @@ class HomeController extends Controller
          
          // Перебор массива с выбранными клиниками 
          foreach ($sheduleClinics as $sheduleClinicsKey => $sheduleClinicsValue) {
-            if ($sheduleClinicsValue->name === "Все") {
-               continue;
-            };
-
             $shedileClinicDays = ShedulesDay::where('sheduleId', $sheduleValue->id)->where('clinicId', $sheduleClinicsValue->id)->get();
 
             // Если есть дни

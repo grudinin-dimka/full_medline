@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 /* Помощники */
 use Illuminate\Support\Facades\Storage;
@@ -1302,10 +1303,73 @@ class AdminController extends Controller
    /* |                   РАСПИСАНИЕ                      |*/
    /* |___________________________________________________|*/
    /* Сохранение расписания */
-   public function saveShedulesAll(Request $request) {
-      $shedules = json_decode($request->shedules);
-      $clinics = json_decode($request->clinics);
-      $week = json_decode($request->week);
+   public function saveShedulesAll() {
+      // Получение всех файлов
+      $files = Storage::disk('local')->files('schedules');
+
+      // Сортировка массива файлов
+      $jsonFiles = array_filter($files, function($file) {
+         return pathinfo($file, PATHINFO_EXTENSION) === 'json';
+      });
+      
+      // Поиск самого актуального файла
+      $lastFile = null;
+      foreach ($jsonFiles as $key => $value) {
+         if ($lastFile === null) {
+            $lastFile = $value;
+            continue;
+         }; 
+
+         $CurrentFileName = pathinfo($value, PATHINFO_FILENAME);
+         $dateLastFileName = pathinfo($lastFile, PATHINFO_FILENAME);
+         
+         $currentFileDate = Carbon::createFromFormat('Y-m-d', $CurrentFileName);
+         $lastFileDate = Carbon::createFromFormat('Y-m-d', $dateLastFileName);
+
+         if ($currentFileDate > $lastFileDate) {
+            $lastFile = $value;
+            continue;
+         };
+      }
+
+      // Если файл есть
+      if ($lastFile) {
+         $file = Storage::disk('local')->get($lastFile);
+         $fileContent = json_decode($file);
+         
+         $clinics = $fileContent?->clinics;
+         if (!$clinics) {
+            return response()->json([
+               "status" => false,
+               "message" => "Отсутствует расписание.",
+               "data" => null,
+            ]);      
+         }
+
+         $week = $fileContent?->week;
+         if (!$week) {
+            return response()->json([
+               "status" => false,
+               "message" => "Отсутствует расписание.",
+               "data" => null,
+            ]);      
+         }
+
+         $shedules = $fileContent?->shedules;
+         if (!$shedules) {
+            return response()->json([
+               "status" => false,
+               "message" => "Отсутствует расписание.",
+               "data" => null,
+            ]);      
+         }
+      } else {
+         return response()->json([
+            "status" => false,
+            "message" => "Файлов нет.",
+            "data" => null,
+         ]);   
+      };
       
       // Сбрасываю ограничения внешнего ключа, чтобы очистить таблицы
       DB::statement('SET FOREIGN_KEY_CHECKS = 0');
