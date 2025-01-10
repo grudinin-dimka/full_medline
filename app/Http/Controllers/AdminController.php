@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
 /* Помощники */
@@ -1339,36 +1340,24 @@ class AdminController extends Controller
          
          $clinics = $fileContent?->clinics;
          if (!$clinics) {
-            return response()->json([
-               "status" => false,
-               "message" => "Отсутствует расписание.",
-               "data" => null,
-            ]);      
+            Log::error('Отсутствуют клиники.');
+            return;      
          }
 
          $week = $fileContent?->week;
          if (!$week) {
-            return response()->json([
-               "status" => false,
-               "message" => "Отсутствует расписание.",
-               "data" => null,
-            ]);      
+            Log::error('Отсутствуют дни.');
+            return;      
          }
 
          $shedules = $fileContent?->shedules;
          if (!$shedules) {
-            return response()->json([
-               "status" => false,
-               "message" => "Отсутствует расписание.",
-               "data" => null,
-            ]);      
+            Log::error('Отсутствует расписание.');
+            return;      
          }
       } else {
-         return response()->json([
-            "status" => false,
-            "message" => "Файлов нет.",
-            "data" => null,
-         ]);   
+         Log::error('Отсутствует файл.');
+         return;      
       };
       
       // Сбрасываю ограничения внешнего ключа, чтобы очистить таблицы
@@ -1430,17 +1419,6 @@ class AdminController extends Controller
             };
          };
       };
-
-      return response()->json([
-         "status" => true,
-         "message" => "График успешно сохранён.",
-         "data" => (object) [
-            "clinicsId" => $clinicId,
-            "currentDays" => $currentDays,
-            "shedules" => Shedule::all(),
-            "shedulesDays" => ShedulesDay::all(),
-         ],
-      ]);
    }
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                      ЦЕНЫ                         |*/
