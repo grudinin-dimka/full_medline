@@ -13,7 +13,13 @@
 		:class="{ all: disabled, parent: hasChildren }"
 	>
 		<div>{{ node.name }}</div>
-		<div class="check" :class="{ active: selected.includes(node) }" v-if="!hasChildren">
+		<div
+			class="check"
+			:class="{
+				active: getActive(node),
+			}"
+			v-if="!hasChildren"
+		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				height="26px"
@@ -77,6 +83,15 @@ export default {
 		},
 	},
 	methods: {
+		getActive(node) {
+			for (let i = 0; i < this.selected.length; i++) {
+				if (this.selected[i].name == node.name) {
+					return true;
+				}
+			}
+
+			return false;
+		},
 		selectNodeChild(node) {
 			this.$emit("selectChild", node);
 		},

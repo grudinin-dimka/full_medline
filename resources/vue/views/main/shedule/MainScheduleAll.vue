@@ -398,23 +398,7 @@ export default {
 				url: `${this.$store.state.axios.urlApi}` + `save-shedules-all`,
 			})
 				.then((response) => {
-					if (response.data.status) {
-						let debbugStory = {
-							title: "Успешно!",
-							body: response.data.message,
-							type: "Completed",
-						};
-						this.$store.commit("debuggerState", debbugStory);
-
-						console.log(response.data.data);
-					} else {
-						let debbugStory = {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
-					}
+					console.log(response.data);
 				})
 				.catch((error) => {
 					console.log(error);

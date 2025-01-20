@@ -473,10 +473,19 @@ export default {
 		},
 		/* Изменение выбранного дочернего элемента */
 		changeSelectedItemChild(selectedItem, name) {
-			if (this.filters[name].selected.includes(selectedItem)) {
-				this.filters[name].selected = this.filters[name].selected.filter(
-					(item) => item !== selectedItem
-				);
+			let status = false;
+
+			for (let i = 0; i < this.filters[name].selected.length; i++) {
+				if (selectedItem.name == this.filters[name].selected[i].name) {
+					status = true;
+					break;
+				}
+			}
+
+			if (status) {
+				this.filters[name].selected = this.filters[name].selected.filter((item) => {
+					return item.name !== selectedItem.name;
+				});
 			} else {
 				this.filters[name].selected.push(selectedItem);
 			}
@@ -636,13 +645,13 @@ export default {
 				let queryCategories = this.$route.query.category.split("%");
 
 				for (let i = 0; i < queryCategories.length; i++) {
-					for (let j = 0; j < this.categoriesList.length; j++) {
+					outer: for (let j = 0; j < this.categoriesList.length; j++) {
 						if (queryCategories[i] == this.categoriesList[j].name) {
-							this.filters.category.selected.forEach((category) => {
-								if (category.name == this.categoriesList[j].name) {
-									return;
+							for (let k = 0; k < this.filters.category.selected.length; k++) {
+								if (this.filters.category.selected[k].name == this.categoriesList[j].name) {
+									continue outer;
 								}
-							});
+							}
 
 							this.filters.category.selected.push(this.categoriesList[j]);
 						}
@@ -700,6 +709,9 @@ export default {
 			.finally(() => {
 				this.getQuery();
 				this.loading.loader.prices = false;
+
+				console.log(this.filters.address.selected);
+				console.log(this.filters.category.selected);
 			});
 	},
 };

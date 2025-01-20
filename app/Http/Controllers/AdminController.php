@@ -1306,7 +1306,7 @@ class AdminController extends Controller
    /* Сохранение расписания */
    public function saveShedulesAll() {
       // Получение всех файлов
-      $files = Storage::disk('local')->files('schedules');
+      $files = Storage::disk('private')->files('schedules');
 
       // Сортировка массива файлов
       $jsonFiles = array_filter($files, function($file) {
@@ -1335,7 +1335,7 @@ class AdminController extends Controller
 
       // Если файл есть
       if ($lastFile) {
-         $file = Storage::disk('local')->get($lastFile);
+         $file = Storage::disk('private')->get($lastFile);
          $fileContent = json_decode($file);
          
          $clinics = $fileContent?->clinics;
