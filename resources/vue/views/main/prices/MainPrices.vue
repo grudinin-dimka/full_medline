@@ -11,6 +11,19 @@
 				<!-- Поле ввода -->
 				<div class="container-input">
 					<input type="text" placeholder="Введите услугу" v-model="filters.name" />
+					<button class="clear" @click="filters.name = ''" v-if="filters.name">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="26"
+							height="26"
+							viewBox="0 -960 960 960"
+						>
+							<path
+								data-v-31eebbb4=""
+								d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
+							></path>
+						</svg>
+					</button>
 				</div>
 
 				<!-- Фильтры -->
@@ -81,7 +94,20 @@
 					"
 				>
 					<div class="filter-subject" @click="filters.name = ''" v-if="filters.name">
-						<div class="title">{{ filters.name }}</div>
+						<div class="title">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								height="22px"
+								viewBox="0 -960 960 960"
+								width="22px"
+								fill="white"
+							>
+								<path
+									d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"
+								/>
+							</svg>
+							{{ filters.name }}
+						</div>
 						<div class="close">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -266,7 +292,7 @@ import ContainerInputOnce from "../../../components/ui/admin/containers/input/Co
 
 import IconContactHome from "../../../components/icons/contacts/IconContactHome.vue";
 
-import axios from "axios";
+import axios, { all } from "axios";
 import { useRoute } from "vue-router";
 import sorted from "../../../services/sorted.js";
 
@@ -475,6 +501,7 @@ export default {
 		changeSelectedItemChild(selectedItem, name) {
 			let status = false;
 
+			// Проверяем есть ли выбранный элемент в массиве
 			for (let i = 0; i < this.filters[name].selected.length; i++) {
 				if (selectedItem.name == this.filters[name].selected[i].name) {
 					status = true;
@@ -482,6 +509,7 @@ export default {
 				}
 			}
 
+			// Если выбранный элемент есть в массиве
 			if (status) {
 				this.filters[name].selected = this.filters[name].selected.filter((item) => {
 					return item.name !== selectedItem.name;
@@ -496,13 +524,42 @@ export default {
 		changeSelectedItemParent(selectedItem, name) {
 			let childItems = this.getChildItemFromParent(selectedItem);
 
+			let status = {
+				hasOnce: false,
+				hasAll: true,
+			};
+
 			for (let i = 0; i < childItems.length; i++) {
-				if (this.filters[name].selected.includes(childItems[i])) {
-					this.filters[name].selected = this.filters[name].selected.filter(
-						(item) => item !== childItems[i]
-					);
+				if (this.filters[name].selected.some((item) => item.name == childItems[i].name)) {
+					status.hasOnce = true;
 				} else {
-					this.filters[name].selected.push(childItems[i]);
+					status.hasAll = false;
+				}
+			}
+
+			// Проверка на наличие всех childItems в массиве
+			if (status.hasAll) {
+				this.filters[name].selected = this.filters[name].selected.filter((item) => {
+					if (childItems.some((childItem) => childItem.name == item.name)) {
+						return false;
+					} else {
+						return true;
+					}
+				});
+			} else {
+				// Проверка на наличие хотя бы одного childItem в массиве
+				if (status.hasOnce) {
+					for (let i = 0; i < childItems.length; i++) {
+						if (this.filters[name].selected.some((item) => item.name == childItems[i].name)) {
+							continue;
+						}
+
+						this.filters[name].selected.push(childItems[i]);
+					}
+				} else {
+					for (let i = 0; i < childItems.length; i++) {
+						this.filters[name].selected.push(childItems[i]);
+					}
 				}
 			}
 
@@ -709,9 +766,6 @@ export default {
 			.finally(() => {
 				this.getQuery();
 				this.loading.loader.prices = false;
-
-				console.log(this.filters.address.selected);
-				console.log(this.filters.category.selected);
 			});
 	},
 };
@@ -728,6 +782,7 @@ export default {
 }
 
 .filter-blocks > .container-input {
+	position: relative;
 	display: grid;
 	grid-template-columns: 1fr auto;
 }
@@ -751,24 +806,29 @@ export default {
 }
 
 .filter-blocks > .container-input > button {
+	position: absolute;
+	right: 5px;
+	top: 14px;
 	cursor: pointer;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	gap: 5px;
 
-	padding: 10px 15px;
-	width: 125px;
 	border-radius: 10px;
 	border: 0px solid white;
 
 	font-size: 1.125rem;
 	color: white;
-	background-color: var(--button-default-color);
+	background-color: rgba(0, 0, 0, 0);
 }
 
-.filter-blocks > .container-input > button:hover {
-	background-color: var(--button-default-color-hover);
+.filter-blocks > .container-input > button > svg {
+	fill: rgba(0, 0, 0, 0.3);
+}
+
+.filter-blocks > .container-input > button > svg:hover {
+	fill: rgba(0, 0, 0, 0.6);
 }
 
 .filter-blocks > .container-filters {

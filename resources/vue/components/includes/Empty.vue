@@ -37,6 +37,7 @@ export default {
 
 	font-size: 20px;
 	color: #c7c7c7;
+	min-height: max(75dvh, 400px);
 
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }

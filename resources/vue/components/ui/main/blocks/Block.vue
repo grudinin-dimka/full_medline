@@ -28,6 +28,5 @@ section {
 	gap: 20px;
 
 	margin: 20px 30px;
-	min-height: max(60dvh, 400px);
 }
 </style>

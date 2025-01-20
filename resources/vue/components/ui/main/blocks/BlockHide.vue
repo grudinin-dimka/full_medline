@@ -33,8 +33,7 @@ export default {
 	height: auto;
 
 	margin: 20px 30px;
-
-	min-height: max(60dvh, 400px);
+	
 	max-width: 100%;
 
 	transition: all 0.5s;

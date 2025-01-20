@@ -59,6 +59,8 @@ export default {
 	align-items: center;
 
 	margin: auto;
+
+	min-height: max(75dvh, 400px);
 }
 
 .loader {
