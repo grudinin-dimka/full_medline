@@ -5,7 +5,7 @@
 		<router-link to="/prices">Цены</router-link>
 	</info-bar>
 
-	<Block>
+	<Block :minHeight="600">
 		<template v-if="loading.sections.prices">
 			<div class="filter-blocks">
 				<!-- Поле ввода -->

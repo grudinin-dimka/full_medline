@@ -138,7 +138,7 @@
 	</admin-modal>
 
 	<!-- Шапка страницы -->
-	<header>
+	<header :class="{ slide: isShadow }">
 		<div class="header-block">
 			<a href="/" class="header-logo-avatar" @click.prevent="$router.push({ name: 'home' })">
 				<img src="../../../assets/svg/logo.svg" width="100" />
@@ -219,6 +219,7 @@ export default {
 	},
 	data() {
 		return {
+			isShadow: false,
 			nameTitle: "",
 			modal: {
 				title: "",
@@ -303,6 +304,13 @@ export default {
 		};
 	},
 	methods: {
+		setShadow() {
+			if (window.scrollY > 0 && window.document.documentElement.clientWidth <= 500) {
+				this.isShadow = true;
+			} else {
+				this.isShadow = false;
+			}
+		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                 Модальное окно                    |*/
 		/* |___________________________________________________|*/
@@ -645,7 +653,7 @@ export default {
 		},
 	},
 	mounted() {
-		window.addEventListener("resize", this.setShadow);
+		window.addEventListener("scroll", this.setShadow);
 	},
 };
 </script>
@@ -657,9 +665,14 @@ header {
 	align-items: center;
 	flex-wrap: wrap;
 	padding: 10px;
-	margin: 0px 50px;
+	margin: 0px 0px;
 
 	transition: box-shadow 0.5s;
+}
+
+header.slide {
+	background-color: white;
+	box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.2);
 }
 
 .header-logo {
@@ -919,6 +932,7 @@ header {
 
 @media screen and (max-width: 900px) {
 	header {
+		padding: 10px 50px 10px 50px;
 		justify-content: space-between;
 	}
 

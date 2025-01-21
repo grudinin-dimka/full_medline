@@ -85,7 +85,7 @@ nav a:hover {
 	cursor: pointer;
 }
 
-@media screen and (max-width: 1550px) {
+@media screen and (max-width: 1200px) {
 	nav {
 		display: grid;
 		grid-template-columns: repeat(4, 1fr);

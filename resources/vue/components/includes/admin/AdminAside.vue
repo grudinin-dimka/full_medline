@@ -81,7 +81,7 @@
 				</a>
 				<div class="item-list" ref="eprices" :class="{ active: links.prices.status }">
 					<a href="#" @click.prevent="insertSubPage('eprices-all')"> СПИСОК ЦЕН </a>
-					<a href="#" @click.prevent="insertSubPage('eprices-rules')"> ПРАВИЛА </a>
+					<a href="#" @click.prevent="insertSubPage('eprices-template')"> ШАБЛОН </a>
 				</div>
 			</div>
 			<div class="item active">

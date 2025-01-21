@@ -197,8 +197,8 @@ const router = createRouter({
 						},
 						{
 							path: "rules",
-							name: "eprices-rules",
-							component: () => import("../views/admin/prices/AdminPricesRools.vue"),
+							name: "eprices-template",
+							component: () => import("../views/admin/prices/AdminPricesTemplate.vue"),
 						},
 					],
 				},

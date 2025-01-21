@@ -853,9 +853,14 @@ tr.empty > td {
 	}
 }
 
-@media screen and (width <= 480px) {
-	.filter-blocks > .item {
-		flex: 1 0 200px;
+@media screen and (width <= 500px) {
+	.filter-list > .container > .body {
+		flex-direction: column;
+		width: 100%;
+	}
+
+	.filter-list > .container > .body > .item {
+		width: 100%;
 	}
 }
 </style>
