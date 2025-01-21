@@ -80,7 +80,7 @@
 						<rect x="335" y="255" width="280" height="48" rx="5" />
 						<rect x="254" y="31" width="188" height="82" rx="5" />
 					</svg>
-					<div class="title">Показать карту</div>
+					<div class="title">Показать на карте</div>
 				</div>
 			</div>
 		</div>

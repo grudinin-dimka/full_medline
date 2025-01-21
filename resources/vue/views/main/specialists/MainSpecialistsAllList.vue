@@ -9,6 +9,10 @@
 				</div>
 				<div class="specialist-body-options-other">
 					<div class="specialist-body-options-other-block">
+						<div>Специализация:</div>
+						<div>{{ getSpecializationString(specialist.specialization) }}.</div>
+					</div>
+					<div class="specialist-body-options-other-block">
 						<div>Категория:</div>
 						<div>{{ specialist.category }}.</div>
 					</div>
@@ -48,6 +52,17 @@ export default {
 		},
 	},
 	methods: {
+		getSpecializationString(specialization) {
+			let specializationString = "";
+
+			for (let i = 0; i < specialization.length; i++) {
+				specializationString += specialization[i].name + ", ";
+			}
+
+			return specializationString.slice(0, -2)
+				? specializationString.slice(0, -2)
+				: "Нет информации";
+		},
 		getWorkAges(date) {
 			let startDate = new Date(date);
 			let currentDate = new Date();

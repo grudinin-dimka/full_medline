@@ -235,16 +235,22 @@
 			</template>
 		</block-title>
 
-		<!-- Таблица -->
-		<admin-specialists-table
-			v-show="loading.table"
-			:array="clinics"
-			@useFilter="filterClinics"
-			@touchEditArrValue="editClinic"
-			@touchRemoveArrValue="removeClinic"
-		/>
+		<div class="container-clinics" v-if="loading.table">
+			<admin-specialists-table
+				:array="getClinics"
+				@useFilter="filterClinics"
+				@touchEditArrValue="editClinic"
+				@touchRemoveArrValue="removeClinic"
+			/>
 
-		<!-- Загрузчик -->
+			<pagination
+				v-if="clinics.length > 0"
+				:arrayLength="clinics.length"
+				:settings="paginationClinics"
+				@changePage="changePageClinics"
+			/>
+		</div>
+
 		<loader-child
 			:isLoading="loading.loader"
 			:minHeight="200"
@@ -261,6 +267,7 @@
 import AdminModal from "../../../components/includes/admin/AdminModal.vue";
 
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
+import Pagination from "../../../components/ui/admin/pagination/Pagination.vue";
 
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
 
@@ -292,6 +299,7 @@ export default {
 	components: {
 		AdminModal,
 		InfoBar,
+		Pagination,
 		LoaderChild,
 		ElementInputLabel,
 		BlockOnce,
@@ -337,6 +345,15 @@ export default {
 			disabled: {
 				clinics: {
 					save: false,
+				},
+			},
+			paginationClinics: {
+				pages: {
+					current: 1,
+					range: 5,
+				},
+				elements: {
+					range: 10,
 				},
 			},
 			currentClinic: {
@@ -436,6 +453,14 @@ export default {
 			clinics: [],
 		};
 	},
+	computed: {
+		getClinics() {
+			return [...this.clinics].splice(
+				(this.paginationClinics.pages.current - 1) * this.paginationClinics.elements.range,
+				this.paginationClinics.elements.range
+			);
+		},
+	},
 	methods: {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                   Загрузчик                       |*/
@@ -443,6 +468,23 @@ export default {
 		/* После скрытия элементы */
 		loaderChildAfterLeave() {
 			this.loading.table = true;
+		},
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                    ПАГИНАЦИЯ                      |*/
+		/* |___________________________________________________|*/
+		/* _____________________________________________________*/
+		/* 1. Основные действия                                 */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* Изменение текущей страницы */
+		changePageClinics(pageNumber) {
+			// Проверка на превышение количества страниц
+			if (pageNumber > Math.ceil(this.clinics.length / this.paginationClinics.elements.range)) {
+				return;
+			} else if (pageNumber < 1) {
+				return;
+			}
+
+			this.paginationClinics.pages.current = pageNumber;
 		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                 Модальное окно                    |*/
@@ -800,4 +842,10 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.container-clinics {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+</style>

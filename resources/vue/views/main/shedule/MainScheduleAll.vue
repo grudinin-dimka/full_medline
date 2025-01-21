@@ -50,7 +50,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="filter-blocks">
+			<fieldset class="filter-blocks">
 				<div class="item">
 					<div
 						class="clear-filter"
@@ -84,11 +84,11 @@
 					>
 						Очистить
 					</div>
-					<container-input-once :type="'default'">
+					<container-select-once :type="'default'">
 						<template #title>
 							<span>СПЕЦИАЛИЗАЦИЯ</span>
 						</template>
-						<template #input>
+						<template #select>
 							<select
 								v-model="filters.sections.specialization.data.body"
 								@input="filters.sections.specialization.status = true"
@@ -102,9 +102,9 @@
 								</option>
 							</select>
 						</template>
-					</container-input-once>
+					</container-select-once>
 				</div>
-			</div>
+			</fieldset>
 			<!-- TODO надо бы сделать вывод значений в одну строку, которые одинаковые по типу -->
 			<table>
 				<thead>
@@ -185,6 +185,7 @@ import Block from "../../../components/ui/main/blocks/Block.vue";
 import BlockHide from "../../../components/ui/main/blocks/BlockHide.vue";
 
 import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
+import ContainerSelectOnce from "../../../components/ui/admin/containers/select/ContainerSelectOnce.vue";
 
 import axios from "axios";
 import sorted from "../../../services/sorted.js";
@@ -196,6 +197,7 @@ export default {
 		Block,
 		BlockHide,
 		ContainerInputOnce,
+		ContainerSelectOnce,
 		axios,
 		sorted,
 	},
@@ -615,12 +617,22 @@ export default {
 
 /* Блоки фильтров */
 .filter-blocks {
+	box-sizing: border-box;
 	display: flex;
 	flex-wrap: wrap;
 	gap: 10px;
 
+	border: 2px solid var(--input-border-color-inactive);
+	border-radius: 15px;
+	padding: 10px;
+
 	width: 1350px;
+	transition: all 0.2s;
 	animation: show 0.5s ease-out;
+}
+
+fieldset.filter-blocks:focus-within {
+	border: 2px solid var(--input-border-color-active);
 }
 
 .filter-blocks > .item {

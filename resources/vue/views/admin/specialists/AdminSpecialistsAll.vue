@@ -13,18 +13,26 @@
 			</template>
 		</block-title>
 
+		<div class="container-specialists" v-if="loading.table">
+			<admin-specialists-table
+				:specialists="getSpecialists"
+				@touchHideSpecialist="hideSpecialist"
+				@touchUseFilter="filterSpecialists"
+				@touchRemoveSpecialist="removeSpecialist"
+			/>
+
+			<pagination
+				v-if="specialists.length > 0"
+				:arrayLength="specialists.length"
+				:settings="paginationSpecialists"
+				@changePage="changePageSpecialists"
+			/>
+		</div>
+
 		<loader-child
 			:isLoading="loading.loader"
 			:minHeight="300"
 			@loaderChildAfterLeave="loaderChildAfterLeave"
-		/>
-
-		<admin-specialists-table
-			v-show="loading.table"
-			:specialists="specialists"
-			@touchHideSpecialist="hideSpecialist"
-			@touchUseFilter="filterSpecialists"
-			@touchRemoveSpecialist="removeSpecialist"
 		/>
 
 		<block-buttons>
@@ -37,6 +45,7 @@
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
+import Pagination from "../../../components/ui/admin/pagination/Pagination.vue";
 
 import ElementInputLabel from "../../../components/ui/admin/elements/ElementInputLabel.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
@@ -61,6 +70,7 @@ export default {
 	components: {
 		InfoBar,
 		LoaderChild,
+		Pagination,
 		ElementInputLabel,
 		BlockOnce,
 		BlockTitle,
@@ -88,8 +98,26 @@ export default {
 					save: false,
 				},
 			},
+			paginationSpecialists: {
+				pages: {
+					current: 1,
+					range: 5,
+				},
+				elements: {
+					range: 10,
+				},
+			},
 			specialists: [],
 		};
+	},
+	computed: {
+		getSpecialists() {
+			return [...this.specialists].splice(
+				(this.paginationSpecialists.pages.current - 1) *
+					this.paginationSpecialists.elements.range,
+				this.paginationSpecialists.elements.range
+			);
+		},
 	},
 	methods: {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -98,6 +126,26 @@ export default {
 		/* После скрытия элементы */
 		loaderChildAfterLeave() {
 			this.loading.table = true;
+		},
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                    ПАГИНАЦИЯ                      |*/
+		/* |___________________________________________________|*/
+		/* _____________________________________________________*/
+		/* 1. Основные действия                                 */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* Изменение текущей страницы */
+		changePageSpecialists(pageNumber) {
+			// Проверка на превышение количества страниц
+			if (
+				pageNumber >
+				Math.ceil(this.specialists.length / this.paginationSpecialists.elements.range)
+			) {
+				return;
+			} else if (pageNumber < 1) {
+				return;
+			}
+
+			this.paginationSpecialists.pages.current = pageNumber;
 		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                  Специалисты                      |*/
@@ -245,4 +293,10 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.container-specialists {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+</style>

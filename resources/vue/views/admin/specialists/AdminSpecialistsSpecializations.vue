@@ -62,13 +62,21 @@
 			</template>
 		</block-title>
 
-		<admin-specialists-table
-			v-show="loading.table"
-			:array="specializations"
-			@useFilter="filterSpecializations"
-			@touchEditArrValue="editSpecialization"
-			@touchRemoveArrValue="removeSpecialization"
-		/>
+		<div class="container-specializations" v-if="loading.table">
+			<admin-specialists-table
+				:array="getSpecializations"
+				@useFilter="filterSpecializations"
+				@touchEditArrValue="editSpecialization"
+				@touchRemoveArrValue="removeSpecialization"
+			/>
+
+			<pagination
+				v-if="specializations.length > 0"
+				:arrayLength="specializations.length"
+				:settings="paginationSpecializations"
+				@changePage="changePageSpecializations"
+			/>
+		</div>
 
 		<loader-child
 			:isLoading="loading.loader"
@@ -86,6 +94,7 @@
 import AdminModal from "../../../components/includes/admin/AdminModal.vue";
 
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
+import Pagination from "../../../components/ui/admin/pagination/Pagination.vue";
 
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
 
@@ -114,6 +123,7 @@ export default {
 	components: {
 		AdminModal,
 		InfoBar,
+		Pagination,
 		LoaderChild,
 		ElementInputLabel,
 		ContainerInputOnce,
@@ -158,6 +168,15 @@ export default {
 					save: false,
 				},
 			},
+			paginationSpecializations: {
+				pages: {
+					current: 1,
+					range: 5,
+				},
+				elements: {
+					range: 10,
+				},
+			},
 			currentSpecialization: {
 				errors: {
 					id: {
@@ -191,6 +210,15 @@ export default {
 			specializations: [],
 		};
 	},
+	computed: {
+		getSpecializations() {
+			return [...this.specializations].splice(
+				(this.paginationSpecializations.pages.current - 1) *
+					this.paginationSpecializations.elements.range,
+				this.paginationSpecializations.elements.range
+			);
+		},
+	},
 	methods: {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                   Загрузчик                       |*/
@@ -198,6 +226,26 @@ export default {
 		/* После скрытия загрузчика */
 		loaderChildAfterLeave() {
 			this.loading.table = true;
+		},
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                    ПАГИНАЦИЯ                      |*/
+		/* |___________________________________________________|*/
+		/* _____________________________________________________*/
+		/* 1. Основные действия                                 */
+		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* Изменение текущей страницы */
+		changePageSpecializations(pageNumber) {
+			// Проверка на превышение количества страниц
+			if (
+				pageNumber >
+				Math.ceil(this.specializations.length / this.paginationSpecializations.elements.range)
+			) {
+				return;
+			} else if (pageNumber < 1) {
+				return;
+			}
+
+			this.paginationSpecializations.pages.current = pageNumber;
 		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                 Модальное окно                    |*/
@@ -507,4 +555,10 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.container-specializations {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+</style>

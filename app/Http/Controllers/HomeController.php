@@ -137,13 +137,30 @@ class HomeController extends Controller
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
    /* Вывод всех докторов */ 
    public function getSpecialists(Request $request) {
-      $specializations = Specialization::all();
-
       $specialists = Specialist::where('hide', false)->get();
       if($specialists) {
          foreach ($specialists as $key => $value) {
+            $specialistsSpecializations = SpecialistSpecialization::where('id_specialist', $specialists[$key]->id)->get();
+            if($specialistsSpecializations) {
+               $specializations = [];
+               foreach ($specialistsSpecializations as $specialistsSpecializationsKey => $specialistsSpecializationsValue) {
+                  $specializations[] = Specialization::find($specialistsSpecializationsValue->id_specialization);
+               };   
+            } else {
+               return response()->json([
+                  "status" => false,
+                  "message" => "Не удалось получить специализации.",
+                  "data" => (object)[
+                     "profile" => null,
+                     "specializations" => null,
+                     "educations" => null,
+                  ],
+               ]);    
+            };      
+
             $specialists[$key]->url = makeUrl($specialists[$key]->family . " " . $specialists[$key]->name . " " . $specialists[$key]->surname);
             $specialists[$key]->path = Storage::url('specialists/' . $value->filename);      
+            $specialists[$key]->specialization = $specializations;      
          };
 
          return response()->json([

@@ -81,7 +81,6 @@ export default {
 
 .modal-list > .item > .content {
 	font-size: 18px;
-	font-family: "Azeret Mono";
 }
 
 .modal-list > .item > .content.default {

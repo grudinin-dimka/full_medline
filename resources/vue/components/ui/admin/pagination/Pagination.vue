@@ -5,9 +5,9 @@
 			<div class="item first" @click="$emit('changePage', 1)">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
-					height="24px"
+					height="28px"
 					viewBox="0 -960 960 960"
-					width="24px"
+					width="28px"
 					fill="#e8eaed"
 				>
 					<path
@@ -18,9 +18,9 @@
 			<div class="item previous" @click="$emit('changePage', settings.pages.current - 1)">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
-					height="24px"
+					height="28px"
 					viewBox="0 -960 960 960"
-					width="24px"
+					width="28px"
 					fill="black"
 				>
 					<path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z" />
@@ -42,9 +42,9 @@
 			<div class="item next" @click="$emit('changePage', settings.pages.current + 1)">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
-					height="24px"
+					height="28px"
 					viewBox="0 -960 960 960"
-					width="24px"
+					width="28px"
 					fill="black"
 				>
 					<path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
@@ -53,9 +53,9 @@
 			<div class="item last" @click="$emit('changePage', getPagesCount)">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
-					height="24px"
+					height="28px"
 					viewBox="0 -960 960 960"
-					width="24px"
+					width="28px"
 					fill="#e8eaed"
 				>
 					<path
@@ -153,7 +153,7 @@ svg:hover {
 	align-items: center;
 
 	color: var(--input-border-color-inactive);
-	font-size: 18px;
+	font-size: 1.275rem;
 	width: 20px;
 	text-align: center;
 }

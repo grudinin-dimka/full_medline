@@ -865,13 +865,11 @@
 					<div class="item">
 						<div>Название</div>
 					</div>
-					<!-- HACK Сделать сортировку по алфавиту -->
 					<div
 						class="item"
 						v-for="specialization in sortedConnectionsSpecializations"
 						:key="specialization.id"
 					>
-						<!-- <div class="item-title">1</div> -->
 						<div class="item-title">
 							{{
 								sections.specializations.filter(
