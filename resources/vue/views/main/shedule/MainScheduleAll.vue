@@ -51,7 +51,7 @@
 		</div>
 		<div class="filter-blocks">
 			<div class="container-input">
-				<input type="text" placeholder="Введите услугу" v-model="filters.fio.data.body" />
+				<input type="text" placeholder="Введите ФИО" v-model="filters.fio.data.body" />
 				<button class="clear" @click="filters.fio.data.body = ''" v-if="filters.fio.data.body">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -68,6 +68,7 @@
 			</div>
 			<div class="container-select">
 				<Selector
+					:placeholder="'Выберите специализацию'"
 					:list="getFormatSpecializations"
 					:selected="filters.specialization.data.body"
 					@select="filters.specialization.data.body = $event"

@@ -7,7 +7,29 @@
 
 	<block>
 		<template v-if="loading.sections.specialists">
-			<specialists-list :specialists="specialists" v-if="specialists.length > 0" />
+			<div class="specialists-filters" v-if="loading.sections.specialists">
+				<div
+					class="item"
+					:class="{ active: filterSpecialization.all }"
+					@click="setActiveFilter('all')"
+				>
+					Все
+				</div>
+				<div
+					class="item"
+					v-for="specalization in calcSpecializations"
+					:key="specalization"
+					:class="{ active: specalization == filterSpecialization.selected }"
+					@click="setActiveFilter(specalization)"
+				>
+					{{ specalization }}
+				</div>
+			</div>
+
+			<specialists-list
+				:specialists="getFilteredSpecialists"
+				v-if="getFilteredSpecialists.length > 0"
+			/>
 
 			<Empty v-else />
 		</template>
@@ -53,17 +75,61 @@ export default {
 					specialists: false,
 				},
 			},
-			filters: [
-				{
-					id: 1,
-					name: "Хирург",
-				},
-				{
-					id: 2,
-					name: "Терапевт",
-				},
-			],
+			filterSpecialization: {
+				all: true,
+				selected: null,
+			},
 		};
+	},
+	computed: {
+		getFilteredSpecialists() {
+			let specialists = this.specialists;
+
+			if (this.filterSpecialization.all) return specialists;
+
+			if (this.filterSpecialization.selected !== null) {
+				specialists = specialists.filter((specialist) => {
+					if (Array.isArray(specialist.specialization)) {
+						for (let i = 0; i < specialist.specialization.length; i++) {
+							if (specialist.specialization[i].name == this.filterSpecialization.selected) {
+								return true;
+							}
+						}
+					}
+
+					if (
+						specialist.specialization !== null &&
+						typeof specialist.specialization == "object"
+					) {
+						return specialist.specialization.name == this.filterSpecialization.selected;
+					}
+				});
+			}
+
+			return specialists;
+		},
+		calcSpecializations() {
+			let specalizations = [];
+
+			this.specialists.forEach((specialist) => {
+				if (Array.isArray(specialist.specialization)) {
+					specialist.specialization.forEach((spec) => {
+						specalizations.push(spec.name);
+					});
+
+					return;
+				}
+
+				if (
+					specialist.specialization !== null &&
+					typeof specialist.specialization == "object"
+				) {
+					specalizations.push(specialist.specialization);
+				}
+			});
+
+			return specalizations;
+		},
 	},
 	methods: {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -76,6 +142,16 @@ export default {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                  СПЕЦИАЛИСТЫ                      |*/
 		/* |___________________________________________________|*/
+		setActiveFilter(name) {
+			if (name == "all") {
+				this.filterSpecialization.all = true;
+				this.filterSpecialization.selected = null;
+				return;
+			}
+
+			this.filterSpecialization.all = false;
+			this.filterSpecialization.selected = name;
+		},
 	},
 	mounted() {
 		// Получение массива докторов с сервера
@@ -110,4 +186,37 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.specialists-filters {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+
+	width: 1350px;
+
+	animation: show-bottom-to-top-15 0.5s ease-in-out;
+}
+
+.specialists-filters > .item {
+	cursor: pointer;
+	padding: 5px;
+
+	border: 2px solid var(--input-border-color-inactive);
+	border-radius: 10px;
+
+	font-size: 1.125rem;
+
+	transition: all 0.2s;
+}
+
+.specialists-filters > .item:is(:hover, .active) {
+	border: 2px solid var(--input-border-color-active);
+	background-color: #f2feff;
+}
+
+@media screen and (width < 1450px) {
+	.specialists-filters {
+		width: 100%;
+	}
+}
+</style>
