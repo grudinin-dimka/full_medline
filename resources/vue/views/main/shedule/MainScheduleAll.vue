@@ -21,90 +21,64 @@
 		</button>
 	</template>
 
-	<block-hide>
-		<template v-if="loading.sections.schedule">
-			<div class="filter-list">
-				<div class="container">
-					<div class="body">
-						<div
-							class="item"
-							:class="{ active: activeClinic.name === 'Все' }"
-							@click="
-								changeActiveClinic({
-									id: 0,
-									name: 'Все',
-								})
-							"
-						>
-							<div>Все</div>
-						</div>
-						<div
-							class="item"
-							v-for="clinic in clinics"
-							:key="clinic.id"
-							:class="{ active: clinic.status }"
-							@click="changeActiveClinic(clinic)"
-						>
-							<div>{{ clinic.name }}</div>
-						</div>
+	<block v-if="loading.sections.schedule">
+		<div class="filter-list">
+			<div class="container">
+				<div class="body">
+					<div
+						class="item"
+						:class="{ active: activeClinic.name === 'Все' }"
+						@click="
+							changeActiveClinic({
+								id: 0,
+								name: 'Все',
+							})
+						"
+					>
+						<div>Все</div>
+					</div>
+					<div
+						class="item"
+						v-for="clinic in clinics"
+						:key="clinic.id"
+						:class="{ active: clinic.status }"
+						@click="changeActiveClinic(clinic)"
+					>
+						<div>{{ clinic.name }}</div>
 					</div>
 				</div>
 			</div>
-			<fieldset class="filter-blocks">
-				<div class="item">
-					<div
-						class="clear-filter"
-						v-if="filters.sections.fio.status && filters.sections.fio.data.body !== ''"
-						@click="clearFilter('fio')"
+		</div>
+		<div class="filter-blocks">
+			<div class="container-input">
+				<input type="text" placeholder="Введите услугу" v-model="filters.fio.data.body" />
+				<button class="clear" @click="filters.fio.data.body = ''" v-if="filters.fio.data.body">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="26"
+						height="26"
+						viewBox="0 -960 960 960"
 					>
-						Очистить
-					</div>
-					<container-input-once :type="'default'">
-						<template #title>
-							<span>ВРАЧ (Ф.И.О.)</span>
-						</template>
-						<template #input>
-							<input
-								type="text"
-								placeholder="Введите Ф.И.О."
-								v-model="filters.sections.fio.data.body"
-								@input="filters.sections.fio.status = true"
-							/>
-						</template>
-					</container-input-once>
-				</div>
-				<div class="item">
-					<div
-						class="clear-filter"
-						v-if="
-							filters.sections.specialization.status &&
-							filters.sections.specialization.data.body !== ''
-						"
-						@click="clearFilter('specialization')"
-					>
-						Очистить
-					</div>
-					<container-select-once :type="'default'">
-						<template #title>
-							<span>СПЕЦИАЛИЗАЦИЯ</span>
-						</template>
-						<template #select>
-							<select
-								v-model="filters.sections.specialization.data.body"
-								@input="filters.sections.specialization.status = true"
-							>
-								<option value="" selected>Ничего не выбрано</option>
-								<option
-									:value="specialization"
-									v-for="specialization in getAllSpecializations"
-								>
-									{{ specialization }}
-								</option>
-							</select>
-						</template>
-					</container-select-once>
-				</div>
-			</fieldset>
+						<path
+							data-v-31eebbb4=""
+							d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
+						></path>
+					</svg>
+				</button>
+			</div>
+			<div class="container-select">
+				<Selector
+					:list="getFormatSpecializations"
+					:selected="filters.specialization.data.body"
+					@select="filters.specialization.data.body = $event"
+					@clear="filters.specialization.data.body = ''"
+				></Selector>
+			</div>
+		</div>
+	</block>
+
+	<block-hide>
+		<template v-if="loading.sections.schedule">
 			<!-- TODO надо бы сделать вывод значений в одну строку, которые одинаковые по типу -->
 			<table>
 				<thead>
@@ -179,6 +153,9 @@
 </template>
 
 <script>
+import VueSelect from "vue3-select-component";
+import Selector from "../../../components/includes/Selector.vue";
+
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
 import Block from "../../../components/ui/main/blocks/Block.vue";
@@ -192,6 +169,8 @@ import sorted from "../../../services/sorted.js";
 
 export default {
 	components: {
+		VueSelect,
+		Selector,
 		InfoBar,
 		LoaderChild,
 		Block,
@@ -203,6 +182,7 @@ export default {
 	},
 	data() {
 		return {
+			selected: null,
 			loading: {
 				loader: {
 					schedule: true,
@@ -217,28 +197,26 @@ export default {
 			},
 			// Фильтры
 			filters: {
-				sections: {
-					fio: {
-						status: false,
-						data: {
-							body: "",
-							edited: false,
-						},
-						errors: {
-							body: null,
-							status: false,
-						},
+				fio: {
+					status: false,
+					data: {
+						body: "",
+						edited: false,
 					},
-					specialization: {
+					errors: {
+						body: null,
 						status: false,
-						data: {
-							body: "",
-							edited: false,
-						},
-						errors: {
-							body: null,
-							status: false,
-						},
+					},
+				},
+				specialization: {
+					status: true,
+					data: {
+						body: "",
+						edited: false,
+					},
+					errors: {
+						body: null,
+						status: false,
 					},
 				},
 			},
@@ -248,6 +226,18 @@ export default {
 		};
 	},
 	computed: {
+		/* Получение всех специализаций */
+		getFormatSpecializations() {
+			let specializations = [];
+
+			this.shedules.forEach((shedule) => {
+				if (!specializations.includes(shedule.specializations))
+					specializations.push(shedule.specializations);
+			});
+
+			sorted.sortString("up", specializations);
+			return specializations;
+		},
 		/* Получение всех специализаций */
 		getAllSpecializations() {
 			let specializations = [];
@@ -261,8 +251,8 @@ export default {
 		/* Получение количества активных фильтров */
 		getActiveFilters() {
 			let count = 0;
-			for (let key in this.filters.sections) {
-				if (this.filters.sections[key].status) {
+			for (let key in this.filters) {
+				if (this.filters[key].status) {
 					count++;
 				}
 			}
@@ -290,24 +280,18 @@ export default {
 					break;
 			}
 
-			if (this.filters.sections.fio.status) {
-				if (this.filters.sections.fio.data.body !== "") {
-					filteredShedules = filteredShedules.filter((item) => {
-						if (item.name.indexOf(this.filters.sections.fio.data.body) !== -1) {
-							return item;
-						}
-					});
-				}
+			if (this.filters.fio.data.body !== "") {
+				filteredShedules = filteredShedules.filter((item) => {
+					if (item.name.indexOf(this.filters.fio.data.body) !== -1) {
+						return item;
+					}
+				});
 			}
 
-			if (this.filters.sections.specialization.status) {
-				if (this.filters.sections.specialization.data.body !== "") {
+			if (this.filters.specialization.status) {
+				if (this.filters.specialization.data.body !== "") {
 					filteredShedules = filteredShedules.filter((item) => {
-						if (
-							item.specializations.indexOf(
-								this.filters.sections.specialization.data.body
-							) !== -1
-						) {
+						if (item.specializations.indexOf(this.filters.specialization.data.body) !== -1) {
 							return item;
 						}
 					});
@@ -360,8 +344,8 @@ export default {
 		},
 		/* Очистка фильтра */
 		clearFilter(filterName) {
-			this.filters.sections[filterName].status = false;
-			this.filters.sections[filterName].data.body = "";
+			this.filters[filterName].status = false;
+			this.filters[filterName].data.body = "";
 		},
 		/* Получение текущего дня и связка с таблицей недели */
 		getDateNow() {
@@ -449,6 +433,17 @@ export default {
 </script>
 
 <style scoped>
+.container-select {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+.container-select > label {
+	color: var(--primary-color);
+	font-size: 1.125rem;
+}
+
 .shedule-refresh {
 	cursor: pointer;
 	position: fixed;
@@ -618,21 +613,17 @@ export default {
 /* Блоки фильтров */
 .filter-blocks {
 	box-sizing: border-box;
-	display: flex;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
 	flex-wrap: wrap;
 	gap: 10px;
 
-	border: 2px solid var(--input-border-color-inactive);
+	border: 0px solid var(--input-border-color-inactive);
 	border-radius: 15px;
-	padding: 10px;
 
 	width: 1350px;
 	transition: all 0.2s;
 	animation: show 0.5s ease-out;
-}
-
-fieldset.filter-blocks:focus-within {
-	border: 2px solid var(--input-border-color-active);
 }
 
 .filter-blocks > .item {
@@ -644,6 +635,56 @@ fieldset.filter-blocks:focus-within {
 
 .filter-blocks > .item.active {
 	border: 2px solid #44a533;
+}
+
+.filter-blocks > .container-input {
+	position: relative;
+	display: grid;
+	grid-template-columns: 1fr auto;
+}
+
+.filter-blocks > .container-input > input {
+	box-sizing: border-box;
+
+	padding: 15px;
+	border-radius: 10px;
+	border: 2px solid var(--input-border-color-inactive);
+	outline: none;
+
+	font-size: 1.125rem;
+
+	transition: all 0.2s;
+	caret-color: var(--input-border-color-active);
+}
+
+.filter-blocks > .container-input > input:focus {
+	border: 2px solid var(--input-border-color-active);
+}
+
+.filter-blocks > .container-input > button {
+	position: absolute;
+	right: 5px;
+	top: 14px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 5px;
+
+	border-radius: 10px;
+	border: 0px solid white;
+
+	font-size: 1.125rem;
+	color: white;
+	background-color: rgba(0, 0, 0, 0);
+}
+
+.filter-blocks > .container-input > button > svg {
+	fill: rgba(0, 0, 0, 0.3);
+}
+
+.filter-blocks > .container-input > button > svg:hover {
+	fill: rgba(0, 0, 0, 0.6);
 }
 
 .filter-button.active {
@@ -856,6 +897,12 @@ tr.empty > td {
 		width: auto;
 		display: block;
 		overflow-x: scroll;
+	}
+}
+
+@media screen and (max-width: 700px) {
+	.filter-blocks {
+		grid-template-columns: 1fr;
 	}
 }
 

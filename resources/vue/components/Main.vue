@@ -38,18 +38,18 @@ export default {
 </script>
 
 <style>
-	.router-link-active {
-		font-size: 20px;
-		text-decoration: none;
-		color: black;
-		transition: color 0.15s;
-	}
+.router-link-active {
+	font-size: 20px;
+	text-decoration: none;
+	color: black;
+	transition: color 0.15s;
+}
 
-	.router-link-active:hover {
-		color: var(--primary-color);
-	}
+.router-link-active:hover {
+	color: var(--primary-color);
+}
 
-	.link-arrow {
-		font-size: 20px;
-	}
+.link-arrow {
+	font-size: 20px;
+}
 </style>

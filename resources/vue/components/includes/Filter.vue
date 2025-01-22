@@ -8,15 +8,6 @@
 			<div class="name">
 				<slot name="title"></slot>
 			</div>
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				height="24px"
-				viewBox="0 -960 960 960"
-				width="24px"
-				fill="black"
-			>
-				<path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
-			</svg>
 		</div>
 		<div class="filter-body" :class="{ active: filter.status }">
 			<div class="container-input">
@@ -338,6 +329,7 @@ export default {
 	cursor: all-scroll;
 }
 /* Конец. */
+
 .filter > .filter-body > ol > li {
 	cursor: pointer;
 	display: flex;
@@ -352,7 +344,6 @@ export default {
 
 .filter > .filter-body > ol > li.empty {
 	color: rgb(150, 150, 150);
-	margin: auto;
 }
 
 .filter > .filter-body > ol > li.active {
