@@ -14,14 +14,14 @@
 					<button class="clear" @click="filters.name = ''" v-if="filters.name">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
-							width="26"
-							height="26"
+							height="20px"
 							viewBox="0 -960 960 960"
+							width="20px"
+							fill="black"
 						>
 							<path
-								data-v-31eebbb4=""
 								d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
-							></path>
+							/>
 						</svg>
 					</button>
 				</div>
@@ -795,6 +795,8 @@ export default {
 	border: 2px solid var(--input-border-color-inactive);
 	outline: none;
 
+	height: 58px;
+
 	font-size: 1.125rem;
 
 	transition: all 0.2s;
@@ -807,13 +809,15 @@ export default {
 
 .filter-blocks > .container-input > button {
 	position: absolute;
+	top: 0px;
 	right: 5px;
-	top: 14px;
 	cursor: pointer;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	gap: 5px;
+
+	height: 58px;
 
 	border-radius: 10px;
 	border: 0px solid white;
@@ -824,11 +828,11 @@ export default {
 }
 
 .filter-blocks > .container-input > button > svg {
-	fill: rgba(0, 0, 0, 0.3);
+	fill: rgba(0, 0, 0, 1);
 }
 
 .filter-blocks > .container-input > button > svg:hover {
-	fill: rgba(0, 0, 0, 0.6);
+	fill: rgba(0, 0, 0, 1);
 }
 
 .filter-blocks > .container-filters {

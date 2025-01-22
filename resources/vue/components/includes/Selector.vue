@@ -159,8 +159,11 @@ export default {
 	height: 58px;
 }
 
-.control > .clear {
+.control > :is(.clear, .arrow) {
 	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .control.open {

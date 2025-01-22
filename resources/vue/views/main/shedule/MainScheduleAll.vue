@@ -55,14 +55,14 @@
 				<button class="clear" @click="filters.fio.data.body = ''" v-if="filters.fio.data.body">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
-						width="26"
-						height="26"
+						height="20px"
 						viewBox="0 -960 960 960"
+						width="20px"
+						fill="black"
 					>
 						<path
-							data-v-31eebbb4=""
 							d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
-						></path>
+						/>
 					</svg>
 				</button>
 			</div>
@@ -115,6 +115,9 @@
 										v-if="getClinicStatus(shedule.id, clinic.id)"
 									>
 										{{ blob !== "-" ? blob : "" }}
+										<div class="help" v-if="blob !== '-'">
+											{{ clinic.name }}
+										</div>
 									</div>
 								</div>
 								<div
@@ -153,7 +156,6 @@
 </template>
 
 <script>
-import VueSelect from "vue3-select-component";
 import Selector from "../../../components/includes/Selector.vue";
 
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
@@ -169,7 +171,6 @@ import sorted from "../../../services/sorted.js";
 
 export default {
 	components: {
-		VueSelect,
 		Selector,
 		InfoBar,
 		LoaderChild,
@@ -653,6 +654,8 @@ export default {
 
 	font-size: 1.125rem;
 
+	height: 58px;
+
 	transition: all 0.2s;
 	caret-color: var(--input-border-color-active);
 }
@@ -663,13 +666,15 @@ export default {
 
 .filter-blocks > .container-input > button {
 	position: absolute;
+	top: 0px;
 	right: 5px;
-	top: 14px;
 	cursor: pointer;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	gap: 5px;
+
+	height: 58px;
 
 	border-radius: 10px;
 	border: 0px solid white;
@@ -680,11 +685,11 @@ export default {
 }
 
 .filter-blocks > .container-input > button > svg {
-	fill: rgba(0, 0, 0, 0.3);
+	fill: rgba(0, 0, 0, 1);
 }
 
 .filter-blocks > .container-input > button > svg:hover {
-	fill: rgba(0, 0, 0, 0.6);
+	fill: rgba(0, 0, 0, 1);
 }
 
 .filter-button.active {
@@ -817,6 +822,7 @@ tr.create:hover > td {
 }
 
 .days > .item > .time {
+	position: relative;
 	cursor: default;
 	border-radius: 10px;
 }
@@ -827,6 +833,29 @@ tr.create:hover > td {
 	border-radius: 10px;
 
 	margin: 5px 0px;
+}
+
+.days > .item.all > .time > .help {
+	position: absolute;
+	top: -45px;
+	right: 0px;
+
+	white-space: nowrap;
+	width: auto;
+	padding: 10px;
+	border-radius: 10px;
+
+	opacity: 0;
+	visibility: hidden;
+
+	color: white;
+	background-color: rgba(0, 0, 0, 0.5);
+	transition: all 0.2s;
+}
+
+.days > .item > .time:hover > .help {
+	opacity: 1;
+	visibility: visible;
 }
 
 .days > .item.all > .time.clear {
