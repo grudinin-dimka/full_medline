@@ -549,7 +549,15 @@ export default {
 				this.loading.loader = false;
 			})
 			.catch((error) => {
-				console.log(error);
+				let debbugStory = {
+					title: "Ошибка.",
+					body: "При загрузке что-то пошло не так.",
+					type: "Error",
+				};
+				this.$store.commit("debuggerState", debbugStory);
+			})
+			.finally(() => {
+				sorted.sortByName("up", this.specializations);
 			});
 	},
 };

@@ -2,7 +2,7 @@
 	<table>
 		<thead>
 			<tr>
-				<th>
+				<!-- <th>
 					<div class="table-th-container">
 						<div class="table-th-name">ID</div>
 						<div
@@ -27,7 +27,7 @@
 							<icon-filter-on-reverse :width="22" :height="22" />
 						</div>
 					</div>
-				</th>
+				</th> -->
 				<th>
 					<div class="table-th-container">
 						<div class="table-th-name">Имя</div>
@@ -126,11 +126,11 @@
 				v-for="specialist in specialists"
 				:class="{ create: specialist.create, delete: specialist.delete }"
 			>
-				<td>
+				<!-- <td>
 					{{ specialist.id }}
-				</td>
+				</td> -->
 				<td>
-					{{ specialist.family + " " + specialist.name + " " + specialist.surname }}
+					{{ specialist.name }}
 				</td>
 				<td>
 					{{ specialist.specializations }}
@@ -222,12 +222,12 @@ export default {
 	data() {
 		return {
 			filters: {
-				id: {
-					status: true,
-					type: "default",
-				},
+				// id: {
+				// 	status: false,
+				// 	type: "default",
+				// },
 				name: {
-					status: false,
+					status: true,
 					type: "default",
 				},
 				specialization: {
@@ -318,20 +318,22 @@ tr.delete:hover > td {
 	background-color: rgba(255, 255, 255, 0.3);
 }
 
-th:nth-of-type(1) {
+th:nth-of-type(0) {
 	width: 50px;
 	min-width: 50px;
 }
 
+th:nth-of-type(1) {
+	min-width: 300px;
+	width: 40%;
+}
+
 th:nth-of-type(2) {
 	min-width: 300px;
+	width: 30%;
 }
 
 th:nth-of-type(3) {
-	min-width: 150px;
-}
-
-th:nth-of-type(4) {
 	min-width: 70px;
 }
 

@@ -90,7 +90,7 @@
 								</ul>
 							</td>
 						</tr>
-						<tr>
+						<tr v-if="specialist.profile.link !== '#'">
 							<td colspan="2" height="50px">
 								<a class="prodoctorov" :href="specialist.profile.link">
 									<span class="red">ПРО</span>

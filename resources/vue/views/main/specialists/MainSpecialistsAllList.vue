@@ -5,7 +5,7 @@
 		<div class="specialist-body">
 			<div class="specialist-body-options">
 				<div class="specialist-body-options-title">
-					{{ specialist.family + " " + specialist.name + " " + specialist.surname }}
+					{{ specialist.name }}
 				</div>
 				<div class="specialist-body-options-other">
 					<div class="specialist-body-options-other-block">
@@ -119,9 +119,9 @@ export default {
 	border-radius: 20px;
 	padding: 20px;
 
-	width: 1350px;
+	min-height: 312.7px;
 
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
+	width: 100%;
 	transition: all 0.2s;
 }
 
@@ -177,21 +177,21 @@ export default {
 }
 
 .specialist-body-link {
+	cursor: pointer;
+
 	margin-top: 10px;
+	margin-left: auto;
+
 	font-size: 16px;
 	color: var(--primary-color);
-	cursor: pointer;
+
+	width: 100px;
+
 	text-align: right;
 }
 
 .specialist-body-link:hover {
 	text-decoration: underline;
-}
-
-@media screen and (max-width: 1425px) {
-	.specialist {
-		width: 100%;
-	}
 }
 
 @media screen and (max-width: 775px) {

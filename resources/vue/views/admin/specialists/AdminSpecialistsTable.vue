@@ -3,7 +3,7 @@
 	<table>
 		<thead>
 			<tr>
-				<th>
+				<!-- <th>
 					<div class="table-th-container">
 						<div class="table-th-name">ID</div>
 						<div
@@ -28,7 +28,7 @@
 							<icon-filter-on :width="22" :height="22" />
 						</div>
 					</div>
-				</th>
+				</th> -->
 				<th>
 					<div class="table-th-container">
 						<div class="table-th-name">Название</div>
@@ -67,10 +67,10 @@
 				<td colspan="5" class="table-td-empty">Ничего нету...</td>
 			</tr>
 			<tr v-else v-for="value in array" :class="{ create: value.create, delete: value.delete }">
-				<td v-if="!value.create">
+				<!-- <td v-if="!value.create">
 					{{ value.id }}
 				</td>
-				<td v-else>?</td>
+				<td v-else>?</td> -->
 				<td>
 					{{ value.name }}
 				</td>
@@ -143,11 +143,11 @@ export default {
 		return {
 			filters: {
 				id: {
-					status: true,
+					status: false,
 					type: "default",
 				},
 				name: {
-					status: false,
+					status: true,
 					type: "default",
 				},
 			},
@@ -209,17 +209,17 @@ tr > th {
 	color: white;
 }
 
-tr > th:first-of-type {
+tr > th:nth-of-type(0) {
 	width: 50px;
 	min-width: 50px;
 }
 
-tr > th:nth-of-type(2) {
+tr > th:nth-of-type(1) {
 	width: 100%;
 	min-width: 500px;
 }
 
-tr > th:last-of-type {
+tr > th:nth-of-type(2) {
 	width: 300px;
 	min-width: 300px;
 }
@@ -229,7 +229,7 @@ tr > td {
 	border: 1px solid #3fbecd;
 }
 
-tr > td:first-of-type {
+tr > th:nth-of-type(0) {
 	text-align: center;
 }
 

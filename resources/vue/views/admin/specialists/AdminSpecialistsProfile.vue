@@ -832,133 +832,188 @@
 		/>
 	</block-once>
 
-	<block-two v-if="$route.params.id !== 'new'">
+	<template v-if="$route.params.id !== 'new'">
+		<block-two>
+			<!--____________________________________________________-->
+			<!--2. Специализации                                    -->
+			<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
+			<template #title-one>
+				<block-title>
+					<template #title>
+						СПЕЦИАЛИЗАЦИИ
+						<span v-show="loading.sections.specializations">
+							({{ specialist.connections.specializations.length }})
+						</span>
+					</template>
+					<template #buttons>
+						<icon-save
+							:width="28"
+							:height="28"
+							@click="saveSpecialistModular('specializations')"
+							v-if="false"
+						/>
+					</template>
+				</block-title>
+			</template>
+			<template #body-one>
+				<div class="profile-list" v-show="loading.sections.specializations">
+					<!-- Если специализации не выбраны -->
+					<div class="item-empty" v-if="specialist.connections.specializations.length == 0">
+						<div class="item-title">Пока тут ничего нет...</div>
+					</div>
+					<!-- Если специализации выбраны -->
+					<template v-else>
+						<div class="item">
+							<div>Название</div>
+						</div>
+						<div
+							class="item"
+							v-for="specialization in sortedConnectionsSpecializations"
+							:key="specialization.id"
+						>
+							<div class="item-title">
+								{{
+									sections.specializations.filter(
+										(item) => item.id == specialization.id_specialization
+									)[0].name
+								}}
+							</div>
+							<div class="item-priem"></div>
+							<div
+								class="item-close"
+								@click="removeArrValue('specializations', specialization)"
+							>
+								<icon-close :width="26" :height="26" />
+							</div>
+						</div>
+					</template>
+				</div>
+
+				<!-- Загрузчик специализаций -->
+				<loader-child
+					:isLoading="loading.loader.specializations"
+					:minHeight="100"
+					@loaderChildAfterLeave="loaderChildAfterLeave"
+				/>
+
+				<block-buttons>
+					<button-disabled v-if="this.specialist.profile.data.id.body == null">
+						Добавить
+					</button-disabled>
+					<button-default
+						@click="editSpecialization"
+						v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.body !== null"
+					>
+						Добавить
+					</button-default>
+					<button-claim @click="editSpecialization" v-if="$route.params.id === 'new'">
+						Добавить
+					</button-claim>
+				</block-buttons>
+			</template>
+			<!--____________________________________________________-->
+			<!--3. Клиники                                          -->
+			<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
+			<template #title-two>
+				<block-title>
+					<template #title>
+						КЛИНИКИ
+						<span v-show="loading.sections.clinics">
+							({{ specialist.connections.clinics.length }})
+						</span>
+					</template>
+					<template #buttons>
+						<icon-save
+							:width="28"
+							:height="28"
+							@click="saveSpecialistModular('clinics')"
+							v-if="false"
+						/>
+					</template>
+				</block-title>
+			</template>
+			<template #body-two>
+				<div class="profile-list" v-show="loading.sections.clinics">
+					<!-- Если клиники не выбраны -->
+					<div class="item-empty" v-if="specialist.connections.clinics.length == 0">
+						<div class="item-title">Пока тут ничего нет...</div>
+					</div>
+					<template v-else>
+						<div class="item">
+							<div>Название</div>
+							<div>Приём</div>
+							<div></div>
+						</div>
+						<!-- Если клиники выбраны -->
+						<div
+							class="item"
+							v-for="clinic in specialist.connections.clinics"
+							:key="clinic.id"
+						>
+							<div class="item-title">
+								{{ sections.clinics.filter((item) => item.id == clinic.id_clinic)[0].name }}
+							</div>
+							<div class="item-priem">
+								{{ clinic.priem ? `Да` : "Нет" }}
+							</div>
+							<div class="item-close" @click="removeArrValue('clinics', clinic)">
+								<icon-close :width="26" :height="26" />
+							</div>
+						</div>
+					</template>
+				</div>
+
+				<!-- Загрузчик клиник -->
+				<loader-child
+					:isLoading="loading.loader.clinics"
+					:minHeight="100"
+					@loaderChildAfterLeave="loaderChildAfterLeave"
+				/>
+
+				<block-buttons>
+					<button-disabled v-if="this.specialist.profile.data.id.body == null">
+						Добавить
+					</button-disabled>
+					<button-default
+						@click="editClinics"
+						v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.body !== null"
+					>
+						Добавить
+					</button-default>
+				</block-buttons>
+			</template>
+		</block-two>
+
 		<!--____________________________________________________-->
-		<!--2. Специализации                                    -->
+		<!--4. Сертификаты                                      -->
 		<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
-		<template #title-one>
+		<block-once :minHeight="200">
 			<block-title>
 				<template #title>
-					СПЕЦИАЛИЗАЦИИ
-					<span v-show="loading.sections.specializations">
-						({{ specialist.connections.specializations.length }})
+					СЕРТИФИКАТЫ
+					<span v-show="loading.sections.certificates">
+						({{ specialist.connections.certificates.length }})
 					</span>
 				</template>
 				<template #buttons>
 					<icon-save
 						:width="28"
 						:height="28"
-						@click="saveSpecialistModular('specializations')"
+						@click="saveSpecialistModular('certificates')"
 						v-if="false"
 					/>
 				</template>
 			</block-title>
-		</template>
-		<template #body-one>
-			<div class="profile-list" v-show="loading.sections.specializations">
-				<!-- Если специализации не выбраны -->
-				<div class="item-empty" v-if="specialist.connections.specializations.length == 0">
-					<div class="item-title">Пока тут ничего нет...</div>
-				</div>
-				<!-- Если специализации выбраны -->
-				<template v-else>
-					<div class="item">
-						<div>Название</div>
-					</div>
-					<div
-						class="item"
-						v-for="specialization in sortedConnectionsSpecializations"
-						:key="specialization.id"
-					>
-						<div class="item-title">
-							{{
-								sections.specializations.filter(
-									(item) => item.id == specialization.id_specialization
-								)[0].name
-							}}
-						</div>
-						<div class="item-priem"></div>
-						<div
-							class="item-close"
-							@click="removeArrValue('specializations', specialization)"
-						>
-							<icon-close :width="26" :height="26" />
-						</div>
-					</div>
-				</template>
-			</div>
 
-			<!-- Загрузчик специализаций -->
-			<loader-child
-				:isLoading="loading.loader.specializations"
-				:minHeight="100"
-				@loaderChildAfterLeave="loaderChildAfterLeave"
+			<admin-specialists-table
+				v-show="loading.sections.certificates"
+				:array="specialist.connections.certificates"
+				@useFilter="filterArray"
+				@touchEditArrValue="editArrayValue('edit', 'certificates', $event)"
+				@touchRemoveArrValue="updateDeleteValue('certificates', $event)"
 			/>
 
-			<block-buttons>
-				<button-disabled v-if="this.specialist.profile.data.id.body == null">
-					Добавить
-				</button-disabled>
-				<button-default
-					@click="editSpecialization"
-					v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.body !== null"
-				>
-					Добавить
-				</button-default>
-				<button-claim @click="editSpecialization" v-if="$route.params.id === 'new'">
-					Добавить
-				</button-claim>
-			</block-buttons>
-		</template>
-		<!--____________________________________________________-->
-		<!--3. Клиники                                          -->
-		<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
-		<template #title-two>
-			<block-title>
-				<template #title>
-					КЛИНИКИ
-					<span v-show="loading.sections.clinics">
-						({{ specialist.connections.clinics.length }})
-					</span>
-				</template>
-				<template #buttons>
-					<icon-save
-						:width="28"
-						:height="28"
-						@click="saveSpecialistModular('clinics')"
-						v-if="false"
-					/>
-				</template>
-			</block-title>
-		</template>
-		<template #body-two>
-			<div class="profile-list" v-show="loading.sections.clinics">
-				<!-- Если клиники не выбраны -->
-				<div class="item-empty" v-if="specialist.connections.clinics.length == 0">
-					<div class="item-title">Пока тут ничего нет...</div>
-				</div>
-				<template v-else>
-					<div class="item">
-						<div>Название</div>
-						<div>Приём</div>
-						<div></div>
-					</div>
-					<!-- Если клиники выбраны -->
-					<div class="item" v-for="clinic in specialist.connections.clinics" :key="clinic.id">
-						<div class="item-title">
-							{{ sections.clinics.filter((item) => item.id == clinic.id_clinic)[0].name }}
-						</div>
-						<div class="item-priem">
-							{{ clinic.priem ? `Да` : "Нет" }}
-						</div>
-						<div class="item-close" @click="removeArrValue('clinics', clinic)">
-							<icon-close :width="26" :height="26" />
-						</div>
-					</div>
-				</template>
-			</div>
-
-			<!-- Загрузчик клиник -->
+			<!-- Загрузчик профиля -->
 			<loader-child
 				:isLoading="loading.loader.clinics"
 				:minHeight="100"
@@ -970,158 +1025,109 @@
 					Добавить
 				</button-disabled>
 				<button-default
-					@click="editClinics"
+					@click="editArrayValue('create', 'certificates', null)"
 					v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.body !== null"
 				>
 					Добавить
 				</button-default>
 			</block-buttons>
-		</template>
-	</block-two>
+		</block-once>
+		<!--____________________________________________________-->
+		<!--5. Образование                                      -->
+		<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
+		<block-once :minHeight="200">
+			<block-title>
+				<template #title>
+					ОБРАЗОВАНИЕ
+					<span v-show="loading.sections.educations">
+						({{ specialist.connections.educations.length }})
+					</span>
+				</template>
+				<template #buttons>
+					<icon-save
+						:width="28"
+						:height="28"
+						@click="saveSpecialistModular('educations')"
+						v-if="false"
+					/>
+				</template>
+			</block-title>
 
-	<!--____________________________________________________-->
-	<!--4. Сертификаты                                      -->
-	<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
-	<block-once v-if="$route.params.id !== 'new'" :minHeight="200">
-		<block-title>
-			<template #title>
-				СЕРТИФИКАТЫ
-				<span v-show="loading.sections.certificates">
-					({{ specialist.connections.certificates.length }})
-				</span>
-			</template>
-			<template #buttons>
-				<icon-save
-					:width="28"
-					:height="28"
-					@click="saveSpecialistModular('certificates')"
-					v-if="false"
-				/>
-			</template>
-		</block-title>
+			<admin-specialists-table
+				v-show="loading.sections.educations"
+				:array="getSpecialistEducations"
+				@touchEditArrValue="editArrayValue('edit', 'educations', $event)"
+				@touchRemoveArrValue="updateDeleteValue('educations', $event)"
+			/>
 
-		<admin-specialists-table
-			v-show="loading.sections.certificates"
-			:array="specialist.connections.certificates"
-			@useFilter="filterArray"
-			@touchEditArrValue="editArrayValue('edit', 'certificates', $event)"
-			@touchRemoveArrValue="updateDeleteValue('certificates', $event)"
-		/>
+			<!-- Загрузчик профиля -->
+			<loader-child
+				:isLoading="loading.loader.clinics"
+				:minHeight="100"
+				@loaderChildAfterLeave="loaderChildAfterLeave"
+			/>
 
-		<!-- Загрузчик профиля -->
-		<loader-child
-			:isLoading="loading.loader.clinics"
-			:minHeight="100"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
-		/>
+			<block-buttons>
+				<button-disabled v-if="this.specialist.profile.data.id.body == null">
+					Добавить
+				</button-disabled>
+				<button-default
+					@click="editArrayValue('create', 'educations', null)"
+					v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.body !== null"
+				>
+					Добавить
+				</button-default>
+			</block-buttons>
+		</block-once>
 
-		<block-buttons>
-			<button-disabled v-if="this.specialist.profile.data.id.body == null">
-				Добавить
-			</button-disabled>
-			<button-default
-				@click="editArrayValue('create', 'certificates', null)"
-				v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.body !== null"
-			>
-				Добавить
-			</button-default>
-		</block-buttons>
-	</block-once>
-	<!--____________________________________________________-->
-	<!--5. Образование                                      -->
-	<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
-	<block-once v-if="$route.params.id !== 'new'" :minHeight="200">
-		<block-title>
-			<template #title>
-				ОБРАЗОВАНИЕ
-				<span v-show="loading.sections.educations">
-					({{ specialist.connections.educations.length }})
-				</span>
-			</template>
-			<template #buttons>
-				<icon-save
-					:width="28"
-					:height="28"
-					@click="saveSpecialistModular('educations')"
-					v-if="false"
-				/>
-			</template>
-		</block-title>
+		<!--____________________________________________________-->
+		<!--6. Места работы                                     -->
+		<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
+		<block-once :minHeight="200">
+			<block-title>
+				<template #title>
+					МЕСТА РАБОТЫ
+					<span v-show="loading.sections.works">
+						({{ specialist.connections.works.length }})
+					</span>
+				</template>
+				<template #buttons>
+					<icon-save
+						:width="28"
+						:height="28"
+						@click="saveSpecialistModular('works')"
+						v-if="false"
+					/>
+				</template>
+			</block-title>
 
-		<admin-specialists-table
-			v-show="loading.sections.educations"
-			:array="getSpecialistEducations"
-			@touchEditArrValue="editArrayValue('edit', 'educations', $event)"
-			@touchRemoveArrValue="updateDeleteValue('educations', $event)"
-		/>
+			<admin-specialists-table
+				v-show="loading.sections.works"
+				:array="getSpecialistWorks"
+				@touchEditArrValue="editArrayValue('edit', 'works', $event)"
+				@touchRemoveArrValue="updateDeleteValue('works', $event)"
+			/>
 
-		<!-- Загрузчик профиля -->
-		<loader-child
-			:isLoading="loading.loader.clinics"
-			:minHeight="100"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
-		/>
+			<!-- Загрузчик профиля -->
+			<loader-child
+				:isLoading="loading.loader.clinics"
+				:minHeight="100"
+				@loaderChildAfterLeave="loaderChildAfterLeave"
+			/>
 
-		<block-buttons>
-			<button-disabled v-if="this.specialist.profile.data.id.body == null">
-				Добавить
-			</button-disabled>
-			<button-default
-				@click="editArrayValue('create', 'educations', null)"
-				v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.body !== null"
-			>
-				Добавить
-			</button-default>
-		</block-buttons>
-	</block-once>
-
-	<!--____________________________________________________-->
-	<!--6. Места работы                                     -->
-	<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
-	<block-once v-if="$route.params.id !== 'new'" :minHeight="200">
-		<block-title>
-			<template #title>
-				МЕСТА РАБОТЫ
-				<span v-show="loading.sections.works">
-					({{ specialist.connections.works.length }})
-				</span>
-			</template>
-			<template #buttons>
-				<icon-save
-					:width="28"
-					:height="28"
-					@click="saveSpecialistModular('works')"
-					v-if="false"
-				/>
-			</template>
-		</block-title>
-
-		<admin-specialists-table
-			v-show="loading.sections.works"
-			:array="getSpecialistWorks"
-			@touchEditArrValue="editArrayValue('edit', 'works', $event)"
-			@touchRemoveArrValue="updateDeleteValue('works', $event)"
-		/>
-
-		<!-- Загрузчик профиля -->
-		<loader-child
-			:isLoading="loading.loader.clinics"
-			:minHeight="100"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
-		/>
-
-		<block-buttons>
-			<button-disabled v-if="this.specialist.profile.data.id.body == null">
-				Добавить
-			</button-disabled>
-			<button-default
-				@click="editArrayValue('create', 'works', null)"
-				v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.body !== null"
-			>
-				Добавить
-			</button-default>
-		</block-buttons>
-	</block-once>
+			<block-buttons>
+				<button-disabled v-if="this.specialist.profile.data.id.body == null">
+					Добавить
+				</button-disabled>
+				<button-default
+					@click="editArrayValue('create', 'works', null)"
+					v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.body !== null"
+				>
+					Добавить
+				</button-default>
+			</block-buttons>
+		</block-once>
+	</template>
 </template>
 
 <script>
@@ -1169,6 +1175,7 @@ import axios from "axios";
 
 import { RouterView, RouterLink } from "vue-router";
 import validate from "../../../services/validate";
+import sorted from "../../../services/sorted";
 
 export default {
 	components: {
@@ -1696,11 +1703,15 @@ export default {
 		},
 		/* HACK Сделать сортировку по алфавиту */
 		getSortedSpecializations() {
-			return [...this.sections.specializations].splice(
+			let specializations = [...this.sections.specializations].splice(
 				(this.paginationSpecializations.pages.current - 1) *
 					this.paginationSpecializations.elements.range,
 				this.paginationSpecializations.elements.range
 			);
+
+			sorted.sortByName("up", specializations);
+
+			return specializations;
 		},
 		/* _____________________________________________________*/
 		/* 2. Клиники                                           */

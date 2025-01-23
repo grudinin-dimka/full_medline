@@ -288,6 +288,9 @@ export default {
 			})
 			.catch((error) => {
 				console.log(error);
+			})
+			.finally(() => {
+				sorted.sortByName("up", this.specialists);
 			});
 	},
 };

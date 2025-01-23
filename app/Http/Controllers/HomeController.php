@@ -161,6 +161,8 @@ class HomeController extends Controller
             $specialists[$key]->url = makeUrl($specialists[$key]->family . " " . $specialists[$key]->name . " " . $specialists[$key]->surname);
             $specialists[$key]->path = Storage::url('specialists/' . $value->filename);      
             $specialists[$key]->specialization = $specializations;      
+
+            $specialists[$key]->name = $specialists[$key]->family . " " . $specialists[$key]->name . " " . $specialists[$key]->surname;
          };
 
          return response()->json([
@@ -268,6 +270,7 @@ class HomeController extends Controller
          $specializationsNames = substr($specializationsNames, 0, -2);
 
          $value->specializations = $specializationsNames;
+         $value->name = $value->family . " " . $value->name . " " . $value->surname;;
       };
 
       // $SpecialistSpecializations = SpecialistSpecialization::where('id_specialist', 1)->get();

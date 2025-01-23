@@ -26,10 +26,9 @@
 				</div>
 			</div>
 
-			<specialists-list
-				:specialists="getFilteredSpecialists"
-				v-if="getFilteredSpecialists.length > 0"
-			/>
+			<div class="animation-list" v-if="getFilteredSpecialists.length > 0">
+				<specialists-list :specialists="getFilteredSpecialists" />
+			</div>
 
 			<Empty v-else />
 		</template>
@@ -52,6 +51,7 @@ import Empty from "../../../components/includes/Empty.vue";
 
 import { RouterLink } from "vue-router";
 import axios from "axios";
+import sorted from "../../../services/sorted";
 
 export default {
 	components: {
@@ -85,8 +85,6 @@ export default {
 		getFilteredSpecialists() {
 			let specialists = this.specialists;
 
-			if (this.filterSpecialization.all) return specialists;
-
 			if (this.filterSpecialization.selected !== null) {
 				specialists = specialists.filter((specialist) => {
 					if (Array.isArray(specialist.specialization)) {
@@ -106,6 +104,8 @@ export default {
 				});
 			}
 
+			sorted.sortByName("up", specialists);
+
 			return specialists;
 		},
 		calcSpecializations() {
@@ -114,6 +114,10 @@ export default {
 			this.specialists.forEach((specialist) => {
 				if (Array.isArray(specialist.specialization)) {
 					specialist.specialization.forEach((spec) => {
+						if (specalizations.includes(spec.name)) {
+							return;
+						}
+
 						specalizations.push(spec.name);
 					});
 
@@ -127,6 +131,8 @@ export default {
 					specalizations.push(specialist.specialization);
 				}
 			});
+
+			sorted.sortString("up", specalizations);
 
 			return specalizations;
 		},
@@ -187,6 +193,17 @@ export default {
 </script>
 
 <style scoped>
+.animation-list {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+
+	width: 1350px;
+	min-height: 400px;
+
+	animation: show-bottom-to-top-15 0.5s ease-in-out;
+}
+
 .specialists-filters {
 	display: flex;
 	flex-wrap: wrap;
@@ -215,6 +232,7 @@ export default {
 }
 
 @media screen and (width < 1450px) {
+	.animation-list,
 	.specialists-filters {
 		width: 100%;
 	}

@@ -79,6 +79,10 @@ export default {
 	},
 	watch: {
 		"filter.status"(newQuery) {
+			if (newQuery) {
+				this.name = "";
+			}
+
 			nextTick(() => {
 				this.changeFilterBodyPosition();
 			});
@@ -244,6 +248,30 @@ export default {
 	border-radius: 10px;
 
 	font-size: 1.125rem;
+}
+
+.filter > .filter-body > .container-input > .clear {
+	position: absolute;
+	top: 9px;
+	right: 15px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 5px;
+
+	height: 58px;
+
+	border-radius: 10px;
+	border: 0px solid white;
+
+	font-size: 1.125rem;
+	color: white;
+	background-color: rgba(0, 0, 0, 0);
+}
+
+.filter > .filter-body > .container-input > .clear > svg {
+	fill: rgba(0, 0, 0, 1);
 }
 
 .filter > .filter-body > .container-buttons {

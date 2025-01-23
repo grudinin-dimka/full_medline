@@ -284,7 +284,7 @@ export default {
 
 			if (this.filters.fio.data.body !== "") {
 				filteredShedules = filteredShedules.filter((item) => {
-					if (item.name.indexOf(this.filters.fio.data.body) !== -1) {
+					if (item.name.toLowerCase().includes(this.filters.fio.data.body.toLowerCase())) {
 						return item;
 					}
 				});

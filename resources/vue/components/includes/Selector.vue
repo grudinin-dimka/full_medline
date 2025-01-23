@@ -78,6 +78,11 @@ export default {
 		};
 	},
 	watch: {
+		isOpen(value) {
+			if (value) {
+				this.name = "";
+			}
+		},
 		isFocus(value) {
 			if (value) {
 				this.isOpen = true;
