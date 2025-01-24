@@ -1,8 +1,17 @@
 <template>
-	<div class="select" ref="selector">
+	<div
+		class="select"
+		ref="selector"
+		:class="{
+			error: type === 'error',
+			create: type === 'create',
+		}"
+	>
 		<div class="control" :class="{ open: isOpen }">
-			<div class="label" @click="isOpen = !isOpen">{{ selected ? selected : placeholder }}</div>
-			<div class="clear" v-if="selected" @click="$emit('clear')">
+			<div class="label" @click="isOpen = !isOpen">
+				{{ selected !== "" ? list.find((item) => item.value === selected).label : placeholder }}
+			</div>
+			<div class="clear" v-if="selected !== ''" @click="$emit('clear')">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					height="20px"
@@ -28,18 +37,17 @@
 			</div>
 		</div>
 		<div class="menu" :class="{ open: isOpen }">
-			<div class="input">
+			<div class="input" v-if="filter">
 				<input type="text" placeholder="Введите название" v-model="name" />
 			</div>
 			<ul>
 				<li
 					v-for="item in getFilteredList"
-					:key="item"
 					v-if="getFilteredList.length > 0"
-					:class="{ active: item == selected }"
-					@click="select(item)"
+					:class="{ active: item.value === selected }"
+					@click="select(item.value)"
 				>
-					{{ item }}
+					{{ item.label }}
 				</li>
 				<li v-else class="empty">Ничего нет</li>
 			</ul>
@@ -61,13 +69,21 @@ export default {
 			required: true,
 		},
 		selected: {
-			type: String,
+			type: [String, Number],
 			default: "",
 			required: true,
 		},
 		placeholder: {
 			type: String,
 			default: "Ничего не выбрано",
+		},
+		type: {
+			type: String,
+			default: "default",
+		},
+		filter: {
+			type: Boolean,
+			default: true,
 		},
 	},
 	data() {
@@ -95,20 +111,16 @@ export default {
 
 			/* Фильтрация по вводу значения */
 			filteredList = filteredList.filter((item) => {
-				if (item.toLowerCase().includes(this.name.toLowerCase())) {
-					return item;
-				}
+				return item?.label.toLowerCase().includes(this.name.toLowerCase());
 			});
-
-			sorted.sortByName("up", filteredList);
 
 			return filteredList;
 		},
 	},
 	methods: {
-		select(item) {
+		select(value) {
 			this.isOpen = false;
-			this.$emit("select", item);
+			this.$emit("select", value);
 		},
 		/* Обработка клика вне компонента */
 		handleClickOutside(event) {
@@ -188,6 +200,27 @@ export default {
 	font-size: 1.125rem;
 }
 
+.select.error > .control {
+	border: 2px solid var(--input-border-color-error);
+	border-radius: 10px;
+	padding: 0px 10px 0px 10px;
+
+	height: 58px;
+
+	caret-color: var(--input-border-color-active);
+	background-color: var(--input-background-color-error);
+
+	font-size: 20px;
+	font-family: "Rubik";
+
+	transition: all 0.2s;
+}
+
+.select.create > .control.open {
+	border: 2px solid #44a533;
+}
+
+/* Меню */
 .menu {
 	display: flex;
 	flex-direction: column;

@@ -218,8 +218,17 @@ export default {
 	cursor: pointer;
 	padding: 5px;
 
-	border: 2px solid var(--input-border-color-inactive);
-	border-radius: 10px;
+	color: rgb(150, 150, 150);
+
+	/* border-top: 2px;
+	border-top-color: rgba(255, 255, 255, 0);
+	border-right: 2px;
+	border-right-color: rgba(255, 255, 255, 0);
+	border-bottom: 2px;
+	border-bottom-color: var(--input-border-color-inactive);
+	border-left: 2px;
+	border-left-color: rgba(255, 255, 255, 0);
+	border-style: solid; */
 
 	font-size: 1.125rem;
 
@@ -227,8 +236,16 @@ export default {
 }
 
 .specialists-filters > .item:is(:hover, .active) {
-	border: 2px solid var(--input-border-color-active);
-	background-color: #f2feff;
+	color: black;
+	/* border-top: 2px;
+	border-top-color: rgba(255, 255, 255, 0);
+	border-right: 2px;
+	border-right-color: rgba(255, 255, 255, 0);
+	border-bottom: 2px;
+	border-bottom-color: var(--primary-color);
+	border-left: 2px;
+	border-left-color: rgba(255, 255, 255, 0);
+	border-style: solid; */
 }
 
 @media screen and (width < 1450px) {

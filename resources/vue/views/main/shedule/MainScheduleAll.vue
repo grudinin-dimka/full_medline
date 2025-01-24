@@ -233,8 +233,11 @@ export default {
 			let specializations = [];
 
 			this.shedules.forEach((shedule) => {
-				if (!specializations.includes(shedule.specializations))
-					specializations.push(shedule.specializations);
+				if (!specializations.find((item) => item.value === shedule.specializations))
+					specializations.push({
+						value: shedule.specializations,
+						label: shedule.specializations,
+					});
 			});
 
 			sorted.sortString("up", specializations);

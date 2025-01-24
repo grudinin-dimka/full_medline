@@ -1,5 +1,5 @@
 <template>
-	<div class="block-once" ref="blockOnce" :style="{ minHeight: `${minHeight}px` }">
+	<div class="block-once-hide" ref="blockOnceHide" :style="{ minHeight: `${minHeight}px` }">
 		<slot></slot>
 	</div>
 </template>
@@ -16,11 +16,12 @@ export default {
 </script>
 
 <style>
-.block-once {
+.block-once-hide {
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
 
+	overflow: hidden;
 	box-sizing: border-box;
 
 	background-color: white;

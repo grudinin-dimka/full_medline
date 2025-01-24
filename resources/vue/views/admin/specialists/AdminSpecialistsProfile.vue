@@ -654,16 +654,38 @@
 						<span v-if="specialist.profile.data.category.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #select-one>
-						<select
-							v-model="specialist.profile.data.category.body"
-							:class="{ error: specialist.profile.errors.category.status }"
-							@blur="checkSpecialistInput('category', 'select')"
-						>
-							<option value="" disabled>Ничего не выбрано...</option>
-							<option value="Первая">Первая</option>
-							<option value="Вторая">Вторая</option>
-							<option value="Высшая">Высшая</option>
-						</select>
+						<Selector
+							:placeholder="'Выберите категорию'"
+							:type="
+								specialist.profile.errors.category.status
+									? 'error'
+									: $route.params.id == 'new'
+									? 'create'
+									: 'default'
+							"
+							:filter="false"
+							:list="[
+								{
+									value: 'Нет категории',
+									label: 'Нет категории',
+								},
+								{
+									value: 'Первая',
+									label: 'Первая',
+								},
+								{
+									value: 'Вторая',
+									label: 'Вторая',
+								},
+								{
+									value: 'Высшая',
+									label: 'Высшая',
+								},
+							]"
+							:selected="specialist.profile.data.category.body"
+							@select="specialist.profile.data.category.body = $event"
+							@clear="specialist.profile.data.category.body = ''"
+						></Selector>
 					</template>
 					<template #error-one>
 						<span class="error" v-if="specialist.profile.errors.category.status">
@@ -765,15 +787,30 @@
 						<span v-if="specialist.profile.data.adultDoctor.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #input-one>
-						<select
-							v-model="specialist.profile.data.adultDoctor.body"
-							:class="{ error: specialist.profile.errors.adultDoctor.status }"
-							@blur="checkSpecialistInput('adultDoctor', 'select')"
-						>
-							<option value="" disabled>Ничего не выбрано...</option>
-							<option :value="0">Нет</option>
-							<option :value="1">Да</option>
-						</select>
+						<Selector
+							:placeholder="'Выберите статус'"
+							:type="
+								specialist.profile.errors.adultDoctor.status
+									? 'error'
+									: $route.params.id == 'new'
+									? 'create'
+									: 'default'
+							"
+							:filter="false"
+							:list="[
+								{
+									value: 0,
+									label: 'Нет',
+								},
+								{
+									value: 1,
+									label: 'Да',
+								},
+							]"
+							:selected="specialist.profile.data.adultDoctor.body"
+							@select="specialist.profile.data.adultDoctor.body = $event"
+							@clear="specialist.profile.data.adultDoctor.body = ''"
+						></Selector>
 					</template>
 					<template #error-one>
 						<span class="error" v-if="specialist.profile.errors.adultDoctor.status">
@@ -785,16 +822,30 @@
 						<span v-if="specialist.profile.data.childrenDoctor.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #input-two>
-						<select
-							autocomplete="off"
-							v-model="specialist.profile.data.childrenDoctor.body"
-							:class="{ error: specialist.profile.errors.childrenDoctor.status }"
-							@blur="checkSpecialistInput('childrenDoctor', 'select')"
-						>
-							<option value="" disabled>Ничего не выбрано...</option>
-							<option :value="0">Нет</option>
-							<option :value="1">Да</option>
-						</select>
+						<Selector
+							:placeholder="'Выберите статус'"
+							:type="
+								specialist.profile.errors.childrenDoctor.status
+									? 'error'
+									: $route.params.id == 'new'
+									? 'create'
+									: 'default'
+							"
+							:filter="false"
+							:list="[
+								{
+									value: 0,
+									label: 'Нет',
+								},
+								{
+									value: 1,
+									label: 'Да',
+								},
+							]"
+							:selected="specialist.profile.data.childrenDoctor.body"
+							@select="specialist.profile.data.childrenDoctor.body = $event"
+							@clear="specialist.profile.data.childrenDoctor.body = ''"
+						></Selector>
 					</template>
 					<template #error-two>
 						<span class="error" v-if="specialist.profile.errors.childrenDoctor.status">
@@ -1135,7 +1186,7 @@ import AdminModal from "../../../components/includes/admin/AdminModal.vue";
 import AdminSpecialistsTable from "./AdminSpecialistsTable.vue";
 
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
-
+import Selector from "../../../components/includes/Selector.vue";
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
 
 import ElementInputLabel from "../../../components/ui/admin/elements/ElementInputLabel.vue";
@@ -1182,6 +1233,7 @@ export default {
 		AdminModal,
 		AdminSpecialistsTable,
 		InfoBar,
+		Selector,
 		LoaderChild,
 		ElementInputLabel,
 		BlockOnce,
