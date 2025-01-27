@@ -9,9 +9,13 @@
 	>
 		<div class="control" :class="{ open: isOpen }">
 			<div class="label" @click="isOpen = !isOpen">
-				{{ selected !== "" ? list.find((item) => item.value === selected).label : placeholder }}
+				{{
+					modelValue !== ""
+						? list.find((item) => item.value === modelValue).label
+						: placeholder
+				}}
 			</div>
-			<div class="clear" v-if="selected !== ''" @click="$emit('clear')">
+			<div class="clear" v-if="modelValue !== ''" @click="$emit('update:modelValue', '')">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					height="20px"
@@ -44,7 +48,7 @@
 				<li
 					v-for="item in getFilteredList"
 					v-if="getFilteredList.length > 0"
-					:class="{ active: item.value === selected }"
+					:class="{ active: item.value === modelValue }"
 					@click="select(item.value)"
 				>
 					{{ item.label }}
@@ -63,14 +67,14 @@ export default {
 		sorted,
 	},
 	props: {
+		modelValue: {
+			type: [String, Number],
+			default: "",
+			required: true,
+		},
 		list: {
 			type: Array,
 			default: [],
-			required: true,
-		},
-		selected: {
-			type: [String, Number],
-			default: "",
 			required: true,
 		},
 		placeholder: {
@@ -114,13 +118,15 @@ export default {
 				return item?.label.toLowerCase().includes(this.name.toLowerCase());
 			});
 
+			sorted.sortString("up", filteredList);
+
 			return filteredList;
 		},
 	},
 	methods: {
 		select(value) {
 			this.isOpen = false;
-			this.$emit("select", value);
+			this.$emit("update:modelValue", value);
 		},
 		/* Обработка клика вне компонента */
 		handleClickOutside(event) {

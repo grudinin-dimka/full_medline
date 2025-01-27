@@ -68,11 +68,9 @@
 			</div>
 			<div class="container-select">
 				<Selector
+					v-model="filters.specialization.data.body"
 					:placeholder="'Выберите специализацию'"
 					:list="getFormatSpecializations"
-					:selected="filters.specialization.data.body"
-					@select="filters.specialization.data.body = $event"
-					@clear="filters.specialization.data.body = ''"
 				></Selector>
 			</div>
 		</div>

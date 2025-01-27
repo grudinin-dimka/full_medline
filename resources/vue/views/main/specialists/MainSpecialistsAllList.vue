@@ -123,6 +123,7 @@ export default {
 
 	width: 100%;
 	transition: all 0.2s;
+	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 .specialist > img {

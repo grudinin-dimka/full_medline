@@ -244,7 +244,7 @@
 			/>
 
 			<pagination
-				v-if="clinics.length > 0"
+				v-if="clinics.length > paginationClinics.elements.range"
 				:arrayLength="clinics.length"
 				:settings="paginationClinics"
 				@changePage="changePageClinics"

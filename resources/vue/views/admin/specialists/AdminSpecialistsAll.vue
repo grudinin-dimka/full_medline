@@ -22,7 +22,7 @@
 			/>
 
 			<pagination
-				v-if="specialists.length > 0"
+				v-if="specialists.length > paginationSpecialists.elements.range"
 				:arrayLength="specialists.length"
 				:settings="paginationSpecialists"
 				@changePage="changePageSpecialists"

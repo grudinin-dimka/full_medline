@@ -655,6 +655,7 @@
 					</template>
 					<template #select-one>
 						<Selector
+							v-model="specialist.profile.data.category.body"
 							:placeholder="'Выберите категорию'"
 							:type="
 								specialist.profile.errors.category.status
@@ -682,9 +683,6 @@
 									label: 'Высшая',
 								},
 							]"
-							:selected="specialist.profile.data.category.body"
-							@select="specialist.profile.data.category.body = $event"
-							@clear="specialist.profile.data.category.body = ''"
 						></Selector>
 					</template>
 					<template #error-one>
@@ -788,6 +786,7 @@
 					</template>
 					<template #input-one>
 						<Selector
+							v-model="specialist.profile.data.adultDoctor.body"
 							:placeholder="'Выберите статус'"
 							:type="
 								specialist.profile.errors.adultDoctor.status
@@ -807,9 +806,6 @@
 									label: 'Да',
 								},
 							]"
-							:selected="specialist.profile.data.adultDoctor.body"
-							@select="specialist.profile.data.adultDoctor.body = $event"
-							@clear="specialist.profile.data.adultDoctor.body = ''"
 						></Selector>
 					</template>
 					<template #error-one>
@@ -823,6 +819,7 @@
 					</template>
 					<template #input-two>
 						<Selector
+							v-model="specialist.profile.data.childrenDoctor.body"
 							:placeholder="'Выберите статус'"
 							:type="
 								specialist.profile.errors.childrenDoctor.status
@@ -842,9 +839,6 @@
 									label: 'Да',
 								},
 							]"
-							:selected="specialist.profile.data.childrenDoctor.body"
-							@select="specialist.profile.data.childrenDoctor.body = $event"
-							@clear="specialist.profile.data.childrenDoctor.body = ''"
 						></Selector>
 					</template>
 					<template #error-two>

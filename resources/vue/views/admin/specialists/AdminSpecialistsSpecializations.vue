@@ -71,7 +71,7 @@
 			/>
 
 			<pagination
-				v-if="specializations.length > 0"
+				v-if="specializations.length > paginationSpecializations.elements.range"
 				:arrayLength="specializations.length"
 				:settings="paginationSpecializations"
 				@changePage="changePageSpecializations"
@@ -414,6 +414,21 @@ export default {
 		addSpecialization() {
 			if (this.checkModalInputsAll(["name"])) return;
 			try {
+				if (
+					this.specializations.some(
+						(item) => item.name === this.currentSpecialization.data.name.body
+					)
+				) {
+					let debbugStory = {
+						title: "Ошибка.",
+						body: "Такая специализация уже существует.",
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+
+					return;
+				}
+
 				this.specializations.push({
 					id: shared.getMaxId(this.specializations) + 1,
 					name: this.currentSpecialization.data.name.body,
