@@ -92,15 +92,21 @@
 						</li>
 					</ul>
 				</div>
-
-				<!-- <tr v-if="specialist.profile.link !== '#'">
-					<td colspan="2" height="50px">
-						<a class="prodoctorov" :href="specialist.profile.link">
-							<span class="red">ПРО</span>
-							<span class="blue">ДОКТОРОВ</span>
-						</a>
-					</td>
-				</tr> -->
+				<div class="item links" v-if="specialist.profile.link !== '#'">
+					<div class="label">Ссылки</div>
+					<ul>
+						<li>
+							<article>
+								<div>
+									<a class="prodoctorov" :href="specialist.profile.link">
+										<span class="red">ПРО</span>
+										<span class="blue">ДОКТОРОВ</span> </a
+									>.
+								</div>
+							</article>
+						</li>
+					</ul>
+				</div>
 			</div>
 		</div>
 
@@ -329,10 +335,7 @@ export default {
 a.prodoctorov {
 	box-sizing: border-box;
 
-	border: 2px solid var(--input-border-color-inactive);
 	border-radius: 50px;
-	padding: 10px;
-	width: 200px;
 
 	font-size: 18px;
 	text-decoration: none;
@@ -342,15 +345,16 @@ a.prodoctorov {
 }
 
 a.prodoctorov:hover {
-	border: 2px solid #ec9d9e;
-	background-color: #fff0f0;
+	text-decoration: underline;
+	text-decoration-thickness: 2px;
+	text-decoration-color: #117cc0;
 }
 
-a.prodoctorov .red {
+:is(a.prodoctorov, li > article > div) .red {
 	color: #ec2227;
 }
 
-a.prodoctorov .blue {
+:is(a.prodoctorov, li > article > div) .blue {
 	color: #117cc0;
 }
 
@@ -370,6 +374,18 @@ a.prodoctorov .blue {
 @media screen and (width <= 900px) {
 	.container-specialist-profile {
 		grid-template-columns: 1fr;
+	}
+
+	.specialist-profile > .item {
+		padding: 0px 0px;
+	}
+
+	.specialist-profile > .item > ul {
+		padding: 0px 0px 0px 20px;
+	}
+
+	.specialist-profile > .item > ul > li > article {
+		grid-template-columns: 175px 1fr;
 	}
 }
 
