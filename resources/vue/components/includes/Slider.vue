@@ -122,6 +122,11 @@ export default {
 }
 
 .carousel__pagination-button::after {
+	border-radius: 30px;
+	margin: 0px 5px;
+
+	height: 10px;
+	width: 10px;
 	background-color: rgba(0, 171, 189, 0.5);
 }
 

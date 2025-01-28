@@ -238,7 +238,8 @@ export default {
 					});
 			});
 
-			sorted.sortString("up", specializations);
+			sorted.sortStringByKey("up", specializations, "label");
+
 			return specializations;
 		},
 		/* Получение всех специализаций */

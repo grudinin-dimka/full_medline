@@ -345,6 +345,10 @@ export default {
 	margin-top: 10px;
 }
 
+.contacts-main > .item > .info > .body > :is(.mail, .phone, .address) > ul > li > svg {
+	flex: 0 0 20px;
+}
+
 .contacts-main > .item > .info > .body > :is(.mail, .phone, .address) > ul > li > a {
 	text-decoration: none;
 	text-decoration-color: white;

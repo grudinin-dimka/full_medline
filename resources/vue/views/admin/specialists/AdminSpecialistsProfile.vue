@@ -20,11 +20,9 @@
 					<div></div>
 					<div>Название</div>
 				</label>
-				<!-- HACK Сделать соритровку по алфавиту -->
 				<label
 					class="item"
 					v-for="(specialization, index) in getSortedSpecializations"
-					:key="specialization.id"
 					:class="{ active: cheked.specializations.includes(specialization.id) }"
 				>
 					<div>
@@ -738,7 +736,7 @@
 						<span :class="{ create: $route.params.id === 'new' }">НАЧАЛО КАРЪЕРЫ</span>
 					</template>
 					<template #title-one>
-						<span>ДАТА*</span>
+						<span>ДАТА* ({{ getAge(specialist.profile.data.startWorkAge.body) }} лет)</span>
 						<span v-if="specialist.profile.data.startWorkAge.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #input-one>
@@ -911,11 +909,7 @@
 						<div class="item">
 							<div>Название</div>
 						</div>
-						<div
-							class="item"
-							v-for="specialization in sortedConnectionsSpecializations"
-							:key="specialization.id"
-						>
+						<div class="item" v-for="specialization in sortedConnectionsSpecializations">
 							<div class="item-title">
 								{{
 									sections.specializations.filter(
@@ -1736,11 +1730,11 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* TODO Доделать сотрировку по алфавиту в блоке this.specialist.connections.specializations */
 		sortedConnectionsSpecializations() {
-			const collator = new Intl.Collator("ru");
+			let specializations = [...this.specialist.connections.specializations];
 
-			return [...this.specialist.connections.specializations].sort((a, b) => {
-				return collator.compare(a.name, b.name);
-			});
+			sorted.sortStringByKey("up", specializations, "name");
+
+			return specializations;
 		},
 		getPagesSpecializationsTotal() {
 			return Math.ceil(
@@ -1749,15 +1743,15 @@ export default {
 		},
 		/* HACK Сделать сортировку по алфавиту */
 		getSortedSpecializations() {
-			let specializations = [...this.sections.specializations].splice(
+			let specializations = [...this.sections.specializations];
+
+			sorted.sortStringByKey("up", specializations, "name");
+
+			return specializations.splice(
 				(this.paginationSpecializations.pages.current - 1) *
 					this.paginationSpecializations.elements.range,
 				this.paginationSpecializations.elements.range
 			);
-
-			sorted.sortByName("up", specializations);
-
-			return specializations;
 		},
 		/* _____________________________________________________*/
 		/* 2. Клиники                                           */
@@ -2042,6 +2036,15 @@ export default {
 				return true;
 			} else {
 				return false;
+			}
+		},
+		getAge(age) {
+			let ageDiff = new Date().getFullYear() - new Date(age).getFullYear();
+
+			if (ageDiff) {
+				return ageDiff;
+			} else {
+				return 0;
 			}
 		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/

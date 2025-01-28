@@ -234,6 +234,24 @@ class HomeController extends Controller
                ]);    
             }
 
+            $specialistsCertificates = SpecialistCertificate::where('id_specialist', $specialists[$key]->id)->get();
+            if($specialistsCertificates) {
+               $certificates = [];
+               foreach ($specialistsCertificates as $specialistsCertificatesKey => $specialistsCertificatesValue) {
+                  $certificates[] = Certificate::find($specialistsCertificatesValue->id_certificate);
+               };               
+            } else {
+               return response()->json([
+                  "status" => false,
+                  "message" => "Не удалось получить специализации.",
+                  "data" => (object)[
+                     "profile" => null,
+                     "specializations" => null,
+                     "educations" => null,
+                  ],
+               ]);    
+            }
+
             return response()->json([
                "status" => true,
                "message" => "Данные получены.",
@@ -241,6 +259,7 @@ class HomeController extends Controller
                   "profile" => $specialists[$key],
                   "specializations" => $specializations,
                   "educations" => $educations,
+                  "certificates" => $certificates,
                ],
             ]);            
          };

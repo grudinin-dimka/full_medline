@@ -96,10 +96,10 @@ export default {
 						link: i,
 					});
 				}
+
 				return pages;
 			} else if (this.getPagesCount > this.settings.pages.range) {
-				// Пагинация, если текущая страница выше диапазона пагинации
-				if (this.settings.pages.current > this.settings.pages.range) {
+				if (this.settings.pages.current == this.getPagesCount) {
 					for (
 						let i = this.settings.pages.current + 1 - this.settings.pages.range;
 						i <= this.settings.pages.current;
@@ -110,8 +110,40 @@ export default {
 							link: i,
 						});
 					}
+
 					return pages;
 				}
+
+				// Пагинация, если текущая страница выше диапазона пагинации
+				if (this.settings.pages.current >= this.settings.pages.range) {
+					for (
+						let i = this.settings.pages.current + 1 - this.settings.pages.range;
+						i <= this.settings.pages.current;
+						i++
+					) {
+						pages.push({
+							number: i + 1,
+							link: i + 1,
+						});
+					}
+
+					return pages;
+				}
+
+				// if (this.settings.pages.current >= this.settings.pages.range) {
+				// 	for (
+				// 		let i = this.settings.pages.current + 1 - this.settings.pages.range;
+				// 		i <= this.settings.pages.current;
+				// 		i++
+				// 	) {
+				// 		pages.push({
+				// 			number: i + 1,
+				// 			link: i + 1,
+				// 		});
+				// 	}
+
+				// 	return pages;
+				// }
 
 				// Если текущая страница не выше диапазона пагинации
 				for (let i = 1; i <= this.settings.pages.range; i++) {
@@ -120,6 +152,7 @@ export default {
 						link: i,
 					});
 				}
+
 				return pages;
 			} else {
 				console.log("Ничего не получилось.");

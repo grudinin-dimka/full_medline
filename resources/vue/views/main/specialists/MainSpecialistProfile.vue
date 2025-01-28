@@ -20,86 +20,87 @@
 		<div class="container-specialist-profile" v-if="loading.sections.profile">
 			<img :src="specialist.profile.path" />
 			<div class="specialist-profile">
-				<table class="specialist-profile-head">
-					<thead>
-						<tr>
-							<th colspan="2">
-								{{
-									specialist.profile.family +
-									" " +
-									specialist.profile.name +
-									" " +
-									specialist.profile.surname
-								}}
-							</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr v-if="specialist.specializations.length">
-							<td width="250px">Специализации:</td>
-							<td>{{ getSpecializations }}</td>
-						</tr>
-						<tr>
-							<td width="250px">Категория:</td>
-							<td>{{ specialist.profile.category }}.</td>
-						</tr>
-						<tr>
-							<td>Стаж:</td>
-							<td>{{ getWorkAges(specialist.profile.startWorkAge) }}.</td>
-						</tr>
-						<tr>
-							<td>Приём:</td>
-							<td></td>
-						</tr>
-						<tr>
-							<td>
-								<ul>
-									<li>
-										<IconSpecialistChild :width="18" :height="18" />
-										У детей:
-									</li>
-								</ul>
-							</td>
-							<td v-if="specialist.profile.childrenDoctor">
-								{{ specialist.profile.childrenDoctorAge }}+.
-							</td>
-							<td v-else>Нет.</td>
-						</tr>
-						<tr>
-							<td>
-								<ul>
-									<li>
-										<IconSpecialistAdult :width="18" :height="18" />
-										У взрослых:
-									</li>
-								</ul>
-							</td>
-							<td>{{ specialist.profile.adultDoctor ? "Да." : "Нет." }}</td>
-						</tr>
-						<tr v-if="specialist.educations.length">
-							<td>Образования:</td>
-							<td></td>
-						</tr>
-						<tr
-							v-if="specialist.educations.length"
-							v-for="education in specialist.educations"
-						>
-							<td colspan="2">
-								<ul>
-									<li>{{ education.organization }}.</li>
-								</ul>
-							</td>
-						</tr>
-						<tr v-if="specialist.profile.link !== '#'">
-							<td colspan="2" height="50px">
-								<a class="prodoctorov" :href="specialist.profile.link">
-									<span class="red">ПРО</span>
-									<span class="blue">ДОКТОРОВ</span>
-								</a>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+				<div class="title">
+					{{
+						specialist.profile.family +
+						" " +
+						specialist.profile.name +
+						" " +
+						specialist.profile.surname
+					}}
+				</div>
+				<div class="item info">
+					<div class="label">Основная информация</div>
+					<ul>
+						<li>
+							<article>
+								<div>Специализация:</div>
+								<div>{{ getSpecializations }}.</div>
+							</article>
+						</li>
+						<li>
+							<article>
+								<div>Категория:</div>
+								<div>{{ specialist.profile.category }}.</div>
+							</article>
+						</li>
+						<li>
+							<article>
+								<div>Стаж:</div>
+								<div>{{ getWorkAges(specialist.profile.startWorkAge) }}.</div>
+							</article>
+						</li>
+					</ul>
+				</div>
+				<div class="item priem">
+					<div class="label">Прием пациентов</div>
+					<ul>
+						<li>
+							<article>
+								<div>У детей:</div>
+								<div v-if="specialist.profile.childrenDoctor">
+									{{ specialist.profile.childrenDoctorAge }}+.
+								</div>
+								<div v-else>Нет.</div>
+							</article>
+						</li>
+						<li>
+							<article>
+								<div>У взрослых:</div>
+								<div>{{ specialist.profile.adultDoctor ? "Да" : "Нет" }}.</div>
+							</article>
+						</li>
+					</ul>
+				</div>
+				<div class="item certificates" v-if="specialist.certificates.length">
+					<div class="label">Сертификаты</div>
+					<ul>
+						<li v-for="certificate in specialist.certificates">
+							<article>
+								<div>{{ certificate.name }}.</div>
+							</article>
+						</li>
+					</ul>
+				</div>
+				<div class="item educations" v-if="specialist.educations.length">
+					<div class="label">Образование</div>
+					<ul>
+						<li v-for="education in specialist.educations">
+							<article>
+								<div>{{ education.organization }}</div>
+							</article>
+						</li>
+					</ul>
+				</div>
+
+				<!-- <tr v-if="specialist.profile.link !== '#'">
+					<td colspan="2" height="50px">
+						<a class="prodoctorov" :href="specialist.profile.link">
+							<span class="red">ПРО</span>
+							<span class="blue">ДОКТОРОВ</span>
+						</a>
+					</td>
+				</tr> -->
 			</div>
 		</div>
 
@@ -146,6 +147,7 @@ export default {
 			specialist: {
 				profile: {},
 				specializations: [],
+				certificates: [],
 				education: [],
 			},
 		};
@@ -158,7 +160,7 @@ export default {
 				result += specialization.name + ", ";
 			});
 
-			return result.slice(0, -2) + ".";
+			return result.slice(0, -2);
 		},
 	},
 	methods: {
@@ -200,6 +202,7 @@ export default {
 					this.specialist.profile = response.data.data.profile;
 					this.specialist.specializations = response.data.data.specializations;
 					this.specialist.educations = response.data.data.educations;
+					this.specialist.certificates = response.data.data.certificates;
 				} else {
 					this.specialist.profile = null;
 
@@ -245,7 +248,7 @@ export default {
 }
 
 .container-specialist-profile > img {
-	align-self: center;
+	align-self: self-start;
 	justify-self: end;
 
 	width: 350px;
@@ -253,13 +256,51 @@ export default {
 	background-size: contain;
 	background-position: center center;
 	background-repeat: no-repeat;
-	height: 100%;
 }
 
 .specialist-profile {
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
+
+	font-size: 1.125rem;
+}
+
+.specialist-profile > .title {
+	font-size: 1.5rem;
+}
+
+.specialist-profile > .item {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+
+	border-radius: 15px;
+	border: 0px solid var(--input-border-color-inactive);
+	padding: 0px 0px 0px 30px;
+}
+
+.specialist-profile > .item > .label {
+	color: var(--primary-color);
+	font-size: 1.25rem;
+}
+
+.specialist-profile > .item > ul {
+	margin: 0px;
+}
+
+.specialist-profile > .item > ul > li > article {
+	display: grid;
+	grid-template-columns: 200px 1fr;
+
+	border-radius: 15px;
+	border: 0px solid var(--input-border-color-inactive);
+	padding: 10px 0px;
+	transition: all 0.2s;
+}
+
+.specialist-profile > .item:is(.educations, .certificates) > ul > li > article {
+	grid-template-columns: 1fr;
 }
 
 .specialist-profile-head th {
