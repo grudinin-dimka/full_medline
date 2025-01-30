@@ -16,9 +16,9 @@
 		</router-link>
 	</info-bar>
 
-	<block :minHeight="400">
+	<block>
 		<div class="container-specialist-profile" v-if="loading.sections.profile">
-			<img :src="specialist.profile.path" />
+			<div class="img" :style="{ backgroundImage: `url(${specialist.profile.path})` }"></div>
 			<div class="specialist-profile">
 				<div class="title">
 					{{
@@ -100,8 +100,8 @@
 								<div>
 									<a class="prodoctorov" :href="specialist.profile.link">
 										<span class="red">ПРО</span>
-										<span class="blue">ДОКТОРОВ</span> </a
-									>.
+										<span class="blue">ДОКТОРОВ</span>
+									</a>
 								</div>
 							</article>
 						</li>
@@ -112,7 +112,6 @@
 
 		<loader-child
 			:isLoading="loading.loader.profile"
-			:minHeight="400"
 			@loaderChildAfterLeave="loaderChildAfterLeave"
 		/>
 	</block>
@@ -253,12 +252,14 @@ export default {
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
-.container-specialist-profile > img {
+.container-specialist-profile > .img {
 	align-self: self-start;
 	justify-self: end;
 
 	width: 350px;
-	border-radius: 15px;
+	height: 350px;
+	border-radius: 100%;
+	border: 2px solid var(--input-border-color-inactive);
 	background-size: contain;
 	background-position: center center;
 	background-repeat: no-repeat;
@@ -387,11 +388,17 @@ a.prodoctorov:hover {
 	.specialist-profile > .item > ul > li > article {
 		grid-template-columns: 175px 1fr;
 	}
+
+	.container-specialist-profile > .img {
+		margin: 0px auto;
+	}
 }
 
 @media screen and (width <= 420px) {
-	.container-specialist-profile > img {
+	.container-specialist-profile > .img {
 		width: 100%;
+		height: 100%;
+		aspect-ratio: 1 / 1;
 	}
 }
 </style>

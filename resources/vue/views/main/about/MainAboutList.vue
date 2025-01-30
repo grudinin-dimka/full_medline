@@ -50,16 +50,19 @@ export default {
 .about {
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: 20px;
 
-	width: 1000px;
+	width: 1350px;
 	font-size: 18px;
+
+	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
-.about > .item {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
+.about > .title {
+	font-size: 20px;
+	font-weight: bold;
+
+	color: var(--primary-color);
 }
 
 .about > .item > .title {
@@ -67,6 +70,12 @@ export default {
 	font-weight: bold;
 
 	color: var(--primary-color);
+}
+
+.about > .item {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
 }
 
 .images {
@@ -86,9 +95,9 @@ export default {
 	background-size: cover;
 }
 
-@media screen and (width <= 1080px) {
+@media screen and (width <= 1425px) {
 	.about {
-		width: auto;
+		width: 100%;
 	}
 }
 </style>

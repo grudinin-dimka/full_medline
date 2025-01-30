@@ -1536,7 +1536,7 @@ class AdminController extends Controller
                
                foreach ($dataFromFileValue as $dataKey => $dataValue) {
                   // Заполнение адреса 
-                  if ($index === 11) {
+                  if (($index + 1) === 12) {
                      // Проверка на пустой адресс
                      if (empty($dataValue[0])) {
                         return response()->json([
@@ -1552,8 +1552,16 @@ class AdminController extends Controller
                   }
                   
                   // Заполнение данных из таблицы 
-                  if ($index > 14) {
-                     $levelClear = trim($dataValue[0], " ");
+                  if (($index + 1) >= 16) {
+                     if (count($dataValue) < 2) { 
+                        return response()->json([
+                           "status" => false,
+                           "message" => "Недостаточно данных (строка " . ($index + 1) . ") в файле " . basename(Storage::path($filesPricesValue)) . ".",
+                           "data" => $arrayID,
+                        ]);
+                     };
+
+                     $levelClear = trim($dataValue[0], " ");                        
 
                      // Проверка на категорию
                      if (str_contains($levelClear, '#')) {
@@ -1589,6 +1597,14 @@ class AdminController extends Controller
                      };
                      
                      if (is_numeric($levelClear)) {
+                        if (!is_numeric($dataValue[2])) {
+                           return response()->json([
+                              "status" => false,
+                              "message" => "Цена (строка " . ($index + 1) . ") в файле " . basename(Storage::path($filesPricesValue)) . " должна быть числом.",
+                              "data" => $arrayID,
+                           ]);
+                        };
+                        
                         PriceValue::create([
                            "name" => $dataValue[1],
                            "price" => $dataValue[2],
@@ -1607,7 +1623,7 @@ class AdminController extends Controller
          "status" => true,
          "message" => "Цены успешно сохранены.",
          "data" => count($arrayID) > 0 ? $arrayID : null,
-      ]);
+      ]);            
    }
    /* Считывание данных с файла .ods, .xls, .xlsx */
    protected function getDataFromFile($path) {

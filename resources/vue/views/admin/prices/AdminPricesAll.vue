@@ -464,7 +464,7 @@ export default {
 
 							let debbugStory = {
 								title: "Ошибка.",
-								body: "Не удалось обновить данные после загрузки изображения.",
+								body: response.data.message,
 								type: "Error",
 							};
 							this.$store.commit("debuggerState", debbugStory);

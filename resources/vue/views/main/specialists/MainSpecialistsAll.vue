@@ -33,34 +33,13 @@
 				</div>
 			</div>
 
-			<!-- <div class="specialists-filters">
-				<div class="title">СПИСОК ВСЕХ НАШИХ СПЕЦИАЛИСТОВ:</div>
-				<Selector
-					v-model="activeSpecialization"
-					:placeholder="'Выберите специализацию'"
-					:list="calcSpecializations"
-				/>
-			</div> -->
-			<!-- <div class="specialists-filters" v-if="loading.sections.specialists">
-				<div
-					class="item"
-					:class="{ active: filterSpecialization.all }"
-					@click="setActiveFilter('all')"
-				>
-					Все
-				</div>
-				<div
-					class="item"
-					v-for="specalization in calcSpecializations"
-					:key="specalization"
-					:class="{ active: specalization == filterSpecialization.selected }"
-					@click="setActiveFilter(specalization)"
-				>
-					{{ specalization }}
-				</div>
-			</div> -->
-
 			<div class="animation-list" v-if="getFilteredSpecialists.length > 0">
+				<div class="list-header">
+					<div></div>
+					<div>Врач</div>
+					<div>Клиника</div>
+					<div></div>
+				</div>
 				<specialists-list :specialists="getFilteredSpecialists" />
 			</div>
 
@@ -119,7 +98,7 @@ export default {
 	},
 	computed: {
 		getFilteredSpecialists() {
-			let filteredSpecialists = [... this.specialists];
+			let filteredSpecialists = [...this.specialists];
 
 			if (this.filters.specialization !== "") {
 				filteredSpecialists = filteredSpecialists.filter((specialist) => {
@@ -354,8 +333,15 @@ export default {
 
 	width: 1350px;
 	min-height: 400px;
+}
 
-	
+.animation-list > .list-header {
+	display: grid;
+	grid-template-columns: 110px 1fr 1fr 150px;
+	align-items: center;
+
+	color: rgb(150, 150, 150);
+	font-size: 1.125rem;
 }
 
 .specialists-filters {
@@ -378,8 +364,6 @@ export default {
 .specialists-filters > .item {
 	cursor: pointer;
 	padding: 5px;
-
-	/* color: rgb(150, 150, 150); */
 
 	border-top: 2px;
 	border-top-color: rgba(255, 255, 255, 0);
@@ -414,6 +398,12 @@ export default {
 	.specialists-filters,
 	.filter-blocks {
 		width: 100%;
+	}
+}
+
+@media screen and (max-width: 1100px) {
+	.animation-list > .list-header {
+		display: none;
 	}
 }
 

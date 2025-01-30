@@ -1988,9 +1988,13 @@ export default {
 				switch (inputKeys[i]) {
 					case "file":
 						/* Проверка на тип загруженного файла */
-						if (this.$refs.fileUpload.files[0].type !== "image/png") {
+						if (
+							this.$refs.fileUpload.files[0].type !== "image/png" &&
+							this.$refs.fileUpload.files[0].type !== "image/webp"
+						) {
 							this.specialist.profile.errors.file.status = true;
-							this.specialist.profile.errors.file.body = "Разрешенный формат файла: png.";
+							this.specialist.profile.errors.file.body =
+								"Разрешенный формат файла: png, webp.";
 							errorCount++;
 
 							continue;
@@ -2149,7 +2153,7 @@ export default {
 				let formData = new FormData();
 				formData.append("type", "profile");
 				formData.append("image", this.$refs.fileUpload.files[0]);
-				formData.append("formats", ["png"]);
+				formData.append("formats", ["png", "webp"]);
 				formData.append("profile", JSON.stringify(this.specialist.profile.data));
 
 				// Сохранение данных
@@ -2249,7 +2253,7 @@ export default {
 
 				let formData = new FormData();
 				formData.append("image", this.$refs.fileUpload.files[0]);
-				formData.append("formats", ["png"]);
+				formData.append("formats", ["png", "webp"]);
 				formData.append("profile", JSON.stringify(this.specialist.profile.data));
 
 				this.disabled.profile.create = true;
@@ -2342,7 +2346,7 @@ export default {
 				formData.append("type", "all");
 				// Данные блока профиля
 				formData.append("image", this.$refs.fileUpload.files[0]);
-				formData.append("formats", ["png"]);
+				formData.append("formats", ["png", "webp"]);
 				formData.append("profile", JSON.stringify(this.specialist.profile.data));
 				// Id специалиста
 				formData.append("id", JSON.stringify(this.specialist.profile.data.id.body));

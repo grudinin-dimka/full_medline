@@ -150,17 +150,28 @@ class HomeController extends Controller
                return response()->json([
                   "status" => false,
                   "message" => "Не удалось получить специализации.",
-                  "data" => (object)[
-                     "profile" => null,
-                     "specializations" => null,
-                     "educations" => null,
-                  ],
+                  "data" => null,
                ]);    
             };      
+
+            $specialistsClinics = SpecialistClinic::where('id_specialist', $specialists[$key]->id)->get();
+            if($specialistsClinics) {
+               $clinics = [];
+               foreach ($specialistsClinics as $specialistsClinicsKey => $specialistsClinicsValue) {
+                  $clinics[] = Clinic::find($specialistsClinicsValue->id_clinic);
+               };   
+            } else {
+               return response()->json([
+                  "status" => false,
+                  "message" => "Не удалось получить клиники.",
+                  "data" => null,
+               ]);    
+            };   
 
             $specialists[$key]->url = makeUrl($specialists[$key]->family . " " . $specialists[$key]->name . " " . $specialists[$key]->surname);
             $specialists[$key]->path = Storage::url('specialists/' . $value->filename);      
             $specialists[$key]->specialization = $specializations;      
+            $specialists[$key]->clinics = $clinics;      
 
             $specialists[$key]->name = $specialists[$key]->family . " " . $specialists[$key]->name . " " . $specialists[$key]->surname;
          };

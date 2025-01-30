@@ -597,10 +597,11 @@ export default {
 			/* Проверка на тип загруженного файла */
 			if (
 				this.$refs.fileUpload.files[0].type !== "image/png" &&
-				this.$refs.fileUpload.files[0].type !== "image/jpeg"
+				this.$refs.fileUpload.files[0].type !== "image/jpeg" &&
+				this.$refs.fileUpload.files[0].type !== "image/webp"
 			) {
 				this.currentImage.errors.status = true;
-				this.currentImage.errors.body = "Разрешенный формат файла: png, jpg.";
+				this.currentImage.errors.body = "Разрешенный формат файла: png, jpg, webp.";
 				return;
 			}
 			/* Проверка на размер загруженного файла */
@@ -617,7 +618,7 @@ export default {
 			let formData = new FormData();
 			formData.append("image", this.$refs.fileUpload.files[0]);
 			formData.append("type", "abouts");
-			formData.append("formats", ["png", "jpg", "jpeg"]);
+			formData.append("formats", ["png", "jpg", "jpeg", "webp"]);
 
 			if (this.subModal.type == "create") {
 				this.disabled.image.add = true;

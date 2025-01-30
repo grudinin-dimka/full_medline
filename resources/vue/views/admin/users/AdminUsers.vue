@@ -762,6 +762,8 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Открытие */
 		openModal(type = "edit", name = "modal") {
+			this.$refs.fileUpload.value = "";
+
 			switch (type) {
 				case "create":
 					{

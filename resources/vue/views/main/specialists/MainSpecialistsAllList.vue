@@ -1,42 +1,36 @@
 <template>
 	<!-- TODO сделать отображение специализаций -->
 	<div class="specialist" v-for="specialist in specialists" :key="specialist.id">
-		<img :src="specialist.path" />
+		<div class="specialist-img" :style="{ backgroundImage: `url(${specialist.path})` }"></div>
+		<!-- <img :src="specialist.path" /> -->
 		<div class="specialist-body">
 			<div class="specialist-body-options">
-				<div class="specialist-body-options-title">
+				<div class="specialist-body-options-other">
+					{{ getSpecializationString(specialist.specialization) }}.
+				</div>
+				<div class="specialist-body-options-title label" @click="openspecialistProfile(specialist)">
 					{{ specialist.name }}
 				</div>
-				<div class="specialist-body-options-other">
-					<div class="specialist-body-options-other-block">
-						<div>Специализация:</div>
-						<div>{{ getSpecializationString(specialist.specialization) }}.</div>
+			</div>
+			<div class="specialist-body-clinics" v-if="specialist.clinics.length > 0">
+				<div class="clinic" v-for="clinic in specialist.clinics">
+					<div class="specialist-body-options-other">
+						{{ `г. ${clinic.city}, ул. ${clinic.street}, д. ${clinic.home}` }}.
 					</div>
-					<div class="specialist-body-options-other-block">
-						<div>Категория:</div>
-						<div>{{ specialist.category }}.</div>
-					</div>
-					<div class="specialist-body-options-other-block">
-						<div>Стаж:</div>
-						<div>{{ getWorkAges(specialist.startWorkAge) }}</div>
-					</div>
-					<div class="specialist-body-options-other-block" v-if="specialist.childrenDoctor">
-						<div>Приём у детей:</div>
-						<div>{{ specialist.childrenDoctorAge }}+.</div>
-					</div>
-					<div class="specialist-body-options-other-block" v-else>
-						<div>Приём у детей:</div>
-						<div>Нет.</div>
-					</div>
-					<div class="specialist-body-options-other-block">
-						<div>Приём у взрослых:</div>
-						<div>{{ specialist.adultDoctor ? "Да." : "Нет." }}</div>
+					<div class="specialist-body-options-title ">
+						{{ clinic.name }}
 					</div>
 				</div>
 			</div>
-			<div class="specialist-body-link" @click="openspecialistProfile(specialist)">
-				Подробнее
+			<div class="specialist-body-clinics" v-else>
+				<div class="clinic">
+					<div class="specialist-body-options-other">
+						Неизвестно.
+					</div>
+					<div class="specialist-body-options-title empty">Не указано.</div>
+				</div>
 			</div>
+			<button @click="openspecialistProfile(specialist)">Подробнее</button>
 		</div>
 	</div>
 </template>
@@ -115,31 +109,63 @@ export default {
 	justify-content: center;
 	gap: 20px;
 
-	border: 2px solid var(--input-border-color-inactive);
-	border-radius: 20px;
-	padding: 20px;
-
-	min-height: 312.7px;
+	border-top: 0px;
+	border-right: 0px;
+	border-bottom: 1px;
+	border-left: 0px;
+	border-style: solid;
+	border-color: var(--input-border-color-inactive);
+	padding: 0px 0px 20px 0px;
 
 	width: 100%;
 	transition: all 0.2s;
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
-.specialist > img {
-	width: 230px;
-	border-radius: 15px;
+.specialist > :is(img, .specialist-img) {
+	width: 90px;
+	border-radius: 300px;
+	border: 2px solid var(--input-border-color-inactive);
 	background-size: contain;
 	background-position: center center;
 	background-repeat: no-repeat;
-	height: 100%;
+	height: 90px;
 }
 
 .specialist-body {
 	flex: 1 0 0px;
+	display: grid;
+	grid-template-columns: 1fr 1fr 150px;
+	gap: 20px;
+	align-items: center;
+}
+
+.specialist-body-clinics {
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between;
+	gap: 10px;
+}
+
+.specialist-body-clinics > .clinic.empty {
+	font-size: 1.125rem;
+}
+
+.specialist-body > button {
+	cursor: pointer;
+	padding: 15px;
+	font-size: 1.125em;
+
+	border: 2px solid var(--primary-color);
+	color: var(--primary-color);
+	border-radius: 10px;
+	background-color: rgba(255, 255, 255, 0);
+
+	transition: all 0.2s;
+}
+
+.specialist-body > button:hover {
+	background-color: var(--primary-color);
+	color: white;
 }
 
 .specialist-body-options {
@@ -150,6 +176,16 @@ export default {
 
 .specialist-body-options-title {
 	font-size: 24px;
+
+	transition: all 0.2s;
+}
+
+.specialist-body-options-title.label {
+	cursor: pointer;
+}
+
+.specialist-body-options-title.label:hover {
+	color: var(--primary-color);
 }
 
 .specialist-body-options-other {
@@ -195,11 +231,30 @@ export default {
 	text-decoration: underline;
 }
 
-@media screen and (max-width: 775px) {
+@media screen and (max-width: 1100px) {
+	.specialist-body {
+		grid-template-columns: 1fr 150px;
+	}
+
+	.specialist-body-clinics {
+		display: none;
+	}
+}
+
+@media screen and (max-width: 600px) {
 	.specialist {
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
+	}
+
+	.specialist > :is(img, .specialist-img) {
+		width: 150px;
+		border-radius: 300px;
+		background-size: contain;
+		background-position: center center;
+		background-repeat: no-repeat;
+		height: 150px;
 	}
 }
 
@@ -211,6 +266,11 @@ export default {
 	.specialist > img {
 		width: 100%;
 		max-width: 230px;
+	}
+
+	.specialist-body {
+		text-align: center;
+		grid-template-columns: 1fr;
 	}
 }
 </style>

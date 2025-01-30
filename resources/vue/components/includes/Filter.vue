@@ -366,7 +366,7 @@ export default {
 	gap: 10px;
 
 	padding: 10px;
-	white-space: nowrap;
+	min-width: 500px;
 	background-color: rgba(255, 255, 255, 1);
 }
 
@@ -433,6 +433,10 @@ export default {
 		min-width: 0px;
 		max-width: none;
 		width: 100%;
+	}
+
+	.filter > .filter-body > ol > li {
+		min-width: 0px;
 	}
 
 	.filter > .filter-body > ol > li {
