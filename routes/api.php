@@ -50,6 +50,8 @@ Route::post('/get-certificates-all', [HomeController::class, 'getCertificatesAll
 /* _____________________________________________________*/
 /* Цены                                                 */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+Route::post('/get-prices-choice', [HomeController::class, 'getPricesChoice']);
+Route::post('/get-prices-template', [HomeController::class, 'getPricesTemplate']);
 Route::post('/get-prices-all', [HomeController::class, 'getPricesAll']);
 /* _____________________________________________________*/
 /* Контакты                                             */

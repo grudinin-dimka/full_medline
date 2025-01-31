@@ -8,7 +8,10 @@
 				<div class="specialist-body-options-other">
 					{{ getSpecializationString(specialist.specialization) }}.
 				</div>
-				<div class="specialist-body-options-title label" @click="openspecialistProfile(specialist)">
+				<div
+					class="specialist-body-options-title label"
+					@click="openspecialistProfile(specialist)"
+				>
 					{{ specialist.name }}
 				</div>
 			</div>
@@ -17,17 +20,23 @@
 					<div class="specialist-body-options-other">
 						{{ `г. ${clinic.city}, ул. ${clinic.street}, д. ${clinic.home}` }}.
 					</div>
-					<div class="specialist-body-options-title ">
+					<div
+						class="specialist-body-options-title label"
+						@click="openspecialistProfile(specialist)"
+					>
 						{{ clinic.name }}
 					</div>
 				</div>
 			</div>
 			<div class="specialist-body-clinics" v-else>
 				<div class="clinic">
-					<div class="specialist-body-options-other">
-						Неизвестно.
+					<div class="specialist-body-options-other">Неизвестно.</div>
+					<div
+						class="specialist-body-options-title label"
+						@click="openspecialistProfile(specialist)"
+					>
+						Не указано.
 					</div>
-					<div class="specialist-body-options-title empty">Не указано.</div>
 				</div>
 			</div>
 			<button @click="openspecialistProfile(specialist)">Подробнее</button>

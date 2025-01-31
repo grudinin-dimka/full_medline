@@ -1597,6 +1597,14 @@ class AdminController extends Controller
                      };
                      
                      if (is_numeric($levelClear)) {
+                        if (count($dataValue) < 3) {
+                           return response()->json([
+                              "status" => false,
+                              "message" => "Недостаточно данных (строка " . ($index + 1) . ") в файле " . basename(Storage::path($filesPricesValue)) . ".",
+                              "data" => $arrayID,
+                           ]);
+                        };
+
                         if (!is_numeric($dataValue[2])) {
                            return response()->json([
                               "status" => false,
@@ -1605,11 +1613,19 @@ class AdminController extends Controller
                            ]);
                         };
                         
-                        PriceValue::create([
+                        $createPriceValue = PriceValue::create([
                            "name" => $dataValue[1],
                            "price" => $dataValue[2],
                            "categoryId" => $currentCategory->id,
                         ]);
+
+                        if (!$createPriceValue) {
+                           return response()->json([
+                              "status" => false,
+                              "message" => "Не удалось создать цену (строка " . ($index + 1) . ") в файле " . basename(Storage::path($filesPricesValue)) . ".",
+                              "data" => $arrayID,
+                           ]);
+                        };
                      };
                   };
 

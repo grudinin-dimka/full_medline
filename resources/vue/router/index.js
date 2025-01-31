@@ -47,7 +47,25 @@ const router = createRouter({
 					path: "prices",
 					name: "prices",
 					meta: { title: "Цены" },
+					redirect: { name: "prices-choice" },
 					component: () => import("../views/main/prices/MainPrices.vue"),
+					children: [
+						// {
+						// 	path: "all",
+						// 	name: "prices-all",
+						// 	component: () => import("../views/main/prices/MainPricesAll.vue"),
+						// },
+						{
+							path: "",
+							name: "prices-choice",
+							component: () => import("../views/main/prices/MainPricesChoice.vue"),
+						},
+						{
+							path: ":city/:street/:house",
+							name: "prices-template",
+							component: () => import("../views/main/prices/MainPricesTemplate.vue"),
+						},
+					],
 				},
 				{
 					path: "schedule",

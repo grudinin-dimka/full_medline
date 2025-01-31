@@ -5,7 +5,7 @@
 		<router-link to="/specialists">Специалисты</router-link>
 	</info-bar>
 
-	<block>
+	<block :minHeight="500">
 		<template v-if="loading.sections.specialists">
 			<div class="filter-blocks">
 				<div class="container-input">

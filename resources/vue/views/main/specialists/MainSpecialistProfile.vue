@@ -16,7 +16,7 @@
 		</router-link>
 	</info-bar>
 
-	<block>
+	<block :minHeight="500">
 		<div class="container-specialist-profile" v-if="loading.sections.profile">
 			<div class="img" :style="{ backgroundImage: `url(${specialist.profile.path})` }"></div>
 			<div class="specialist-profile">
@@ -247,7 +247,7 @@ export default {
 	gap: 20px;
 
 	min-height: 300px;
-	width: 1250px;
+	width: 1350px;
 
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }

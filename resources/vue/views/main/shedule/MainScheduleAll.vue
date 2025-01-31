@@ -21,7 +21,7 @@
 		</button>
 	</template>
 
-	<block v-if="loading.sections.schedule">
+	<block :minHeight="100" v-if="loading.sections.schedule">
 		<div class="filter-list">
 			<div class="container">
 				<div class="body">

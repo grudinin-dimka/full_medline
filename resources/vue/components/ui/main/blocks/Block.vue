@@ -27,6 +27,8 @@ section {
 	align-items: center;
 	gap: 20px;
 
+	min-height: max(75dvh, 400px);
+
 	margin: 20px 30px;
 }
 </style>

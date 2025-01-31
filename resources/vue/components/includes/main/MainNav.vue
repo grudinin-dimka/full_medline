@@ -29,18 +29,20 @@ export default {
 	},
 	methods: {
 		insertPage(page) {
-			if (page === "prices") {
-				this.$router.push({
-					name: `${page}`,
-					query: {
-						name: "none",
-						address: "all",
-						category: "all",
-					},
-				});
-			} else {
-				this.$router.push({ name: `${page}` });
-			}
+			// if (page === "prices") {
+			// 	this.$router.push({
+			// 		name: `${page}`,
+			// 		query: {
+			// 			name: "none",
+			// 			address: "all",
+			// 			category: "all",
+			// 		},
+			// 	});
+			// } else {
+			// 	this.$router.push({ name: `${page}` });
+			// }
+
+			this.$router.push({ name: `${page}` });
 
 			// смена статуса закрытия бургера
 			this.$store.state.burger.main.status = false;

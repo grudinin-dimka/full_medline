@@ -168,7 +168,7 @@ class HomeController extends Controller
                ]);    
             };   
 
-            $specialists[$key]->url = makeUrl($specialists[$key]->family . " " . $specialists[$key]->name . " " . $specialists[$key]->surname);
+            $specialists[$key]->url = $this->makeUrl($specialists[$key]->family . " " . $specialists[$key]->name . " " . $specialists[$key]->surname);
             $specialists[$key]->path = Storage::url('specialists/' . $value->filename);      
             $specialists[$key]->specialization = $specializations;      
             $specialists[$key]->clinics = $clinics;      
@@ -459,6 +459,116 @@ class HomeController extends Controller
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                      ЦЕНЫ                         |*/
    /* |___________________________________________________|*/
+   /* Вывод адресов с ценами */
+   public function getPricesChoice(Request $request) {
+      $priceAddresses = PriceAddress::all();
+
+      $cityFlags = array("г. ", "город", "р.п.", "р. п.", "п.", "п. ");
+      $streetFlags = array("ул. ", "улица ");
+      $houseFlags = array("д.", "д. ", "дом", "дом ",);
+
+      $formatPriceAddresses = [];
+      foreach($priceAddresses as $key => $value) {
+         $splitAddress = explode(', ', $value->name);
+
+         trim($splitAddress[0]);
+
+         $city = trim(str_ireplace($cityFlags, "", $splitAddress[0]), " ");
+         $street = trim(str_ireplace($streetFlags, "", $splitAddress[1]), " ");
+         $house = trim(str_ireplace($houseFlags, "", $splitAddress[2]), " ");
+
+         $formatPriceAddresses[] = (object) [
+            "city" => $city,
+            "cityUrl" => $this->makeUrl($city),
+            "street" => $street,
+            "streetUrl" => $this->makeUrl($street),
+            "house" => $house,
+            "houseUrl" => $this->makeUrl($house),
+         ];
+      };
+
+      return response()->json([
+         "status" => true,
+         "message" => "Адреса успешно получены.",
+         "data" => $formatPriceAddresses,
+      ]);
+   }   
+   public function getPricesTemplate(Request $request) {
+      $priceAddresses = PriceAddress::all();
+
+      $cityFlags = array("г. ", "город", "р.п.", "р. п.", "п.", "п. ");
+      $streetFlags = array("ул. ", "улица ");
+      $houseFlags = array("д.", "д. ", "дом", "дом ",);
+
+      $currentAddress = null;
+      $addresses = [];
+      
+      foreach($priceAddresses as $key => $value) {
+         $splitAddress = explode(', ', $value->name);
+
+         $city = trim(str_ireplace($cityFlags, "", $splitAddress[0]), " ");
+         $street = trim(str_ireplace($streetFlags, "", $splitAddress[1]), " ");
+         $house = trim(str_ireplace($houseFlags, "", $splitAddress[2]), " ");
+
+         if ($this->makeUrl($city) != $request->city) {
+            continue;
+         };
+
+         if ($this->makeUrl($street) != $request->street) {
+            continue;
+         };
+
+         if ($this->makeUrl($house) != $request->house) {
+            continue;
+         };
+
+         $currentAddress = $value;
+         break;
+      };
+
+      $categories = PriceCategory::where('addressId', $currentAddress->id)->get();
+      if (!$categories) {
+         return response()->json([
+            "status" => false,
+            "message" => "Категории не найдены.",
+            "data" => null,
+         ]);
+      };
+
+      // Форматируем категории
+      $categoriesFormat = [];
+      foreach($categories as $categoriesKey => $categoriesValue) {
+         if ($categoriesValue->categoryId != null) continue;
+         
+         $categoriesFormat[] = $this->getCategoryArray($categoriesValue);
+      }
+
+      // Получаем ID категорий
+      $categoryIds = $categories->pluck('id');
+
+      // Получаем цены, привязанные к этим категориям
+      $prices = PriceValue::whereIn('categoryId', $categoryIds)->get();
+      
+      if (!$currentAddress) {
+         return response()->json([
+            "status" => false,
+            "message" => "Адрес не найден.",
+            "data" => null,
+         ]);
+      };
+
+      return response()->json([
+         "status" => true,
+         "message" => "Адрес успешно получен.",
+         "data" => (object) [
+            "address" => $currentAddress,
+            "categories" => $categoriesFormat,
+            "categoriesList" => $categories,
+            "prices" => $prices
+         ],
+      ]);
+   }
+   /* Вывод всего о ценах */
    public function getPricesAll(Request $request) {
       $priceAddresses = PriceAddress::all();
       if (!$priceAddresses) {
@@ -720,13 +830,12 @@ class HomeController extends Controller
          ],
       ]);
    }
+   private function makeUrl($url) {
+      $stringTransliterate = Transliterator::create('Any-Latin; Latin-ASCII')->transliterate($url);
+      $stringUnderCase = strtolower($stringTransliterate);
+      $stringReplace = str_replace(" ", "-", $stringUnderCase);
+   
+      return $stringReplace;
+   }
 };
-
-function makeUrl($url) {
-   $stringTransliterate = Transliterator::create('Any-Latin; Latin-ASCII')->transliterate($url);
-   $stringUnderCase = strtolower($stringTransliterate);
-   $stringReplace = str_replace(" ", "-", $stringUnderCase);
-
-   return $stringReplace;
-}
 
