@@ -76,7 +76,6 @@
 					<div>Название</div>
 					<div>Статус приёма</div>
 				</label>
-				<!-- HACK Сделать соритровку по алфавиту -->
 				<label
 					class="item"
 					v-for="(clinic, index) in getSortedClinics"
@@ -469,8 +468,6 @@
 	<!--____________________________________________________-->
 	<!--1. Профиль                                          -->
 	<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
-	<!-- HACK Проработать детальнее адаптивный дизайн -->
-	<!-- HACK Переделать функцию модульного сохранения строго под сохранение данных всей страницы -->
 	<info-bar>
 		<template v-slot:title>Специалисты</template>
 		<template v-slot:addreas>specialists/{{ $route.params.id }}</template>
@@ -1046,7 +1043,7 @@
 
 			<admin-specialists-table
 				v-show="loading.sections.certificates"
-				:array="specialist.connections.certificates"
+				:array="getSpecialistCertificates"
 				@useFilter="filterArray"
 				@touchEditArrValue="editArrayValue('edit', 'certificates', $event)"
 				@touchRemoveArrValue="updateDeleteValue('certificates', $event)"
@@ -1728,7 +1725,6 @@ export default {
 		/* _____________________________________________________*/
 		/* 1. Специализации                                     */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		/* TODO Доделать сотрировку по алфавиту в блоке this.specialist.connections.specializations */
 		sortedConnectionsSpecializations() {
 			let specializations = [...this.specialist.connections.specializations];
 
@@ -1741,7 +1737,6 @@ export default {
 				this.sections.specializations.length / this.paginationSpecializations.elements.range
 			);
 		},
-		/* HACK Сделать сортировку по алфавиту */
 		getSortedSpecializations() {
 			let specializations = [...this.sections.specializations];
 
@@ -1759,9 +1754,12 @@ export default {
 		getPagesClinicsTotal() {
 			return Math.ceil(this.sections.clinics.length / this.paginationClinics.elements.range);
 		},
-		/* HACK Сделать сортировку по алфавиту */
 		getSortedClinics() {
-			return [...this.sections.clinics].splice(
+			let clinics = [...this.sections.clinics];
+
+			sorted.sortStringByKey("up", clinics, "name");
+
+			return clinics.splice(
 				(this.paginationClinics.pages.current - 1) * this.paginationClinics.elements.range,
 				this.paginationClinics.elements.range
 			);
@@ -1769,18 +1767,32 @@ export default {
 		/* _____________________________________________________*/
 		/* 3. Сертификаты                                       */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		/* .... */
+		getSpecialistCertificates() {
+			let specialistCertificates = [...this.specialist.connections.certificates];
+
+			sorted.sortStringByKey("up", specialistCertificates, "name");
+
+			return specialistCertificates;
+		},
 		/* _____________________________________________________*/
 		/* 4. Обучения                                          */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		getSpecialistEducations() {
-			return [...this.specialist.connections.educations];
+			let specialistEducations = [...this.specialist.connections.educations];
+
+			sorted.sortStringByKey("up", specialistEducations, "name");
+
+			return specialistEducations;
 		},
 		/* _____________________________________________________*/
 		/* 5. Прошлые работы                                    */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		getSpecialistWorks() {
-			return [...this.specialist.connections.works];
+			let specialistWorks = [...this.specialist.connections.works];
+
+			sorted.sortStringByKey("up", specialistWorks, "name");
+
+			return specialistWorks;
 		},
 	},
 	methods: {

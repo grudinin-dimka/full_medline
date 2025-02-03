@@ -6,7 +6,6 @@
 		<block-title>
 			<template #title>ПРОФИЛЬ</template>
 		</block-title>
-		<!-- TODO Доделать этот раздел с профилем -->
 		<div class="profile-info" v-if="loading.sections.profile">
 			<div class="item avatar">
 				<div

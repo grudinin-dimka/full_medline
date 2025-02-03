@@ -1,8 +1,6 @@
 <template>
-	<!-- TODO сделать отображение специализаций -->
 	<div class="specialist" v-for="specialist in specialists" :key="specialist.id">
 		<div class="specialist-img" :style="{ backgroundImage: `url(${specialist.path})` }"></div>
-		<!-- <img :src="specialist.path" /> -->
 		<div class="specialist-body">
 			<div class="specialist-body-options">
 				<div class="specialist-body-options-other">

@@ -1,5 +1,4 @@
 <template>
-	<!-- HACK Добавить transition group -->
 	<table>
 		<thead>
 			<tr>

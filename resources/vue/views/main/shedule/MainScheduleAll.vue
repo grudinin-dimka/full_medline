@@ -78,7 +78,6 @@
 
 	<block-hide>
 		<template v-if="loading.sections.schedule">
-			<!-- TODO надо бы сделать вывод значений в одну строку, которые одинаковые по типу -->
 			<table>
 				<thead>
 					<tr>
