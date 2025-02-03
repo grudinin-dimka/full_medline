@@ -50,11 +50,6 @@ const router = createRouter({
 					redirect: { name: "prices-choice" },
 					component: () => import("../views/main/prices/MainPrices.vue"),
 					children: [
-						// {
-						// 	path: "all",
-						// 	name: "prices-all",
-						// 	component: () => import("../views/main/prices/MainPricesAll.vue"),
-						// },
 						{
 							path: "",
 							name: "prices-choice",
@@ -181,24 +176,6 @@ const router = createRouter({
 							component: () =>
 								import("../views/admin/specialists/AdminSpecialistsClinics.vue"),
 						},
-						{
-							path: "educations",
-							name: "especialists-educations",
-							component: () =>
-								import("../views/admin/specialists/AdminSpecialistsEducations.vue"),
-						},
-						{
-							path: "works",
-							name: "especialists-works",
-							component: () =>
-								import("../views/admin/specialists/AdminSpecialistsWorks.vue"),
-						},
-						{
-							path: "certificates",
-							name: "especialists-certificates",
-							component: () =>
-								import("../views/admin/specialists/AdminSpecialistsCertificates.vue"),
-						},
 					],
 				},
 				{
@@ -214,7 +191,7 @@ const router = createRouter({
 							component: () => import("../views/admin/prices/AdminPricesAll.vue"),
 						},
 						{
-							path: "template",
+							path: "rules",
 							name: "eprices-template",
 							component: () => import("../views/admin/prices/AdminPricesTemplate.vue"),
 						},
