@@ -45,7 +45,7 @@ export default {
 			this.$router.push({ name: `${page}` });
 
 			// смена статуса закрытия бургера
-			this.$store.state.burger.main.status = false;
+			this.$store.commit("setBurgerMain");
 		},
 	},
 };

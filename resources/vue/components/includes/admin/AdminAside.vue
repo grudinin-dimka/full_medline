@@ -1,5 +1,5 @@
 <template>
-	<aside :class="{ active: $store.state.burger.status }">
+	<aside :class="{ active: $store.state.burger.admin.status }">
 		<div class="aside-body">
 			<div class="item">
 				<a class="item-title" href="#" @click.prevent="insertPage(links.profile)">
@@ -234,7 +234,7 @@ export default {
 			});
 
 			// смена статуса закрытия бургера
-			this.$store.state.burger.status = false;
+			this.$store.commit("setBurgerAdmin");
 		},
 		// Выход из аккаунта
 		logoutUser() {

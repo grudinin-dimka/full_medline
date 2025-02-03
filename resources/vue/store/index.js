@@ -43,10 +43,11 @@ const store = createStore({
 		/* Отображение модального окна */
 		changeModal(state, title) {
 			state.modal.title = title;
-			document.body.classList.toggle("modal-open");
 			if (state.modal.status === false) {
+				document.body.classList.add("modal-open");
 				state.modal.status = true;
 			} else {
+				ocument.body.classList.remove("modal-open");
 				state.modal.status = false;
 			}
 		},
@@ -61,9 +62,20 @@ const store = createStore({
 		/* Отображение меню навигации */
 		setBurgerMain(state) {
 			if (state.burger.main.status) {
+				document.body.classList.remove("modal-open");
 				state.burger.main.status = false;
 			} else {
+				document.body.classList.add("modal-open");
 				state.burger.main.status = true;
+			}
+		},
+		setBurgerAdmin(state) {
+			if (state.burger.admin.status) {
+				document.body.classList.remove("modal-open");
+				state.burger.admin.status = false;
+			} else {
+				document.body.classList.add("modal-open");
+				state.burger.admin.status = true;
 			}
 		},
 		/* Установка токена */

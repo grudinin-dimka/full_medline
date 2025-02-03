@@ -1385,8 +1385,8 @@ export default {
 }
 
 .users > .item > .user-container > .img {
-	width: 70px;
-	height: 70px;
+	min-width: 70px;
+	min-height: 70px;
 	border-radius: 50%;
 	background-size: cover;
 	background-repeat: no-repeat;
