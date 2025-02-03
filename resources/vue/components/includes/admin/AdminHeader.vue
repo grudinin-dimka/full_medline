@@ -6,11 +6,7 @@
 		</div>
 	</header>
 	<!-- Кнопка "бургер" -->
-	<div
-		class="burger"
-		@click="$store.commit('setBurgerAdmin')"
-		:class="{ active: $store.state.burger.admin.status }"
-	>
+	<div class="burger" @click="openBurger" :class="{ active: $store.state.burger.status }">
 		<div></div>
 		<div></div>
 		<div></div>
@@ -23,6 +19,15 @@ import Logo from "../../icons/logo.vue";
 export default {
 	components: {
 		Logo,
+	},
+	methods: {
+		openBurger() {
+			if (this.$store.state.burger.status) {
+				this.$store.state.burger.status = false;
+			} else {
+				this.$store.state.burger.status = true;
+			}
+		},
 	},
 };
 </script>
