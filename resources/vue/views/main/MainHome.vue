@@ -4,12 +4,12 @@
 			<template v-if="slides.length > 0">
 				<Slider :slides="slides" />
 			</template>
-			<Empty :minHeight="397" v-else />
+			<Empty :minHeight="400" v-else />
 		</template>
 
 		<loader-child
 			:isLoading="loading.loader.slider"
-         :minHeight="397"
+         :minHeight="403"
 			@loaderChildAfterLeave="loaderChildAfterLeave"
 		/>
 

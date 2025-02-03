@@ -228,7 +228,7 @@
 
 	<block-once :minHeight="200">
 		<block-title>
-			<template #title>Клиники</template>
+			<template #title>КЛИНИКИ</template>
 			<template #buttons>
 				<icon-load :width="28" :height="28" v-if="disabled.clinics.save" />
 				<icon-save :width="28" :height="28" @click="saveClinicsChanges" v-else />

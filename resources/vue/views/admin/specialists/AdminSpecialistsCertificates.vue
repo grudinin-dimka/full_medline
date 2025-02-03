@@ -111,7 +111,7 @@
 
 	<block-once>
 		<block-title>
-			<template #title>Сертификаты</template>
+			<template #title>СЕРТИФИКАТЫ</template>
 			<template #buttons>
 				<icon-save :width="28" :height="28" @click="saveCertificatesChanges" />
 			</template>

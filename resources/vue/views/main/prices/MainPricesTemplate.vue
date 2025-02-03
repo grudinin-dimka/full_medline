@@ -355,7 +355,7 @@ export default {
 				});
 			}
 
-			sorted.sortNumberByKey("up", currentPrices, "price");
+			sorted.sortStringByKey("up", currentPrices, "name");
 
 			return currentPrices;
 		},

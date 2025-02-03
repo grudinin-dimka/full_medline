@@ -9,7 +9,7 @@ export default {
 	props: {
 		minHeight: {
 			type: Number,
-			default: "200",
+			default: 200,
 		},
 	},
 };

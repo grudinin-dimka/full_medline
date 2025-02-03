@@ -1,8 +1,8 @@
 <template>
 	<aside :class="{ active: $store.state.burger.status }">
 		<div class="aside-body">
-			<div class="item active">
-				<a class="item-title" href="#" @click.prevent="insertPage('profile')">
+			<div class="item">
+				<a class="item-title" href="#" @click.prevent="insertPage(links.profile)">
 					<svg width="22" height="22" viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg">
 						<path
 							d="M5.775 22.65C7.05 21.675 8.475 20.9063 10.05 20.3438C11.625 19.7813 13.275 19.5 15 19.5C16.725 19.5 18.375 19.7813 19.95 20.3438C21.525 20.9063 22.95 21.675 24.225 22.65C25.1 21.625 25.7813 20.4625 26.2688 19.1625C26.7563 17.8625 27 16.475 27 15C27 11.675 25.8313 8.84375 23.4938 6.50625C21.1563 4.16875 18.325 3 15 3C11.675 3 8.84375 4.16875 6.50625 6.50625C4.16875 8.84375 3 11.675 3 15C3 16.475 3.24375 17.8625 3.73125 19.1625C4.21875 20.4625 4.9 21.625 5.775 22.65ZM15 16.5C13.525 16.5 12.2813 15.9938 11.2688 14.9813C10.2563 13.9688 9.75 12.725 9.75 11.25C9.75 9.775 10.2563 8.53125 11.2688 7.51875C12.2813 6.50625 13.525 6 15 6C16.475 6 17.7188 6.50625 18.7313 7.51875C19.7438 8.53125 20.25 9.775 20.25 11.25C20.25 12.725 19.7438 13.9688 18.7313 14.9813C17.7188 15.9938 16.475 16.5 15 16.5ZM15 30C12.925 30 10.975 29.6063 9.15 28.8188C7.325 28.0313 5.7375 26.9625 4.3875 25.6125C3.0375 24.2625 1.96875 22.675 1.18125 20.85C0.39375 19.025 0 17.075 0 15C0 12.925 0.39375 10.975 1.18125 9.15C1.96875 7.325 3.0375 5.7375 4.3875 4.3875C5.7375 3.0375 7.325 1.96875 9.15 1.18125C10.975 0.39375 12.925 0 15 0C17.075 0 19.025 0.39375 20.85 1.18125C22.675 1.96875 24.2625 3.0375 25.6125 4.3875C26.9625 5.7375 28.0313 7.325 28.8188 9.15C29.6063 10.975 30 12.925 30 15C30 17.075 29.6063 19.025 28.8188 20.85C28.0313 22.675 26.9625 24.2625 25.6125 25.6125C24.2625 26.9625 22.675 28.0313 20.85 28.8188C19.025 29.6063 17.075 30 15 30ZM15 27C16.325 27 17.575 26.8063 18.75 26.4188C19.925 26.0313 21 25.475 21.975 24.75C21 24.025 19.925 23.4688 18.75 23.0813C17.575 22.6938 16.325 22.5 15 22.5C13.675 22.5 12.425 22.6938 11.25 23.0813C10.075 23.4688 9 24.025 8.025 24.75C9 25.475 10.075 26.0313 11.25 26.4188C12.425 26.8063 13.675 27 15 27ZM15 13.5C15.65 13.5 16.1875 13.2875 16.6125 12.8625C17.0375 12.4375 17.25 11.9 17.25 11.25C17.25 10.6 17.0375 10.0625 16.6125 9.6375C16.1875 9.2125 15.65 9 15 9C14.35 9 13.8125 9.2125 13.3875 9.6375C12.9625 10.0625 12.75 10.6 12.75 11.25C12.75 11.9 12.9625 12.4375 13.3875 12.8625C13.8125 13.2875 14.35 13.5 15 13.5Z"
@@ -11,8 +11,8 @@
 					ПРОФИЛЬ
 				</a>
 			</div>
-			<div class="item active" v-if="$store.state.user.rights === 'creator'">
-				<a class="item-title" href="#" @click.prevent="insertPage('users')">
+			<div class="item" v-if="$store.state.user.rights === 'creator'">
+				<a class="item-title" href="#" @click.prevent="insertPage(links.users)">
 					<svg width="26" height="20" viewBox="0 0 33 24" xmlns="http://www.w3.org/2000/svg">
 						<path
 							d="M0 24V19.8C0 18.95 0.21875 18.1688 0.65625 17.4563C1.09375 16.7438 1.675 16.2 2.4 15.825C3.95 15.05 5.525 14.4688 7.125 14.0813C8.725 13.6938 10.35 13.5 12 13.5C13.65 13.5 15.275 13.6938 16.875 14.0813C18.475 14.4688 20.05 15.05 21.6 15.825C22.325 16.2 22.9062 16.7438 23.3438 17.4563C23.7813 18.1688 24 18.95 24 19.8V24H0ZM27 24V19.5C27 18.4 26.6938 17.3438 26.0813 16.3313C25.4688 15.3188 24.6 14.45 23.475 13.725C24.75 13.875 25.95 14.1313 27.075 14.4938C28.2 14.8563 29.25 15.3 30.225 15.825C31.125 16.325 31.8125 16.8813 32.2875 17.4938C32.7625 18.1063 33 18.775 33 19.5V24H27ZM12 12C10.35 12 8.9375 11.4125 7.7625 10.2375C6.5875 9.0625 6 7.65 6 6C6 4.35 6.5875 2.9375 7.7625 1.7625C8.9375 0.5875 10.35 0 12 0C13.65 0 15.0625 0.5875 16.2375 1.7625C17.4125 2.9375 18 4.35 18 6C18 7.65 17.4125 9.0625 16.2375 10.2375C15.0625 11.4125 13.65 12 12 12ZM27 6C27 7.65 26.4125 9.0625 25.2375 10.2375C24.0625 11.4125 22.65 12 21 12C20.725 12 20.375 11.9688 19.95 11.9062C19.525 11.8438 19.175 11.775 18.9 11.7C19.575 10.9 20.0938 10.0125 20.4563 9.0375C20.8188 8.0625 21 7.05 21 6C21 4.95 20.8188 3.9375 20.4563 2.9625C20.0938 1.9875 19.575 1.1 18.9 0.3C19.25 0.175 19.6 0.09375 19.95 0.05625C20.3 0.01875 20.65 0 21 0C22.65 0 24.0625 0.5875 25.2375 1.7625C26.4125 2.9375 27 4.35 27 6ZM3 21H21V19.8C21 19.525 20.9313 19.275 20.7938 19.05C20.6562 18.825 20.475 18.65 20.25 18.525C18.9 17.85 17.5375 17.3438 16.1625 17.0063C14.7875 16.6688 13.4 16.5 12 16.5C10.6 16.5 9.2125 16.6688 7.8375 17.0063C6.4625 17.3438 5.1 17.85 3.75 18.525C3.525 18.65 3.34375 18.825 3.20625 19.05C3.06875 19.275 3 19.525 3 19.8V21ZM12 9C12.825 9 13.5313 8.70625 14.1188 8.11875C14.7063 7.53125 15 6.825 15 6C15 5.175 14.7063 4.46875 14.1188 3.88125C13.5313 3.29375 12.825 3 12 3C11.175 3 10.4688 3.29375 9.88125 3.88125C9.29375 4.46875 9 5.175 9 6C9 6.825 9.29375 7.53125 9.88125 8.11875C10.4688 8.70625 11.175 9 12 9Z"
@@ -21,8 +21,8 @@
 					ПОЛЬЗОВАТЕЛИ
 				</a>
 			</div>
-			<div class="item active">
-				<a class="item-title" href="#" @click.prevent="insertPage('ehome')">
+			<div class="item">
+				<a class="item-title" href="#" @click.prevent="insertPage(links.home)">
 					<svg width="20" height="23" viewBox="0 0 24 27" xmlns="http://www.w3.org/2000/svg">
 						<path
 							d="M3 24H7.5V15H16.5V24H21V10.5L12 3.75L3 10.5V24ZM0 27V9L12 0L24 9V27H13.5V18H10.5V27H0Z"
@@ -31,8 +31,8 @@
 					ГЛАВНАЯ
 				</a>
 			</div>
-			<div class="item active">
-				<a class="item-title" href="#" @click.prevent="insertPage('eabout')">
+			<div class="item">
+				<a class="item-title" href="#" @click.prevent="insertPage(links.about)">
 					<svg width="22" height="22" viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg">
 						<path
 							d="M13.5 22.5H16.5V13.5H13.5V22.5ZM15 10.5C15.425 10.5 15.7813 10.3563 16.0688 10.0688C16.3563 9.78125 16.5 9.425 16.5 9C16.5 8.575 16.3563 8.21875 16.0688 7.93125C15.7813 7.64375 15.425 7.5 15 7.5C14.575 7.5 14.2188 7.64375 13.9313 7.93125C13.6438 8.21875 13.5 8.575 13.5 9C13.5 9.425 13.6438 9.78125 13.9313 10.0688C14.2188 10.3563 14.575 10.5 15 10.5ZM15 30C12.925 30 10.975 29.6063 9.15 28.8188C7.325 28.0313 5.7375 26.9625 4.3875 25.6125C3.0375 24.2625 1.96875 22.675 1.18125 20.85C0.39375 19.025 0 17.075 0 15C0 12.925 0.39375 10.975 1.18125 9.15C1.96875 7.325 3.0375 5.7375 4.3875 4.3875C5.7375 3.0375 7.325 1.96875 9.15 1.18125C10.975 0.39375 12.925 0 15 0C17.075 0 19.025 0.39375 20.85 1.18125C22.675 1.96875 24.2625 3.0375 25.6125 4.3875C26.9625 5.7375 28.0313 7.325 28.8188 9.15C29.6063 10.975 30 12.925 30 15C30 17.075 29.6063 19.025 28.8188 20.85C28.0313 22.675 26.9625 24.2625 25.6125 25.6125C24.2625 26.9625 22.675 28.0313 20.85 28.8188C19.025 29.6063 17.075 30 15 30ZM15 27C18.35 27 21.1875 25.8375 23.5125 23.5125C25.8375 21.1875 27 18.35 27 15C27 11.65 25.8375 8.8125 23.5125 6.4875C21.1875 4.1625 18.35 3 15 3C11.65 3 8.8125 4.1625 6.4875 6.4875C4.1625 8.8125 3 11.65 3 15C3 18.35 4.1625 21.1875 6.4875 23.5125C8.8125 25.8375 11.65 27 15 27Z"
@@ -41,7 +41,7 @@
 					О НАС
 				</a>
 			</div>
-			<div class="item active">
+			<div class="item">
 				<a
 					class="item-title"
 					:class="{ active: links.specialists.status }"
@@ -57,14 +57,29 @@
 					СПЕЦИАЛИСТЫ
 				</a>
 				<div class="item-list" ref="especialists" :class="{ active: links.specialists.status }">
-					<a href="#" @click.prevent="insertSubPage('especialists-all')"> СПИСОК </a>
-					<a href="#" @click.prevent="insertSubPage('especialists-specializations')">
+					<a
+						href="#"
+						@click.prevent="insertPage(links.specialists, links.specialists.list.all)"
+					>
+						СПИСОК
+					</a>
+					<a
+						href="#"
+						@click.prevent="
+							insertPage(links.specialists, links.specialists.list.specialization)
+						"
+					>
 						СПЕЦИАЛИЗАЦИИ
 					</a>
-					<a href="#" @click.prevent="insertSubPage('especialists-clinics')"> КЛИНИКИ </a>
+					<a
+						href="#"
+						@click.prevent="insertPage(links.specialists, links.specialists.list.clinic)"
+					>
+						КЛИНИКИ
+					</a>
 				</div>
 			</div>
-			<div class="item active">
+			<div class="item">
 				<a
 					class="item-title"
 					:class="{ active: links.prices.status }"
@@ -80,12 +95,16 @@
 					ЦЕНЫ
 				</a>
 				<div class="item-list" ref="eprices" :class="{ active: links.prices.status }">
-					<a href="#" @click.prevent="insertSubPage('eprices-all')"> СПИСОК ЦЕН </a>
-					<a href="#" @click.prevent="insertSubPage('eprices-template')"> ШАБЛОН </a>
+					<a href="#" @click.prevent="insertPage(links.prices, links.prices.list.all)">
+						СПИСОК ЦЕН
+					</a>
+					<a href="#" @click.prevent="insertPage(links.prices, links.prices.list.template)">
+						ШАБЛОН
+					</a>
 				</div>
 			</div>
-			<div class="item active">
-				<a class="item-title" href="#" @click.prevent="insertPage('econtacts')">
+			<div class="item" :class="{ active: links.contacts.status }">
+				<a class="item-title" href="#" @click.prevent="insertPage(links.contacts)">
 					<svg width="25" height="25" viewBox="0 0 30 33" xmlns="http://www.w3.org/2000/svg">
 						<path
 							d="M3 33V30H27V33H3ZM3 3V0H27V3H3ZM15 18C16.25 18 17.3125 17.5625 18.1875 16.6875C19.0625 15.8125 19.5 14.75 19.5 13.5C19.5 12.25 19.0625 11.1875 18.1875 10.3125C17.3125 9.4375 16.25 9 15 9C13.75 9 12.6875 9.4375 11.8125 10.3125C10.9375 11.1875 10.5 12.25 10.5 13.5C10.5 14.75 10.9375 15.8125 11.8125 16.6875C12.6875 17.5625 13.75 18 15 18ZM3 28.5C2.175 28.5 1.46875 28.2063 0.88125 27.6188C0.29375 27.0313 0 26.325 0 25.5V7.5C0 6.675 0.29375 5.96875 0.88125 5.38125C1.46875 4.79375 2.175 4.5 3 4.5H27C27.825 4.5 28.5313 4.79375 29.1188 5.38125C29.7063 5.96875 30 6.675 30 7.5V25.5C30 26.325 29.7063 27.0313 29.1188 27.6188C28.5313 28.2063 27.825 28.5 27 28.5H3ZM5.625 25.5C6.75 24.1 8.1125 23 9.7125 22.2C11.3125 21.4 13.075 21 15 21C16.925 21 18.6875 21.4 20.2875 22.2C21.8875 23 23.25 24.1 24.375 25.5H27V7.5H3V25.5H5.625ZM10.05 25.5H19.95C19.225 25 18.4438 24.625 17.6063 24.375C16.7688 24.125 15.9 24 15 24C14.1 24 13.2313 24.125 12.3938 24.375C11.5563 24.625 10.775 25 10.05 25.5ZM15 15C14.575 15 14.2188 14.8563 13.9313 14.5688C13.6438 14.2813 13.5 13.925 13.5 13.5C13.5 13.075 13.6438 12.7188 13.9313 12.4313C14.2188 12.1438 14.575 12 15 12C15.425 12 15.7813 12.1438 16.0688 12.4313C16.3563 12.7188 16.5 13.075 16.5 13.5C16.5 13.925 16.3563 14.2813 16.0688 14.5688C15.7813 14.8563 15.425 15 15 15Z"
@@ -120,47 +139,67 @@ export default {
 			},
 			isCreator: false,
 			links: {
+				profile: {
+					name: "profile",
+					status: false,
+					list: null,
+				},
 				home: {
 					name: "ehome",
 					status: false,
 					list: null,
 				},
 				about: {
-					name: "about-us",
+					name: "eabout",
 					status: false,
 					list: null,
 				},
 				specialists: {
-					name: "specialists",
+					name: "especialists",
 					status: false,
 					list: {
-						all: false,
-						specialization: false,
-						clinic: false,
-						education: false,
-						works: false,
-						certificates: false,
+						all: {
+							name: "especialists-all",
+							status: false,
+							list: null,
+						},
+						specialization: {
+							name: "especialists-specializations",
+							status: false,
+							list: null,
+						},
+						clinic: {
+							name: "especialists-clinics",
+							status: false,
+							list: null,
+						},
 					},
 				},
 				prices: {
 					name: "eprices",
 					status: false,
 					list: {
-						download: false,
-						rules: false,
+						all: {
+							name: "eprices-all",
+							status: false,
+							list: null,
+						},
+						template: {
+							name: "eprices-template",
+							status: false,
+							list: null,
+						},
 					},
 				},
-				specialists: {
-					name: "admin-settings",
+				contacts: {
+					name: "econtacts",
 					status: false,
-					list: {
-						all: false,
-						specialization: false,
-						clinic: false,
-						education: false,
-						works: false,
-						certificates: false,
-					},
+					list: null,
+				},
+				users: {
+					name: "users",
+					status: false,
+					list: null,
 				},
 			},
 		};
@@ -176,21 +215,16 @@ export default {
 				}
 			}
 		},
-		insertPage(page) {
-			for (let key in this.links) {
-				this.links[key].status = false;
+		insertPage(parent, child = null) {
+			if (!child) {
+				for (let key in this.links) {
+					this.links[key].status = false;
+				}
+
+				this.$router.push({ name: `${parent.name}` });
+			} else {
+				this.$router.push({ name: `${child.name}` });
 			}
-
-			this.$router.push({ name: `${page}` });
-
-			// смена статуса закрытия бургера
-			this.$store.state.burger.status = false;
-		},
-		insertSubPage(subPage) {
-			this.$router.push({ name: `${subPage}` });
-
-			// смена статуса закрытия бургера
-			this.$store.state.burger.status = false;
 
 			// скролл к верху
 			window.scrollTo({
@@ -198,6 +232,9 @@ export default {
 				left: 0,
 				behavior: "instant",
 			});
+
+			// смена статуса закрытия бургера
+			this.$store.state.burger.status = false;
 		},
 		// Выход из аккаунта
 		logoutUser() {
@@ -259,6 +296,10 @@ aside.active {
 	box-sizing: border-box;
 	display: flex;
 	flex-direction: column;
+}
+
+.aside-body > .item.active {
+	background-color: red;
 }
 
 .aside-body > .item.active {

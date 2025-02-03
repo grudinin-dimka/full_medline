@@ -233,10 +233,6 @@ export default {
 							"token"
 						)}`;
 
-						// Вводим первоначальные данные активной ссылки
-						localStorage.setItem("linkActiveName", "ehome");
-						localStorage.setItem("linkPreviosName", "ehome");
-
 						// Перевод на страницу админки
 						this.$router.push({ name: "ehome" });
 

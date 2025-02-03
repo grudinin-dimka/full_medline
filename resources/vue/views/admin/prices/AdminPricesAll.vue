@@ -69,8 +69,8 @@
 				v-if="prices.length > 0"
 			>
 				<div class="info">
-					<div>{{ price.filename }}</div>
-					<div>{{ formatDate(price.created_at) }}</div>
+					<div class="name">{{ price.filename }}</div>
+					<div class="date">{{ formatDate(price.created_at) }}</div>
 				</div>
 				<div class="buttons">
 					<template v-if="price.create">
@@ -585,5 +585,30 @@ export default {
 	display: flex;
 	align-items: center;
 	gap: 10px;
+}
+
+@media screen and (width <= 1300px) {
+	.eprices > .item > .info > .date {
+		display: none;
+	}
+
+	.eprices > .item > .info {
+		flex: 1 0 0px;
+		display: flex;
+	}
+}
+
+@media screen and (width <= 700px) {
+	.eprices > .item {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+	}
+
+	.eprices > .item > .buttons {
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+	}
 }
 </style>

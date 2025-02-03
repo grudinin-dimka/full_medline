@@ -119,15 +119,25 @@ class HomeController extends Controller
    public function getFooter(Request $request) {
       $footer = Footer::find(1);
 
-      $data = [
-         "title" => $footer->title,        
-         "titleDesc" => $footer->titleDesc,        
-         "license" => $footer->license,        
-         "licenseDesc" => $footer->licenseDesc,        
-         "footer" => $footer->footer,        
-      ];
-         
-      return $data;
+      if (!$footer) {
+         return response()->json([
+            "status" => false,
+            "message" => "Футер не найден.",
+            "data" => null,
+         ]);
+      }
+
+      return response()->json([
+         "status" => true,
+         "message" => "Футер найден.",
+         "data" => (object) [
+            "title" => $footer->title,        
+            "titleDesc" => $footer->titleDesc,        
+            "license" => $footer->license,        
+            "licenseDesc" => $footer->licenseDesc,        
+            "footer" => $footer->footer,        
+         ],
+      ]);
    } 
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                  СПЕЦИАЛИСТЫ                      |*/

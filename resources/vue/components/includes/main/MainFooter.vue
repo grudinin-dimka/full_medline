@@ -154,8 +154,17 @@ export default {
 			url: `${this.$store.state.axios.urlApi}` + `get-footer`,
 		})
 			.then((response) => {
-				for (let key in response.data) {
-					this.footer[key] = response.data[key];
+				if (response.data.status) {
+					for (let key in response.data.data) {
+						this.footer[key] = response.data.data[key];
+					}
+				} else {
+					let debbugStory = {
+						title: "Ошибка.",
+						body: "Произошла ошибка при получении данных о футере.",
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
 				}
 			})
 			.catch((error) => {

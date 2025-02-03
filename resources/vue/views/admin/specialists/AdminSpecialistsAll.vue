@@ -6,7 +6,7 @@
 
 	<block-once :minHeight="200">
 		<block-title>
-			<template #title>Список врачей</template>
+			<template #title>СПИСОК ВРАЧЕЙ</template>
 			<template #buttons>
 				<icon-load :width="28" :height="28" v-if="disabled.specialists.save" />
 				<icon-save :width="28" :height="28" @click="saveSpecialistChanges" v-else />

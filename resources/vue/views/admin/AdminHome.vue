@@ -1221,13 +1221,22 @@ export default {
 			url: `${this.$store.state.axios.urlApi}` + `get-footer`,
 		})
 			.then((response) => {
-				for (let key in response.data) {
-					// Проверка полученного поля в объекте на пустоту
-					if (response.data[key] !== null) {
-						// Заполнение полей данными с сервера
-						this.footer[key].body = response.data[key];
-						this.footer[key].symbolsCount = response.data[key].length;
+				if (response.data.status) {
+					for (let key in response.data.data) {
+						// Проверка полученного поля в объекте на пустоту
+						if (response.data.data[key] !== null) {
+							// Заполнение полей данными с сервера
+							this.footer[key].body = response.data.data[key];
+							this.footer[key].symbolsCount = response.data.data[key].length;
+						}
 					}
+				} else {
+					let debbugStory = {
+						title: "Ошибка.",
+						body: response.data.message,
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
 				}
 			})
 			.catch((error) => {
