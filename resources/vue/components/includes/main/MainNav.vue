@@ -31,8 +31,7 @@ export default {
 		insertPage(page) {
 			this.$router.push({ name: `${page}` });
 
-			// смена статуса закрытия бургера
-			this.$store.commit("setBurgerMain");
+			this.$store.commit("closeBurgerMain");
 		},
 	},
 };

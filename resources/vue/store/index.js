@@ -19,7 +19,6 @@ const store = createStore({
 			main: {
 				status: false,
 			},
-			status: false,
 		},
 		user: {
 			nickname: null,
@@ -58,20 +57,33 @@ const store = createStore({
 				state.mainNav.status = false;
 			}
 		},
-		/* Отображение меню навигации */
+		/* Изменение меню навигации (главная) */
 		setBurgerMain(state) {
+			document.body.classList.toggle("modal-open");
+
 			if (state.burger.main.status) {
 				state.burger.main.status = false;
 			} else {
 				state.burger.main.status = true;
 			}
 		},
+		closeBurgerMain(state) {
+			document.body.classList.remove("modal-open");
+			state.burger.main.status = false;
+		},
+		/* Изменение меню навигации (админка) */
 		setBurgerAdmin(state) {
+			document.body.classList.toggle("modal-open");
+
 			if (state.burger.admin.status) {
 				state.burger.admin.status = false;
 			} else {
 				state.burger.admin.status = true;
 			}
+		},
+		closeBurgerAdmin(state) {
+			document.body.classList.remove("modal-open");
+			state.burger.admin.status = false;
 		},
 		/* Установка токена */
 		setToken(state, token) {
