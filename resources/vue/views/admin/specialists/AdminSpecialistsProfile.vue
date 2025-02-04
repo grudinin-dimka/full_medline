@@ -40,6 +40,7 @@
 
 			<!-- Пагинация -->
 			<pagination
+				v-if="sections.specializations.length > paginationSpecializations.elements.range"
 				:arrayLength="sections.specializations.length"
 				:settings="paginationSpecializations"
 				@changePage="changePageSpecializations"
@@ -104,6 +105,7 @@
 			</div>
 			<!-- Пагинация -->
 			<pagination
+				v-if="sections.clinics.length > paginationClinics.elements.range"
 				:arrayLength="sections.clinics.length"
 				:settings="paginationClinics"
 				@changePage="changePageClinics"

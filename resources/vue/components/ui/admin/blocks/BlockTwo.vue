@@ -44,4 +44,10 @@ export default {};
 	box-shadow: 0px 4px 10px -10px rgba(0, 0, 0, 0.99);
 	transition: all 0.5s;
 }
+
+@media screen and (width <= 600px) {
+	.block-two > .item {
+		flex: 1 0 200px;
+	}
+}
 </style>

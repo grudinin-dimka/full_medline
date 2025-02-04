@@ -43,6 +43,8 @@
 </template>
 
 <script>
+import sorted from "../../../services/sorted";
+
 export default {
 	components: {},
 	props: {
@@ -55,6 +57,8 @@ export default {
 	methods: {
 		getSpecializationString(specialization) {
 			let specializationString = "";
+
+			sorted.sortStringByKey("up", specialization, "name");
 
 			for (let i = 0; i < specialization.length; i++) {
 				specializationString += specialization[i].name + ", ";
@@ -137,6 +141,10 @@ export default {
 	background-position: center center;
 	background-repeat: no-repeat;
 	height: 90px;
+}
+
+.specialist > :is(img:hover, .specialist-img:hover) {
+	border: 2px solid var(--input-border-color-inactive);
 }
 
 .specialist-body {

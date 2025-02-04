@@ -128,6 +128,7 @@ import IconSpecialistChild from "../../../components/icons/specialists/IconSpeci
 import IconSpecialistAdult from "../../../components/icons/specialists/IconSpecialistAdult.vue";
 
 import axios from "axios";
+import sorted from "../../../services/sorted";
 
 export default {
 	components: {
@@ -160,6 +161,8 @@ export default {
 	computed: {
 		getSpecializations() {
 			let result = "";
+
+			sorted.sortStringByKey("up", this.specialist.specializations, "name");
 
 			this.specialist.specializations.forEach((specialization) => {
 				result += specialization.name + ", ";

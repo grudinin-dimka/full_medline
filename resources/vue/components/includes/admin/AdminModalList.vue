@@ -73,6 +73,7 @@ export default {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	gap: 10px;
 
 	border: 2px solid var(--input-border-color-inactive);
 	border-radius: 10px;
@@ -80,7 +81,8 @@ export default {
 }
 
 .modal-list > .item > .content {
-	font-size: 18px;
+	font-size: 1.125rem;
+	word-break: break-all;
 }
 
 .modal-list > .item > .content.default {

@@ -29,8 +29,7 @@
 	</div>
 </template>
 
-<script>
-</script>
+<script></script>
 
 <style scoped>
 .debugger {
@@ -108,6 +107,15 @@
 	100% {
 		opacity: 1;
 		transform: translateY(0);
+	}
+}
+
+@media screen and (width < 450px) {
+	.debugger {
+		right: 20px;
+		left: 20px;
+		top: 20px;
+		width: auto;
 	}
 }
 </style>

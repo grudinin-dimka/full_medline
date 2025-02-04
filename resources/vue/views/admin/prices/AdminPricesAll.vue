@@ -84,9 +84,7 @@
 						</TableButtonDefault>
 					</template>
 					<template v-if="!price.delete && !price.create">
-						<a :href="price.path" download>
-							<TableButtonDefault>Скачать</TableButtonDefault>
-						</a>
+						<a :href="price.path" download> Скачать </a>
 						<TableButtonRemove @click="updateDeleteElement(price)">
 							Удалить
 						</TableButtonRemove>
@@ -583,6 +581,27 @@ export default {
 	display: flex;
 	align-items: center;
 	gap: 10px;
+}
+
+.eprices > .item > .buttons > a {
+	flex: 1 0 120px;
+	cursor: pointer;
+	min-width: 120px;
+
+	padding: 7.5px 0px;
+	border: 0px solid black;
+	border-radius: 7.5px;
+
+	font-size: 1rem;
+	text-align: center;
+	text-decoration: none;
+	color: white;
+
+	background-color: var(--button-default-color);
+}
+
+.eprices > .item > .buttons > a:hover {
+	background-color: var(--button-default-color-hover);
 }
 
 @media screen and (width <= 1300px) {

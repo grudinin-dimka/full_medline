@@ -277,7 +277,7 @@ aside {
 }
 
 aside.active {
-	padding-top: 100px;
+	padding-top: 60px;
 	top: 0px;
 	left: 0px;
 	right: 0px;
@@ -289,6 +289,9 @@ aside.active {
 	display: flex;
 	flex-direction: column;
 	gap: 5px;
+
+	max-height: 100%;
+	overflow-y: auto;
 }
 
 .aside-body > .item {

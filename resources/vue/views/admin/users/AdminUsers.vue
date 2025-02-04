@@ -423,9 +423,11 @@
 				<div class="buttons">
 					<div class="icon edit" @click="editUser(user)">
 						<IconEdit :width="24" :height="24" :type="'edit'"></IconEdit>
+						<div class="label">Редактирование</div>
 					</div>
 					<div class="icon admin" @click="editUserPassword(user)">
 						<IconPassword :width="22" :height="22" :type="'admin'"></IconPassword>
+						<div class="label">Смена пароля</div>
 					</div>
 					<div
 						class="icon"
@@ -444,9 +446,11 @@
 							:type="'delete'"
 							v-if="user.statusId === 2"
 						></IconLockClose>
+						<div class="label">Блокировка</div>
 					</div>
 					<div class="icon delete" @click="editUserDelete(user)">
 						<IconRemove :width="24" :height="24" :type="'delete'"></IconRemove>
+						<div class="label">Удаление</div>
 					</div>
 				</div>
 			</div>
@@ -1415,6 +1419,26 @@ export default {
 	height: 25px;
 }
 
+.users > .item > .buttons > .icon > .label {
+	display: none;
+}
+
+.users > .item > .buttons > .icon.delete > .label {
+	color: #d74949;
+}
+
+.users > .item > .buttons > .icon.default > .label {
+	color: rgb(100, 100, 100);
+}
+
+.users > .item > .buttons > .icon.admin > .label {
+	color: rgb(208, 145, 62);
+}
+
+.users > .item > .buttons > .icon.edit > .label {
+	color: var(--primary-color);
+}
+
 .users > .item > .buttons > .icon.delete {
 	background-color: rgb(255, 237, 237);
 }
@@ -1504,6 +1528,23 @@ export default {
 	.users > .item {
 		flex-direction: column;
 		align-items: flex-start;
+	}
+
+	.users > .item > .buttons {
+		flex-direction: column;
+		margin-left: 0;
+		width: 100%;
+	}
+
+	.users > .item > .buttons > .icon {
+		flex-grow: 1;
+		justify-content: flex-start;
+		gap: 10px;
+		width: auto;
+	}
+
+	.users > .item > .buttons > .icon > .label {
+		display: block;
 	}
 }
 </style>

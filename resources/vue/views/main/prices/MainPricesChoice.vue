@@ -95,9 +95,13 @@ export default {
 		/* |                    Геттеры                        |*/
 		/* |___________________________________________________|*/
 		getStreet(city) {
-			return this.addresses.filter((address) => {
+			let filteredAddresses = this.addresses.filter((address) => {
 				return address.city == city;
 			});
+
+			sorted.sortStringByKey("up", filteredAddresses, "street");
+
+			return filteredAddresses;
 		},
 	},
 	mounted() {
@@ -135,8 +139,8 @@ export default {
 <style scoped>
 .prices-choice {
 	display: grid;
-	grid-template-columns: repeat(2, 1fr);
-	gap: 40px;
+	grid-template-columns: repeat(1, 1fr);
+	gap: 20px;
 
 	width: 1350px;
 	font-size: 18px;
@@ -171,33 +175,31 @@ export default {
 	align-items: center;
 	gap: 10px;
 
-	padding: 10px;
 	border: 2px solid var(--input-border-color-inactive);
 	border-radius: 10px;
+	padding: 10px;
+
+	font-size: 1.125em;
 
 	transition: all 0.2s;
 }
 
 .prices-choice > .item > ul > li > button {
 	cursor: pointer;
-	display: flex;
-	justify-content: space-between;
-	gap: 10px;
-
 	padding: 10px 20px;
-	border: 0px;
-	border-radius: 10px;
-
 	font-size: 1.125rem;
 
-	background-color: var(--button-default-color);
 	color: white;
+	border: 0px;
+	border-radius: 10px;
+	background-color: var(--primary-color);
 
 	transition: all 0.2s;
 }
 
 .prices-choice > .item > ul > li > button:hover {
-	background-color: var(--button-default-color-hover);
+	background-color: var(--primary-color);
+	color: white;
 }
 
 @media screen and (width < 1450px) {

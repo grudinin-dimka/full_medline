@@ -41,7 +41,7 @@ button:hover {
 
 @media screen and (max-width: 700px) {
 	button {
-		flex: 0 0 120px;
+		flex: 1 0 120px;
 	}
 }
 </style>

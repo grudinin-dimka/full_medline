@@ -347,7 +347,7 @@ export default {
 
 .buttons {
 	display: flex;
-	justify-content: center;
+	justify-content: flex-end;
 
 	margin-top: 30px;
 }
