@@ -38,4 +38,11 @@ main {
     gap: 20px;
   }
 }
+
+@media screen and (max-width: 450px) {
+  main {
+    padding: 10px;
+    gap: 10px;
+  }
+}
 </style>

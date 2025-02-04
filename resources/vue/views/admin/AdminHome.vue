@@ -36,7 +36,7 @@
 			#{{ currentSlide.data.order.body }}
 			<icon-arrow :width="16" :height="16" :rotate="90" @click="changeSlideOrder('up')" />
 		</template>
-		<template #img>
+		<template #body>
 			<div
 				class="modal-slide-img"
 				v-if="modal.type == 'edit'"
@@ -53,8 +53,6 @@
 				}"
 				ref="modalImg"
 			></div>
-		</template>
-		<template #body>
 			<container-input>
 				<!-- Название -->
 				<container-input-once
@@ -482,7 +480,7 @@ export default {
 						hide: true,
 						close: true,
 					},
-					images: true,
+					images: false,
 					body: true,
 					footer: true,
 				},
@@ -1261,6 +1259,7 @@ export default {
 	background-repeat: no-repeat;
 
 	width: 100%;
+	min-height: 250px;
 	height: 400px;
 }
 

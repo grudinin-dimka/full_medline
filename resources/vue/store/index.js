@@ -6,9 +6,6 @@ const store = createStore({
 			title: "",
 			status: false,
 		},
-		mainNav: {
-			status: false,
-		},
 		axios: {
 			urlApi: "/api/",
 		},
@@ -42,28 +39,22 @@ const store = createStore({
 		/* Отображение модального окна */
 		changeModal(state, title) {
 			state.modal.title = title;
-			document.body.classList.toggle("modal-open");
-			if (state.modal.status === false) {
-				state.modal.status = true;
-			} else {
+
+			if (state.modal.status) {
+				document.body.classList.remove("modal-open");
 				state.modal.status = false;
-			}
-		},
-		/* Отображение меню навигации */
-		changeMainNav(state) {
-			if (state.mainNav.status === false) {
-				state.mainNav.status = true;
 			} else {
-				state.mainNav.status = false;
+				document.body.classList.add("modal-open");
+				state.modal.status = true;
 			}
 		},
 		/* Изменение меню навигации (главная) */
 		setBurgerMain(state) {
-			document.body.classList.toggle("modal-open");
-
 			if (state.burger.main.status) {
+				document.body.classList.remove("modal-open");
 				state.burger.main.status = false;
 			} else {
+				document.body.classList.add("modal-open");
 				state.burger.main.status = true;
 			}
 		},
@@ -73,11 +64,11 @@ const store = createStore({
 		},
 		/* Изменение меню навигации (админка) */
 		setBurgerAdmin(state) {
-			document.body.classList.toggle("modal-open");
-
 			if (state.burger.admin.status) {
+				document.body.classList.remove("modal-open");
 				state.burger.admin.status = false;
 			} else {
+				document.body.classList.add("modal-open");
 				state.burger.admin.status = true;
 			}
 		},

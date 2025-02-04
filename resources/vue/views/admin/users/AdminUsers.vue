@@ -327,16 +327,17 @@
 		<template #title>УДАЛЕНИЕ</template>
 		<template #body>
 			<div class="sub-modal-text">
-				Вы действительно хотите <span class="delete">удалить</span> пользователя "
+				Вы действительно хотите <span class="delete">удалить</span> пользователя
 				<span class="delete">
 					{{
 						currentUser.data.family.body +
 						" " +
 						currentUser.data.name.body +
-						" " +
-						currentUser.data.surname.body
+						(currentUser.data.surname.body !== null
+							? " " + currentUser.data.surname.body
+							: "")
 					}} </span
-				>?"
+				>?
 			</div>
 		</template>
 		<template #footer>
@@ -369,16 +370,16 @@
 				<span class="block">
 					{{ currentUser.data.statusId.body === 1 ? "заблокировать" : "разблокировать" }}
 				</span>
-				пользователя "
-				<span class="block">
+				пользователя <span class="block">
 					{{
 						currentUser.data.family.body +
 						" " +
 						currentUser.data.name.body +
-						" " +
-						currentUser.data.surname.body
+						(currentUser.data.surname.body !== null
+							? " " + currentUser.data.surname.body
+							: "")
 					}} </span
-				>?"
+				>?
 			</div>
 		</template>
 		<template #footer>
