@@ -54,6 +54,10 @@ Route::post('/get-prices-choice', [HomeController::class, 'getPricesChoice']);
 Route::post('/get-prices-template', [HomeController::class, 'getPricesTemplate']);
 Route::post('/get-prices-all', [HomeController::class, 'getPricesAll']);
 /* _____________________________________________________*/
+/* Путевки                                              */
+/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+Route::post('/get-prices-group', [HomeController::class, 'getPricesGruop']);
+/* _____________________________________________________*/
 /* Контакты                                             */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 Route::post('/get-contacts-all', [HomeController::class, 'getContactsAll']);

@@ -14,27 +14,11 @@
 
 	<Block>
 		<template v-if="loading.sections.prices">
-			<div class="filter-blocks">
-				<!-- Поле ввода -->
-				<div class="container-input">
-					<input type="text" placeholder="Введите услугу" v-model="filters.name" />
-					<button class="clear" @click="filters.name = ''" v-if="filters.name">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							height="20px"
-							viewBox="0 -960 960 960"
-							width="20px"
-							fill="black"
-						>
-							<path
-								d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
-							/>
-						</svg>
-					</button>
-				</div>
+			<div class="filter_blocks">
+				<ContainerInputSearch v-model="filters.name" :placeholder="'Введите услугу'" />
 
 				<!-- Фильтры -->
-				<div class="container-filters">
+				<div class="filter_blocks-item">
 					<Filter
 						:filter="filters.category"
 						:list="categories"
@@ -66,11 +50,11 @@
 
 				<!-- Субъекты фильтров -->
 				<div
-					class="container-filters"
+					class="filter_blocks-item"
 					v-if="filters.category.selected.length > 0 || filters.name"
 				>
 					<div class="filter-subject" @click="filters.name = ''" v-if="filters.name">
-						<div class="title">
+						<div class="prices__address-title">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								height="22px"
@@ -107,7 +91,7 @@
 						:key="filter.id"
 						@click="changeSelectedItemChild(filter, 'category')"
 					>
-						<div class="title">
+						<div class="prices__address-title">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								height="24px"
@@ -136,7 +120,7 @@
 						</div>
 					</div>
 					<div class="filter-subject" @click="clearSelectedItems(['category'])">
-						<div class="title">Сбросить фильтры</div>
+						<div class="prices__address-title">Сбросить фильтры</div>
 						<div class="close">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -156,12 +140,12 @@
 
 			<!-- Цены -->
 			<div class="prices">
-				<div class="container-address">
-					<div class="title">
+				<div class="prices__address">
+					<div class="prices__address-title">
 						{{ filters.address.name }}
 					</div>
 					<div
-						class="container-category"
+						class="prices__category"
 						:class="{
 							disabled: category.id === null,
 						}"
@@ -169,7 +153,7 @@
 						v-if="getCurrentCategories.length > 0"
 						:key="category.id"
 					>
-						<div class="title">
+						<div class="prices__address-title">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								height="30px"
@@ -182,26 +166,26 @@
 							</svg>
 							{{ category.name }}
 						</div>
-						<ol class="container-price" v-if="category.id !== null">
+						<ol class="prices__values" v-if="category.id !== null">
 							<li v-for="price in getCurrentPrices(category.id)" :key="price.id">
-								<div class="text">
-									<div class="name">{{ price.name }}</div>
-									<div class="price">{{ formatPrice(price.price) }}</div>
-									<div class="valute">руб.</div>
+								<div class="prices__values-item">
+									<div class="prices__values-name">{{ price.name }}</div>
+									<div class="prices__values-price">{{ formatPrice(price.price) }}</div>
+									<div class="prices__values-valute">руб.</div>
 								</div>
 							</li>
 						</ol>
-						<ol class="container-price" v-if="category.id === null">
+						<ol class="prices__values" v-if="category.id === null">
 							<li>
-								<div class="text">
-									<div class="name">Отсутствует...</div>
-									<div class="price"></div>
-									<div class="valute"></div>
+								<div class="prices__values-item">
+									<div class="prices__values-name">Отсутствует...</div>
+									<div class="prices__values-price"></div>
+									<div class="prices__values-valute"></div>
 								</div>
 							</li>
 						</ol>
 					</div>
-					<div class="container-category-none" v-else>Ничего нет...</div>
+					<div class="prices__categories--none" v-else>Ничего нет...</div>
 				</div>
 			</div>
 		</template>
@@ -222,6 +206,7 @@ import Filter from "../../../components/includes/Filter.vue";
 import Empty from "../../../components/includes/Empty.vue";
 
 import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
+import ContainerInputSearch from "../../../components/ui/admin/containers/input/ContainerInputSearch.vue";
 
 import IconContactHome from "../../../components/icons/contacts/IconContactHome.vue";
 
@@ -237,6 +222,7 @@ export default {
 		Filter,
 		Empty,
 		ContainerInputOnce,
+		ContainerInputSearch,
 		IconContactHome,
 		axios,
 		sorted,
@@ -504,7 +490,7 @@ export default {
 </script>
 
 <style scoped>
-.filter-blocks {
+.filter_blocks {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
@@ -513,13 +499,13 @@ export default {
 	animation: show 0.5s ease-out;
 }
 
-.filter-blocks > .container-input {
+.filter_blocks > .container-input {
 	position: relative;
 	display: grid;
 	grid-template-columns: 1fr auto;
 }
 
-.filter-blocks > .container-input > input {
+.filter_blocks > .container-input > input {
 	box-sizing: border-box;
 
 	padding: 15px;
@@ -535,11 +521,11 @@ export default {
 	caret-color: var(--input-border-color-active);
 }
 
-.filter-blocks > .container-input > input:focus {
+.filter_blocks > .container-input > input:focus {
 	border: 2px solid var(--input-border-color-active);
 }
 
-.filter-blocks > .container-input > button {
+.filter_blocks > .container-input > button {
 	position: absolute;
 	top: 0px;
 	right: 5px;
@@ -559,15 +545,15 @@ export default {
 	background-color: rgba(0, 0, 0, 0);
 }
 
-.filter-blocks > .container-input > button > svg {
+.filter_blocks > .container-input > button > svg {
 	fill: rgba(0, 0, 0, 1);
 }
 
-.filter-blocks > .container-input > button > svg:hover {
+.filter_blocks > .container-input > button > svg:hover {
 	fill: rgba(0, 0, 0, 1);
 }
 
-.filter-blocks > .container-filters {
+.filter_blocks > .filter_blocks-item {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 10px;
@@ -575,7 +561,7 @@ export default {
 	border-radius: 10px;
 }
 
-.filter-blocks > .container-filters > .filter-subject {
+.filter_blocks > .filter_blocks-item > .filter-subject {
 	cursor: pointer;
 	display: flex;
 	align-items: center;
@@ -589,32 +575,32 @@ export default {
 	transition: all 0.2s;
 }
 
-.filter-blocks > .container-filters > .filter-subject:hover {
+.filter_blocks > .filter_blocks-item > .filter-subject:hover {
 	background-color: var(--button-default-color-hover);
 }
 
-.filter-blocks > .container-filters > .filter-subject:last-child {
+.filter_blocks > .filter_blocks-item > .filter-subject:last-child {
 	color: black;
 	background-color: rgb(240, 240, 240);
 }
 
-.filter-blocks > .container-filters > .filter-subject:last-child:hover {
+.filter_blocks > .filter_blocks-item > .filter-subject:last-child:hover {
 	background-color: rgb(230, 230, 230);
 }
 
-.filter-blocks > .container-filters > .filter-subject > .title {
+.filter_blocks > .filter_blocks-item > .filter-subject > .prices__address-title {
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	gap: 5px;
 }
 
-.filter-blocks > .container-filters > .filter-subject:first-child {
+.filter_blocks > .filter_blocks-item > .filter-subject:first-child {
 	padding: 5px 10px;
 	border-radius: 10px;
 }
 
-.filter-blocks > .container-filters > .filter-subject > .close {
+.filter_blocks > .filter_blocks-item > .filter-subject > .close {
 	cursor: pointer;
 	display: flex;
 	align-items: center;
@@ -624,7 +610,7 @@ export default {
 	border-radius: 50px;
 }
 
-.filter-blocks > .container-filters > .filter-subject.disabled {
+.filter_blocks > .filter_blocks-item > .filter-subject.disabled {
 	background-color: rgb(150, 150, 150);
 	color: white;
 }
@@ -636,13 +622,13 @@ export default {
 	grid-template-columns: repeat(1, 1fr);
 }
 
-.prices > .container-address {
+.prices__address {
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
 }
 
-.prices > .container-address > .title {
+.prices__address > .prices__address-title {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -656,15 +642,15 @@ export default {
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
-.prices > .container-address:first-child > .title {
+.prices__address:first-child > .prices__address-title {
 	margin-top: 10px;
 }
 
-.prices > .container-address > .title > svg {
+.prices__address > .prices__address-title > svg {
 	fill: var(--button-default-color);
 }
 
-.prices > .container-address > .container-category {
+.prices__category {
 	display: flex;
 	flex-direction: column;
 	gap: 0px;
@@ -674,7 +660,7 @@ export default {
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
-.prices > .container-address > .container-category-none {
+.prices__categories--none {
 	display: flex;
 	justify-content: center;
 
@@ -686,7 +672,7 @@ export default {
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
-.prices > .container-address > .container-category > .title {
+.prices__category > .prices__address-title {
 	display: flex;
 	align-items: center;
 	gap: 5px;
@@ -701,26 +687,26 @@ export default {
 	border: 0px solid #2d9aa7;
 }
 
-.prices > .container-address > .container-category > .title > svg {
+.prices__category > .prices__address-title > svg {
 	fill: var(--button-default-color);
 }
 
-.prices > .container-address > .container-category.disabled > .title {
+.prices__category.disabled > .prices__address-title {
 	color: rgb(150, 150, 150);
 }
 
-.prices > .container-address > .container-category.disabled > .title > svg {
+.prices__category.disabled > .prices__address-title > svg {
 	fill: rgb(150, 150, 150);
 }
 
-.prices > .container-address > .container-category > .container-price {
+.prices__category > .prices__values {
 	padding: 0px 0px 0px 0px;
 	margin: 0px;
 
 	font-size: 1.125rem;
 }
 
-.prices > .container-address > .container-category > .container-price > li {
+.prices__values > li {
 	list-style: decimal-leading-zero;
 
 	padding: 20px 0px;
@@ -736,13 +722,13 @@ export default {
 	transition: all 0.2s;
 }
 
-.prices > .container-address > .container-category > .container-price > li > .text {
+.prices__values-item {
 	display: grid;
 	grid-template-columns: 1fr 100px 50px;
 	gap: 5px;
 }
 
-.prices > .container-address > .container-category > .container-price > li > .text > .price {
+.prices__values-price {
 	font-family: "Roboto", sans-serif;
 	text-align: right;
 	color: var(--button-default-color);
@@ -753,21 +739,21 @@ export default {
 		width: auto;
 	}
 
-	.filter-blocks {
+	.filter_blocks {
 		width: 100%;
 	}
 }
 
 @media screen and (width <= 850px) {
-	.prices > .container-address > .container-category > .container-price > li {
+	.prices__values > li {
 		margin: 0px 0px 0px 30px;
 	}
 
-	.prices > .container-address > .container-category > .container-price > li > .text {
+	.prices__values-item {
 		grid-template-columns: 1fr 50px 50px;
 	}
 
-	.prices > .container-address > .container-category > .container-price > li > .text > .name {
+	.prices__values-name {
 		text-overflow: ellipsis;
 		word-break: break-all;
 	}

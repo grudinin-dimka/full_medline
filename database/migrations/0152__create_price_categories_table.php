@@ -13,9 +13,20 @@ return new class extends Migration
     {
         Schema::create('price_categories', function (Blueprint $table) {
             $table->id();
-            $table->text('name');
-            $table->foreignId('addressId')->references('id')->on('price_addresses')->onDelete('cascade');
-            $table->foreignId('categoryId')->nullable()->default(null)->references('id')->on('price_categories')->onDelete('cascade');
+            $table->string('name')->index();
+            
+            $table->foreignId('addressId')->index()
+                ->references('id')
+                ->on('price_addresses')
+                ->onDelete('cascade');
+            
+            $table->foreignId('categoryId')->index()
+                ->nullable()
+                ->default(null)
+                ->references('id')
+                ->on('price_categories')
+                ->onDelete('cascade');
+            
             $table->timestamps();
         });
     }

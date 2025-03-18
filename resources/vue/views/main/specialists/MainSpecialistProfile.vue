@@ -87,7 +87,7 @@
 					<ul>
 						<li v-for="education in specialist.educations">
 							<article>
-								<div>{{ education.organization }}</div>
+								<div>{{ education.name + ' (' + education.organization + ")." }}</div>
 							</article>
 						</li>
 					</ul>

@@ -1,13 +1,13 @@
 <template>
 	<nav :class="{ active: $store.state.burger.main.status }">
 		<a
-			v-for="element in menu"
-			:key="element.id"
+			v-for="page in menu"
+			:key="page.id"
 			class="element"
 			:class="{ hiden: isActiv }"
-			@click="insertPage(element.name)"
+			@click="insertPage(page)"
 		>
-			{{ element.title }}
+			{{ page.title }}
 		</a>
 	</nav>
 </template>
@@ -22,14 +22,28 @@ export default {
 				{ id: "2", title: "О Нас", name: "about", href: "about" },
 				{ id: "3", title: "Специалисты", name: "all", href: "/specialists" },
 				{ id: "4", title: "Цены", name: "prices", href: "/prices" },
-				{ id: "5", title: "Расписание", name: "schedule-all", href: "/schedule" },
-				{ id: "6", title: "Контакты", name: "contacts", href: "/contacts" },
+				{ id: "5", title: "Путевки", name: "prices-group", href: "/prices" },
+				{ id: "6", title: "Расписание", name: "schedule-all", href: "/schedule" },
+				{ id: "7", title: "Контакты", name: "contacts", href: "/contacts" },
 			],
 		};
 	},
 	methods: {
 		insertPage(page) {
-			this.$router.push({ name: `${page}` });
+			switch (page.title) {
+				case "Путевки":
+					this.$router.push({
+						name: `${page.name}`,
+						params: {
+							group: "travels",
+						},
+					});
+
+					break;
+				default:
+					this.$router.push({ name: `${page.name}` });
+					break;
+			}
 
 			this.$store.commit("closeBurgerMain");
 		},
@@ -40,7 +54,7 @@ export default {
 <style scoped>
 nav {
 	display: grid;
-	grid-template-columns: repeat(6, 1fr);
+	grid-template-columns: repeat(7, 1fr);
 
 	padding: 10px;
 	margin: 0px 30px;

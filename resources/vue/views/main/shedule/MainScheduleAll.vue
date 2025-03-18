@@ -6,7 +6,7 @@
 	</info-bar>
 
 	<template v-if="false">
-		<button class="shedule-refresh" @click="updateSheduleFromServe">
+		<button class="shedule_refresh" @click="updateSheduleFromServe">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				height="45px"
@@ -22,57 +22,38 @@
 	</template>
 
 	<block :minHeight="100" v-if="loading.sections.schedule">
-		<div class="filter-list">
-			<div class="container">
-				<div class="body">
-					<div
-						class="item"
-						:class="{ active: activeClinic.name === 'Все' }"
-						@click="
-							changeActiveClinic({
-								id: 0,
-								name: 'Все',
-							})
-						"
-					>
-						<div>Все</div>
-					</div>
-					<div
-						class="item"
-						v-for="clinic in clinics"
-						:key="clinic.id"
-						:class="{ active: clinic.status }"
-						@click="changeActiveClinic(clinic)"
-					>
-						<div>{{ clinic.name }}</div>
-					</div>
-				</div>
+		<div class="filter__list">
+			<div
+				class="filter__list-item"
+				:class="{ active: activeClinic.name === 'Все' }"
+				@click="
+					changeActiveClinic({
+						id: 0,
+						name: 'Все',
+					})
+				"
+			>
+				<div>Все</div>
+			</div>
+			<div
+				class="filter__list-item"
+				v-for="clinic in clinics"
+				:key="clinic.id"
+				:class="{ active: clinic.status }"
+				@click="changeActiveClinic(clinic)"
+			>
+				<div>{{ clinic.name }}</div>
 			</div>
 		</div>
-		<div class="filter-blocks">
-			<div class="container-input">
-				<input type="text" placeholder="Введите ФИО" v-model="filters.fio.data.body" />
-				<button class="clear" @click="filters.fio.data.body = ''" v-if="filters.fio.data.body">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						height="20px"
-						viewBox="0 -960 960 960"
-						width="20px"
-						fill="black"
-					>
-						<path
-							d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
-						/>
-					</svg>
-				</button>
-			</div>
-			<div class="container-select">
-				<Selector
-					v-model="filters.specialization.data.body"
-					:placeholder="'Выберите специализацию'"
-					:list="getFormatSpecializations"
-				></Selector>
-			</div>
+		<div class="filter__blocks">
+			<ContainerInputSearch v-model="filters.fio.data.body">
+				<template #label>Поиск</template>
+			</ContainerInputSearch>
+			<Selector
+				v-model="filters.specialization.data.body"
+				:placeholder="'Выберите специализацию'"
+				:list="getFormatSpecializations"
+			></Selector>
 		</div>
 	</block>
 
@@ -163,6 +144,7 @@ import BlockHide from "../../../components/ui/main/blocks/BlockHide.vue";
 
 import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
 import ContainerSelectOnce from "../../../components/ui/admin/containers/select/ContainerSelectOnce.vue";
+import ContainerInputSearch from "../../../components/ui/admin/containers/input/ContainerInputSearch.vue";
 
 import axios from "axios";
 import sorted from "../../../services/sorted.js";
@@ -176,6 +158,7 @@ export default {
 		BlockHide,
 		ContainerInputOnce,
 		ContainerSelectOnce,
+		ContainerInputSearch,
 		axios,
 		sorted,
 	},
@@ -447,7 +430,7 @@ export default {
 	font-size: 1.125rem;
 }
 
-.shedule-refresh {
+.shedule_refresh {
 	cursor: pointer;
 	position: fixed;
 	right: 30px;
@@ -461,7 +444,7 @@ export default {
 	color: white;
 }
 
-.shedule-refresh:hover {
+.shedule_refresh:hover {
 	background-color: var(--button-default-color-hover);
 }
 
@@ -471,15 +454,9 @@ export default {
 }
 
 /* Фильтры */
-.filter-list {
-	display: flex;
-	justify-content: center;
-	width: 100%;
-}
-
-.filter-list > .container {
+.filter__list {
 	display: inline-flex;
-	justify-content: space-between;
+	justify-content: flex-start;
 	flex-wrap: wrap;
 	gap: 10px;
 
@@ -488,34 +465,7 @@ export default {
 	animation: show 0.5s ease-out;
 }
 
-.filters-button {
-	cursor: pointer;
-}
-
-.filter-list > .container > .body {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 10px;
-}
-
-.filter-button {
-	cursor: pointer;
-
-	padding: 5px 10px;
-	font-size: 18px;
-	border: 2px solid var(--input-border-color-inactive);
-	border-radius: 100px;
-
-	transition: all 0.2s;
-}
-
-.filter-button:hover {
-	border: 2px solid var(--input-border-color-active);
-	background-color: #f2feff;
-}
-
-.filter-list > .container > .body > .item {
-	flex-grow: 1;
+.filter__list-item {
 	cursor: pointer;
 
 	height: 22px;
@@ -535,7 +485,7 @@ export default {
 	transition: all 0.15s;
 }
 
-.filter-list > .container > .body > .item:nth-of-type(2) {
+.filter__list-item:nth-of-type(2) {
 	border-top: 2px;
 	border-top-color: rgba(255, 255, 255, 0);
 	border-right: 2px;
@@ -547,7 +497,7 @@ export default {
 	border-style: solid;
 }
 
-.filter-list > .container > .body > .item:nth-of-type(3) {
+.filter__list-item:nth-of-type(3) {
 	border-top: 2px;
 	border-top-color: rgba(255, 255, 255, 0);
 	border-right: 2px;
@@ -559,7 +509,7 @@ export default {
 	border-style: solid;
 }
 
-.filter-list > .container > .body > .item:nth-of-type(4) {
+.filter__list-item:nth-of-type(4) {
 	border-top: 2px;
 	border-top-color: rgba(255, 255, 255, 0);
 	border-right: 2px;
@@ -571,7 +521,7 @@ export default {
 	border-style: solid;
 }
 
-.filter-list > .container > .body > .item:nth-of-type(5) {
+.filter__list-item:nth-of-type(5) {
 	border-top: 2px;
 	border-top-color: rgba(255, 255, 255, 0);
 	border-right: 2px;
@@ -583,7 +533,7 @@ export default {
 	border-style: solid;
 }
 
-.filter-list > .container > .body > .item:nth-of-type(1).active {
+.filter__list-item:nth-of-type(1).active {
 	border-top: 2px;
 	border-top-color: rgba(255, 255, 255, 0);
 	border-right: 2px;
@@ -597,24 +547,24 @@ export default {
 	color: var(--primary-color);
 }
 
-.filter-list > .container > .body > .item:nth-of-type(2).active {
+.filter__list-item:nth-of-type(2).active {
 	color: #ffad00;
 }
 
-.filter-list > .container > .body > .item:nth-of-type(3).active {
+.filter__list-item:nth-of-type(3).active {
 	color: #ff0d00;
 }
 
-.filter-list > .container > .body > .item:nth-of-type(4).active {
+.filter__list-item:nth-of-type(4).active {
 	color: #49d369;
 }
 
-.filter-list > .container > .body > .item:nth-of-type(5).active {
+.filter__list-item:nth-of-type(5).active {
 	color: #0036c8;
 }
 
 /* Блоки фильтров */
-.filter-blocks {
+.filter__blocks {
 	box-sizing: border-box;
 	display: grid;
 	grid-template-columns: 1fr 1fr;
@@ -629,24 +579,24 @@ export default {
 	animation: show 0.5s ease-out;
 }
 
-.filter-blocks > .item {
+.filter__blocks > .item {
 	position: relative;
 	flex: 1 0 350px;
 
 	transition: all 0.2s;
 }
 
-.filter-blocks > .item.active {
+.filter__blocks > .item.active {
 	border: 2px solid #44a533;
 }
 
-.filter-blocks > .container-input {
+.filter__blocks > .container-input {
 	position: relative;
 	display: grid;
 	grid-template-columns: 1fr auto;
 }
 
-.filter-blocks > .container-input > input {
+.filter__blocks > .container-input > input {
 	box-sizing: border-box;
 
 	padding: 15px;
@@ -662,11 +612,11 @@ export default {
 	caret-color: var(--input-border-color-active);
 }
 
-.filter-blocks > .container-input > input:focus {
+.filter__blocks > .container-input > input:focus {
 	border: 2px solid var(--input-border-color-active);
 }
 
-.filter-blocks > .container-input > button {
+.filter__blocks > .container-input > button {
 	position: absolute;
 	top: 0px;
 	right: 5px;
@@ -686,11 +636,11 @@ export default {
 	background-color: rgba(0, 0, 0, 0);
 }
 
-.filter-blocks > .container-input > button > svg {
+.filter__blocks > .container-input > button > svg {
 	fill: rgba(0, 0, 0, 1);
 }
 
-.filter-blocks > .container-input > button > svg:hover {
+.filter__blocks > .container-input > button > svg:hover {
 	fill: rgba(0, 0, 0, 1);
 }
 
@@ -910,15 +860,13 @@ tr.empty > td {
 }
 
 @media screen and (width <= 1430px) {
-	.title-table {
+	.title-table,
+	.filter__list,
+	.filter__blocks {
 		width: 100%;
 	}
 
-	.filter-list > .container {
-		width: 100%;
-	}
-
-	.filter-blocks {
+	.filter__blocks {
 		width: 100%;
 	}
 }
@@ -932,24 +880,13 @@ tr.empty > td {
 }
 
 @media screen and (max-width: 700px) {
-	.filter-blocks {
+	.filter__blocks {
 		grid-template-columns: 1fr;
 	}
 }
 
-@media screen and (width <= 600px) {
-	.filter-list .container > .item {
-		flex: 1 0 250px;
-	}
-}
-
 @media screen and (width <= 500px) {
-	.filter-list > .container > .body {
-		flex-direction: column;
-		width: 100%;
-	}
-
-	.filter-list > .container > .body > .item {
+	.filter__list-item {
 		width: 100%;
 	}
 }

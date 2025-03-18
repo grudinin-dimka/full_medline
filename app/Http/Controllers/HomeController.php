@@ -645,6 +645,43 @@ class HomeController extends Controller
       
       return $categoryFormat;
    }
+
+   /* Получение групп цен */
+   public function getPricesGruop(Request $request) {
+      $addresses = PriceAddress::all();
+
+      foreach ($addresses as $addressesKey => $addressesValue) {
+         // Проверяем наличие категорий по ключевым словам
+         $categories = PriceCategory::where('addressId', '=', $addressesValue->id)
+            ->where(function($query) {
+               $query->where('name', 'like', '%Путевки%')
+                  ->orWhere('name', 'like', '%путевки%')
+                  ->orWhere('name', 'like', '%Путёвки%')
+                  ->orWhere('name', 'like', '%путёвки%')
+                  ->orWhere('name', 'like', '%Комплексные программы%');
+            })->get();
+         
+         if (count($categories) > 0) {
+            // Проверяем наличие цен
+            foreach ($categories as $categoriesKey => $categoriesValue) {
+               $categoriesValue->prices = PriceValue::where('categoryId', $categoriesValue->id)->get();
+            }
+
+            $travels[] = [
+               "id" => $addressesValue->id,
+               "name" => $addressesValue->name,
+               "categories" => $categories,
+            ];
+         }
+      }
+
+      return response()->json([
+         "status" => true,
+         "message" => "Успешно.",
+         "data" => $travels,
+      ]);
+   }
+
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                    КОНТАКТЫ                       |*/
    /* |___________________________________________________|*/
