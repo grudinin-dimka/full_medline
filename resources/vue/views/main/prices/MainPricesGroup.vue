@@ -9,13 +9,15 @@
 
 	<block :minHeight="100">
 		<div class="travels" v-if="loading.sections.travels">
-			<ContainerInputSearch v-model="search" :placeholder="'Введите услугу'" />
+			<div class="travels__search">
+				<ContainerInputSearch v-model="search" :placeholder="'Введите услугу'" />
+			</div>
 
 			<div class="travels__list">
 				<div class="travels__address" v-for="travel in travels">
 					<div class="travels__address-title">{{ travel.name }}</div>
-					<template v-for="category in travel.categories">
-						<div class="travels__category" v-if="isPricesEmpty(travel)">
+					<template v-if="isPricesTravelEmpty(travel)" v-for="category in travel.categories">
+						<div class="travels__category" v-if="getCurrentPrices(category.prices).length > 0">
 							<div class="travels__category-title">
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
@@ -41,8 +43,8 @@
 								</li>
 							</ol>
 						</div>
-						<div class="prices__categories--none" v-else>Ничего нет...</div>
 					</template>
+					<div class="prices__categories--none" v-else>Ничего нет...</div>
 				</div>
 			</div>
 		</div>
@@ -117,16 +119,14 @@ export default {
 			return price.toLocaleString("ru-RU");
 		},
 
-		isPricesEmpty(travel) {
-			// for (let i = 0; i < travel.categories; i++) {
-			// 	if (travel.categories[i].prices.length > 0) {
-			// 		return true;
-			// 	}
-			// }
+		isPricesTravelEmpty(travel) {
+			for (let i = 0; i < travel.categories.length; i++) {
+				if (this.getCurrentPrices(travel.categories[i].prices).length > 0) {
+					return true;
+				}
+			}
 
-			// return false;
-
-			return true;
+			return false;
 		},
 	},
 	created() {
@@ -169,8 +169,10 @@ export default {
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
+}
 
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
+.travels__search {
+	animation: show 0.5s ease-in-out;
 }
 
 .travels__list {
@@ -207,8 +209,6 @@ export default {
 	font-size: 1.25rem;
 	font-weight: 600;
 	color: var(--primary-color);
-
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 .travels__category-title > svg {
