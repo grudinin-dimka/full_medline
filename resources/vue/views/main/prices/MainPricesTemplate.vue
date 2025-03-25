@@ -53,7 +53,7 @@
 					class="filter_blocks-item"
 					v-if="filters.category.selected.length > 0 || filters.name"
 				>
-					<div class="filter-subject" @click="filters.name = ''" v-if="filters.name">
+					<div class="filter__subject" @click="filters.name = ''" v-if="filters.name">
 						<div class="prices__address-title">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -83,7 +83,7 @@
 						</div>
 					</div>
 					<div
-						class="filter-subject"
+						class="filter__subject"
 						:class="{
 							disabled: filters.category.all,
 						}"
@@ -119,7 +119,7 @@
 							</svg>
 						</div>
 					</div>
-					<div class="filter-subject" @click="clearSelectedItems(['category'])">
+					<div class="filter__subject" @click="clearSelectedItems(['category'])">
 						<div class="prices__address-title">Сбросить фильтры</div>
 						<div class="close">
 							<svg
@@ -141,9 +141,6 @@
 			<!-- Цены -->
 			<div class="prices">
 				<div class="prices__address">
-					<div class="prices__address-title">
-						{{ filters.address.name }}
-					</div>
 					<div
 						class="prices__category"
 						:class="{
@@ -561,7 +558,7 @@ export default {
 	border-radius: 10px;
 }
 
-.filter_blocks > .filter_blocks-item > .filter-subject {
+.filter_blocks > .filter_blocks-item > .filter__subject {
 	cursor: pointer;
 	display: flex;
 	align-items: center;
@@ -575,32 +572,32 @@ export default {
 	transition: all 0.2s;
 }
 
-.filter_blocks > .filter_blocks-item > .filter-subject:hover {
+.filter_blocks > .filter_blocks-item > .filter__subject:hover {
 	background-color: var(--button-default-color-hover);
 }
 
-.filter_blocks > .filter_blocks-item > .filter-subject:last-child {
+.filter_blocks > .filter_blocks-item > .filter__subject:last-child {
 	color: black;
 	background-color: rgb(240, 240, 240);
 }
 
-.filter_blocks > .filter_blocks-item > .filter-subject:last-child:hover {
+.filter_blocks > .filter_blocks-item > .filter__subject:last-child:hover {
 	background-color: rgb(230, 230, 230);
 }
 
-.filter_blocks > .filter_blocks-item > .filter-subject > .prices__address-title {
+.filter_blocks > .filter_blocks-item > .filter__subject > .prices__address-title {
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	gap: 5px;
 }
 
-.filter_blocks > .filter_blocks-item > .filter-subject:first-child {
+.filter_blocks > .filter_blocks-item > .filter__subject:first-child {
 	padding: 5px 10px;
 	border-radius: 10px;
 }
 
-.filter_blocks > .filter_blocks-item > .filter-subject > .close {
+.filter_blocks > .filter_blocks-item > .filter__subject > .close {
 	cursor: pointer;
 	display: flex;
 	align-items: center;
@@ -610,7 +607,7 @@ export default {
 	border-radius: 50px;
 }
 
-.filter_blocks > .filter_blocks-item > .filter-subject.disabled {
+.filter_blocks > .filter_blocks-item > .filter__subject.disabled {
 	background-color: rgb(150, 150, 150);
 	color: white;
 }

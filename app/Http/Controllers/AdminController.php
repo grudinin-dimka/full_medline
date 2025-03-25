@@ -1339,23 +1339,23 @@ class AdminController extends Controller
          $clinics = $fileContent?->clinics;
          if (!$clinics) {
             Log::error('Отсутствуют клиники.');
-            return;      
+            return response()->json(['error' => 'Отсутствуют клиники.']);      
          }
 
          $week = $fileContent?->week;
          if (!$week) {
             Log::error('Отсутствуют дни.');
-            return;      
+            return response()->json(['error' => 'Отсутствуют дни.']);      
          }
 
          $shedules = $fileContent?->shedules;
          if (!$shedules) {
             Log::error('Отсутствует расписание.');
-            return;      
+            return response()->json(['error' => 'Отсутствуют расписание.']);      
          }
       } else {
          Log::error('Отсутствует файл.');
-         return;      
+         return response()->json(['error' => 'Отсутствует файл.']);
       };
       
       // Сбрасываю ограничения внешнего ключа, чтобы очистить таблицы

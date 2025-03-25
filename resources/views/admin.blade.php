@@ -20,7 +20,7 @@
       <meta property="og:image" content="https://medlinegroup.ru/storage/img/logo.webp">
 
       <link rel="shortcut icon" href="{{ asset('favicon.png') }}" type="image/png" size="100x100">
-      <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+      
       <!-- Yandex.Maps -->
       <script src="https://api-maps.yandex.ru/v3/?apikey=599ae210-3f94-4561-9fbb-3668aa323749&lang=ru_RU"></script>
    </head>

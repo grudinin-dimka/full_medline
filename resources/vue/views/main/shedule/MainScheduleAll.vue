@@ -99,16 +99,8 @@
 										</div>
 									</div>
 								</div>
-								<div
-									class="item"
-									v-else
-									:class="{
-										one: activeClinic.id === clinics[0].id,
-										two: activeClinic.id === clinics[1].id,
-										three: activeClinic.id === clinics[2].id,
-										four: activeClinic.id === clinics[3].id,
-									}"
-								>
+								<!-- STOP Делал тут и есть ошибка в id -->
+								<div class="item" v-else :class="getTimeClass(activeClinic.id)">
 									<div
 										class="time"
 										v-for="blob in getDayTime(shedule.id, day.date, activeClinic.id)"
@@ -213,11 +205,19 @@ export default {
 			let specializations = [];
 
 			this.shedules.forEach((shedule) => {
-				if (!specializations.find((item) => item.value === shedule.specializations))
-					specializations.push({
-						value: shedule.specializations,
-						label: shedule.specializations,
-					});
+				let keys = shedule.specializations.split(", ");
+
+				keys.forEach((key) => {
+					if (
+						!specializations.find((item) =>
+							item.value.toLowerCase().includes(key.toLowerCase())
+						)
+					)
+						specializations.push({
+							value: key,
+							label: key,
+						});
+				});
 			});
 
 			sorted.sortStringByKey("up", specializations, "label");
@@ -255,7 +255,6 @@ export default {
 			switch (this.activeClinic.name) {
 				case "Все":
 					filteredShedules = [...this.shedules];
-					sorted.sortByName("up", filteredShedules);
 					break;
 				default:
 					filteredShedules = this.shedules.filter((item) =>
@@ -283,6 +282,8 @@ export default {
 					});
 				}
 			}
+
+			sorted.sortByName("up", filteredShedules);
 
 			return [...filteredShedules];
 		},
@@ -370,6 +371,9 @@ export default {
 			await axios({
 				method: "post",
 				url: `${this.$store.state.axios.urlApi}` + `save-shedules-all`,
+				data: {
+					type: "manual",
+				},
 			})
 				.then((response) => {
 					console.log(response.data);
@@ -377,6 +381,27 @@ export default {
 				.catch((error) => {
 					console.log(error);
 				});
+		},
+
+		/* Получение класса у времени */
+		getTimeClass(id) {
+			switch (id) {
+				case this.clinics.at(0)?.id:
+					return "one";
+					break;
+				case this.clinics.at(1)?.id:
+					return "two";
+					break;
+				case this.clinics.at(2)?.id:
+					return "three";
+					break;
+				case this.clinics.at(3)?.id:
+					return "four";
+					break;
+				default:
+					return "other";
+					break;
+			}
 		},
 	},
 	mounted() {
@@ -779,13 +804,19 @@ tr.create:hover > td {
 	border-radius: 10px;
 }
 
+.days > .item:is(.one, .two, .three, .four) {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
 .days > .item.all > .time {
 	color: black;
 	cursor: default;
 	border-radius: 10px;
 
 	margin: 5px 0px;
-}
+}	
 
 .days > .item.all > .time > .help {
 	position: absolute;

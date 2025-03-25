@@ -1,12 +1,16 @@
+/* Импорт стилей */
 import "./assets/css/main.css";
 
 import { createApp } from "vue";
 import App from "./App.vue";
-// Импорт роутера
+
+/* Роутера */
 import router from "./router/index.js";
-// Импорт для создания масок у полей ввода
+
+/* Маски полей */
 import VueTheMask from "vue-the-mask";
-// Импорт глобальных переменных
+
+/* Хранилище */
 import store from "./store/index.js";
 
 const app = createApp(App);
