@@ -6,30 +6,33 @@
 	</info-bar>
 
 	<Block :minHeight="500">
-		<div class="prices-choice" v-if="loading.sections.addresses">
-			<div class="item" v-for="city in getCities">
-				<div class="label">{{ city }}</div>
-				<ul>
-					<li v-for="street in getStreet(city)">
-						<div class="address">{{ `ул. ${street.street}, д. ${street.house}` }}</div>
-						<button
-							@click="
-								$router.push({
-									name: 'prices-template',
-									params: {
-										city: street.cityUrl,
-										street: street.streetUrl,
-										house: street.houseUrl,
-									},
-								})
-							"
-						>
-							Смотреть
-						</button>
-					</li>
-				</ul>
+		<template v-if="loading.sections.addresses">
+			<div class="prices-choice" v-if="getCities.length > 0">
+				<div class="item" v-for="city in getCities">
+					<div class="label">{{ city }}</div>
+					<ul>
+						<li v-for="street in getStreet(city)">
+							<div class="address">{{ `ул. ${street.street}, д. ${street.house}` }}</div>
+							<button
+								@click="
+									$router.push({
+										name: 'prices-template',
+										params: {
+											city: street.cityUrl,
+											street: street.streetUrl,
+											house: street.houseUrl,
+										},
+									})
+								"
+							>
+								Смотреть
+							</button>
+						</li>
+					</ul>
+				</div>
 			</div>
-		</div>
+			<Empty :minHeight="300" v-else />
+		</template>
 
 		<loader-child
 			:isLoading="loading.loader.addresses"
@@ -42,6 +45,7 @@
 import Block from "../../../components/ui/main/blocks/Block.vue";
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
+import Empty from "../../../components/includes/Empty.vue";
 
 import shared from "../../../services/shared";
 import sorted from "../../../services/sorted";
@@ -52,6 +56,8 @@ export default {
 		InfoBar,
 		Block,
 		LoaderChild,
+		Empty,
+
 		shared,
 		axios,
 	},

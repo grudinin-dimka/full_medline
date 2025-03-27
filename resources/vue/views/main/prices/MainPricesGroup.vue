@@ -8,46 +8,55 @@
 	</info-bar>
 
 	<block :minHeight="100">
-		<div class="travels" v-if="loading.sections.travels">
-			<div class="travels__search">
-				<ContainerInputSearch v-model="search" :placeholder="'Введите услугу'" />
-			</div>
+		<template v-if="loading.sections.travels">
+			<div class="travels" v-if="travels.length > 0">
+				<div class="travels__search">
+					<ContainerInputSearch v-model="search" :placeholder="'Введите услугу'" />
+				</div>
 
-			<div class="travels__list">
-				<div class="travels__address" v-for="travel in travels">
-					<div class="travels__address-title">{{ travel.name }}</div>
-					<template v-if="isPricesTravelEmpty(travel)" v-for="category in travel.categories">
-						<div class="travels__category" v-if="getCurrentPrices(category.prices).length > 0">
-							<div class="travels__category-title">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									height="30px"
-									viewBox="0 -960 960 960"
-									width="30px"
-								>
-									<path
-										d="m260-520 220-360 220 360H260ZM700-80q-75 0-127.5-52.5T520-260q0-75 52.5-127.5T700-440q75 0 127.5 52.5T880-260q0 75-52.5 127.5T700-80Zm-580-20v-320h320v320H120Zm580-60q42 0 71-29t29-71q0-42-29-71t-71-29q-42 0-71 29t-29 71q0 42 29 71t71 29Zm-500-20h160v-160H200v160Zm202-420h156l-78-126-78 126Zm78 0ZM360-340Zm340 80Z"
-									/>
-								</svg>
-								{{ category.name }}
-							</div>
-							<ol class="travels__prices">
-								<li v-for="price in getCurrentPrices(category.prices)" :key="price.id">
-									<div class="travels__prices-item">
-										<div class="travels__prices-name">{{ price.name }}</div>
-										<div class="travels__prices-value">
-											{{ formatPrice(price.price) }}
+				<div class="travels__list">
+					<div class="travels__address" v-for="travel in travels">
+						<div class="travels__address-title">{{ travel.name }}</div>
+						<template
+							v-if="isPricesTravelEmpty(travel)"
+							v-for="category in travel.categories"
+						>
+							<div
+								class="travels__category"
+								v-if="getCurrentPrices(category.prices).length > 0"
+							>
+								<div class="travels__category-title">
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										height="30px"
+										viewBox="0 -960 960 960"
+										width="30px"
+									>
+										<path
+											d="m260-520 220-360 220 360H260ZM700-80q-75 0-127.5-52.5T520-260q0-75 52.5-127.5T700-440q75 0 127.5 52.5T880-260q0 75-52.5 127.5T700-80Zm-580-20v-320h320v320H120Zm580-60q42 0 71-29t29-71q0-42-29-71t-71-29q-42 0-71 29t-29 71q0 42 29 71t71 29Zm-500-20h160v-160H200v160Zm202-420h156l-78-126-78 126Zm78 0ZM360-340Zm340 80Z"
+										/>
+									</svg>
+									{{ category.name }}
+								</div>
+								<ol class="travels__prices">
+									<li v-for="price in getCurrentPrices(category.prices)" :key="price.id">
+										<div class="travels__prices-item">
+											<div class="travels__prices-name">{{ price.name }}</div>
+											<div class="travels__prices-value">
+												{{ formatPrice(price.price) }}
+											</div>
+											<div class="travels__prices-valute">руб.</div>
 										</div>
-										<div class="travels__prices-valute">руб.</div>
-									</div>
-								</li>
-							</ol>
-						</div>
-					</template>
-					<div class="prices__categories--none" v-else>Ничего нет...</div>
+									</li>
+								</ol>
+							</div>
+						</template>
+						<div class="prices__categories--none" v-else>Ничего нет...</div>
+					</div>
 				</div>
 			</div>
-		</div>
+			<Empty :minHeight="300" v-else />
+		</template>
 
 		<loader-child
 			:isLoading="loading.loader.travels"
@@ -60,6 +69,7 @@
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import Block from "../../../components/ui/main/blocks/Block.vue";
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
+import Empty from "../../../components/includes/Empty.vue";
 
 import ContainerInputSearch from "../../../components/ui/admin/containers/input/ContainerInputSearch.vue";
 
@@ -69,8 +79,8 @@ export default {
 	components: {
 		InfoBar,
 		Block,
-
 		LoaderChild,
+		Empty,
 
 		ContainerInputSearch,
 	},

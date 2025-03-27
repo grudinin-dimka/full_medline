@@ -678,7 +678,7 @@ class HomeController extends Controller
       return response()->json([
          "status" => true,
          "message" => "Успешно.",
-         "data" => $travels,
+         "data" => $travels ?? [],
       ]);
    }
 

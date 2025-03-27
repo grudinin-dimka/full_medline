@@ -5,7 +5,7 @@
 			<!-- Блок с платёжными системами -->
 			<div class="pay">
 				<a href="/">
-					<img src="../../../assets/svg/logo.svg" width="250" height="150" />
+					<img src="../../../assets/svg/logo.svg" width="250" height="150" alt="логотип"/>
 				</a>
 				<p>Мы принимаем к оплате</p>
 				<div class="pay-cards">

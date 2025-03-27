@@ -5,7 +5,7 @@
 		<router-link to="/schedule">Расписание</router-link>
 	</info-bar>
 
-	<template v-if="false">
+	<template v-if="true">
 		<button class="shedule_refresh" @click="updateSheduleFromServe">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -25,7 +25,7 @@
 		<div class="filter__list">
 			<div
 				class="filter__list-item"
-				:class="{ active: activeClinic.name === 'Все' }"
+				:style="getClinicStyle('Все')"
 				@click="
 					changeActiveClinic({
 						id: 0,
@@ -37,9 +37,9 @@
 			</div>
 			<div
 				class="filter__list-item"
+				:style="getClinicStyle(clinic.id)"
 				v-for="clinic in clinics"
 				:key="clinic.id"
-				:class="{ active: clinic.status }"
 				@click="changeActiveClinic(clinic)"
 			>
 				<div>{{ clinic.name }}</div>
@@ -82,31 +82,30 @@
 							<div class="days">
 								<!-- Вывод расписания на несколько -->
 								<div
-									class="item all"
+									class="days__item all"
 									v-for="clinic in getClinicsWithoutAll"
 									:key="clinic.id"
 									v-if="activeClinic.name === 'Все'"
 								>
 									<div
-										class="time"
-										v-for="blob in getDayTime(shedule.id, day.date, clinic.id)"
-										:class="{ clear: blob === '-' }"
+										class="days__item-content"
+										v-for="time in getDayTime(shedule.id, day.date, clinic.id)"
 										v-if="getClinicStatus(shedule.id, clinic.id)"
+										:style="getTimeStyle(clinic.id, time)"
 									>
-										{{ blob !== "-" ? blob : "" }}
-										<div class="help" v-if="blob !== '-'">
+										{{ time !== "-" ? time : "" }}
+										<div class="days__content-help" v-if="time !== '-'">
 											{{ clinic.name }}
 										</div>
 									</div>
 								</div>
-								<!-- STOP Делал тут и есть ошибка в id -->
-								<div class="item" v-else :class="getTimeClass(activeClinic.id)">
+								<div class="days__item" v-else>
 									<div
-										class="time"
-										v-for="blob in getDayTime(shedule.id, day.date, activeClinic.id)"
-										:class="{ clear: blob === '-' }"
+										class="days__item-content"
+										v-for="time in getDayTime(shedule.id, day.date, activeClinic.id)"
+										:style="getTimeStyle(activeClinic.id, time)"
 									>
-										{{ blob !== "-" ? blob : "" }}
+										{{ time !== "-" ? time : "" }}
 									</div>
 								</div>
 							</div>
@@ -197,6 +196,57 @@ export default {
 			clinics: [],
 			week: [],
 			shedules: [],
+
+			colors: [
+				{
+					primary: {
+						hsl: [41, 100, 50],
+						rgb: [255, 173, 0],
+						alpha: 1,
+					},
+					secondary: {
+						hsl: [41, 100, 84],
+						rgb: [255, 229, 172],
+						alpha: 0.3,
+					},
+				},
+				{
+					primary: {
+						hsl: [3, 100, 65],
+						rgb: [255, 83, 74],
+						alpha: 1,
+					},
+					secondary: {
+						hsl: [3, 92, 85],
+						rgb: [255, 186, 183],
+						alpha: 0.3,
+					},
+				},
+				{
+					primary: {
+						hsl: [123, 76, 44],
+						rgb: [27, 199, 36],
+						alpha: 1,
+					},
+					secondary: {
+						hsl: [120, 100, 91],
+						rgb: [120, 100, 91],
+						alpha: 0.3,
+					},
+				},
+				{
+					primary: {
+						hsl: [224, 82, 58],
+						rgb: [61, 108, 236],
+						alpha: 1,
+					},
+					secondary: {
+						hsl: [224, 100, 85],
+						rgb: [180, 200, 255],
+						alpha: 0.3,
+					},
+				},
+			],
 		};
 	},
 	computed: {
@@ -384,24 +434,88 @@ export default {
 		},
 
 		/* Получение класса у времени */
-		getTimeClass(id) {
-			switch (id) {
-				case this.clinics.at(0)?.id:
-					return "one";
-					break;
-				case this.clinics.at(1)?.id:
-					return "two";
-					break;
-				case this.clinics.at(2)?.id:
-					return "three";
-					break;
-				case this.clinics.at(3)?.id:
-					return "four";
-					break;
-				default:
-					return "other";
-					break;
+		getClinicStyle(id) {
+			if (id === "Все") {
+				// Если выбраны "Все"
+				if (this.activeClinic.name === "Все") {
+					return {
+						color: "var(--primary-color)",
+						borderBottomColor: "var(--primary-color)",
+					};
+				}
+
+				// Если выбрана другая клиника
+				return {
+					borderBottomColor: "var(--primary-color)",
+				};
 			}
+
+			let count = 0;
+
+			// Определение цвета в зависимости от id
+			while (id > this.colors.length) {
+				id -= this.colors.length;
+
+				count++;
+			}
+
+			if (this.activeClinic.id === id) {
+				return {
+					color: this.getColor(id, count, "primary"),
+					borderBottomColor: this.getColor(id, count, "primary"),
+				};
+			}
+
+			return {
+				borderBottomColor: this.getColor(id, count, "primary"),
+			};
+		},
+
+		/* Получение класса у времени */
+		getTimeStyle(id, time) {
+			// Проверка на пустоту
+			if (!id || time == "-") {
+				return {
+					borderColor: "rgba(255, 255, 255, 0)",
+					backgroundColor: "rgba(255, 255, 255, 0)",
+				};
+			}
+
+			let count = 0;
+			// Определение цвета в зависимости от id
+			while (id > this.colors.length) {
+				id -= this.colors.length;
+
+				count++;
+			}
+
+			return {
+				borderColor: this.getColor(id, count, "primary"),
+				backgroundColor: this.getColor(id, count, "secondary"),
+			};
+		},
+
+		// Формирование цвета в зависимости от id
+		getColor(id, count, option) {
+			return (
+				"hsl(" +
+				this.colors.at(id - 1)[option].hsl.reduce((acc, item, index) => {
+					switch (index) {
+						case 1:
+							return acc + ", " + item + "%";
+							break;
+						case 2:
+							return acc + ", " + item + "%";
+							break;
+						default:
+							return acc + item;
+							break;
+					}
+				}, "") +
+				", " +
+				this.colors.at(id - 1)[option].alpha +
+				")"
+			);
 		},
 	},
 	mounted() {
@@ -510,84 +624,6 @@ export default {
 	transition: all 0.15s;
 }
 
-.filter__list-item:nth-of-type(2) {
-	border-top: 2px;
-	border-top-color: rgba(255, 255, 255, 0);
-	border-right: 2px;
-	border-right-color: rgba(255, 255, 255, 0);
-	border-bottom: 2px;
-	border-bottom-color: #ffad00;
-	border-left: 2px;
-	border-left-color: rgba(255, 255, 255, 0);
-	border-style: solid;
-}
-
-.filter__list-item:nth-of-type(3) {
-	border-top: 2px;
-	border-top-color: rgba(255, 255, 255, 0);
-	border-right: 2px;
-	border-right-color: rgba(255, 255, 255, 0);
-	border-bottom: 2px;
-	border-bottom-color: #ff0d00;
-	border-left: 2px;
-	border-left-color: rgba(255, 255, 255, 0);
-	border-style: solid;
-}
-
-.filter__list-item:nth-of-type(4) {
-	border-top: 2px;
-	border-top-color: rgba(255, 255, 255, 0);
-	border-right: 2px;
-	border-right-color: rgba(255, 255, 255, 0);
-	border-bottom: 2px;
-	border-bottom-color: #49d369;
-	border-left: 2px;
-	border-left-color: rgba(255, 255, 255, 0);
-	border-style: solid;
-}
-
-.filter__list-item:nth-of-type(5) {
-	border-top: 2px;
-	border-top-color: rgba(255, 255, 255, 0);
-	border-right: 2px;
-	border-right-color: rgba(255, 255, 255, 0);
-	border-bottom: 2px;
-	border-bottom-color: #0036c8;
-	border-left: 2px;
-	border-left-color: rgba(255, 255, 255, 0);
-	border-style: solid;
-}
-
-.filter__list-item:nth-of-type(1).active {
-	border-top: 2px;
-	border-top-color: rgba(255, 255, 255, 0);
-	border-right: 2px;
-	border-right-color: rgba(255, 255, 255, 0);
-	border-bottom: 2px;
-	border-bottom-color: var(--primary-color);
-	border-left: 2px;
-	border-left-color: rgba(255, 255, 255, 0);
-	border-style: solid;
-
-	color: var(--primary-color);
-}
-
-.filter__list-item:nth-of-type(2).active {
-	color: #ffad00;
-}
-
-.filter__list-item:nth-of-type(3).active {
-	color: #ff0d00;
-}
-
-.filter__list-item:nth-of-type(4).active {
-	color: #49d369;
-}
-
-.filter__list-item:nth-of-type(5).active {
-	color: #0036c8;
-}
-
 /* Блоки фильтров */
 .filter__blocks {
 	box-sizing: border-box;
@@ -604,14 +640,14 @@ export default {
 	animation: show 0.5s ease-out;
 }
 
-.filter__blocks > .item {
+.filter__blocks > .days__item {
 	position: relative;
 	flex: 1 0 350px;
 
 	transition: all 0.2s;
 }
 
-.filter__blocks > .item.active {
+.filter__blocks > .days__item.active {
 	border: 2px solid #44a533;
 }
 
@@ -791,34 +827,38 @@ tr.create:hover > td {
 	flex-direction: column;
 }
 
-.days > .item {
+.days > .days__item {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+
 	text-align: center;
 
 	width: 110px;
 	border-radius: 10px;
 }
 
-.days > .item > .time {
+.days > .days__item > .days__item-content {
 	position: relative;
 	cursor: default;
 	border-radius: 10px;
+
+	border: 1px solid rgba(0, 0, 0, 0);
 }
 
-.days > .item:is(.one, .two, .three, .four) {
+.days > .days__item:is(.one, .two, .three, .four) {
 	display: flex;
 	flex-direction: column;
 	gap: 5px;
 }
 
-.days > .item.all > .time {
+.days > .days__item.all > .days__item-content {
 	color: black;
 	cursor: default;
 	border-radius: 10px;
+}
 
-	margin: 5px 0px;
-}	
-
-.days > .item.all > .time > .help {
+.days > .days__item.all > .days__item-content > .days__content-help {
 	position: absolute;
 	top: -45px;
 	right: 0px;
@@ -836,44 +876,14 @@ tr.create:hover > td {
 	transition: all 0.2s;
 }
 
-.days > .item > .time:hover > .help {
+.days > .days__item > .days__item-content:hover > .days__content-help {
 	opacity: 1;
 	visibility: visible;
 }
 
-.days > .item.all > .time.clear {
+.days > .days__item.all > .days__item-content.clear {
 	margin: 0px;
 	height: 30px;
-}
-
-.days > .item.all:nth-child(1) > .time,
-.days > .item.one > .time {
-	border: 1px solid #ffad00;
-	background-color: rgba(255, 229, 172, 0.3);
-}
-
-.days > .item.all:nth-child(2) > .time,
-.days > .item.two > .time {
-	border: 1px solid #ff534a;
-	background-color: rgba(255, 186, 183, 0.3);
-}
-
-.days > .item.all:nth-child(3) > .time,
-.days > .item.three > .time {
-	border: 1px solid #1bc724;
-	background-color: rgba(211, 255, 211, 0.3);
-}
-
-.days > .item.all:nth-child(4) > .time,
-.days > .item.four > .time {
-	border: 1px solid #3d6cec;
-	background-color: rgba(180, 200, 255, 0.3);
-}
-
-.days > .item.all > .time.clear,
-.days > :is(.item.one, .item.two, .item.three, .item.four) > .time.clear {
-	border: 0px solid #d2f2f5;
-	background-color: rgba(255, 255, 255, 0);
 }
 
 tr.empty > td {

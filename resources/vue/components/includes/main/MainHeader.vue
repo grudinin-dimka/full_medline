@@ -140,7 +140,7 @@
 	<header :class="{ slide: isShadow }">
 		<div class="header-block">
 			<a href="/" class="header-logo-avatar" @click.prevent="$router.push({ name: 'home' })">
-				<img src="../../../assets/svg/logo.svg" width="100" />
+				<img src="../../../assets/svg/logo.svg" width="100" alt="логотип"/>
 			</a>
 		</div>
 
@@ -152,7 +152,7 @@
 			</div>
 		</div>
 		<div class="header-block">
-			<img src="../../../assets/svg/home.svg" width="50" />
+			<img src="../../../assets/svg/home.svg" width="50" alt="адреса"/>
 			<div class="header-block-list">
 				<a href="https://yandex.ru/maps/-/CDtEvOl2" target="_blank">ул. Комсомольская, 16</a>
 				<a href="https://yandex.ru/maps/-/CDtEvSjk" target="_blank">ул. Карла Либкнехта, 10</a>
@@ -160,7 +160,7 @@
 			</div>
 		</div>
 		<div class="header-block">
-			<img src="../../../assets/svg/phone.svg" width="50" />
+			<img src="../../../assets/svg/phone.svg" width="50" alt="номера"/>
 			<div class="header-block-list">
 				<a href="tel:+73525390009" target="_blank">+7 (35253) 9-000-9</a>
 				<a href="tel:+73525332936" target="_blank">+7 (35253) 3-29-36</a>
