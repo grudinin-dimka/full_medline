@@ -618,6 +618,7 @@ export default {
 						"image/jpeg",
 						"image/jpg",
 						"image/png",
+						"image/webp",
 					]);
 					break;
 				default:
@@ -868,7 +869,7 @@ export default {
 				let formData = new FormData();
 				formData.append("image", this.currentSlide.file);
 				formData.append("type", "slide");
-				formData.append("formats", ["png", "jpg", "jpeg"]);
+				formData.append("formats", ["png", "jpg", "jpeg", "webp"]);
 
 				this.disabled.slider.create = true;
 
@@ -984,7 +985,7 @@ export default {
 				let formData = new FormData();
 				formData.append("image", this.$refs.fileUpload.files[0]);
 				formData.append("type", "slide");
-				formData.append("formats", ["png", "jpg", "jpeg"]);
+				formData.append("formats", ["png", "jpg", "jpeg", "webp"]);
 
 				axios({
 					method: "post",

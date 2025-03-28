@@ -2267,7 +2267,7 @@ export default {
 
 				let formData = new FormData();
 				formData.append("image", this.$refs.fileUpload.files[0]);
-				formData.append("formats", ["png", "webp"]);
+				formData.append("formats", ["	", "webp"]);
 				formData.append("profile", JSON.stringify(this.specialist.profile.data));
 
 				this.disabled.profile.create = true;

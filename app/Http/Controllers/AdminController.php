@@ -580,7 +580,7 @@ class AdminController extends Controller
          $validated = validator($request->all(), [
             'image' => [
                'required',
-               File::types('png')->max(10 * 1024),
+               File::types(['png', 'webp'])->max(10 * 1024),
             ],
          ]);
 
@@ -1014,7 +1014,7 @@ class AdminController extends Controller
          $validated = validator($request->all(), [
             'image' => [
                'required',
-               File::types('png')->max(10 * 1024),
+               File::types(['png', 'webp'])->max(10 * 1024),
             ],
          ]);
          if ($validated->fails()) return response()->json([
