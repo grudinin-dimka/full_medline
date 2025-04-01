@@ -451,23 +451,23 @@ export default {
 			}
 
 			let count = 0;
-
+			let number = id;
 			// Определение цвета в зависимости от id
-			while (id > this.colors.length) {
-				id -= this.colors.length;
+			while (number > this.colors.length) {
+				number -= this.colors.length;
 
 				count++;
 			}
 
 			if (this.activeClinic.id === id) {
 				return {
-					color: this.getColor(id, count, "primary"),
-					borderBottomColor: this.getColor(id, count, "primary"),
+					color: this.getColor(number, count, "primary"),
+					borderBottomColor: this.getColor(number, count, "primary"),
 				};
 			}
 
 			return {
-				borderBottomColor: this.getColor(id, count, "primary"),
+				borderBottomColor: this.getColor(number, count, "primary"),
 			};
 		},
 
@@ -502,18 +502,18 @@ export default {
 				this.colors.at(id - 1)[option].hsl.reduce((acc, item, index) => {
 					switch (index) {
 						case 1:
-							return acc + ", " + item + "%";
+							return acc + ", " + (item - count * 10) + "%";
 							break;
 						case 2:
-							return acc + ", " + item + "%";
+							return acc + ", " + (item - count * 10) + "%";
 							break;
 						default:
-							return acc + item;
+							return acc + (item - count * 20);
 							break;
 					}
 				}, "") +
 				", " +
-				this.colors.at(id - 1)[option].alpha +
+				(this.colors.at(id - 1)[option].alpha) +
 				")"
 			);
 		},
