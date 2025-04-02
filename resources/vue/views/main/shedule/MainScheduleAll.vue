@@ -447,6 +447,8 @@ export default {
 				return {
 					borderColor: "rgba(255, 255, 255, 0)",
 					backgroundColor: "rgba(255, 255, 255, 0)",
+					height: "21px",
+					margin: "5px 0px",
 				};
 			}
 
@@ -461,6 +463,7 @@ export default {
 			return {
 				borderColor: this.getColor(id, count, "primary"),
 				backgroundColor: this.getColor(id, count, "secondary"),
+				margin: "5px 0px",
 			};
 		},
 
@@ -568,7 +571,7 @@ export default {
 	border-left: 2px;
 	border-left-color: white;
 	border-style: solid;
-	
+
 	font-size: 18px;
 
 	transition: all 0.15s;
@@ -716,9 +719,8 @@ td {
 
 th,
 td {
-	padding: 10px 5px;
+	padding: 5px 5px;
 	transition: all 0.2s;
-	height: 30px;
 }
 
 tr {
@@ -780,32 +782,17 @@ tr.create:hover > td {
 .days > .days__item {
 	display: flex;
 	flex-direction: column;
-	gap: 5px;
 
 	text-align: center;
-
-	width: 110px;
-	border-radius: 10px;
 }
 
 .days > .days__item > .days__item-content {
 	position: relative;
 	cursor: default;
+
 	border-radius: 10px;
 
 	border: 1px solid rgba(0, 0, 0, 0);
-}
-
-.days > .days__item:is(.one, .two, .three, .four) {
-	display: flex;
-	flex-direction: column;
-	gap: 5px;
-}
-
-.days > .days__item.all > .days__item-content {
-	color: black;
-	cursor: default;
-	border-radius: 10px;
 }
 
 .days > .days__item.all > .days__item-content > .days__content-help {
@@ -832,8 +819,7 @@ tr.create:hover > td {
 }
 
 .days > .days__item.all > .days__item-content.clear {
-	margin: 0px;
-	height: 30px;
+	height: 21px;
 }
 
 tr.empty > td {

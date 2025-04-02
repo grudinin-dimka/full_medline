@@ -140,7 +140,7 @@
 	<header :class="{ slide: isShadow }">
 		<div class="header-block">
 			<a href="/" class="header-logo-avatar" @click.prevent="$router.push({ name: 'home' })">
-				<img src="../../../assets/svg/logo.svg" width="100" alt="логотип"/>
+				<img src="../../../assets/svg/logo.svg" width="100" alt="логотип" />
 			</a>
 		</div>
 
@@ -152,7 +152,7 @@
 			</div>
 		</div>
 		<div class="header-block">
-			<img src="../../../assets/svg/home.svg" width="50" alt="адреса"/>
+			<img src="../../../assets/svg/home.svg" width="50" alt="адреса" />
 			<div class="header-block-list">
 				<a href="https://yandex.ru/maps/-/CDtEvOl2" target="_blank">ул. Комсомольская, 16</a>
 				<a href="https://yandex.ru/maps/-/CDtEvSjk" target="_blank">ул. Карла Либкнехта, 10</a>
@@ -160,10 +160,9 @@
 			</div>
 		</div>
 		<div class="header-block">
-			<img src="../../../assets/svg/phone.svg" width="50" alt="номера"/>
+			<img src="../../../assets/svg/phone.svg" width="50" alt="номера" />
 			<div class="header-block-list">
 				<a href="tel:+73525390009" target="_blank">+7 (35253) 9-000-9</a>
-				<a href="tel:+73525332936" target="_blank">+7 (35253) 3-29-36</a>
 				<a href="tel:+79630070006" target="_blank">+7 (963) 007-00-06</a>
 			</div>
 		</div>
@@ -615,22 +614,15 @@ export default {
 			})
 				.then((response) => {
 					if (response.data.status) {
-						try {
-							this.disabled.modalForm.request = false;
-							this.closeModal();
-						} catch (error) {
-							this.disabled.modalForm.request = false;
+						let debbugStory = {
+							title: "Успешно!",
+							body: "Заявка отправлена.",
+							type: "Completed",
+						};
+						this.$store.commit("debuggerState", debbugStory);
 
-							let debbugStory = {
-								title: "Ошибка.",
-								body: "После отправки запроса произошла ошибка.",
-								type: "Error",
-							};
-							this.$store.commit("debuggerState", debbugStory);
-						}
+						this.closeModal();
 					} else {
-						this.disabled.modalForm.request = false;
-
 						let debbugStory = {
 							title: "Ошибка.",
 							body: response.data.message,
@@ -640,14 +632,15 @@ export default {
 					}
 				})
 				.catch((error) => {
-					this.disabled.modalForm.request = false;
-
 					let debbugStory = {
 						title: "Ошибка.",
 						body: "Не удалось запросить данные у сервера.",
 						type: "Error",
 					};
 					this.$store.commit("debuggerState", debbugStory);
+				})
+				.finally(() => {
+					this.disabled.modalForm.request = false;
 				});
 		},
 	},

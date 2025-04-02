@@ -10,4 +10,4 @@ use App\Http\Controllers\AdminController;
 // Обновление расписания каждй день
 Schedule::call(function () {
     (new AdminController)->saveShedulesAll();
-})->twiceDailyAt(12, 19, 30)->timezone('Asia/Yekaterinburg');
+})->twiceDailyAt(12, 19, 30)->timezone(env('APP_TIMEZONE', 'Asia/Yekaterinburg'));

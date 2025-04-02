@@ -19,12 +19,12 @@ export default {
 			isActiv: true,
 			menu: [
 				{ id: "1", title: "Главная", name: "home", href: "home" },
-				{ id: "2", title: "О Нас", name: "about", href: "about" },
-				{ id: "3", title: "Специалисты", name: "all", href: "/specialists" },
-				{ id: "4", title: "Цены", name: "prices", href: "/prices" },
-				{ id: "5", title: "Путевки", name: "prices-group", href: "/prices" },
-				{ id: "6", title: "Расписание", name: "schedule-all", href: "/schedule" },
-				{ id: "7", title: "Контакты", name: "contacts", href: "/contacts" },
+				{ id: "2", title: "Специалисты", name: "all", href: "/specialists" },
+				{ id: "3", title: "Цены", name: "prices", href: "/prices" },
+				{ id: "4", title: "Путевки", name: "prices-group", href: "/prices" },
+				{ id: "5", title: "Расписание", name: "schedule-all", href: "/schedule" },
+				{ id: "6", title: "Контакты", name: "contacts", href: "/contacts" },
+				{ id: "7", title: "О Нас", name: "about", href: "about" },
 			],
 		};
 	},
