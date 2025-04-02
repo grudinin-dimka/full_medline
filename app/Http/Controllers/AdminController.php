@@ -63,6 +63,7 @@ use \PhpOffice\PhpSpreadsheet\Reader\IReader;
 use \PhpOffice\PhpSpreadsheet\Reader\Ods;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Throwable;
 
 use function PHPUnit\Framework\isEmpty;
 
@@ -1371,53 +1372,61 @@ class AdminController extends Controller
       // Возвращаю ограничения внешнего ключа 
       DB::statement('SET FOREIGN_KEY_CHECKS = 1');
 
-      $clinicId = [];
-      foreach ($clinics as $clinicsKey => $clinicsValue) {
-         $clinic = ShedulesClinic::create([
-            "name" => $clinicsValue->name,
-         ]);
-
-         $clinicId['' . $clinicsValue->id . ''] = $clinic->id;
-      };
-
-      $currentDays = [];
-      foreach ($week as $weekKey => $weekValue) {
-         $day = ShedulesCurrentDay::create([
-            "date" => $weekValue->date,
-         ]);
-
-         $currentDays[] = (object) [
-            "id" => $day->id,
-            "date" => $weekValue->date,
-         ];
-      };
-
-      foreach ($shedules as $shedulesKey => $shedulesValue) {
-         $shedule = Shedule::create([
-            "name" => $shedulesValue->name,
-            "specializations" => $shedulesValue->specializations,
-         ]);
-
-         foreach ($shedulesValue->weeks as $sheduleWeekKey => $sheduleWeekValue) {
-            if ($sheduleWeekValue->status === true) {
-               foreach ($sheduleWeekValue->content as $sheduleWeekContentKey => $sheduleWeekContentValue) {
-                  $day = ShedulesDay::create([
-                     "date" => $sheduleWeekContentValue->date,
-                     "sheduleId" => $shedule->id,
-                     "clinicId" => $clinicId[$sheduleWeekValue->clinicId],
-                  ]);
-
-                  foreach ($sheduleWeekContentValue->time as $ContentValueTimeKey => $ContentValueTimeValue) {
-                     $time = ShedulesDaysTime::create([
-                        "name" => $ContentValueTimeValue,
-                        "dayId" => $day->id,
+      try {
+         $clinicId = [];
+         foreach ($clinics as $clinicsKey => $clinicsValue) {
+            $clinic = ShedulesClinic::create([
+               "name" => $clinicsValue->name,
+            ]);
+   
+            $clinicId['' . $clinicsValue->id . ''] = $clinic->id;
+         };
+   
+         $currentDays = [];
+         foreach ($week as $weekKey => $weekValue) {
+            $day = ShedulesCurrentDay::create([
+               "date" => $weekValue->date,
+            ]);
+   
+            $currentDays[] = (object) [
+               "id" => $day->id,
+               "date" => $weekValue->date,
+            ];
+         };
+   
+         foreach ($shedules as $shedulesKey => $shedulesValue) {
+            $shedule = Shedule::create([
+               "name" => $shedulesValue->name,
+               "specializations" => $shedulesValue->specializations,
+            ]);
+   
+            foreach ($shedulesValue->weeks as $sheduleWeekKey => $sheduleWeekValue) {
+               if ($sheduleWeekValue->status === true) {
+                  foreach ($sheduleWeekValue->content as $sheduleWeekContentKey => $sheduleWeekContentValue) {
+                     $day = ShedulesDay::create([
+                        "date" => $sheduleWeekContentValue->date,
+                        "sheduleId" => $shedule->id,
+                        "clinicId" => $clinicId[$sheduleWeekValue->clinicId],
                      ]);
+   
+                     foreach ($sheduleWeekContentValue->time as $ContentValueTimeKey => $ContentValueTimeValue) {
+                        $time = ShedulesDaysTime::create([
+                           "name" => $ContentValueTimeValue,
+                           "dayId" => $day->id,
+                        ]);
+                     };
                   };
                };
             };
          };
-      };
+
+         return response()->json(['success' => true]);   
+      } catch (Throwable $e) {
+         Log::error($e);
+         return response()->json(['error' => $e]);
+      }   
    }
+   
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                      ЦЕНЫ                         |*/
    /* |___________________________________________________|*/

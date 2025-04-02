@@ -5,22 +5,6 @@
 		<router-link to="/schedule">Расписание</router-link>
 	</info-bar>
 
-	<template v-if="true">
-		<button class="shedule_refresh" @click="updateSheduleFromServe">
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				height="45px"
-				viewBox="0 -960 960 960"
-				width="45px"
-				fill="white"
-			>
-				<path
-					d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-110h80v280H520v-80h168q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q77 0 139-44t87-116h84q-28 106-114 173t-196 67Z"
-				/>
-			</svg>
-		</button>
-	</template>
-
 	<block :minHeight="100" v-if="loading.sections.schedule">
 		<div class="filter__list">
 			<div
@@ -417,21 +401,6 @@ export default {
 			}
 			return false;
 		},
-		async updateSheduleFromServe() {
-			await axios({
-				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `save-shedules-all`,
-				data: {
-					type: "manual",
-				},
-			})
-				.then((response) => {
-					console.log(response.data);
-				})
-				.catch((error) => {
-					console.log(error);
-				});
-		},
 
 		/* Получение класса у времени */
 		getClinicStyle(id) {
@@ -569,24 +538,6 @@ export default {
 	font-size: 1.125rem;
 }
 
-.shedule_refresh {
-	cursor: pointer;
-	position: fixed;
-	right: 30px;
-	bottom: 30px;
-	z-index: 10;
-	width: 80px;
-	height: 80px;
-	border-radius: 100px;
-	border: none;
-	background-color: var(--button-default-color);
-	color: white;
-}
-
-.shedule_refresh:hover {
-	background-color: var(--button-default-color-hover);
-}
-
 .title-table {
 	width: 1350px;
 	font-size: 24px;
@@ -607,7 +558,6 @@ export default {
 .filter__list-item {
 	cursor: pointer;
 
-	height: 22px;
 	padding: 5px;
 	border-top: 2px;
 	border-top-color: white;
@@ -618,7 +568,7 @@ export default {
 	border-left: 2px;
 	border-left-color: white;
 	border-style: solid;
-
+	
 	font-size: 18px;
 
 	transition: all 0.15s;

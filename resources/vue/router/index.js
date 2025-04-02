@@ -209,6 +209,12 @@ const router = createRouter({
 					component: () => import("../views/admin/contacts/AdminContacts.vue"),
 				},
 				{
+					path: "eschedule",
+					name: "eschedule",
+					meta: { title: "(e) Расписание" },
+					component: () => import("../views/admin/schedule/AdminSchedule.vue"),
+				},
+				{
 					path: "users",
 					name: "users",
 					meta: { title: "Пользователи" },
