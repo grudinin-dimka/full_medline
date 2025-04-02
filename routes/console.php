@@ -7,11 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 use App\Http\Controllers\AdminController;
 
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote')->hourly();
-
 // Обновление расписания каждй день
 Schedule::call(function () {
     (new AdminController)->saveShedulesAll();
-})->everyMinute();
+})->twiceDailyAt(12, 19, 30)->timezone('Asia/Yekaterinburg');
