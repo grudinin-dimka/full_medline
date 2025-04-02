@@ -310,7 +310,11 @@ export default {
 			if (this.filters.specialization.status) {
 				if (this.filters.specialization.data.body !== "") {
 					filteredShedules = filteredShedules.filter((item) => {
-						if (item.specializations.indexOf(this.filters.specialization.data.body) !== -1) {
+						if (
+							item.specializations
+								.toLowerCase()
+								.includes(this.filters.specialization.data.body.toLowerCase())
+						) {
 							return item;
 						}
 					});
@@ -485,7 +489,7 @@ export default {
 					}
 				}, "") +
 				", " +
-				(this.colors.at(id - 1)[option].alpha) +
+				this.colors.at(id - 1)[option].alpha +
 				")"
 			);
 		},

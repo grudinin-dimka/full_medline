@@ -171,15 +171,15 @@ export default {
 	font-size: 1.125em;
 
 	border: 2px solid var(--primary-color);
-	color: var(--primary-color);
 	border-radius: 10px;
-	background-color: rgba(255, 255, 255, 0);
+	color: white;
+	background-color: var(--button-default-color);
 
 	transition: all 0.2s;
 }
 
 .specialist-body > button:hover {
-	background-color: var(--primary-color);
+	background-color: var(--button-default-color-hover);
 	color: white;
 }
 

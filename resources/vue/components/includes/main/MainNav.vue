@@ -1,11 +1,12 @@
 <template>
 	<nav :class="{ active: $store.state.burger.main.status }">
 		<a
-			v-for="page in menu"
-			:key="page.id"
 			class="element"
 			:class="{ hiden: isActiv }"
-			@click="insertPage(page)"
+			:href="page.href"
+			v-for="page in menu"
+			:key="page.id"
+			@click.prevent="insertPage(page)"
 		>
 			{{ page.title }}
 		</a>
@@ -18,13 +19,13 @@ export default {
 		return {
 			isActiv: true,
 			menu: [
-				{ id: "1", title: "Главная", name: "home", href: "home" },
+				{ id: "1", title: "Главная", name: "home", href: "/" },
 				{ id: "2", title: "Специалисты", name: "all", href: "/specialists" },
 				{ id: "3", title: "Цены", name: "prices", href: "/prices" },
-				{ id: "4", title: "Путевки", name: "prices-group", href: "/prices" },
+				{ id: "4", title: "Путевки", name: "prices-group", href: "/prices/travels" },
 				{ id: "5", title: "Расписание", name: "schedule-all", href: "/schedule" },
 				{ id: "6", title: "Контакты", name: "contacts", href: "/contacts" },
-				{ id: "7", title: "О Нас", name: "about", href: "about" },
+				{ id: "7", title: "О Нас", name: "about", href: "/about" },
 			],
 		};
 	},
@@ -73,6 +74,8 @@ nav a {
 
 	text-align: center;
 	font-size: 20px;
+	color: white;
+	text-decoration: none;
 
 	transition: all 0.15s ease-in-out;
 }

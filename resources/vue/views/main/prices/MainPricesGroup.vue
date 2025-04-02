@@ -4,28 +4,31 @@
 		<span class="link-arrow"> / </span>
 		<router-link to="/prices">Цены</router-link>
 		<span class="link-arrow"> / </span>
-		<router-link to="/prices/travels">Путевки</router-link>
+		<router-link :to="`/prices/${$route.params.group}`">
+			<load-text :isLoading="loading.loader.title"> Загрузка... </load-text>
+			<span v-if="loading.sections.group">{{ title }}</span>
+		</router-link>
 	</info-bar>
 
 	<block :minHeight="100">
-		<template v-if="loading.sections.travels">
-			<div class="travels" v-if="travels.length > 0">
-				<div class="travels__search">
+		<template v-if="loading.sections.group">
+			<div class="price__group" v-if="group.length > 0">
+				<div class="price__group__search">
 					<ContainerInputSearch v-model="search" :placeholder="'Введите услугу'" />
 				</div>
 
-				<div class="travels__list">
-					<div class="travels__address" v-for="travel in travels">
-						<div class="travels__address-title">{{ travel.name }}</div>
+				<div class="price__group__list">
+					<div class="price__group__address" v-for="item in group">
+						<div class="price__group__address-title">{{ item.name }}</div>
 						<template
-							v-if="isPricesTravelEmpty(travel)"
-							v-for="category in travel.categories"
+							v-if="isPricesGroupEmpty(item)"
+							v-for="category in item.categories"
 						>
 							<div
-								class="travels__category"
+								class="price__group__category"
 								v-if="getCurrentPrices(category.prices).length > 0"
 							>
-								<div class="travels__category-title">
+								<div class="price__group__category-title">
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										height="30px"
@@ -38,20 +41,20 @@
 									</svg>
 									{{ category.name }}
 								</div>
-								<ol class="travels__prices">
+								<ol class="price__group__prices">
 									<li v-for="price in getCurrentPrices(category.prices)" :key="price.id">
-										<div class="travels__prices-item">
-											<div class="travels__prices-name">{{ price.name }}</div>
-											<div class="travels__prices-value">
+										<div class="price__group__prices-item">
+											<div class="price__group__prices-name">{{ price.name }}</div>
+											<div class="price__group__prices-value">
 												{{ formatPrice(price.price) }}
 											</div>
-											<div class="travels__prices-valute">руб.</div>
+											<div class="price__group__prices-valute">руб.</div>
 										</div>
 									</li>
 								</ol>
 							</div>
 						</template>
-						<div class="prices__categories--none" v-else>Ничего нет...</div>
+						<div class="price__group__prices--none" v-else>Ничего нет...</div>
 					</div>
 				</div>
 			</div>
@@ -70,6 +73,7 @@ import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import Block from "../../../components/ui/main/blocks/Block.vue";
 import LoaderChild from "../../../components/includes/LoaderChild.vue";
 import Empty from "../../../components/includes/Empty.vue";
+import LoadText from "../../../components/ui/main/LoadText.vue";
 
 import ContainerInputSearch from "../../../components/ui/admin/containers/input/ContainerInputSearch.vue";
 
@@ -81,6 +85,7 @@ export default {
 		Block,
 		LoaderChild,
 		Empty,
+		LoadText,
 
 		ContainerInputSearch,
 	},
@@ -88,15 +93,18 @@ export default {
 		return {
 			loading: {
 				loader: {
+					title: true,
 					travels: true,
 				},
 				sections: {
-					travels: false,
+					title: false,
+					group: false,
 				},
 			},
 
 			search: "",
-			travels: [],
+			title: "",
+			group: [],
 		};
 	},
 	methods: {
@@ -105,7 +113,7 @@ export default {
 		/* |___________________________________________________|*/
 		/* После скрытия элементы */
 		loaderChildAfterLeave() {
-			this.loading.sections.travels = true;
+			this.loading.sections.group = true;
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -129,9 +137,9 @@ export default {
 			return price.toLocaleString("ru-RU");
 		},
 
-		isPricesTravelEmpty(travel) {
-			for (let i = 0; i < travel.categories.length; i++) {
-				if (this.getCurrentPrices(travel.categories[i].prices).length > 0) {
+		isPricesGroupEmpty(item) {
+			for (let i = 0; i < item.categories.length; i++) {
+				if (this.getCurrentPrices(item.categories[i].prices).length > 0) {
 					return true;
 				}
 			}
@@ -144,11 +152,17 @@ export default {
 		axios({
 			method: "post",
 			url: `${this.$store.state.axios.urlApi}` + `get-prices-group`,
-			data: this.$route.params.group,
+			headers: {
+				Accept: "application/json",
+			},
+			data: {
+				group: this.$route.params.group,
+			},
 		})
 			.then((response) => {
 				if (response.data.status) {
-					this.travels = response.data.data;
+					this.title = response.data.result.title;
+					this.group = response.data.result.array;
 				} else {
 					let debbugStory = {
 						title: "Ошибка.",
@@ -167,6 +181,7 @@ export default {
 				this.$store.commit("debuggerState", debbugStory);
 			})
 			.finally(() => {
+				this.loading.loader.title = false;
 				this.loading.loader.travels = false;
 			});
 	},
@@ -174,30 +189,30 @@ export default {
 </script>
 
 <style scoped>
-.travels {
+.price__group {
 	width: 1350px;
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
 }
 
-.travels__search {
+.price__group__search {
 	animation: show 0.5s ease-in-out;
 }
 
-.travels__list {
+.price__group__list {
 	width: 1350px;
 	display: grid;
 	grid-template-columns: repeat(1, 1fr);
 }
 
-.travels__address {
+.price__group__address {
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
 }
 
-.travels__address-title {
+.price__group__address-title {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -211,7 +226,7 @@ export default {
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
-.travels__category-title {
+.price__group__category-title {
 	display: flex;
 	align-items: center;
 	gap: 5px;
@@ -221,11 +236,11 @@ export default {
 	color: var(--primary-color);
 }
 
-.travels__category-title > svg {
+.price__group__category-title > svg {
 	fill: var(--primary-color);
 }
 
-.travels__category {
+.price__group__category {
 	display: flex;
 	flex-direction: column;
 	gap: 0px;
@@ -235,7 +250,7 @@ export default {
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
-.prices__categories--none {
+.price__group__prices--none {
 	display: flex;
 	justify-content: center;
 
@@ -247,14 +262,14 @@ export default {
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
-.travels__prices {
+.price__group__prices {
 	padding: 0px 0px 0px 0px;
 	margin: 0px;
 
 	font-size: 1.125rem;
 }
 
-.travels__prices > li {
+.price__group__prices > li {
 	list-style: decimal-leading-zero;
 
 	padding: 20px 0px;
@@ -270,21 +285,21 @@ export default {
 	transition: all 0.2s;
 }
 
-.travels__prices-item {
+.price__group__prices-item {
 	display: grid;
 	grid-template-columns: 1fr 100px 50px;
 	gap: 5px;
 }
 
-.travels__prices-value {
+.price__group__prices-value {
 	font-family: "Roboto", sans-serif;
 	text-align: right;
 	color: var(--button-default-color);
 }
 
 @media screen and (width <= 1450px) {
-	.travels,
-	.travels__list {
+	.price__group,
+	.price__group__list {
 		width: auto;
 	}
 
@@ -294,15 +309,15 @@ export default {
 }
 
 @media screen and (width <= 850px) {
-	.travels__prices > li {
+	.price__group__prices > li {
 		margin: 0px 0px 0px 30px;
 	}
 
-	.travels__prices-item {
+	.price__group__prices-item {
 		grid-template-columns: 1fr 50px 50px;
 	}
 
-	.travels__prices-name {
+	.price__group__prices-name {
 		text-overflow: ellipsis;
 		word-break: break-all;
 	}

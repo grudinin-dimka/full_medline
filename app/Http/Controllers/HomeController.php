@@ -648,18 +648,38 @@ class HomeController extends Controller
 
    /* Получение групп цен */
    public function getPricesGruop(Request $request) {
+      $group = $request->group;
+      $title = "";
+      $array = [];
       $addresses = PriceAddress::all();
 
       foreach ($addresses as $addressesKey => $addressesValue) {
-         // Проверяем наличие категорий по ключевым словам
-         $categories = PriceCategory::where('addressId', '=', $addressesValue->id)
-            ->where(function($query) {
-               $query->where('name', 'like', '%Путевки%')
-                  ->orWhere('name', 'like', '%путевки%')
-                  ->orWhere('name', 'like', '%Путёвки%')
-                  ->orWhere('name', 'like', '%путёвки%')
-                  ->orWhere('name', 'like', '%Комплексные программы%');
-            })->get();
+         $categories = [];
+
+         switch ($group) {
+            case 'travels':
+               $title = "Путевки";
+
+               $categories = PriceCategory::where('addressId', '=', $addressesValue->id)
+               ->where(function($query) {
+                  $query->where('name', 'like', '%Путевки%')
+                     ->orWhere('name', 'like', '%путевки%')
+                     ->orWhere('name', 'like', '%Путёвки%')
+                     ->orWhere('name', 'like', '%путёвки%')
+                     ->orWhere('name', 'like', '%Комплексные программы%');
+               })->get();   
+               break;
+            case 'plastic':
+               $title = "Пластика";
+
+               $categories = [];   
+               break;            
+            default:
+               $title = "Не найдено";
+
+               $categories = [];
+               break;
+         }
          
          if (count($categories) > 0) {
             // Проверяем наличие цен
@@ -667,7 +687,7 @@ class HomeController extends Controller
                $categoriesValue->prices = PriceValue::where('categoryId', $categoriesValue->id)->get();
             }
 
-            $travels[] = [
+            $array[] = [
                "id" => $addressesValue->id,
                "name" => $addressesValue->name,
                "categories" => $categories,
@@ -678,7 +698,10 @@ class HomeController extends Controller
       return response()->json([
          "status" => true,
          "message" => "Успешно.",
-         "data" => $travels ?? [],
+         "result" => [
+            "array" => $array ?? [],
+            "title" => $title
+         ],
       ]);
    }
 

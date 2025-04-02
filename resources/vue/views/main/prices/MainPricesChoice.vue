@@ -7,26 +7,13 @@
 
 	<Block :minHeight="500">
 		<template v-if="loading.sections.addresses">
-			<div class="prices-choice" v-if="getCities.length > 0">
-				<div class="item" v-for="city in getCities">
-					<div class="label">{{ city }}</div>
+			<div class="prices__choice" v-if="getCities.length > 0">
+				<div class="prices__item" v-for="city in getCities">
+					<div class="prices__item-label">{{ city }}</div>
 					<ul>
-						<li v-for="street in getStreet(city)">
+						<li v-for="street in getStreet(city)" @click="pushStreet(street)">
 							<div class="address">{{ `ул. ${street.street}, д. ${street.house}` }}</div>
-							<button
-								@click="
-									$router.push({
-										name: 'prices-template',
-										params: {
-											city: street.cityUrl,
-											street: street.streetUrl,
-											house: street.houseUrl,
-										},
-									})
-								"
-							>
-								Смотреть
-							</button>
+							<button @click="pushStreet(street)">Смотреть</button>
 						</li>
 					</ul>
 				</div>
@@ -109,6 +96,17 @@ export default {
 
 			return filteredAddresses;
 		},
+
+		pushStreet(street) {
+			this.$router.push({
+				name: "prices-template",
+				params: {
+					city: street.cityUrl,
+					street: street.streetUrl,
+					house: street.houseUrl,
+				},
+			});
+		},
 	},
 	mounted() {
 		axios({
@@ -143,7 +141,7 @@ export default {
 </script>
 
 <style scoped>
-.prices-choice {
+.prices__choice {
 	display: grid;
 	grid-template-columns: repeat(1, 1fr);
 	gap: 20px;
@@ -154,19 +152,19 @@ export default {
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
-.prices-choice > .item {
+.prices__item {
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
 }
 
-.prices-choice > .item > .label {
+.prices__item-label {
 	font-weight: 600;
 	font-size: 1.5rem;
 	color: var(--primary-color);
 }
 
-.prices-choice > .item > ul {
+.prices__item > ul {
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
@@ -175,7 +173,8 @@ export default {
 	padding: 0px;
 }
 
-.prices-choice > .item > ul > li {
+.prices__item > ul > li {
+	cursor: pointer;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -190,26 +189,26 @@ export default {
 	transition: all 0.2s;
 }
 
-.prices-choice > .item > ul > li > button {
+.prices__item > ul > li > button {
 	cursor: pointer;
 	padding: 10px 20px;
 	font-size: 1.125rem;
 
-	color: white;
 	border: 0px;
 	border-radius: 10px;
-	background-color: var(--primary-color);
+	color: white;
+	background-color: var(--button-default-color);
 
 	transition: all 0.2s;
 }
 
-.prices-choice > .item > ul > li > button:hover {
-	background-color: var(--primary-color);
+.prices__item > ul > li > button:hover {
+	background-color: var(--button-default-color-hover);
 	color: white;
 }
 
 @media screen and (width < 1450px) {
-	.prices-choice {
+	.prices__choice {
 		grid-template-columns: repeat(1, 1fr);
 		width: 100%;
 	}

@@ -1,11 +1,15 @@
 <template>
-	<div class="contacts-main">
-		<div class="item" v-for="contact in contacts" :class="{ one: contact.clinicId == null }">
-			<div class="info">
-				<div class="title">{{ contact.name }}</div>
-				<div class="body">
-					<div class="phone">
-						<div class="title">Телефоны:</div>
+	<div class="contacts">
+		<div
+			class="contacts__item"
+			v-for="contact in contacts"
+			:class="{ one: contact.clinicId == null }"
+		>
+			<div class="contacts__info">
+				<div class="contacts__info-title">{{ contact.name }}</div>
+				<div class="contacts__info-body">
+					<div class="contacts__phones">
+						<div class="contacts__phones-title">Телефоны:</div>
 						<ul>
 							<li v-for="phone in contact.phones" v-if="contact.phones.length > 0">
 								<IconContactPhone :width="16" :height="16" />
@@ -17,8 +21,8 @@
 							</li>
 						</ul>
 					</div>
-					<div class="mail">
-						<div class="title">Почта:</div>
+					<div class="contacts__mails">
+						<div class="contacts__mails-title">Почта:</div>
 						<ul>
 							<li v-for="mail in contact.mails" v-if="contact.mails.length > 0">
 								<IconContactMail :width="18" :height="16" />
@@ -30,8 +34,8 @@
 							</li>
 						</ul>
 					</div>
-					<div class="address" v-if="contact.clinicId != null">
-						<div class="title">Адрес:</div>
+					<div class="contacts__address" v-if="contact.clinicId != null">
+						<div class="contacts__address-title">Адрес:</div>
 						<ul>
 							<li>
 								<IconContactHome :width="18" :height="18" />
@@ -43,15 +47,15 @@
 					</div>
 				</div>
 			</div>
-			<div class="map" v-if="contact.clinicId != null" :id="`map-${contact.id}`">
+			<div class="contacts__map" v-if="contact.clinicId != null" :id="`map-${contact.id}`">
 				<div
-					class="body"
+					class="contacts__map-body"
 					:id="`map-container-${contact.id}`"
 					v-if="true"
 					style="width: 100%; height: 100%; border-radius: 10px"
 				></div>
 				<div
-					class="wall"
+					class="contacts__map-wall"
 					@click="showMap(contact.id, [contact.clinic.geoLongitude, contact.clinic.geoWidth])"
 				>
 					<svg viewBox="0 0 640 313" xmlns="http://www.w3.org/2000/svg">
@@ -80,7 +84,7 @@
 						<rect x="335" y="255" width="280" height="48" rx="5" />
 						<rect x="254" y="31" width="188" height="82" rx="5" />
 					</svg>
-					<div class="title">Показать на карте</div>
+					<div class="contacts__map-wall-title">Показать на карте</div>
 				</div>
 			</div>
 		</div>
@@ -184,17 +188,7 @@ export default {
 </script>
 
 <style>
-.my-marker {
-	background-image: url("../../../assets/svg/map-point.svg");
-	background-size: cover;
-	background-position: center center;
-	background-repeat: no-repeat;
-	width: 30px;
-	height: 30px;
-	cursor: pointer;
-}
-
-.contacts-main {
+.contacts {
 	width: 1350px;
 	display: flex;
 	flex-direction: column;
@@ -203,132 +197,42 @@ export default {
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
-.contacts-main > .item {
+.contacts__item {
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
 	gap: 20px;
 	font-size: 18px;
 }
 
-.contacts-main > .item.one {
+.contacts__item.one {
 	grid-template-columns: 1fr;
 }
 
-.contacts-main > .item > .info {
+.contacts__info {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
 }
 
-.contacts-main > .item > .info > .body {
+.contacts__info-body {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
 }
 
-.contacts-main > .item.one > .info > .body {
+.contacts__item.one > .contacts__info > .contacts__info-body {
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
 	gap: 10px;
 }
 
-.contacts-main > .item > .info > .title {
+.contacts__info-title {
 	font-size: 22px;
 	font-weight: bold;
 	color: var(--primary-color);
 }
 
-.contacts-main > .item > .map {
-	position: relative;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 300px;
-	overflow: hidden;
-
-	border: 2px solid var(--input-border-color-inactive);
-	border-radius: 10px;
-
-	transition: all 0.2s;
-}
-
-.contacts-main > .item > .map:hover {
-	border: 2px solid var(--input-border-color-active);
-}
-
-.contacts-main > .item > .map > .wall > .title {
-	position: absolute;
-
-	padding: 10px;
-	background-color: white;
-	border: 2px solid var(--input-border-color-inactive);
-	border-radius: 10px;
-
-	transition: all 0.2s;
-}
-
-.contacts-main > .item > .map > .wall {
-	cursor: pointer;
-	position: absolute;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	top: 0px;
-
-	overflow: hidden;
-	color: var(--input-border-color-inactive);
-	background-color: white;
-
-	width: 100%;
-	height: 300px;
-
-	transition: top 1s, background-color 0.2s;
-}
-
-.contacts-main > .item > .map > .wall:hover {
-	background-color: #f2feff;
-}
-
-.contacts-main > .item > .map > .wall > svg {
-	width: 100%;
-	min-width: 620px;
-	height: 350px;
-	min-height: 100%;
-
-	fill: #f2f2f2;
-	transition: all 0.2s;
-}
-
-.contacts-main > .item > .map > .wall:hover > svg {
-	fill: #dbf1f3;
-}
-
-.contacts-main > .item > .map > .wall:hover > .title {
-	border: 2px solid var(--input-border-color-active);
-	color: var(--primary-color);
-}
-
-.contacts-main > .item > .map.load {
-	animation: load-map 2s infinite ease-in-out;
-}
-
-.contacts-main > .item > .map > .wall.load {
-	animation: load-map-wall 2s infinite ease-in-out;
-}
-
-.contacts-main > .item > .map > .wall.active {
-	top: -300px;
-}
-
-.contacts-main > .item > .map > .wall > svg.load {
-	animation: load-map-svg 2s infinite ease-in-out;
-}
-
-.contacts-main > .item > .map > .wall > .title.load {
-	animation: load-map-title 2s infinite ease-in-out;
-}
-
-.contacts-main > .item > .info > .body > :is(.mail, .phone, .address) > ul {
+:is(.contacts__mails, .contacts__phones, .contacts__address) > ul {
 	padding: 0px;
 	margin: 0px 0px 0px 20px;
 	inline-size: 80%;
@@ -336,7 +240,7 @@ export default {
 	overflow-y: auto;
 }
 
-.contacts-main > .item > .info > .body > :is(.mail, .phone, .address) > ul > li {
+:is(.contacts__mails, .contacts__phones, .contacts__address) > ul > li {
 	display: flex;
 	align-items: center;
 	word-wrap: break-word;
@@ -345,11 +249,11 @@ export default {
 	margin-top: 10px;
 }
 
-.contacts-main > .item > .info > .body > :is(.mail, .phone, .address) > ul > li > svg {
+:is(.contacts__mails, .contacts__phones, .contacts__address) > ul > li > svg {
 	flex: 0 0 20px;
 }
 
-.contacts-main > .item > .info > .body > :is(.mail, .phone, .address) > ul > li > a {
+:is(.contacts__mails, .contacts__phones, .contacts__address) > ul > li > a {
 	text-decoration: none;
 	text-decoration-color: white;
 	color: black;
@@ -357,7 +261,7 @@ export default {
 	transition: all 0.2s;
 }
 
-.contacts-main > .item > .info > .body > :is(.mail, .phone, .address) > ul > li > a:hover {
+:is(.contacts__mails, .contacts__phones, .contacts__address) > ul > li > a:hover {
 	text-decoration: underline;
 	text-decoration-thickness: 1.5px;
 	text-decoration-color: var(--primary-color);
@@ -386,6 +290,107 @@ ul::-webkit-scrollbar-thumb:hover {
 
 span.empty {
 	color: rgb(199, 199, 199);
+}
+
+/* Map */
+.my-marker {
+	background-image: url("../../../assets/svg/map-point.svg");
+	background-size: cover;
+	background-position: center center;
+	background-repeat: no-repeat;
+	width: 30px;
+	height: 30px;
+	cursor: pointer;
+}
+
+.contacts__map {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 300px;
+	overflow: hidden;
+
+	border: 2px solid var(--input-border-color-inactive);
+	border-radius: 10px;
+
+	transition: all 0.2s;
+}
+
+.contacts__map:hover {
+	border: 2px solid var(--input-border-color-active);
+}
+
+.contacts__map-wall-title {
+	position: absolute;
+
+	padding: 10px;
+	background-color: white;
+	border: 2px solid var(--input-border-color-inactive);
+	border-radius: 10px;
+
+	transition: all 0.2s;
+}
+
+.contacts__map-wall {
+	cursor: pointer;
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	top: 0px;
+
+	overflow: hidden;
+	color: var(--input-border-color-inactive);
+	background-color: white;
+
+	min-width: 100%;
+	min-height: 300px;
+
+	transition: top 1s, background-color 0.2s;
+}
+
+.contacts__map-wall:hover {
+	background-color: #f2feff;
+}
+
+.contacts__map-wall > svg {
+	width: 100%;
+	min-width: 620px;
+	height: 350px;
+	min-height: 100%;
+
+	fill: #f2f2f2;
+	transition: all 0.2s;
+}
+
+.contacts__map-wall:hover > svg {
+	fill: #dbf1f3;
+}
+
+.contacts__map-wall:hover > .title {
+	border: 2px solid var(--input-border-color-active);
+	color: var(--primary-color);
+}
+
+.contacts__map.load {
+	animation: load-map 2s infinite ease-in-out;
+}
+
+.contacts__map-wall.load {
+	animation: load-map-wall 2s infinite ease-in-out;
+}
+
+.contacts__map-wall.active {
+	top: -300px;
+}
+
+.contacts__map-wall > svg.load {
+	animation: load-map-svg 2s infinite ease-in-out;
+}
+
+.contacts__map-wall-title.load {
+	animation: load-map-title 2s infinite ease-in-out;
 }
 
 /* Анимации */
@@ -447,40 +452,40 @@ span.empty {
 
 /* Адаптив */
 @media screen and (width <= 1430px) {
-	.contacts-main {
+	.contacts {
 		width: 100%;
 	}
 }
 
 @media screen and (width <= 970px) {
-	.contacts-main > .item {
+	.contacts__item {
 		grid-template-columns: repeat(1, 1fr);
 		gap: 20px;
 		font-size: 18px;
 	}
 
-	.contacts-main > .item > .info > .body {
+	.contacts__info-body {
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);
 	}
 
-	.contacts-main > .item.one > .info > .body {
+	.contacts__item.one > .contacts__info > .contacts__info-body {
 		grid-template-columns: repeat(2, 1fr);
 	}
 
-	.contacts-main > .item > .map > .wall > svg {
+	.contacts__map-wall > svg {
 		min-width: 600;
 		min-height: 500px;
 	}
 }
 
 @media screen and (width <= 820px) {
-	.contacts-main > .item > .info > .body,
-	.contacts-main > .item.one > .info > .body {
+	.contacts__info-body,
+	.contacts__item.one > .contacts__info > .contacts__info-body {
 		grid-template-columns: repeat(1, 1fr);
 	}
 
-	.contacts-main > .item > .map {
+	.contacts__map {
 		width: auto;
 		min-width: 100px;
 	}
