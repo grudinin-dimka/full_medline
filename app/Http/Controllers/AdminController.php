@@ -1323,8 +1323,13 @@ class AdminController extends Controller
          $CurrentFileName = pathinfo($value, PATHINFO_FILENAME);
          $dateLastFileName = pathinfo($lastFile, PATHINFO_FILENAME);
          
-         $currentFileDate = Carbon::createFromFormat('Y-m-d', $CurrentFileName);
-         $lastFileDate = Carbon::createFromFormat('Y-m-d', $dateLastFileName);
+         try {            
+            $currentFileDate = Carbon::createFromFormat('Y-m-d H-i', $CurrentFileName);
+            $lastFileDate = Carbon::createFromFormat('Y-m-d H-i', $dateLastFileName);
+         } catch (Exception $e) {
+            Log::error($e->getMessage());
+            continue;
+         }
 
          if ($currentFileDate > $lastFileDate) {
             $lastFile = $value;

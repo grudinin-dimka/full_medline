@@ -7,6 +7,7 @@ use Transliterator;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -92,16 +93,19 @@ class HomeController extends Controller
    /* _____________________________________________________*/
    /* 1. Получение данных                                  */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-   // Получение данных о всех слайдах
+   /* Получение данных о всех слайдах */
    public function getSlidesAll(Request $request) {
       $slides = Slide::all();
+
       foreach ($slides as $key => $value) {
          // Добавление нового поля path, в котором хранится путь к изображению
          $slides[$key]->path = Storage::url('slides/' . $value->filename);
       };
+
       return $slides;
    } 
-   // Получение данных о всех слайдах, которые не скрыты
+
+   /* Получение данных о всех слайдах, которые не скрыты */
    public function getSlidesNotHide(Request $request) {
       $slides = Slide::where('hide', false)->get();
       foreach ($slides as $key => $value) {
@@ -115,7 +119,7 @@ class HomeController extends Controller
    /* _____________________________________________________*/
    /* 1. Получение данных                                  */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-   // Получение данных о футере
+   /* Получение данных о футере */
    public function getFooter(Request $request) {
       $footer = Footer::find(1);
 
@@ -139,6 +143,7 @@ class HomeController extends Controller
          ],
       ]);
    } 
+   
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                  СПЕЦИАЛИСТЫ                      |*/
    /* |___________________________________________________|*/
@@ -199,8 +204,22 @@ class HomeController extends Controller
          ]);
       };
    }
+
    /* Вывод конкретного доктора */
    public function getSpecialistProfile(Request $request) {
+      // Валидация
+      $validated = Validator::make($request->all(), [
+         'url' => 'required',  
+      ]);
+
+      if ($validated->fails()) {
+         return response()->json([
+            "status" => false,
+            "message" => "Ошибка валидации входных данных.",
+            "data" => null,
+         ]);
+      };
+
       $specialists = Specialist::all();
 
       foreach ($specialists as $key => $value) {
@@ -292,6 +311,7 @@ class HomeController extends Controller
          "data" => null,
       ]);            
    }
+
    /* Вывод сокращенной информации о врачах */ 
    public function getSpecialistsShort(Request $request) {
       $specialistsShort = Specialist::select('id', 'family', 'name', 'surname', 'hide')->get();
@@ -316,8 +336,22 @@ class HomeController extends Controller
       // $SpecialistSpecializations = SpecialistSpecialization::where('id_specialist', 1)->get();
       return $specialistsShort;
    }
+
    /* Вывод полной информации о враче */
    public function getSpecialistAll(Request $request) {
+      // Валидация
+      $validated = Validator::make($request->all(), [
+         'id' => 'required',
+      ]);
+
+      if ($validated->fails()) {
+         return response()->json([
+            "status" => false,
+            "message" => "Ошибка валидации входных данных.",
+            "data" => null,
+         ]);
+      };
+
       $specialist = Specialist::find($request->id);
       if($specialist) {
          $specialist->path = Storage::url('specialists/' . $specialist->filename);
@@ -388,6 +422,7 @@ class HomeController extends Controller
       };
 
    }  
+
    /* Вывод полной информации о враче */
    public function getSpecialistSections(Request $request) {
       return response()->json([
@@ -398,6 +433,7 @@ class HomeController extends Controller
          "works" => Work::all(),
       ]);
    }
+
    /* _____________________________________________________*/
    /* 2. Специализации                                     */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
@@ -406,6 +442,7 @@ class HomeController extends Controller
       $specializations = Specialization::all();
       return $specializations;
    }
+   
    /* _____________________________________________________*/
    /* 3. Клиники                                           */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
@@ -414,6 +451,7 @@ class HomeController extends Controller
       $clinics = Clinic::all();
       return $clinics;
    }
+   
    /* _____________________________________________________*/
    /* 4. Образования                                       */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
@@ -425,6 +463,7 @@ class HomeController extends Controller
          "educations" => $educations,
       ]);
    }
+   
    /* _____________________________________________________*/
    /* 5. Работы                                            */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
@@ -433,6 +472,7 @@ class HomeController extends Controller
       $works = Work::all();
       return $works;
    }
+   
    /* _____________________________________________________*/
    /* 6. Работы                                            */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
@@ -441,6 +481,7 @@ class HomeController extends Controller
       $certificate = Certificate::all();
       return $certificate;
    }
+   
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                     О НАС                         |*/
    /* |___________________________________________________|*/
@@ -466,6 +507,7 @@ class HomeController extends Controller
          "data" => $about,
       ]);
    }
+
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                      ЦЕНЫ                         |*/
    /* |___________________________________________________|*/
@@ -503,16 +545,38 @@ class HomeController extends Controller
          "data" => $formatPriceAddresses,
       ]);
    }   
+
+   /* Вывод шаблона цен */
    public function getPricesTemplate(Request $request) {
+      // Валидация
+      $validated = Validator::make($request->all(), [
+         'city' => 'required',
+         'street' => 'required',
+         'house' => 'required',
+      ]);
+
+      if ($validated->fails()) {
+         return response()->json([
+            "status" => false,
+            "message" => "Ошибка валидации входных данных.",
+            "data" => null,
+         ]);
+      };
+
       $priceAddresses = PriceAddress::all();
 
+      // Флаги для поиска
       $cityFlags = array("г. ", "город", "р.п.", "р. п.", "п.", "п. ");
       $streetFlags = array("ул. ", "улица ");
       $houseFlags = array("д.", "д. ", "дом", "дом ",);
 
+      // Текущий адрес
       $currentAddress = null;
+      
+      // Все адреса
       $addresses = [];
       
+      // Формирование ссылок на клиники в заголовке
       foreach($priceAddresses as $key => $value) {
          $splitAddress = explode(', ', $value->name);
 
@@ -578,7 +642,8 @@ class HomeController extends Controller
          ],
       ]);
    }
-   /* Вывод всего о ценах */
+
+   /* Вывод всех данных из таблиц с ценами */
    public function getPricesAll(Request $request) {
       $priceAddresses = PriceAddress::all();
       if (!$priceAddresses) {
@@ -626,6 +691,8 @@ class HomeController extends Controller
          ],
       ]);
    }
+
+   /* Форматирование категорий */
    public function getCategoryArray($category) {
       $categoryFormat = (object) [
          "id" => $category->id,
@@ -648,6 +715,19 @@ class HomeController extends Controller
 
    /* Получение групп цен */
    public function getPricesGruop(Request $request) {
+      // Валидация
+      $validated = Validator::make($request->all(), [
+         'group' => 'required',
+      ]);
+
+      if ($validated->fails()) {
+         return response()->json([
+            "status" => false,
+            "message" => "Ошибка валидации входных данных.",
+            "data" => null,
+         ]);
+      };
+
       $group = $request->group;
       $title = "";
       $array = [];
@@ -668,9 +748,31 @@ class HomeController extends Controller
                      ->orWhere('name', 'like', '%путёвки%')
                      ->orWhere('name', 'like', '%Комплексные программы%');
                })->get();   
+          
+               if (count($categories) > 0) {
+                  // Проверяем наличие цен
+                  foreach ($categories as $categoriesKey => $categoriesValue) {
+                     $categoriesValue->prices = PriceValue::where('categoryId', $categoriesValue->id)->get();
+                  }
+      
+                  $array[] = [
+                     "id" => $addressesValue->id,
+                     "name" => $addressesValue->name,
+                     "categories" => $categories,
+                  ];
+               }
+                     
                break;
             case 'plastic':
                $title = "Пластика";
+
+               $prices = PriceValue::where(function($query) {
+                  $query->where('name', 'like', '%Путевки%')
+                     ->orWhere('name', 'like', '%путевки%')
+                     ->orWhere('name', 'like', '%Путёвки%')
+                     ->orWhere('name', 'like', '%путёвки%')
+                     ->orWhere('name', 'like', '%Комплексные программы%');
+               })->get();   
 
                $categories = [];   
                break;            
@@ -679,20 +781,7 @@ class HomeController extends Controller
 
                $categories = [];
                break;
-         }
-         
-         if (count($categories) > 0) {
-            // Проверяем наличие цен
-            foreach ($categories as $categoriesKey => $categoriesValue) {
-               $categoriesValue->prices = PriceValue::where('categoryId', $categoriesValue->id)->get();
-            }
-
-            $array[] = [
-               "id" => $addressesValue->id,
-               "name" => $addressesValue->name,
-               "categories" => $categories,
-            ];
-         }
+         }         
       }
 
       return response()->json([
@@ -823,83 +912,97 @@ class HomeController extends Controller
    /* |___________________________________________________|*/
    /* Получение расписания */
    public function getShedulesAll(Request $request) {
-      $shedules = Shedule::all();
-      $sheduleClinics = ShedulesClinic::all();
+      // Загрузка ВСЕХ основных данных сразу 
+      $schedules = Shedule::all(); 
+      $scheduleClinics = ShedulesClinic::all();
       $currentDays = ShedulesCurrentDay::all();
 
-      // Перебор массива с выбранными расписаниями
-      foreach ($shedules as $sheduleKey => $sheduleValue) {
-         $weeks = [];         
+      // Подготовка ID для массовой загрузки связанных данных
+      $scheduleIds = $schedules->pluck('id');
+      $clinicIds = $scheduleClinics->pluck('id'); 
+
+      // Загрузка ВСЕХ дней расписаний за ОДИН запрос
+      $scheduleDays = ShedulesDay::whereIn('sheduleId', $scheduleIds)
+         ->whereIn('clinicId', $clinicIds)
+         ->get()
+         ->groupBy(['sheduleId', 'clinicId']);
+
+
+      // Загрузка ВСЕХ времен для дней за ОДИН запрос
+      $dayIds = $scheduleDays->flatten()->pluck('id'); // Получаем все ID дней
+      $scheduleTimes = ShedulesDaysTime::whereIn('dayId', $dayIds)
+         ->get()
+         ->groupBy('dayId');
+
+      // Создаем "карту" текущих дней для мгновенного поиска по дате
+      $currentDaysMap = $currentDays->keyBy('date');
+
+      // Основной цикл по расписаниям
+      foreach ($schedules as $schedule) {
+         $weeks = []; // Здесь будем хранить данные для каждой клиники
          
-         // Перебор массива с выбранными клиниками 
-         foreach ($sheduleClinics as $sheduleClinicsKey => $sheduleClinicsValue) {
-            $shedileClinicDays = ShedulesDay::where('sheduleId', $sheduleValue->id)->where('clinicId', $sheduleClinicsValue->id)->get();
+         // Цикл по клиникам для текущего расписания
+         foreach ($scheduleClinics as $clinic) {
+            // Получаем дни для данной пары (расписание + клиника)
+            // Используем группировку, чтобы избежать дополнительных запросов
+            $daysForClinic = $scheduleDays
+                  ->get($schedule->id, collect()) // Ищем по ID расписания
+                  ->get($clinic->id, collect());  // Затем по ID клиники
 
-            // Если есть дни
-            if (count($shedileClinicDays) > 0) {
-               $content = [];
-
-               // Перебор массива с выбранными днями
-               foreach ($currentDays as $currentDaysKey => $currentDaysValue) {
-                  $status = false;
-
-                  foreach ($shedileClinicDays as $shedileClinicDaysKey => $shedileClinicDaysValue) {
-                     if ($currentDaysValue->date === $shedileClinicDaysValue->date) {
-                        $times = [];
-                        
-                        $shedulesDaysTimes = ShedulesDaysTime::where('dayId', $shedileClinicDaysValue->id)->get();
-                        foreach ($shedulesDaysTimes as $shedulesDaysTimesKey => $shedulesDaysTimesValue) {
-                           $times[] = $shedulesDaysTimesValue->name;
-                        };
-
-                        $content[] = [
-                           "id" => $currentDaysValue->id,
-                           "date" => $shedileClinicDaysValue->date,
-                           "time" => $times,
-                        ];
-
-                        $status = true;
-                        if ($status) break;
-                     };
-                  };
-
-                  if (!$status) {
-                     $content[] = [
-                        "id" => $currentDaysValue->id,
-                        "date" => $currentDaysValue->date,
-                        "time" => [],
+            // Если есть дни для этой клиники
+            if ($daysForClinic->isNotEmpty()) {
+                  // Формируем контент для всех текущих дней
+                  $content = $currentDays->map(function ($day) use ($daysForClinic, $scheduleTimes) {
+                     // Ищем день с такой же датой
+                     $matchingDay = $daysForClinic->firstWhere('date', $day->date);
+                     
+                     // Формируем объект дня
+                     return [
+                        "id" => $day->id,
+                        "date" => $day->date,
+                        "time" => $matchingDay 
+                              ? $scheduleTimes->get($matchingDay->id, collect())->pluck('name')->all()
+                              : [], // Если нет совпадения - пустой массив
                      ];
-                  };
-               };
+                  })->all();
 
-               $weeks[] = (object) [
-                  "clinicId" => $sheduleClinicsValue->id,
-                  "status" => true,
-                  "content" => $content,
-               ];
+                  $weeks[] = (object) [
+                     "clinicId" => $clinic->id,
+                     "status" => true,
+                     "content" => $content,
+                  ];
             } else {
-               $weeks[] = (object) [
-                  "clinicId" => $sheduleClinicsValue->id,
-                  "status" => false,
-                  "content" => [],
-               ];
+                  // Если нет дней для этой клиники
+                  $weeks[] = (object) [
+                     "clinicId" => $clinic->id,
+                     "status" => false,
+                     "content" => $currentDays->map(function ($day) {
+                        return [
+                              "id" => $day->id,
+                              "date" => $day->date,
+                              "time" => [],
+                        ];
+                     })->all(),
+                  ];
+            }
+         }
 
-            };
-
-            $sheduleValue->weeks = $weeks;
-         };
-      };
+         // Сохраняем сформированные данные в объект расписания
+         $schedule->weeks = $weeks;
+      }
 
       return response()->json([
          "status" => true,
          "message" => "Успешно!",
          "data" => (object) [
             "currentDays" => $currentDays,
-            "shedules" => $shedules,
-            "sheduleClinics" => $sheduleClinics,
+            "shedules" => $schedules,
+            "sheduleClinics" => $scheduleClinics,
          ],
       ]);
    }
+
+   /* Создание ссылки на специалиста */
    private function makeUrl($url) {
       $stringTransliterate = Transliterator::create('Any-Latin; Latin-ASCII')->transliterate($url);
       $stringUnderCase = strtolower($stringTransliterate);

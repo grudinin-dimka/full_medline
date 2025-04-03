@@ -308,8 +308,10 @@ span.empty {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	height: 300px;
 	overflow: hidden;
+
+	min-height: 300px;
+	height: 300px;
 
 	border: 2px solid var(--input-border-color-inactive);
 	border-radius: 10px;
@@ -345,7 +347,7 @@ span.empty {
 	background-color: white;
 
 	min-width: 100%;
-	min-height: 300px;
+	height: 300px;
 
 	transition: top 1s, background-color 0.2s;
 }
@@ -357,7 +359,6 @@ span.empty {
 .contacts__map-wall > svg {
 	width: 100%;
 	min-width: 620px;
-	height: 350px;
 	min-height: 100%;
 
 	fill: #f2f2f2;
@@ -472,22 +473,12 @@ span.empty {
 	.contacts__item.one > .contacts__info > .contacts__info-body {
 		grid-template-columns: repeat(2, 1fr);
 	}
-
-	.contacts__map-wall > svg {
-		min-width: 600;
-		min-height: 500px;
-	}
 }
 
 @media screen and (width <= 820px) {
 	.contacts__info-body,
 	.contacts__item.one > .contacts__info > .contacts__info-body {
 		grid-template-columns: repeat(1, 1fr);
-	}
-
-	.contacts__map {
-		width: auto;
-		min-width: 100px;
 	}
 }
 </style>

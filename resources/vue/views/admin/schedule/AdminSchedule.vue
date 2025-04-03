@@ -1,4 +1,17 @@
 <template>
+	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
+	<!--|                    СПИСОК ЦЕН                     |-->
+	<!--|___________________________________________________|-->
+	<block-once :minHeight="200">
+		<block-title>
+			<template #title>РАСПИСАНИЕ</template>
+			<template #buttons>
+				<icon-load :width="28" :height="28" v-if="disabled.schedule.save" />
+				<icon-save :width="28" :height="28" @click="updateSheduleFromServe" v-else />
+			</template>
+		</block-title>
+	</block-once>
+
 	<button class="shedule_refresh" @click="updateSheduleFromServe">
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
@@ -15,12 +28,44 @@
 </template>
 
 <script>
-import axios from 'axios';
+import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
+import BlockTitle from "../../../components/ui/admin/blocks/BlockTitle.vue";
+import InfoBar from "../../../components/ui/main/InfoBar.vue";
+import BlockButtons from "../../../components/ui/admin/blocks/BlockButtons.vue";
+
+import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
+
+import IconLoad from "../../../components/icons/IconLoad.vue";
+import IconSave from "../../../components/icons/IconSave.vue";
+
+import axios from "axios";
 
 export default {
+	components: {
+		BlockOnce,
+		BlockTitle,
+		InfoBar,
+		BlockButtons,
+
+		ButtonDefault,
+
+		IconLoad,
+		IconSave,
+	},
+	data() {
+		return {
+			disabled: {
+				schedule: {
+					save: false,
+				},
+			},
+		};
+	},
 	methods: {
-		async updateSheduleFromServe() {
-			await axios({
+		updateSheduleFromServe() {
+			this.disabled.schedule.save = true;
+
+			axios({
 				method: "post",
 				url: `${this.$store.state.axios.urlApi}` + `save-shedules-all`,
 				headers: {
@@ -33,9 +78,26 @@ export default {
 			})
 				.then((response) => {
 					console.log(response.data);
+
+					let debbugStory = {
+						title: "Успешно!",
+						body: "Расписание обновлено.",
+						type: "Completed",
+					};
+					this.$store.commit("debuggerState", debbugStory);
 				})
 				.catch((error) => {
 					console.log(error);
+
+					let debbugStory = {
+						title: "Ошибка.",
+						body: "Не удалось обновить расписание.",
+						type: "Error",
+					};
+					this.$store.commit("debuggerState", debbugStory);
+				})
+				.finally(() => {
+					this.disabled.schedule.save = false;
 				});
 		},
 	},

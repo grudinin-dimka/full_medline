@@ -19,31 +19,35 @@ export default {
 		return {
 			isActiv: true,
 			menu: [
-				{ id: "1", title: "Главная", name: "home", href: "/" },
-				{ id: "2", title: "Специалисты", name: "all", href: "/specialists" },
-				{ id: "3", title: "Цены", name: "prices", href: "/prices" },
-				{ id: "4", title: "Путевки", name: "prices-group", href: "/prices/travels" },
-				{ id: "5", title: "Расписание", name: "schedule-all", href: "/schedule" },
-				{ id: "6", title: "Контакты", name: "contacts", href: "/contacts" },
-				{ id: "7", title: "О Нас", name: "about", href: "/about" },
+				{ id: "1", title: "Главная", name: "home", href: "/", params: null },
+				{ id: "2", title: "Специалисты", name: "all", href: "/specialists", params: null },
+				{ id: "3", title: "Цены", name: "prices", href: "/prices", params: null },
+				{
+					id: "4",
+					title: "Путевки",
+					name: "prices-group",
+					href: "/prices/travels",
+					params: { group: "travels" },
+				},
+				{
+					id: "5",
+					title: "Пластическая хирургия",
+					name: "prices-group",
+					href: "/prices/plastic",
+					params: { group: "plastic" },
+				},
+				{ id: "6", title: "Расписание", name: "schedule-all", href: "/schedule", params: null },
+				{ id: "7", title: "Контакты", name: "contacts", href: "/contacts", params: null },
+				{ id: "8", title: "О Нас", name: "about", href: "/about", params: null },
 			],
 		};
 	},
 	methods: {
 		insertPage(page) {
-			switch (page.title) {
-				case "Путевки":
-					this.$router.push({
-						name: `${page.name}`,
-						params: {
-							group: "travels",
-						},
-					});
-
-					break;
-				default:
-					this.$router.push({ name: `${page.name}` });
-					break;
+			if (page.params !== null) {
+				this.$router.push({ name: `${page.name}`, params: page.params });
+			} else {
+				this.$router.push({ name: `${page.name}` });
 			}
 
 			this.$store.commit("closeBurgerMain");
@@ -55,7 +59,7 @@ export default {
 <style scoped>
 nav {
 	display: grid;
-	grid-template-columns: repeat(7, 1fr);
+	grid-template-columns: repeat(8, auto);
 
 	padding: 10px;
 	margin: 0px 30px;

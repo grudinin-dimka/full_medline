@@ -37,7 +37,7 @@
 					</div>
 				</div>
 			</div>
-			<button @click="openspecialistProfile(specialist)">Подробнее</button>
+			<a @click.prevent="openspecialistProfile(specialist)" :href="`/specialists/${specialist.url}`">Подробнее</a>
 		</div>
 	</div>
 </template>
@@ -165,12 +165,14 @@ export default {
 	font-size: 1.125rem;
 }
 
-.specialist-body > button {
+.specialist-body > a {
 	cursor: pointer;
 	padding: 15px;
 	font-size: 1.125em;
 
-	border: 2px solid var(--primary-color);
+	text-align: center;
+	text-decoration: none;
+
 	border-radius: 10px;
 	color: white;
 	background-color: var(--button-default-color);
@@ -178,7 +180,7 @@ export default {
 	transition: all 0.2s;
 }
 
-.specialist-body > button:hover {
+.specialist-body > a:hover {
 	background-color: var(--button-default-color-hover);
 	color: white;
 }
