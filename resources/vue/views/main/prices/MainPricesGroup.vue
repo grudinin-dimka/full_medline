@@ -5,8 +5,10 @@
 		<router-link to="/prices">Цены</router-link>
 		<span class="link-arrow"> / </span>
 		<router-link :to="`/prices/${$route.params.group}`">
-			<load-text :isLoading="loading.loader.title"> Загрузка... </load-text>
-			<span v-if="loading.sections.group">{{ title }}</span>
+			<load-text :isLoading="loading.loader.title" @afterLeave="afterLeave">
+				Загрузка...
+			</load-text>
+			<span v-if="loading.sections.title">{{ title }}</span>
 		</router-link>
 	</info-bar>
 
@@ -20,10 +22,7 @@
 				<div class="price__group__list">
 					<div class="price__group__address" v-for="item in group">
 						<div class="price__group__address-title">{{ item.name }}</div>
-						<template
-							v-if="isPricesGroupEmpty(item)"
-							v-for="category in item.categories"
-						>
+						<template v-if="isPricesGroupEmpty(item)" v-for="category in item.categories">
 							<div
 								class="price__group__category"
 								v-if="getCurrentPrices(category.prices).length > 0"
@@ -61,10 +60,7 @@
 			<Empty :minHeight="300" v-else />
 		</template>
 
-		<loader-child
-			:isLoading="loading.loader.travels"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
-		/>
+		<loader-child :isLoading="loading.loader.group" @loaderChildAfterLeave="afterLeave" />
 	</block>
 </template>
 
@@ -94,7 +90,7 @@ export default {
 			loading: {
 				loader: {
 					title: true,
-					travels: true,
+					group: true,
 				},
 				sections: {
 					title: false,
@@ -112,8 +108,12 @@ export default {
 		/* |                   ЗАГРУЗЧИК                       |*/
 		/* |___________________________________________________|*/
 		/* После скрытия элементы */
-		loaderChildAfterLeave() {
-			this.loading.sections.group = true;
+		afterLeave() {
+			for (let key in this.loading.loader) {
+				if (!this.loading.loader[key]) {
+					this.loading.sections[key] = true;
+				}
+			}
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -182,7 +182,7 @@ export default {
 			})
 			.finally(() => {
 				this.loading.loader.title = false;
-				this.loading.loader.travels = false;
+				this.loading.loader.group = false;
 			});
 	},
 };

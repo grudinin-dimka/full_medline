@@ -32,9 +32,9 @@ export default {
 				{
 					id: "5",
 					title: "Пластическая хирургия",
-					name: "prices-group",
+					name: "prices-plastic",
 					href: "/prices/plastic",
-					params: { group: "plastic" },
+					params: null,
 				},
 				{ id: "6", title: "Расписание", name: "schedule-all", href: "/schedule", params: null },
 				{ id: "7", title: "Контакты", name: "contacts", href: "/contacts", params: null },

@@ -61,6 +61,11 @@ const router = createRouter({
 							component: () => import("../views/main/prices/MainPricesGroup.vue"),
 						},
 						{
+							path: "plastic",
+							name: "prices-plastic",
+							component: () => import("../views/main/prices/MainPricesPlastic.vue"),
+						},
+						{
 							path: ":city/:street/:house",
 							name: "prices-template",
 							component: () => import("../views/main/prices/MainPricesTemplate.vue"),

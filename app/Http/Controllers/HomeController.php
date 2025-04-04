@@ -41,6 +41,7 @@ use App\Models\PriceCategory;
 use App\Models\PriceValue;
 
 use Illuminate\Support\Facades\Storage;
+use PhpOffice\PhpSpreadsheet\Calculation\Financial\Securities\Price;
 
 class HomeController extends Controller
 {
@@ -702,6 +703,7 @@ class HomeController extends Controller
 
       // Проверяем наличие подкатегорий
       $innerCategories = PriceCategory::where('categoryId', $category->id)->get();
+      
       if (count($innerCategories) > 0) {
          foreach ($innerCategories as $innerCategoriesKey => $innerCategoriesValue) {
             $innerCategories[$innerCategoriesKey] = $this->getCategoryArray($innerCategoriesValue);
@@ -731,28 +733,37 @@ class HomeController extends Controller
       $group = $request->group;
       $title = "";
       $array = [];
-      $addresses = PriceAddress::all();
 
-      foreach ($addresses as $addressesKey => $addressesValue) {
-         $categories = [];
+      switch ($group) {
+         case 'travels':
+            $title = "Путевки";
 
-         switch ($group) {
-            case 'travels':
-               $title = "Путевки";
+            // Получение всех адресов
+            $addresses = PriceAddress::all();
 
+            // Перебор адресов
+            foreach ($addresses as $addressesKey => $addressesValue) {
+               $categories = [];
+                  
+               // Поиск нужных категорий
                $categories = PriceCategory::where('addressId', '=', $addressesValue->id)
-               ->where(function($query) {
+                  ->where(function($query) {
                   $query->where('name', 'like', '%Путевки%')
                      ->orWhere('name', 'like', '%путевки%')
                      ->orWhere('name', 'like', '%Путёвки%')
                      ->orWhere('name', 'like', '%путёвки%')
                      ->orWhere('name', 'like', '%Комплексные программы%');
                })->get();   
-          
+
+               // Проверка на наличие категорий
                if (count($categories) > 0) {
+                  $categoriesIds = $categories->pluck('id')->toArray();
+
+                  $prices = PriceValue::whereIn('categoryId', $categoriesIds)->get()->groupBy('categoryId');
+
                   // Проверяем наличие цен
-                  foreach ($categories as $categoriesKey => $categoriesValue) {
-                     $categoriesValue->prices = PriceValue::where('categoryId', $categoriesValue->id)->get();
+                  foreach ($categories as $categoryKey => $categoryValue) {
+                     $categoryValue->prices = $prices[$categoryValue->id];
                   }
       
                   $array[] = [
@@ -761,28 +772,49 @@ class HomeController extends Controller
                      "categories" => $categories,
                   ];
                }
-                     
-               break;
-            case 'plastic':
-               $title = "Пластика";
+            }            
+            break;
+         case 'plastic':
+            $title = "Пластика";
 
-               $prices = PriceValue::where(function($query) {
-                  $query->where('name', 'like', '%Путевки%')
-                     ->orWhere('name', 'like', '%путевки%')
-                     ->orWhere('name', 'like', '%Путёвки%')
-                     ->orWhere('name', 'like', '%путёвки%')
-                     ->orWhere('name', 'like', '%Комплексные программы%');
-               })->get();   
+            // Получение всех цен, которые имеют вхождения по названию
+            $prices = PriceValue::where(function($query) {
+               $query->where('name', 'like', '%Блефаропластика%')
+                  ->orWhere('name', 'like', '%блефаропластика%')
+                  ->orWhere('name', 'like', '%Булхорн%')
+                  ->orWhere('name', 'like', '%булхорн%');
+            })->get()->groupBy('categoryId');   
 
-               $categories = [];   
-               break;            
-            default:
-               $title = "Не найдено";
+            // Получение id всех категорий, где есть такие цены
+            $categoryIds = $prices->keys()->toArray();
 
-               $categories = [];
-               break;
-         }         
-      }
+            // Получение всех категорий
+            $categories = PriceCategory::whereIn('id', $categoryIds)->get()->groupBy('addressId');
+            
+            // Получение id всех категорий, где есть такие цены
+            $addressesIds = $categories->keys()->toArray();
+            $addresses = PriceAddress::whereIn('id', $addressesIds)->get();
+
+            foreach ($addresses as $addressesKey => $addressesValue) {
+               $categories = $categories[$addressesValue->id];
+
+               foreach($categories as $categoryKey => $categoryValue) {
+                  $categoryValue->prices = $prices[$categoryValue->id];
+               };
+
+               $array[] = [
+                  "id" => $addressesValue->id,
+                  "name" => $addressesValue->name,
+                  "categories" => $categories,
+               ];
+            };
+            break;            
+         default:
+            $title = "Не найдено";
+
+            $categories = [];
+            break;
+      }   
 
       return response()->json([
          "status" => true,
