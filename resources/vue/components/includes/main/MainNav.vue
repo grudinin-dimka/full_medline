@@ -1,5 +1,5 @@
 <template>
-	<nav :class="{ active: $store.state.burger.main.status }">
+	<nav :class="{ active: $store.getters.burgerMainStatus }">
 		<a
 			class="element"
 			:class="{ hiden: isActiv }"

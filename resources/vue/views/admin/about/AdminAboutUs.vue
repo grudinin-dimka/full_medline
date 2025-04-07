@@ -628,7 +628,7 @@ export default {
 
 			axios({
 				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `upload-file`,
+				url: `${this.$store.getters.urlApi}` + `upload-file`,
 				headers: {
 					"Content-Type": "multipart/form-data",
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -865,7 +865,7 @@ export default {
 
 			axios({
 				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `save-abouts-changes`,
+				url: `${this.$store.getters.urlApi}` + `save-abouts-changes`,
 				headers: {
 					"Content-Type": "multipart/form-data",
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -925,7 +925,7 @@ export default {
 			headers: {
 				Accept: "application/json",
 			},
-			url: `${this.$store.state.axios.urlApi}` + `get-abouts-all`,
+			url: `${this.$store.getters.urlApi}` + `get-abouts-all`,
 		})
 			.then((response) => {
 				if (response.data.status) {

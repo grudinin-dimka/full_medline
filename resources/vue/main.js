@@ -11,7 +11,7 @@ import router from "./router/index.js";
 import VueTheMask from "vue-the-mask";
 
 /* Хранилище */
-import store from "./store/index.js";
+import store from "./store/index";
 
 const app = createApp(App);
 

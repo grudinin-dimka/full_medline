@@ -733,7 +733,7 @@ export default {
 
 			axios({
 				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `save-contacts-changes`,
+				url: `${this.$store.getters.urlApi}` + `save-contacts-changes`,
 				headers: {
 					ContentType: "multipart/form-data",
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -1038,7 +1038,7 @@ export default {
 	mounted() {
 		axios({
 			method: "post",
-			url: `${this.$store.state.axios.urlApi}` + `get-contacts-all`,
+			url: `${this.$store.getters.urlApi}` + `get-contacts-all`,
 		})
 			.then((response) => {
 				if (response.data.status) {

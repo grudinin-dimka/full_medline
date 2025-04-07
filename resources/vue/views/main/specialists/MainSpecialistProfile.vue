@@ -200,7 +200,7 @@ export default {
 		// Получение массива слайдов с сервера
 		axios({
 			method: "post",
-			url: `${this.$store.state.axios.urlApi}` + `get-specialist-profile`,
+			url: `${this.$store.getters.urlApi}` + `get-specialist-profile`,
 			data: {
 				url: this.$route.params.name,
 			},

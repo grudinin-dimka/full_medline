@@ -1,0 +1,400 @@
+<template>
+	<teleport to="body">
+		<transition name="modal">
+			<div
+				v-show="isOpen"
+				class="modal"
+				:class="{
+					[settings.values.look]: settings.values.look,
+					clamped: settings.clamped,
+					unclamped: !settings.clamped,
+				}"
+				ref="modal"
+				@click.self="close"
+			>
+				<transition name="modal-container">
+					<div class="modal__container" :class="{ thin: settings.thin }" v-show="isOpen">
+						<!-- Верхняя часть окна -->
+						<div class="modal__head">
+							<!-- Заголовок -->
+							<div class="modal__head-title" v-if="$slots.title">
+								<slot name="title"></slot>
+							</div>
+							<!-- Кнопки -->
+							<div class="modal__head-buttons">
+								<slot name="buttons" v-if="$slots.buttons"></slot>
+								<button @click.prevent="close">
+									<svg
+										data-v-05b9c86b=""
+										xmlns="http://www.w3.org/2000/svg"
+										width="12"
+										height="12"
+										viewBox="0 0 14 14"
+									>
+										<path
+											data-v-05b9c86b=""
+											d="M1.4 14L0 12.6L5.6 7L0 1.4L1.4 0L7 5.6L12.6 0L14 1.4L8.4 7L14 12.6L12.6 14L7 8.4L1.4 14Z"
+										></path>
+									</svg>
+								</button>
+							</div>
+						</div>
+						<!-- Тело окна -->
+						<div class="modal__body" v-if="$slots.body">
+							<slot name="body"></slot>
+						</div>
+						<!-- Нижняя часть окна -->
+						<div class="modal__footer" v-if="$slots.footer">
+							<slot name="footer"></slot>
+						</div>
+					</div>
+				</transition>
+			</div>
+		</transition>
+	</teleport>
+</template>
+
+<script>
+import modals from "../../../store/modals";
+
+export default {
+	emits: ["enter"],
+	props: {
+		/* 
+			settings: {
+				thin: false,
+				clamped: false,
+				values: {
+					title: "",
+					look: "default",
+				},
+			},
+		*/
+		settings: {
+			type: Object,
+			default: {},
+		},
+		look: {
+			type: String,
+			default: "",
+		},
+	},
+	data() {
+		return {
+			isOpen: false,
+			keydownHandler: null,
+		};
+	},
+	methods: {
+		/* STOP: делал работу на кнопку */
+		open() {
+			this.isOpen = true;
+			this.$store.commit("registerModal", this);
+		},
+		close() {
+			this.isOpen = false;
+			this.$store.commit("unregisterModal", this);
+		},
+	},
+	mounted() {
+		document.addEventListener("keydown", (e) => {
+			if (e.key === "Escape") {
+				this.$store.commit("closeTopmost");
+			}
+		});
+	},
+};
+</script>
+
+<style scoped>
+.modal-enter-active,
+.modal-leave-active {
+	transition: opacity 0.3s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+	opacity: 0;
+}
+
+.modal-container-enter-active,
+.modal-container-leave-active {
+	transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.modal-container-enter-from,
+.modal-container-leave-to {
+	opacity: 0;
+	transform: scale(0.7);
+}
+
+.modal {
+	position: fixed;
+	z-index: 500;
+	top: 0px;
+	left: 0px;
+
+	border: var(--modal-border);
+	border-radius: var(--modal-border-radius);
+
+	width: 100%;
+	height: 100%;
+
+	background: var(--modal-background-color);
+}
+
+/* Скролбар блока со стандартным стилем*/
+/* Define the scrollbar style */
+.modal::-webkit-scrollbar {
+	width: 17px;
+}
+
+/* Define the thumb style */
+.modal::-webkit-scrollbar-thumb {
+	border: 0px solid rgb(190, 190, 190);
+
+	background-color: rgb(251, 251, 251);
+}
+
+.modal::-webkit-scrollbar-thumb:hover {
+	background-color: rgb(245, 245, 245);
+}
+
+/* Верхняя полоса под скроллбаром */
+.modal::-webkit-scrollbar-track-piece:vertical:start {
+	border: 0px solid rgb(190, 190, 190);
+
+	background-color: rgb(220, 220, 220);
+}
+
+/* Нижняя полоса под скроллбаром */
+.modal::-webkit-scrollbar-track-piece:vertical:end {
+	border: 0px solid rgb(190, 190, 190);
+
+	background-color: rgb(220, 220, 220);
+}
+
+/* Стиль вертикальных кнопок прокрутки */
+.modal::-webkit-scrollbar-button:vertical {
+	background-color: #ffffff;
+	background-repeat: no-repeat;
+	background-size: 50%;
+	background-position: center;
+}
+
+.modal::-webkit-scrollbar-button:vertical:decrement {
+	border-left: 0px;
+	border-top: 0px;
+	border-right: 0px;
+	border-bottom: 0px;
+	border-style: solid;
+	border-color: rgb(190, 190, 190);
+
+	background-image: url("../../../assets/svg/arrow-up.svg");
+	background-size: 15px;
+}
+
+.modal::-webkit-scrollbar-button:vertical:increment {
+	border-left: 0px;
+	border-top: 0px;
+	border-right: 0px;
+	border-bottom: 0px;
+	border-style: solid;
+	border-color: rgb(190, 190, 190);
+
+	background-image: url("../../../assets/svg/arrow-down.svg");
+	background-size: 15px;
+}
+
+/* Стиль горизонтальных кнопок прокрутки */
+.modal::-webkit-scrollbar-button:horizontal {
+	background-color: #ffffff;
+	background-repeat: no-repeat;
+	background-size: 50%;
+	background-position: center;
+}
+
+.modal::-webkit-scrollbar-button:horizontal:decrement {
+	border-left: 0px;
+	border-top: 0px;
+	border-right: 0px;
+	border-bottom: 0px;
+	border-style: solid;
+	border-color: rgb(190, 190, 190);
+
+	background-image: url("../../../assets/svg/arrow-left.svg");
+	background-size: 15px;
+}
+
+.modal::-webkit-scrollbar-button:horizontal:increment {
+	border-left: 0px;
+	border-top: 0px;
+	border-right: 0px;
+	border-bottom: 0px;
+	border-style: solid;
+	border-color: rgb(190, 190, 190);
+
+	background-image: url("../../../assets/svg/keyboard-arrow.svg");
+	background-size: 15px;
+}
+
+/* Define the button style when being hovered over */
+.modal::-webkit-scrollbar-button:hover {
+	background-color: rgb(245, 245, 245);
+}
+
+.modal.clamped {
+	display: flex;
+	justify-content: safe center;
+	align-items: center;
+}
+
+.modal.unclamped {
+	display: grid;
+	grid-template-columns: auto;
+
+	padding: 30px;
+
+	overflow: auto;
+}
+
+.modal__container {
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	gap: var(--modal-container-gap);
+
+	padding: var(--modal-container-padding);
+
+	background: var(--modal-container-background-color);
+	border-radius: var(--modal-container-border-radius);
+	width: 100%;
+	max-width: 1000px;
+}
+
+.modal.clamped > .modal__container {
+	margin: 30px;
+
+	max-height: calc(100% - 60px);
+}
+
+.modal.unclamped > .modal__container {
+	margin: auto;
+}
+
+.modal__container.thin {
+	max-width: 600px;
+}
+
+/* Голова */
+.modal__head {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 10px;
+}
+
+.modal__head-title {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	font-size: 22px;
+	margin: 0px;
+	padding: 0px;
+}
+
+.modal__head-buttons {
+	display: flex;
+	justify-content: flex-end;
+	gap: 5px;
+}
+
+.modal__head-buttons > button {
+	cursor: pointer;
+	background-color: rgba(255, 255, 255, 0);
+	border: var(--default-border);
+	border-radius: 100px;
+	padding: 0px;
+
+	width: 30px;
+	height: 30px;
+
+	transition: all 0.2s ease;
+}
+
+.modal__head-buttons button:hover {
+	border: var(--default-border-active);
+	background-color: var(--item-background-color-active);
+}
+
+/* Тело */
+.modal__body {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	overflow: auto;
+}
+
+.modal__body::-webkit-scrollbar {
+	width: 20px;
+}
+
+.modal__body::-webkit-scrollbar-track {
+	background-color: rgb(255, 255, 255);
+}
+
+.modal__body::-webkit-scrollbar-thumb {
+	background-color: rgb(220, 220, 220);
+	border-left: 10px;
+	border-color: rgb(255, 255, 255);
+	border-style: solid;
+}
+
+.modal__body::-webkit-scrollbar-thumb:hover {
+	background-color: rgb(230, 230, 230);
+	cursor: all-scroll;
+}
+
+/* Футер */
+.modal__footer {
+	display: flex;
+	justify-content: flex-end;
+	gap: 10px;
+}
+
+@media screen and (max-width: 1000px) {
+	.modal__container {
+		margin: 20px;
+	}
+}
+
+@media screen and (max-width: 960px) {
+	.modal__container {
+		min-width: 0px;
+		width: 100%;
+	}
+}
+
+@media screen and (max-width: 860px) {
+	.modal-img {
+		display: flex;
+		flex-direction: column;
+		justify-content: justify;
+		align-items: justify;
+		min-height: none;
+	}
+}
+
+@media screen and (max-width: 500px) {
+	.modal__body {
+		height: 100%;
+	}
+
+	.modal__container {
+		justify-content: space-between;
+		margin: 0px;
+		height: 100%;
+		border-radius: 0px;
+		max-height: 100%;
+	}
+}
+</style>

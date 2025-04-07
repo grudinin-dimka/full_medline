@@ -995,7 +995,7 @@ export default {
 
 			axios({
 				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `set-user-status`,
+				url: `${this.$store.getters.urlApi}` + `set-user-status`,
 				headers: {
 					Accept: "multipart/form-data",
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -1053,7 +1053,7 @@ export default {
 
 			axios({
 				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `set-user-password`,
+				url: `${this.$store.getters.urlApi}` + `set-user-password`,
 				headers: {
 					Accept: "multipart/form-data",
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -1116,7 +1116,7 @@ export default {
 
 			axios({
 				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `save-user`,
+				url: `${this.$store.getters.urlApi}` + `save-user`,
 				headers: {
 					Accept: "multipart/form-data",
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -1201,7 +1201,7 @@ export default {
 
 			axios({
 				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `create-user`,
+				url: `${this.$store.getters.urlApi}` + `create-user`,
 				headers: {
 					Accept: "multipart/form-data",
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -1264,7 +1264,7 @@ export default {
 
 			axios({
 				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `delete-user`,
+				url: `${this.$store.getters.urlApi}` + `delete-user`,
 				headers: {
 					Accept: "multipart/form-data",
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -1316,7 +1316,7 @@ export default {
 				Accept: "application/json",
 				Authorization: `Bearer ${localStorage.getItem("token")}`,
 			},
-			url: `${this.$store.state.axios.urlApi}` + `get-users-all`,
+			url: `${this.$store.getters.urlApi}` + `get-users-all`,
 		})
 			.then((response) => {
 				if (response.data.status) {
@@ -1350,7 +1350,7 @@ export default {
 			});
 	},
 	beforeCreate() {
-		if (this.$store.state.user.rights !== "creator") {
+		if (this.$store.getters.userRights !== "creator") {
 			this.$router.push("/404");
 		}
 	},

@@ -111,7 +111,7 @@ export default {
 	mounted() {
 		axios({
 			method: "post",
-			url: `${this.$store.state.axios.urlApi}` + `get-prices-choice`,
+			url: `${this.$store.getters.urlApi}` + `get-prices-choice`,
 		})
 			.then((response) => {
 				if (response.data.status) {

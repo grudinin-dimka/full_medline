@@ -449,7 +449,7 @@ export default {
 	mounted() {
 		axios({
 			method: "post",
-			url: `${this.$store.state.axios.urlApi}` + `get-prices-template`,
+			url: `${this.$store.getters.urlApi}` + `get-prices-template`,
 			data: {
 				city: this.$route.params.city,
 				street: this.$route.params.street,

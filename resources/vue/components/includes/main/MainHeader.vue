@@ -179,7 +179,7 @@
 	<div
 		class="burger"
 		@click="$store.commit('setBurgerMain')"
-		:class="{ active: $store.state.burger.main.status }"
+		:class="{ active: $store.getters.burgerMainStatus }"
 	>
 		<div></div>
 		<div></div>
@@ -606,7 +606,7 @@ export default {
 
 			axios({
 				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `request-telegram-bot`,
+				url: `${this.$store.getters.urlApi}` + `request-telegram-bot`,
 				headers: {
 					"Content-Type": "multipart/form-data",
 				},

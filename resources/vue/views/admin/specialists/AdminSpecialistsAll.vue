@@ -224,7 +224,7 @@ export default {
 			// Получение массива докторов с сервера
 			axios({
 				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `save-specialists-changes`,
+				url: `${this.$store.getters.urlApi}` + `save-specialists-changes`,
 				headers: {
 					Accept: "application/json",
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -275,7 +275,7 @@ export default {
 			headers: {
 				Accept: "application/json",
 			},
-			url: `${this.$store.state.axios.urlApi}` + `get-specialists-short`,
+			url: `${this.$store.getters.urlApi}` + `get-specialists-short`,
 		})
 			.then((response) => {
 				this.specialists = response.data;

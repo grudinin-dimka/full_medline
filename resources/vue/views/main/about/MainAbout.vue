@@ -64,7 +64,7 @@ export default {
 
 		axios({
 			method: "post",
-			url: `${this.$store.state.axios.urlApi}` + `get-abouts-all`,
+			url: `${this.$store.getters.urlApi}` + `get-abouts-all`,
 		})
 			.then((response) => {
 				if (response.data.status) {

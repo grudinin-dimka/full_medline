@@ -2,10 +2,10 @@
 	<div
 		class="debugger"
 		:class="{
-			completed: $store.state.debugger.type.completed,
-			error: $store.state.debugger.type.error,
+			completed: $store.getters.debuggerTypeCompleted,
+			error: $store.getters.debuggerTypeError,
 		}"
-		v-if="$store.state.debugger.show"
+		v-if="$store.getters.debuggerShow"
 	>
 		<div class="debugger-close" @click="$store.commit('debuggerCloseClick')">
 			<svg
@@ -21,10 +21,10 @@
 			</svg>
 		</div>
 		<div class="debugger-title">
-			{{ $store.state.debugger.title }}
+			{{ $store.getters.debuggerTitle }}
 		</div>
 		<div class="debugger-body">
-			{{ $store.state.debugger.body }}
+			{{ $store.getters.debuggerBody }}
 		</div>
 	</div>
 </template>

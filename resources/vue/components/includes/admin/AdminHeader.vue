@@ -6,7 +6,11 @@
 		</div>
 	</header>
 	<!-- Кнопка "бургер" -->
-	<div class="burger" @click="$store.commit('setBurgerAdmin')" :class="{ active: $store.state.burger.admin.status }">
+	<div
+		class="burger"
+		@click="$store.commit('setBurgerAdmin')"
+		:class="{ active: $store.getters.burgerAdminStatus }"
+	>
 		<div></div>
 		<div></div>
 		<div></div>

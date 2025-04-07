@@ -67,7 +67,7 @@ export default {
 
 			axios({
 				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `save-shedules-all`,
+				url: `${this.$store.getters.urlApi}` + `save-shedules-all`,
 				headers: {
 					Accept: "application/json",
 					Authorization: `Bearer ${localStorage.getItem("token")}`,

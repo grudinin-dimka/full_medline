@@ -135,7 +135,7 @@ export default {
 
 		axios({
 			method: "post",
-			url: `${this.$store.state.axios.urlApi}` + `get-contacts-clinics-all`,
+			url: `${this.$store.getters.urlApi}` + `get-contacts-clinics-all`,
 		})
 			.then((response) => {
 				if (response.data.status) {

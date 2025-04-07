@@ -497,7 +497,7 @@ export default {
 	mounted() {
 		axios({
 			method: "post",
-			url: `${this.$store.state.axios.urlApi}` + `get-shedules-all`,
+			url: `${this.$store.getters.urlApi}` + `get-shedules-all`,
 		})
 			.then((response) => {
 				if (response.data.status) {

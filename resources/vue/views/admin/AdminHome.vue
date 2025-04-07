@@ -875,7 +875,7 @@ export default {
 
 				axios({
 					method: "post",
-					url: `${this.$store.state.axios.urlApi}` + `upload-file`,
+					url: `${this.$store.getters.urlApi}` + `upload-file`,
 					headers: {
 						"Content-Type": "multipart/form-data",
 						Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -989,7 +989,7 @@ export default {
 
 				axios({
 					method: "post",
-					url: `${this.$store.state.axios.urlApi}` + `upload-file`,
+					url: `${this.$store.getters.urlApi}` + `upload-file`,
 					headers: {
 						"Content-Type": "multipart/form-data",
 						Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -1052,7 +1052,7 @@ export default {
 			}
 			axios({
 				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `save-slides-changes`,
+				url: `${this.$store.getters.urlApi}` + `save-slides-changes`,
 				headers: {
 					Accept: "application/json",
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -1150,7 +1150,7 @@ export default {
 			// Сохранение данных в базу данных
 			axios({
 				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `save-footer`,
+				url: `${this.$store.getters.urlApi}` + `save-footer`,
 				headers: {
 					Accept: "application/json",
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -1190,7 +1190,7 @@ export default {
 		// Получение массива слайдов с сервера
 		axios({
 			method: "post",
-			url: `${this.$store.state.axios.urlApi}` + `get-slides-all`,
+			url: `${this.$store.getters.urlApi}` + `get-slides-all`,
 		})
 			.then((response) => {
 				this.slides = response.data;
@@ -1217,7 +1217,7 @@ export default {
 		// Получение массива данных о футере с сервера
 		axios({
 			method: "post",
-			url: `${this.$store.state.axios.urlApi}` + `get-footer`,
+			url: `${this.$store.getters.urlApi}` + `get-footer`,
 		})
 			.then((response) => {
 				if (response.data.status) {

@@ -771,7 +771,7 @@ export default {
 
 			axios({
 				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `save-clinics-changes`,
+				url: `${this.$store.getters.urlApi}` + `save-clinics-changes`,
 				headers: {
 					Accept: "application/json",
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -823,7 +823,7 @@ export default {
 			headers: {
 				Accept: "application/json",
 			},
-			url: `${this.$store.state.axios.urlApi}` + `get-clinics-all`,
+			url: `${this.$store.getters.urlApi}` + `get-clinics-all`,
 		})
 			.then((response) => {
 				this.clinics = response.data;

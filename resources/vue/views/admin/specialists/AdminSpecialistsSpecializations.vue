@@ -499,7 +499,7 @@ export default {
 
 			axios({
 				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `save-specializations-changes`,
+				url: `${this.$store.getters.urlApi}` + `save-specializations-changes`,
 				headers: {
 					Accept: "application/json",
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -551,7 +551,7 @@ export default {
 			headers: {
 				Accept: "application/json",
 			},
-			url: `${this.$store.state.axios.urlApi}` + `get-specializations-all`,
+			url: `${this.$store.getters.urlApi}` + `get-specializations-all`,
 		})
 			.then((response) => {
 				this.specializations = response.data;

@@ -45,7 +45,7 @@ export default {
 			// Проверка токена в базе
 			axios({
 				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `check-user`,
+				url: `${this.$store.getters.urlApi}` + `check-user`,
 				headers: {
 					Accept: "application/json",
 					Authorization: `Bearer ${localStorage.getItem("token")}`,

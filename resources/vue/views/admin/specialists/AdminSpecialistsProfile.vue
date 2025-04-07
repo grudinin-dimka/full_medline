@@ -2173,7 +2173,7 @@ export default {
 				// Сохранение данных
 				axios({
 					method: "post",
-					url: `${this.$store.state.axios.urlApi}` + `save-specialist-modular`,
+					url: `${this.$store.getters.urlApi}` + `save-specialist-modular`,
 					headers: {
 						Accept: "multipart/form-data",
 						Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -2275,7 +2275,7 @@ export default {
 				// Сохранение данных
 				await axios({
 					method: "post",
-					url: `${this.$store.state.axios.urlApi}` + `add-specialist`,
+					url: `${this.$store.getters.urlApi}` + `add-specialist`,
 					headers: {
 						Accept: "multipart/form-data",
 						Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -2384,7 +2384,7 @@ export default {
 				// Сохранение данных
 				await axios({
 					method: "post",
-					url: `${this.$store.state.axios.urlApi}` + `save-specialist-modular`,
+					url: `${this.$store.getters.urlApi}` + `save-specialist-modular`,
 					headers: {
 						Accept: "multipart/form-data",
 						Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -2538,7 +2538,7 @@ export default {
 
 				await axios({
 					method: "post",
-					url: `${this.$store.state.axios.urlApi}` + `save-specialist-modular`,
+					url: `${this.$store.getters.urlApi}` + `save-specialist-modular`,
 					headers: {
 						Accept: "multipart/form-data",
 						Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -2671,7 +2671,7 @@ export default {
 
 				await axios({
 					method: "post",
-					url: `${this.$store.state.axios.urlApi}` + `save-specialist-modular`,
+					url: `${this.$store.getters.urlApi}` + `save-specialist-modular`,
 					headers: {
 						Accept: "multipart/form-data",
 						Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -2781,7 +2781,7 @@ export default {
 
 			await axios({
 				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `save-specialist-modular`,
+				url: `${this.$store.getters.urlApi}` + `save-specialist-modular`,
 				headers: {
 					Accept: "multipart/form-data",
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -2914,7 +2914,7 @@ export default {
 
 			await axios({
 				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `save-specialist-modular`,
+				url: `${this.$store.getters.urlApi}` + `save-specialist-modular`,
 				headers: {
 					Accept: "multipart/form-data",
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -3049,7 +3049,7 @@ export default {
 
 			await axios({
 				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `save-specialist-modular`,
+				url: `${this.$store.getters.urlApi}` + `save-specialist-modular`,
 				headers: {
 					Accept: "multipart/form-data",
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -3326,7 +3326,7 @@ export default {
 				headers: {
 					Accept: "application/json",
 				},
-				url: `${this.$store.state.axios.urlApi}` + `get-specialist-all`,
+				url: `${this.$store.getters.urlApi}` + `get-specialist-all`,
 				data: {
 					id: this.$route.params.id,
 				},
@@ -3431,7 +3431,7 @@ export default {
 				headers: {
 					Accept: "application/json",
 				},
-				url: `${this.$store.state.axios.urlApi}` + `get-specialist-sections`,
+				url: `${this.$store.getters.urlApi}` + `get-specialist-sections`,
 			})
 				.then((response) => {
 					for (let key in response.data) {

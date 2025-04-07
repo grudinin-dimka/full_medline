@@ -143,7 +143,7 @@ export default {
 				Accept: "application/json",
 				Authorization: `Bearer ${localStorage.getItem("token")}`,
 			},
-			url: `${this.$store.state.axios.urlApi}` + `get-profile-info`,
+			url: `${this.$store.getters.urlApi}` + `get-profile-info`,
 		})
 			.then((response) => {
 				for (let key in this.profile) {

@@ -374,7 +374,7 @@ export default {
 
 			axios({
 				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `upload-file`,
+				url: `${this.$store.getters.urlApi}` + `upload-file`,
 				headers: {
 					"Content-Type": "multipart/form-data",
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -436,7 +436,7 @@ export default {
 
 			axios({
 				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `save-prices-changes`,
+				url: `${this.$store.getters.urlApi}` + `save-prices-changes`,
 				headers: {
 					ContentType: "multipart/form-data",
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -506,7 +506,7 @@ export default {
 				Accept: "application/json",
 				Authorization: `Bearer ${localStorage.getItem("token")}`,
 			},
-			url: `${this.$store.state.axios.urlApi}` + `get-prices-files-all`,
+			url: `${this.$store.getters.urlApi}` + `get-prices-files-all`,
 		})
 			.then((response) => {
 				if (response.data.status) {

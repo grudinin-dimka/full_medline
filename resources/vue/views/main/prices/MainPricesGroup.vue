@@ -151,7 +151,7 @@ export default {
 		// Получение массива докторов с сервера
 		axios({
 			method: "post",
-			url: `${this.$store.state.axios.urlApi}` + `get-prices-group`,
+			url: `${this.$store.getters.urlApi}` + `get-prices-group`,
 			headers: {
 				Accept: "application/json",
 			},

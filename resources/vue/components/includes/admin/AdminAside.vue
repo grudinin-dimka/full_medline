@@ -1,5 +1,5 @@
 <template>
-	<aside :class="{ active: $store.state.burger.admin.status }">
+	<aside :class="{ active: $store.getters.burgerAdminStatus }">
 		<div class="aside-body">
 			<div class="item">
 				<a class="item-title" href="#" @click.prevent="insertPage(links.profile)">
@@ -11,7 +11,7 @@
 					ПРОФИЛЬ
 				</a>
 			</div>
-			<div class="item" v-if="$store.state.user.rights === 'creator'">
+			<div class="item" v-if="$store.getters.userRights === 'creator'">
 				<a class="item-title" href="#" @click.prevent="insertPage(links.users)">
 					<svg width="26" height="20" viewBox="0 0 33 24" xmlns="http://www.w3.org/2000/svg">
 						<path
@@ -254,7 +254,7 @@ export default {
 		logoutUser() {
 			axios({
 				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `logout`,
+				url: `${this.$store.getters.urlApi}` + `logout`,
 				headers: {
 					Accept: "application/json",
 					Authorization: `Bearer ${localStorage.getItem("token")}`,

@@ -151,7 +151,7 @@ export default {
 	mounted() {
 		axios({
 			method: "post",
-			url: `${this.$store.state.axios.urlApi}` + `get-footer`,
+			url: `${this.$store.getters.urlApi}` + `get-footer`,
 		})
 			.then((response) => {
 				if (response.data.status) {
