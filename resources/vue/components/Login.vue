@@ -58,8 +58,8 @@
 </template>
 
 <script>
-import Debugger from "./includes/Debugger.vue";
-import Loader from "./includes/loader.vue";
+import Debugger from "./modules/Debugger.vue";
+import Loader from "./modules/loader.vue";
 
 import axios from "axios";
 

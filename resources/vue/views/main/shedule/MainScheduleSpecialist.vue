@@ -115,7 +115,7 @@
 
 <script>
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
-import LoaderChild from "../../../components/includes/LoaderChild.vue";
+import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import Block from "../../../components/ui/main/blocks/Block.vue";
 
 export default {

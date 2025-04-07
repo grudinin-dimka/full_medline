@@ -1173,8 +1173,8 @@ import AdminModal from "../../../components/includes/admin/AdminModal.vue";
 import AdminSpecialistsTable from "./AdminSpecialistsTable.vue";
 
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
-import Selector from "../../../components/includes/Selector.vue";
-import LoaderChild from "../../../components/includes/LoaderChild.vue";
+import Selector from "../../../components/modules/Selector.vue";
+import LoaderChild from "../../../components/modules/LoaderChild.vue";
 
 import ElementInputLabel from "../../../components/ui/admin/elements/ElementInputLabel.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";

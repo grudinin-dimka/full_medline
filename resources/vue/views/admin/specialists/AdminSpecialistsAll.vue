@@ -44,7 +44,7 @@
 <script>
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 
-import LoaderChild from "../../../components/includes/LoaderChild.vue";
+import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import Pagination from "../../../components/ui/admin/pagination/Pagination.vue";
 
 import ElementInputLabel from "../../../components/ui/admin/elements/ElementInputLabel.vue";

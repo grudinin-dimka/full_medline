@@ -21,10 +21,10 @@
 </template>
 
 <script>
-import Slider from "../../components/includes/Slider.vue";
+import Slider from "../../components/modules/Slider.vue";
 import Block from "../../components/ui/main/blocks/Block.vue";
-import Empty from "../../components/includes/Empty.vue";
-import LoaderChild from "../../components/includes/LoaderChild.vue";
+import Empty from "../../components/modules/Empty.vue";
+import LoaderChild from "../../components/modules/LoaderChild.vue";
 
 import axios from "axios";
 import sorted from "../../services/sorted.js";

@@ -97,8 +97,8 @@ import IconVisa from "../../icons/IconVisa.vue";
 import IconMasterCard from "../../icons/IconMasterCard.vue";
 import IconMir from "../../icons/IconMir.vue";
 
-import LoaderChild from "../LoaderChild.vue";
-import Empty from "../Empty.vue";
+import LoaderChild from "../../modules/LoaderChild.vue";
+import Empty from "../../modules/Empty.vue";
 
 export default {
 	components: {

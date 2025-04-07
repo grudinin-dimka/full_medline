@@ -67,8 +67,8 @@
 <script>
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import Block from "../../../components/ui/main/blocks/Block.vue";
-import LoaderChild from "../../../components/includes/LoaderChild.vue";
-import Empty from "../../../components/includes/Empty.vue";
+import LoaderChild from "../../../components/modules/LoaderChild.vue";
+import Empty from "../../../components/modules/Empty.vue";
 import LoadText from "../../../components/ui/main/LoadText.vue";
 
 import ContainerInputSearch from "../../../components/ui/admin/containers/input/ContainerInputSearch.vue";

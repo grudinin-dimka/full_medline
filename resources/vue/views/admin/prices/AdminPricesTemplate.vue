@@ -123,7 +123,7 @@
 </template>
 
 <script>
-import LoaderChild from "../../../components/includes/LoaderChild.vue";
+import LoaderChild from "../../../components/modules/LoaderChild.vue";
 
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTitle from "../../../components/ui/admin/blocks/BlockTitle.vue";

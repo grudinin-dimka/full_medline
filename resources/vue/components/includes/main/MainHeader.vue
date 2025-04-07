@@ -189,7 +189,7 @@
 
 <script>
 import AdminModal from "../admin/AdminModal.vue";
-import Captcha from "../Captcha.vue";
+import Captcha from "../../modules/Captcha.vue";
 
 import ContainerInput from "../../ui/admin/containers/ContainerInput.vue";
 import ContainerInputOnce from "../../ui/admin/containers/input/ContainerInputOnce.vue";

@@ -96,7 +96,7 @@ import AdminModal from "../../../components/includes/admin/AdminModal.vue";
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import Pagination from "../../../components/ui/admin/pagination/Pagination.vue";
 
-import LoaderChild from "../../../components/includes/LoaderChild.vue";
+import LoaderChild from "../../../components/modules/LoaderChild.vue";
 
 import ElementInputLabel from "../../../components/ui/admin/elements/ElementInputLabel.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";

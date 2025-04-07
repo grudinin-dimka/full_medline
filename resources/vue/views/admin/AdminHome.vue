@@ -396,8 +396,8 @@
 <script>
 import ElementInputLabel from "../../components/ui/admin/elements/ElementInputLabel.vue";
 
-import LoaderChild from "../../components/includes/LoaderChild.vue";
-import Empty from "../../components/includes/Empty.vue";
+import LoaderChild from "../../components/modules/LoaderChild.vue";
+import Empty from "../../components/modules/Empty.vue";
 
 import Modal from "../../components/includes/admin/AdminModal.vue";
 import InfoBar from "../../components/ui/admin/InfoBar.vue";

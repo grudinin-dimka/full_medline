@@ -106,9 +106,9 @@
 </template>
 
 <script>
-import LoaderChild from "../../../components/includes/LoaderChild.vue";
+import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import AdminModal from "../../../components/includes/admin/AdminModal.vue";
-import Empty from "../../../components/includes/Empty.vue";
+import Empty from "../../../components/modules/Empty.vue";
 
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTitle from "../../../components/ui/admin/blocks/BlockTitle.vue";

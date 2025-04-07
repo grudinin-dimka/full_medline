@@ -287,8 +287,8 @@ import IconRemove from "../../../components/icons/IconRemove.vue";
 import IconCreate from "../../../components/icons/IconCreate.vue";
 import IconLoad from "../../../components/icons/IconLoad.vue";
 
-import LoaderChild from "../../../components/includes/LoaderChild.vue";
-import Empty from "../../../components/includes/Empty.vue";
+import LoaderChild from "../../../components/modules/LoaderChild.vue";
+import Empty from "../../../components/modules/Empty.vue";
 
 import AdminAboutUsList from "./AdminAboutUsList.vue";
 

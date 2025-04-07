@@ -57,11 +57,11 @@
 import Block from "../../../components/ui/main/blocks/Block.vue";
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import Filters from "../../../components/ui/main/Filters.vue";
-import Selector from "../../../components/includes/Selector.vue";
+import Selector from "../../../components/modules/Selector.vue";
 
-import LoaderChild from "../../../components/includes/LoaderChild.vue";
+import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import SpecialistsList from "./MainSpecialistsAllList.vue";
-import Empty from "../../../components/includes/Empty.vue";
+import Empty from "../../../components/modules/Empty.vue";
 
 import { RouterLink } from "vue-router";
 import axios from "axios";

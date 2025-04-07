@@ -13,11 +13,11 @@
 </template>
 
 <script>
-import Debugger from "./includes/Debugger.vue";
+import Debugger from "./modules/Debugger.vue";
 import MainHeader from "./includes/main/MainHeader.vue";
 import MainNav from "./includes/main/MainNav.vue";
 import MainFooter from "./includes/main/MainFooter.vue";
-import Loader from "./includes/loader.vue";
+import Loader from "./modules/loader.vue";
 
 export default {
 	data() {

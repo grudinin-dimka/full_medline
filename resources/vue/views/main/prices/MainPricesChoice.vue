@@ -31,8 +31,8 @@
 <script>
 import Block from "../../../components/ui/main/blocks/Block.vue";
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
-import LoaderChild from "../../../components/includes/LoaderChild.vue";
-import Empty from "../../../components/includes/Empty.vue";
+import LoaderChild from "../../../components/modules/LoaderChild.vue";
+import Empty from "../../../components/modules/Empty.vue";
 
 import shared from "../../../services/shared";
 import sorted from "../../../services/sorted";

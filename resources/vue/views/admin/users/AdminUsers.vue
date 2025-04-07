@@ -470,10 +470,10 @@
 </template>
 
 <script>
-import LoaderChild from "../../../components/includes/LoaderChild.vue";
+import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import AdminModal from "../../../components/includes/admin/AdminModal.vue";
 import AdminSubModal from "../../../components/includes/admin/AdminSubModal.vue";
-import PasswordGenerator from "../../../components/includes/PasswordGenerator.vue";
+import PasswordGenerator from "../../../components/modules/PasswordGenerator.vue";
 
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTitle from "../../../components/ui/admin/blocks/BlockTitle.vue";

@@ -9,8 +9,8 @@
 
 <script>
 import { RouterLink, RouterView } from "vue-router";
-import Debugger from "./includes/Debugger.vue";
-import Loader from "./includes/loader.vue";
+import Debugger from "./modules/Debugger.vue";
+import Loader from "./modules/loader.vue";
 import axios from "axios";
 import AdminHeader from "./includes/admin/AdminHeader.vue";
 import AdminAside from "./includes/admin/AdminAside.vue";

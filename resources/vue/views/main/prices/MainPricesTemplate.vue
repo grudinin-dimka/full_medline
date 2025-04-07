@@ -196,11 +196,11 @@
 
 <script>
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
-import LoaderChild from "../../../components/includes/LoaderChild.vue";
+import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import Block from "../../../components/ui/main/blocks/Block.vue";
 import LoadText from "../../../components/ui/main/LoadText.vue";
-import Filter from "../../../components/includes/Filter.vue";
-import Empty from "../../../components/includes/Empty.vue";
+import Filter from "../../../components/modules/Filter.vue";
+import Empty from "../../../components/modules/Empty.vue";
 
 import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
 import ContainerInputSearch from "../../../components/ui/admin/containers/input/ContainerInputSearch.vue";

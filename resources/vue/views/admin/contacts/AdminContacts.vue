@@ -263,8 +263,8 @@ import AdminContactsList from "./AdminContactsList.vue";
 
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 
-import LoaderChild from "../../../components/includes/LoaderChild.vue";
-import Empty from "../../../components/includes/Empty.vue";
+import LoaderChild from "../../../components/modules/LoaderChild.vue";
+import Empty from "../../../components/modules/Empty.vue";
 
 import BlockTitle from "../../../components/ui/admin/blocks/BlockTitle.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
