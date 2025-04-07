@@ -30,7 +30,7 @@
 			</div>
 		</div>
 		<div class="filter__blocks">
-			<ContainerInputSearch v-model="filters.fio.data.body">
+			<ContainerInputSearch v-model="filters.fio.data.body" :placeholder="'Имя специалиста'">
 				<template #label>Поиск</template>
 			</ContainerInputSearch>
 			<Selector
@@ -712,13 +712,12 @@ table {
 
 th {
 	white-space: pre-wrap;
-	word-wrap: break-word;
 	text-align: center;
+	min-width: 110px;
 }
 
 td {
 	text-align: left;
-	word-wrap: break-word;
 }
 
 th,
@@ -793,6 +792,7 @@ tr.create:hover > td {
 .days > .days__item > .days__item-content {
 	position: relative;
 	cursor: default;
+	white-space: nowrap;
 
 	border-radius: 10px;
 

@@ -213,4 +213,14 @@ export default {
 		width: 100%;
 	}
 }
+
+@media screen and (width < 600px) {
+	.prices__item > ul > li {
+		flex-direction: column;
+	}
+
+	.prices__item > ul > li > button {
+		width: 100%;
+	}
+}
 </style>

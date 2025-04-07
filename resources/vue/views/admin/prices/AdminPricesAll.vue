@@ -72,9 +72,7 @@
 				</div>
 				<div class="buttons">
 					<template v-if="price.create">
-						<a :href="price.path" download>
-							<TableButtonDefault>Скачать</TableButtonDefault>
-						</a>
+						<TableButtonDefault @click="downloadFile(price)">Скачать</TableButtonDefault>
 						<TableButtonDisabled> Удалить </TableButtonDisabled>
 					</template>
 					<template v-if="price.delete">
@@ -84,7 +82,7 @@
 						</TableButtonDefault>
 					</template>
 					<template v-if="!price.delete && !price.create">
-						<a :href="price.path" download> Скачать </a>
+						<TableButtonDefault @click="downloadFile(price)">Скачать</TableButtonDefault>
 						<TableButtonRemove @click="updateDeleteElement(price)">
 							Удалить
 						</TableButtonRemove>
@@ -325,6 +323,11 @@ export default {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                      ЦЕНЫ                         |*/
 		/* |___________________________________________________|*/
+		downloadFile(price) {
+			// Перенаправляем пользователя на ссылку для скачивания файла
+			window.location.href = price.path;
+		},
+
 		/* Изменение статуса */
 		updateStatus(price) {
 			this.prices.forEach((item) => {
@@ -337,6 +340,7 @@ export default {
 				}
 			});
 		},
+
 		/* Пометка на удаление */
 		updateDeleteElement(price) {
 			let currentPrice = this.prices.find((item) => item.id === price.id);
