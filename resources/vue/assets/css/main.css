@@ -1,6 +1,9 @@
 /* Импорт стилей */
 @import url("./animation.css");
 
+/* Импорт переменных */
+@import url("./roots/modules/modal.css");
+
 /* Импорт шрифтов */
 @import url("./fonts.css");
 

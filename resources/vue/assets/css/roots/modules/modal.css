@@ -1,0 +1,16 @@
+:root {
+   --modal-border-radius: 0px;
+   --modal-border: 0px;
+   --modal-padding: 0px;
+
+   --modal-background-color: rgba(0, 0, 0, 0.3);
+
+   /* контейнер */
+   --modal-container-gap: 20px;
+
+   --modal-container-border-radius: 15px;
+   --modal-container-border: 0px;
+   --modal-container-padding: 20px;
+   
+   --modal-container-background-color: white;
+}

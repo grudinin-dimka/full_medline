@@ -23,12 +23,12 @@
 							<!-- Кнопки -->
 							<div class="modal__head-buttons">
 								<slot name="buttons" v-if="$slots.buttons"></slot>
-								<button @click.prevent="close">
+								<button class="modal__head-close" @click.prevent="close">
 									<svg
 										data-v-05b9c86b=""
 										xmlns="http://www.w3.org/2000/svg"
-										width="12"
-										height="12"
+										width="14"
+										height="14"
 										viewBox="0 0 14 14"
 									>
 										<path
@@ -55,8 +55,6 @@
 </template>
 
 <script>
-import modals from "../../../store/modals";
-
 export default {
 	emits: ["enter"],
 	props: {
@@ -86,22 +84,12 @@ export default {
 		};
 	},
 	methods: {
-		/* STOP: делал работу на кнопку */
 		open() {
 			this.isOpen = true;
-			this.$store.commit("registerModal", this);
 		},
 		close() {
 			this.isOpen = false;
-			this.$store.commit("unregisterModal", this);
 		},
-	},
-	mounted() {
-		document.addEventListener("keydown", (e) => {
-			if (e.key === "Escape") {
-				this.$store.commit("closeTopmost");
-			}
-		});
 	},
 };
 </script>
@@ -305,10 +293,11 @@ export default {
 .modal__head-buttons {
 	display: flex;
 	justify-content: flex-end;
+	align-items: center;
 	gap: 5px;
 }
 
-.modal__head-buttons > button {
+.modal__head-close {
 	cursor: pointer;
 	background-color: rgba(255, 255, 255, 0);
 	border: var(--default-border);
@@ -321,7 +310,7 @@ export default {
 	transition: all 0.2s ease;
 }
 
-.modal__head-buttons button:hover {
+.modal__head-close:hover {
 	border: var(--default-border-active);
 	background-color: var(--item-background-color-active);
 }

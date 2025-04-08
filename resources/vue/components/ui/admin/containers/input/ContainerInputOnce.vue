@@ -1,13 +1,5 @@
 <template>
-	<div
-		class="container-input-once"
-		:class="{
-			create: type === 'create',
-			delete: type === 'delete',
-			disabled: type === 'disabled',
-			password: type === 'password',
-		}"
-	>
+	<div class="container-input-once" :class="type">
 		<label>
 			<slot name="title"></slot>
 		</label>
@@ -22,7 +14,6 @@ export default {
 		type: {
 			type: String,
 			default: "",
-			required: true,
 		},
 	},
 };
