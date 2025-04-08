@@ -370,7 +370,8 @@
 				<span class="block">
 					{{ currentUser.data.statusId.body === 1 ? "заблокировать" : "разблокировать" }}
 				</span>
-				пользователя <span class="block">
+				пользователя
+				<span class="block">
 					{{
 						currentUser.data.family.body +
 						" " +
@@ -402,70 +403,70 @@
 	<!--|                   БЛОК ПРОФИЛЯ                    |-->
 	<!--|___________________________________________________|-->
 	<block-once :minHeight="100">
-		<block-title>
-			<template #title>
-				ПОЛЬЗОВАТЕЛИ
-				<span v-if="loading.sections.users">{{ " (" + users.length + ")" }}</span>
-			</template>
-		</block-title>
+		<template #title>
+			ПОЛЬЗОВАТЕЛИ
+			<span v-if="loading.sections.users">{{ " (" + users.length + ")" }}</span>
+		</template>
 
-		<div class="users" v-if="loading.sections.users">
-			<div class="item" v-for="user in users">
-				<div class="user-container">
-					<div class="id">#{{ user.id }}</div>
-					<div class="img" :style="{ backgroundImage: `url(${user.path}` }"></div>
-					<div class="info">
-						<div class="fio">
-							{{ user.family + " " + user.name + " " }}
+		<template #body>
+			<div class="users" v-if="loading.sections.users">
+				<div class="item" v-for="user in users">
+					<div class="user-container">
+						<div class="id">#{{ user.id }}</div>
+						<div class="img" :style="{ backgroundImage: `url(${user.path}` }"></div>
+						<div class="info">
+							<div class="fio">
+								{{ user.family + " " + user.name + " " }}
+							</div>
+							<div class="nickname">{{ user.nickname }}</div>
 						</div>
-						<div class="nickname">{{ user.nickname }}</div>
 					</div>
-				</div>
-				<div class="buttons">
-					<div class="icon edit" @click="editUser(user)">
-						<IconEdit :width="24" :height="24" :type="'edit'"></IconEdit>
-						<div class="label">Редактирование</div>
-					</div>
-					<div class="icon admin" @click="editUserPassword(user)">
-						<IconPassword :width="22" :height="22" :type="'admin'"></IconPassword>
-						<div class="label">Смена пароля</div>
-					</div>
-					<div
-						class="icon"
-						:class="{ default: user.statusId === 1, delete: user.statusId === 2 }"
-						@click="editUserBlock(user)"
-					>
-						<IconLockOpen
-							:width="22"
-							:height="22"
-							:type="'default'"
-							v-if="user.statusId === 1"
-						></IconLockOpen>
-						<IconLockClose
-							:width="22"
-							:height="22"
-							:type="'delete'"
-							v-if="user.statusId === 2"
-						></IconLockClose>
-						<div class="label">Блокировка</div>
-					</div>
-					<div class="icon delete" @click="editUserDelete(user)">
-						<IconRemove :width="24" :height="24" :type="'delete'"></IconRemove>
-						<div class="label">Удаление</div>
+					<div class="buttons">
+						<div class="icon edit" @click="editUser(user)">
+							<IconEdit :width="24" :height="24" :type="'edit'"></IconEdit>
+							<div class="label">Редактирование</div>
+						</div>
+						<div class="icon admin" @click="editUserPassword(user)">
+							<IconPassword :width="22" :height="22" :type="'admin'"></IconPassword>
+							<div class="label">Смена пароля</div>
+						</div>
+						<div
+							class="icon"
+							:class="{ default: user.statusId === 1, delete: user.statusId === 2 }"
+							@click="editUserBlock(user)"
+						>
+							<IconLockOpen
+								:width="22"
+								:height="22"
+								:type="'default'"
+								v-if="user.statusId === 1"
+							></IconLockOpen>
+							<IconLockClose
+								:width="22"
+								:height="22"
+								:type="'delete'"
+								v-if="user.statusId === 2"
+							></IconLockClose>
+							<div class="label">Блокировка</div>
+						</div>
+						<div class="icon delete" @click="editUserDelete(user)">
+							<IconRemove :width="24" :height="24" :type="'delete'"></IconRemove>
+							<div class="label">Удаление</div>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 
-		<LoaderChild
-			:isLoading="loading.loader.users"
-			:minHeight="300"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
-		></LoaderChild>
-
-		<BlockButtons>
+			<LoaderChild
+				:isLoading="loading.loader.users"
+				:minHeight="300"
+				@loaderChildAfterLeave="loaderChildAfterLeave"
+			></LoaderChild>
+		</template>
+		
+		<template #buttons>
 			<ButtonDefault @click="createUser"> Добавить </ButtonDefault>
-		</BlockButtons>
+		</template>
 	</block-once>
 </template>
 
@@ -476,7 +477,6 @@ import AdminSubModal from "../../../components/includes/admin/AdminSubModal.vue"
 import PasswordGenerator from "../../../components/modules/PasswordGenerator.vue";
 
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
-import BlockTitle from "../../../components/ui/admin/blocks/BlockTitle.vue";
 
 import IconLoad from "../../../components/icons/IconLoad.vue";
 import IconSave from "../../../components/icons/IconSave.vue";
@@ -510,7 +510,6 @@ export default {
 		AdminSubModal,
 		PasswordGenerator,
 		BlockOnce,
-		BlockTitle,
 		IconLoad,
 		IconSave,
 		ContainerInput,

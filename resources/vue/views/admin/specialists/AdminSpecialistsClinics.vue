@@ -226,40 +226,41 @@
 		<template v-slot:addreas>specialists</template>
 	</info-bar>
 
-	<block-once :minHeight="200">
-		<block-title>
-			<template #title>КЛИНИКИ</template>
-			<template #buttons>
-				<icon-load :width="28" :height="28" v-if="disabled.clinics.save" />
-				<icon-save :width="28" :height="28" @click="saveClinicsChanges" v-else />
-			</template>
-		</block-title>
+	<block-once :minHeight="100">
+		<template #title>КЛИНИКИ</template>
 
-		<div class="container-clinics" v-if="loading.table">
-			<admin-specialists-table
-				:array="getClinics"
-				@useFilter="filterClinics"
-				@touchEditArrValue="editClinic"
-				@touchRemoveArrValue="removeClinic"
+		<template #options>
+			<icon-load :width="28" :height="28" v-if="disabled.clinics.save" />
+			<icon-save :width="28" :height="28" @click="saveClinicsChanges" v-else />
+		</template>
+
+		<template #body>
+			<div class="container-clinics" v-if="loading.table">
+				<admin-specialists-table
+					:array="getClinics"
+					@useFilter="filterClinics"
+					@touchEditArrValue="editClinic"
+					@touchRemoveArrValue="removeClinic"
+				/>
+
+				<pagination
+					v-if="clinics.length > paginationClinics.elements.range"
+					:arrayLength="clinics.length"
+					:settings="paginationClinics"
+					@changePage="changePageClinics"
+				/>
+			</div>
+
+			<loader-child
+				:isLoading="loading.loader"
+				:minHeight="200"
+				@loaderChildAfterLeave="loaderChildAfterLeave"
 			/>
+		</template>
 
-			<pagination
-				v-if="clinics.length > paginationClinics.elements.range"
-				:arrayLength="clinics.length"
-				:settings="paginationClinics"
-				@changePage="changePageClinics"
-			/>
-		</div>
-
-		<loader-child
-			:isLoading="loading.loader"
-			:minHeight="200"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
-		/>
-
-		<block-buttons>
+		<template #buttons>
 			<button-default @click="createClinic"> Добавить </button-default>
-		</block-buttons>
+		</template>
 	</block-once>
 </template>
 

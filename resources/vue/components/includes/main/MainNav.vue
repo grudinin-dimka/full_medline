@@ -2,7 +2,7 @@
 	<nav :class="{ active: $store.getters.burgerMainStatus }">
 		<a
 			class="element"
-			:class="{ hiden: isActiv }"
+			:class="{ active: isActive(page.href) }"
 			:href="page.href"
 			v-for="page in menu"
 			:key="page.id"
@@ -17,7 +17,6 @@
 export default {
 	data() {
 		return {
-			isActiv: true,
 			menu: [
 				{ id: "1", title: "Главная", name: "home", href: "/", params: null },
 				{ id: "2", title: "Специалисты", name: "all", href: "/specialists", params: null },
@@ -43,6 +42,11 @@ export default {
 		};
 	},
 	methods: {
+		/* Активная ссылка */
+		isActive(route) {
+			return this.$route.path === route;
+		},
+
 		insertPage(page) {
 			if (page.params !== null) {
 				this.$router.push({ name: `${page.name}`, params: page.params });
@@ -84,7 +88,7 @@ nav a {
 	transition: all 0.15s ease-in-out;
 }
 
-nav a:hover {
+nav a:is(.active, :hover) {
 	background-color: rgba(255, 255, 255, 0.15);
 }
 

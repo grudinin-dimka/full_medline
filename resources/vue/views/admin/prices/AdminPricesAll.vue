@@ -47,61 +47,62 @@
 	</info-bar>
 
 	<block-once :minHeight="200">
-		<block-title>
-			<template #title>СПИСОК ЦЕН</template>
-			<template #buttons>
-				<icon-load :width="28" :height="28" v-if="disabled.prices.save" />
-				<icon-save :width="28" :height="28" @click="savePricesFiles" v-else />
-			</template>
-		</block-title>
+		<template #title>СПИСОК ЦЕН</template>
 
-		<div class="eprices" v-if="loading.sections.prices">
-			<div
-				class="item"
-				:class="{
-					create: price.create,
-					delete: price.delete,
-				}"
-				v-for="price in prices"
-				:key="price.id"
-				v-if="prices.length > 0"
-			>
-				<div class="info">
-					<div class="name">{{ price.filename }}</div>
-					<div class="date">{{ formatDate(price.created_at) }}</div>
+		<template #options>
+			<icon-load :width="28" :height="28" v-if="disabled.prices.save" />
+			<icon-save :width="28" :height="28" @click="savePricesFiles" v-else />
+		</template>
+
+		<template #body>
+			<div class="eprices" v-if="loading.sections.prices">
+				<div
+					class="item"
+					:class="{
+						create: price.create,
+						delete: price.delete,
+					}"
+					v-for="price in prices"
+					:key="price.id"
+					v-if="prices.length > 0"
+				>
+					<div class="info">
+						<div class="name">{{ price.filename }}</div>
+						<div class="date">{{ formatDate(price.created_at) }}</div>
+					</div>
+					<div class="buttons">
+						<template v-if="price.create">
+							<TableButtonDefault @click="downloadFile(price)">Скачать</TableButtonDefault>
+							<TableButtonDisabled> Удалить </TableButtonDisabled>
+						</template>
+						<template v-if="price.delete">
+							<TableButtonDisabled> Скачать </TableButtonDisabled>
+							<TableButtonDefault @click="updateDeleteElement(price)">
+								Вернуть
+							</TableButtonDefault>
+						</template>
+						<template v-if="!price.delete && !price.create">
+							<TableButtonDefault @click="downloadFile(price)">Скачать</TableButtonDefault>
+							<TableButtonRemove @click="updateDeleteElement(price)">
+								Удалить
+							</TableButtonRemove>
+						</template>
+					</div>
 				</div>
-				<div class="buttons">
-					<template v-if="price.create">
-						<TableButtonDefault @click="downloadFile(price)">Скачать</TableButtonDefault>
-						<TableButtonDisabled> Удалить </TableButtonDisabled>
-					</template>
-					<template v-if="price.delete">
-						<TableButtonDisabled> Скачать </TableButtonDisabled>
-						<TableButtonDefault @click="updateDeleteElement(price)">
-							Вернуть
-						</TableButtonDefault>
-					</template>
-					<template v-if="!price.delete && !price.create">
-						<TableButtonDefault @click="downloadFile(price)">Скачать</TableButtonDefault>
-						<TableButtonRemove @click="updateDeleteElement(price)">
-							Удалить
-						</TableButtonRemove>
-					</template>
-				</div>
+
+				<Empty :minHeight="300" v-else />
 			</div>
 
-			<Empty :minHeight="300" v-else />
-		</div>
+			<LoaderChild
+				:isLoading="loading.loader.prices"
+				:minHeight="300"
+				@loaderChildAfterLeave="loaderChildAfterLeave"
+			></LoaderChild>
+		</template>
 
-		<LoaderChild
-			:isLoading="loading.loader.prices"
-			:minHeight="300"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
-		></LoaderChild>
-
-		<BlockButtons>
+		<template #buttons>
 			<ButtonDefault @click="openModal('create', 'modal')"> Добавить </ButtonDefault>
-		</BlockButtons>
+		</template>
 	</block-once>
 </template>
 

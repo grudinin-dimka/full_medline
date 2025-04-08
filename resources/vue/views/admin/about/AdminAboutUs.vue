@@ -231,35 +231,36 @@
 		<template v-slot:addreas>about</template>
 	</info-bar>
 
-	<block-once :minHeight="400">
-		<block-title>
-			<template #title>ИНФОРМАЦИОННЫЕ БЛОКИ</template>
-			<template #buttons>
-				<icon-load :width="28" :height="28" v-if="disabled.about.save" />
-				<icon-save :width="28" :height="28" @click="saveInfoBlocks" v-else />
-			</template>
-		</block-title>
+	<block-once :minHeight="300">
+		<template #title>ИНФОРМАЦИОННЫЕ БЛОКИ</template>
 
-		<template v-if="loading.sections.infoBlocks">
-			<AdminAboutUsList
-				:infoBlocks="infoBlocks"
-				@touchEditBlock="editInfoBlock"
-				v-if="infoBlocks.length > 0"
-			/>
-
-			<!-- Элемент пустой страницы -->
-			<empty :minHeight="300" v-if="infoBlocks.length == 0" />
+		<template #options>
+			<icon-load :width="28" :height="28" v-if="disabled.about.save" />
+			<icon-save :width="28" :height="28" @click="saveInfoBlocks" v-else />
 		</template>
 
-		<LoaderChild
-			:isLoading="loading.loader.infoBlocks"
-			:minHeight="300"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
-		></LoaderChild>
+		<template #body>
+			<template v-if="loading.sections.infoBlocks">
+				<AdminAboutUsList
+					:infoBlocks="infoBlocks"
+					@touchEditBlock="editInfoBlock"
+					v-if="infoBlocks.length > 0"
+				/>
 
-		<block-buttons>
+				<!-- Элемент пустой страницы -->
+				<empty :minHeight="300" v-if="infoBlocks.length == 0" />
+			</template>
+
+			<LoaderChild
+				:isLoading="loading.loader.infoBlocks"
+				:minHeight="300"
+				@loaderChildAfterLeave="loaderChildAfterLeave"
+			></LoaderChild>
+		</template>
+
+		<template #buttons>
 			<button-default @click="openModal('create')"> Добавить </button-default>
-		</block-buttons>
+		</template>
 	</block-once>
 </template>
 
@@ -271,7 +272,6 @@ import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTwo from "../../../components/ui/admin/blocks/BlockTwo.vue";
-import BlockTitle from "../../../components/ui/admin/blocks/BlockTitle.vue";
 import BlockButtons from "../../../components/ui/admin/blocks/BlockButtons.vue";
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
@@ -305,13 +305,15 @@ export default {
 		AdminModal,
 		AdminSubModal,
 		InfoBar,
+
 		BlockOnce,
 		BlockTwo,
-		BlockTitle,
 		BlockButtons,
+
 		ButtonDefault,
 		ButtonRemove,
 		ButtonClaim,
+
 		IconArrow,
 		IconSave,
 		IconHide,
@@ -321,11 +323,13 @@ export default {
 		IconCreate,
 		IconLoad,
 		LoaderChild,
+
 		Empty,
 		AdminAboutUsList,
 		ContainerInput,
 		ContainerInputOnce,
 		ContainerTextareaOnce,
+
 		axios,
 	},
 	data() {

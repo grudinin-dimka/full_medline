@@ -1,12 +1,29 @@
 <template>
-	<div class="block-once" ref="blockOnce" :style="{ minHeight: `${minHeight}px` }">
-		<slot></slot>
+	<div class="block-once" ref="blockOnce" :class="{ hide: hide }">
+		<div class="block-once__head" v-if="$slots.title || $slots.options">
+			<div class="block-once__title" v-if="$slots.title">
+				<slot name="title"></slot>
+			</div>
+			<div class="block-once__options" v-if="$slots.options">
+				<slot name="options"></slot>
+			</div>
+		</div>
+		<div class="block-once__body" :style="{ minHeight: `${minHeight}px` }">
+			<slot name="body"></slot>
+		</div>
+		<div class="block-once__buttons" v-if="$slots.buttons">
+			<slot name="buttons"></slot>
+		</div>
 	</div>
 </template>
 
 <script>
 export default {
 	props: {
+		hide: {
+			type: Boolean,
+			default: false,
+		},
 		minHeight: {
 			type: Number,
 			default: 200,
@@ -32,5 +49,37 @@ export default {
 	box-shadow: 0px 4px 10px -10px rgba(0, 0, 0, 0.99);
 
 	transition: all 0.5s;
+}
+
+.block-once.hide {
+	overflow: hidden;
+
+	max-width: 100%;
+}
+
+.block-once__head {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.block-once__options {
+	display: flex;
+	gap: 10px;
+}
+
+.block-once__body {
+	height: 100%;
+}
+
+.block-once__buttons {
+	display: flex;
+	justify-content: flex-end;
+	gap: 10px;
+}
+
+.block-once__title {
+	font-size: 24px;
+	font-weight: 500;
 }
 </style>

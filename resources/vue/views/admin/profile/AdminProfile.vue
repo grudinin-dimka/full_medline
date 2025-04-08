@@ -3,72 +3,75 @@
 	<!--|                   БЛОК ПРОФИЛЯ                    |-->
 	<!--|___________________________________________________|-->
 	<block-once :minHeight="400">
-		<block-title>
-			<template #title>ПРОФИЛЬ</template>
-		</block-title>
-		<div class="profile-info" v-if="loading.sections.profile">
-			<div class="item avatar">
-				<div
-					class="img"
-					:style="{
-						backgroundImage: `url(${profile.path})`,
-					}"
-				></div>
-			</div>
-			<div class="item fio">
-				<div class="title">Контактная информация</div>
-				<div class="body">
-					<div class="block">
-						<div class="title">Фамилия</div>
-						<div class="content">{{ profile.family }}</div>
-					</div>
-					<div class="block">
-						<div class="title">Имя</div>
-						<div class="content">{{ profile.name }}</div>
-					</div>
-					<div class="block">
-						<div class="title">Отчество</div>
-						<div class="content">{{ profile.surname === null ? "-" : profile.surname }}</div>
-					</div>
-					<div class="block">
-						<div class="title">Возраст</div>
-						<div class="content">{{ getDateAges(profile.dateOfBirth) }}</div>
-					</div>
-				</div>
-			</div>
-			<div class="item">
-				<div class="title">Пользовательская информация</div>
-				<div class="body">
-					<div class="block">
-						<div class="title">Псевдоним</div>
-						<div class="content">{{ profile.nickname }}</div>
-					</div>
-					<div class="block">
-						<div class="title">Почта</div>
-						<div class="content">{{ profile.email }}</div>
-					</div>
-				</div>
-			</div>
-			<div class="item advanced">
-				<div class="title">Расширенная информация</div>
-				<div class="body">
-					<div class="block">
-						<div class="title">Статус</div>
-						<div class="content">{{ profile.status }}</div>
-					</div>
-					<div class="block">
-						<div class="title">Права</div>
-						<div class="content">{{ profile.rights }}</div>
-					</div>
-				</div>
-			</div>
-		</div>
+		<template #title>ПРОФИЛЬ</template>
 
-		<LoaderChild
-			:isLoading="loading.loader.profile"
-			:minHeight="300"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
-		></LoaderChild>
+		<template #body>
+			<div class="profile-info" v-if="loading.sections.profile">
+				<div class="item avatar">
+					<div
+						class="img"
+						:style="{
+							backgroundImage: `url(${profile.path})`,
+						}"
+					></div>
+				</div>
+				<div class="item fio">
+					<div class="title">Контактная информация</div>
+					<div class="body">
+						<div class="block">
+							<div class="title">Фамилия</div>
+							<div class="content">{{ profile.family }}</div>
+						</div>
+						<div class="block">
+							<div class="title">Имя</div>
+							<div class="content">{{ profile.name }}</div>
+						</div>
+						<div class="block">
+							<div class="title">Отчество</div>
+							<div class="content">
+								{{ profile.surname === null ? "-" : profile.surname }}
+							</div>
+						</div>
+						<div class="block">
+							<div class="title">Возраст</div>
+							<div class="content">{{ getDateAges(profile.dateOfBirth) }}</div>
+						</div>
+					</div>
+				</div>
+				<div class="item">
+					<div class="title">Пользовательская информация</div>
+					<div class="body">
+						<div class="block">
+							<div class="title">Псевдоним</div>
+							<div class="content">{{ profile.nickname }}</div>
+						</div>
+						<div class="block">
+							<div class="title">Почта</div>
+							<div class="content">{{ profile.email }}</div>
+						</div>
+					</div>
+				</div>
+				<div class="item advanced">
+					<div class="title">Расширенная информация</div>
+					<div class="body">
+						<div class="block">
+							<div class="title">Статус</div>
+							<div class="content">{{ profile.status }}</div>
+						</div>
+						<div class="block">
+							<div class="title">Права</div>
+							<div class="content">{{ profile.rights }}</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<LoaderChild
+				:isLoading="loading.loader.profile"
+				:minHeight="300"
+				@loaderChildAfterLeave="loaderChildAfterLeave"
+			></LoaderChild>
+		</template>
 	</block-once>
 </template>
 
@@ -76,7 +79,6 @@
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
-import BlockTitle from "../../../components/ui/admin/blocks/BlockTitle.vue";
 
 import IconLoad from "../../../components/icons/IconLoad.vue";
 import IconSave from "../../../components/icons/IconSave.vue";
@@ -91,12 +93,14 @@ export default {
 	components: {
 		LoaderChild,
 		BlockOnce,
-		BlockTitle,
+
 		IconLoad,
 		IconSave,
+
 		ContainerInput,
 		ContainerInputTwo,
 		ContainerInputThree,
+
 		axios,
 	},
 	data() {

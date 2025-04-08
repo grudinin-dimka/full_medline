@@ -1,22 +1,53 @@
 <template>
-	<div class="block-two">
-		<div class="item">
-			<label>
-				<slot name="title-one"></slot>
-			</label>
-			<slot name="body-one"></slot>
+	<div class="block-two" ref="blockTwo">
+		<div class="block-two__item">
+			<div class="block-two__head">
+				<div class="block-two__head-title">
+					<slot name="one-title"></slot>
+				</div>
+				<div class="block-two__head-options">
+					<slot name="one-options"></slot>
+				</div>
+			</div>
+			<div class="block-two__body" :style="{ minHeight: `${minHeight}px` }">
+				<slot name="one-body"></slot>
+			</div>
+			<div class="block-two__buttons">
+				<slot name="one-buttons"></slot>
+			</div>
 		</div>
-		<div class="item">
-			<label>
-				<slot name="title-two"></slot>
-			</label>
-			<slot name="body-two"></slot>
+		<div class="block-two__item">
+			<div class="block-two__head">
+				<div class="block-two__head-title">
+					<slot name="two-title"></slot>
+				</div>
+				<div class="block-two__head-options">
+					<slot name="two-options"></slot>
+				</div>
+			</div>
+			<div class="block-two__body" :style="{ minHeight: `${minHeight}px` }">
+				<slot name="two-body"></slot>
+			</div>
+			<div class="block-two__buttons">
+				<slot name="two-buttons"></slot>
+			</div>
 		</div>
 	</div>
 </template>
 
 <script>
-export default {};
+export default {
+	props: {
+		hide: {
+			type: Boolean,
+			default: false,
+		},
+		minHeight: {
+			type: Number,
+			default: 200,
+		},
+	},
+};
 </script>
 
 <style scoped>
@@ -27,7 +58,7 @@ export default {};
 	gap: 20px;
 }
 
-.block-two > .item {
+.block-two__item {
 	flex: 1 0 350px;
 	display: flex;
 	flex-direction: column;
@@ -46,7 +77,7 @@ export default {};
 }
 
 @media screen and (width <= 600px) {
-	.block-two > .item {
+	.block-two__item {
 		flex: 1 0 200px;
 	}
 }

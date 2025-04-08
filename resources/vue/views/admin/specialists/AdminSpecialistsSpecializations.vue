@@ -53,40 +53,41 @@
 		<template v-slot:addreas>specialists</template>
 	</info-bar>
 
-	<block-once :minHeight="200">
-		<block-title>
-			<template #title>Специализации</template>
-			<template #buttons>
-				<icon-load :width="28" :height="28" v-if="disabled.specializations.save" />
-				<icon-save :width="28" :height="28" @click="saveSpecializationsChanges" v-else />
-			</template>
-		</block-title>
+	<block-once :minHeight="100">
+		<template #title>Специализации</template>
 
-		<div class="container-specializations" v-if="loading.table">
-			<admin-specialists-table
-				:array="getSpecializations"
-				@useFilter="filterSpecializations"
-				@touchEditArrValue="editSpecialization"
-				@touchRemoveArrValue="removeSpecialization"
+		<template #options>
+			<icon-load :width="28" :height="28" v-if="disabled.specializations.save" />
+			<icon-save :width="28" :height="28" @click="saveSpecializationsChanges" v-else />
+		</template>
+
+		<template #body>
+			<div class="container-specializations" v-if="loading.table">
+				<admin-specialists-table
+					:array="getSpecializations"
+					@useFilter="filterSpecializations"
+					@touchEditArrValue="editSpecialization"
+					@touchRemoveArrValue="removeSpecialization"
+				/>
+
+				<pagination
+					v-if="specializations.length > paginationSpecializations.elements.range"
+					:arrayLength="specializations.length"
+					:settings="paginationSpecializations"
+					@changePage="changePageSpecializations"
+				/>
+			</div>
+
+			<loader-child
+				:isLoading="loading.loader"
+				:minHeight="200"
+				@loaderChildAfterLeave="loaderChildAfterLeave"
 			/>
+		</template>
 
-			<pagination
-				v-if="specializations.length > paginationSpecializations.elements.range"
-				:arrayLength="specializations.length"
-				:settings="paginationSpecializations"
-				@changePage="changePageSpecializations"
-			/>
-		</div>
-
-		<loader-child
-			:isLoading="loading.loader"
-			:minHeight="200"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
-		/>
-
-		<block-buttons>
+		<template #buttons>
 			<button-default @click="createSpecialization"> Добавить </button-default>
-		</block-buttons>
+		</template>
 	</block-once>
 </template>
 
@@ -100,7 +101,6 @@ import LoaderChild from "../../../components/modules/LoaderChild.vue";
 
 import ElementInputLabel from "../../../components/ui/admin/elements/ElementInputLabel.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
-import BlockTitle from "../../../components/ui/admin/blocks/BlockTitle.vue";
 import BlockButtons from "../../../components/ui/admin/blocks/BlockButtons.vue";
 
 import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
@@ -125,15 +125,18 @@ export default {
 		InfoBar,
 		Pagination,
 		LoaderChild,
+
 		ElementInputLabel,
 		ContainerInputOnce,
 		AdminSpecialistsTable,
+
 		BlockOnce,
-		BlockTitle,
 		BlockButtons,
+
 		ButtonDefault,
 		ButtonClaim,
 		ButtonRemove,
+
 		IconSave,
 		IconLoad,
 		axios,

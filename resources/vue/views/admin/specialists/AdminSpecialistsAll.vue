@@ -4,40 +4,41 @@
 		<template v-slot:addreas>specialists</template>
 	</info-bar>
 
-	<block-once :minHeight="200">
-		<block-title>
-			<template #title>СПИСОК ВРАЧЕЙ</template>
-			<template #buttons>
-				<icon-load :width="28" :height="28" v-if="disabled.specialists.save" />
-				<icon-save :width="28" :height="28" @click="saveSpecialistChanges" v-else />
-			</template>
-		</block-title>
+	<block-once :minHeight="100">
+		<template #title>СПИСОК ВРАЧЕЙ</template>
 
-		<div class="container-specialists" v-if="loading.table">
-			<admin-specialists-table
-				:specialists="getSpecialists"
-				@touchHideSpecialist="hideSpecialist"
-				@touchUseFilter="filterSpecialists"
-				@touchRemoveSpecialist="removeSpecialist"
+		<template #options>
+			<icon-load :width="28" :height="28" v-if="disabled.specialists.save" />
+			<icon-save :width="28" :height="28" @click="saveSpecialistChanges" v-else />
+		</template>
+
+		<template #body>
+			<div class="container-specialists" v-if="loading.table">
+				<admin-specialists-table
+					:specialists="getSpecialists"
+					@touchHideSpecialist="hideSpecialist"
+					@touchUseFilter="filterSpecialists"
+					@touchRemoveSpecialist="removeSpecialist"
+				/>
+
+				<pagination
+					v-if="specialists.length > paginationSpecialists.elements.range"
+					:arrayLength="specialists.length"
+					:settings="paginationSpecialists"
+					@changePage="changePageSpecialists"
+				/>
+			</div>
+
+			<loader-child
+				:isLoading="loading.loader"
+				:minHeight="300"
+				@loaderChildAfterLeave="loaderChildAfterLeave"
 			/>
+		</template>
 
-			<pagination
-				v-if="specialists.length > paginationSpecialists.elements.range"
-				:arrayLength="specialists.length"
-				:settings="paginationSpecialists"
-				@changePage="changePageSpecialists"
-			/>
-		</div>
-
-		<loader-child
-			:isLoading="loading.loader"
-			:minHeight="300"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
-		/>
-
-		<block-buttons>
+		<template #buttons>
 			<button-default @click="$router.push('especialists/new')"> Добавить </button-default>
-		</block-buttons>
+		</template>
 	</block-once>
 </template>
 
@@ -49,7 +50,6 @@ import Pagination from "../../../components/ui/admin/pagination/Pagination.vue";
 
 import ElementInputLabel from "../../../components/ui/admin/elements/ElementInputLabel.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
-import BlockTitle from "../../../components/ui/admin/blocks/BlockTitle.vue";
 import BlockButtons from "../../../components/ui/admin/blocks/BlockButtons.vue";
 import AdminSpecialistsTable from "./AdminSpecialistsAllTable.vue";
 import SpanError from "../../../components/ui/admin/SpanError.vue";
@@ -72,18 +72,23 @@ export default {
 		LoaderChild,
 		Pagination,
 		ElementInputLabel,
+
 		BlockOnce,
-		BlockTitle,
 		BlockButtons,
+
 		AdminSpecialistsTable,
+
 		SpanError,
 		ButtonDefault,
 		ButtonRemove,
+
 		IconSave,
 		IconLoad,
+
 		axios,
 		sorted,
 		shared,
+
 		RouterView,
 		RouterLink,
 	},

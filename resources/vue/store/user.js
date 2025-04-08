@@ -25,5 +25,9 @@ export default {
 		userRights(state) {
 			return state.user.rights;
 		},
+
+		userNickname(state) {
+			return state.user.nickname;
+		},
 	},
 };

@@ -477,427 +477,432 @@
 
 	<!-- Основные данные врача -->
 	<block-once :minHeight="400">
-		<block-title>
-			<template #title>
-				<span :class="{ create: $route.params.id == 'new' }">ПРОФИЛЬ</span>
-				<span v-if="$route.params.id == 'new'" class="create"> (СОЗДАНИЕ)</span>
-			</template>
-			<template #buttons>
-				<icon-load :width="28" :height="28" v-if="disabled.profile.save" />
-				<icon-save
-					:width="28"
-					:height="28"
-					@click="saveSpecialistModular('all')"
-					v-if="
-						$route.params.id !== 'new' &&
-						this.specialist.profile.data.id.body !== null &&
-						!disabled.profile.save
-					"
-				/>
-				<icon-add
-					:width="28"
-					:height="28"
-					@click="addSpecialist"
-					v-if="$route.params.id === 'new' && !disabled.profile.create"
-				></icon-add>
-				<icon-load :width="28" :height="28" v-if="disabled.profile.create" :type="'create'" />
-			</template>
-		</block-title>
+		<template #title>
+			<span :class="{ create: $route.params.id == 'new' }">ПРОФИЛЬ</span>
+			<span v-if="$route.params.id == 'new'" class="create"> (СОЗДАНИЕ)</span>
+		</template>
 
-		<div class="container-profile" v-show="loading.sections.profile">
-			<div class="profile-image" v-if="$route.params.id == 'new'">
-				<div
-					class="item"
-					:style="{
-						backgroundImage: `url(/storage/default/image-none-default.png)`,
-					}"
-				></div>
-			</div>
-			<div class="profile-image" v-else>
-				<div
-					class="item"
-					:style="{
-						backgroundImage: `url(${specialist.profile.data.path.body})`,
-					}"
-				></div>
-			</div>
-			<div class="profile-info">
-				<container-input-two
-					:fieldset="true"
-					:type="$route.params.id == 'new' ? 'create' : 'edit'"
-				>
-					<template #legend>
-						<span :class="{ create: $route.params.id === 'new' }">АВАТАР И ССЫЛКА</span>
-					</template>
-					<template #title-one>
-						<span>ФОТО ВРАЧА<span v-if="$route.params.id == 'new'">*</span></span>
-						<span v-if="specialist.profile.data.filename.edited"> (ИЗМЕНЕНО)</span>
-					</template>
-					<template #input-one>
-						<input
-							class="profile-file"
-							type="file"
-							autocomplete="off"
-							ref="fileUpload"
-							:class="{ error: specialist.profile.errors.file.status }"
-						/>
-					</template>
-					<template #error-one>
-						<span class="error" v-if="specialist.profile.errors.file.status">
-							{{ specialist.profile.errors.file.body }}
-						</span>
-					</template>
-					<template #title-two>
-						<span>ССЫЛКА НА ПРОДОКТОРОВ*</span>
-						<span v-if="specialist.profile.data.link.edited"> (ИЗМЕНЕНО)</span>
-					</template>
-					<template #input-two>
-						<input
-							type="text"
-							placeholder="Введите ссылку"
-							autocomplete="off"
-							v-model="specialist.profile.data.link.body"
-							:class="{ error: specialist.profile.errors.link.status }"
-							@input="specialist.profile.data.link.edited = true"
-							@blur="checkSpecialistInput('link', 'text')"
-						/>
-					</template>
-					<template #error-two>
-						<span class="error" v-if="true">
-							{{ specialist.profile.errors.link.body }}
-						</span>
-					</template>
-				</container-input-two>
-				<container-input-three
-					:fieldset="true"
-					:type="$route.params.id == 'new' ? 'create' : 'edit'"
-				>
-					<template #legend>
-						<span :class="{ create: $route.params.id == 'new' }">Ф.И.О.</span>
-					</template>
-					<template #title-one>
-						<span>ФАМИЛИЯ*</span>
-						<span v-if="specialist.profile.data.family.edited"> (ИЗМЕНЕНО)</span>
-					</template>
-					<template #input-one>
-						<input
-							type="text"
-							placeholder="Введите фамилию"
-							autocomplete="off"
-							v-model="specialist.profile.data.family.body"
-							:class="{ error: specialist.profile.errors.family.status }"
-							@input="specialist.profile.data.family.edited = true"
-							@blur="checkSpecialistInput('family', 'text')"
-						/>
-					</template>
-					<template #error-one>
-						<span class="error" v-if="specialist.profile.errors.family.status">
-							{{ specialist.profile.errors.family.body }}
-						</span>
-					</template>
-					<template #title-two>
-						<span>ИМЯ*</span>
-						<span v-if="specialist.profile.data.name.edited"> (ИЗМЕНЕНО)</span>
-					</template>
-					<template #input-two>
-						<input
-							type="text"
-							placeholder="Введите имя"
-							autocomplete="off"
-							v-model="specialist.profile.data.name.body"
-							:class="{ error: specialist.profile.errors.name.status }"
-							@input="specialist.profile.data.name.edited = true"
-							@blur="checkSpecialistInput('name', 'text')"
-						/>
-					</template>
-					<template #error-two>
-						<span class="error" v-if="specialist.profile.errors.name.status">
-							{{ specialist.profile.errors.name.body }}
-						</span>
-					</template>
-					<template #title-three>
-						<span>ОТЧЕСТВО</span>
-						<span v-if="specialist.profile.data.surname.edited"> (ИЗМЕНЕНО)</span>
-					</template>
-					<template #input-three>
-						<input
-							type="text"
-							placeholder="Введите отчество"
-							autocomplete="off"
-							v-model="specialist.profile.data.surname.body"
-							:class="{ error: specialist.profile.errors.surname.status }"
-							@input="specialist.profile.data.surname.edited = true"
-						/>
-					</template>
-					<template #error-three>
-						<span class="error" v-if="specialist.profile.errors.surname.status">
-							{{ specialist.profile.errors.surname.body }}
-						</span>
-					</template>
-				</container-input-three>
-			</div>
-		</div>
-		<div class="container-profile-other" v-show="loading.sections.profile">
-			<container-input>
-				<container-select-three
-					:fieldset="true"
-					:type="$route.params.id == 'new' ? 'create' : 'edit'"
-				>
-					<template #legend>
-						<span :class="{ create: $route.params.id === 'new' }">НАУЧНОЕ ОБРАЗОВАНИЕ</span>
-					</template>
-					<template #title-one>
-						<span>КАТЕГОРИЯ*</span>
-						<span v-if="specialist.profile.data.category.edited"> (ИЗМЕНЕНО)</span>
-					</template>
-					<template #select-one>
-						<Selector
-							v-model="specialist.profile.data.category.body"
-							:placeholder="'Выберите категорию'"
-							:type="
-								specialist.profile.errors.category.status
-									? 'error'
-									: $route.params.id == 'new'
-									? 'create'
-									: 'default'
-							"
-							:filter="false"
-							:list="[
-								{
-									value: 'Нет категории',
-									label: 'Нет категории',
-								},
-								{
-									value: 'Первая',
-									label: 'Первая',
-								},
-								{
-									value: 'Вторая',
-									label: 'Вторая',
-								},
-								{
-									value: 'Высшая',
-									label: 'Высшая',
-								},
-							]"
-						></Selector>
-					</template>
-					<template #error-one>
-						<span class="error" v-if="specialist.profile.errors.category.status">
-							{{ specialist.profile.errors.category.body }}
-						</span>
-					</template>
-					<template #title-two>
-						<span>СТЕПЕНЬ</span>
-						<span v-if="specialist.profile.data.degree.edited"> (ИЗМЕНЕНО)</span>
-					</template>
-					<template #select-two>
-						<input
-							type="text"
-							placeholder="Введите степень"
-							autocomplete="off"
-							list="specialist-dedgree"
-							v-model="specialist.profile.data.degree.body"
-							@input="specialist.profile.data.degree.edited = true"
-						/>
-						<datalist id="specialist-dedgree">
-							<option value="Отсутствует">Отсутствует</option>
-							<option value="Кандидат медицинских наук">Кандидат медицинских наук</option>
-							<option value="Доктор медицинских наук">Доктор медицинских наук</option>
-						</datalist>
-					</template>
-					<template #title-three>
-						<span>ЗВАНИЕ</span>
-						<span v-if="specialist.profile.data.rank.edited"> (ИЗМЕНЕНО)</span>
-					</template>
-					<template #select-three>
-						<input
-							type="text"
-							placeholder="Введите звание"
-							autocomplete="off"
-							list="specialist-rank"
-							v-model="specialist.profile.data.rank.body"
-							@input="specialist.profile.data.rank.edited = true"
-						/>
-						<datalist id="specialist-rank">
-							<option value="Отсутствует">Отсутствует</option>
-							<option value="Доцент">Доцент</option>
-							<option value="Профессор">Профессор</option>
-						</datalist>
-					</template>
-				</container-select-three>
-				<!-- Первая работа -->
-				<container-input-two
-					:fieldset="true"
-					:type="$route.params.id == 'new' ? 'create' : 'edit'"
-				>
-					<template #legend>
-						<span :class="{ create: $route.params.id === 'new' }">НАЧАЛО КАРЪЕРЫ</span>
-					</template>
-					<template #title-one>
-						<span>ДАТА* ({{ getAge(specialist.profile.data.startWorkAge.body) }} лет)</span>
-						<span v-if="specialist.profile.data.startWorkAge.edited"> (ИЗМЕНЕНО)</span>
-					</template>
-					<template #input-one>
-						<input
-							type="date"
-							autocomplete="off"
-							v-model="specialist.profile.data.startWorkAge.body"
-							:class="{ error: specialist.profile.errors.startWorkAge.status }"
-							@input="specialist.profile.data.startWorkAge.edited = true"
-							@blur="checkSpecialistInput('startWorkAge', 'text')"
-						/>
-					</template>
-					<template #error-one>
-						<span class="error" v-if="specialist.profile.errors.startWorkAge.status">
-							{{ specialist.profile.errors.startWorkAge.body }}
-						</span>
-					</template>
-					<template #title-two>
-						<span>ГОРОД</span>
-						<span v-if="specialist.profile.data.startWorkCity.edited"> (ИЗМЕНЕНО)</span>
-					</template>
-					<template #input-two>
-						<input
-							type="text"
-							placeholder="Введите название города"
-							autocomplete="off"
-							v-model="specialist.profile.data.startWorkCity.body"
-							@input="specialist.profile.data.startWorkCity.edited = true"
-						/>
-					</template>
-				</container-input-two>
-				<!-- Статус приёма -->
-				<container-input-two-sub
-					:fieldset="true"
-					:subOne="false"
-					:subTwo="specialist.profile.data.childrenDoctor.body ? true : false"
-					:type="$route.params.id == 'new' ? 'create' : 'edit'"
-				>
-					<template #legend>
-						<span :class="{ create: $route.params.id === 'new' }">ПРИЁМ ВРАЧА</span>
-					</template>
-					<template #title-one>
-						<span>У ВЗРОСЛЫХ*</span>
-						<span v-if="specialist.profile.data.adultDoctor.edited"> (ИЗМЕНЕНО)</span>
-					</template>
-					<template #input-one>
-						<Selector
-							v-model="specialist.profile.data.adultDoctor.body"
-							:placeholder="'Выберите статус'"
-							:type="
-								specialist.profile.errors.adultDoctor.status
-									? 'error'
-									: $route.params.id == 'new'
-									? 'create'
-									: 'default'
-							"
-							:filter="false"
-							:list="[
-								{
-									value: 0,
-									label: 'Нет',
-								},
-								{
-									value: 1,
-									label: 'Да',
-								},
-							]"
-						></Selector>
-					</template>
-					<template #error-one>
-						<span class="error" v-if="specialist.profile.errors.adultDoctor.status">
-							{{ specialist.profile.errors.adultDoctor.body }}
-						</span>
-					</template>
-					<template #title-two>
-						<span>У ДЕТЕЙ*</span>
-						<span v-if="specialist.profile.data.childrenDoctor.edited"> (ИЗМЕНЕНО)</span>
-					</template>
-					<template #input-two>
-						<Selector
-							v-model="specialist.profile.data.childrenDoctor.body"
-							:placeholder="'Выберите статус'"
-							:type="
-								specialist.profile.errors.childrenDoctor.status
-									? 'error'
-									: $route.params.id == 'new'
-									? 'create'
-									: 'default'
-							"
-							:filter="false"
-							:list="[
-								{
-									value: 0,
-									label: 'Нет',
-								},
-								{
-									value: 1,
-									label: 'Да',
-								},
-							]"
-						></Selector>
-					</template>
-					<template #error-two>
-						<span class="error" v-if="specialist.profile.errors.childrenDoctor.status">
-							{{ specialist.profile.errors.childrenDoctor.body }}
-						</span>
-					</template>
-					<template #title-sub-two>
-						<span>ВОЗРАСТ* (+{{ specialist.profile.data.childrenDoctorAge.body }})</span>
-						<span v-if="specialist.profile.data.childrenDoctorAge.edited"> (ИЗМЕНЕНО)</span>
-					</template>
-					<template #input-sub-two>
-						<input
-							type="number"
-							placeholder="Годы"
-							v-model="specialist.profile.data.childrenDoctorAge.body"
-							:class="{ error: specialist.profile.errors.childrenDoctorAge.status }"
-							@input="specialist.profile.data.childrenDoctorAge.edited = true"
-							@blur="checkSpecialistInput('childrenDoctorAge', 'number')"
-						/>
-					</template>
-					<template #error-sub-two>
-						<span class="error" v-if="specialist.profile.errors.childrenDoctorAge.status">
-							{{ specialist.profile.errors.childrenDoctorAge.body }}
-						</span>
-					</template>
-				</container-input-two-sub>
-			</container-input>
-		</div>
+		<template #options>
+			<icon-load :width="28" :height="28" v-if="disabled.profile.save" />
+			<icon-save
+				:width="28"
+				:height="28"
+				@click="saveSpecialistModular('all')"
+				v-if="
+					$route.params.id !== 'new' &&
+					this.specialist.profile.data.id.body !== null &&
+					!disabled.profile.save
+				"
+			/>
+			<icon-add
+				:width="28"
+				:height="28"
+				@click="addSpecialist"
+				v-if="$route.params.id === 'new' && !disabled.profile.create"
+			></icon-add>
+			<icon-load :width="28" :height="28" v-if="disabled.profile.create" :type="'create'" />
+		</template>
 
-		<!-- Загрузчик профиля -->
-		<loader-child
-			:isLoading="loading.loader.profile"
-			:minHeight="600"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
-		/>
+		<template #body>
+			<div class="container-profile" v-show="loading.sections.profile">
+				<div class="profile-image" v-if="$route.params.id == 'new'">
+					<div
+						class="item"
+						:style="{
+							backgroundImage: `url(/storage/default/image-none-default.png)`,
+						}"
+					></div>
+				</div>
+				<div class="profile-image" v-else>
+					<div
+						class="item"
+						:style="{
+							backgroundImage: `url(${specialist.profile.data.path.body})`,
+						}"
+					></div>
+				</div>
+				<div class="profile-info">
+					<container-input-two
+						:fieldset="true"
+						:type="$route.params.id == 'new' ? 'create' : 'edit'"
+					>
+						<template #legend>
+							<span :class="{ create: $route.params.id === 'new' }">АВАТАР И ССЫЛКА</span>
+						</template>
+						<template #title-one>
+							<span>ФОТО ВРАЧА<span v-if="$route.params.id == 'new'">*</span></span>
+							<span v-if="specialist.profile.data.filename.edited"> (ИЗМЕНЕНО)</span>
+						</template>
+						<template #input-one>
+							<input
+								class="profile-file"
+								type="file"
+								autocomplete="off"
+								ref="fileUpload"
+								:class="{ error: specialist.profile.errors.file.status }"
+							/>
+						</template>
+						<template #error-one>
+							<span class="error" v-if="specialist.profile.errors.file.status">
+								{{ specialist.profile.errors.file.body }}
+							</span>
+						</template>
+						<template #title-two>
+							<span>ССЫЛКА НА ПРОДОКТОРОВ*</span>
+							<span v-if="specialist.profile.data.link.edited"> (ИЗМЕНЕНО)</span>
+						</template>
+						<template #input-two>
+							<input
+								type="text"
+								placeholder="Введите ссылку"
+								autocomplete="off"
+								v-model="specialist.profile.data.link.body"
+								:class="{ error: specialist.profile.errors.link.status }"
+								@input="specialist.profile.data.link.edited = true"
+								@blur="checkSpecialistInput('link', 'text')"
+							/>
+						</template>
+						<template #error-two>
+							<span class="error" v-if="true">
+								{{ specialist.profile.errors.link.body }}
+							</span>
+						</template>
+					</container-input-two>
+					<container-input-three
+						:fieldset="true"
+						:type="$route.params.id == 'new' ? 'create' : 'edit'"
+					>
+						<template #legend>
+							<span :class="{ create: $route.params.id == 'new' }">Ф.И.О.</span>
+						</template>
+						<template #title-one>
+							<span>ФАМИЛИЯ*</span>
+							<span v-if="specialist.profile.data.family.edited"> (ИЗМЕНЕНО)</span>
+						</template>
+						<template #input-one>
+							<input
+								type="text"
+								placeholder="Введите фамилию"
+								autocomplete="off"
+								v-model="specialist.profile.data.family.body"
+								:class="{ error: specialist.profile.errors.family.status }"
+								@input="specialist.profile.data.family.edited = true"
+								@blur="checkSpecialistInput('family', 'text')"
+							/>
+						</template>
+						<template #error-one>
+							<span class="error" v-if="specialist.profile.errors.family.status">
+								{{ specialist.profile.errors.family.body }}
+							</span>
+						</template>
+						<template #title-two>
+							<span>ИМЯ*</span>
+							<span v-if="specialist.profile.data.name.edited"> (ИЗМЕНЕНО)</span>
+						</template>
+						<template #input-two>
+							<input
+								type="text"
+								placeholder="Введите имя"
+								autocomplete="off"
+								v-model="specialist.profile.data.name.body"
+								:class="{ error: specialist.profile.errors.name.status }"
+								@input="specialist.profile.data.name.edited = true"
+								@blur="checkSpecialistInput('name', 'text')"
+							/>
+						</template>
+						<template #error-two>
+							<span class="error" v-if="specialist.profile.errors.name.status">
+								{{ specialist.profile.errors.name.body }}
+							</span>
+						</template>
+						<template #title-three>
+							<span>ОТЧЕСТВО</span>
+							<span v-if="specialist.profile.data.surname.edited"> (ИЗМЕНЕНО)</span>
+						</template>
+						<template #input-three>
+							<input
+								type="text"
+								placeholder="Введите отчество"
+								autocomplete="off"
+								v-model="specialist.profile.data.surname.body"
+								:class="{ error: specialist.profile.errors.surname.status }"
+								@input="specialist.profile.data.surname.edited = true"
+							/>
+						</template>
+						<template #error-three>
+							<span class="error" v-if="specialist.profile.errors.surname.status">
+								{{ specialist.profile.errors.surname.body }}
+							</span>
+						</template>
+					</container-input-three>
+				</div>
+			</div>
+			<div class="container-profile-other" v-show="loading.sections.profile">
+				<container-input>
+					<container-select-three
+						:fieldset="true"
+						:type="$route.params.id == 'new' ? 'create' : 'edit'"
+					>
+						<template #legend>
+							<span :class="{ create: $route.params.id === 'new' }"
+								>НАУЧНОЕ ОБРАЗОВАНИЕ</span
+							>
+						</template>
+						<template #title-one>
+							<span>КАТЕГОРИЯ*</span>
+							<span v-if="specialist.profile.data.category.edited"> (ИЗМЕНЕНО)</span>
+						</template>
+						<template #select-one>
+							<Selector
+								v-model="specialist.profile.data.category.body"
+								:placeholder="'Выберите категорию'"
+								:type="
+									specialist.profile.errors.category.status
+										? 'error'
+										: $route.params.id == 'new'
+										? 'create'
+										: 'default'
+								"
+								:filter="false"
+								:list="[
+									{
+										value: 'Нет категории',
+										label: 'Нет категории',
+									},
+									{
+										value: 'Первая',
+										label: 'Первая',
+									},
+									{
+										value: 'Вторая',
+										label: 'Вторая',
+									},
+									{
+										value: 'Высшая',
+										label: 'Высшая',
+									},
+								]"
+							></Selector>
+						</template>
+						<template #error-one>
+							<span class="error" v-if="specialist.profile.errors.category.status">
+								{{ specialist.profile.errors.category.body }}
+							</span>
+						</template>
+						<template #title-two>
+							<span>СТЕПЕНЬ</span>
+							<span v-if="specialist.profile.data.degree.edited"> (ИЗМЕНЕНО)</span>
+						</template>
+						<template #select-two>
+							<input
+								type="text"
+								placeholder="Введите степень"
+								autocomplete="off"
+								list="specialist-dedgree"
+								v-model="specialist.profile.data.degree.body"
+								@input="specialist.profile.data.degree.edited = true"
+							/>
+							<datalist id="specialist-dedgree">
+								<option value="Отсутствует">Отсутствует</option>
+								<option value="Кандидат медицинских наук">Кандидат медицинских наук</option>
+								<option value="Доктор медицинских наук">Доктор медицинских наук</option>
+							</datalist>
+						</template>
+						<template #title-three>
+							<span>ЗВАНИЕ</span>
+							<span v-if="specialist.profile.data.rank.edited"> (ИЗМЕНЕНО)</span>
+						</template>
+						<template #select-three>
+							<input
+								type="text"
+								placeholder="Введите звание"
+								autocomplete="off"
+								list="specialist-rank"
+								v-model="specialist.profile.data.rank.body"
+								@input="specialist.profile.data.rank.edited = true"
+							/>
+							<datalist id="specialist-rank">
+								<option value="Отсутствует">Отсутствует</option>
+								<option value="Доцент">Доцент</option>
+								<option value="Профессор">Профессор</option>
+							</datalist>
+						</template>
+					</container-select-three>
+					<!-- Первая работа -->
+					<container-input-two
+						:fieldset="true"
+						:type="$route.params.id == 'new' ? 'create' : 'edit'"
+					>
+						<template #legend>
+							<span :class="{ create: $route.params.id === 'new' }">НАЧАЛО КАРЪЕРЫ</span>
+						</template>
+						<template #title-one>
+							<span
+								>ДАТА* ({{ getAge(specialist.profile.data.startWorkAge.body) }} лет)</span
+							>
+							<span v-if="specialist.profile.data.startWorkAge.edited"> (ИЗМЕНЕНО)</span>
+						</template>
+						<template #input-one>
+							<input
+								type="date"
+								autocomplete="off"
+								v-model="specialist.profile.data.startWorkAge.body"
+								:class="{ error: specialist.profile.errors.startWorkAge.status }"
+								@input="specialist.profile.data.startWorkAge.edited = true"
+								@blur="checkSpecialistInput('startWorkAge', 'text')"
+							/>
+						</template>
+						<template #error-one>
+							<span class="error" v-if="specialist.profile.errors.startWorkAge.status">
+								{{ specialist.profile.errors.startWorkAge.body }}
+							</span>
+						</template>
+						<template #title-two>
+							<span>ГОРОД</span>
+							<span v-if="specialist.profile.data.startWorkCity.edited"> (ИЗМЕНЕНО)</span>
+						</template>
+						<template #input-two>
+							<input
+								type="text"
+								placeholder="Введите название города"
+								autocomplete="off"
+								v-model="specialist.profile.data.startWorkCity.body"
+								@input="specialist.profile.data.startWorkCity.edited = true"
+							/>
+						</template>
+					</container-input-two>
+					<!-- Статус приёма -->
+					<container-input-two-sub
+						:fieldset="true"
+						:subOne="false"
+						:subTwo="specialist.profile.data.childrenDoctor.body ? true : false"
+						:type="$route.params.id == 'new' ? 'create' : 'edit'"
+					>
+						<template #legend>
+							<span :class="{ create: $route.params.id === 'new' }">ПРИЁМ ВРАЧА</span>
+						</template>
+						<template #title-one>
+							<span>У ВЗРОСЛЫХ*</span>
+							<span v-if="specialist.profile.data.adultDoctor.edited"> (ИЗМЕНЕНО)</span>
+						</template>
+						<template #input-one>
+							<Selector
+								v-model="specialist.profile.data.adultDoctor.body"
+								:placeholder="'Выберите статус'"
+								:type="
+									specialist.profile.errors.adultDoctor.status
+										? 'error'
+										: $route.params.id == 'new'
+										? 'create'
+										: 'default'
+								"
+								:filter="false"
+								:list="[
+									{
+										value: 0,
+										label: 'Нет',
+									},
+									{
+										value: 1,
+										label: 'Да',
+									},
+								]"
+							></Selector>
+						</template>
+						<template #error-one>
+							<span class="error" v-if="specialist.profile.errors.adultDoctor.status">
+								{{ specialist.profile.errors.adultDoctor.body }}
+							</span>
+						</template>
+						<template #title-two>
+							<span>У ДЕТЕЙ*</span>
+							<span v-if="specialist.profile.data.childrenDoctor.edited"> (ИЗМЕНЕНО)</span>
+						</template>
+						<template #input-two>
+							<Selector
+								v-model="specialist.profile.data.childrenDoctor.body"
+								:placeholder="'Выберите статус'"
+								:type="
+									specialist.profile.errors.childrenDoctor.status
+										? 'error'
+										: $route.params.id == 'new'
+										? 'create'
+										: 'default'
+								"
+								:filter="false"
+								:list="[
+									{
+										value: 0,
+										label: 'Нет',
+									},
+									{
+										value: 1,
+										label: 'Да',
+									},
+								]"
+							></Selector>
+						</template>
+						<template #error-two>
+							<span class="error" v-if="specialist.profile.errors.childrenDoctor.status">
+								{{ specialist.profile.errors.childrenDoctor.body }}
+							</span>
+						</template>
+						<template #title-sub-two>
+							<span>ВОЗРАСТ* (+{{ specialist.profile.data.childrenDoctorAge.body }})</span>
+							<span v-if="specialist.profile.data.childrenDoctorAge.edited">
+								(ИЗМЕНЕНО)</span
+							>
+						</template>
+						<template #input-sub-two>
+							<input
+								type="number"
+								placeholder="Годы"
+								v-model="specialist.profile.data.childrenDoctorAge.body"
+								:class="{ error: specialist.profile.errors.childrenDoctorAge.status }"
+								@input="specialist.profile.data.childrenDoctorAge.edited = true"
+								@blur="checkSpecialistInput('childrenDoctorAge', 'number')"
+							/>
+						</template>
+						<template #error-sub-two>
+							<span class="error" v-if="specialist.profile.errors.childrenDoctorAge.status">
+								{{ specialist.profile.errors.childrenDoctorAge.body }}
+							</span>
+						</template>
+					</container-input-two-sub>
+				</container-input>
+			</div>
+
+			<!-- Загрузчик профиля -->
+			<loader-child
+				:isLoading="loading.loader.profile"
+				:minHeight="600"
+				@loaderChildAfterLeave="loaderChildAfterLeave"
+			/>
+		</template>
 	</block-once>
 
 	<template v-if="$route.params.id !== 'new'">
-		<block-two>
+		<block-two :minHeight="100">
 			<!--____________________________________________________-->
 			<!--2. Специализации                                    -->
 			<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
-			<template #title-one>
-				<block-title>
-					<template #title>
-						СПЕЦИАЛИЗАЦИИ
-						<span v-show="loading.sections.specializations">
-							({{ specialist.connections.specializations.length }})
-						</span>
-					</template>
-					<template #buttons>
-						<icon-save
-							:width="28"
-							:height="28"
-							@click="saveSpecialistModular('specializations')"
-							v-if="false"
-						/>
-					</template>
-				</block-title>
+			<template #one-title>
+				СПЕЦИАЛИЗАЦИИ
+				<span v-show="loading.sections.specializations">
+					({{ specialist.connections.specializations.length }})
+				</span>
 			</template>
-			<template #body-one>
+
+			<template one-options>
+				<icon-save
+					:width="28"
+					:height="28"
+					@click="saveSpecialistModular('specializations')"
+					v-if="false"
+				/>
+			</template>
+
+			<template #one-body>
 				<div class="profile-list" v-show="loading.sections.specializations">
 					<!-- Если специализации не выбраны -->
 					<div class="item-empty" v-if="specialist.connections.specializations.length == 0">
@@ -933,44 +938,42 @@
 					:minHeight="100"
 					@loaderChildAfterLeave="loaderChildAfterLeave"
 				/>
+			</template>
 
-				<block-buttons>
-					<button-disabled v-if="this.specialist.profile.data.id.body == null">
-						Добавить
-					</button-disabled>
-					<button-default
-						@click="editSpecialization"
-						v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.body !== null"
-					>
-						Добавить
-					</button-default>
-					<button-claim @click="editSpecialization" v-if="$route.params.id === 'new'">
-						Добавить
-					</button-claim>
-				</block-buttons>
+			<template #one-buttons>
+				<button-disabled v-if="this.specialist.profile.data.id.body == null">
+					Добавить
+				</button-disabled>
+				<button-default
+					@click="editSpecialization"
+					v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.body !== null"
+				>
+					Добавить
+				</button-default>
+				<button-claim @click="editSpecialization" v-if="$route.params.id === 'new'">
+					Добавить
+				</button-claim>
 			</template>
 			<!--____________________________________________________-->
 			<!--3. Клиники                                          -->
 			<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
-			<template #title-two>
-				<block-title>
-					<template #title>
-						КЛИНИКИ
-						<span v-show="loading.sections.clinics">
-							({{ specialist.connections.clinics.length }})
-						</span>
-					</template>
-					<template #buttons>
-						<icon-save
-							:width="28"
-							:height="28"
-							@click="saveSpecialistModular('clinics')"
-							v-if="false"
-						/>
-					</template>
-				</block-title>
+			<template #two-title>
+				КЛИНИКИ
+				<span v-show="loading.sections.clinics">
+					({{ specialist.connections.clinics.length }})
+				</span>
 			</template>
-			<template #body-two>
+
+			<template #two-options>
+				<icon-save
+					:width="28"
+					:height="28"
+					@click="saveSpecialistModular('clinics')"
+					v-if="false"
+				/>
+			</template>
+
+			<template #two-body>
 				<div class="profile-list" v-show="loading.sections.clinics">
 					<!-- Если клиники не выбраны -->
 					<div class="item-empty" v-if="specialist.connections.clinics.length == 0">
@@ -1007,58 +1010,59 @@
 					:minHeight="100"
 					@loaderChildAfterLeave="loaderChildAfterLeave"
 				/>
+			</template>
 
-				<block-buttons>
-					<button-disabled v-if="this.specialist.profile.data.id.body == null">
-						Добавить
-					</button-disabled>
-					<button-default
-						@click="editClinics"
-						v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.body !== null"
-					>
-						Добавить
-					</button-default>
-				</block-buttons>
+			<template #two-buttons>
+				<button-disabled v-if="this.specialist.profile.data.id.body == null">
+					Добавить
+				</button-disabled>
+				<button-default
+					@click="editClinics"
+					v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.body !== null"
+				>
+					Добавить
+				</button-default>
 			</template>
 		</block-two>
 
 		<!--____________________________________________________-->
 		<!--4. Сертификаты                                      -->
 		<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
-		<block-once :minHeight="200">
-			<block-title>
-				<template #title>
-					СЕРТИФИКАТЫ
-					<span v-show="loading.sections.certificates">
-						({{ specialist.connections.certificates.length }})
-					</span>
-				</template>
-				<template #buttons>
-					<icon-save
-						:width="28"
-						:height="28"
-						@click="saveSpecialistModular('certificates')"
-						v-if="false"
-					/>
-				</template>
-			</block-title>
+		<block-once :minHeight="100">
+			<template #title>
+				СЕРТИФИКАТЫ
+				<span v-show="loading.sections.certificates">
+					({{ specialist.connections.certificates.length }})
+				</span>
+			</template>
 
-			<admin-specialists-table
-				v-show="loading.sections.certificates"
-				:array="getSpecialistCertificates"
-				@useFilter="filterArray"
-				@touchEditArrValue="editArrayValue('edit', 'certificates', $event)"
-				@touchRemoveArrValue="updateDeleteValue('certificates', $event)"
-			/>
+			<template #options>
+				<icon-save
+					:width="28"
+					:height="28"
+					@click="saveSpecialistModular('certificates')"
+					v-if="false"
+				/>
+			</template>
 
-			<!-- Загрузчик профиля -->
-			<loader-child
-				:isLoading="loading.loader.clinics"
-				:minHeight="100"
-				@loaderChildAfterLeave="loaderChildAfterLeave"
-			/>
+			<template #body>
+				<admin-specialists-table
+					v-show="loading.sections.certificates"
+					:array="getSpecialistCertificates"
+					@useFilter="filterArray"
+					@touchEditArrValue="editArrayValue('edit', 'certificates', $event)"
+					@touchRemoveArrValue="updateDeleteValue('certificates', $event)"
+				/>
 
-			<block-buttons>
+				<!-- Загрузчик профиля -->
+				<loader-child
+					:isLoading="loading.loader.clinics"
+					:minHeight="100"
+					@loaderChildAfterLeave="loaderChildAfterLeave"
+				/>
+			</template>
+
+			<template #buttons>
 				<button-disabled v-if="this.specialist.profile.data.id.body == null">
 					Добавить
 				</button-disabled>
@@ -1068,44 +1072,45 @@
 				>
 					Добавить
 				</button-default>
-			</block-buttons>
+			</template>
 		</block-once>
 		<!--____________________________________________________-->
 		<!--5. Образование                                      -->
 		<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
-		<block-once :minHeight="200">
-			<block-title>
-				<template #title>
-					ОБРАЗОВАНИЕ
-					<span v-show="loading.sections.educations">
-						({{ specialist.connections.educations.length }})
-					</span>
-				</template>
-				<template #buttons>
-					<icon-save
-						:width="28"
-						:height="28"
-						@click="saveSpecialistModular('educations')"
-						v-if="false"
-					/>
-				</template>
-			</block-title>
+		<block-once :minHeight="100">
+			<template #title>
+				ОБРАЗОВАНИЕ
+				<span v-show="loading.sections.educations">
+					({{ specialist.connections.educations.length }})
+				</span>
+			</template>
 
-			<admin-specialists-table
-				v-show="loading.sections.educations"
-				:array="getSpecialistEducations"
-				@touchEditArrValue="editArrayValue('edit', 'educations', $event)"
-				@touchRemoveArrValue="updateDeleteValue('educations', $event)"
-			/>
+			<template #options>
+				<icon-save
+					:width="28"
+					:height="28"
+					@click="saveSpecialistModular('educations')"
+					v-if="false"
+				/>
+			</template>
 
-			<!-- Загрузчик профиля -->
-			<loader-child
-				:isLoading="loading.loader.clinics"
-				:minHeight="100"
-				@loaderChildAfterLeave="loaderChildAfterLeave"
-			/>
+			<template #body>
+				<admin-specialists-table
+					v-show="loading.sections.educations"
+					:array="getSpecialistEducations"
+					@touchEditArrValue="editArrayValue('edit', 'educations', $event)"
+					@touchRemoveArrValue="updateDeleteValue('educations', $event)"
+				/>
 
-			<block-buttons>
+				<!-- Загрузчик профиля -->
+				<loader-child
+					:isLoading="loading.loader.clinics"
+					:minHeight="100"
+					@loaderChildAfterLeave="loaderChildAfterLeave"
+				/>
+			</template>
+
+			<template #buttons>
 				<button-disabled v-if="this.specialist.profile.data.id.body == null">
 					Добавить
 				</button-disabled>
@@ -1115,45 +1120,46 @@
 				>
 					Добавить
 				</button-default>
-			</block-buttons>
+			</template>
 		</block-once>
 
 		<!--____________________________________________________-->
 		<!--6. Места работы                                     -->
 		<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
-		<block-once :minHeight="200">
-			<block-title>
-				<template #title>
-					МЕСТА РАБОТЫ
-					<span v-show="loading.sections.works">
-						({{ specialist.connections.works.length }})
-					</span>
-				</template>
-				<template #buttons>
-					<icon-save
-						:width="28"
-						:height="28"
-						@click="saveSpecialistModular('works')"
-						v-if="false"
-					/>
-				</template>
-			</block-title>
+		<block-once :minHeight="100">
+			<template #title>
+				МЕСТА РАБОТЫ
+				<span v-show="loading.sections.works">
+					({{ specialist.connections.works.length }})
+				</span>
+			</template>
 
-			<admin-specialists-table
-				v-show="loading.sections.works"
-				:array="getSpecialistWorks"
-				@touchEditArrValue="editArrayValue('edit', 'works', $event)"
-				@touchRemoveArrValue="updateDeleteValue('works', $event)"
-			/>
+			<template #options>
+				<icon-save
+					:width="28"
+					:height="28"
+					@click="saveSpecialistModular('works')"
+					v-if="false"
+				/>
+			</template>
 
-			<!-- Загрузчик профиля -->
-			<loader-child
-				:isLoading="loading.loader.clinics"
-				:minHeight="100"
-				@loaderChildAfterLeave="loaderChildAfterLeave"
-			/>
+			<template #body>
+				<admin-specialists-table
+					v-show="loading.sections.works"
+					:array="getSpecialistWorks"
+					@touchEditArrValue="editArrayValue('edit', 'works', $event)"
+					@touchRemoveArrValue="updateDeleteValue('works', $event)"
+				/>
 
-			<block-buttons>
+				<!-- Загрузчик профиля -->
+				<loader-child
+					:isLoading="loading.loader.clinics"
+					:minHeight="100"
+					@loaderChildAfterLeave="loaderChildAfterLeave"
+				/>
+			</template>
+
+			<template #buttons>
 				<button-disabled v-if="this.specialist.profile.data.id.body == null">
 					Добавить
 				</button-disabled>
@@ -1163,7 +1169,7 @@
 				>
 					Добавить
 				</button-default>
-			</block-buttons>
+			</template>
 		</block-once>
 	</template>
 </template>
@@ -1179,7 +1185,6 @@ import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import ElementInputLabel from "../../../components/ui/admin/elements/ElementInputLabel.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTwo from "../../../components/ui/admin/blocks/BlockTwo.vue";
-import BlockTitle from "../../../components/ui/admin/blocks/BlockTitle.vue";
 import BlockButtons from "../../../components/ui/admin/blocks/BlockButtons.vue";
 import SpanError from "../../../components/ui/admin/SpanError.vue";
 
@@ -1223,12 +1228,14 @@ export default {
 		Selector,
 		LoaderChild,
 		ElementInputLabel,
+
 		BlockOnce,
 		BlockTwo,
-		BlockTitle,
 		BlockButtons,
+
 		IconClose,
 		SpanError,
+
 		ContainerInput,
 		ContainerInputOnce,
 		ContainerInputTwo,
@@ -1237,17 +1244,21 @@ export default {
 		ContainerSelectOnce,
 		ContainerSelectThree,
 		ContainerTextareaOnce,
+
 		Pagination,
 		TableButtonDefault,
 		TableButtonRemove,
+
 		ButtonDefault,
 		ButtonDisabled,
 		ButtonRemove,
 		ButtonClaim,
+
 		IconSave,
 		IconSaveAll,
 		IconAdd,
 		IconLoad,
+
 		axios,
 		RouterView,
 		RouterLink,

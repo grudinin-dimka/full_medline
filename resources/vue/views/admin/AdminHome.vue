@@ -168,228 +168,236 @@
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                      СЛАЙДЕР                      |-->
 	<!--|___________________________________________________|-->
-	<block-once :minHeight="400">
-		<block-title>
-			<template #title>СЛАЙДЕР</template>
-			<template #buttons>
-				<icon-load :width="28" :height="28" v-if="disabled.slider.save" />
-				<icon-save :width="28" :height="28" @click="saveSlidesChanges" v-else />
-			</template>
-		</block-title>
+	<block-once :minHeight="300">
+		<template #title>СЛАЙДЕР</template>
 
-		<template v-if="loading.slider">
-			<div class="slider" v-if="slides.length > 0">
-				<div
-					v-for="slide in slides"
-					:key="slide.id"
-					class="slider-block"
-					:class="{
-						hide: slide.hide,
-						create: slide.create,
-						delete: slide.delete,
-					}"
-					@click="openSlide(slide, 'edit')"
-				>
-					<div class="head">
-						<div>id: {{ slide.create ? "?" : slide.id }}</div>
-						<div>order: {{ slide.order }}</div>
-					</div>
-					<div
-						v-bind:style="{
-							'background-image': `url(${slide.path})`,
-							height: '275px',
-							'background-size': 'contain	',
-							'background-position': 'center center',
-							'background-repeat': 'no-repeat',
-						}"
-					></div>
-					<!-- <div class="slider-block-id">#{{ slide.order }}</div> -->
-					<div class="slider-block-info">
-						<article>
-							<SlideUserCard />
-							<label>
-								{{ slide.name }}
-							</label>
-						</article>
-						<article>
-							<SlideLink />
-							<label>
-								{{ slide.link }}
-							</label>
-						</article>
-						<article>
-							<SlidePath />
-							<label> {{ slide.path }} </label>
-						</article>
-					</div>
-				</div>
-			</div>
-			<!-- Элемент пустой страницы -->
-			<empty :minHeight="300" v-if="slides.length == 0" />
+		<template #options>
+			<icon-load :width="28" :height="28" v-if="disabled.slider.save" />
+			<icon-save :width="28" :height="28" @click="saveSlidesChanges" v-else />
 		</template>
 
-		<!-- Загрузка слайдов -->
-		<loader-child
-			:isLoading="loading.loader.slider"
-			:minHeight="300"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
-		/>
+		<template #body>
+			<template v-if="loading.slider">
+				<div class="slider" v-if="slides.length > 0">
+					<div
+						v-for="slide in slides"
+						:key="slide.id"
+						class="slider-block"
+						:class="{
+							hide: slide.hide,
+							create: slide.create,
+							delete: slide.delete,
+						}"
+						@click="openSlide(slide, 'edit')"
+					>
+						<div class="head">
+							<div>id: {{ slide.create ? "?" : slide.id }}</div>
+							<div>order: {{ slide.order }}</div>
+						</div>
+						<div
+							v-bind:style="{
+								'background-image': `url(${slide.path})`,
+								height: '275px',
+								'background-size': 'contain	',
+								'background-position': 'center center',
+								'background-repeat': 'no-repeat',
+							}"
+						></div>
+						<!-- <div class="slider-block-id">#{{ slide.order }}</div> -->
+						<div class="slider-block-info">
+							<article>
+								<SlideUserCard />
+								<label>
+									{{ slide.name }}
+								</label>
+							</article>
+							<article>
+								<SlideLink />
+								<label>
+									{{ slide.link }}
+								</label>
+							</article>
+							<article>
+								<SlidePath />
+								<label> {{ slide.path }} </label>
+							</article>
+						</div>
+					</div>
+				</div>
+				<!-- Элемент пустой страницы -->
+				<empty :minHeight="300" v-if="slides.length == 0" />
+			</template>
 
-		<BlockButtons>
+			<!-- Загрузка слайдов -->
+			<loader-child
+				:isLoading="loading.loader.slider"
+				:minHeight="300"
+				@loaderChildAfterLeave="loaderChildAfterLeave"
+			/>
+		</template>
+
+		<template #buttons>
 			<ButtonDefault @click="openSlide(null, 'create')" :disabled="disabled.slider.add">
 				Добавить
 			</ButtonDefault>
-		</BlockButtons>
+		</template>
 	</block-once>
 
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                       ФУТЕР                       |-->
 	<!--|___________________________________________________|-->
 	<block-once :minHeight="400">
-		<block-title>
-			<template #title>ФУТЕР</template>
-			<template #buttons>
-				<icon-load :width="28" :height="28" v-if="disabled.footer.save" />
-				<icon-save :width="28" :height="28" @click="saveFooterChanges" v-else />
-			</template>
-		</block-title>
+		<template #title>ФУТЕР</template>
 
-		<div class="footer-container" v-show="loading.footer">
-			<containerInput>
-				<!-- Заголовок -->
-				<div class="block-textarea">
-					<container-textarea-once :type="'edit'">
-						<template #title>
-							<span>ЗАГОЛОВОК</span>
-							<span v-if="footer.title.edited"> (ИЗМЕНЕНО)</span>
-						</template>
-						<template #textarea>
-							<textarea
-								rows="4"
-								placeholder="Введите заголовок"
-								autocomplete="off"
-								:class="{ error: false }"
-								v-model="footer.title.body"
-								@input="controlSymbols('title')"
-							></textarea>
-						</template>
-						<template #error>
-							<span class="error" v-if="false"> Ошибка </span>
-						</template>
-					</container-textarea-once>
-					<span>{{ footer.title.symbolsCount }}/{{ footer.title.symbolsCountMax }}</span>
-				</div>
-				<!-- Дополнение к заголовку -->
-				<div class="block-textarea">
-					<container-textarea-once :type="'edit'">
-						<template #title>
-							<span>ДОПОЛНЕНИЕ К ЗАГОЛОВКУ</span>
-							<span v-if="footer.titleDesc.edited"> (ИЗМЕНЕНО)</span>
-						</template>
-						<template #textarea>
-							<textarea
-								rows="10"
-								placeholder="Введите дополнение"
-								autocomplete="off"
-								:class="{ error: false }"
-								v-model="footer.titleDesc.body"
-								@input="controlSymbols('titleDesc')"
-							></textarea>
-						</template>
-						<template #error>
-							<span class="error" v-if="false"> Ошибка </span>
-						</template>
-					</container-textarea-once>
-					<span
-						>{{ footer.titleDesc.symbolsCount }}/{{ footer.titleDesc.symbolsCountMax }}</span
-					>
-				</div>
-				<!-- Лицензия -->
-				<div class="block-textarea">
-					<container-textarea-once :type="'edit'">
-						<template #title>
-							<span>ЛИЦЕНЗИЯ</span>
-							<span v-if="footer.license.edited"> (ИЗМЕНЕНО)</span>
-						</template>
-						<template #textarea>
-							<textarea
-								rows="4"
-								placeholder="Введите лицензию"
-								autocomplete="off"
-								:class="{ error: false }"
-								v-model="footer.license.body"
-								@input="controlSymbols('license')"
-							></textarea>
-						</template>
-						<template #error>
-							<span class="error" v-if="false"> Ошибка </span>
-						</template>
-					</container-textarea-once>
-					<span>{{ footer.license.symbolsCount }}/{{ footer.license.symbolsCountMax }}</span>
-				</div>
-				<!-- Лицензия -->
-				<div class="block-textarea">
-					<container-textarea-once :type="'edit'">
-						<template #title>
-							<span>ОСНОВНОЙ ТЕКСТ</span>
-							<span v-if="footer.licenseDesc.edited"> (ИЗМЕНЕНО)</span>
-						</template>
-						<template #textarea>
-							<textarea
-								rows="10"
-								placeholder="Введите основной текст"
-								autocomplete="off"
-								:class="{ error: false }"
-								v-model="footer.licenseDesc.body"
-								@input="controlSymbols('licenseDesc')"
-							></textarea>
-						</template>
-						<template #error>
-							<span class="error" v-if="false"> Ошибка </span>
-						</template>
-					</container-textarea-once>
-					<span
-						>{{ footer.licenseDesc.symbolsCount }}/{{
-							footer.licenseDesc.symbolsCountMax
-						}}</span
-					>
-				</div>
-				<!-- Лицензия -->
-				<div class="block-textarea">
-					<container-textarea-once :type="'edit'">
-						<template #title>
-							<span>ПОДВАЛ</span>
-							<span v-if="footer.footer.edited"> (ИЗМЕНЕНО)</span>
-						</template>
-						<template #textarea>
-							<textarea
-								rows="10"
-								placeholder="Введите подвал"
-								autocomplete="off"
-								:class="{ error: false }"
-								v-model="footer.footer.body"
-								@input="controlSymbols('footer')"
-							></textarea>
-						</template>
-						<template #error>
-							<span class="error" v-if="false"> Ошибка </span>
-						</template>
-						<template #counter>
-							<span class="counter"
-								>{{ footer.footer.symbolsCount }}/{{ footer.footer.symbolsCountMax }}</span
-							>
-						</template>
-					</container-textarea-once>
-				</div>
-			</containerInput>
-		</div>
+		<template #options>
+			<icon-load :width="28" :height="28" v-if="disabled.footer.save" />
+			<icon-save :width="28" :height="28" @click="saveFooterChanges" v-else />
+		</template>
 
-		<!-- Загрузка футера -->
-		<loader-child
-			:isLoading="loading.loader.footer"
-			:minHeight="400"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
-		/>
+		<template #body>
+			<div class="footer-container" v-show="loading.footer">
+				<containerInput>
+					<!-- Заголовок -->
+					<div class="block-textarea">
+						<container-textarea-once :type="'edit'">
+							<template #title>
+								<span>ЗАГОЛОВОК</span>
+								<span v-if="footer.title.edited"> (ИЗМЕНЕНО)</span>
+							</template>
+							<template #textarea>
+								<textarea
+									rows="4"
+									placeholder="Введите заголовок"
+									autocomplete="off"
+									:class="{ error: false }"
+									v-model="footer.title.body"
+									@input="controlSymbols('title')"
+								></textarea>
+							</template>
+							<template #error>
+								<span class="error" v-if="false"> Ошибка </span>
+							</template>
+						</container-textarea-once>
+						<span>{{ footer.title.symbolsCount }}/{{ footer.title.symbolsCountMax }}</span>
+					</div>
+					<!-- Дополнение к заголовку -->
+					<div class="block-textarea">
+						<container-textarea-once :type="'edit'">
+							<template #title>
+								<span>ДОПОЛНЕНИЕ К ЗАГОЛОВКУ</span>
+								<span v-if="footer.titleDesc.edited"> (ИЗМЕНЕНО)</span>
+							</template>
+							<template #textarea>
+								<textarea
+									rows="10"
+									placeholder="Введите дополнение"
+									autocomplete="off"
+									:class="{ error: false }"
+									v-model="footer.titleDesc.body"
+									@input="controlSymbols('titleDesc')"
+								></textarea>
+							</template>
+							<template #error>
+								<span class="error" v-if="false"> Ошибка </span>
+							</template>
+						</container-textarea-once>
+						<span
+							>{{ footer.titleDesc.symbolsCount }}/{{
+								footer.titleDesc.symbolsCountMax
+							}}</span
+						>
+					</div>
+					<!-- Лицензия -->
+					<div class="block-textarea">
+						<container-textarea-once :type="'edit'">
+							<template #title>
+								<span>ЛИЦЕНЗИЯ</span>
+								<span v-if="footer.license.edited"> (ИЗМЕНЕНО)</span>
+							</template>
+							<template #textarea>
+								<textarea
+									rows="4"
+									placeholder="Введите лицензию"
+									autocomplete="off"
+									:class="{ error: false }"
+									v-model="footer.license.body"
+									@input="controlSymbols('license')"
+								></textarea>
+							</template>
+							<template #error>
+								<span class="error" v-if="false"> Ошибка </span>
+							</template>
+						</container-textarea-once>
+						<span
+							>{{ footer.license.symbolsCount }}/{{ footer.license.symbolsCountMax }}</span
+						>
+					</div>
+					<!-- Лицензия -->
+					<div class="block-textarea">
+						<container-textarea-once :type="'edit'">
+							<template #title>
+								<span>ОСНОВНОЙ ТЕКСТ</span>
+								<span v-if="footer.licenseDesc.edited"> (ИЗМЕНЕНО)</span>
+							</template>
+							<template #textarea>
+								<textarea
+									rows="10"
+									placeholder="Введите основной текст"
+									autocomplete="off"
+									:class="{ error: false }"
+									v-model="footer.licenseDesc.body"
+									@input="controlSymbols('licenseDesc')"
+								></textarea>
+							</template>
+							<template #error>
+								<span class="error" v-if="false"> Ошибка </span>
+							</template>
+						</container-textarea-once>
+						<span
+							>{{ footer.licenseDesc.symbolsCount }}/{{
+								footer.licenseDesc.symbolsCountMax
+							}}</span
+						>
+					</div>
+					<!-- Лицензия -->
+					<div class="block-textarea">
+						<container-textarea-once :type="'edit'">
+							<template #title>
+								<span>ПОДВАЛ</span>
+								<span v-if="footer.footer.edited"> (ИЗМЕНЕНО)</span>
+							</template>
+							<template #textarea>
+								<textarea
+									rows="10"
+									placeholder="Введите подвал"
+									autocomplete="off"
+									:class="{ error: false }"
+									v-model="footer.footer.body"
+									@input="controlSymbols('footer')"
+								></textarea>
+							</template>
+							<template #error>
+								<span class="error" v-if="false"> Ошибка </span>
+							</template>
+							<template #counter>
+								<span class="counter"
+									>{{ footer.footer.symbolsCount }}/{{
+										footer.footer.symbolsCountMax
+									}}</span
+								>
+							</template>
+						</container-textarea-once>
+					</div>
+				</containerInput>
+			</div>
+
+			<!-- Загрузка футера -->
+			<loader-child
+				:isLoading="loading.loader.footer"
+				:minHeight="400"
+				@loaderChildAfterLeave="loaderChildAfterLeave"
+			/>
+		</template>
 	</block-once>
 </template>
 
@@ -406,7 +414,6 @@ import ContainerInput from "../../components/ui/admin/containers/ContainerInput.
 import ContainerInputOnce from "../../components/ui/admin/containers/input/ContainerInputOnce.vue";
 import ContainerTextareaOnce from "../../components/ui/admin/containers/textarea/ContainerTextareaOnce.vue";
 
-import BlockTitle from "../../components/ui/admin/blocks/BlockTitle.vue";
 import BlockOnce from "../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockButtons from "../../components/ui/admin/blocks/BlockButtons.vue";
 
@@ -441,7 +448,6 @@ export default {
 		ContainerInputOnce,
 		ContainerTextareaOnce,
 		BlockOnce,
-		BlockTitle,
 		BlockButtons,
 		ButtonDefault,
 		ButtonRemove,

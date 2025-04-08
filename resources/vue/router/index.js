@@ -145,6 +145,26 @@ const router = createRouter({
 					component: () => import("../views/admin/profile/AdminProfile.vue"),
 				},
 				{
+					path: "users",
+					name: "users",
+					meta: { title: "Пользователи" },
+					component: () => import("../views/admin/users/AdminUsers.vue"),
+				},
+				{
+					path: "statistics",
+					name: "statistics",
+					meta: { title: "Статистика" },
+					component: () => import("../views/admin/statistics/AdminStatistics.vue"),
+					redirect: { name: "statistics-load" },
+					children: [
+						{
+							path: "",
+							name: "statistics-load",
+							component: () => import("../views/admin/statistics/AdminStatisticsLoad.vue"),
+						},
+					],
+				},
+				{
 					path: "ehome",
 					name: "ehome",
 					meta: { title: "(e) Главная" },
@@ -218,12 +238,6 @@ const router = createRouter({
 					name: "eschedule",
 					meta: { title: "(e) Расписание" },
 					component: () => import("../views/admin/schedule/AdminSchedule.vue"),
-				},
-				{
-					path: "users",
-					name: "users",
-					meta: { title: "Пользователи" },
-					component: () => import("../views/admin/users/AdminUsers.vue"),
 				},
 			],
 		},

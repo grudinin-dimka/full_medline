@@ -2,7 +2,7 @@
 	<header>
 		<img src="../../../assets/svg/logo.svg" alt="Медлайн" />
 		<div class="user">
-			<p>{{ $store.state.user.nickname }}</p>
+			<p>{{ $store.getters.userNickname }}</p>
 		</div>
 	</header>
 	<!-- Кнопка "бургер" -->

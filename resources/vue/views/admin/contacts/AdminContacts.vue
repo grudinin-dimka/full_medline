@@ -221,36 +221,37 @@
 	<!--|                     КОНТАКТЫ                      |-->
 	<!--|___________________________________________________|-->
 	<block-once :minHeight="300">
-		<block-title>
-			<template #title>КОНТАКТЫ</template>
-			<template #buttons>
-				<icon-load :width="28" :height="28" v-if="disabled.contacts.save" />
-				<icon-save :width="28" :height="28" @click="saveContact" v-else />
-			</template>
-		</block-title>
+		<template #title>КОНТАКТЫ</template>
 
-		<!-- Список элементов -->
-		<template v-if="loading.sections.clinics">
-			<AdminContactsList
-				v-if="contacts.length > 0"
-				:contacts="contacts"
-				:clinics="clinics"
-				@touchEditContact="editContact"
-			/>
-
-			<Empty :minHeight="300" v-else />
+		<template #options>
+			<icon-load :width="28" :height="28" v-if="disabled.contacts.save" />
+			<icon-save :width="28" :height="28" @click="saveContact" v-else />
 		</template>
 
-		<!-- Загрузка элементов -->
-		<loader-child
-			:isLoading="loading.loader.clinics"
-			:minHeight="300"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
-		/>
+		<template #body>
+			<!-- Список элементов -->
+			<template v-if="loading.sections.clinics">
+				<AdminContactsList
+					v-if="contacts.length > 0"
+					:contacts="contacts"
+					:clinics="clinics"
+					@touchEditContact="editContact"
+				/>
 
-		<BlockButtons>
+				<Empty :minHeight="300" v-else />
+			</template>
+
+			<!-- Загрузка элементов -->
+			<loader-child
+				:isLoading="loading.loader.clinics"
+				:minHeight="300"
+				@loaderChildAfterLeave="loaderChildAfterLeave"
+			/>
+		</template>
+
+		<template #buttons>
 			<ButtonDefault @click="openModal('create')"> Добавить </ButtonDefault>
-		</BlockButtons>
+		</template>
 	</block-once>
 </template>
 
@@ -266,7 +267,6 @@ import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import Empty from "../../../components/modules/Empty.vue";
 
-import BlockTitle from "../../../components/ui/admin/blocks/BlockTitle.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockButtons from "../../../components/ui/admin/blocks/BlockButtons.vue";
 
@@ -302,19 +302,23 @@ export default {
 		AdminSubModal,
 		AdminModalList,
 		AdminContactsList,
+		
 		InfoBar,
 		LoaderChild,
 		Empty,
-		BlockTitle,
+		
 		BlockOnce,
 		BlockButtons,
+		
 		ContainerInput,
 		ContainerInputOnce,
 		ContainerSelectOnce,
 		ContainerTextareaOnce,
+		
 		ButtonDefault,
 		ButtonRemove,
 		ButtonClaim,
+		
 		IconArrow,
 		IconHide,
 		IconVisible,
@@ -326,6 +330,7 @@ export default {
 		IconContactHome,
 		IconContactMail,
 		IconContactPhone,
+		
 		axios,
 	},
 	data() {
