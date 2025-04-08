@@ -216,7 +216,7 @@ export default {
 
 			axios({
 				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `login`,
+				url: `${this.$store.getters.urlApi}` + `login`,
 				data: {
 					name: this.currentLogin.data.name.body,
 					password: this.currentLogin.data.password.body,
@@ -280,7 +280,7 @@ export default {
 			// Проверка токена
 			axios({
 				method: "post",
-				url: `${this.$store.state.axios.urlApi}` + `check-token`,
+				url: `${this.$store.getters.urlApi}` + `check-token`,
 				headers: {
 					Accept: "application/json",
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
