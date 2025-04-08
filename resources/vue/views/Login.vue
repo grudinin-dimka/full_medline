@@ -58,16 +58,16 @@
 </template>
 
 <script>
-import Debugger from "./modules/Debugger.vue";
-import Loader from "./modules/loader.vue";
+import Debugger from "../components/modules/Debugger.vue";
+import Loader from "../components/modules/loader.vue";
 
 import axios from "axios";
 
-import Logo from "./icons/logo.vue";
+import Logo from "../components/icons/logo.vue";
 
-import ContainerInput from "./ui/admin/containers/ContainerInput.vue";
-import ContainerInputOnce from "./ui/admin/containers/input/ContainerInputOnce.vue";
-import ButtonDefault from "./ui/admin/buttons/ButtonDefault.vue";
+import ContainerInput from "../components/ui/admin/containers/ContainerInput.vue";
+import ContainerInputOnce from "../components/ui/admin/containers/input/ContainerInputOnce.vue";
+import ButtonDefault from "../components/ui/admin/buttons/ButtonDefault.vue";
 
 import validate from "../services/validate";
 

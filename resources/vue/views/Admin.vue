@@ -9,12 +9,12 @@
 
 <script>
 import { RouterLink, RouterView } from "vue-router";
-import Debugger from "./modules/Debugger.vue";
-import Loader from "./modules/loader.vue";
+import Debugger from "../components/modules/Debugger.vue";
+import Loader from "../components/modules/loader.vue";
 import axios from "axios";
-import AdminHeader from "./includes/admin/AdminHeader.vue";
-import AdminAside from "./includes/admin/AdminAside.vue";
-import AdminContent from "./includes/admin/AdminContent.vue";
+import AdminHeader from "../components/includes/admin/AdminHeader.vue";
+import AdminAside from "../components/includes/admin/AdminAside.vue";
+import AdminContent from "../components/includes/admin/AdminContent.vue";
 import { compile } from "vue";
 
 export default {

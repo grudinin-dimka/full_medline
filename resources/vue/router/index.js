@@ -1,8 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Main from "../components/Main.vue";
-import Login from "../components/Login.vue";
-import Admin from "../components/Admin.vue";
-import NotFound from "../components/NotFound.vue";
+
+import Main from "../views/Main.vue";
+import Admin from "../views/Admin.vue";
+import Login from "../views/Login.vue";
+import NotFound from "../views/NotFound.vue";
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.VITE_BASE_URL || "/"),
@@ -119,13 +120,6 @@ const router = createRouter({
 				},
 			],
 		},
-		// Роутер для логина
-		{
-			path: "/login",
-			name: "login",
-			meta: { title: "Вход в систему" },
-			component: Login,
-		},
 		// Роутер для админки
 		{
 			path: "/admin",
@@ -240,6 +234,13 @@ const router = createRouter({
 					component: () => import("../views/admin/schedule/AdminSchedule.vue"),
 				},
 			],
+		},
+		// Роутер для логина
+		{
+			path: "/login",
+			name: "login",
+			meta: { title: "Вход в систему" },
+			component: Login,
 		},
 		// Роутер для не найденных страниц
 		{

@@ -13,11 +13,10 @@
 </template>
 
 <script>
-import Debugger from "./modules/Debugger.vue";
-import MainHeader from "./includes/main/MainHeader.vue";
-import MainNav from "./includes/main/MainNav.vue";
-import MainFooter from "./includes/main/MainFooter.vue";
-import Loader from "./modules/loader.vue";
+import Debugger from "../components/modules/Debugger.vue";
+import MainHeader from "../components/includes/main/MainHeader.vue";
+import MainNav from "../components/includes/main/MainNav.vue";
+import MainFooter from "../components/includes/main/MainFooter.vue";
 
 export default {
 	data() {
