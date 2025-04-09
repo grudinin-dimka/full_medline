@@ -277,25 +277,7 @@ export default {
 		this.$store.commit("clearDebugger");
 
 		if (localStorage.getItem("token")) {
-			// Проверка токена
-			axios({
-				method: "post",
-				url: `${this.$store.getters.urlApi}` + `check-token`,
-				headers: {
-					Accept: "application/json",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-			})
-				.then((response) => {
-					// Перевод на страницу админки
-					this.$router.push({ name: "ehome" });
-				})
-				.catch((error) => {
-					localStorage.removeItem("token");
-
-					this.loader.loading = false;
-					this.loader.other = true;
-				});
+			this.$router.push({ name: "ehome" });
 		} else {
 			this.loader.loading = false;
 			this.loader.other = true;

@@ -39,7 +39,7 @@ export default {
 	beforeCreate() {
 		// Проверка начилия токена в локальном хранилище
 		if (!localStorage.getItem("token")) {
-			this.$router.push("/login");
+			this.$router.push({ name: "not-found" });
 			return;
 		} else {
 			// Проверка токена в базе
@@ -59,12 +59,12 @@ export default {
 						this.loader.other = true;
 					} else {
 						localStorage.removeItem("token");
-						this.$router.push({ name: "login" });
+						this.$router.push({ name: "not-found" });
 					}
 				})
 				.catch((error) => {
 					localStorage.removeItem("token");
-					this.$router.push({ name: "login" });
+					this.$router.push({ name: "not-found" });
 					return;
 				});
 		}

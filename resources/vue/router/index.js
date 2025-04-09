@@ -87,27 +87,6 @@ const router = createRouter({
 					],
 				},
 				{
-					path: "diagnostics",
-					name: "diagnostics",
-					meta: { title: "Дигностика" },
-					redirect: { name: "home" },
-					component: () => import("../views/main/MainDiagnostics.vue"),
-				},
-				{
-					path: "licenses",
-					name: "licenses",
-					meta: { title: "Лицензии" },
-					redirect: { name: "home" },
-					component: () => import("../views/main/MainLicense.vue"),
-				},
-				{
-					path: "videos",
-					name: "videos",
-					meta: { title: "Видео" },
-					redirect: { name: "home" },
-					component: () => import("../views/main/MainVideos.vue"),
-				},
-				{
 					path: "contacts",
 					name: "contacts",
 					meta: { title: "Контакты" },
@@ -232,7 +211,7 @@ const router = createRouter({
 		},
 		// Роутер для логина
 		{
-			path: "/login",
+			path: "/rqukrdojysacarof",
 			name: "login",
 			meta: { title: "Вход в систему" },
 			component: Login,
