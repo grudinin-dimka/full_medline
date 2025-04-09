@@ -22,7 +22,7 @@ return new class extends Migration
             $table->date('dateOfBirth');
             $table->string('nickname')->unique();
             $table->string('email')->unique();
-            $table->foreignId('statusId')->foreignId('statusId')->references('id')->on('statuses')->onDelete('cascade');
+            $table->foreignId('statusId')->references('id')->on('statuses')->onDelete('cascade');
             $table->foreignId('rightsId')->references('id')->on('rights')->onDelete('cascade');
             $table->string('password');
             $table->rememberToken();

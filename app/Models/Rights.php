@@ -10,6 +10,6 @@ class Rights extends Model
     use HasFactory;
 
     protected $table = 'rights';
-    protected $guarded = [];
+    protected $guarded = ['id'];
     protected $hidden = ['created_at', 'updated_at']; 
 }

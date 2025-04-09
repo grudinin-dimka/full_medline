@@ -10,6 +10,6 @@ class Certificate extends Model
     use HasFactory;
 
     protected $table = 'certificates';
-    protected $guarded = [];
+    protected $guarded = ['id'];
     protected $hidden = ['created_at', 'updated_at']; 
 }

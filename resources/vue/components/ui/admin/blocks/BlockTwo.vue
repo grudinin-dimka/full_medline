@@ -76,7 +76,37 @@ export default {
 	transition: all 0.5s;
 }
 
+.block-two__head {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.block-two__head-options {
+	display: flex;
+	gap: 10px;
+}
+
+.block-two__body {
+	height: 100%;
+}
+
+.block-two__buttons {
+	display: flex;
+	justify-content: flex-end;
+	gap: 10px;
+}
+
+.block-two__head-title {
+	font-size: 24px;
+	font-weight: 500;
+}
+
 @media screen and (width <= 600px) {
+	.block-two {
+		flex-direction: column;
+	}
+
 	.block-two__item {
 		flex: 1 0 200px;
 	}

@@ -11,5 +11,6 @@ class Slide extends Model
 
     protected $table = 'slides';
     protected $fillable = ['order', 'name', 'link', 'filename', 'hide'];
+    protected $guarded = ['id'];
     protected $hidden = ['created_at', 'updated_at'];
 }

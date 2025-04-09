@@ -15,7 +15,7 @@ class User extends Authenticatable
     use HasFactory, Notifiable, HasApiTokens;
 
     protected $table = 'users';
-    protected $guarded = [];
+    protected $guarded = ['id'];
     protected $hidden = ['password', 'remember_token'];
 
     /**
@@ -28,5 +28,30 @@ class User extends Authenticatable
         return [
             'password' => 'hashed',
         ];
+    }
+
+    // Связь с таблицей прав
+    public function rights() {
+        return $this->belongsTo(Rights::class, 'rightsId', 'id');
+    }
+
+    // Связь с таблицей статус
+    public function status() {
+        return $this->belongsTo(Status::class, 'statusId', 'id');
+    }
+
+    // Проверка на админа
+    public function isAdmin() {
+        return $this->rights->name === 'admin';
+    }
+
+    // Проверка на создателя
+    public function isCreator() {
+        return $this->rights->name === 'creator';
+    }
+
+    // Проверка на создателя
+    public function isActive() {
+        return $this->status->name === 'active';
     }
 }

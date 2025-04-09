@@ -2,9 +2,7 @@
 	<info-bar>
 		<router-link to="/">Главная</router-link>
 		<span class="link-arrow"> / </span>
-		<router-link to="/prices">Цены</router-link>
-		<span class="link-arrow"> / </span>
-		<router-link :to="`/prices/plastic`">
+		<router-link :to="`/plastic`">
 			<span>Пластическая хирургия</span>
 		</router-link>
 	</info-bar>

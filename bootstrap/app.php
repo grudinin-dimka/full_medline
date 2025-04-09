@@ -12,7 +12,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        // Добавление проверки на права доступа
+        $middleware->alias([
+            'admin' => \App\Http\Middleware\CheckAdmin::class,
+            'creator' => \App\Http\Middleware\CheckCreator::class,
+            'admin-or-creator' => \App\Http\Middleware\CheckAdminOrCreator::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

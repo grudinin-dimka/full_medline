@@ -10,6 +10,6 @@ class SpecialistCertificate extends Model
     use HasFactory;
 
     protected $table = 'specialist_certificates';
-    protected $guarded = [];
+    protected $guarded = ['id'];
     protected $hidden = ['created_at', 'updated_at'];
 }

@@ -55,7 +55,6 @@ use App\Models\PriceAddress;
 use App\Models\PriceCategory;
 use App\Models\PriceValue;
 
-/* Для работы с табличными файлами */
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Throwable;
 
@@ -1507,7 +1506,7 @@ class AdminController extends Controller
                               "data" => $arrayID,
                            ]);
                         };
-                        
+
                         $createPriceValue = PriceValue::create([
                            "name" => $dataValue[1],
                            "price" => $dataValue[2],

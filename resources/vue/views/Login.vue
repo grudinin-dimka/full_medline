@@ -226,12 +226,6 @@ export default {
 					if (response.data.status) {
 						// Запись токена в глобальную переменную
 						localStorage.setItem("token", response.data.result.token);
-						// Запись пользователя в глобальную переменную
-
-						axios.defaults.headers.common["Accept"] = "application/json";
-						axios.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem(
-							"token"
-						)}`;
 
 						// Перевод на страницу админки
 						this.$router.push({ name: "ehome" });
@@ -241,35 +235,24 @@ export default {
 						this.errors.name.value = "";
 						this.errors.password.status = false;
 						this.errors.password.value = "";
-
-						this.disabled.login.update = false;
-
-						return;
 					} else {
-						this.disabled.login.update = false;
-
-						let debbugStory = {
+						this.$store.commit("addDebugger", {
 							title: "Ошибка.",
 							body: response.data.message,
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
+							type: "error",
+						});
 					}
 				})
 				.catch((error) => {
-					this.errors.server = true;
-					this.disabled.login.update = false;
-					j;
-					let debbugStory = {
+					this.$store.commit("addDebugger", {
 						title: "Ошибка.",
-						body: "Отсутствует соединение с сервером.",
-						type: "Error",
-					};
-					this.$store.commit("debuggerState", debbugStory);
-					return;
+						body: error,
+						type: "error",
+					});
 				})
 				.finally(() => {
 					this.loader.loading = false;
+					this.disabled.login.update = false;
 				});
 		},
 	},

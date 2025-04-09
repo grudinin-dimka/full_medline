@@ -10,6 +10,6 @@ class PriceFile extends Model
     use HasFactory;
 
     protected $table = "price_files";
-    protected $guarded = [];
+    protected $guarded = ['id'];
     protected $hidden = ['updated_at'];
 }

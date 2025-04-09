@@ -10,6 +10,6 @@ class ShedulesClinic extends Model
     use HasFactory;
 
     protected $table = 'shedules_clinics';
-    protected $guarded = [];
+    protected $guarded = ['id'];
     protected $hidden = ['created_at', 'updated_at'];
 }

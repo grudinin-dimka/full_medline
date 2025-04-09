@@ -10,6 +10,6 @@ class PriceValue extends Model
     use HasFactory;
 
     protected $table = "price_values";
-    protected $guarded = [];
+    protected $guarded = ['id'];
     protected $hidden = ['created_at, updated_at'];
 }

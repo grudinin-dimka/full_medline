@@ -10,6 +10,6 @@ class ShedulesDaysTime extends Model
     use HasFactory;
 
     protected $table = 'shedules_days_times';
-    protected $guarded = [];
+    protected $guarded = ['id'];
     protected $hidden = ['created_at','updated_at'];
 }

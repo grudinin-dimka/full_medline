@@ -10,5 +10,5 @@ class Footer extends Model
     use HasFactory;
 
     protected $table = 'footers';
-    protected $guarded = [];
+    protected $guarded = ['id'];
 }

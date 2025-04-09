@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SpecialistClinic extends Model
+class Tracking extends Model
 {
     use HasFactory;
 
-    protected $table = 'specialist_clinics';
+    protected $table = 'trackings';
     protected $guarded = ['id'];
-    protected $hidden = ['created_at', 'updated_at'];
+    protected $hidden = ['created_at', 'updated_at']; 
 }

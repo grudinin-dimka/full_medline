@@ -10,6 +10,6 @@ class ContactMail extends Model
     use HasFactory;
 
     protected $table = 'contact_mails';
-    protected $guarded = [];
+    protected $guarded = ['id'];
     protected $hidden = ['created_at', 'updated_at']; 
 }

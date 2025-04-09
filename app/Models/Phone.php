@@ -10,6 +10,6 @@ class Phone extends Model
     use HasFactory;
 
     protected $table = 'phones';
-    protected $guarded = [];
+    protected $guarded = ['id'];
     protected $hidden = ['created_at', 'updated_at']; 
 }

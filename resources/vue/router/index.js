@@ -62,16 +62,17 @@ const router = createRouter({
 							component: () => import("../views/main/prices/MainPricesGroup.vue"),
 						},
 						{
-							path: "plastic",
-							name: "prices-plastic",
-							component: () => import("../views/main/prices/MainPricesPlastic.vue"),
-						},
-						{
 							path: ":city/:street/:house",
 							name: "prices-template",
 							component: () => import("../views/main/prices/MainPricesTemplate.vue"),
 						},
 					],
+				},
+				{
+					path: "plastic",
+					name: "plastic",
+					meta: { title: "Пластическая хирургия" },
+					component: () => import("../views/main/plastic/MainPlastic.vue"),
 				},
 				{
 					path: "schedule",
@@ -234,7 +235,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-	document.title = `${to.meta.title}`;
+	document.title = `${to.meta.title} | Медицинский центр «МедЛайн»`;
 	next();
 });
 

@@ -956,6 +956,7 @@ export default {
 
 			this.openModal("edit", "subModalPassword");
 		},
+		
 		/* Редактирование блокировки пользователя */
 		editUserBlock(user) {
 			for (let key in this.currentUser.data) {
@@ -964,6 +965,7 @@ export default {
 
 			this.openModal("edit", "subModalBlock");
 		},
+
 		/* Редактирование удаления пользователя */
 		editUserDelete(user) {
 			this.subModalDelete.style.delete = true;
@@ -974,6 +976,7 @@ export default {
 
 			this.openModal("edit", "subModalDelete");
 		},
+		
 		/* Редактирование информации пользователя */
 		editUser(user) {
 			for (let key in this.currentUser.data) {
@@ -985,6 +988,8 @@ export default {
 
 			this.openModal("edit", "modal");
 		},
+
+		/* Сохранение блокировки пользователя */
 		saveUserBlock() {
 			let formData = new FormData();
 			formData.append("userId", JSON.stringify(this.currentUser.data.id.body));
@@ -1016,13 +1021,6 @@ export default {
 							body: response.data.message,
 							type: "completed",
 						});
-
-						let debbugStory = {
-							title: "Успешно!",
-							body: response.data.message,
-							type: "Completed",
-						};
-						this.$store.commit("debuggerState", debbugStory);
 					} else {
 						this.$store.commit("addDebugger", {
 							title: "Ошибка.",
@@ -1089,6 +1087,7 @@ export default {
 					this.disabled.userPassword.save = false;
 				});
 		},
+
 		/* Редактирование информации пользователя */
 		saveUser() {
 			let checkArray = ["family", "name", "dateOfBirth", "email", "nickname"];
@@ -1163,6 +1162,7 @@ export default {
 					this.disabled.users.save = false;
 				});
 		},
+
 		/* Добавление пользователя */
 		addUser() {
 			let checkArray = [
@@ -1241,12 +1241,10 @@ export default {
 					this.disabled.users.create = false;
 				});
 		},
+
 		/* Удаление пользователя */
 		deleteUser() {
 			this.disabled.users.delete = true;
-
-			let formData = new FormData();
-			formData.append("userId", JSON.stringify(this.currentUser.data.id.body));
 
 			axios({
 				method: "post",
@@ -1255,7 +1253,9 @@ export default {
 					Accept: "multipart/form-data",
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
-				data: formData,
+				data: {
+					id: this.currentUser.data.id.body,
+				},
 			})
 				.then((response) => {
 					if (response.data.status) {

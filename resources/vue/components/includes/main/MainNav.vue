@@ -31,8 +31,8 @@ export default {
 				{
 					id: "5",
 					title: "Пластическая хирургия",
-					name: "prices-plastic",
-					href: "/prices/plastic",
+					name: "plastic",
+					href: "/plastic",
 					params: null,
 				},
 				{ id: "6", title: "Расписание", name: "schedule-all", href: "/schedule", params: null },

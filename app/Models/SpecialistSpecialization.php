@@ -10,6 +10,6 @@ class SpecialistSpecialization extends Model
    use HasFactory;
 
    protected $table = 'specialist_specializations';
-   protected $guarded = [];
+   protected $guarded = ['id'];
    protected $hidden = ['created_at', 'updated_at'];
 }

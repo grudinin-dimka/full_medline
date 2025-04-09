@@ -10,6 +10,6 @@ class Work extends Model
    use HasFactory;
 
    protected $table = 'works';
-   protected $guarded = [];
+   protected $guarded = ['id'];
    protected $hidden = ['created_at', 'updated_at'];
 }
