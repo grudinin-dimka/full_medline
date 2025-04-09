@@ -245,12 +245,11 @@ export default {
 					break;
 				default:
 					{
-						let debbugStory = {
+						this.$store.commit("addDebugger", {
 							title: "Ошибка.",
 							body: "Низвестный тип открытия модального окна.",
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
+							type: "error",
+						});
 					}
 					break;
 			}
@@ -348,6 +347,7 @@ export default {
 
 			currentPrice.delete = !currentPrice.delete;
 		},
+
 		/* Форматирование даты */
 		formatDate(created_at) {
 			let date = new Date(created_at);
@@ -360,6 +360,8 @@ export default {
 
 			return date.toLocaleString("ru", options);
 		},
+
+		/* Создание цены */
 		createPrice() {
 			if (this.checkModalInputsAll(["file"])) {
 				return;
@@ -394,39 +396,31 @@ export default {
 								create: true,
 							});
 
-							this.disabled.prices.create = false;
-
 							this.closeModal("modal");
 						} catch (error) {
-							this.disabled.prices.create = false;
-
-							let debbugStory = {
+							this.$store.commit("addDebugger", {
 								title: "Ошибка.",
-								body: "Не удалось обновить данные после загрузки файла.",
-								type: "Error",
-							};
-							this.$store.commit("debuggerState", debbugStory);
+								body: error,
+								type: "error",
+							});
 						}
 					} else {
-						this.disabled.prices.create = false;
-
-						let debbugStory = {
+						this.$store.commit("addDebugger", {
 							title: "Ошибка.",
 							body: response.data.message,
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
+							type: "error",
+						});
 					}
 				})
 				.catch((error) => {
-					this.disabled.prices.create = false;
-
-					let debbugStory = {
+					this.$store.commit("addDebugger", {
 						title: "Ошибка.",
-						body: "Не удалось загрузить изображение.",
-						type: "Error",
-					};
-					this.$store.commit("debuggerState", debbugStory);
+						body: error,
+						type: "error",
+					});
+				})
+				.finally(() => {
+					this.disabled.prices.create = false;
 				});
 		},
 		savePricesFiles() {
@@ -452,23 +446,17 @@ export default {
 							shared.clearFlags(this.prices);
 							shared.updateOrders(this.prices);
 
-							this.disabled.prices.save = false;
-
-							let debbugStory = {
+							this.$store.commit("addDebugger", {
 								title: "Успешно!",
 								body: response.data.message,
-								type: "Completed",
-							};
-							this.$store.commit("debuggerState", debbugStory);
+								type: "completed",
+							});
 						} catch (error) {
-							this.disabled.prices.save = false;
-
-							let debbugStory = {
+							this.$store.commit("addDebugger", {
 								title: "Ошибка.",
-								body: response.data.message,
-								type: "Error",
-							};
-							this.$store.commit("debuggerState", debbugStory);
+								body: error,
+								type: "error",
+							});
 						}
 					} else {
 						if (response.data.data) {
@@ -478,25 +466,22 @@ export default {
 							shared.updateOrders(this.prices);
 						}
 
-						this.disabled.prices.save = false;
-
-						let debbugStory = {
+						this.$store.commit("addDebugger", {
 							title: "Ошибка.",
 							body: response.data.message,
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
+							type: "error",
+						});
 					}
 				})
 				.catch((error) => {
-					this.disabled.prices.save = false;
-
-					let debbugStory = {
+					this.$store.commit("addDebugger", {
 						title: "Ошибка.",
-						body: "Не удалось сохранить данные.",
-						type: "Error",
-					};
-					this.$store.commit("debuggerState", debbugStory);
+						body: error,
+						type: "error",
+					});
+				})
+				.finally(() => {
+					this.disabled.prices.save = false;
 				});
 		},
 	},
@@ -521,16 +506,19 @@ export default {
 						item.delete = false;
 					});
 				} else {
-					let debbugStory = {
+					this.$store.commit("addDebugger", {
 						title: "Ошибка.",
 						body: response.data.message,
-						type: "Error",
-					};
-					this.$store.commit("debuggerState", debbugStory);
+						type: "error",
+					});
 				}
 			})
 			.catch((error) => {
-				console.log(error);
+				this.$store.commit("addDebugger", {
+					title: "Ошибка.",
+					body: error,
+					type: "error",
+				});
 			})
 			.finally(() => {
 				this.loading.loader.prices = false;

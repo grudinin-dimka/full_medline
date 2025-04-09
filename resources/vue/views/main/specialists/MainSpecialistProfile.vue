@@ -87,7 +87,7 @@
 					<ul>
 						<li v-for="education in specialist.educations">
 							<article>
-								<div>{{ education.name + ' (' + education.organization + ")." }}</div>
+								<div>{{ education.name + " (" + education.organization + ")." }}</div>
 							</article>
 						</li>
 					</ul>
@@ -214,21 +214,19 @@ export default {
 				} else {
 					this.specialist.profile = null;
 
-					let debbugStory = {
+					this.$store.commit("addDebugger", {
 						title: "Ошибка.",
 						body: response.data.message,
-						type: "Error",
-					};
-					this.$store.commit("debuggerState", debbugStory);
+						type: "error",
+					});
 				}
 			})
 			.catch((error) => {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "Произошла ошибка при получении данных о враче.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					body: error,
+					type: "error",
+				});
 			})
 			.finally(() => {
 				if (this.specialist.profile != null) {

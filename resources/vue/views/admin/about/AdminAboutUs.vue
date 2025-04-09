@@ -537,12 +537,11 @@ export default {
 					break;
 				default:
 					{
-						let debbugStory = {
+						this.$store.commit("addDebugger", {
 							title: "Ошибка.",
 							body: "Низвестный тип открытия модального окна.",
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
+							type: "error",
+						});
 					}
 					break;
 			}
@@ -666,43 +665,35 @@ export default {
 									break;
 							}
 
-							if (this.subModal.type == "create") {
-								this.disabled.image.add = false;
-							} else if (this.subModal.type == "edit") {
-								this.disabled.image.update = false;
-							}
-
 							this.closeModal("subModal");
 						} catch (error) {
-							let debbugStory = {
+							this.$store.commit("addDebugger", {
 								title: "Ошибка.",
-								body: "Не удалось обновить данные после загрузки изображения.",
-								type: "Error",
-							};
-							this.$store.commit("debuggerState", debbugStory);
+								body: error,
+								type: "error",
+							});
 						}
 					} else {
-						let debbugStory = {
+						this.$store.commit("addDebugger", {
 							title: "Ошибка.",
 							body: response.data.message,
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
+							type: "error",
+						});
 					}
 				})
 				.catch((error) => {
-					if (this.subModal.type == "create") {
-						this.disabled.image.add = true;
-					} else if (this.subModal.type == "edit") {
-						this.disabled.image.update = true;
-					}
-
-					let debbugStory = {
+					this.$store.commit("addDebugger", {
 						title: "Ошибка.",
-						body: "Не удалось загрузить изображение.",
-						type: "Error",
-					};
-					this.$store.commit("debuggerState", debbugStory);
+						body: response.data.message,
+						type: "error",
+					});
+				})
+				.finally(() => {
+					if (this.subModal.type == "create") {
+						this.disabled.image.add = false;
+					} else if (this.subModal.type == "edit") {
+						this.disabled.image.update = false;
+					}
 				});
 		},
 		/* Очистка */
@@ -770,12 +761,11 @@ export default {
 
 				this.closeModal("modal");
 			} catch (error) {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "Не удалось добавить новый блок.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					body: response.data.message,
+					type: "error",
+				});
 			}
 		},
 		/* Обновление */
@@ -879,47 +869,40 @@ export default {
 				.then((response) => {
 					if (response.data.status) {
 						try {
-							this.disabled.about.save = false;
-
 							shared.updateId(this.infoBlocks, response.data.data);
 							shared.clearDeletes(this.infoBlocks);
 							shared.clearFlags(this.infoBlocks);
 							shared.updateOrders(this.infoBlocks);
 
-							let debbugStory = {
+							this.$store.commit("addDebugger", {
 								title: "Успешно!",
 								body: response.data.message,
-								type: "Completed",
-							};
-							this.$store.commit("debuggerState", debbugStory);
+								type: "completed",
+							});
 						} catch (error) {
-							this.disabled.about.save = false;
-
-							let debbugStory = {
+							this.$store.commit("addDebugger", {
 								title: "Ошибка.",
-								body: "Не удалось обновить данные после загрузки изображения.",
-								type: "Error",
-							};
-							this.$store.commit("debuggerState", debbugStory);
+								body: response.data.message,
+								type: "error",
+							});
 						}
 					} else {
-						this.disabled.about.save = false;
-
-						let debbugStory = {
+						this.$store.commit("addDebugger", {
 							title: "Ошибка.",
 							body: response.data.message,
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
+							type: "error",
+						});
 					}
 				})
 				.catch((error) => {
-					let debbugStory = {
+					this.$store.commit("addDebugger", {
 						title: "Ошибка.",
-						body: "Не удалось сохранить данные.",
-						type: "Error",
-					};
-					this.$store.commit("debuggerState", debbugStory);
+						body: error,
+						type: "error",
+					});
+				})
+				.finally(() => {
+					this.disabled.about.save = false;
 				});
 		},
 	},
@@ -942,12 +925,11 @@ export default {
 
 					sorted.sortByOrder("up", this.infoBlocks);
 				} else {
-					let debbugStory = {
+					this.$store.commit("addDebugger", {
 						title: "Ошибка.",
 						body: response.data.message,
-						type: "Error",
-					};
-					this.$store.commit("debuggerState", debbugStory);
+						type: "error",
+					});
 				}
 			})
 			.catch((error) => {

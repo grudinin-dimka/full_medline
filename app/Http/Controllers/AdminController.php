@@ -3,9 +3,8 @@ namespace App\Http\Controllers;
 
 /* Подключения */
 use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 
 /* Помощники */
@@ -57,15 +56,8 @@ use App\Models\PriceCategory;
 use App\Models\PriceValue;
 
 /* Для работы с табличными файлами */
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use \PhpOffice\PhpSpreadsheet\Reader\IReader;
-use \PhpOffice\PhpSpreadsheet\Reader\Ods;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Throwable;
-
-use function PHPUnit\Framework\isEmpty;
 
 class AdminController extends Controller
 {
@@ -244,20 +236,28 @@ class AdminController extends Controller
    /* Сохранение футера */ 
    public function saveFooter(Request $request) {
       $footer = Footer::find(1);
-      $footerUpdate = $footer->update([
-         'title' => $request->title,
-         'titleDesc' => $request->titleDesc,
-         'license' => $request->license,
-         'licenseDesc' => $request->licenseDesc,
-         'footer' => $request->footer,
-      ]);
       
-      // Проверка обновления футера
-      if ($footerUpdate) {
-         return true;
-      } else {
-         return false;
+      try {
+         $footerUpdate = $footer->update([
+            'title' => $request->title,
+            'titleDesc' => $request->titleDesc,
+            'license' => $request->license,
+            'licenseDesc' => $request->licenseDesc,
+            'footer' => $request->footer,
+         ]);
+      } catch (Throwable $th) {
+         return response()->json([
+            "status" => false,
+            "message" => "Футер не найден.",
+            "data" => null
+         ]);
       };
+      
+      return response()->json([
+         "status" => true,
+         "message" => "Данные обновлены.",
+         "data" => null         
+      ]);
    }
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                     О НАС                         |*/
@@ -494,83 +494,53 @@ class AdminController extends Controller
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
    /* Модульное сохранение */
    public function saveSpecialistModular(Request $request) {
-      $result = null;
-      
-      switch ($request->type) {
-         case "profile":
-            $result = $this->saveSpecialistProfile($request);            
-            return response()->json($result);
-            break;         
-         case "specializations":
-            $result = $this->saveSpecialistSpecializations($request);
-            return response()->json($result);
-         case "clinics":
-            $result = $this->saveSpecialistClinics($request);
-            return response()->json($result);
-            break;         
-         case "certificates":
-            $result = $this->saveSpecialistCertificates($request);
-            return response()->json($result);
-            break;         
-         case "educations":
-            $result = $this->saveSpecialistEducations($request);
-            return response()->json($result);
-            break;         
-         case "works":
-            $result = $this->saveSpecialistWorks($request);
-            return response()->json($result);
-            break;
-         case "all":
-            // Сохранение профиля
-            $saveProfile = $this->saveSpecialistProfile($request);            
-            if (!$saveProfile->status) {
-               return response()->json($saveProfile);
-            };
-            // Сохранение специализаций
-            $saveSpecializations = $this->saveSpecialistSpecializations($request);            
-            if (!$saveSpecializations->status) {
-               return response()->json($saveSpecializations);
-            };
-            // Сохранение клиник
-            $saveClinic = $this->saveSpecialistClinics($request);            
-            if (!$saveClinic->status) {
-               return response()->json($saveClinic);
-            };
-            // Сохранение сертификатов
-            $saveClinic = $this->saveSpecialistCertificates($request);            
-            if (!$saveClinic->status) {
-               return response()->json($saveClinic);
-            };
-            // Сохранение образований
-            $saveEducation = $this->saveSpecialistEducations($request);            
-            if (!$saveEducation->status) {
-               return response()->json($saveEducation);
-            };
-            // Сохранение работ
-            $saveWork = $this->saveSpecialistWorks($request);            
-            if (!$saveWork->status) {
-               return response()->json($saveWork);
-            };
+      // Сохранение профиля
+      $saveProfile = $this->saveSpecialistProfile($request);            
+      if (!$saveProfile->status) {
+         return response()->json($saveProfile);
+      };
 
-            return response()->json([
-               "status" => true,
-               "message" => "Все данные специалиста сохранены.",
-               "data" => (object) [
-                  "imagePath" => $saveProfile->data,
-                  "certificates" => $saveClinic->data,
-                  "educations" => $saveEducation->data,
-                  "works" => $saveWork->data,     
-               ],
-            ]);
-            break;
-         default:
-            return response()->json([
-               "status" => false,
-               "message" => "Неизивестный тип сохранения.",
-               "data" => null,
-            ]);            
-            break;
-      }
+      // Сохранение специализаций
+      $saveSpecializations = $this->saveSpecialistSpecializations($request);            
+      if (!$saveSpecializations->status) {
+         return response()->json($saveSpecializations);
+      };
+      
+      // Сохранение клиник
+      $saveClinic = $this->saveSpecialistClinics($request);            
+      if (!$saveClinic->status) {
+         return response()->json($saveClinic);
+      };
+      
+      // Сохранение сертификатов
+      $saveClinic = $this->saveSpecialistCertificates($request);            
+      if (!$saveClinic->status) {
+         return response()->json($saveClinic);
+      };
+      
+      // Сохранение образований
+      $saveEducation = $this->saveSpecialistEducations($request);            
+      if (!$saveEducation->status) {
+         return response()->json($saveEducation);
+      };
+      
+      // Сохранение работ
+      $saveWork = $this->saveSpecialistWorks($request);            
+      if (!$saveWork->status) {
+         return response()->json($saveWork);
+      };
+
+      return response()->json([
+         "status" => true,
+         "message" => "Все данные специалиста сохранены.",
+         "data" => (object) [
+            "imagePath" => $saveProfile->data,
+            "certificates" => $saveClinic->data,
+            "educations" => $saveEducation->data,
+            "works" => $saveWork->data,     
+         ],
+      ]);
+      
    }
    /* Модуль: Сохранение профиля */ 
    public function saveSpecialistProfile(Request $request) {
@@ -694,6 +664,7 @@ class AdminController extends Controller
          ];
       }
    }
+
    /* Модуль: Сохранение клиник */
    public function saveSpecialistClinics(Request $request) {
       $clinics = json_decode($request->clinics);
@@ -735,14 +706,17 @@ class AdminController extends Controller
          return (object) [
             "status" => true,
             "message" => "Данные о клиниках сохранились.",
+            "data" => null,
          ];
       } else {
          return (object) [
             "status" => false,
             "message" => "Специалист не найден.",
+            "data" => null,
          ];
       };
    }
+
    /* Модуль: Сохранение сертификатов */
    public function saveSpecialistCertificates(Request $request) {
       $certificates = json_decode($request->certificates);
@@ -956,8 +930,22 @@ class AdminController extends Controller
          ];
       }      
    }
+   
    /* Сохранение таблицы со специалистами */ 
    public function saveSpecialistsChanges(Request $request) {
+      // Валидация
+      $validator = Validator::make($request->all(), [
+         'specialists' => 'nullable|array',
+      ]);
+
+      if ($validator->fails()) {
+         return response()->json([
+            "status" => false,
+            "message" => "Некорректные данные.",
+            "data" => null,
+         ]);
+      };
+
       // Удаление помеченных
       foreach ($request->specialists as $key => $value) {
          if ($value['delete'] === true) {
@@ -973,8 +961,10 @@ class AdminController extends Controller
       };      
 
       $specialists = Specialist::all();
+      
       // Получение всех файлов
       $filesSpecialists = Storage::files('public/specialists');
+      
       if($filesSpecialists) {
          foreach ($filesSpecialists as $fileKey => $fileValue) {
             $useFile = false;
@@ -993,13 +983,7 @@ class AdminController extends Controller
                Storage::delete($fileValue);
             };
          };
-      } else {
-         return response()->json([
-            "status" => false,
-            "message" => "Отсутствуют файлы.",
-            "data" => null,
-         ]);
-      }
+      };
 
       return response()->json([
          "status" => true,
@@ -1007,75 +991,89 @@ class AdminController extends Controller
          "data" => null,
       ]);
    }
+
    /* Добавление нового специалиста */ 
    public function addSpecialist(Request $request) {
-      $path = null;
-
-      if($request->hasFile('image')) {
-         $validated = validator($request->all(), [
-            'image' => [
-               'required',
-               File::types(['png', 'webp'])->max(10 * 1024),
-            ],
-         ]);
-         if ($validated->fails()) return response()->json([
-            "status" => false,
-            "message" => "Файл не прошёл проверку.",
-            "data" => null,
-         ]);
-
-         $path = $request->file('image')->store(
-            'public/specialists'
-         );
-
-         if (!$path) {
-            return response()->json([
-               "status" => false,
-               "message" => "Не удалось сохранить изображение.",
-               "data" => null,
-            ]);
-         };
-      };      
-
-      $profile = json_decode($request->profile);
-      $specialist = Specialist::create([
-         "link" => $profile->link->body,
-         "family" => $profile->family->body,
-         "name" => $profile->name->body,
-         "surname" => $profile->surname->body,
-         "category" => $profile->category->body,
-         "degree" => $profile->degree->body,
-         "rank" => $profile->rank->body,
-         "startWorkAge" => $profile->startWorkAge->body ? $profile->startWorkAge->body : null,
-         "startWorkCity" => $profile->startWorkCity->body,
-         "adultDoctor" => $profile->adultDoctor->body,
-         "childrenDoctor" => $profile->childrenDoctor->body,
-         "childrenDoctorAge" => $profile->childrenDoctor->body ? $profile->childrenDoctorAge->body : 0,
-         "filename" => str_replace("public/specialists/", "", $path),
+      // Валидация
+      $validator = Validator::make($request->all(), [
+         'image' => [
+            'required',
+            File::types(['png', 'webp'])->max(10 * 1024),
+         ],
       ]);
 
-      if ($specialist) {
+      if ($validator->fails()) {
          return response()->json([
-            "status" => true,
-            "message" => "Специалист создан.",
-            "data" => (object) [
-               "id" => $specialist->id,
-               "path" => Storage::url($path),
-            ],
+            "status" => false,
+            "message" => "Некорректные данные.",
+            "data" => null,
+         ]);
+      };
+
+      // Получение пути нового файла
+      $path = $request->file('image')->store(
+         'public/specialists'
+      );
+
+      if (!$path) {
+         return response()->json([
+            "status" => false,
+            "message" => "Не удалось сохранить изображение.",
+            "data" => null,
+         ]);
+      };
+      
+      $profile = json_decode($request->profile);
+
+      try {
+         $specialist = Specialist::create([
+            "link" => $profile->link->body,
+            "family" => $profile->family->body,
+            "name" => $profile->name->body,
+            "surname" => $profile->surname->body,
+            "category" => $profile->category->body,
+            "degree" => $profile->degree->body,
+            "rank" => $profile->rank->body,
+            "startWorkAge" => $profile->startWorkAge->body ? $profile->startWorkAge->body : null,
+            "startWorkCity" => $profile->startWorkCity->body,
+            "adultDoctor" => $profile->adultDoctor->body,
+            "childrenDoctor" => $profile->childrenDoctor->body,
+            "childrenDoctorAge" => $profile->childrenDoctor->body ? $profile->childrenDoctorAge->body : 0,
+            "filename" => str_replace("public/specialists/", "", $path),
          ]);   
-      } else {
+      } catch (Throwable $e) {
          return response()->json([
             "status" => false,
             "message" => "Не удалось создать специалиста.",
             "data" => null,
          ]);   
       };
+
+      return response()->json([
+         "status" => true,
+         "message" => "Специалист создан.",
+         "data" => (object) [
+            "id" => $specialist->id,
+            "path" => Storage::url($path),
+         ],
+      ]);   
    }
-   /* _____________________________________________________*/
-   /* 2. Специализации                                     */
-   /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+
    /* Сохранение изменений специализаций */
    public function saveSpecializationsChanges(Request $request) {
+      // Валидация
+      $validator = Validator::make($request->all(), [
+         'specializations' => 'nullable|array',
+      ]);
+
+      if ($validator->fails()) {
+         return response()->json([
+            "status" => false,
+            "message" => "Некорректные данные.",
+            "data" => null,
+         ]);
+      };
+
       $arrayID = [];
       
       foreach ($request->specializations as $key => $value) {
@@ -1109,15 +1107,31 @@ class AdminController extends Controller
          ]);     
       }
       
-      return $arrayID;
+      return response()->json([
+         "status" => true,
+         "message" => "Данные обновлены.",
+         "data" => $arrayID
+      ]);
    }
-   /* _____________________________________________________*/
-   /* 3. Клиники                                           */
-   /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+
    /* Сохранение изменений клиник */
    public function saveClinicsChanges(Request $request) {
+      // Валидация
+      $validator = Validator::make($request->all(), [
+         'clinics' => 'nullable|array',
+      ]);
+
+      if ($validator->fails()) {
+         return response()->json([
+            "status" => false,
+            "message" => "Некорректные данные.",
+            "data" => null,
+         ]);
+      };
+
       $arrayID = [];
 
+      // Поиск или добавление
       foreach ($request->clinics as $key => $value) {
          // Удаление
          if ($value["delete"] === true){
@@ -1161,144 +1175,13 @@ class AdminController extends Controller
          ]);     
       }
 
-      return $arrayID;
+      return response()->json([
+         "status" => true,
+         "message" => "Клиники сохранены.",
+         "data" => $arrayID,
+      ]);
    }
-   /* _____________________________________________________*/
-   /* 4. Образования                                       */
-   /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-   /* Сохранение изменений образований */
-   public function saveEducationsChanges(Request $request) {
-      $arrayID = [];
 
-      foreach ($request->educations as $key => $value) {
-         // Удаление
-         if ($value["delete"] === true){
-            $education = Education::find($value['id']);
-            $education->delete();
-            continue;
-         }         
-
-         // Создание
-         if ($value["create"] === true) {
-            $educationToCreate = Education::create([
-               "name" => $value['name'],
-               "organization" => $value['organization'],
-               "date" => $value['date'],
-               "speсialization" => $value['speсialization'],
-            ]);
-
-            /* Запись нового объекта в массив */
-            $arrayID[] = (object) [
-               // Прошлый id
-               'old' => $value['id'], 
-               // Новый id
-               'new' => $educationToCreate->id
-            ];            
-            continue;
-         };       
-
-         // Обновление
-         $education = Education::find($value['id']);
-         $educationUpdate = $education->update([
-            "name" => $value['name'],
-            "organization" => $value['organization'],
-            "date" => $value['date'],
-            "speсialization" => $value['speсialization'],
-         ]);     
-      }
-      
-      return $arrayID;      
-   }
-   /* _____________________________________________________*/
-   /* 5. Прошлые работы                                    */
-   /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-   /* Сохранение изменений работ */
-   public function saveWorkChanges(Request $request) {
-      $arrayID = [];
-
-      foreach ($request->works as $key => $value) {
-         // Удаление
-         if ($value["delete"] === true){
-            $work = Work::find($value['id']);
-            $work->delete();
-            continue;
-         }         
-
-         // Создание
-         if ($value["create"] === true) {
-            $workToCreate = Work::create([
-               "startWork" => $value['startWork'],
-               "endWork" => $value['endWork'],
-               "organization" => $value['organization'],
-               "name" => $value['name'],
-            ]);
-
-            /* Запись нового объекта в массив */
-            $arrayID[] = (object) [
-               // Прошлый id
-               'old' => $value['id'], 
-               // Новый id
-               'new' => $workToCreate->id
-            ];       
-            continue;     
-         };       
-
-         // Обновление
-         $work = Work::find($value['id']);
-         $workUpdate = $work->update([
-            "startWork" => $value['startWork'],
-            "endWork" => $value['endWork'],
-            "organization" => $value['organization'],
-            "name" => $value['name'],
-         ]);     
-      }
-      
-      return $arrayID;      
-   }   
-   /* _____________________________________________________*/
-   /* 6. Сертификаты                                       */
-   /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-   /* Сохранение изменений сертификатов */
-   public function saveCertificatesChanges(Request $request) {
-      $arrayID = [];
-
-      foreach ($request->certificates as $key => $value) {
-         // Удаление
-         if ($value["delete"] === true){
-            $certificate = Certificate::find($value['id']);
-            $certificate->delete();
-            continue;
-         }         
-
-         // Создание
-         if ($value["create"] === true) {
-            $certificateToCreate = Certificate::create([
-               "organization" => $value['organization'],
-               "endEducation" => $value['endEducation'],
-               "name" => $value['name'],
-            ]);
-
-            /* Запись нового объекта в массив */
-            $arrayID[] = (object) [
-               // Прошлый id
-               'old' => $value['id'], 
-               // Новый id
-               'new' => $certificateToCreate->id
-            ];    
-            continue;        
-         };
-         
-         // Обновление
-         $certificate = Certificate::find($value['id']);
-         $certificateUpdate = $certificate->update([
-            "organization" => $value['organization'],
-            "endEducation" => $value['endEducation'],
-            "name" => $value['name'],
-         ]);     
-      }
-
-      return $arrayID;      
-   }
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                   РАСПИСАНИЕ                      |*/
    /* |___________________________________________________|*/

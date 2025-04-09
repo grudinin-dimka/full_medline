@@ -282,12 +282,11 @@ export default {
 					break;
 				default:
 					{
-						let debbugStory = {
+						this.$store.commit("addDebugger", {
 							title: "Ошибка.",
 							body: "Низвестный тип открытия модального окна.",
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
+							type: "error",
+						});
 					}
 					break;
 			}
@@ -422,12 +421,11 @@ export default {
 						(item) => item.name === this.currentSpecialization.data.name.body
 					)
 				) {
-					let debbugStory = {
+					this.$store.commit("addDebugger", {
 						title: "Ошибка.",
 						body: "Такая специализация уже существует.",
-						type: "Error",
-					};
-					this.$store.commit("debuggerState", debbugStory);
+						type: "error",
+					});
 
 					return;
 				}
@@ -441,12 +439,11 @@ export default {
 
 				this.closeModal();
 			} catch (error) {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "При добавлении что-то пошло не так.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					body: error,
+					type: "error",
+				});
 			}
 		},
 		/* Пометка на удаление */
@@ -472,32 +469,15 @@ export default {
 				specializationToUpdate[0].name = this.currentSpecialization.data.name.body;
 				this.closeModal();
 			} catch (error) {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "При обновлении что-то пошло не так.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					body: error,
+					type: "error",
+				});
 			}
 		},
 		/* Сохранение изменений на сервере */
 		saveSpecializationsChanges() {
-			let newArray = [];
-
-			for (let key in this.specializations) {
-				newArray.push(Object.assign({}, this.specializations[key]));
-			}
-
-			newArray.sort((a, b) => {
-				if (a.id > b.id) {
-					return 1;
-				} else if (a.id < b.id) {
-					return -1;
-				} else {
-					return 0;
-				}
-			});
-
 			this.disabled.specializations.save = true;
 
 			axios({
@@ -508,43 +488,37 @@ export default {
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: {
-					specializations: newArray,
+					specializations: this.specializations,
 				},
 			})
 				.then((response) => {
-					try {
-						shared.updateId(this.specializations, response.data);
+					if (response.data.status) {
+						shared.updateId(this.specializations, response.data.data);
 						shared.clearDeletes(this.specializations);
 						shared.clearFlags(this.specializations);
 
-						this.disabled.specializations.save = false;
-
-						let debbugStory = {
+						this.$store.commit("addDebugger", {
 							title: "Успешно!",
-							body: "Данные сохранились.",
-							type: "Completed",
-						};
-						this.$store.commit("debuggerState", debbugStory);
-					} catch (error) {
-						this.disabled.specializations.save = false;
-
-						let debbugStory = {
+							body: response.data.message,
+							type: "completed",
+						});
+					} else {
+						this.$store.commit("addDebugger", {
 							title: "Ошибка.",
-							body: "После сохранения что-то пошло не так.",
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
+							body: response.data.message,
+							type: "error",
+						});
 					}
 				})
 				.catch((error) => {
-					this.disabled.specializations.save = false;
-
-					let debbugStory = {
+					this.$store.commit("addDebugger", {
 						title: "Ошибка.",
-						body: "Данные почему-то не сохранились...",
-						type: "Error",
-					};
-					this.$store.commit("debuggerState", debbugStory);
+						body: error,
+						type: "error",
+					});
+				})
+				.finally(() => {
+					this.disabled.specializations.save = false;
 				});
 		},
 	},
@@ -557,25 +531,32 @@ export default {
 			url: `${this.$store.getters.urlApi}` + `get-specializations-all`,
 		})
 			.then((response) => {
-				this.specializations = response.data;
+				if (response.data.status) {
+					this.specializations = response.data.data;
 
-				for (let key in this.specializations) {
-					this.specializations[key].create = false;
-					this.specializations[key].delete = false;
+					for (let key in this.specializations) {
+						this.specializations[key].create = false;
+						this.specializations[key].delete = false;
+					}
+				} else {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка.",
+						body: response.data.message,
+						type: "error",
+					});
 				}
-
-				this.loading.loader = false;
 			})
 			.catch((error) => {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "При загрузке что-то пошло не так.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					body: error,
+					type: "error",
+				});
 			})
 			.finally(() => {
 				sorted.sortByName("up", this.specializations);
+
+				this.loading.loader = false;
 			});
 	},
 };

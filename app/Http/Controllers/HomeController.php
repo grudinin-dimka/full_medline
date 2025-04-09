@@ -334,8 +334,11 @@ class HomeController extends Controller
          $value->name = $value->family . " " . $value->name . " " . $value->surname;;
       };
 
-      // $SpecialistSpecializations = SpecialistSpecialization::where('id_specialist', 1)->get();
-      return $specialistsShort;
+      return response()->json([
+         "status" => true,
+         "message" => "Данные получены.",
+         "data" => $specialistsShort,
+      ]);
    }
 
    /* Вывод полной информации о враче */
@@ -441,7 +444,20 @@ class HomeController extends Controller
    /* Вывод данных из таблицы "специализации" */
    public function getSpecializationsAll(Request $request) {
       $specializations = Specialization::all();
-      return $specializations;
+      
+      if (!$specializations) {
+         return response()->json([
+            "status" => false,
+            "message" => "Не удалось получить данные.",
+            "data" => [],
+         ]);
+      };
+
+      return response()->json([
+         "status" => true,
+         "message" => "Данные получены.",
+         "data" => $specializations,
+      ]);
    }
    
    /* _____________________________________________________*/
@@ -450,37 +466,20 @@ class HomeController extends Controller
    /* Вывод данных из таблицы "клиники" */
    public function getClinicsAll(Request $request) {
       $clinics = Clinic::all();
-      return $clinics;
-   }
-   
-   /* _____________________________________________________*/
-   /* 4. Образования                                       */
-   /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-   /* Вывод данных из таблицы "образование" */
-   public function getEducationsAll(Request $request) {
-      $educations = Education::all();
+
+      if (!$clinics) {
+         return response()->json([
+            "status" => false,
+            "message" => "Не удалось получить данные.",
+            "data" => [],
+         ]);
+      };
 
       return response()->json([
-         "educations" => $educations,
+         "status" => true,
+         "message" => "Данные получены.",
+         "data" => $clinics,
       ]);
-   }
-   
-   /* _____________________________________________________*/
-   /* 5. Работы                                            */
-   /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-   /* Вывод данных из таблицы "работы" */
-   public function getWorksAll(Request $request) {
-      $works = Work::all();
-      return $works;
-   }
-   
-   /* _____________________________________________________*/
-   /* 6. Работы                                            */
-   /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-   /* Вывод данных из таблицы "работы" */
-   public function getCertificatesAll(Request $request) {
-      $certificate = Certificate::all();
-      return $certificate;
    }
    
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/

@@ -1,10 +1,10 @@
 <template>
 	<block-once :minHeight="100">
 		<template #title>
-			ПОЛЬЗОВАТЕЛИ
+			СТАТИСТИКА
 		</template>
 		<template #body>
-			ПОЛЬЗОВАТЕЛИ
+			
 		</template>
 	</block-once>
 </template>

@@ -117,21 +117,19 @@ export default {
 				if (response.data.status) {
 					this.addresses = response.data.data;
 				} else {
-					let debbugStory = {
+					this.$store.commit("addDebugger", {
 						title: "Ошибка.",
 						body: response.data.message,
-						type: "Error",
-					};
-					this.$store.commit("debuggerState", debbugStory);
+						type: "error",
+					});
 				}
 			})
 			.catch((error) => {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "Произошла ошибка при получении данных.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					body: error,
+					type: "error",
+				});
 			})
 			.finally(() => {
 				this.loading.loader.addresses = false;

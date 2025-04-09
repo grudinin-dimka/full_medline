@@ -164,21 +164,19 @@ export default {
 					this.title = response.data.result.title;
 					this.group = response.data.result.array;
 				} else {
-					let debbugStory = {
+					this.$store.commit("addDebugger", {
 						title: "Ошибка.",
 						body: response.data.message,
-						type: "Error",
-					};
-					this.$store.commit("debuggerState", debbugStory);
+						type: "error",
+					});
 				}
 			})
 			.catch((error) => {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "Произошла ошибка при получении данных о путевках.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					body: error,
+					type: "error",
+				});
 			})
 			.finally(() => {
 				this.loading.loader.title = false;

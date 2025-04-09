@@ -771,12 +771,11 @@ export default {
 						break;
 				}
 			} catch (error) {
-				let debbugStory = {
-					title: "Ошибка.",
-					body: "Не удаётся открыть выбранный слайд.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+				this.$store.commit("addDebugger", {
+					title: "Ошибка",
+					body: error,
+					type: "error",
+				});
 			}
 		},
 		/* _____________________________________________________*/
@@ -854,12 +853,11 @@ export default {
 						break;
 				}
 			} catch (error) {
-				let debbugStory = {
-					title: "Ошибка.",
-					body: "Не удалось обновить порядок выбранного слайда.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+				this.$store.commit("addDebugger", {
+					title: "Ошибка",
+					body: error,
+					type: "error",
+				});
 			}
 		},
 		/* _____________________________________________________*/
@@ -903,43 +901,44 @@ export default {
 									delete: false,
 								});
 
-								this.disabled.slider.create = false;
-
 								this.closeSlide();
 
-								let debbugStory = {
+								this.$store.commit("addDebugger", {
 									title: "Успешно!",
 									body: "Новый слайд добавлен.",
-									type: "Completed",
-								};
-								this.$store.commit("debuggerState", debbugStory);
+									type: "completed",
+								});
 							} catch (error) {
-								let debbugStory = {
-									title: "Ошибка.",
-									body: "При добавлении что-то пошло не так...",
-									type: "Error",
-								};
-								this.$store.commit("debuggerState", debbugStory);
+								this.$store.commit("addDebugger", {
+									title: "Ошибка",
+									body: error,
+									type: "error",
+								});
 							}
 						} else {
-							let debbugStory = {
-								title: "Ошибка.",
+							this.$store.commit("addDebugger", {
+								title: "Ошибка",
 								body: response.data.message,
-								type: "Error",
-							};
-							this.$store.commit("debuggerState", debbugStory);
+								type: "error",
+							});
 						}
 					})
 					.catch((error) => {
-						console.log(error);
+						this.$store.commit("addDebugger", {
+							title: "Ошибка",
+							body: error,
+							type: "error",
+						});
+					})
+					.finally(() => {
+						this.disabled.slider.create = false;
 					});
 			} catch (error) {
-				let debbugStory = {
-					title: "Ошибка.",
-					body: "Не удалось создать новый слайд.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+				this.$store.commit("addDebugger", {
+					title: "Ошибка",
+					body: error,
+					type: "error",
+				});
 			}
 		},
 		// Пометка на удаление выбранного слайда
@@ -1003,8 +1002,6 @@ export default {
 					data: formData,
 				})
 					.then((response) => {
-						this.disabled.slider.update = false;
-
 						if (response.data.status) {
 							try {
 								this.currentSlide.data.path.body = response.data.data;
@@ -1013,32 +1010,36 @@ export default {
 
 								this.closeSlide();
 							} catch (error) {
-								let debbugStory = {
-									title: "Ошибка.",
-									body: "Не удалось обновить данные после загрузки изображения.",
-									type: "Error",
-								};
-								this.$store.commit("debuggerState", debbugStory);
+								this.$store.commit("addDebugger", {
+									title: "Ошибка",
+									body: error,
+									type: "error",
+								});
 							}
 						} else {
-							let debbugStory = {
-								title: "Ошибка.",
+							this.$store.commit("addDebugger", {
+								title: "Ошибка",
 								body: response.data.message,
-								type: "Error",
-							};
-							this.$store.commit("debuggerState", debbugStory);
+								type: "error",
+							});
 						}
 					})
 					.catch((error) => {
-						console.log(error);
+						this.$store.commit("addDebugger", {
+							title: "Ошибка",
+							body: error,
+							type: "error",
+						});
+					})
+					.finally(() => {
+						this.disabled.slider.update = false;
 					});
 			} catch (error) {
-				let debbugStory = {
-					title: "Ошибка.",
-					body: "Не удалось обновить данные слайда.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+				this.$store.commit("addDebugger", {
+					title: "Ошибка",
+					body: error,
+					type: "error",
+				});
 			}
 		},
 		/* Сохранение изменений в базе данных */
@@ -1074,34 +1075,28 @@ export default {
 						shared.clearFlags(this.slides);
 						shared.updateOrders(this.slides);
 
-						this.disabled.slider.save = false;
-
-						let debbugStory = {
+						this.$store.commit("addDebugger", {
 							title: "Успешно!",
 							body: response.data.message,
-							type: "Completed",
-						};
-						this.$store.commit("debuggerState", debbugStory);
+							type: "completed",
+						});
 					} else {
-						this.disabled.slider.save = false;
-
-						let debbugStory = {
-							title: "Ошибка.",
+						this.$store.commit("addDebugger", {
+							title: "Ошибка",
 							body: response.data.message,
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
+							type: "error",
+						});
 					}
 				})
 				.catch((error) => {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка",
+						body: error,
+						type: "error",
+					});
+				})
+				.finally(() => {
 					this.disabled.slider.save = false;
-
-					let debbugStory = {
-						title: "Ошибка.",
-						body: "Что-то помешало сохранить данные о слайдах.",
-						type: "Error",
-					};
-					this.$store.commit("debuggerState", debbugStory);
 				});
 		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -1170,25 +1165,31 @@ export default {
 				},
 			})
 				.then((response) => {
-					this.clearTextareaEdited();
-					this.disabled.footer.save = false;
+					if (response.data.status) {
+						this.clearTextareaEdited();
 
-					let debbugStory = {
-						title: "Успешно!",
-						body: "Данные о футере сохранены.",
-						type: "Completed",
-					};
-					this.$store.commit("debuggerState", debbugStory);
+						this.$store.commit("addDebugger", {
+							title: "Успешно!",
+							body: response.data.message,
+							type: "completed",
+						});
+					} else {
+						this.$store.commit("addDebugger", {
+							title: "Ошибка",
+							body: response.data.message,
+							type: "error",
+						});
+					}
 				})
 				.catch((error) => {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка",
+						body: error,
+						type: "error",
+					});
+				})
+				.finally(() => {
 					this.disabled.footer.save = false;
-
-					let debbugStory = {
-						title: "Ошибка.",
-						body: "Данные о футере почему-то не сохранились.",
-						type: "Error",
-					};
-					this.$store.commit("debuggerState", debbugStory);
 				});
 		},
 	},
@@ -1209,12 +1210,11 @@ export default {
 				sorted.sortByOrder("up", this.slides);
 			})
 			.catch((error) => {
-				let debbugStory = {
-					title: "Ошибка.",
-					body: "Произошла ошибка при получении данных о слайдере.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+				this.$store.commit("addDebugger", {
+					title: "Ошибка",
+					body: error,
+					type: "error",
+				});
 			})
 			.finally(() => {
 				this.loading.loader.slider = false;
@@ -1236,21 +1236,19 @@ export default {
 						}
 					}
 				} else {
-					let debbugStory = {
-						title: "Ошибка.",
+					this.$store.commit("addDebugger", {
+						title: "Ошибка",
 						body: response.data.message,
-						type: "Error",
-					};
-					this.$store.commit("debuggerState", debbugStory);
+						type: "error",
+					});
 				}
 			})
 			.catch((error) => {
-				let debbugStory = {
-					title: "Ошибка.",
-					body: "Произошла ошибка при получении данных о футере.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+				this.$store.commit("addDebugger", {
+					title: "Ошибка",
+					body: error,
+					type: "error",
+				});
 			})
 			.finally(() => {
 				this.loading.loader.footer = false;

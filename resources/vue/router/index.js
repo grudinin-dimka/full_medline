@@ -84,11 +84,6 @@ const router = createRouter({
 							name: "schedule-all",
 							component: () => import("../views/main/shedule/MainScheduleAll.vue"),
 						},
-						{
-							path: "specialist",
-							name: "schedule-specialist",
-							component: () => import("../views/main/shedule/MainScheduleSpecialist.vue"),
-						},
 					],
 				},
 				{

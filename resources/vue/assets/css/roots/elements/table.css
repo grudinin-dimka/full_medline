@@ -1,0 +1,9 @@
+/* BaseTable */
+:root {
+	--table-th-gap: calc(var(--default-gap) / 2);
+	--table-th-background-color: var(--default-background-color);	
+
+	--table-td-gap: var(--table-th-gap);
+	--table-td-odd-background-color: rgba(0, 0, 0, 0.05);
+	--table-td-even-background-color: rgba(0, 0, 0, 0);
+}

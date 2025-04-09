@@ -9,7 +9,7 @@
 
 		<loader-child
 			:isLoading="loading.loader.slider"
-         :minHeight="403"
+			:minHeight="403"
 			@loaderChildAfterLeave="loaderChildAfterLeave"
 		/>
 
@@ -70,12 +70,11 @@ export default {
 				sorted.sortByOrder("up", this.slides);
 			})
 			.catch((error) => {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "Произошла ошибка при получении данных о слайдере.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					body: error,
+					type: "error",
+				});
 			})
 			.finally(() => {
 				this.loading.loader.slider = false;

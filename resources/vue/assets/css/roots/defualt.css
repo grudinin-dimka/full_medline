@@ -1,0 +1,12 @@
+/* По умолчанию */
+:root {
+	--create-background-color: rgb(243, 255, 240);
+	--create-background-hover-color: rgb(243, 255, 240);
+	--create-border-color: #aaf281;
+	--create-border-hover-color: rgb(243, 255, 240);
+
+	--delete-background-color: rgb(255, 240, 240);
+	--delete-background-hover-color: #fff3f3;
+	--delete-border-color: #f28181;
+	--delete-border-hover-color: #f59a9a;
+}

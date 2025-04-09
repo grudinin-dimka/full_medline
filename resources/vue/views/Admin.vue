@@ -70,7 +70,7 @@ export default {
 		}
 	},
 	mounted() {
-		this.$store.commit("setDebuggerClose");
+		this.$store.commit("clearDebugger");
 	},
 };
 </script>

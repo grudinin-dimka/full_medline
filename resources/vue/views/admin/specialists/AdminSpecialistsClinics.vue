@@ -518,12 +518,11 @@ export default {
 					break;
 				default:
 					{
-						let debbugStory = {
+						this.$store.commit("addDebugger", {
 							title: "Ошибка.",
 							body: "Низвестный тип открытия модального окна.",
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
+							type: "error",
+						});
 					}
 					break;
 			}
@@ -703,12 +702,11 @@ export default {
 
 				this.closeModal();
 			} catch (error) {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "При обновлении что-то пошло не так.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					body: error,
+					type: "error",
+				});
 			}
 		},
 		/* Добавление элемента в массив */
@@ -742,14 +740,14 @@ export default {
 
 				this.closeModal();
 			} catch (error) {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "При добавлении что-то пошло не так.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					body: error,
+					type: "error",
+				});
 			}
 		},
+
 		/* Сохранение изменений на сервере */
 		saveClinicsChanges() {
 			let newArray = [];
@@ -782,39 +780,41 @@ export default {
 				},
 			})
 				.then((response) => {
-					try {
-						shared.updateId(this.clinics, response.data);
-						shared.clearDeletes(this.clinics);
-						shared.clearFlags(this.clinics);
+					if (response.data.status) {
+						try {
+							shared.updateId(this.clinics, response.data.data);
+							shared.clearDeletes(this.clinics);
+							shared.clearFlags(this.clinics);
 
-						this.disabled.clinics.save = false;
-
-						let debbugStory = {
-							title: "Успешно!",
-							body: "Данные сохранились.",
-							type: "Completed",
-						};
-						this.$store.commit("debuggerState", debbugStory);
-					} catch (error) {
-						this.disabled.clinics.save = false;
-
-						let debbugStory = {
+							this.$store.commit("addDebugger", {
+								title: "Успешно!",
+								body: response.data.message,
+								type: "completed",
+							});
+						} catch (error) {
+							this.$store.commit("addDebugger", {
+								title: "Ошибка.",
+								body: error,
+								type: "error",
+							});
+						}
+					} else {
+						this.$store.commit("addDebugger", {
 							title: "Ошибка.",
-							body: "После сохранения что-то пошло не так.",
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
+							body: response.data.message,
+							type: "error",
+						});
 					}
 				})
 				.catch((error) => {
-					this.disabled.clinics.save = false;
-
-					let debbugStory = {
+					this.$store.commit("addDebugger", {
 						title: "Ошибка.",
-						body: "Данные почему-то не сохранились...",
-						type: "Error",
-					};
-					this.$store.commit("debuggerState", debbugStory);
+						body: error,
+						type: "error",
+					});
+				})
+				.finally(() => {
+					this.disabled.clinics.save = false;
 				});
 		},
 	},
@@ -827,24 +827,31 @@ export default {
 			url: `${this.$store.getters.urlApi}` + `get-clinics-all`,
 		})
 			.then((response) => {
-				this.clinics = response.data;
+				if (response.data.status) {
+					this.clinics = response.data.data;
 
-				for (let key in this.clinics) {
-					this.clinics[key].create = false;
-					this.clinics[key].delete = false;
+					for (let key in this.clinics) {
+						this.clinics[key].create = false;
+						this.clinics[key].delete = false;
+					}
+				} else {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка.",
+						body: response.data.message,
+						type: "error",
+					});
 				}
-
-				this.loading.loader = false;
 			})
 			.catch((error) => {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "При загрузке что-то пошло не так.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					body: error,
+					type: "error",
+				});
 			})
 			.finally(() => {
+				this.loading.loader = false;
+
 				sorted.sortByName("up", this.clinics);
 			});
 	},

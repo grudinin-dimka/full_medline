@@ -302,23 +302,23 @@ export default {
 		AdminSubModal,
 		AdminModalList,
 		AdminContactsList,
-		
+
 		InfoBar,
 		LoaderChild,
 		Empty,
-		
+
 		BlockOnce,
 		BlockButtons,
-		
+
 		ContainerInput,
 		ContainerInputOnce,
 		ContainerSelectOnce,
 		ContainerTextareaOnce,
-		
+
 		ButtonDefault,
 		ButtonRemove,
 		ButtonClaim,
-		
+
 		IconArrow,
 		IconHide,
 		IconVisible,
@@ -330,7 +330,7 @@ export default {
 		IconContactHome,
 		IconContactMail,
 		IconContactPhone,
-		
+
 		axios,
 	},
 	data() {
@@ -585,12 +585,11 @@ export default {
 					break;
 				default:
 					{
-						let debbugStory = {
+						this.$store.commit("addDebugger", {
 							title: "Ошибка.",
 							body: "Низвестный тип открытия модального окна.",
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
+							type: "error",
+						});
 					}
 					break;
 			}
@@ -679,12 +678,11 @@ export default {
 
 				this.closeModal("modal");
 			} catch (error) {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "Не удалось добавить контакт.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					body: error,
+					type: "error",
+				});
 			}
 		},
 		/* Изменение */
@@ -721,12 +719,11 @@ export default {
 
 				this.closeModal("modal");
 			} catch (error) {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "Не удалось пометить блок на удаление.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					body: error,
+					type: "error",
+				});
 			}
 		},
 		/* Сохранение */
@@ -748,49 +745,41 @@ export default {
 				.then((response) => {
 					if (response.data.status) {
 						try {
-							this.disabled.contacts.save = false;
-
 							shared.updateId(this.contacts, response.data.data);
 							shared.clearDeletes(this.contacts);
 							shared.clearFlags(this.contacts);
 							shared.updateOrders(this.contacts);
 
-							let debbugStory = {
+							this.$store.commit("addDebugger", {
 								title: "Успешно!",
 								body: response.data.message,
-								type: "Completed",
-							};
-							this.$store.commit("debuggerState", debbugStory);
+								type: "completed",
+							});
 						} catch (error) {
-							this.disabled.contacts.save = false;
-
-							let debbugStory = {
+							this.$store.commit("addDebugger", {
 								title: "Ошибка.",
-								body: "Не удалось обновить данные после загрузки изображения.",
-								type: "Error",
-							};
-							this.$store.commit("debuggerState", debbugStory);
+								body: error,
+								type: "error",
+							});
 						}
 					} else {
-						this.disabled.contacts.save = false;
-
-						let debbugStory = {
+						this.$store.commit("addDebugger", {
 							title: "Ошибка.",
 							body: response.data.message,
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
+							type: "error",
+						});
 					}
 				})
 				.catch((error) => {
-					this.disabled.contacts.save = false;
-
 					let debbugStory = {
 						title: "Ошибка.",
-						body: "Не удалось сохранить данные.",
+						body: error,
 						type: "Error",
 					};
 					this.$store.commit("debuggerState", debbugStory);
+				})
+				.finally(() => {
+					this.disabled.contacts.save = false;
 				});
 		},
 		/* Изменение порядка */
@@ -900,12 +889,11 @@ export default {
 
 				this.closeModal("subModalPhone");
 			} catch (error) {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "Не удалось добавить телефон.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					body: error,
+					type: "error",
+				});
 			}
 		},
 		/* Изменение */
@@ -934,12 +922,11 @@ export default {
 
 				this.closeModal("subModalPhone");
 			} catch (error) {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "Не удалось обновить телефон.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					body: error,
+					type: "error",
+				});
 			}
 		},
 		/* Удаление */
@@ -953,12 +940,11 @@ export default {
 					}
 				);
 			} catch (error) {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "Не удалось обновить телефон.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					body: error,
+					type: "error",
+				});
 			}
 		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -988,12 +974,11 @@ export default {
 
 				this.closeModal("subModalMail");
 			} catch (error) {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "Не удалось добавить почту.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					body: error,
+					type: "error",
+				});
 			}
 		},
 		/* Изменение */
@@ -1021,12 +1006,11 @@ export default {
 
 				this.closeModal("subModalMail");
 			} catch (error) {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "Не удалось обновить почту.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					body: error,
+					type: "error",
+				});
 			}
 		},
 		/* Удаление */
@@ -1057,15 +1041,20 @@ export default {
 
 					this.clinics = response.data.data.clinics;
 				} else {
-					let debbugStory = {
+					this.$store.commit("addDebugger", {
 						title: "Ошибка.",
-						body: "Не удалось получить данные.",
-						type: "Error",
-					};
-					this.$store.commit("debuggerState", debbugStory);
+						body: response.data.message,
+						type: "error",
+					});
 				}
 			})
-			.catch((error) => {})
+			.catch((error) => {
+				this.$store.commit("addDebugger", {
+					title: "Ошибка.",
+					body: response.data.message,
+					type: "error",
+				});
+			})
 			.finally(() => {
 				this.loading.loader.clinics = false;
 			});

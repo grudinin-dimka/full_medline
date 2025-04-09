@@ -274,7 +274,7 @@ export default {
 		},
 	},
 	mounted() {
-		this.$store.commit("setDebuggerClose");
+		this.$store.commit("clearDebugger");
 
 		if (localStorage.getItem("token")) {
 			// Проверка токена

@@ -41,12 +41,6 @@ Route::post('/get-specialists-short', [HomeController::class, 'getSpecialistsSho
 Route::post('/get-specializations-all', [HomeController::class, 'getSpecializationsAll']);
 /* 3. Клиники                                           */
 Route::post('/get-clinics-all', [HomeController::class, 'getClinicsAll']);
-/* 4. Образования                                       */
-Route::post('/get-educations-all', [HomeController::class, 'getEducationsAll']);
-/* 5. Прошлые работы                                    */
-Route::post('/get-works-all', [HomeController::class, 'getWorksAll']);
-/* 6. Сертификаты                                       */
-Route::post('/get-certificates-all', [HomeController::class, 'getCertificatesAll']);
 /* _____________________________________________________*/
 /* Цены                                                 */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/

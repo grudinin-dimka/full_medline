@@ -1,0 +1,7 @@
+:root {
+   --footer-padding: calc(var(--default-padding) / 1.25);
+   --footer-border: var(--default-border);
+   --footer-border-radius: var(--default-border-radius);
+
+   --footer-background-color: var(--default-background-color);
+}

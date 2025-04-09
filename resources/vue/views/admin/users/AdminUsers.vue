@@ -463,7 +463,7 @@
 				@loaderChildAfterLeave="loaderChildAfterLeave"
 			></LoaderChild>
 		</template>
-		
+
 		<template #buttons>
 			<ButtonDefault @click="createUser"> Добавить </ButtonDefault>
 		</template>
@@ -789,12 +789,11 @@ export default {
 					break;
 				default:
 					{
-						let debbugStory = {
+						this.$store.commit("addDebugger", {
 							title: "Ошибка.",
 							body: "Низвестный тип открытия модального окна.",
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
+							type: "error",
+						});
 					}
 					break;
 			}
@@ -1011,7 +1010,12 @@ export default {
 						currentUser.statusId = response.data.data;
 
 						this.closeModal("subModalBlock");
-						this.disabled.userBlock.save = false;
+
+						this.$store.commit("addDebugger", {
+							title: "Успешно!",
+							body: response.data.message,
+							type: "completed",
+						});
 
 						let debbugStory = {
 							title: "Успешно!",
@@ -1020,25 +1024,22 @@ export default {
 						};
 						this.$store.commit("debuggerState", debbugStory);
 					} else {
-						this.disabled.userBlock.save = false;
-
-						let debbugStory = {
+						this.$store.commit("addDebugger", {
 							title: "Ошибка.",
 							body: response.data.message,
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
+							type: "error",
+						});
 					}
 				})
 				.catch((error) => {
-					this.disabled.userBlock.save = false;
-
-					let debbugStory = {
+					this.$store.commit("addDebugger", {
 						title: "Ошибка.",
-						body: "Не удалось обновить статус...",
-						type: "Error",
-					};
-					this.$store.commit("debuggerState", debbugStory);
+						body: error,
+						type: "error",
+					});
+				})
+				.finally(() => {
+					this.disabled.userBlock.save = false;
 				});
 		},
 		saveUserPassword() {
@@ -1064,32 +1065,28 @@ export default {
 						this.disabled.userPassword.save = false;
 						this.closeModal("subModalPassword");
 
-						let debbugStory = {
+						this.$store.commit("addDebugger", {
 							title: "Успешно!",
 							body: response.data.message,
-							type: "Completed",
-						};
-						this.$store.commit("debuggerState", debbugStory);
+							type: "completed",
+						});
 					} else {
-						this.disabled.userPassword.save = false;
-
-						let debbugStory = {
+						this.$store.commit("addDebugger", {
 							title: "Ошибка.",
 							body: response.data.message,
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
+							type: "error",
+						});
 					}
 				})
 				.catch((error) => {
-					this.disabled.userPassword.save = false;
-
-					let debbugStory = {
+					this.$store.commit("addDebugger", {
 						title: "Ошибка.",
-						body: "Не удалось обновить пароль...",
-						type: "Error",
-					};
-					this.$store.commit("debuggerState", debbugStory);
+						body: error,
+						type: "error",
+					});
+				})
+				.finally(() => {
+					this.disabled.userPassword.save = false;
 				});
 		},
 		/* Редактирование информации пользователя */
@@ -1141,34 +1138,29 @@ export default {
 						}
 
 						this.closeModal("modal");
-						this.disabled.users.save = false;
 
-						let debbugStory = {
+						this.$store.commit("addDebugger", {
 							title: "Успешно!",
 							body: response.data.message,
-							type: "Completed",
-						};
-						this.$store.commit("debuggerState", debbugStory);
+							type: "completed",
+						});
 					} else {
-						this.disabled.users.save = false;
-
-						let debbugStory = {
+						this.$store.commit("addDebugger", {
 							title: "Ошибка.",
 							body: response.data.message,
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
+							type: "error",
+						});
 					}
 				})
 				.catch((error) => {
-					this.disabled.users.save = false;
-
-					let debbugStory = {
+					this.$store.commit("addDebugger", {
 						title: "Ошибка.",
-						body: "Не удалось сохранить изменения...",
-						type: "Error",
-					};
-					this.$store.commit("debuggerState", debbugStory);
+						body: error,
+						type: "error",
+					});
+				})
+				.finally(() => {
+					this.disabled.users.save = false;
 				});
 		},
 		/* Добавление пользователя */
@@ -1224,34 +1216,29 @@ export default {
 						});
 
 						this.closeModal("modal");
-						this.disabled.users.create = false;
 
-						let debbugStory = {
+						this.$store.commit("addDebugger", {
 							title: "Успешно!",
 							body: response.data.message,
-							type: "Completed",
-						};
-						this.$store.commit("debuggerState", debbugStory);
+							type: "completed",
+						});
 					} else {
-						this.disabled.users.create = false;
-
-						let debbugStory = {
+						this.$store.commit("addDebugger", {
 							title: "Ошибка.",
 							body: response.data.message,
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
+							type: "error",
+						});
 					}
 				})
 				.catch((error) => {
-					this.disabled.users.create = false;
-
-					let debbugStory = {
+					this.$store.commit("addDebugger", {
 						title: "Ошибка.",
-						body: "Не удалось создать пользователя...",
-						type: "Error",
-					};
-					this.$store.commit("debuggerState", debbugStory);
+						body: error,
+						type: "error",
+					});
+				})
+				.finally(() => {
+					this.disabled.users.create = false;
 				});
 		},
 		/* Удаление пользователя */
@@ -1277,34 +1264,29 @@ export default {
 						);
 
 						this.closeModal("subModalDelete");
-						this.disabled.users.delete = false;
 
-						let debbugStory = {
+						this.$store.commit("addDebugger", {
 							title: "Успешно!",
 							body: response.data.message,
-							type: "Completed",
-						};
-						this.$store.commit("debuggerState", debbugStory);
+							type: "completed",
+						});
 					} else {
-						this.disabled.users.delete = false;
-
-						let debbugStory = {
+						this.$store.commit("addDebugger", {
 							title: "Ошибка.",
 							body: response.data.message,
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
+							type: "error",
+						});
 					}
 				})
 				.catch((error) => {
-					this.disabled.users.delete = false;
-
-					let debbugStory = {
+					this.$store.commit("addDebugger", {
 						title: "Ошибка.",
-						body: "Не удалось удалить пользователя...",
-						type: "Error",
-					};
-					this.$store.commit("debuggerState", debbugStory);
+						body: error,
+						type: "error",
+					});
+				})
+				.finally(() => {
+					this.disabled.users.delete = false;
 				});
 		},
 	},
@@ -1328,21 +1310,19 @@ export default {
 						return;
 					}
 
-					let debbugStory = {
+					this.$store.commit("addDebugger", {
 						title: "Ошибка.",
 						body: response.data.message,
-						type: "Error",
-					};
-					this.$store.commit("debuggerState", debbugStory);
+						type: "error",
+					});
 				}
 			})
 			.catch((error) => {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "Произошла ошибка при загрузке пользователей.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					body: error,
+					type: "error",
+				});
 			})
 			.finally(() => {
 				this.loading.loader.users = false;

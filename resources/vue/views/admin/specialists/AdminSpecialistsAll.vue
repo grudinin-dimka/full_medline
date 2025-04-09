@@ -239,37 +239,31 @@ export default {
 				},
 			})
 				.then((response) => {
-					try {
-						this.disabled.specialists.save = false;
+					if (response.data.status) {
 						shared.clearDeletes(this.specialists);
 
-						let debbugStory = {
+						this.$store.commit("addDebugger", {
 							title: "Успешно!",
-							body: "Данные сохранились.",
-							type: "Completed",
-						};
-						this.$store.commit("debuggerState", debbugStory);
-					} catch (error) {
-						this.disabled.specialists.save = false;
-
-						let debbugStory = {
+							body: response.data.message,
+							type: "completed",
+						});
+					} else {
+						this.$store.commit("addDebugger", {
 							title: "Ошибка.",
-							body: "После сохранения что-то пошло не так.",
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
+							body: response.data.message,
+							type: "error",
+						});
 					}
 				})
 				.catch((error) => {
-					this.disabled.specialists.save = false;
-
-					let debbugStory = {
+					this.$store.commit("addDebugger", {
 						title: "Ошибка.",
-						body: "Данные почему-то не сохранились.",
-						type: "Error",
-					};
-					this.$store.commit("debuggerState", debbugStory);
-					return;
+						body: error,
+						type: "error",
+					});
+				})
+				.finally(() => {
+					this.disabled.specialists.save = false;
 				});
 		},
 	},
@@ -283,19 +277,31 @@ export default {
 			url: `${this.$store.getters.urlApi}` + `get-specialists-short`,
 		})
 			.then((response) => {
-				this.specialists = response.data;
+				if (response.data.status) {
+					this.specialists = response.data.data;
 
-				for (let key in this.specialists) {
-					this.specialists[key].delete = false;
+					for (let key in this.specialists) {
+						this.specialists[key].delete = false;
+					}
+				} else {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка.",
+						body: response.data.message,
+						type: "error",
+					});
 				}
-
-				this.loading.loader = false;
 			})
 			.catch((error) => {
-				console.log(error);
+				this.$store.commit("addDebugger", {
+					title: "Ошибка.",
+					body: error,
+					type: "error",
+				});
 			})
 			.finally(() => {
 				sorted.sortByName("up", this.specialists);
+
+				this.loading.loader = false;
 			});
 	},
 };

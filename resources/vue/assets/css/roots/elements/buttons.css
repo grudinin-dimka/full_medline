@@ -1,0 +1,26 @@
+/* Кнопки */
+:root {
+	--button-font-size: 1.125rem;
+
+	--button-padding: 15px 30px;
+	--button-border: 0px;
+	--button-border-radius: calc(var(--default-border-radius) / 2);
+
+	/* По умолчанию */
+	--button-font-color: rgb(255, 255, 255);
+	--button-font-color-hover: rgb(255, 255, 255);
+	--button-background-color: var(--primary-color);
+	--button-background-color-hover: var(--primary-color-hover);
+
+	/* Инвертированный */
+	--button-font-color-inverse: rgb(255, 255, 255);
+	--button-font-color-inverse-hover: rgb(255, 255, 255);
+	--button-background-color-inverse: var(--primary-color);
+	--button-background-color-inverse-hover: var(--primary-color-hover);
+
+	/* Удалить */
+	--button-font-color-delete: rgb(255, 255, 255);
+	--button-font-color-delete-hover: rgb(255, 255, 255);
+	--button-background-color-delete: rgb(212, 65, 65);
+	--button-background-color-delete-hover: rgb(229, 81, 81);
+}

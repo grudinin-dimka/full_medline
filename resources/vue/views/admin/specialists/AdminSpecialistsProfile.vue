@@ -1218,6 +1218,7 @@ import axios from "axios";
 
 import { RouterView, RouterLink } from "vue-router";
 import validate from "../../../services/validate";
+import shared from "../../../services/shared";
 import sorted from "../../../services/sorted";
 
 export default {
@@ -2231,6 +2232,7 @@ export default {
 				this.$store.commit("debuggerState", debbugStory);
 			}
 		},
+
 		/* Сохранение данных профиля */
 		async addSpecialist() {
 			// Проверка на статус добавления специалиста
@@ -2295,7 +2297,7 @@ export default {
 				})
 					.then((response) => {
 						this.clearSpecialistProfileEdited();
-						this.$refs.fileUpload.value = "";
+						this.$refs.fileUpload.value = null;
 
 						if (response.data.status) {
 							this.disabled.profile.create = false;
@@ -2310,36 +2312,34 @@ export default {
 
 							this.$router.push(String(response.data.data.id));
 
-							let debbugStory = {
+							this.$store.commit("addDebugger", {
 								title: "Успешно!",
 								body: response.data.message,
-								type: "Completed",
-							};
-							this.$store.commit("debuggerState", debbugStory);
+								type: "completed",
+							});
 						} else {
-							this.disabled.profile.create = false;
-
-							let debbugStory = {
+							this.$store.commit("addDebugger", {
 								title: "Ошибка.",
 								body: response.data.message,
-								type: "Error",
-							};
-							this.$store.commit("debuggerState", debbugStory);
+								type: "error",
+							});
 						}
 					})
 					.catch((error) => {
-						this.disabled.profile.create = false;
-
-						let debbugStory = {
+						this.$store.commit("addDebugger", {
 							title: "Ошибка.",
-							body: "Не удалось добавить специалиста.",
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
+							body: error,
+							type: "error",
+						});
+					})
+					.finally(() => {
+						this.disabled.profile.create = false;
 					});
 			}
 		},
-		async saveSpecialistAll() {
+
+		/* Сохранение всех данных */
+		saveSpecialistAll() {
 			if (
 				this.checkSpecialistInputsAll([
 					"link",
@@ -2364,110 +2364,89 @@ export default {
 				if (this.checkSpecialistInputsAll(["file"])) return;
 			}
 
-			try {
-				this.disabled.profile.save = true;
+			this.disabled.profile.save = true;
 
-				let formData = new FormData();
-				formData.append("type", "all");
-				// Данные блока профиля
-				formData.append("image", this.$refs.fileUpload.files[0]);
-				formData.append("formats", ["png", "webp"]);
-				formData.append("profile", JSON.stringify(this.specialist.profile.data));
-				// Id специалиста
-				formData.append("id", JSON.stringify(this.specialist.profile.data.id.body));
-				// Данные блока специализаций
-				formData.append(
-					"specializations",
-					JSON.stringify(this.specialist.connections.specializations)
-				);
-				// Данные блока клиник
-				formData.append("clinics", JSON.stringify(this.specialist.connections.clinics));
-				// Данные блока сертификаты
-				formData.append(
-					"certificates",
-					JSON.stringify(this.specialist.connections.certificates)
-				);
-				// Данные блока образования
-				formData.append("educations", JSON.stringify(this.specialist.connections.educations));
-				// Данные блока прошлых работ
-				formData.append("works", JSON.stringify(this.specialist.connections.works));
+			let formData = new FormData();
+			formData.append("type", "all");
 
-				// Сохранение данных
-				await axios({
-					method: "post",
-					url: `${this.$store.getters.urlApi}` + `save-specialist-modular`,
-					headers: {
-						Accept: "multipart/form-data",
-						Authorization: `Bearer ${localStorage.getItem("token")}`,
-					},
-					data: formData,
-				})
-					.then((response) => {
-						if (response.data.status) {
+			// Данные блока профиля
+			formData.append("image", this.$refs.fileUpload.files[0]);
+			formData.append("formats", ["png", "webp"]);
+			formData.append("profile", JSON.stringify(this.specialist.profile.data));
+
+			// Id специалиста
+			formData.append("id", JSON.stringify(this.specialist.profile.data.id.body));
+
+			// Данные блока специализаций
+			formData.append(
+				"specializations",
+				JSON.stringify(this.specialist.connections.specializations)
+			);
+			formData.append("clinics", JSON.stringify(this.specialist.connections.clinics));
+			formData.append("certificates", JSON.stringify(this.specialist.connections.certificates));
+			formData.append("educations", JSON.stringify(this.specialist.connections.educations));
+			formData.append("works", JSON.stringify(this.specialist.connections.works));
+
+			// Сохранение данных
+			axios({
+				method: "post",
+				url: `${this.$store.getters.urlApi}` + `save-specialist-modular`,
+				headers: {
+					Accept: "multipart/form-data",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: formData,
+			})
+				.then((response) => {
+					if (response.data.status) {
+						this.clearSpecialistProfileEdited();
+
+						// Замена изображения профиля
+						if (response.data.data.imagePath != null) {
 							this.clearSpecialistProfileEdited();
+							this.$refs.fileUpload.value = "";
 
-							// Замена изображения профиля
-							if (response.data.data.imagePath != null) {
-								this.clearSpecialistProfileEdited();
-								this.$refs.fileUpload.value = "";
-
-								this.specialist.profile.data.path.body = response.data.data.imagePath;
-								this.specialist.profile.data.filename.body =
-									response.data.data.imagePath.replace("/storage/specialists/", "");
-							}
-
-							let blocks = ["certificates", "educations", "works"];
-
-							blocks.forEach((block) => {
-								/* Обновление id в соответствии с изменениями */
-								this.updateIdFromConnection(block, response.data.data[block]);
-
-								/* Очистка удалённых элементов */
-								this.clearDeletesFromConnection(block);
-
-								/* Обновление флагов на удаление и сохранение */
-								this.clearFlagsFromConnection(block);
-							});
-
-							this.disabled.profile.save = false;
-
-							let debbugStory = {
-								title: "Успешно!",
-								body: response.data.message,
-								type: "Completed",
-							};
-							this.$store.commit("debuggerState", debbugStory);
-						} else {
-							this.disabled.profile.save = false;
-
-							let debbugStory = {
-								title: "Ошибка.",
-								body: response.data.message,
-								type: "Error",
-							};
-							this.$store.commit("debuggerState", debbugStory);
+							this.specialist.profile.data.path.body = response.data.data.imagePath;
+							this.specialist.profile.data.filename.body =
+								response.data.data.imagePath.replace("/storage/specialists/", "");
 						}
-					})
-					.catch((error) => {
-						this.disabled.profile.save = false;
 
-						let debbugStory = {
+						let blocks = ["certificates", "educations", "works"];
+
+						blocks.forEach((block) => {
+							/* Обновление id в соответствии с изменениями */
+							this.updateIdFromConnection(block, response.data.data[block]);
+
+							/* Очистка удалённых элементов */
+							this.clearDeletesFromConnection(block);
+
+							/* Обновление флагов на удаление и сохранение */
+							this.clearFlagsFromConnection(block);
+						});
+
+						this.$store.commit("addDebugger", {
+							title: "Успешно!",
+							body: response.data.message,
+							type: "completed",
+						});
+					} else {
+						this.$store.commit("addDebugger", {
 							title: "Ошибка.",
-							body: error,
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
+							body: response.data.message,
+							type: "error",
+						});
+					}
+				})
+				.catch((error) => {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка.",
+						body: error,
+						type: "error",
 					});
-			} catch (error) {
-				this.disabled.profile.save = false;
-
-				let debbugStory = {
-					title: "Ошибка.",
-					body: "При сохранении данных специалиста произошла ошибка.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
-			}
+				})
+				.finally(() => {
+					this.disabled.profile.save = false;
+				});
 		},
 		/* Очистка статуса изменений */
 		clearSpecialistProfileEdited() {
@@ -2528,66 +2507,11 @@ export default {
 				}
 				this.closeModal("modalSpecializations");
 			} catch (error) {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "При обновлении значений произошла ошибка.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
-			}
-		},
-		/* Сохранение изменений */
-		async saveSpecializationsChanges() {
-			try {
-				let formData = new FormData();
-				formData.append("type", "specializations");
-				formData.append("id", JSON.stringify(this.specialist.profile.data.id.body));
-				formData.append(
-					"specializations",
-					JSON.stringify(this.specialist.connections.specializations)
-				);
-
-				await axios({
-					method: "post",
-					url: `${this.$store.getters.urlApi}` + `save-specialist-modular`,
-					headers: {
-						Accept: "multipart/form-data",
-						Authorization: `Bearer ${localStorage.getItem("token")}`,
-					},
-					data: formData,
-				})
-					.then((response) => {
-						if (response.data.status) {
-							let debbugStory = {
-								title: "Успешно!",
-								body: response.data.message,
-								type: "Completed",
-							};
-							this.$store.commit("debuggerState", debbugStory);
-						} else {
-							let debbugStory = {
-								title: "Ошибка.",
-								body: response.data.message,
-								type: "Error",
-							};
-							this.$store.commit("debuggerState", debbugStory);
-						}
-					})
-					.catch((error) => {
-						let debbugStory = {
-							title: "Ошибка.",
-							body: "Данные почему-то не сохранились...",
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
-					});
-			} catch (error) {
-				let debbugStory = {
-					title: "Ошибка.",
-					body: "При сохранении значений произошла ошибка.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					body: error,
+					type: "error",
+				});
 			}
 		},
 		/* _____________________________________________________*/
@@ -2614,12 +2538,11 @@ export default {
 
 				this.openModal("edit", "modalClinics", null);
 			} catch (error) {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "При открытии списка произошла ошибка.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					body: error,
+					type: "error",
+				});
 			}
 		},
 		/* Обновление клиник */
@@ -2664,63 +2587,11 @@ export default {
 
 				this.closeModal("modalClinics");
 			} catch (error) {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "При обновлении значений произошла ошибка.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
-			}
-		},
-		/* Сохранение изменений */
-		async saveClinicsChanges() {
-			try {
-				let formData = new FormData();
-				formData.append("type", "clinics");
-				formData.append("id", JSON.stringify(this.specialist.profile.data.id.body));
-				formData.append("clinics", JSON.stringify(this.specialist.connections.clinics));
-
-				await axios({
-					method: "post",
-					url: `${this.$store.getters.urlApi}` + `save-specialist-modular`,
-					headers: {
-						Accept: "multipart/form-data",
-						Authorization: `Bearer ${localStorage.getItem("token")}`,
-					},
-					data: formData,
-				})
-					.then((response) => {
-						if (response.data.status) {
-							let debbugStory = {
-								title: "Успешно!",
-								body: response.data.message,
-								type: "Completed",
-							};
-							this.$store.commit("debuggerState", debbugStory);
-						} else {
-							let debbugStory = {
-								title: "Ошибка.",
-								body: response.data.message,
-								type: "Error",
-							};
-							this.$store.commit("debuggerState", debbugStory);
-						}
-					})
-					.catch((error) => {
-						let debbugStory = {
-							title: "Ошибка.",
-							body: "Данные почему-то не сохранились...",
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
-					});
-			} catch (error) {
-				let debbugStory = {
-					title: "Ошибка.",
-					body: "При сохранении значений произошла ошибка.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					body: error,
+					type: "error",
+				});
 			}
 		},
 		/* _____________________________________________________*/
@@ -2748,12 +2619,11 @@ export default {
 				});
 				this.closeModal("modalCertificates");
 			} catch (error) {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "При добавлении что-то пошло не так.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					body: error,
+					type: "error",
+				});
 			}
 		},
 		/* Обновление данных */
@@ -2775,73 +2645,12 @@ export default {
 				}
 				this.closeModal("modalCertificates");
 			} catch (error) {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "При обновлении что-то пошло не так.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
-			}
-		},
-		/* Сохранение изменений */
-		async saveCertificateChanges() {
-			let formData = new FormData();
-			formData.append("type", "certificates");
-			formData.append("id", JSON.stringify(this.specialist.profile.data.id.body));
-			formData.append("certificates", JSON.stringify(this.specialist.connections.certificates));
-
-			await axios({
-				method: "post",
-				url: `${this.$store.getters.urlApi}` + `save-specialist-modular`,
-				headers: {
-					Accept: "multipart/form-data",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-				data: formData,
-			})
-				.then((response) => {
-					if (response.data.status) {
-						try {
-							/* Обновление id в соответствии с изменениями */
-							this.updateIdFromConnection("certificates", response.data.data);
-
-							/* Очистка удалённых элементов */
-							this.clearDeletesFromConnection("certificates");
-
-							/* Обновление флагов на удаление и сохранение */
-							this.clearFlagsFromConnection("certificates");
-
-							let debbugStory = {
-								title: "Успешно!",
-								body: response.data.message,
-								type: "Completed",
-							};
-							this.$store.commit("debuggerState", debbugStory);
-						} catch (error) {
-							let debbugStory = {
-								title: "Ошибка.",
-								body: "После сохранения что-то пошло не так.",
-								type: "Error",
-							};
-							this.$store.commit("debuggerState", debbugStory);
-						}
-					} else {
-						let debbugStory = {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
-					}
-				})
-				.catch((error) => {
-					let debbugStory = {
-						title: "Ошибка.",
-						body: "Данные почему-то не сохранились...",
-						type: "Error",
-					};
-					this.$store.commit("debuggerState", debbugStory);
+					body: error,
+					type: "error",
 				});
+			}
 		},
 		/* _____________________________________________________*/
 		/* 5. Образования                                       */
@@ -2876,12 +2685,11 @@ export default {
 				});
 				this.closeModal("modalEducations");
 			} catch (error) {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "При добавлении что-то пошло не так.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					body: error,
+					type: "error",
+				});
 			}
 		},
 		/* Обновление данных */
@@ -2908,73 +2716,12 @@ export default {
 				}
 				this.closeModal("modalEducations");
 			} catch (error) {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "При обновлении что-то пошло не так.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
-			}
-		},
-		/* Сохранение */
-		async saveEducationChanges() {
-			let formData = new FormData();
-			formData.append("type", "educations");
-			formData.append("id", JSON.stringify(this.specialist.profile.data.id.body));
-			formData.append("educations", JSON.stringify(this.specialist.connections.educations));
-
-			await axios({
-				method: "post",
-				url: `${this.$store.getters.urlApi}` + `save-specialist-modular`,
-				headers: {
-					Accept: "multipart/form-data",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-				data: formData,
-			})
-				.then((response) => {
-					if (response.data.status) {
-						try {
-							/* Обновление id в соответствии с изменениями */
-							this.updateIdFromConnection("educations", response.data.data);
-
-							/* Очистка удалённых элементов */
-							this.clearDeletesFromConnection("educations");
-
-							/* Обновление флагов на удаление и сохранение */
-							this.clearFlagsFromConnection("educations");
-
-							let debbugStory = {
-								title: "Успешно!",
-								body: response.data.message,
-								type: "Completed",
-							};
-							this.$store.commit("debuggerState", debbugStory);
-						} catch (error) {
-							let debbugStory = {
-								title: "Ошибка.",
-								body: "После сохранения что-то пошло не так.",
-								type: "Error",
-							};
-							this.$store.commit("debuggerState", debbugStory);
-						}
-					} else {
-						let debbugStory = {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
-					}
-				})
-				.catch((error) => {
-					let debbugStory = {
-						title: "Ошибка.",
-						body: "Данные почему-то не сохранились...",
-						type: "Error",
-					};
-					this.$store.commit("debuggerState", debbugStory);
+					body: error,
+					type: "error",
 				});
+			}
 		},
 		/* _____________________________________________________*/
 		/* 6. Прошлые работы                                    */
@@ -3010,12 +2757,11 @@ export default {
 
 				this.closeModal("modalWorks");
 			} catch (error) {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "При добавлении что-то пошло не так.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					body: error,
+					type: "error",
+				});
 			}
 		},
 		/* Обновление */
@@ -3043,76 +2789,15 @@ export default {
 
 				this.closeModal("modalWorks");
 			} catch (error) {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "При обновлении что-то пошло не так.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					body: error,
+					type: "error",
+				});
 			}
 		},
-		/* Сохранение */
-		async saveWorksChanges() {
-			let formData = new FormData();
-			formData.append("type", "works");
-			formData.append("id", JSON.stringify(this.specialist.profile.data.id.body));
-			formData.append("works", JSON.stringify(this.specialist.connections.works));
-
-			await axios({
-				method: "post",
-				url: `${this.$store.getters.urlApi}` + `save-specialist-modular`,
-				headers: {
-					Accept: "multipart/form-data",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-				data: formData,
-			})
-				.then((response) => {
-					if (response.data.status) {
-						try {
-							/* Обновление id в соответствии с изменениями */
-							this.updateIdFromConnection("works", response.data.data);
-
-							/* Очистка удалённых элементов */
-							this.clearDeletesFromConnection("works");
-
-							/* Обновление флагов на удаление и сохранение */
-							this.clearFlagsFromConnection("works");
-
-							let debbugStory = {
-								title: "Успешно!",
-								body: response.data.message,
-								type: "Completed",
-							};
-							this.$store.commit("debuggerState", debbugStory);
-						} catch (error) {
-							let debbugStory = {
-								title: "Ошибка.",
-								body: "После сохранения что-то пошло не так.",
-								type: "Error",
-							};
-							this.$store.commit("debuggerState", debbugStory);
-						}
-					} else {
-						let debbugStory = {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
-					}
-				})
-				.catch((error) => {
-					let debbugStory = {
-						title: "Ошибка.",
-						body: "Данные почему-то не сохранились...",
-						type: "Error",
-					};
-					this.$store.commit("debuggerState", debbugStory);
-				});
-		},
 		/* _____________________________________________________*/
-		/* ?. Общие методы                                      */
+		/* Общие методы                                         */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Обновление значений id */
 		updateIdFromConnection(connectionName, idArray) {
@@ -3130,12 +2815,11 @@ export default {
 					}).new;
 				}
 			} catch (error) {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "Не удалось обновить id.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					body: error,
+					type: "error",
+				});
 			}
 		},
 		/* Очистка удалённых элементов */
@@ -3163,12 +2847,11 @@ export default {
 					});
 				}
 			} catch (error) {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "Не удалось очистить удалённые элементы.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					body: error,
+					type: "error",
+				});
 			}
 		},
 		clearFlagsFromConnection(connectionName) {
@@ -3179,16 +2862,13 @@ export default {
 					item.delete = false;
 				});
 			} catch (error) {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "Не удалось сбросить флаги.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					body: error,
+					type: "error",
+				});
 			}
 		},
-		/* Удаление элементов со статусом на удаление */
-		deleteValueFromArray(idArray) {},
 		/* Фильтрация массивов */
 		filterArray(column, type) {
 			// Объявляем объект Intl.Collator, который обеспечивает сравнение строк с учётом языка.
@@ -3395,16 +3075,19 @@ export default {
 					} else {
 						this.specialist.profile.data.id.body = "none";
 
-						let debbugStory = {
+						this.$store.commit("addDebugger", {
 							title: "Ошибка.",
 							body: response.data.message,
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
+							type: "error",
+						});
 					}
 				})
 				.catch((error) => {
-					console.log(error);
+					this.$store.commit("addDebugger", {
+						title: "Ошибка.",
+						body: error,
+						type: "error",
+					});
 				})
 				.finally(() => {
 					if (this.specialist.profile.data.id.body != "none") {
@@ -3471,12 +3154,11 @@ export default {
 		} else {
 			this.specialist.profile.data.id.body = null;
 
-			let debbugStory = {
+			this.$store.commit("addDebugger", {
 				title: "Ошибка.",
 				body: "Произошла непредвиденная ошибка.",
-				type: "Error",
-			};
-			this.$store.commit("debuggerState", debbugStory);
+				type: "error",
+			});
 		}
 	},
 };

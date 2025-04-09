@@ -62,24 +62,18 @@ export default {
 				},
 			})
 				.then((response) => {
-					console.log(response.data);
-
-					let debbugStory = {
+					this.$store.commit("addDebugger", {
 						title: "Успешно!",
 						body: "Расписание обновлено.",
-						type: "Completed",
-					};
-					this.$store.commit("debuggerState", debbugStory);
+						type: "completed",
+					});
 				})
 				.catch((error) => {
-					console.log(error);
-
-					let debbugStory = {
+					this.$store.commit("addDebugger", {
 						title: "Ошибка.",
-						body: "Не удалось обновить расписание.",
-						type: "Error",
-					};
-					this.$store.commit("debuggerState", debbugStory);
+						body: error,
+						type: "error",
+					});
 				})
 				.finally(() => {
 					this.disabled.schedule.save = false;
