@@ -63,7 +63,7 @@ export default {
 		this.loading.loader.about = false;
 
 		axios({
-			method: "post",
+			method: "get",
 			url: `${this.$store.getters.urlApi}` + `get-abouts-all`,
 		})
 			.then((response) => {

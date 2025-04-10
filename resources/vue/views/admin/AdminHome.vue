@@ -1196,7 +1196,7 @@ export default {
 	mounted() {
 		// Получение массива слайдов с сервера
 		axios({
-			method: "post",
+			method: "get",
 			url: `${this.$store.getters.urlApi}` + `get-slides-all`,
 		})
 			.then((response) => {
@@ -1222,7 +1222,7 @@ export default {
 
 		// Получение массива данных о футере с сервера
 		axios({
-			method: "post",
+			method: "get",
 			url: `${this.$store.getters.urlApi}` + `get-footer`,
 		})
 			.then((response) => {

@@ -62,7 +62,7 @@ export default {
 	mounted() {
 		// Получение массива слайдов с сервера
 		axios({
-			method: "post",
+			method: "get",
 			url: `${this.$store.getters.urlApi}` + `get-slides-not-hide`,
 		})
 			.then((response) => {

@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use App\Models\Rights;
 use App\Models\Status;
+use App\Models\Tracking;
+use Carbon\Carbon;
 use Illuminate\Validation\Rule;
 
 class CreatorController extends Controller
@@ -360,10 +362,21 @@ class CreatorController extends Controller
    /* |                    СТАТИСТИКА                     |*/
    /* |___________________________________________________|*/
    public function getTrackingStatistics(Request $request) {
+      $statistics = Tracking::all();
+
+      foreach ($statistics as $key => $statistic) {
+         $date = Carbon::parse($statistic->created_at);
+
+         // Форматируем дату в нужный формат
+         $dateShort = $date->format('d.m.Y H:i:s');
+
+         $statistic->created = $dateShort;
+      };
+      
       return response()->json([
          "status" => true,
          "message" => "Данные успешно получены.",
-         "data" => null,
+         "data" => $statistics,
       ]);
    }
 }

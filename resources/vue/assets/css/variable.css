@@ -3,3 +3,9 @@
 @import url("./roots/defualt.css");
 
 /* Модули */
+@import url("./roots/modules/pagination.css");
+@import url("./roots/modules/modal.css");
+
+/* Элементы */
+@import url("./roots/elements/buttons.css");
+@import url("./roots/elements/table.css");

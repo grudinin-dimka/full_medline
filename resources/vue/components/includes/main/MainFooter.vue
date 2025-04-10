@@ -5,7 +5,7 @@
 			<!-- Блок с платёжными системами -->
 			<div class="pay">
 				<a href="/">
-					<img src="../../../assets/svg/logo.svg" width="250" height="150" alt="логотип"/>
+					<img src="../../../assets/svg/logo.svg" width="250" height="150" alt="логотип" />
 				</a>
 				<p>Мы принимаем к оплате</p>
 				<div class="pay-cards">
@@ -150,7 +150,7 @@ export default {
 	},
 	mounted() {
 		axios({
-			method: "post",
+			method: "get",
 			url: `${this.$store.getters.urlApi}` + `get-footer`,
 		})
 			.then((response) => {
@@ -159,21 +159,19 @@ export default {
 						this.footer[key] = response.data.data[key];
 					}
 				} else {
-					let debbugStory = {
+					this.$store.commit("addDebugger", {
 						title: "Ошибка.",
-						body: "Произошла ошибка при получении данных о футере.",
-						type: "Error",
-					};
-					this.$store.commit("debuggerState", debbugStory);
+						body: response.data.message,
+						type: "error",
+					});
 				}
 			})
 			.catch((error) => {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "Произошла ошибка при получении данных о футере.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					body: error,
+					type: "error",
+				});
 			})
 			.finally(() => {
 				this.loading.loader.footer = false;

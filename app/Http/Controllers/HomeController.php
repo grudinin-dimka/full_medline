@@ -39,9 +39,11 @@ use App\Models\ShedulesCurrentDay;
 use App\Models\PriceAddress;
 use App\Models\PriceCategory;
 use App\Models\PriceValue;
+use App\Models\Tracking;
 
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\Calculation\Financial\Securities\Price;
+use Throwable;
 
 class HomeController extends Controller
 {
@@ -52,8 +54,18 @@ class HomeController extends Controller
    /* 1. Отправка данных                                   */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
    public function requestTelegramBot(Request $request) {
+      // Получение данных
       $formData = $request->formData;
       $json = json_decode($formData, true);
+
+      // Создание трека
+      $request->merge([
+         'type' => 'form_request_telegram_bot',
+         'meta' => 'Заявка - ' . $json['title'],
+      ]);
+      $this->createTrack($request);
+
+      // Отправка сообщения
       $str =
          "Заявка: ". $json['title'] . "\n" . 
          "ФИО : " . $json['name'] . "\n" . 
@@ -1040,6 +1052,42 @@ class HomeController extends Controller
       $stringReplace = str_replace(" ", "-", $stringUnderCase);
    
       return $stringReplace;
+   }
+
+   /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+   /* |                    СТАТИСТИКА                     |*/
+   /* |___________________________________________________|*/
+   public function createTrack(Request $request) {
+      try {
+         // Поиск браузера
+         $browser = match (true) {
+            str_contains($request->userAgent(), 'Edge') => 'Edge',
+            str_contains($request->userAgent(), 'Opera') => 'Opera',
+            str_contains($request->userAgent(), 'Firefox') => 'Firefox',
+            str_contains($request->userAgent(), 'Chrome') => 'Chrome',
+            str_contains($request->userAgent(), 'Safari') => 'Safari',
+            default => 'Unknown',
+         };
+
+         $track = Tracking::create([
+            "type" => $request->type ?? "not defined",
+            "ip" => $request->ip() ?? "not defined",
+            "user_agent" => $browser ?? "not defined",
+            "meta" => $request->meta ?? "not defined",
+         ]);
+      } catch (Throwable $e) {
+         return response()->json([
+            "status" => false,
+            "message" => "Произошла ошибка при загрузке.",
+            "data" => null,
+         ]);         
+      };
+
+      return response()->json([
+         "status" => true,
+         "message" => "Данные успешно получены.",
+         "data" => false,
+      ]);
    }
 };
 

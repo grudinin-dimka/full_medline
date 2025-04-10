@@ -1292,7 +1292,7 @@ export default {
 	},
 	mounted() {
 		axios({
-			method: "post",
+			method: "get",
 			headers: {
 				Accept: "application/json",
 				Authorization: `Bearer ${localStorage.getItem("token")}`,

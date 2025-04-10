@@ -134,7 +134,7 @@ export default {
 		this.loading.loader.contacts = false;
 
 		axios({
-			method: "post",
+			method: "get",
 			url: `${this.$store.getters.urlApi}` + `get-contacts-clinics-all`,
 		})
 			.then((response) => {

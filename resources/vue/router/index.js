@@ -221,15 +221,20 @@ const router = createRouter({
 		{
 			path: "/:pathMatch(.*)*",
 			name: "not-found",
+			meta: { title: "404" },
 			component: NotFound,
 		},
 	],
+
 	/* Отмотка страницы */
 	scrollBehavior(to, from, savedPosition) {
 		if (savedPosition) {
 			return savedPosition;
 		} else {
-			return { top: 0 };
+			return {
+				top: 0,
+				behavior: "smooth",
+			};
 		}
 	},
 });

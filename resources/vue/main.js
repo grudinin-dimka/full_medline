@@ -7,6 +7,8 @@ import App from "./App.vue";
 /* Роутера */
 import router from "./router/index.js";
 
+import axios from "axios";
+
 /* Маски полей */
 import VueTheMask from "vue-the-mask";
 

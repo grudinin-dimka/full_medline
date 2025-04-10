@@ -1026,7 +1026,7 @@ export default {
 	},
 	mounted() {
 		axios({
-			method: "post",
+			method: "get",
 			url: `${this.$store.getters.urlApi}` + `get-contacts-all`,
 		})
 			.then((response) => {
@@ -1051,7 +1051,7 @@ export default {
 			.catch((error) => {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: response.data.message,
+					body: error,
 					type: "error",
 				});
 			})

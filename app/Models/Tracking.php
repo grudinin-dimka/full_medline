@@ -10,6 +10,8 @@ class Tracking extends Model
     use HasFactory;
 
     protected $table = 'trackings';
+
     protected $guarded = ['id'];
+    
     protected $hidden = ['created_at', 'updated_at']; 
 }

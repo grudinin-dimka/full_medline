@@ -176,7 +176,7 @@ export default {
 	mounted() {
 		// Получение массива докторов с сервера
 		axios({
-			method: "post",
+			method: "get",
 			url: `${this.$store.getters.urlApi}` + `get-specialists`,
 		})
 			.then((response) => {

@@ -18,6 +18,8 @@ import MainHeader from "../components/includes/main/MainHeader.vue";
 import MainNav from "../components/includes/main/MainNav.vue";
 import MainFooter from "../components/includes/main/MainFooter.vue";
 
+import axios from "axios";
+
 export default {
 	data() {
 		return {
@@ -32,6 +34,26 @@ export default {
 		MainHeader,
 		MainNav,
 		MainFooter,
+	},
+	created() {
+		axios({
+			method: "post",
+			url: `${this.$store.getters.urlApi}` + `create-track`,
+			headers: {
+				Accept: "application/json",
+				Authorization: `Bearer ${localStorage.getItem("token")}`,
+			},
+			data: {
+				type: "page_load",
+				meta: "Главная страница",
+			},
+		}).catch((error) => {
+			this.$store.commit("addDebugger", {
+				title: "Ошибка.",
+				body: error,
+				type: "error",
+			});
+		});
 	},
 };
 </script>

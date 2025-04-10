@@ -110,7 +110,7 @@ export default {
 	},
 	mounted() {
 		axios({
-			method: "post",
+			method: "get",
 			url: `${this.$store.getters.urlApi}` + `get-prices-choice`,
 		})
 			.then((response) => {

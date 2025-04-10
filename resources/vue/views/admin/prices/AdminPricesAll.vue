@@ -214,6 +214,7 @@ export default {
 		loaderChildAfterLeave() {
 			this.loading.sections.prices = true;
 		},
+		
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                 Модальное окно                    |*/
 		/* |___________________________________________________|*/
@@ -487,7 +488,7 @@ export default {
 	},
 	mounted() {
 		axios({
-			method: "post",
+			method: "get",
 			headers: {
 				Accept: "application/json",
 				Authorization: `Bearer ${localStorage.getItem("token")}`,

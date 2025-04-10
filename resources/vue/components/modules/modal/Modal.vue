@@ -55,8 +55,6 @@
 </template>
 
 <script>
-import modals from "../../../store/modals";
-
 export default {
 	emits: ["enter"],
 	props: {
@@ -86,22 +84,12 @@ export default {
 		};
 	},
 	methods: {
-		/* STOP: делал работу на кнопку */
 		open() {
 			this.isOpen = true;
-			this.$store.commit("registerModal", this);
 		},
 		close() {
 			this.isOpen = false;
-			this.$store.commit("unregisterModal", this);
 		},
-	},
-	mounted() {
-		document.addEventListener("keydown", (e) => {
-			if (e.key === "Escape") {
-				this.$store.commit("closeTopmost");
-			}
-		});
 	},
 };
 </script>

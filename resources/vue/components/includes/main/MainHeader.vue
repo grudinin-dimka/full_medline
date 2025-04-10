@@ -614,30 +614,27 @@ export default {
 			})
 				.then((response) => {
 					if (response.data.status) {
-						let debbugStory = {
+						this.$store.commit("addDebugger", {
 							title: "Успешно!",
-							body: "Заявка отправлена.",
-							type: "Completed",
-						};
-						this.$store.commit("debuggerState", debbugStory);
+							body: response.data.message,
+							type: "completed",
+						});
 
 						this.closeModal();
 					} else {
-						let debbugStory = {
+						this.$store.commit("addDebugger", {
 							title: "Ошибка.",
 							body: response.data.message,
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
+							type: "error",
+						});
 					}
 				})
 				.catch((error) => {
-					let debbugStory = {
+					this.$store.commit("addDebugger", {
 						title: "Ошибка.",
-						body: "Не удалось запросить данные у сервера.",
-						type: "Error",
-					};
-					this.$store.commit("debuggerState", debbugStory);
+						body: error,
+						type: "error",
+					});
 				})
 				.finally(() => {
 					this.disabled.modalForm.request = false;

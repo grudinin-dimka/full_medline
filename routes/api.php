@@ -24,47 +24,48 @@ Route::post('/login', [LoginController::class, 'loginUser']);
 /* Главная                                              */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 /* 1. Слайдер                                           */
-Route::post('/get-slides-all', [HomeController::class, 'getSlidesAll']);
+Route::get('/get-slides-all', [HomeController::class, 'getSlidesAll']);
 /* 2. Слайдер (без статуса скрытия)                     */
-Route::post('/get-slides-not-hide', [HomeController::class, 'getSlidesNotHide']);
+Route::get('/get-slides-not-hide', [HomeController::class, 'getSlidesNotHide']);
 /* 3. Футер                                             */
-Route::post('/get-footer', [HomeController::class, 'getFooter']);
+Route::get('/get-footer', [HomeController::class, 'getFooter']);
 /* _____________________________________________________*/
 /* О нас                                                */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-Route::post('/get-abouts-all', [HomeController::class, 'getAboutsAll']);
+Route::get('/get-abouts-all', [HomeController::class, 'getAboutsAll']);
 /* _____________________________________________________*/
 /* Специалисты                                          */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 /* 1. Врачи                                             */
-Route::post('/get-specialists', [HomeController::class, 'getSpecialists']);
+Route::get('/get-specialists', [HomeController::class, 'getSpecialists']);
 Route::post('/get-specialist-profile', [HomeController::class, 'getSpecialistProfile']);
 Route::post('/get-specialist-all', [HomeController::class, 'getSpecialistAll']);
 Route::post('/get-specialist-sections', [HomeController::class, 'getSpecialistSections']);
-Route::post('/get-specialists-short', [HomeController::class, 'getSpecialistsShort']);
+Route::get('/get-specialists-short', [HomeController::class, 'getSpecialistsShort']);
 /* 2. Специализации                                     */
-Route::post('/get-specializations-all', [HomeController::class, 'getSpecializationsAll']);
+Route::get('/get-specializations-all', [HomeController::class, 'getSpecializationsAll']);
 /* 3. Клиники                                           */
-Route::post('/get-clinics-all', [HomeController::class, 'getClinicsAll']);
+Route::get('/get-clinics-all', [HomeController::class, 'getClinicsAll']);
 /* _____________________________________________________*/
 /* Цены                                                 */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-Route::post('/get-prices-choice', [HomeController::class, 'getPricesChoice']);
-Route::post('/get-prices-template', [HomeController::class, 'getPricesTemplate']);
-Route::post('/get-prices-all', [HomeController::class, 'getPricesAll']);
-/* _____________________________________________________*/
-/* Путевки                                              */
-/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+Route::get('/get-prices-choice', [HomeController::class, 'getPricesChoice']);
 Route::post('/get-prices-group', [HomeController::class, 'getPricesGruop']);
+Route::post('/get-prices-template', [HomeController::class, 'getPricesTemplate']);
+Route::get('/get-prices-all', [HomeController::class, 'getPricesAll']);
 /* _____________________________________________________*/
 /* Контакты                                             */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-Route::post('/get-contacts-all', [HomeController::class, 'getContactsAll']);
-Route::post('/get-contacts-clinics-all', [HomeController::class, 'getContactsClinicsAll']);
+Route::get('/get-contacts-all', [HomeController::class, 'getContactsAll']);
+Route::get('/get-contacts-clinics-all', [HomeController::class, 'getContactsClinicsAll']);
 /* _____________________________________________________*/
 /* Расписание                                           */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-Route::post('/get-shedules-all', [HomeController::class, 'getShedulesAll']);
+Route::get('/get-shedules-all', [HomeController::class, 'getShedulesAll']);
+/* _____________________________________________________*/
+/* Запись нового события                                */
+/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+Route::post('/create-track', [HomeController::class, 'createTrack']);
 
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 /* |                   ПОЛЬЗОВАТЕЛЬ                    |*/
@@ -74,7 +75,7 @@ Route::middleware('auth:sanctum')->group(function () {
    Route::post('/check-user', [LoginController::class, 'checkUser']);
    Route::post('/logout', [LoginController::class, 'logoutUser']);
    Route::post('/upload-file', [AdminController::class, 'uploadFile']);
-   Route::post('/get-profile-info', [AdminController::class, 'getProfileInfo']);   
+   Route::get('/get-profile-info', [AdminController::class, 'getProfileInfo']);   
 });
 
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -104,7 +105,7 @@ Route::middleware(['auth:sanctum', 'admin-or-creator'])->group(function () {
    Route::post('/save-shedules-all', [AdminController::class, 'saveShedulesAll']);
 
    // Цены 
-   Route::post('/get-prices-files-all', [AdminController::class, 'getPricesFilesAll']);
+   Route::get('/get-prices-files-all', [AdminController::class, 'getPricesFilesAll']);
    Route::post('/save-prices-changes', [AdminController::class, 'savePricesChanges']);
 });
 
@@ -112,7 +113,8 @@ Route::middleware(['auth:sanctum', 'admin-or-creator'])->group(function () {
 /* |                    СОЗДАТЕЛЬ                      |*/
 /* |___________________________________________________|*/
 Route::middleware(['auth:sanctum', 'creator'])->group(function () {
-   Route::post('/get-users-all', [CreatorController::class, 'getUsersAll']);
+   Route::get('/get-users-all', [CreatorController::class, 'getUsersAll']);
+   Route::get('/get-tracking-statistics', [CreatorController::class, 'getTrackingStatistics']);
 
    Route::post('/save-user', [CreatorController::class, 'saveUser'])->middleware('auth:sanctum');
    Route::post('/create-user', [CreatorController::class, 'createUser'])->middleware('auth:sanctum');
@@ -120,6 +122,5 @@ Route::middleware(['auth:sanctum', 'creator'])->group(function () {
    Route::post('/set-user-password', [CreatorController::class, 'setUserPassword'])->middleware('auth:sanctum');
    Route::post('/set-user-status', [CreatorController::class, 'setUserStatus'])->middleware('auth:sanctum');
 });
-
 
 

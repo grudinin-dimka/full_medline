@@ -13,17 +13,10 @@ return new class extends Migration
     {
         Schema::create('trackings', function (Blueprint $table) {
             $table->id();
-            $table->string('type'); // 'page_visit', 'form_click' и т.д.
-            $table->string('ip')->nullable();
-            $table->string('url')->nullable();
-            $table->string('user_agent')->nullable();
-            $table->json('meta')->nullable(); // Доп. данные (например, ID формы)
-
-            $table->foreignId('user_id')->nullable()->constrained( 
-                table: 'users', 
-                column: 'id',
-             )->nullOnDelete();
-
+            $table->string('type')->default('none');
+            $table->string('ip')->index()->nullable()->default('none');
+            $table->string('user_agent')->nullable()->default('none');
+            $table->string('meta')->nullable()->default('none'); 
             $table->timestamps();
         });
     }
