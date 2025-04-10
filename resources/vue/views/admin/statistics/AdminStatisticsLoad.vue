@@ -117,8 +117,6 @@ export default {
 			},
 		})
 			.then((response) => {
-				console.log(response.data);
-
 				if (response.data.status) {
 					this.table.body = response.data.data;
 				} else {
