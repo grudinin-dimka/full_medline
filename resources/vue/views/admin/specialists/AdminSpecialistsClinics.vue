@@ -274,8 +274,6 @@ import ContainerInputOnce from "../../../components/ui/admin/containers/input/Co
 import ContainerInputTwo from "../../../components/ui/admin/containers/input/ContainerInputTwo.vue";
 import ContainerInputThree from "../../../components/ui/admin/containers/input/ContainerInputThree.vue";
 
-import AdminSpecialistsTable from "./AdminSpecialistsTable.vue";
-
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
 import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
@@ -354,7 +352,7 @@ export default {
 				},
 			},
 
-			/* Текущая клиника */
+			/* Форма */
 			currentClinic: {
 				errors: {
 					id: {

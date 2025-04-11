@@ -62,24 +62,16 @@
 		</template>
 
 		<template #body>
-			<div class="container-specializations" v-if="loading.table">
-				<admin-specialists-table
-					:array="getSpecializations"
-					@useFilter="filterSpecializations"
-					@touchEditArrValue="editSpecialization"
-					@touchRemoveArrValue="removeSpecialization"
-				/>
-
-				<pagination
-					v-if="specializations.length > paginationSpecializations.elements.range"
-					:arrayLength="specializations.length"
-					:settings="paginationSpecializations"
-					@changePage="changePageSpecializations"
-				/>
-			</div>
+			<BaseTable
+				v-if="loading.sections.specializations"
+				:table="table"
+				@create="console.log('create')"
+				@edite="editSpecialization"
+				@delete="removeSpecialization"
+			/>
 
 			<loader-child
-				:isLoading="loading.loader"
+				:isLoading="loading.loader.specializations"
 				:minHeight="200"
 				@loaderChildAfterLeave="loaderChildAfterLeave"
 			/>
@@ -95,7 +87,7 @@
 import AdminModal from "../../../components/includes/admin/AdminModal.vue";
 
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
-import Pagination from "../../../components/ui/admin/pagination/Pagination.vue";
+import BaseTable from "../../../components/modules/table/BaseTable.vue";
 
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 
@@ -104,8 +96,6 @@ import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockButtons from "../../../components/ui/admin/blocks/BlockButtons.vue";
 
 import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
-
-import AdminSpecialistsTable from "./AdminSpecialistsTable.vue";
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
@@ -123,12 +113,11 @@ export default {
 	components: {
 		AdminModal,
 		InfoBar,
-		Pagination,
+		BaseTable,
 		LoaderChild,
 
 		ElementInputLabel,
 		ContainerInputOnce,
-		AdminSpecialistsTable,
 
 		BlockOnce,
 		BlockButtons,
@@ -143,6 +132,7 @@ export default {
 	},
 	data() {
 		return {
+			/* Модальное окно */
 			modal: {
 				title: "",
 				status: false,
@@ -163,23 +153,22 @@ export default {
 				},
 			},
 			loading: {
-				loader: true,
-				table: false,
+				loader: {
+					specializations: true,
+				},
+				sections: {
+					specializations: false,
+				},
 			},
+
+			/* Кнопки */
 			disabled: {
 				specializations: {
 					save: false,
 				},
 			},
-			paginationSpecializations: {
-				pages: {
-					current: 1,
-					range: 5,
-				},
-				elements: {
-					range: 10,
-				},
-			},
+
+			/* Форма */
 			currentSpecialization: {
 				errors: {
 					id: {
@@ -210,17 +199,32 @@ export default {
 					},
 				},
 			},
-			specializations: [],
+
+			/* Таблица */
+			table: {
+				// Настройки
+				options: {
+					create: false,
+					delete: true,
+					update: true,
+					report: false,
+				},
+
+				// Колонки
+				head: [
+					{ name: "id", text: "ID", columnType: "id" },
+					{
+						name: "name",
+						text: "Название",
+						columnType: "default",
+						columnSize: "auto",
+					},
+				],
+
+				// Элементы
+				body: [],
+			},
 		};
-	},
-	computed: {
-		getSpecializations() {
-			return [...this.specializations].splice(
-				(this.paginationSpecializations.pages.current - 1) *
-					this.paginationSpecializations.elements.range,
-				this.paginationSpecializations.elements.range
-			);
-		},
 	},
 	methods: {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -228,28 +232,9 @@ export default {
 		/* |___________________________________________________|*/
 		/* После скрытия загрузчика */
 		loaderChildAfterLeave() {
-			this.loading.table = true;
+			this.loading.sections.specializations = true;
 		},
-		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                    ПАГИНАЦИЯ                      |*/
-		/* |___________________________________________________|*/
-		/* _____________________________________________________*/
-		/* 1. Основные действия                                 */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		/* Изменение текущей страницы */
-		changePageSpecializations(pageNumber) {
-			// Проверка на превышение количества страниц
-			if (
-				pageNumber >
-				Math.ceil(this.specializations.length / this.paginationSpecializations.elements.range)
-			) {
-				return;
-			} else if (pageNumber < 1) {
-				return;
-			}
 
-			this.paginationSpecializations.pages.current = pageNumber;
-		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                 Модальное окно                    |*/
 		/* |___________________________________________________|*/
@@ -364,43 +349,14 @@ export default {
 		/* |                 Специализации                     |*/
 		/* |___________________________________________________|*/
 		/* _____________________________________________________*/
-		/* 1. Фильтрация                                        */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		/* Фильтрация по столбцу */
-		filterSpecializations(column, type) {
-			switch (column) {
-				case "id":
-					if (type == "default") {
-						sorted.sortById("up", this.specializations);
-					}
-
-					if (type == "reverse") {
-						sorted.sortById("down", this.specializations);
-					}
-					break;
-				case "name":
-					if (type == "default") {
-						sorted.sortByName("up", this.specializations);
-					}
-
-					if (type == "reverse") {
-						sorted.sortByName("down", this.specializations);
-					}
-
-					break;
-				default:
-					break;
-			}
-		},
-		/* _____________________________________________________*/
-		/* 2. Основные действия                                 */
+		/* Основные действия                                    */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Открытие специализации для редактирования */
-		editSpecialization(selectedSpecialization) {
+		editSpecialization(specialization) {
 			this.clearModalData();
 
 			for (let key in this.currentSpecialization.data) {
-				this.currentSpecialization.data[key].body = selectedSpecialization[key];
+				this.currentSpecialization.data[key].body = specialization[key];
 			}
 
 			this.openModal("edit");
@@ -410,14 +366,14 @@ export default {
 			this.openModal("create");
 		},
 		/* _____________________________________________________*/
-		/* 3. Сохранение, обновление и удаление                 */
+		/* Сохранение, обновление и удаление                    */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Добавление специализации */
 		addSpecialization() {
 			if (this.checkModalInputsAll(["name"])) return;
 			try {
 				if (
-					this.specializations.some(
+					this.table.body.some(
 						(item) => item.name === this.currentSpecialization.data.name.body
 					)
 				) {
@@ -430,8 +386,8 @@ export default {
 					return;
 				}
 
-				this.specializations.push({
-					id: shared.getMaxId(this.specializations) + 1,
+				this.table.body.push({
+					id: shared.getMaxId(this.table.body) + 1,
 					name: this.currentSpecialization.data.name.body,
 					create: true,
 					delete: false,
@@ -447,26 +403,21 @@ export default {
 			}
 		},
 		/* Пометка на удаление */
-		removeSpecialization(id) {
-			let specializationToDelete = this.specializations.filter((item) => {
-				if (item.id === id) {
-					return item;
-				}
-			});
-
-			specializationToDelete[0].delete = !specializationToDelete[0].delete;
+		removeSpecialization(specialization) {
+			specialization.delete = !specialization.delete;
 		},
 		/* Обновление содержимого */
 		updateSpecialization() {
 			if (this.checkModalInputsAll(["name"])) return;
 			try {
-				let specializationToUpdate = this.specializations.filter((item) => {
+				let specializationToUpdate = this.table.body.find((item) => {
 					if (item.id === this.currentSpecialization.data.id.body) {
 						return item;
 					}
 				});
 
-				specializationToUpdate[0].name = this.currentSpecialization.data.name.body;
+				specializationToUpdate.name = this.currentSpecialization.data.name.body;
+				
 				this.closeModal();
 			} catch (error) {
 				this.$store.commit("addDebugger", {
@@ -488,14 +439,14 @@ export default {
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: {
-					specializations: this.specializations,
+					specializations: this.table.body,
 				},
 			})
 				.then((response) => {
 					if (response.data.status) {
-						shared.updateId(this.specializations, response.data.data);
-						shared.clearDeletes(this.specializations);
-						shared.clearFlags(this.specializations);
+						shared.updateId(this.table.body, response.data.data);
+						shared.clearDeletes(this.table.body);
+						shared.clearFlags(this.table.body);
 
 						this.$store.commit("addDebugger", {
 							title: "Успешно!",
@@ -532,11 +483,11 @@ export default {
 		})
 			.then((response) => {
 				if (response.data.status) {
-					this.specializations = response.data.data;
+					this.table.body = response.data.data;
 
-					for (let key in this.specializations) {
-						this.specializations[key].create = false;
-						this.specializations[key].delete = false;
+					for (let key in this.table.body) {
+						this.table.body[key].create = false;
+						this.table.body[key].delete = false;
 					}
 				} else {
 					this.$store.commit("addDebugger", {
@@ -554,9 +505,7 @@ export default {
 				});
 			})
 			.finally(() => {
-				sorted.sortByName("up", this.specializations);
-
-				this.loading.loader = false;
+				this.loading.loader.specializations = false;
 			});
 	},
 };
