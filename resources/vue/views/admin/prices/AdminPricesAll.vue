@@ -55,53 +55,19 @@
 		</template>
 
 		<template #body>
-			<div class="eprices" v-if="loading.sections.prices">
-				<div
-					class="item"
-					:class="{
-						create: price.create,
-						delete: price.delete,
-					}"
-					v-for="price in prices"
-					:key="price.id"
-					v-if="prices.length > 0"
-				>
-					<div class="info">
-						<div class="name">{{ price.filename }}</div>
-						<div class="date">{{ formatDate(price.created_at) }}</div>
-					</div>
-					<div class="buttons">
-						<template v-if="price.create">
-							<TableButtonDefault @click="downloadFile(price)">Скачать</TableButtonDefault>
-							<TableButtonDisabled> Удалить </TableButtonDisabled>
-						</template>
-						<template v-if="price.delete">
-							<TableButtonDisabled> Скачать </TableButtonDisabled>
-							<TableButtonDefault @click="updateDeleteElement(price)">
-								Вернуть
-							</TableButtonDefault>
-						</template>
-						<template v-if="!price.delete && !price.create">
-							<TableButtonDefault @click="downloadFile(price)">Скачать</TableButtonDefault>
-							<TableButtonRemove @click="updateDeleteElement(price)">
-								Удалить
-							</TableButtonRemove>
-						</template>
-					</div>
-				</div>
-
-				<Empty :minHeight="300" v-else />
-			</div>
+			<BaseTable
+				v-if="loading.sections.prices"
+				:table="table"
+				@create="openModal('create', 'modal')"
+				@edite="downloadFile"
+				@delete="removePriceFile"
+			/>
 
 			<LoaderChild
 				:isLoading="loading.loader.prices"
 				:minHeight="300"
 				@loaderChildAfterLeave="loaderChildAfterLeave"
 			></LoaderChild>
-		</template>
-
-		<template #buttons>
-			<ButtonDefault @click="openModal('create', 'modal')"> Добавить </ButtonDefault>
 		</template>
 	</block-once>
 </template>
@@ -110,6 +76,7 @@
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import AdminModal from "../../../components/includes/admin/AdminModal.vue";
 import Empty from "../../../components/modules/Empty.vue";
+import BaseTable from "../../../components/modules/table/BaseTable.vue";
 
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTitle from "../../../components/ui/admin/blocks/BlockTitle.vue";
@@ -137,12 +104,17 @@ export default {
 		LoaderChild,
 		AdminModal,
 		Empty,
+		BaseTable,
+
 		BlockOnce,
 		BlockTitle,
+
 		InfoBar,
+
 		TableButtonDefault,
 		TableButtonRemove,
 		TableButtonDisabled,
+
 		ContainerInputOnce,
 		BlockButtons,
 		ButtonClaim,
@@ -155,6 +127,7 @@ export default {
 	},
 	data() {
 		return {
+			/* Модальное окно */
 			modal: {
 				title: "",
 				status: false,
@@ -174,12 +147,16 @@ export default {
 					footer: true,
 				},
 			},
+
+			/* Кнопки */
 			disabled: {
 				prices: {
 					save: false,
 					create: false,
 				},
 			},
+
+			/* Загрузчик */
 			loading: {
 				loader: {
 					prices: true,
@@ -188,6 +165,8 @@ export default {
 					prices: false,
 				},
 			},
+
+			/* Форма */
 			currentPrice: {
 				errors: {
 					file: {
@@ -202,7 +181,38 @@ export default {
 					},
 				},
 			},
-			radioPrice: null,
+
+			/* Таблица */
+			table: {
+				// Настройки
+				options: {
+					create: true,
+					delete: true,
+					update: true,
+					report: false,
+				},
+
+				// Колонки
+				head: [
+					{ name: "id", text: "ID", columnType: "id" },
+					{
+						name: "filename",
+						text: "Файл",
+						columnType: "default",
+						columnSize: "auto",
+					},
+					{
+						name: "date",
+						text: "Дата загрузки",
+						columnType: "default",
+						columnSize: "auto",
+					},
+				],
+
+				// Элементы
+				body: [],
+			},
+
 			prices: [],
 		};
 	},
@@ -214,7 +224,7 @@ export default {
 		loaderChildAfterLeave() {
 			this.loading.sections.prices = true;
 		},
-		
+
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                 Модальное окно                    |*/
 		/* |___________________________________________________|*/
@@ -331,9 +341,8 @@ export default {
 
 		/* Изменение статуса */
 		updateStatus(price) {
-			this.prices.forEach((item) => {
+			this.table.body.forEach((item) => {
 				if (item.id === price.id) {
-					this.radioPrice = price.id;
 					item.status = true;
 					item.delete = false;
 				} else {
@@ -343,10 +352,8 @@ export default {
 		},
 
 		/* Пометка на удаление */
-		updateDeleteElement(price) {
-			let currentPrice = this.prices.find((item) => item.id === price.id);
-
-			currentPrice.delete = !currentPrice.delete;
+		removePriceFile(price) {
+			price.delete = !price.delete;
 		},
 
 		/* Форматирование даты */
@@ -388,11 +395,18 @@ export default {
 				.then((response) => {
 					if (response.data.status) {
 						try {
-							this.prices.push({
-								id: shared.getMaxId(this.prices) + 1,
+							this.table.body.push({
+								id: shared.getMaxId(this.table.body) + 1,
 								filename: response.data.data.replace("/storage/prices/", ""),
 								path: response.data.data,
-								created_at: new Date(),
+								date: new Date().toLocaleDateString("ru", {
+									year: "numeric",
+									month: "numeric",
+									day: "numeric",
+									hour: "numeric",
+									minute: "numeric",
+									second: "numeric",
+								}),
 								delete: false,
 								create: true,
 							});
@@ -426,7 +440,7 @@ export default {
 		},
 		savePricesFiles() {
 			let formData = new FormData();
-			formData.append("pricesFiles", JSON.stringify(this.prices));
+			formData.append("pricesFiles", JSON.stringify(this.table.body));
 
 			this.disabled.prices.save = true;
 
@@ -442,10 +456,10 @@ export default {
 				.then((response) => {
 					if (response.data.status) {
 						try {
-							shared.updateId(this.prices, response.data.data);
-							shared.clearDeletes(this.prices);
-							shared.clearFlags(this.prices);
-							shared.updateOrders(this.prices);
+							shared.updateId(this.table.body, response.data.data);
+							shared.clearDeletes(this.table.body);
+							shared.clearFlags(this.table.body);
+							shared.updateOrders(this.table.body);
 
 							this.$store.commit("addDebugger", {
 								title: "Успешно!",
@@ -461,10 +475,10 @@ export default {
 						}
 					} else {
 						if (response.data.data) {
-							shared.updateId(this.prices, response.data.data);
-							shared.clearDeletes(this.prices);
-							shared.clearFlags(this.prices);
-							shared.updateOrders(this.prices);
+							shared.updateId(this.table.body, response.data.data);
+							shared.clearDeletes(this.table.body);
+							shared.clearFlags(this.table.body);
+							shared.updateOrders(this.table.body);
 						}
 
 						this.$store.commit("addDebugger", {
@@ -497,12 +511,9 @@ export default {
 		})
 			.then((response) => {
 				if (response.data.status) {
-					this.prices = response.data.data;
+					this.table.body = response.data.data;
 
-					// Проверка на существование файлов
-					if (this.prices.length === 0) return;
-
-					this.prices.forEach((item) => {
+					this.table.body.forEach((item) => {
 						item.create = false;
 						item.delete = false;
 					});

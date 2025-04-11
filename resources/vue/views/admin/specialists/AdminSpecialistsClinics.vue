@@ -238,7 +238,7 @@
 			<BaseTable
 				v-if="loading.sections.clinics"
 				:table="table"
-				@create="console.log('create')"
+				@create="createClinic"
 				@edite="editClinic"
 				@delete="removeClinic"
 			/>
@@ -248,10 +248,6 @@
 				:minHeight="200"
 				@loaderChildAfterLeave="loaderChildAfterLeave"
 			/>
-		</template>
-
-		<template #buttons>
-			<button-default @click="createClinic"> Добавить </button-default>
 		</template>
 	</block-once>
 </template>
@@ -352,7 +348,7 @@ export default {
 				},
 			},
 
-			/* Форма */
+			/* Текущая клиника */
 			currentClinic: {
 				errors: {
 					id: {
@@ -452,7 +448,7 @@ export default {
 			table: {
 				// Настройки
 				options: {
-					create: false,
+					create: true,
 					delete: true,
 					update: true,
 					report: false,

@@ -171,10 +171,10 @@
 				>
 					<!-- Поля -->
 					<td v-for="(value, key) in removeIdTableBody(row)">
-						<div>
+						<div :style="{ justifyContent: justifyOfField(key) }">
 							<!-- По умолчанию -->
 							<template v-if="typeOfField(key) == 'default' || typeOfField(key) == 'time'">
-								{{ value }}
+								{{ value === "" ? "-" : value }}
 							</template>
 
 							<!-- Список -->
@@ -238,7 +238,10 @@
 							<BaseTableButton
 								:wide="true"
 								:look="'delete'"
-								v-if="table.options.delete && !table.body.find((item) => item.id == row.id).delete"
+								v-if="
+									table.options.delete &&
+									!table.body.find((item) => item.id == row.id).delete
+								"
 								@click="
 									$emit(
 										'delete',
@@ -560,6 +563,7 @@ export default {
 				this.sorting.sortType = "desc";
 			}
 		},
+
 		/* Тип поля */
 		typeOfField(name) {
 			for (let i = 0; i < this.table.head.length; i++) {
@@ -568,6 +572,16 @@ export default {
 				}
 			}
 		},
+
+		/* Тип поля */
+		justifyOfField(name) {
+			for (let i = 0; i < this.table.head.length; i++) {
+				if (this.table.head[i].name == name) {
+					return this.table.head[i].columnJustify ?? "flex-start";
+				}
+			}
+		},
+
 		/* Переключение страниц */
 		changePage(page) {
 			if (page > Math.ceil(this.table.body.length / this.settings.elements.range)) {
@@ -839,8 +853,6 @@ th {
 	border-color: rgb(200, 200, 200);
 
 	height: 100%;
-
-	text-align: start;
 }
 
 th > div,

@@ -54,7 +54,7 @@
 	</info-bar>
 
 	<block-once :minHeight="100">
-		<template #title>Специализации</template>
+		<template #title>СПЕЦИАЛИЗАЦИИ</template>
 
 		<template #options>
 			<icon-load :width="28" :height="28" v-if="disabled.specializations.save" />
@@ -65,7 +65,7 @@
 			<BaseTable
 				v-if="loading.sections.specializations"
 				:table="table"
-				@create="console.log('create')"
+				@create="createSpecialization"
 				@edite="editSpecialization"
 				@delete="removeSpecialization"
 			/>
@@ -75,10 +75,6 @@
 				:minHeight="200"
 				@loaderChildAfterLeave="loaderChildAfterLeave"
 			/>
-		</template>
-
-		<template #buttons>
-			<button-default @click="createSpecialization"> Добавить </button-default>
 		</template>
 	</block-once>
 </template>
@@ -204,7 +200,7 @@ export default {
 			table: {
 				// Настройки
 				options: {
-					create: false,
+					create: true,
 					delete: true,
 					update: true,
 					report: false,

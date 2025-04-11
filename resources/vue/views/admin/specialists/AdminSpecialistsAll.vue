@@ -13,45 +13,37 @@
 		</template>
 
 		<template #body>
-			<div class="container-specialists" v-if="loading.table">
-				<admin-specialists-table
-					:specialists="getSpecialists"
-					@touchHideSpecialist="hideSpecialist"
-					@touchUseFilter="filterSpecialists"
-					@touchRemoveSpecialist="removeSpecialist"
-				/>
-
-				<pagination
-					v-if="specialists.length > paginationSpecialists.elements.range"
-					:arrayLength="specialists.length"
-					:settings="paginationSpecialists"
-					@changePage="changePageSpecialists"
-				/>
-			</div>
+			<BaseTable
+				v-if="loading.sections.specialists"
+				:table="table"
+				@create="$router.push('especialists/new')"
+				@edite="openSpecialist"
+				@delete="removeSpecialist"
+			>
+				<template v-slot:hideSpecialist="{ row }">
+					<div class="table__hide" v-if="row.hide" @click="hideSpecialist(row)">Да</div>
+					<div class="table__hide" v-else @click="hideSpecialist(row)">Нет</div>
+				</template>
+			</BaseTable>
 
 			<loader-child
-				:isLoading="loading.loader"
+				:isLoading="loading.loader.specialists"
 				:minHeight="300"
 				@loaderChildAfterLeave="loaderChildAfterLeave"
 			/>
-		</template>
-
-		<template #buttons>
-			<button-default @click="$router.push('especialists/new')"> Добавить </button-default>
 		</template>
 	</block-once>
 </template>
 
 <script>
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
-
+import BaseTable from "../../../components/modules/table/BaseTable.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import Pagination from "../../../components/ui/admin/pagination/Pagination.vue";
 
 import ElementInputLabel from "../../../components/ui/admin/elements/ElementInputLabel.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockButtons from "../../../components/ui/admin/blocks/BlockButtons.vue";
-import AdminSpecialistsTable from "./AdminSpecialistsAllTable.vue";
 import SpanError from "../../../components/ui/admin/SpanError.vue";
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
@@ -59,6 +51,8 @@ import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue"
 
 import IconSave from "../../../components/icons/IconSave.vue";
 import IconLoad from "../../../components/icons/IconLoad.vue";
+import IconHideTable from "../../../components/icons/IconHideTable.vue";
+import IconVisibleTable from "../../../components/icons/IconVisibleTable.vue";
 
 import axios from "axios";
 import sorted from "../../../services/sorted";
@@ -69,6 +63,7 @@ import { RouterView, RouterLink } from "vue-router";
 export default {
 	components: {
 		InfoBar,
+		BaseTable,
 		LoaderChild,
 		Pagination,
 		ElementInputLabel,
@@ -76,14 +71,14 @@ export default {
 		BlockOnce,
 		BlockButtons,
 
-		AdminSpecialistsTable,
-
 		SpanError,
 		ButtonDefault,
 		ButtonRemove,
 
 		IconSave,
 		IconLoad,
+		IconHideTable,
+		IconVisibleTable,
 
 		axios,
 		sorted,
@@ -94,15 +89,23 @@ export default {
 	},
 	data() {
 		return {
+			/* Загрузчик */
 			loading: {
-				loader: true,
-				table: false,
+				loader: {
+					specialists: true,
+				},
+				sections: {
+					specialists: false,
+				},
 			},
+
+			/* Кнопки */
 			disabled: {
 				specialists: {
 					save: false,
 				},
 			},
+
 			paginationSpecialists: {
 				pages: {
 					current: 1,
@@ -112,17 +115,45 @@ export default {
 					range: 10,
 				},
 			},
-			specialists: [],
+
+			/* Таблица */
+			table: {
+				// Настройки
+				options: {
+					create: true,
+					delete: true,
+					update: true,
+					report: false,
+				},
+
+				// Колонки
+				head: [
+					{ name: "id", text: "ID", columnType: "id" },
+					{
+						name: "name",
+						text: "Название",
+						columnType: "default",
+						columnSize: "auto",
+					},
+					{
+						name: "specializations",
+						text: "Специализации",
+						columnType: "default",
+						columnSize: "auto",
+					},
+					{
+						name: "hideSpecialist",
+						text: "Скрытие",
+						columnType: "hideSpecialist",
+						columnSize: "100px",
+						columnJustify: "center",
+					},
+				],
+
+				// Элементы
+				body: [],
+			},
 		};
-	},
-	computed: {
-		getSpecialists() {
-			return [...this.specialists].splice(
-				(this.paginationSpecialists.pages.current - 1) *
-					this.paginationSpecialists.elements.range,
-				this.paginationSpecialists.elements.range
-			);
-		},
 	},
 	methods: {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -130,101 +161,32 @@ export default {
 		/* |___________________________________________________|*/
 		/* После скрытия элементы */
 		loaderChildAfterLeave() {
-			this.loading.table = true;
+			this.loading.sections.specialists = true;
 		},
-		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                    ПАГИНАЦИЯ                      |*/
-		/* |___________________________________________________|*/
-		/* _____________________________________________________*/
-		/* 1. Основные действия                                 */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		/* Изменение текущей страницы */
-		changePageSpecialists(pageNumber) {
-			// Проверка на превышение количества страниц
-			if (
-				pageNumber >
-				Math.ceil(this.specialists.length / this.paginationSpecialists.elements.range)
-			) {
-				return;
-			} else if (pageNumber < 1) {
-				return;
-			}
 
-			this.paginationSpecialists.pages.current = pageNumber;
-		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                  Специалисты                      |*/
 		/* |___________________________________________________|*/
 		/* _____________________________________________________*/
-		/* 1. Фильтрация                                        */
+		/* Сохранение, обновление, удаление                     */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		filterSpecialists(column, type) {
-			// Объявляем объект Intl.Collator, который обеспечивает сравнение строк с учётом языка.
-			const collator = new Intl.Collator("ru");
-
-			switch (column) {
-				case "id":
-					if (type == "default") sorted.sortById("up", this.specialists);
-					if (type == "reverse") sorted.sortById("down", this.specialists);
-					break;
-				case "name":
-					if (type == "default") sorted.sortByName("up", this.specialists);
-					if (type == "reverse") sorted.sortByName("down", this.specialists);
-					break;
-				case "specialization":
-					if (type == "default") sorted.sortBySpecialization("up", this.specialists);
-					if (type == "reverse") sorted.sortBySpecialization("down", this.specialists);
-					break;
-				case "hide":
-					if (type == "default") sorted.sortByHide("up", this.specialists);
-					if (type == "reverse") sorted.sortByHide("down", this.specialists);
-					break;
-				default:
-					break;
-			}
+		openSpecialist(specialist) {
+			this.$router.push({ name: "especialist-profile", params: { id: specialist.id } });
 		},
-		/* _____________________________________________________*/
-		/* 2. Сохранение, обновление, удаление                  */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		// Скрытие выбранного доктора
-		hideSpecialist(selectedSpecialist) {
-			let specialistToHide = this.specialists.filter((specialist) => {
-				if (selectedSpecialist.id === specialist.id) {
-					return specialist;
-				}
-			});
 
-			specialistToHide[0].hide = !specialistToHide[0].hide;
+		/* Скрытие выбранного доктора */
+		hideSpecialist(specialist) {
+			specialist.hide = !specialist.hide;
 		},
-		// Удаление выбранного доктора
-		removeSpecialist(id) {
-			let specialistToDelete = this.specialists.filter((specialist) => {
-				if (specialist.id === id) {
-					return specialist;
-				}
-			});
 
-			specialistToDelete[0].delete = !specialistToDelete[0].delete;
+		/* Удаление выбранного доктора */
+		removeSpecialist(specialist) {
+			specialist.delete = !specialist.delete;
 		},
-		// Скрытие выбранного доктора
+
+		/* Сохранение изменений */
 		saveSpecialistChanges() {
 			this.disabled.specialists.save = true;
-
-			let newArray = [];
-
-			for (let key in this.specialists) {
-				newArray.push(Object.assign({}, this.specialists[key]));
-			}
-
-			newArray.sort((a, b) => {
-				if (a.id > b.id) {
-					return 1;
-				} else if (a.id < b.id) {
-					return -1;
-				} else {
-					return 0;
-				}
-			});
 
 			// Получение массива докторов с сервера
 			axios({
@@ -235,12 +197,12 @@ export default {
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: {
-					specialists: newArray,
+					specialists: this.table.body,
 				},
 			})
 				.then((response) => {
 					if (response.data.status) {
-						shared.clearDeletes(this.specialists);
+						shared.clearDeletes(this.table.body);
 
 						this.$store.commit("addDebugger", {
 							title: "Успешно!",
@@ -278,10 +240,10 @@ export default {
 		})
 			.then((response) => {
 				if (response.data.status) {
-					this.specialists = response.data.data;
+					this.table.body = response.data.data;
 
-					for (let key in this.specialists) {
-						this.specialists[key].delete = false;
+					for (let key in this.table.body) {
+						this.table.body[key].delete = false;
 					}
 				} else {
 					this.$store.commit("addDebugger", {
@@ -299,18 +261,18 @@ export default {
 				});
 			})
 			.finally(() => {
-				sorted.sortByName("up", this.specialists);
-
-				this.loading.loader = false;
+				this.loading.loader.specialists = false;
 			});
 	},
 };
 </script>
 
 <style scoped>
-.container-specialists {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
+.table__hide {
+	cursor: pointer;
+}
+
+.table__hide:hover {
+	color: var(--primary-color);
 }
 </style>
