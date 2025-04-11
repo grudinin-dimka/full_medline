@@ -1032,26 +1032,17 @@
 			<template #title>
 				СЕРТИФИКАТЫ
 				<span v-show="loading.sections.certificates">
-					({{ specialist.connections.certificates.length }})
+					({{ tableCertificates.body.length }})
 				</span>
 			</template>
 
-			<template #options>
-				<icon-save
-					:width="28"
-					:height="28"
-					@click="saveSpecialistModular('certificates')"
-					v-if="false"
-				/>
-			</template>
-
 			<template #body>
-				<admin-specialists-table
-					v-show="loading.sections.certificates"
-					:array="getSpecialistCertificates"
-					@useFilter="filterArray"
-					@touchEditArrValue="editArrayValue('edit', 'certificates', $event)"
-					@touchRemoveArrValue="updateDeleteValue('certificates', $event)"
+				<BaseTable
+					v-if="loading.sections.certificates"
+					:table="tableCertificates"
+					@create="editArrayValue('create', 'certificates', null)"
+					@edite="editArrayValue('edit', 'certificates', $event)"
+					@delete="setFlagDelete"
 				/>
 
 				<!-- Загрузчик профиля -->
@@ -1061,18 +1052,6 @@
 					@loaderChildAfterLeave="loaderChildAfterLeave"
 				/>
 			</template>
-
-			<template #buttons>
-				<button-disabled v-if="this.specialist.profile.data.id.body == null">
-					Добавить
-				</button-disabled>
-				<button-default
-					@click="editArrayValue('create', 'certificates', null)"
-					v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.body !== null"
-				>
-					Добавить
-				</button-default>
-			</template>
 		</block-once>
 		<!--____________________________________________________-->
 		<!--5. Образование                                      -->
@@ -1080,26 +1059,16 @@
 		<block-once :minHeight="100">
 			<template #title>
 				ОБРАЗОВАНИЕ
-				<span v-show="loading.sections.educations">
-					({{ specialist.connections.educations.length }})
-				</span>
-			</template>
-
-			<template #options>
-				<icon-save
-					:width="28"
-					:height="28"
-					@click="saveSpecialistModular('educations')"
-					v-if="false"
-				/>
+				<span v-show="loading.sections.educations"> ({{ tableEducations.body.length }}) </span>
 			</template>
 
 			<template #body>
-				<admin-specialists-table
-					v-show="loading.sections.educations"
-					:array="getSpecialistEducations"
-					@touchEditArrValue="editArrayValue('edit', 'educations', $event)"
-					@touchRemoveArrValue="updateDeleteValue('educations', $event)"
+				<BaseTable
+					v-if="loading.sections.educations"
+					:table="tableEducations"
+					@create="editArrayValue('create', 'educations', null)"
+					@edite="editArrayValue('edit', 'educations', $event)"
+					@delete="setFlagDelete"
 				/>
 
 				<!-- Загрузчик профиля -->
@@ -1129,26 +1098,16 @@
 		<block-once :minHeight="100">
 			<template #title>
 				МЕСТА РАБОТЫ
-				<span v-show="loading.sections.works">
-					({{ specialist.connections.works.length }})
-				</span>
-			</template>
-
-			<template #options>
-				<icon-save
-					:width="28"
-					:height="28"
-					@click="saveSpecialistModular('works')"
-					v-if="false"
-				/>
+				<span v-show="loading.sections.works"> ({{ tableWorks.body.length }}) </span>
 			</template>
 
 			<template #body>
-				<admin-specialists-table
-					v-show="loading.sections.works"
-					:array="getSpecialistWorks"
-					@touchEditArrValue="editArrayValue('edit', 'works', $event)"
-					@touchRemoveArrValue="updateDeleteValue('works', $event)"
+				<BaseTable
+					v-if="loading.sections.works"
+					:table="tableWorks"
+					@create="editArrayValue('create', 'works', null)"
+					@edite="editArrayValue('edit', 'works', $event)"
+					@delete="setFlagDelete"
 				/>
 
 				<!-- Загрузчик профиля -->
@@ -1176,7 +1135,7 @@
 
 <script>
 import AdminModal from "../../../components/includes/admin/AdminModal.vue";
-import AdminSpecialistsTable from "./AdminSpecialistsTable.vue";
+import BaseTable from "../../../components/modules/table/BaseTable.vue";
 
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import Selector from "../../../components/modules/Selector.vue";
@@ -1224,7 +1183,7 @@ import sorted from "../../../services/sorted";
 export default {
 	components: {
 		AdminModal,
-		AdminSpecialistsTable,
+		BaseTable,
 		InfoBar,
 		Selector,
 		LoaderChild,
@@ -1272,7 +1231,8 @@ export default {
 					create: false,
 				},
 			},
-			/* Модальные окна */
+
+			/* Модальное окно */
 			modalSpecializations: {
 				title: "",
 				status: false,
@@ -1292,6 +1252,7 @@ export default {
 					footer: true,
 				},
 			},
+
 			modalClinics: {
 				title: "",
 				status: false,
@@ -1311,6 +1272,7 @@ export default {
 					footer: true,
 				},
 			},
+
 			modalCertificates: {
 				title: "",
 				status: false,
@@ -1330,6 +1292,7 @@ export default {
 					footer: true,
 				},
 			},
+
 			currentCertificate: {
 				errors: {
 					id: {
@@ -1376,6 +1339,7 @@ export default {
 					},
 				},
 			},
+
 			modalEducations: {
 				title: "",
 				status: false,
@@ -1395,6 +1359,28 @@ export default {
 					footer: true,
 				},
 			},
+
+			modalWorks: {
+				title: "",
+				status: false,
+				type: null,
+				style: {
+					create: false,
+					delete: false,
+				},
+				modules: {
+					title: true,
+					buttons: {
+						hide: false,
+						close: true,
+					},
+					images: false,
+					body: true,
+					footer: true,
+				},
+			},
+
+			/* Форма */
 			currentEducation: {
 				errors: {
 					id: {
@@ -1457,25 +1443,7 @@ export default {
 					},
 				},
 			},
-			modalWorks: {
-				title: "",
-				status: false,
-				type: null,
-				style: {
-					create: false,
-					delete: false,
-				},
-				modules: {
-					title: true,
-					buttons: {
-						hide: false,
-						close: true,
-					},
-					images: false,
-					body: true,
-					footer: true,
-				},
-			},
+
 			currentWork: {
 				errors: {
 					id: {
@@ -1530,6 +1498,7 @@ export default {
 					},
 				},
 			},
+
 			/* Загрузчик */
 			loading: {
 				loader: {
@@ -1549,6 +1518,7 @@ export default {
 					works: false,
 				},
 			},
+
 			/* Пагинация */
 			paginationSpecializations: {
 				pages: {
@@ -1559,6 +1529,7 @@ export default {
 					range: 10,
 				},
 			},
+
 			paginationClinics: {
 				pages: {
 					current: 1,
@@ -1568,6 +1539,7 @@ export default {
 					range: 10,
 				},
 			},
+
 			/* Специалист */
 			specialist: {
 				// Основная информация
@@ -1718,11 +1690,116 @@ export default {
 					works: [],
 				},
 			},
+
+			/* Таблица */
+			tableCertificates: {
+				// Настройки
+				options: {
+					create: true,
+					delete: true,
+					update: true,
+					report: false,
+				},
+
+				// Колонки
+				head: [
+					{ name: "id", text: "ID", columnType: "id" },
+					{
+						name: "name",
+						text: "Название",
+						columnType: "default",
+						columnSize: "250px",
+					},
+					{
+						name: "organization",
+						text: "Организация",
+						columnType: "default",
+						columnSize: "auto",
+					},
+					{
+						name: "endEducation",
+						text: "Конец обучение",
+						columnType: "default",
+						columnSize: "250px",
+					},
+				],
+
+				// Элементы
+				body: [],
+			},
+
+			tableEducations: {
+				// Настройки
+				options: {
+					create: true,
+					delete: true,
+					update: true,
+					report: false,
+				},
+
+				// Колонки
+				head: [
+					{ name: "id", text: "ID", columnType: "id" },
+					{
+						name: "name",
+						text: "Название",
+						columnType: "default",
+						columnSize: "250px",
+					},
+					{
+						name: "organization",
+						text: "Организация",
+						columnType: "default",
+						columnSize: "auto",
+					},
+					{
+						name: "speсialization",
+						text: "Специализация",
+						columnType: "default",
+						columnSize: "250px",
+					},
+				],
+
+				// Элементы
+				body: [],
+			},
+
+			tableWorks: {
+				// Настройки
+				options: {
+					create: true,
+					delete: true,
+					update: true,
+					report: false,
+				},
+
+				// Колонки
+				head: [
+					{ name: "id", text: "ID", columnType: "id" },
+					{
+						name: "name",
+						text: "Название",
+						columnType: "default",
+						columnSize: "600px",
+					},
+					{
+						name: "organization",
+						text: "Организация",
+						columnType: "default",
+						columnSize: "auto",
+					},
+				],
+
+				// Элементы
+				body: [],
+			},
+
 			/* Секции */
 			sections: {
 				specializations: [],
 				clinics: [],
 			},
+
 			/* Чекбоксовые массивы */
 			cheked: {
 				counter: 0,
@@ -1736,9 +1813,7 @@ export default {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                     ПРОФИЛЬ                       |*/
 		/* |___________________________________________________|*/
-		/* _____________________________________________________*/
-		/* 1. Специализации                                     */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* Получение отсортированных специализаций */
 		sortedConnectionsSpecializations() {
 			let specializations = [...this.specialist.connections.specializations];
 
@@ -1762,12 +1837,12 @@ export default {
 				this.paginationSpecializations.elements.range
 			);
 		},
-		/* _____________________________________________________*/
-		/* 2. Клиники                                           */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+
+		/* Клиники */
 		getPagesClinicsTotal() {
 			return Math.ceil(this.sections.clinics.length / this.paginationClinics.elements.range);
 		},
+
 		getSortedClinics() {
 			let clinics = [...this.sections.clinics];
 
@@ -1777,36 +1852,6 @@ export default {
 				(this.paginationClinics.pages.current - 1) * this.paginationClinics.elements.range,
 				this.paginationClinics.elements.range
 			);
-		},
-		/* _____________________________________________________*/
-		/* 3. Сертификаты                                       */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		getSpecialistCertificates() {
-			let specialistCertificates = [...this.specialist.connections.certificates];
-
-			sorted.sortStringByKey("up", specialistCertificates, "name");
-
-			return specialistCertificates;
-		},
-		/* _____________________________________________________*/
-		/* 4. Обучения                                          */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		getSpecialistEducations() {
-			let specialistEducations = [...this.specialist.connections.educations];
-
-			sorted.sortStringByKey("up", specialistEducations, "name");
-
-			return specialistEducations;
-		},
-		/* _____________________________________________________*/
-		/* 5. Прошлые работы                                    */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		getSpecialistWorks() {
-			let specialistWorks = [...this.specialist.connections.works];
-
-			sorted.sortStringByKey("up", specialistWorks, "name");
-
-			return specialistWorks;
 		},
 	},
 	methods: {
@@ -1821,6 +1866,7 @@ export default {
 				}
 			}
 		},
+
 		/* Получить название сертификата */
 		getCertificateName(id) {
 			let certificate = this.sections.certificates.filter((item) => {
@@ -1830,6 +1876,7 @@ export default {
 			});
 			return certificate[0].name;
 		},
+
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                 Модальное окно                    |*/
 		/* |___________________________________________________|*/
@@ -2116,120 +2163,17 @@ export default {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                       ВРАЧ                        |*/
 		/* |___________________________________________________|*/
-		/* _____________________________________________________*/
-		/* 1. Профиль                                           */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Модульное сохранение данных */
 		async saveSpecialistModular(type) {
 			// Проверка на статус добавления специалиста
 			if (this.specialist.profile.data.id.body === "new") return;
 
 			switch (type) {
-				case "profile":
-					this.saveProfileChanges();
-					break;
-				case "specializations":
-					this.saveSpecializationsChanges();
-					break;
-				case "clinics":
-					this.saveClinicsChanges();
-					break;
-				case "certificates":
-					this.saveCertificateChanges();
-					break;
-				case "educations":
-					this.saveEducationChanges();
-					break;
-				case "works":
-					this.saveWorksChanges();
-					break;
 				case "all":
 					this.saveSpecialistAll();
 					break;
 				default:
 					break;
-			}
-		},
-		/* Сохранение данных профиля */
-		async saveProfileChanges() {
-			try {
-				if (
-					this.checkSpecialistInputsAll([
-						"link",
-						"family",
-						"name",
-						"category",
-						"adultDoctor",
-						"childrenDoctor",
-					])
-				)
-					return;
-
-				if (this.specialist.profile.data.childrenDoctor.body) {
-					if (this.checkSpecialistInputsAll(["childrenDoctorAge"])) return;
-				} else {
-					this.specialist.profile.errors.childrenDoctorAge.status = false;
-					this.specialist.profile.errors.childrenDoctorAge.body = "";
-				}
-
-				if (this.$refs.fileUpload.files[0]) {
-					if (this.checkSpecialistInputsAll(["file"])) return;
-				}
-
-				let formData = new FormData();
-				formData.append("type", "profile");
-				formData.append("image", this.$refs.fileUpload.files[0]);
-				formData.append("formats", ["png", "webp"]);
-				formData.append("profile", JSON.stringify(this.specialist.profile.data));
-
-				// Сохранение данных
-				axios({
-					method: "post",
-					url: `${this.$store.getters.urlApi}` + `save-specialist-modular`,
-					headers: {
-						Accept: "multipart/form-data",
-						Authorization: `Bearer ${localStorage.getItem("token")}`,
-					},
-					data: formData,
-				})
-					.then((response) => {
-						this.clearSpecialistProfileEdited();
-						this.$refs.fileUpload.value = "";
-
-						if (response.data.status) {
-							if (response.data.data) {
-								this.specialist.profile.data.path.body = response.data.data;
-								this.specialist.profile.data.filename.body = response.data.data.replace(
-									"/storage/specialists/",
-									""
-								);
-							}
-
-							let debbugStory = {
-								title: "Успешно!",
-								body: response.data.message,
-								type: "Completed",
-							};
-							this.$store.commit("debuggerState", debbugStory);
-						} else {
-							let debbugStory = {
-								title: "Ошибка.",
-								body: response.data.message,
-								type: "Error",
-							};
-							this.$store.commit("debuggerState", debbugStory);
-						}
-					})
-					.catch((error) => {
-						console.log(error);
-					});
-			} catch (error) {
-				let debbugStory = {
-					title: "Ошибка.",
-					body: "Не удалось сохранить данные",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
 			}
 		},
 
@@ -2383,9 +2327,9 @@ export default {
 				JSON.stringify(this.specialist.connections.specializations)
 			);
 			formData.append("clinics", JSON.stringify(this.specialist.connections.clinics));
-			formData.append("certificates", JSON.stringify(this.specialist.connections.certificates));
-			formData.append("educations", JSON.stringify(this.specialist.connections.educations));
-			formData.append("works", JSON.stringify(this.specialist.connections.works));
+			formData.append("certificates", JSON.stringify(this.tableCertificates.body));
+			formData.append("educations", JSON.stringify(this.tableEducations.body));
+			formData.append("works", JSON.stringify(this.tableWorks.body));
 
 			// Сохранение данных
 			axios({
@@ -2411,18 +2355,17 @@ export default {
 								response.data.data.imagePath.replace("/storage/specialists/", "");
 						}
 
-						let blocks = ["certificates", "educations", "works"];
+						shared.updateId(this.tableCertificates.body, response.data.data.certificates);
+						shared.clearDeletes(this.tableCertificates.body);
+						shared.clearFlags(this.tableCertificates.body);
 
-						blocks.forEach((block) => {
-							/* Обновление id в соответствии с изменениями */
-							this.updateIdFromConnection(block, response.data.data[block]);
+						shared.updateId(this.tableEducations.body, response.data.data.educations);
+						shared.clearDeletes(this.tableEducations.body);
+						shared.clearFlags(this.tableEducations.body);
 
-							/* Очистка удалённых элементов */
-							this.clearDeletesFromConnection(block);
-
-							/* Обновление флагов на удаление и сохранение */
-							this.clearFlagsFromConnection(block);
-						});
+						shared.updateId(this.tableWorks.body, response.data.data.works);
+						shared.clearDeletes(this.tableWorks.body);
+						shared.clearFlags(this.tableWorks.body);
 
 						this.$store.commit("addDebugger", {
 							title: "Успешно!",
@@ -2604,13 +2547,8 @@ export default {
 			)
 				return;
 			try {
-				// Поиск максимального id
-				let maxId = 0;
-				this.specialist.connections.certificates.forEach((item) => {
-					if (item.id > maxId) maxId = item.id;
-				});
-				this.specialist.connections.certificates.push({
-					id: maxId + 1,
+				this.tableCertificates.body.push({
+					id: shared.getMaxId(this.tableCertificates.body) + 1,
 					name: this.currentCertificate.data.name.body,
 					organization: this.currentCertificate.data.organization.body,
 					endEducation: this.currentCertificate.data.endEducation.body,
@@ -2633,13 +2571,11 @@ export default {
 			)
 				return;
 			try {
-				let сertificateToUpdate = this.specialist.connections.certificates.filter(
-					(сertificate) => {
-						if (сertificate.id === this.currentCertificate.data.id.body) {
-							return сertificate;
-						}
+				let сertificateToUpdate = this.tableCertificates.body.filter((сertificate) => {
+					if (сertificate.id === this.currentCertificate.data.id.body) {
+						return сertificate;
 					}
-				);
+				});
 				for (let key in this.currentCertificate.data) {
 					сertificateToUpdate[0][key] = this.currentCertificate.data[key].body;
 				}
@@ -2668,14 +2604,8 @@ export default {
 				return;
 
 			try {
-				// Поиск максимального id
-				let maxId = 0;
-				this.specialist.connections.educations.forEach((item) => {
-					if (item.id > maxId) maxId = item.id;
-				});
-
-				this.specialist.connections.educations.push({
-					id: maxId + 1,
+				this.tableEducations.body.push({
+					id: shared.getMaxId(this.tableEducations.body) + 1,
 					name: this.currentEducation.data.name.body,
 					organization: this.currentEducation.data.organization.body,
 					date: this.currentEducation.data.date.body,
@@ -2683,6 +2613,7 @@ export default {
 					create: true,
 					delete: false,
 				});
+
 				this.closeModal("modalEducations");
 			} catch (error) {
 				this.$store.commit("addDebugger", {
@@ -2705,15 +2636,16 @@ export default {
 				return;
 
 			try {
-				let educationToUpdate = this.specialist.connections.educations.filter((education) => {
+				let educationToUpdate = this.tableEducations.body.find((education) => {
 					if (education.id === this.currentEducation.data.id.body) {
 						return education;
 					}
 				});
 
 				for (let key in this.currentEducation.data) {
-					educationToUpdate[0][key] = this.currentEducation.data[key].body;
+					educationToUpdate[key] = this.currentEducation.data[key].body;
 				}
+
 				this.closeModal("modalEducations");
 			} catch (error) {
 				this.$store.commit("addDebugger", {
@@ -2739,14 +2671,8 @@ export default {
 				return;
 
 			try {
-				// Поиск максимального id
-				let maxId = 0;
-				this.specialist.connections.works.forEach((item) => {
-					if (item.id > maxId) maxId = item.id;
-				});
-
-				this.specialist.connections.works.push({
-					id: maxId + 1,
+				this.tableWorks.body.push({
+					id: shared.getMaxId(this.tableWorks.body) + 1,
 					name: this.currentWork.data.name.body,
 					organization: this.currentWork.data.organization.body,
 					startWork: this.currentWork.data.startWork.body,
@@ -2777,14 +2703,14 @@ export default {
 				return;
 
 			try {
-				let workToUpdate = this.specialist.connections.works.filter((work) => {
+				let workToUpdate = this.tableWorks.body.find((work) => {
 					if (work.id === this.currentWork.data.id.body) {
 						return work;
 					}
 				});
 
 				for (let key in this.currentWork.data) {
-					workToUpdate[0][key] = this.currentWork.data[key].body;
+					workToUpdate[key] = this.currentWork.data[key].body;
 				}
 
 				this.closeModal("modalWorks");
@@ -2796,130 +2722,15 @@ export default {
 				});
 			}
 		},
+
 		/* _____________________________________________________*/
 		/* Общие методы                                         */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		/* Обновление значений id */
-		updateIdFromConnection(connectionName, idArray) {
-			try {
-				let connectionCreate = this.specialist.connections[connectionName].filter((item) => {
-					if (item.create) return item;
-				});
-
-				// Изменение значений со старых id на новые из б.д.
-				for (let key in connectionCreate) {
-					connectionCreate[key].id = idArray.find((item) => {
-						if (item.old == connectionCreate[key].id) {
-							return item;
-						}
-					}).new;
-				}
-			} catch (error) {
-				this.$store.commit("addDebugger", {
-					title: "Ошибка.",
-					body: error,
-					type: "error",
-				});
-			}
+		/* Пометка на удаление */
+		setFlagDelete(value) {
+			value.delete = !value.delete;
 		},
-		/* Очистка удалённых элементов */
-		clearDeletesFromConnection(connectionName) {
-			try {
-				// Получения нового массива специалистов, помеченных на удаление
-				let res = this.specialist.connections[connectionName].filter((item) => {
-					if (item.delete == true) {
-						return Object.assign({}, item);
-					}
-				});
 
-				// Повторять, пока не будут удалены все элементы, помеченные на удаление
-				while (res.length > 0) {
-					/* Получение индекса элемента, помеченного на удаление из массива специалистов */
-					this.specialist.connections[connectionName].splice(
-						this.specialist.connections[connectionName].indexOf(res[0]),
-						1
-					);
-					/* Обновление списка с элементами, помеченными на удаление */
-					res = this.specialist.connections[connectionName].filter((item) => {
-						if (item.delete == true) {
-							return Object.assign({}, item);
-						}
-					});
-				}
-			} catch (error) {
-				this.$store.commit("addDebugger", {
-					title: "Ошибка.",
-					body: error,
-					type: "error",
-				});
-			}
-		},
-		clearFlagsFromConnection(connectionName) {
-			try {
-				// Сброс флагов добавления и удаления
-				this.specialist.connections[connectionName].forEach((item) => {
-					item.create = false;
-					item.delete = false;
-				});
-			} catch (error) {
-				this.$store.commit("addDebugger", {
-					title: "Ошибка.",
-					body: error,
-					type: "error",
-				});
-			}
-		},
-		/* Фильтрация массивов */
-		filterArray(column, type) {
-			// Объявляем объект Intl.Collator, который обеспечивает сравнение строк с учётом языка.
-			const collator = new Intl.Collator("ru");
-
-			switch (column) {
-				case "id":
-					if (type == "default") {
-						this.specialist.connections.certificates.sort((a, b) => {
-							if (a.id > b.id) {
-								return 1;
-							}
-							if (a.id < b.id) {
-								return -1;
-							}
-							// a должно быть равным b
-							return 0;
-						});
-					}
-
-					if (type == "reverse") {
-						this.specialist.connections.certificates.sort((a, b) => {
-							if (a.id < b.id) {
-								return 1;
-							}
-							if (a.id > b.id) {
-								return -1;
-							}
-							// a должно быть равным b
-							return 0;
-						});
-					}
-					break;
-				case "name":
-					if (type == "default") {
-						this.specialist.connections.certificates.sort((a, b) => {
-							return collator.compare(a.name, b.name);
-						});
-					}
-
-					if (type == "reverse") {
-						this.specialist.connections.certificates.reverse((a, b) => {
-							return collator.compare(a.name, b.name);
-						});
-					}
-
-					break;
-				default:
-					break;
-			}
-		},
 		/* Метод удаления значения из массива */
 		removeArrValue(arrayName, value) {
 			this.specialist.connections[arrayName] = this.specialist.connections[arrayName].filter(
@@ -2930,6 +2741,7 @@ export default {
 				}
 			);
 		},
+
 		/* Метод пометки статуса на удаление */
 		updateDeleteValue(arrayName, value) {
 			let filterValue = this.specialist.connections[arrayName].filter((item) => {
@@ -2940,6 +2752,7 @@ export default {
 
 			filterValue[0].delete = !filterValue[0].delete;
 		},
+
 		/* Метод открытия модального окна для обновления значений */
 		editArrayValue(type, arrayName, value) {
 			switch (arrayName) {
@@ -2950,16 +2763,14 @@ export default {
 					}
 					/* Редактирование */
 					if (type == "edit") {
-						let filterCertificate = this.specialist.connections.certificates.filter(
-							(item) => {
-								if (item.id == value.id) {
-									return item;
-								}
+						let filterCertificate = this.tableCertificates.body.find((item) => {
+							if (item.id == value.id) {
+								return item;
 							}
-						);
+						});
 
 						for (let key in this.currentCertificate.data) {
-							this.currentCertificate.data[key].body = filterCertificate[0][key];
+							this.currentCertificate.data[key].body = filterCertificate[key];
 						}
 
 						this.openModal(type, "modalCertificates", "currentCertificate");
@@ -2972,14 +2783,14 @@ export default {
 					}
 					/* Редактирование */
 					if (type == "edit") {
-						let filterEducation = this.specialist.connections.educations.filter((item) => {
+						let filterEducation = this.tableEducations.body.find((item) => {
 							if (item.id == value.id) {
 								return item;
 							}
 						});
 
 						for (let key in this.currentEducation.data) {
-							this.currentEducation.data[key].body = filterEducation[0][key];
+							this.currentEducation.data[key].body = filterEducation[key];
 						}
 
 						this.openModal(type, "modalEducations", "currentEducation");
@@ -2993,14 +2804,14 @@ export default {
 
 					/* Редактирование */
 					if (type == "edit") {
-						let filterWorks = this.specialist.connections.works.filter((item) => {
+						let filterWorks = this.tableWorks.body.find((item) => {
 							if (item.id == value.id) {
 								return item;
 							}
 						});
 
 						for (let key in this.currentWork.data) {
-							this.currentWork.data[key].body = filterWorks[0][key];
+							this.currentWork.data[key].body = filterWorks[key];
 						}
 
 						this.openModal(type, "modalWorks", "currentWork");
@@ -3034,7 +2845,24 @@ export default {
 							this.sections[key] = response.data.data.sections[key];
 						}
 
+						// Заполнение соединений и таблиц
 						for (let key in response.data.data.specialist.connections) {
+							if (key === "certificates") {
+								this.tableCertificates.body =
+									response.data.data.specialist.connections[key];
+								continue;
+							}
+
+							if (key === "educations") {
+								this.tableEducations.body = response.data.data.specialist.connections[key];
+								continue;
+							}
+
+							if (key === "works") {
+								this.tableWorks.body = response.data.data.specialist.connections[key];
+								continue;
+							}
+
 							this.specialist.connections[key] =
 								response.data.data.specialist.connections[key];
 						}
@@ -3051,15 +2879,17 @@ export default {
 						});
 
 						// Добавление полей delete, create
-						this.specialist.connections.certificates.forEach((item) => {
+						this.tableCertificates.body.forEach((item) => {
 							item.create = false;
 							item.delete = false;
 						});
-						this.specialist.connections.educations.forEach((item) => {
+
+						this.tableEducations.body.forEach((item) => {
 							item.create = false;
 							item.delete = false;
 						});
-						this.specialist.connections.works.forEach((item) => {
+
+						this.tableWorks.body.forEach((item) => {
 							item.create = false;
 							item.delete = false;
 						});
