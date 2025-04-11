@@ -23,4 +23,8 @@
 	--button-font-color-delete-hover: rgb(255, 255, 255);
 	--button-background-color-delete: rgb(212, 65, 65);
 	--button-background-color-delete-hover: rgb(229, 81, 81);
+
+	/* Disabled */
+	--button-background-color-disabled: rgb(150, 150, 150);
+	--button-background-color-disabled-hover: rgb(160, 160, 160);
 }

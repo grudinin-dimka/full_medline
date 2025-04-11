@@ -44,8 +44,8 @@ export default {
 				});
 				break;
 			case "down":
-				array.reverse((a, b) => {
-					return collator.compare(a, b);
+				array.sort((a, b) => {
+					return collator.compare(b, a);
 				});
 				break;
 		}

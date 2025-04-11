@@ -17,17 +17,6 @@ return new class extends Migration
             $table->text('name');
             $table->timestamps();
         });
-
-        // DB::table('mails')->insert(
-        //     [
-        //         "name" => "medline-address@mail.ru",
-        //     ]
-        // );
-        // DB::table('mails')->insert(
-        //     [
-        //         "name" => "medline-address@mail.ru",
-        //     ]
-        // );
     }
 
     /**

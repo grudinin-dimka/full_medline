@@ -17,17 +17,6 @@ return new class extends Migration
             $table->text('name');
             $table->timestamps();
         });
-
-        // DB::table('phones')->insert(
-        //     [
-        //         "name" => "+7(000)-000-00-00",
-        //     ]
-        // );
-        // DB::table('phones')->insert(
-        //     [
-        //         "name" => "+7(800)-555-35-35",
-        //     ]
-        // );
     }
 
     /**

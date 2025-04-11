@@ -12,32 +12,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        /* 2.1. Специализации специалистов                     */
-        /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-        // 1) id - уникальный идентификатор
-        // 2) id_specialist - ссылка на id специалиста
-        // 3) id_specialization - ссылка на id специализации
-        // 4) category - категория специализации
         Schema::create('specialist_specializations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_specialist')->references('id')->on('specialists')->onDelete('cascade');
             $table->foreignId('id_specialization')->references('id')->on('specializations')->onDelete('cascade');
             $table->timestamps();
         });
-
-        // DB::table('specialist_specializations')->insert(
-        //     [
-        //         "id_specialist" => 1,
-        //         "id_specialization" => 1,
-        //     ]
-        // );
-
-        // DB::table('specialist_specializations')->insert(
-        //     [
-        //         "id_specialist" => 1,
-        //         "id_specialization" => 2,
-        //     ]
-        // );
     }
 
     /**

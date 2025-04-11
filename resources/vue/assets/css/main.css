@@ -10,6 +10,8 @@
 * {
 	font-family: "Rubik", sans-serif;
 	-webkit-tap-highlight-color: transparent;
+
+	outline: var(--default-outline);
 }
 
 :root {

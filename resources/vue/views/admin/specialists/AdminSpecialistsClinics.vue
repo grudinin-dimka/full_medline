@@ -235,24 +235,16 @@
 		</template>
 
 		<template #body>
-			<div class="container-clinics" v-if="loading.table">
-				<admin-specialists-table
-					:array="getClinics"
-					@useFilter="filterClinics"
-					@touchEditArrValue="editClinic"
-					@touchRemoveArrValue="removeClinic"
-				/>
-
-				<pagination
-					v-if="clinics.length > paginationClinics.elements.range"
-					:arrayLength="clinics.length"
-					:settings="paginationClinics"
-					@changePage="changePageClinics"
-				/>
-			</div>
+			<BaseTable
+				v-if="loading.sections.clinics"
+				:table="table"
+				@create="console.log('create')"
+				@edite="editClinic"
+				@delete="removeClinic"
+			/>
 
 			<loader-child
-				:isLoading="loading.loader"
+				:isLoading="loading.loader.clinics"
 				:minHeight="200"
 				@loaderChildAfterLeave="loaderChildAfterLeave"
 			/>
@@ -268,7 +260,7 @@
 import AdminModal from "../../../components/includes/admin/AdminModal.vue";
 
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
-import Pagination from "../../../components/ui/admin/pagination/Pagination.vue";
+import BaseTable from "../../../components/modules/table/BaseTable.vue";
 
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 
@@ -293,33 +285,55 @@ import IconLoad from "../../../components/icons/IconLoad.vue";
 
 import axios from "axios";
 import shared from "../../../services/shared";
-import sorted from "../../../services/sorted";
 import validate from "../../../services/validate";
 
 export default {
 	components: {
 		AdminModal,
 		InfoBar,
-		Pagination,
+		BaseTable,
+
 		LoaderChild,
 		ElementInputLabel,
+
 		BlockOnce,
 		BlockTitle,
 		BlockButtons,
+
 		ContainerInput,
 		ContainerInputOnce,
 		ContainerInputTwo,
 		ContainerInputThree,
-		AdminSpecialistsTable,
+
 		ButtonDefault,
 		ButtonRemove,
 		ButtonClaim,
+
 		IconSave,
 		IconLoad,
+
 		axios,
 	},
 	data() {
 		return {
+			/* Загрузчик */
+			loading: {
+				loader: {
+					clinics: true,
+				},
+				sections: {
+					clinics: false,
+				},
+			},
+
+			/* Кнопки */
+			disabled: {
+				clinics: {
+					save: false,
+				},
+			},
+
+			/* Модальное окно */
 			modal: {
 				title: "",
 				status: false,
@@ -339,24 +353,8 @@ export default {
 					footer: true,
 				},
 			},
-			loading: {
-				loader: true,
-				table: false,
-			},
-			disabled: {
-				clinics: {
-					save: false,
-				},
-			},
-			paginationClinics: {
-				pages: {
-					current: 1,
-					range: 5,
-				},
-				elements: {
-					range: 10,
-				},
-			},
+
+			/* Текущая клиника */
 			currentClinic: {
 				errors: {
 					id: {
@@ -451,16 +449,50 @@ export default {
 					},
 				},
 			},
-			clinics: [],
+
+			/* Таблица */
+			table: {
+				// Настройки
+				options: {
+					create: false,
+					delete: true,
+					update: true,
+					report: false,
+				},
+
+				// Колонки
+				head: [
+					{ name: "id", text: "ID", columnType: "id" },
+					{
+						name: "name",
+						text: "Название",
+						columnType: "default",
+						columnSize: "auto",
+					},
+					{
+						name: "city",
+						text: "Город",
+						columnType: "default",
+						columnSize: "auto",
+					},
+					{
+						name: "street",
+						text: "Улица",
+						columnType: "default",
+						columnSize: "auto",
+					},
+					{
+						name: "home",
+						text: "Дом",
+						columnType: "default",
+						columnSize: "auto",
+					},
+				],
+
+				// Элементы
+				body: [],
+			},
 		};
-	},
-	computed: {
-		getClinics() {
-			return [...this.clinics].splice(
-				(this.paginationClinics.pages.current - 1) * this.paginationClinics.elements.range,
-				this.paginationClinics.elements.range
-			);
-		},
 	},
 	methods: {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -468,25 +500,9 @@ export default {
 		/* |___________________________________________________|*/
 		/* После скрытия элементы */
 		loaderChildAfterLeave() {
-			this.loading.table = true;
+			this.loading.sections.clinics = true;
 		},
-		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                    ПАГИНАЦИЯ                      |*/
-		/* |___________________________________________________|*/
-		/* _____________________________________________________*/
-		/* 1. Основные действия                                 */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		/* Изменение текущей страницы */
-		changePageClinics(pageNumber) {
-			// Проверка на превышение количества страниц
-			if (pageNumber > Math.ceil(this.clinics.length / this.paginationClinics.elements.range)) {
-				return;
-			} else if (pageNumber < 1) {
-				return;
-			}
 
-			this.paginationClinics.pages.current = pageNumber;
-		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                 Модальное окно                    |*/
 		/* |___________________________________________________|*/
@@ -617,42 +633,14 @@ export default {
 		/* |                    КЛИНИКИ                        |*/
 		/* |___________________________________________________|*/
 		/* _____________________________________________________*/
-		/* 1. Фильтрация                                        */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		filterClinics(column, type) {
-			switch (column) {
-				case "id":
-					if (type == "default") {
-						sorted.sortById("up", this.clinics);
-					}
-
-					if (type == "reverse") {
-						sorted.sortById("down", this.clinics);
-					}
-					break;
-				case "name":
-					if (type == "default") {
-						sorted.sortByName("up", this.clinics);
-					}
-
-					if (type == "reverse") {
-						sorted.sortByName("down", this.clinics);
-					}
-
-					break;
-				default:
-					break;
-			}
-		},
-		/* _____________________________________________________*/
-		/* 2. Основные действия                                 */
+		/* Основные действия                                    */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Открытие специализации для редактирования */
-		editClinic(selectedClinic) {
+		editClinic(clinic) {
 			this.clearModalData();
 
 			for (let key in this.currentClinic.data) {
-				this.currentClinic.data[key].body = selectedClinic[key];
+				this.currentClinic.data[key].body = clinic[key];
 			}
 
 			this.openModal("edit");
@@ -662,17 +650,11 @@ export default {
 			this.openModal("create");
 		},
 		/* _____________________________________________________*/
-		/* 3. Сохранение, обновление и удаление                 */
+		/* Сохранение, обновление и удаление                    */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Пометка на удаление */
-		removeClinic(id) {
-			let clinicToDelete = this.clinics.filter((clinic) => {
-				if (clinic.id === id) {
-					return clinic;
-				}
-			});
-
-			clinicToDelete[0].delete = !clinicToDelete[0].delete;
+		removeClinic(clinic) {
+			clinic.delete = !clinic.delete;
 		},
 		/* Обновление элемента */
 		updateClinic() {
@@ -690,14 +672,14 @@ export default {
 				return;
 
 			try {
-				let clinicToUpdate = this.clinics.filter((item) => {
+				let clinicToUpdate = this.table.body.find((item) => {
 					if (item.id === this.currentClinic.data.id.body) {
 						return item;
 					}
 				});
 
 				for (let key in this.currentClinic.data) {
-					clinicToUpdate[0][key] = this.currentClinic.data[key].body;
+					clinicToUpdate[key] = this.currentClinic.data[key].body;
 				}
 
 				this.closeModal();
@@ -725,8 +707,8 @@ export default {
 				return;
 
 			try {
-				this.clinics.push({
-					id: shared.getMaxId(this.clinics) + 1,
+				this.table.body.push({
+					id: shared.getMaxId(this.table.body) + 1,
 					name: this.currentClinic.data.name.body,
 					city: this.currentClinic.data.city.body,
 					street: this.currentClinic.data.street.body,
@@ -750,22 +732,6 @@ export default {
 
 		/* Сохранение изменений на сервере */
 		saveClinicsChanges() {
-			let newArray = [];
-
-			for (let key in this.clinics) {
-				newArray.push(Object.assign({}, this.clinics[key]));
-			}
-
-			newArray.sort((a, b) => {
-				if (a.id > b.id) {
-					return 1;
-				} else if (a.id < b.id) {
-					return -1;
-				} else {
-					return 0;
-				}
-			});
-
 			this.disabled.clinics.save = true;
 
 			axios({
@@ -776,15 +742,15 @@ export default {
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: {
-					clinics: newArray,
+					clinics: this.table.body,
 				},
 			})
 				.then((response) => {
 					if (response.data.status) {
 						try {
-							shared.updateId(this.clinics, response.data.data);
-							shared.clearDeletes(this.clinics);
-							shared.clearFlags(this.clinics);
+							shared.updateId(this.table.body, response.data.data);
+							shared.clearDeletes(this.table.body);
+							shared.clearFlags(this.table.body);
 
 							this.$store.commit("addDebugger", {
 								title: "Успешно!",
@@ -828,11 +794,11 @@ export default {
 		})
 			.then((response) => {
 				if (response.data.status) {
-					this.clinics = response.data.data;
+					this.table.body = response.data.data;
 
-					for (let key in this.clinics) {
-						this.clinics[key].create = false;
-						this.clinics[key].delete = false;
+					for (let key in this.table.body) {
+						this.table.body[key].create = false;
+						this.table.body[key].delete = false;
 					}
 				} else {
 					this.$store.commit("addDebugger", {
@@ -850,9 +816,7 @@ export default {
 				});
 			})
 			.finally(() => {
-				this.loading.loader = false;
-
-				sorted.sortByName("up", this.clinics);
+				this.loading.loader.clinics = false;
 			});
 	},
 };

@@ -19,21 +19,6 @@ return new class extends Migration
             $table->foreignId('clinicId')->nullable()->references('id')->on('clinics')->onDelete('cascade')->default(null);
             $table->timestamps();
         });
-
-        // DB::table('contacts')->insert(
-        //     [
-        //         "name" => "Колл-центр",
-        //         "order" => 1,
-        //         "clinicId" => 2,
-        //     ]
-        // );
-
-        // DB::table('contacts')->insert(
-        //     [
-        //         "name" => "На Комсомольской",
-        //         "order" => 2,
-        //     ]
-        // );
     }
 
     /**

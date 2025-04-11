@@ -12,13 +12,6 @@ return new class extends Migration
     */
    public function up(): void
    {
-      /* ____________________________________________________*/
-      /* 6. Сертификаты                                      */
-      /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-      // 1) id - уникальный идентификатор
-      // 2) organization - организация
-      // 3) date - дата получения
-      // 4) name - название
       Schema::create('certificates', function (Blueprint $table) {
          $table->id();
          $table->string('organization', 1000);
@@ -26,21 +19,6 @@ return new class extends Migration
          $table->string('name', 1000);
          $table->timestamps();
       });
-      
-      // DB::table('certificates')->insert(
-      //    [
-      //        "organization" => "Какой-то центр сертификации",
-      //        "endEducation" => date("Y-m-d"),
-      //        "name" => "Ультразвуковая дигностика",
-      //    ]
-      // );
-      // DB::table('certificates')->insert(
-      //    [
-      //        "organization" => "Какой-то центр сертификации",
-      //        "endEducation" => date("Y-m-d"),
-      //        "name" => "Узи брюшной полости",
-      //    ]
-      // );
    }
 
    /**

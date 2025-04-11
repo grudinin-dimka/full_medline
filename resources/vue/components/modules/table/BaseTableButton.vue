@@ -1,5 +1,5 @@
 <template>
-	<button class="table-button" :class="{ wide: wide, [look]: look }">
+	<button class="table-button" :class="{ wide: wide, [look]: look }" :disabled="look == 'disabled'">
 		<slot></slot>
 	</button>
 </template>
@@ -48,6 +48,15 @@ export default {
 
 .table-button.delete:hover {
 	background-color: var(--button-background-color-delete-hover);
+}
+
+.table-button.disabled {
+	cursor: not-allowed;
+	background-color: var(--button-background-color-disabled);
+}
+
+.table-button.disabled:hover {
+	background-color: var(--button-background-color-disabled-hover);
 }
 
 .wide {

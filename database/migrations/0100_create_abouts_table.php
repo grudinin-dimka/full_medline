@@ -12,14 +12,6 @@ return new class extends Migration
     */
    public function up(): void
    {
-      /* ____________________________________________________*/
-      /* Информационные блоки                                */
-      /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-      // 1) id - уникальный идентификатор
-      // 2) description - описание
-      // 3) imageOne - путь к первой картинке
-      // 4) imageTwo - путь ко второй картинке
-      // 5) imageThree - путь к третьей картинке
       Schema::create('abouts', function (Blueprint $table) {
          $table->id();
          $table->unsignedBigInteger('order');

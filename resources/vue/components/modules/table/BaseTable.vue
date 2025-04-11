@@ -18,7 +18,7 @@
 
 			<!-- Right side -->
 			<div class="table__header-right">
-				<TableButtonHead @click="filter = !filter">
+				<BaseTableButtonHead @click="filter = !filter">
 					<svg
 						data-v-0db40482=""
 						xmlns="http://www.w3.org/2000/svg"
@@ -33,9 +33,9 @@
 					</svg>
 					<span v-if="!filter">Вкл. фильтр полей</span>
 					<span v-else>Выкл. фильтр полей</span>
-				</TableButtonHead>
+				</BaseTableButtonHead>
 
-				<TableButtonHead v-if="table.options.create" @click="$emit('create')">
+				<BaseTableButtonHead v-if="table.options.create" @click="$emit('create')">
 					<svg
 						data-v-0db40482=""
 						xmlns="http://www.w3.org/2000/svg"
@@ -47,7 +47,7 @@
 						<path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"></path>
 					</svg>
 					<span>Добавить</span>
-				</TableButtonHead>
+				</BaseTableButtonHead>
 
 				<input v-model="searchInput" type="text" placeholder="Поиск" />
 			</div>
@@ -122,9 +122,9 @@
 								filterFields.find((field) => field.name === value.name).type == 'time'
 							"
 						>
-							<TableButton :wide="true" @click="openFilter(value.name)">
+							<BaseTableButton :wide="true" @click="openFilter(value.name)">
 								Диапазон
-							</TableButton>
+							</BaseTableButton>
 						</div>
 
 						<!-- Фильтр по списку || Фильтр по спискам -->
@@ -162,7 +162,13 @@
 
 			<!--  Тело таблицы  -->
 			<tbody v-if="displayTable.length !== 0">
-				<tr v-for="row in displayTable">
+				<tr
+					v-for="row in displayTable"
+					:class="{
+						create: table.body.find((item) => item.id == row.id).create,
+						delete: table.body.find((item) => item.id == row.id).delete,
+					}"
+				>
 					<!-- Поля -->
 					<td v-for="(value, key) in removeIdTableBody(row)">
 						<div>
@@ -187,7 +193,7 @@
 
 							<!-- Кнопка -->
 							<template v-else-if="typeOfField(key) == 'button'">
-								<TableButton
+								<BaseTableButton
 									:wide="true"
 									@click="
 										$emit(
@@ -200,7 +206,7 @@
 									<span>{{
 										table.head.find((field) => field.name == key).options.buttonName
 									}}</span>
-								</TableButton>
+								</BaseTableButton>
 							</template>
 
 							<!-- Кастомный слот -->
@@ -215,7 +221,7 @@
 					<!-- Действия -->
 					<td v-if="table.canModals || table.options.update">
 						<div class="table__buttons">
-							<TableButton
+							<BaseTableButton
 								:wide="true"
 								v-if="table.options.update"
 								@click="
@@ -227,12 +233,12 @@
 							>
 								<Icons name="edit" :width="'22px'" :height="'22px'" />
 								<span>Изменить</span>
-							</TableButton>
+							</BaseTableButton>
 
-							<TableButton
+							<BaseTableButton
 								:wide="true"
 								:look="'delete'"
-								v-if="table.options.delete"
+								v-if="table.options.delete && !table.body.find((item) => item.id == row.id).delete"
 								@click="
 									$emit(
 										'delete',
@@ -242,7 +248,21 @@
 							>
 								<Icons name="delete" />
 								<span>Удалить</span>
-							</TableButton>
+							</BaseTableButton>
+
+							<BaseTableButton
+								:wide="true"
+								v-else="table.options.delete"
+								@click="
+									$emit(
+										'delete',
+										this.table.body.find((item) => item.id == row.id)
+									)
+								"
+							>
+								<Icons name="delete" />
+								<span>Вернуть</span>
+							</BaseTableButton>
 						</div>
 					</td>
 				</tr>
@@ -269,8 +289,8 @@ import ModalTime from "../modal/filters/ModalTime.vue";
 
 import Pagination from "../Pagination.vue";
 
-import TableButton from "../../ui/admin/buttons/table/TableButton.vue";
-import TableButtonHead from "../../ui/admin/buttons/table/TableButtonHead.vue";
+import BaseTableButton from "./BaseTableButton.vue";
+import BaseTableButtonHead from "./BaseTableButtonHead.vue";
 import ButtonDefault from "../../ui/admin/buttons/ButtonDefault.vue";
 
 import sorted from "../../../services/sorted";
@@ -285,8 +305,8 @@ export default {
 
 		ButtonDefault,
 
-		TableButton,
-		TableButtonHead,
+		BaseTableButton,
+		BaseTableButtonHead,
 	},
 	props: {
 		table: {
@@ -868,6 +888,8 @@ tr:nth-child(odd) > td > div {
 
 	color: black;
 	font-size: 1rem;
+
+	transition: all 0.2s;
 }
 
 th div {
@@ -894,6 +916,14 @@ th div .icon {
 
 tr {
 	transition: 0.25s;
+}
+
+tr.create > td > div {
+	color: var(--create-color);
+}
+
+tr.delete > td > div {
+	color: var(--delete-color);
 }
 
 .table__buttons svg {

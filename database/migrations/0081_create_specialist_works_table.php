@@ -11,8 +11,6 @@ return new class extends Migration
     */
    public function up(): void
    {
-      /* 5.1. Образования, которые получил специалист        */
-      /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
       Schema::create('specialist_works', function (Blueprint $table) {
          $table->id();
          $table->foreignId('id_specialist')->references('id')->on('specialists')->onDelete('cascade');

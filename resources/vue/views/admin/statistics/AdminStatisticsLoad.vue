@@ -5,7 +5,6 @@
 			<BaseTable
 				v-if="loading.sections.statistics"
 				:table="table"
-				icon="devices"
 				@create="console.log('create')"
 				@edite="console.log('edite')"
 				@delete="console.log('delete')"
@@ -94,8 +93,6 @@ export default {
 				// Элементы
 				body: [],
 			},
-
-			statistics: [],
 		};
 	},
 	methods: {

@@ -12,11 +12,6 @@ return new class extends Migration
     */
    public function up(): void
    {
-      /* 3.1. Клиники, где принимают специалисты             */
-      /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-      // 1) id - Идентификатор
-      // 2) id_specialist - ссылка на специалиста
-      // 3) id_clinic - ссылка на клинику
       Schema::create('specialist_clinics', function (Blueprint $table) {
          $table->id();
          $table->foreignId('id_specialist')->references('id')->on('specialists')->onDelete('cascade');
@@ -24,14 +19,6 @@ return new class extends Migration
          $table->boolean('priem');
          $table->timestamps();
       });
-
-   //    DB::table('specialist_clinics')->insert(
-   //       [
-   //           "id_specialist" => 1,
-   //           "id_clinic" => 1,
-   //           "priem" => false,
-   //       ]
-   //   );
    }
 
    /**
