@@ -133,7 +133,7 @@ export default {
 						name: "name",
 						text: "Название",
 						columnType: "default",
-						columnSize: "auto",
+						columnSize: "600px",
 					},
 					{
 						name: "specializations",

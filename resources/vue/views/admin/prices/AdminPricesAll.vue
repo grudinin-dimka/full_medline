@@ -205,7 +205,7 @@ export default {
 						name: "date",
 						text: "Дата загрузки",
 						columnType: "default",
-						columnSize: "auto",
+						columnSize: "300px",
 					},
 				],
 
