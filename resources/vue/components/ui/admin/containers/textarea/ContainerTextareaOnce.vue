@@ -44,7 +44,7 @@ export default {
 	resize: none;
 
 	padding: 10px;
-	border: 2px solid var(--input-border-color-inactive);
+	border: 1px solid rgba(0, 0, 0, 0.25);
 	border-radius: 10px;
 
 	width: 100%;
@@ -56,12 +56,12 @@ export default {
 }
 
 .container-textarea-once > textarea:focus {
-	border: 2px solid var(--input-border-color-active);
+	border: 1px solid var(--input-border-color-active);
 }
 
 .container-textarea-once > textarea.error {
 	background-color: var(--input-background-color-error);
-	border: 2px solid var(--input-border-color-error);
+	border: 1px solid var(--input-border-color-error);
 
 	caret-color: red;
 }
@@ -71,7 +71,7 @@ export default {
 }
 
 .container-textarea-once.create > :is(input:focus, select:focus, textarea:focus) {
-	border: 2px solid #44a533;
+	border: 1px solid #44a533;
 }
 
 .container-textarea-once.create > label > span {

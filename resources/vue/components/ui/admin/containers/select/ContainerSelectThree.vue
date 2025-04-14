@@ -69,7 +69,7 @@ export default {
 
 <style>
 fieldset.container-select-three {
-	border: 2px solid var(--input-border-color-inactive);
+	border: 1px solid rgba(0, 0, 0, 0.25);
 	border-radius: 15px;
 	padding: 10px;
 	transition: all 0.2s;
@@ -77,11 +77,11 @@ fieldset.container-select-three {
 }
 
 fieldset.container-select-three:focus-within {
-	border: 2px solid var(--input-border-color-active);
+	border: 1px solid var(--input-border-color-active);
 }
 
 fieldset.container-select-three.create:focus-within {
-	border: 2px solid #44a533;
+	border: 1px solid #44a533;
 }
 
 .container-select-three {
@@ -106,7 +106,7 @@ fieldset.container-select-three.create:focus-within {
 	outline: none;
 
 	padding: 10px;
-	border: 2px solid var(--input-border-color-inactive);
+	border: 1px solid var(--input-border-color-inactive);
 	border-radius: 10px;
 
 	width: 100%;
@@ -119,11 +119,11 @@ fieldset.container-select-three.create:focus-within {
 }
 
 .container-select-three > .item > :is(input, select):focus {
-	border: 2px solid var(--input-border-color-active);
+	border: 1px solid var(--input-border-color-active);
 }
 
 .container-select-three.create > .item > :is(input, select):focus {
-	border: 2px solid #44a533;
+	border: 1px solid #44a533;
 }
 
 .container-select-three > .item > :is(input, select)::placeholder {
@@ -132,7 +132,7 @@ fieldset.container-select-three.create:focus-within {
 
 .container-select-three > .item > :is(input.error, select.error) {
 	background-color: var(--input-background-color-error);
-	border: 2px solid var(--input-border-color-error);
+	border: 1px solid var(--input-border-color-error);
 
 	caret-color: red;
 }

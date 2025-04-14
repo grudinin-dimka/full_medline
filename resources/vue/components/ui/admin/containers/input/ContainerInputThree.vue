@@ -69,7 +69,7 @@ export default {
 
 <style>
 fieldset.container-input-three {
-	border: 2px solid var(--input-border-color-inactive);
+	border: var(--default-border);
 	border-radius: 15px;
 	padding: 10px;
 	transition: all 0.2s;
@@ -86,11 +86,11 @@ fieldset.container-input-three.create > legend {
 }
 
 fieldset.container-input-three:focus-within {
-	border: 2px solid var(--input-border-color-active);
+	border: var(--default-border);
 }
 
 fieldset.container-input-three.create:focus-within {
-	border: 2px solid #44a533;
+	border: 1px solid #44a533;
 }
 
 .container-input-three {
@@ -119,7 +119,7 @@ fieldset.container-input-three.create:focus-within {
 	outline: none;
 
 	padding: 10px;
-	border: 2px solid var(--input-border-color-inactive);
+	border: var(--default-border);
 	border-radius: 10px;
 
 	width: 100%;
@@ -132,11 +132,11 @@ fieldset.container-input-three.create:focus-within {
 }
 
 .container-input-three > .item > input:focus {
-	border: 2px solid var(--input-border-color-active);
+	border: 1px solid var(--input-border-color-active);
 }
 
 .container-input-three.create > .item > input:focus {
-	border: 2px solid #44a533;
+	border: 1px solid #44a533;
 }
 
 .container-input-three > .item > input::placeholder {
@@ -145,7 +145,7 @@ fieldset.container-input-three.create:focus-within {
 
 .container-input-three > .item > :is(input.error, select.error) {
 	background-color: var(--input-background-color-error);
-	border: 2px solid var(--input-border-color-error);
+	border: 1px solid var(--input-border-color-error);
 
 	caret-color: red;
 }

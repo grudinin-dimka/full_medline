@@ -114,7 +114,7 @@ export default {
 
 <style>
 fieldset.container-input-two-sub-sub {
-	border: 2px solid rgba(0, 0, 0, 0.2);
+	border: var(--default-border);
 	border-radius: 15px;
 	padding: 10px;
 	transition: all 0.2s;
@@ -127,11 +127,11 @@ fieldset.container-input-two-sub-sub > legend {
 }
 
 fieldset.container-input-two-sub-sub.create:focus-within {
-	border: 2px solid #44a533;
+	border: 1px solid #44a533;
 }
 
 fieldset.container-input-two-sub-sub:focus-within {
-	border: 2px solid var(--input-border-color-active);
+	border: 1px solid var(--input-border-color-active);
 }
 
 fieldset.container-input-two-sub.create > legend > span {
@@ -172,7 +172,7 @@ fieldset.container-input-two-sub.create > legend > span {
 	outline: none;
 
 	padding: 10px;
-	border: 2px solid var(--input-border-color-inactive);
+	border: var(--default-border);
 	border-radius: 10px;
 
 	width: 100%;
@@ -185,11 +185,11 @@ fieldset.container-input-two-sub.create > legend > span {
 }
 
 .container-input-two-sub-sub > .item > .input > .item > :is(input:focus, select:focus) {
-	border: 2px solid var(--input-border-color-active);
+	border: 1px solid var(--input-border-color-active);
 }
 
 .container-input-two-sub-sub.create > .item > .input > .item > :is(input:focus, select:focus) {
-	border: 2px solid #44a533;
+	border: 1px solid #44a533;
 }
 
 .container-input-two-sub-sub > .item > .input > .item > input::placeholder {
@@ -198,7 +198,7 @@ fieldset.container-input-two-sub.create > legend > span {
 
 .container-input-two-sub-sub > .item > .input > .item > :is(input.error, select.error) {
 	background-color: var(--input-background-color-error);
-	border: 2px solid var(--input-border-color-error);
+	border: 1px solid var(--input-border-color-error);
 
 	caret-color: red;
 }

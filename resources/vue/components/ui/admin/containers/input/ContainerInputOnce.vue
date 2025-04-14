@@ -47,26 +47,26 @@ export default {
 	outline: none;
 
 	padding: 10px;
-	border: 2px solid var(--input-border-color-inactive);
-	border-radius: 10px;
+	border: var(--input-border);
+	border-radius: var(--input-border-radius);
 
 	width: 100%;
 	height: 58px;
 
 	font-size: 20px;
-	caret-color: var(--input-border-color-active);
+	caret-color: var(--input-border-focus);
 	background-color: white;
 
 	transition: all 0.2s;
 }
 
 .container-input-once.disabled > :is(input, select) {
-	border: 2px solid var(--input-border-color-inactive);
+	border: var(--input-border);
 	background-color: rgba(240, 240, 240, 1);
 }
 
 .container-input-once.password > :is(input, select):focus {
-	border: 2px solid #cebc40;
+	border: 1px solid #cebc40;
 	caret-color: #cebc40;
 	background-color: white;
 }
@@ -87,20 +87,20 @@ export default {
 
 .container-input-once > input.error::file-selector-button {
 	background-color: var(--input-border-color-error);
-	border: 2px solid var(--input-border-color-error);
+	border: 1px solid var(--input-border-color-error);
 }
 
 .container-input-once.create > :is(input:focus, select:focus) {
-	border: 2px solid #44a533;
+	border: 1px solid #44a533;
 }
 
 .container-input-once.create > input::file-selector-button {
-	border: 2px solid #44a533;
+	border: 1px solid #44a533;
 	background-color: #44a533;
 }
 
 .container-input-once.delete > :is(input:focus, select:focus) {
-	border: 2px solid #a53333;
+	border: 1px solid #a53333;
 }
 
 .container-input-once.create > label > span {
@@ -112,26 +112,26 @@ export default {
 }
 
 .container-input-once > input:focus {
-	border: 2px solid var(--input-border-color-active);
+	border: var(--input-border-focus);
 }
 
 .container-input-once > input.error {
-	background-color: var(--input-background-color-error);
-	border: 2px solid var(--input-border-color-error);
+	background-color: var(--input-error-background-color);
+	border: var(--input-error-border);
 
-	caret-color: red;
+	caret-color: var(--input-error-color);
 }
 
 .container-input-once:is(.create, .delete) > input.error {
-	background-color: var(--input-background-color-error);
-	border: 2px solid var(--input-border-color-error);
+	background-color: var(--input-error-background-color);
+	border: var(--input-error-border);
 
-	caret-color: red;
+	caret-color: var(--input-error-color);
 }
 
 .container-input-once:is(.create, .delete) > input.error::file-selector-button {
-	background-color: var(--input-border-color-error);
-	border: 2px solid var(--input-border-color-error);
+	background-color: var(--input-error-background-color);
+	border: var(--input-error-border);
 }
 
 .container-input-once > input::placeholder {

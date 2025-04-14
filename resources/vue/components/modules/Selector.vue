@@ -159,7 +159,7 @@ export default {
 	align-items: center;
 	gap: 10px;
 
-	border: 2px solid var(--input-border-color-inactive);
+	border: 1px solid rgba(0, 0, 0, 0.25);
 	border-radius: 10px;
 	padding: 0px 10px 0px 10px;
 
@@ -190,7 +190,7 @@ export default {
 }
 
 .control.open {
-	border: 2px solid var(--input-border-color-active);
+	border: 1px solid var(--input-border-color-active);
 }
 
 .input > input {
@@ -198,7 +198,7 @@ export default {
 
 	outline: none;
 	padding: 15px;
-	border: 2px solid var(--input-border-color-inactive);
+	border: 1px solid var(--input-border-color-inactive);
 	border-radius: 10px;
 
 	width: 100%;
@@ -207,7 +207,7 @@ export default {
 }
 
 .select.error > .control {
-	border: 2px solid var(--input-border-color-error);
+	border: 1px solid var(--input-border-color-error);
 	border-radius: 10px;
 	padding: 0px 10px 0px 10px;
 
@@ -223,7 +223,7 @@ export default {
 }
 
 .select.create > .control.open {
-	border: 2px solid #44a533;
+	border: 1px solid #44a533;
 }
 
 /* Меню */

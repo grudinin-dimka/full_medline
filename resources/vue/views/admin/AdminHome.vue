@@ -1281,7 +1281,7 @@ export default {
 	flex-direction: column;
 	gap: 10px;
 
-	border: 2px solid var(--input-border-color-inactive);
+	border: var(--default-border);
 	border-radius: 10px;
 	padding: 10px;
 	overflow: hidden;
@@ -1297,48 +1297,48 @@ export default {
 .slider-block > .head > div {
 	padding: 5px 10px;
 	border-radius: 7.5px;
-	border: 2px solid var(--input-border-color-inactive);
+	border: var(--default-border);
 
 	transition: all 0.2s;
 }
 
 .slider-block:hover > .head > div {
-	border: 2px solid var(--input-border-color-active);
+	border: 1px solid var(--input-border-color-active);
 }
 
 .slider-block.create > .head > div {
-	border: 2px solid var(--create-border-color);
+	border: 1px solid var(--create-border-color);
 }
 
 .slider-block.delete > .head > div {
-	border: 2px solid #ec7b7b;
+	border: 1px solid #ec7b7b;
 }
 
 .slider-block.hide {
-	border: 2px solid rgb(210, 210, 210);
+	border: 1px solid rgb(210, 210, 210);
 	background-color: rgb(240, 240, 240);
 }
 
 .slider-block.create {
-	border: 2px solid var(--create-border-color);
+	border: 1px solid var(--create-border-color);
 }
 
 .slider-block.create:hover {
 	background-color: var(--create-background-color);
-	border: 2px solid var(--create-border-color);
+	border: 1px solid var(--create-border-color);
 }
 
 .slider-block.delete {
-	border: 2px solid #ec7b7b;
+	border: 1px solid #ec7b7b;
 }
 
 .slider-block.delete:hover {
-	border: 2px solid #f79999;
+	border: 1px solid #f79999;
 	background-color: rgb(255, 240, 240);
 }
 
 .slider-block:hover {
-	border: 2px solid var(--input-border-color-active);
+	border: 1px solid var(--input-border-color-active);
 	background-color: #f2feff;
 }
 

@@ -65,7 +65,7 @@ fieldset > legend {
 }
 
 fieldset.container-input-two {
-	border: 2px solid rgba(0, 0, 0, 0.2);
+	border: var(--default-border);
 	border-radius: 15px;
 	padding: 10px;
 	transition: all 0.2s;
@@ -73,11 +73,11 @@ fieldset.container-input-two {
 }
 
 fieldset.container-input-two.create:focus-within {
-	border: 2px solid #44a533;
+	border: 1px solid #44a533;
 }
 
 fieldset.container-input-two:focus-within {
-	border: 2px solid var(--input-border-color-active);
+	border: 1px solid var(--input-border-color-active);
 }
 
 fieldset.container-input-two.create > legend > span {
@@ -110,7 +110,7 @@ fieldset.container-input-two.delete > legend > span {
 	outline: none;
 
 	padding: 10px;
-	border: 2px solid var(--input-border-color-inactive);
+	border: var(--default-border);
 	border-radius: 10px;
 
 	width: 100%;
@@ -123,15 +123,15 @@ fieldset.container-input-two.delete > legend > span {
 }
 
 .container-input-two > .item > :is(input:focus, select:focus) {
-	border: 2px solid var(--input-border-color-active);
+	border: 1px solid var(--input-border-color-active);
 }
 
 .container-input-two.create > .item > :is(input:focus, select:focus) {
-	border: 2px solid #44a533;
+	border: 1px solid #44a533;
 }
 
 .container-input-two.delete > .item > :is(input:focus, select:focus) {
-	border: 2px solid #a53333;
+	border: 1px solid #a53333;
 }
 
 .container-input-two > .item > input::placeholder {
@@ -140,7 +140,7 @@ fieldset.container-input-two.delete > legend > span {
 
 .container-input-two > .item > :is(input.error, select.error) {
 	background-color: var(--input-background-color-error);
-	border: 2px solid var(--input-border-color-error);
+	border: 1px solid var(--input-border-color-error);
 
 	caret-color: red;
 }
@@ -156,13 +156,13 @@ fieldset.container-input-two.delete > legend > span {
 }
 
 .container-input-two.create > .item > input::file-selector-button {
-	border: 2px solid #44a533;
+	border: 1px solid #44a533;
 	background-color: #44a533;
 }
 
 .container-input-two > .item > input.error::file-selector-button {
 	background-color: var(--input-border-color-error);
-	border: 2px solid var(--input-border-color-error);
+	border: 1px solid var(--input-border-color-error);
 }
 
 @media screen and (max-width: 450px) {

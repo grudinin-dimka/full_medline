@@ -38,7 +38,7 @@ export default {
 	outline: none;
 
 	padding: 10px;
-	border: 2px solid var(--input-border-color-inactive);
+	border: 1px solid rgba(0, 0, 0, 0.25);
 	border-radius: 10px;
 
 	width: 100%;
@@ -51,7 +51,7 @@ export default {
 }
 
 .container-select-once > select:focus {
-	border: 2px solid var(--input-border-color-active);
+	border: 1px solid var(--input-border-color-active);
 }
 
 .container-select-once > option::placeholder {
@@ -59,7 +59,7 @@ export default {
 }
 
 .container-select-once.create > :is(input:focus, select:focus) {
-	border: 2px solid #44a533;
+	border: 1px solid #44a533;
 }
 
 .container-select-once.create > label > span {
@@ -68,7 +68,7 @@ export default {
 
 .container-select-once > select.error {
 	background-color: var(--input-background-color-error);
-	border: 2px solid var(--input-border-color-error);
+	border: 1px solid var(--input-border-color-error);
 
 	caret-color: red;
 }

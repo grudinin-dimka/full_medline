@@ -1,0 +1,25 @@
+/* пагинация */
+:root {
+	/* input */
+	--input-gap: 5px;
+
+   --input-label-color: var(--primary-color);
+   --input-color: black;
+
+   --input-padding: 30px 15px;
+
+	--input-border: var(--default-border);
+	--input-border-radius: calc(var(--default-border-radius) / 2);
+	--input-border-focus: 1px solid var(--primary-color);
+
+   --input-placeholder-color: rgba(0, 0, 0, 0.5);
+
+   /* textarea */
+   --textarea-padding: 15px;
+
+   /* error */
+   --input-error-border: 1px solid #ff9b9b;
+
+   --input-error-background-color: #fff4f4;
+   --input-error-color: red;
+}

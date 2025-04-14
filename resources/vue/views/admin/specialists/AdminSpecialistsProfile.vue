@@ -1078,18 +1078,6 @@
 					@loaderChildAfterLeave="loaderChildAfterLeave"
 				/>
 			</template>
-
-			<template #buttons>
-				<button-disabled v-if="this.specialist.profile.data.id.body == null">
-					Добавить
-				</button-disabled>
-				<button-default
-					@click="editArrayValue('create', 'educations', null)"
-					v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.body !== null"
-				>
-					Добавить
-				</button-default>
-			</template>
 		</block-once>
 
 		<!--____________________________________________________-->
@@ -1116,18 +1104,6 @@
 					:minHeight="100"
 					@loaderChildAfterLeave="loaderChildAfterLeave"
 				/>
-			</template>
-
-			<template #buttons>
-				<button-disabled v-if="this.specialist.profile.data.id.body == null">
-					Добавить
-				</button-disabled>
-				<button-default
-					@click="editArrayValue('create', 'works', null)"
-					v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.body !== null"
-				>
-					Добавить
-				</button-default>
 			</template>
 		</block-once>
 	</template>
