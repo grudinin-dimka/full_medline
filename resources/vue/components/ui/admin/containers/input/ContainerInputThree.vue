@@ -119,8 +119,8 @@ fieldset.container-input-three.create:focus-within {
 	outline: none;
 
 	padding: 10px;
-	border: var(--default-border);
-	border-radius: 10px;
+	border: var(--input-border);
+	border-radius: var(--input-border-radius);
 
 	width: 100%;
 	height: 58px;
@@ -132,11 +132,11 @@ fieldset.container-input-three.create:focus-within {
 }
 
 .container-input-three > .item > input:focus {
-	border: 1px solid var(--input-border-color-active);
+	border: var(--input-border-focus);
 }
 
 .container-input-three.create > .item > input:focus {
-	border: 1px solid #44a533;
+	border: var(--input-create-border-focus);
 }
 
 .container-input-three > .item > input::placeholder {

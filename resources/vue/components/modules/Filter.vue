@@ -245,8 +245,8 @@ export default {
 
 	outline: none;
 	padding: 15px;
-	border: 2px solid var(--input-border-color-inactive);
-	border-radius: 10px;
+	border: var(--input-border);
+	border-radius: var(--input-border-radius);
 
 	font-size: 1.125rem;
 }
@@ -360,6 +360,7 @@ export default {
 /* Конец. */
 
 .filter > .filter-body > ol > li {
+	user-select: none;
 	cursor: pointer;
 	display: flex;
 	justify-content: space-between;
@@ -388,7 +389,7 @@ export default {
 	width: 20px;
 	height: 20px;
 
-	border: 2px solid var(--input-border-color-inactive);
+	border: var(--input-border);
 	border-radius: 5px;
 }
 

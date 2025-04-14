@@ -77,11 +77,11 @@ fieldset.container-select-three {
 }
 
 fieldset.container-select-three:focus-within {
-	border: 1px solid var(--input-border-color-active);
+	border: var(--input-border-focus);
 }
 
 fieldset.container-select-three.create:focus-within {
-	border: 1px solid #44a533;
+	border: var(--input-create-border-focus);
 }
 
 .container-select-three {

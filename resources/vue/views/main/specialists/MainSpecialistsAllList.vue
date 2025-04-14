@@ -118,6 +118,7 @@ export default {
 	box-sizing: border-box;
 	display: flex;
 	justify-content: center;
+	align-items: center;
 	gap: 20px;
 
 	border-top: 0px;
