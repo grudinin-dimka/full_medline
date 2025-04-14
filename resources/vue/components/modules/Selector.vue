@@ -190,7 +190,7 @@ export default {
 }
 
 .control.open {
-	border: 1px solid var(--input-border-color-active);
+	border: var(--input-border-focus);
 }
 
 .input > input {
@@ -198,8 +198,8 @@ export default {
 
 	outline: none;
 	padding: 15px;
-	border: 1px solid var(--input-border-color-inactive);
-	border-radius: 10px;
+	border: var(--input-border);
+	border-radius: var(--input-border-radius);
 
 	width: 100%;
 
@@ -207,14 +207,15 @@ export default {
 }
 
 .select.error > .control {
-	border: 1px solid var(--input-border-color-error);
+	background-color: var(--input-error-background-color);
+	border: var(--input-error-border);
+
 	border-radius: 10px;
 	padding: 0px 10px 0px 10px;
-
+	
 	height: 58px;
-
-	caret-color: var(--input-border-color-active);
-	background-color: var(--input-background-color-error);
+	
+	caret-color: red;
 
 	font-size: 20px;
 	font-family: "Rubik";

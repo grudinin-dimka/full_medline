@@ -11,7 +11,7 @@
 
 	--input-border: var(--default-border);
 	--input-border-radius: calc(var(--default-border-radius) / 2);
-	--input-border-focus: 1px solid var(--primary-color);
+	--input-border-focus: var(--default-border-width) var(--default-border-style) var(--primary-color);
 
    --input-placeholder-color: rgba(0, 0, 0, 0.5);
 
@@ -19,7 +19,7 @@
    --textarea-padding: 15px;
 
    /* error */
-   --input-error-border: 1px solid #ff9b9b;
+   --input-error-border: var(--default-border-width) var(--default-border-style) #ff9b9b;
 
    --input-error-background-color: #fff4f4;
    --input-error-background-color-file: #ff9b9b;
@@ -33,8 +33,8 @@
    --input-create-color: #44a533;
    --input-create-caret-color: #44a533;
 
-   --input-create-border: 1px solid #44a533;
-   --input-create-border-focus: 1px solid #44a533;
+   --input-create-border: var(--default-border-width) var(--default-border-style) #44a533;
+   --input-create-border-focus: var(--default-border-width) var(--default-border-style) #44a533;
 
    /* delete */
    --input-delete-background-color: rgb(255, 255, 255);
@@ -43,6 +43,6 @@
    --input-delete-color: #cd3f3f;
    --input-delete-caret-color: #cd3f3f;
    
-   --input-delete-border: 1px solid #ec7b7b;
-   --input-delete-border-focus: 1px solid #f79999;
+   --input-delete-border: var(--default-border-width) var(--default-border-style) #ec7b7b;
+   --input-delete-border-focus: var(--default-border-width) var(--default-border-style) #f79999;
 }

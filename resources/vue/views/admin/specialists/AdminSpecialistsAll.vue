@@ -269,6 +269,7 @@ export default {
 
 <style scoped>
 .table__hide {
+	user-select: none;
 	cursor: pointer;
 }
 

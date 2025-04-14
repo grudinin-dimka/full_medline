@@ -3,7 +3,11 @@
 	--default-gap: 20px;
 
 	--default-padding: 20px;
-	--default-border: 1px solid rgba(0, 0, 0, 0.25);
+	
+	--default-border-color: rgba(0, 0, 0, 0.25);
+	--default-border-width: 1px;
+	--default-border-style: solid;
+	--default-border: var(--default-border-style) var(--default-border-width) var(--default-border-color);
 	--default-border-active: 1px solid var(--primary-color);
 	--default-border-radius: 20px;
 

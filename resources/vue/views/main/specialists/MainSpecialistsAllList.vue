@@ -124,8 +124,8 @@ export default {
 	border-right: 0px;
 	border-bottom: 1px;
 	border-left: 0px;
-	border-style: solid;
-	border-color: var(--input-border-color-inactive);
+	border-style: var(--default-border-style);
+	border-color: var(--default-border-color);
 	padding: 0px 0px 20px 0px;
 
 	width: 100%;

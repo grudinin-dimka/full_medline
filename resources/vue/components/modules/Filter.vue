@@ -167,14 +167,15 @@ export default {
 
 .filter > .filter-title {
 	cursor: pointer;
+	user-select: none;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	gap: 10px;
 
 	padding: 10px;
-	border: 2px solid var(--input-border-color-inactive);
-	border-radius: 10px;
+	border: var(--input-border);
+	border-radius: var(--input-border-radius);
 
 	font-size: 1.125rem;
 	background-color: white;
@@ -190,7 +191,7 @@ export default {
 }
 
 .filter > .filter-title:is(.active) {
-	border: 2px solid var(--input-border-color-active);
+	border: var(--input-border-focus);
 }
 
 .filter > .filter-title > svg {

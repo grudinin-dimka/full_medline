@@ -139,8 +139,8 @@ fieldset.container-input-two.delete > legend > span {
 }
 
 .container-input-two > .item > :is(input.error, select.error) {
-	background-color: var(--input-background-color-error);
-	border: 1px solid var(--input-border-color-error);
+	background-color: var(--input-error-background-color);
+	border: var(--input-error-border);
 
 	caret-color: red;
 }
@@ -161,8 +161,8 @@ fieldset.container-input-two.delete > legend > span {
 }
 
 .container-input-two > .item > input.error::file-selector-button {
-	background-color: var(--input-border-color-error);
-	border: 1px solid var(--input-border-color-error);
+	background-color: var(--input-error-background-color-file);
+	border: var(--input-error-border);
 }
 
 @media screen and (max-width: 450px) {

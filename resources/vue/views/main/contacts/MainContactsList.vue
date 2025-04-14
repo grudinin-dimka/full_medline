@@ -313,14 +313,14 @@ span.empty {
 	min-height: 300px;
 	height: 300px;
 
-	border: 2px solid var(--input-border-color-inactive);
-	border-radius: 10px;
+	border: var(--input-border);
+	border-radius: var(--input-border-radius);
 
 	transition: all 0.2s;
 }
 
 .contacts__map:hover {
-	border: 2px solid var(--input-border-color-active);
+	border: var(--input-border-focus);
 }
 
 .contacts__map-wall-title {
@@ -328,8 +328,8 @@ span.empty {
 
 	padding: 10px;
 	background-color: white;
-	border: 2px solid var(--input-border-color-inactive);
-	border-radius: 10px;
+	border: var(--input-border);
+	border-radius: var(--input-border-radius);
 
 	transition: all 0.2s;
 }

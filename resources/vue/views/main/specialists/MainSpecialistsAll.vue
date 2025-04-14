@@ -242,8 +242,8 @@ export default {
 	box-sizing: border-box;
 
 	padding: 15px;
-	border-radius: 10px;
-	border: 2px solid var(--input-border-color-inactive);
+	border-radius: var(--input-border-radius);
+	border: var(--input-border);
 	outline: none;
 
 	font-size: 1.125rem;
@@ -255,7 +255,7 @@ export default {
 }
 
 .filter-blocks > .container-input > input:focus {
-	border: 2px solid var(--input-border-color-active);
+	border: var(--input-border-focus);
 }
 
 .filter-blocks > .container-input > button {

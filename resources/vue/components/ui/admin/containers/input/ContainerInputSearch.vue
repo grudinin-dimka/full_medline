@@ -102,21 +102,21 @@ export default {
 	outline: none;
 
 	padding: 10px;
-	border: 2px solid var(--input-border-color-inactive);
-	border-radius: 10px;
+	border: var(--input-border);
+	border-radius: var(--input-border-radius);
 
 	width: 100%;
 	height: 58px;
 
 	font-size: 20px;
-	caret-color: var(--input-border-color-active);
+	caret-color: var(--input-caret-color);
 	background-color: white;
 
 	transition: all 0.2s;
 }
 
 .input_search > input:focus {
-	border: 2px solid var(--input-border-color-active);
+	border: var(--input-border-focus);
 }
 
 .input_search > input::placeholder {

@@ -178,8 +178,8 @@ export default {
 	align-items: center;
 	gap: 10px;
 
-	border: 2px solid var(--input-border-color-inactive);
-	border-radius: 10px;
+	border: var(--input-border);
+	border-radius: var(--input-border-radius);
 	padding: 10px;
 
 	font-size: 1.125em;

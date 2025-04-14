@@ -260,7 +260,7 @@ export default {
 	width: 350px;
 	height: 350px;
 	border-radius: 100%;
-	border: 2px solid var(--input-border-color-inactive);
+	border: var(--input-border);
 	background-size: contain;
 	background-position: center center;
 	background-repeat: no-repeat;
@@ -284,7 +284,7 @@ export default {
 	gap: 10px;
 
 	border-radius: 15px;
-	border: 0px solid var(--input-border-color-inactive);
+	border: 0px;
 	padding: 0px 0px 0px 30px;
 }
 
@@ -302,7 +302,7 @@ export default {
 	grid-template-columns: 200px 1fr;
 
 	border-radius: 15px;
-	border: 0px solid var(--input-border-color-inactive);
+	border: 0px;
 	padding: 10px 0px;
 	transition: all 0.2s;
 }

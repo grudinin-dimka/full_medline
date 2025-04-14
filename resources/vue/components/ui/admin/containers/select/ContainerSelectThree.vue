@@ -131,8 +131,8 @@ fieldset.container-select-three.create:focus-within {
 }
 
 .container-select-three > .item > :is(input.error, select.error) {
-	background-color: var(--input-background-color-error);
-	border: 1px solid var(--input-border-color-error);
+	background-color: var(--input-error-background-color);
+	border: var(--input-error-border);
 
 	caret-color: red;
 }
