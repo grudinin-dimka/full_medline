@@ -88,8 +88,8 @@ export default {
 }
 
 .contacts > .item {
-	border: 2px solid var(--input-border-color-inactive);
-	border-radius: 10px;
+	border: var(--input-border);
+	border-radius: calc(var(--input-border-radius) / 2);
 }
 
 .contacts > .item {
@@ -98,8 +98,8 @@ export default {
 	flex-direction: column;
 	gap: 10px;
 
-	border: 2px solid var(--input-border-color-inactive);
-	border-radius: 10px;
+	border: var(--input-border);
+	border-radius: var(--input-border-radius);
 	padding: 10px;
 
 	font-size: 16px;
@@ -108,38 +108,38 @@ export default {
 }
 
 .contacts > .item:hover > .head > div {
-	border: 2px solid var(--input-border-color-active);
+	border: var(--input-border-focus);
 }
 
 .contacts > .item:hover {
-	border: 2px solid var(--input-border-color-active);
-	background-color: #f2feff;
+	border: var(--input-border-focus);
+	background-color: var(--item-background-color-active);
 }
 
 .contacts > .item.create {
-	border: 2px solid var(--create-border-color);
+	border: var(--input-create-border);
 }
 
 .contacts > .item.create:hover {
-	background-color: var(--create-background-color);
-	border: 2px solid var(--create-border-color);
+	border: var(--input-create-border);
+	background-color: var(--input-create-background-color-hover);
 }
 
 .contacts > .item.create > .head > div {
-	border: 2px solid var(--create-border-color);
+	border: var(--input-create-border);
 }
 
 .contacts > .item.delete {
-	border: 2px solid #ec7b7b;
+	border: var(--input-delete-border);
 }
 
 .contacts > .item.delete:hover {
-	border: 2px solid #f79999;
-	background-color: rgb(255, 240, 240);
+	border: var(--input-delete-border);
+	background-color: var(--input-delete-background-color-hover);
 }
 
 .contacts > .item.delete > .head > div {
-	border: 2px solid #ec7b7b;
+	border: var(--input-delete-border);
 }
 
 .contacts > .item > .head {
@@ -149,8 +149,8 @@ export default {
 
 .contacts > .item > .head > div {
 	padding: 5px 10px;
-	border-radius: 7.5px;
-	border: 2px solid var(--input-border-color-inactive);
+	border-radius: calc(var(--input-border-radius) / 2);
+	border: var(--default-border);
 
 	transition: all 0.2s;
 }
@@ -169,11 +169,11 @@ export default {
 }
 
 .contacts > .item.create > .body > .title {
-	color: #44a533;
+	color: var(--input-create-color);
 }
 
 .contacts > .item.delete > .body > .title {
-	color: #a53333;
+	color: var(--input-delete-color);
 }
 
 .contacts > .item > .body > .info {

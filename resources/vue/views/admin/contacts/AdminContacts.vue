@@ -98,7 +98,7 @@
 					v-if="modal.type == 'edit' && currentContact.data.delete.body"
 					@click="deleteContact"
 				>
-					Восстановить
+					Вернуть
 				</ButtonDefault>
 			</BlockButtons>
 		</template>

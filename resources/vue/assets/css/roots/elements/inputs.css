@@ -7,6 +7,7 @@
    --input-color: black;
 
    --input-padding: 30px 15px;
+   --input-caret-color: var(--primary-color);
 
 	--input-border: var(--default-border);
 	--input-border-radius: calc(var(--default-border-radius) / 2);
@@ -21,5 +22,27 @@
    --input-error-border: 1px solid #ff9b9b;
 
    --input-error-background-color: #fff4f4;
+   --input-error-background-color-file: #ff9b9b;
+   --input-error-caret-color: red;
    --input-error-color: red;
+
+   /* create */
+   --input-create-background-color: rgb(255, 255, 255);
+   --input-create-background-color-hover: rgb(243, 255, 240);
+
+   --input-create-color: #44a533;
+   --input-create-caret-color: #44a533;
+
+   --input-create-border: 1px solid #44a533;
+   --input-create-border-focus: 1px solid #44a533;
+
+   /* delete */
+   --input-delete-background-color: rgb(255, 255, 255);
+   --input-delete-background-color-hover: rgb(255, 245, 245);
+
+   --input-delete-color: #cd3f3f;
+   --input-delete-caret-color: #cd3f3f;
+   
+   --input-delete-border: 1px solid #ec7b7b;
+   --input-delete-border-focus: 1px solid #f79999;
 }

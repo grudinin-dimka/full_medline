@@ -27,16 +27,6 @@
 	--button-claim-color: #44a533;
 	--button-claim-color-hover: rgb(78, 175, 61);
 
-	/* Поля ввода какой-либо информации */
-	--input-border-color-inactive: #cccccc;
-	--input-border-color-active: var(--primary-color);
-	--input-border-color-error: #ff9b9b;
-	--input-background-color-error: #fff4f4;
-	--input-placeholder-color: rgb(180, 180, 180);
-
-	/* Капча */
-	--captcha-background-color: #dcdcdc;
-
 	/* svg */
 	--svg-icon-arrow-fill: rgba(0, 171, 189, 0.5);
 	--svg-icon-arrow-fill-hover: var(--primary-color);

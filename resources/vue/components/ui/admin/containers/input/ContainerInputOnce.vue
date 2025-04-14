@@ -130,7 +130,7 @@ export default {
 }
 
 .container-input-once:is(.create, .delete) > input.error::file-selector-button {
-	background-color: var(--input-error-background-color);
+	background-color: var(--input-error-background-color-file);
 	border: var(--input-error-border);
 }
 

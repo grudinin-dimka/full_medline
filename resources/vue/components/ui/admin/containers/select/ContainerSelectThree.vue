@@ -106,24 +106,24 @@ fieldset.container-select-three.create:focus-within {
 	outline: none;
 
 	padding: 10px;
-	border: 1px solid var(--input-border-color-inactive);
-	border-radius: 10px;
+	border: var(--input-border);
+	border-radius: var(--input-border-radius);
 
 	width: 100%;
 	height: 58px;
 
 	font-size: 20px;
-	caret-color: var(--input-border-color-active);
+	caret-color: var(--input-caret-color);
 
 	transition: all 0.2s;
 }
 
 .container-select-three > .item > :is(input, select):focus {
-	border: 1px solid var(--input-border-color-active);
+	border: var(--input-border-focus);
 }
 
 .container-select-three.create > .item > :is(input, select):focus {
-	border: 1px solid #44a533;
+	border: var(--input-create-border-focus);
 }
 
 .container-select-three > .item > :is(input, select)::placeholder {

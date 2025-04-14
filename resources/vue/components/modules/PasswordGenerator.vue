@@ -71,11 +71,11 @@ export default {
 	justify-content: center;
 	align-items: center;
 
-	border: 2px solid var(--input-border-color-inactive);
-	border-radius: 10px;
+	border: var(--input-border);
+	border-radius: var(--input-border-radius);
 
 	font-size: 18px;
-	height: 54px;
+	height: 56px;
 
 	background-color: #f5f5f5;
 }

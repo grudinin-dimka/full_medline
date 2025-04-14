@@ -95,7 +95,7 @@
 							</div>
 						</div>
 					</th>
-					<th style="width: 270px" v-if="this.table.canModals || this.table.options.update">
+					<th style="width: 270px" v-if="this.table.options.update">
 						<div>Действия</div>
 					</th>
 				</tr>
@@ -154,7 +154,7 @@
 							<div></div>
 						</div>
 					</td>
-					<td v-if="this.table.canModals || this.table.options.update">
+					<td v-if="this.table.options.update">
 						<div></div>
 					</td>
 				</tr>
@@ -219,7 +219,7 @@
 						</div>
 					</td>
 					<!-- Действия -->
-					<td v-if="table.canModals || table.options.update">
+					<td v-if="table.options.update || table.options.delete">
 						<div class="table__buttons">
 							<BaseTableButton
 								:wide="true"
@@ -853,6 +853,8 @@ th {
 	border-color: rgb(200, 200, 200);
 
 	height: 100%;
+
+	transition: all 0.2s;
 }
 
 th > div,
@@ -860,6 +862,8 @@ td > div {
 	padding: 0px 10px;
 	border-radius: 0px;
 	min-height: 50px;
+
+	transition: all 0.2s;
 }
 
 th > div {
@@ -931,11 +935,19 @@ tr {
 }
 
 tr.create > td > div {
-	color: var(--create-color);
+	color: var(--input-create-color);
+}
+
+tr.create > td {
+	background-color: var(--input-create-background-color-hover);
 }
 
 tr.delete > td > div {
-	color: var(--delete-color);
+	color: var(--input-delete-color);
+}
+
+tr.delete > td {
+	background-color: var(--input-delete-background-color-hover);
 }
 
 .table__buttons svg {

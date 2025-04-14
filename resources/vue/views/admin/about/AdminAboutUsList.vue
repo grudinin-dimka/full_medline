@@ -105,8 +105,8 @@ export default {
 	flex-direction: column;
 	gap: 10px;
 
-	border: 2px solid var(--input-border-color-inactive);
-	border-radius: 10px;
+	border: var(--input-border);
+	border-radius: var(--input-border-radius);
 	padding: 10px;
 
 	font-size: 16px;
@@ -115,21 +115,21 @@ export default {
 }
 
 .about > .item.delete {
-	border: 2px solid #ec7b7b;
+	border: var(--input-delete-border);
 }
 
 .about > .item.delete:hover {
-	border: 2px solid #f79999;
-	background-color: rgb(255, 240, 240);
+	border: var(--input-delete-border);
+	background-color: var(--input-delete-background-color-hover);
 }
 
 .about > .item.create {
-	border: 2px solid var(--create-border-color);
+	border: var(--input-create-border-focus);
 }
 
 .about > .item.create:hover {
-	background-color: var(--create-background-color);
-	border: 2px solid var(--create-border-color);
+	border: var(--input-create-border-focus);
+	background-color: var(--input-create-background-color-hover);
 }
 
 .about > .item > .head {
@@ -139,26 +139,26 @@ export default {
 
 .about > .item > .head > div {
 	padding: 5px 10px;
-	border-radius: 7.5px;
-	border: 2px solid var(--input-border-color-inactive);
+	border-radius: calc(var(--input-border-radius) / 2);
+	border: var(--input-border);
 
 	transition: all 0.2s;
 }
 
 .about > .item:hover > .head > div {
-	border: 2px solid var(--input-border-color-active);
+	border: var(--input-border-focus);
 }
 
 .about > .item.create > .head > div {
-	border: 2px solid var(--create-border-color);
+	border: var(--input-create-border);
 }
 
 .about > .item.delete > .head > div {
-	border: 2px solid #ec7b7b;
+	border: var(--input-delete-border);
 }
 
 .about > .item.delete:hover > .head > div {
-	border: 2px solid #f79999;
+	border: var(--input-delete-border);
 }
 
 .about > .item > .body {
@@ -168,8 +168,8 @@ export default {
 }
 
 .about > .item:hover {
-	border: 2px solid var(--input-border-color-active);
-	background-color: #f2feff;
+	border: var(--input-border-focus);
+	background-color: var(--item-background-color-active);
 }
 
 .images {

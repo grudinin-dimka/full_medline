@@ -44,26 +44,26 @@ export default {
 	resize: none;
 
 	padding: 10px;
-	border: 1px solid rgba(0, 0, 0, 0.25);
-	border-radius: 10px;
+	border: var(--input-border);
+	border-radius: var(--input-border-radius);
 
 	width: 100%;
 
 	font-size: 20px;
-	caret-color: var(--input-border-color-active);
+	caret-color: var(--input-caret-color);
 
 	transition: all 0.2s;
 }
 
 .container-textarea-once > textarea:focus {
-	border: 1px solid var(--input-border-color-active);
+	border: var(--input-border-focus);
 }
 
 .container-textarea-once > textarea.error {
-	background-color: var(--input-background-color-error);
-	border: 1px solid var(--input-border-color-error);
+	background-color: var(--input-error-background-color);
+	border: var(--input-error-border);
 
-	caret-color: red;
+	caret-color: var(--input-error-caret-color);
 }
 
 .container-textarea-once > textarea::placeholder {
@@ -71,15 +71,15 @@ export default {
 }
 
 .container-textarea-once.create > :is(input:focus, select:focus, textarea:focus) {
-	border: 1px solid #44a533;
+	border: var(--input-create-border-focus);
 }
 
 .container-textarea-once.create > label > span {
-	color: #44a533;
+	border: var(--input-create-color);
 }
 
 .container-textarea-once.delete > label > span {
-	color: #a53333;
+	border: var(--input-delete-color);
 }
 
 .error-counter {

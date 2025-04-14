@@ -3022,8 +3022,8 @@ export default {
 
 	display: grid;
 	gap: 10px;
-	border: 2px solid var(--input-border-color-inactive);
-	border-radius: 10px;
+	border: var(--input-border);
+	border-radius: var(--input-border-radius);
 	padding: 15px;
 
 	font-size: 18px;
@@ -3051,7 +3051,7 @@ export default {
 }
 
 :is(.specializations-list, .clinics-list) > .item.active {
-	border: 2px solid var(--input-border-color-active);
+	border: var(--input-border-focus);
 	background-color: #f2feff;
 }
 
@@ -3080,7 +3080,7 @@ export default {
 }
 
 :is(.specializations-list, .clinics-list) > .item:not(:first-of-type):hover {
-	border: 2px solid var(--input-border-color-active);
+	border: var(--input-border-focus);
 	background-color: #f2feff;
 }
 
@@ -3124,34 +3124,6 @@ export default {
 	gap: 10px;
 }
 
-.profile-file {
-	box-sizing: border-box;
-	outline: none;
-
-	padding: 10px;
-	border: 2px solid var(--input-border-color-inactive);
-	border-radius: 10px;
-
-	font-size: 20px;
-	caret-color: var(--input-border-color-active);
-
-	transition: all 0.2s;
-}
-
-.profile-file::file-selector-button {
-	flex-grow: 1;
-	cursor: pointer;
-	background-color: var(--button-default-color);
-	border: 0px;
-	border-radius: 5px;
-	color: white;
-	padding: 5px;
-}
-
-.profile-file:focus {
-	border: 2px solid var(--input-border-color-active);
-}
-
 .profile-list {
 	flex-grow: 1;
 	display: flex;
@@ -3167,8 +3139,8 @@ export default {
 	grid-template-columns: 1fr 1fr 30px;
 	gap: 10px;
 
-	border: 2px solid var(--input-border-color-inactive);
-	border-radius: 10px;
+	border: var(--input-border);
+	border-radius: var(--input-border-radius);
 	padding: 10px;
 
 	font-size: 18px;
@@ -3201,6 +3173,10 @@ export default {
 }
 
 .profile-list > .item > .item-close {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
 	justify-self: end;
 	align-self: end;
 }

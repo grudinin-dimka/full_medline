@@ -1352,7 +1352,7 @@ export default {
 	gap: 20px;
 	align-items: center;
 
-	border: 2px solid var(--input-border-color-inactive);
+	border: var(--input-border);
 	border-radius: 15px;
 	padding: 10px 20px;
 	transition: all 0.2s;

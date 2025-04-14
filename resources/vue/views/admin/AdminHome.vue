@@ -1289,6 +1289,11 @@ export default {
 	transition: all 0.2s;
 }
 
+.slider-block:hover {
+	border: var(--input-border-focus);
+	background-color: #f2feff;
+}
+
 .slider-block > .head {
 	display: flex;
 	gap: 10px;
@@ -1296,22 +1301,22 @@ export default {
 
 .slider-block > .head > div {
 	padding: 5px 10px;
-	border-radius: 7.5px;
-	border: var(--default-border);
+	border-radius: calc(var(--input-border-radius) / 2);
+	border: var(--input-border);
 
 	transition: all 0.2s;
 }
 
 .slider-block:hover > .head > div {
-	border: 1px solid var(--input-border-color-active);
+	border: var(--input-border-focus);
 }
 
 .slider-block.create > .head > div {
-	border: 1px solid var(--create-border-color);
+	border: var(--input-create-border);
 }
 
 .slider-block.delete > .head > div {
-	border: 1px solid #ec7b7b;
+	border: var(--input-delete-border);
 }
 
 .slider-block.hide {
@@ -1320,12 +1325,12 @@ export default {
 }
 
 .slider-block.create {
-	border: 1px solid var(--create-border-color);
+	border: var(--input-create-border);
 }
 
 .slider-block.create:hover {
-	background-color: var(--create-background-color);
-	border: 1px solid var(--create-border-color);
+	background-color: var(--input-create-background-color-hover);
+	border: var(--input-create-border);
 }
 
 .slider-block.delete {
@@ -1335,11 +1340,6 @@ export default {
 .slider-block.delete:hover {
 	border: 1px solid #f79999;
 	background-color: rgb(255, 240, 240);
-}
-
-.slider-block:hover {
-	border: 1px solid var(--input-border-color-active);
-	background-color: #f2feff;
 }
 
 .slider-block-id {

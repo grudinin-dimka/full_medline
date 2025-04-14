@@ -5,12 +5,10 @@
 	--default-padding: 20px;
 	--default-border: 1px solid rgba(0, 0, 0, 0.25);
 	--default-border-active: 1px solid var(--primary-color);
-	--default-border-radius: 15px;
+	--default-border-radius: 20px;
 
 	--default-background-color: white;
 	--secondary-background-color: rgb(220, 220, 220);
-	--item-background-color: rgb(235, 235, 235);
-	--item-background-color-active: rgba(0, 171, 189, 0.1);
 
 	--default-font-color: black;
 
@@ -18,13 +16,6 @@
 
 	--default-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.05);
 
-	--create-background-color: rgb(243, 255, 240);
-	--create-background-hover-color: rgb(243, 255, 240);
-	--create-border-color: #aaf281;
-	--create-border-hover-color: rgb(243, 255, 240);
-
-	--delete-background-color: rgb(255, 240, 240);
-	--delete-background-hover-color: #fff3f3;
-	--delete-border-color: #f28181;
-	--delete-border-hover-color: #f59a9a;
+	--item-background-color: rgb(235, 235, 235);
+	--item-background-color-active: #f2feff;
 }
