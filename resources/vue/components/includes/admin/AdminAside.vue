@@ -387,6 +387,29 @@ aside {
 	overflow-y: auto;
 }
 
+/* Скролбар блока с контентом. */
+.aside__body::-webkit-scrollbar {
+	width: 20px;
+}
+
+.aside__body::-webkit-scrollbar-track {
+	background-color: rgba(255, 255, 255, 0);
+	border-radius: 10px;
+	margin: 2px;
+}
+
+.aside__body::-webkit-scrollbar-thumb {
+	background-color: rgba(255, 255, 255, 0.3);
+	border: 6px solid var(--primary-color);
+	border-radius: 10px;
+}
+
+.aside__body::-webkit-scrollbar-thumb:hover {
+	background-color: rgba(255, 255, 255, 0.5);
+	cursor: all-scroll;
+}
+/* Конец. */
+
 .aside__item {
 	position: relative;
 	box-sizing: border-box;
