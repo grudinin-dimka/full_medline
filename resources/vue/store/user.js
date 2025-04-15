@@ -50,13 +50,14 @@ export default {
 
 			router.push({ name: "login" });
 		},
-
-		logout(state) {
+	},
+	actions: {
+		logout({ state, commit, rootGetters }) {
 			state.isLogout = true;
 
 			axios({
 				method: "post",
-				url: `/api/logout`,
+				url: rootGetters.urlApi + `logout`,
 				headers: {
 					Authorization: "Bearer " + localStorage.getItem("token"),
 				},

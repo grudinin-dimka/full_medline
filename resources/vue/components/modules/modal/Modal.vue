@@ -86,9 +86,11 @@ export default {
 	methods: {
 		open() {
 			this.isOpen = true;
+			document.body.classList.add("modal-open");
 		},
 		close() {
 			this.isOpen = false;
+			document.body.classList.remove("modal-open");
 		},
 	},
 };
