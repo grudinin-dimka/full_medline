@@ -15,7 +15,7 @@ Route::post('/request-telegram-bot', [HomeController::class, 'requestTelegramBot
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 /* |                   АВТОРИЗАЦИЯ                     |*/
 /* |___________________________________________________|*/
-Route::post('/login', [LoginController::class, 'loginUser']);
+Route::post('/login', [LoginController::class, 'login']);
 
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 /* |              ПОЛУЧЕНИЕ ДАННЫХ ИЗ БД               |*/
@@ -73,7 +73,7 @@ Route::post('/create-track', [HomeController::class, 'createTrack']);
 Route::middleware('auth:sanctum')->group(function () {
    // Общие
    Route::post('/check-user', [LoginController::class, 'checkUser']);
-   Route::post('/logout', [LoginController::class, 'logoutUser']);
+   Route::post('/logout', [LoginController::class, 'logout']);
    Route::post('/upload-file', [AdminController::class, 'uploadFile']);
    Route::get('/get-profile-info', [AdminController::class, 'getProfileInfo']);   
 });

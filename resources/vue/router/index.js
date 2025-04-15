@@ -206,7 +206,15 @@ const router = createRouter({
 					path: "eschedule",
 					name: "eschedule",
 					meta: { title: "(e) Расписание" },
+					redirect: { name: "eschedule-all" },
 					component: () => import("../views/admin/schedule/AdminSchedule.vue"),
+					children: [
+						{
+							path: "",
+							name: "eschedule-all",
+							component: () => import("../views/admin/schedule/AdminScheduleAll.vue"),
+						},
+					],
 				},
 			],
 		},

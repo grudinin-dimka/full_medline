@@ -225,7 +225,7 @@ export default {
 				.then((response) => {
 					if (response.data.status) {
 						// Запись токена в глобальную переменную
-						localStorage.setItem("token", response.data.result.token);
+						this.$store.commit("setTokenToLocal", response.data.data.token);
 
 						// Перевод на страницу админки
 						this.$router.push({ name: "ehome" });

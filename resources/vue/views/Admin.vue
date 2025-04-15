@@ -53,7 +53,7 @@ export default {
 			})
 				.then((response) => {
 					if (response.data.status) {
-						this.$store.commit("setUser", response.data.data);
+						this.$store.commit("updateUser", response.data.data);
 
 						this.loader.loading = false;
 						this.loader.other = true;

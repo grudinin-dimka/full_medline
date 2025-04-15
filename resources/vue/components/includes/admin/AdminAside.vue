@@ -1,4 +1,18 @@
 <template>
+	<Modal ref="modalExit" :settings="modalExit">
+		<template #title>{{ modalExit.values.title }}</template>
+		<template #body>Вы уверены, что хотите выйти из системы?</template>
+		<template #footer>
+			<ButtonDefault
+				:wide="false"
+				:disabled="$store.getters.getLogoutStatus"
+				@click="$store.commit('logout')"
+			>
+				Выход
+			</ButtonDefault>
+		</template>
+	</Modal>
+
 	<aside :class="{ active: $store.getters.burgerAdminStatus }">
 		<div class="aside__body">
 			<div class="aside__item" :class="{ active: isActive('/admin/profile') }">
@@ -199,29 +213,50 @@
 			</template>
 		</div>
 		<div class="aside__footer">
-			<button class="aside__close" @click="logoutUser">Выйти</button>
+			<button class="aside__close" @click="openModal('modalExit', 'Выход', 'default')">
+				Выйти
+			</button>
 		</div>
 	</aside>
 </template>
 
 <script>
-import axios from "axios";
+import Modal from "../../modules/modal/Modal.vue";
+import ButtonDefault from "../../ui/admin/buttons/ButtonDefault.vue";
 
 import IconArrowWhite from "../../icons/IconArrowWhite.vue";
 
+import axios from "axios";
+
 export default {
 	components: {
-		axios,
+		Modal,
+		ButtonDefault,
+
 		IconArrowWhite,
+
+		axios,
 	},
 	data() {
 		return {
+			/* Загрузка */
 			loading: {
 				sections: {
 					aside: true,
 				},
 			},
-			isCreator: false,
+
+			/* Модальное окно */
+			modalExit: {
+				thin: true,
+				clamped: false,
+				values: {
+					title: "",
+					look: "default",
+				},
+			},
+
+			/* Ссылки */
 			links: {
 				profile: {
 					name: "profile",
@@ -336,24 +371,16 @@ export default {
 
 			this.$store.commit("closeBurgerAdmin");
 		},
-		/* Выход из аккаунта */
-		logoutUser() {
-			axios({
-				method: "post",
-				url: `${this.$store.getters.urlApi}` + `logout`,
-				headers: {
-					Accept: "application/json",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-				data: {
-					token: localStorage.getItem("token"),
-				},
-			});
 
-			this.$store.commit("closeBurgerAdmin");
-			localStorage.removeItem("token");
-			this.$router.push({ name: "login" });
-			return;
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                 Модальное окно                    |*/
+		/* |___________________________________________________|*/
+		/* Открытие модального окна */
+		openModal(name, title, look) {
+			this[name].values.title = title;
+			this[name].values.look = look;
+
+			this.$refs[name].open();
 		},
 	},
 };

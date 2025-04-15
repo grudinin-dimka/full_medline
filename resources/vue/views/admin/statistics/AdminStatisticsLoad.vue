@@ -68,7 +68,7 @@ export default {
 						name: "ip",
 						text: "ip",
 						columnType: "default",
-						columnSize: "100px",
+						columnSize: "200px",
 					},
 					{
 						name: "user_agent",

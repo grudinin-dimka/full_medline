@@ -823,42 +823,43 @@ header.slide {
 }
 
 .captcha > .input > input {
+	user-select: none;
 	box-sizing: border-box;
 	outline: none;
 	text-align: center;
 
 	padding: 10px;
-	border: 2px solid var(--input-border-color-inactive);
-	border-radius: 10px;
+	border: var(--input-border);
+	border-radius: var(--input-border-radius);
 
 	width: 300px;
 	height: 58px;
 
 	font-size: 20px;
-	caret-color: var(--input-border-color-active);
+	caret-color: var(--input-caret-color);
 	background-color: white;
 
 	transition: all 0.2s;
 }
 
 .captcha > .input > input.error {
-	background-color: var(--input-background-color-error);
-	border: 2px solid var(--input-border-color-error);
+	background-color: var(--input-error-background-color);
+	border: var(--input-error-border);
 
-	caret-color: red;
+	caret-color: var(--input-error-color);
 }
 
 .captcha > .input > input:focus {
-	border: 2px solid var(--input-border-color-active);
+	border: var(--input-border-focus);
 }
 
 .captcha > .input > input.error:focus {
-	border: 2px solid var(--input-border-color-error);
+	border: var(--input-error-border);
 }
 
 .captcha > .input > .input-error {
 	margin-top: 5px;
-	color: var(--span-color-error);
+	color: var(--input-error-color);
 }
 
 .captcha > .content {
@@ -873,9 +874,9 @@ header.slide {
 	align-items: center;
 	position: relative;
 	user-select: none;
-	border: 2px solid var(--input-border-color-inactive);
+	border: var(--input-border);
 
-	border-radius: 10px;
+	border-radius: var(--input-border-radius);
 	background-color: rgb(245, 245, 245);
 
 	width: 300px;

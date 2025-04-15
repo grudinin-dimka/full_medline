@@ -77,7 +77,7 @@ class LoginController extends Controller
    /* 1. Основные действия                                 */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
    /* Авторизация */
-   public function loginUser(Request $request) {
+   public function login(Request $request) {
       // Валидация данных
       $validated = validator($request->all(), [
          "name" => "required",
@@ -115,19 +115,20 @@ class LoginController extends Controller
       return response()->json([
          "status" => true,
          "message" => "Авторизация пройдена.",
-         "result" => (object) [
+         "data" => (object) [
             "token" => $user->createToken('auth_token')->plainTextToken,
          ],
       ]);
    }  
 
-   /* Выход */
-   public function logoutUser(Request $request) {
+   /* Выход из системы */
+   public function logout(Request $request){
       $request->user()->currentAccessToken()->delete();
-      if ($request) {
-         return 'Токен удалён.';
-      } else {
-         return 'Токен не удалён.';
-      };
+
+      return response()->json([
+         "success" => true,
+         "message" => 'Выход из системы.',
+         "data" => null,
+      ]);
    }
 }

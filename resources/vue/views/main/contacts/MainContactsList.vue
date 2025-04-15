@@ -369,8 +369,8 @@ span.empty {
 	fill: #dbf1f3;
 }
 
-.contacts__map-wall:hover > .title {
-	border: 2px solid var(--input-border-color-active);
+.contacts__map-wall:hover > .contacts__map-wall-title {
+	border: var(--input-border-focus);
 	color: var(--primary-color);
 }
 

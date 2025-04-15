@@ -1,15 +1,5 @@
 <template>
-	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
-	<!--|                    СПИСОК ЦЕН                     |-->
-	<!--|___________________________________________________|-->
-	<block-once :minHeight="200">
-		<template #title>РАСПИСАНИЕ</template>
-
-		<template #options>
-			<icon-load :width="28" :height="28" v-if="disabled.schedule.save" />
-			<icon-save :width="28" :height="28" @click="updateSheduleFromServe" v-else />
-		</template>
-	</block-once>
+	<router-view></router-view>
 </template>
 
 <script>

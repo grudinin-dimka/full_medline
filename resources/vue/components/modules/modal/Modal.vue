@@ -27,8 +27,8 @@
 									<svg
 										data-v-05b9c86b=""
 										xmlns="http://www.w3.org/2000/svg"
-										width="12"
-										height="12"
+										width="16"
+										height="16"
 										viewBox="0 0 14 14"
 									>
 										<path
@@ -299,7 +299,7 @@ export default {
 .modal__head-buttons > button {
 	cursor: pointer;
 	background-color: rgba(255, 255, 255, 0);
-	border: var(--default-border);
+	border: 0px;
 	border-radius: 100px;
 	padding: 0px;
 
@@ -309,9 +309,12 @@ export default {
 	transition: all 0.2s ease;
 }
 
-.modal__head-buttons button:hover {
-	border: var(--default-border-active);
-	background-color: var(--item-background-color-active);
+.modal__head-buttons button > svg {
+	fill: rgb(150, 150, 150);
+}
+
+.modal__head-buttons button:hover > svg {
+	fill: rgb(0, 0, 0);
 }
 
 /* Тело */
