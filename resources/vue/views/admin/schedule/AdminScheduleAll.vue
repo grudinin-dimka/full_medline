@@ -1,7 +1,12 @@
 <template>
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
-	<!--|                    СПИСОК ЦЕН                     |-->
+	<!--|                    РАСПИСАНИЕ                     |-->
 	<!--|___________________________________________________|-->
+	<info-bar>
+		<template #title>Расписание</template>
+		<template #addreas>schedule</template>
+	</info-bar>
+
 	<block-once :minHeight="200">
 		<template #title>КЛИНИКИ</template>
 
@@ -52,9 +57,9 @@
 
 <script>
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
+import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTitle from "../../../components/ui/admin/blocks/BlockTitle.vue";
-import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import BlockButtons from "../../../components/ui/admin/blocks/BlockButtons.vue";
 
 import BaseTable from "../../../components/modules/table/BaseTable.vue";
@@ -71,8 +76,9 @@ export default {
 		LoaderChild,
 		BlockOnce,
 		BlockTitle,
-		InfoBar,
 		BlockButtons,
+
+		InfoBar,
 
 		BaseTable,
 

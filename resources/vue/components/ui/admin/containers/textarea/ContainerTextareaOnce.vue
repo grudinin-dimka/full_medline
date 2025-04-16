@@ -75,11 +75,11 @@ export default {
 }
 
 .container-textarea-once.create > label > span {
-	border: var(--input-create-color);
+	color: var(--input-create-color);
 }
 
 .container-textarea-once.delete > label > span {
-	border: var(--input-delete-color);
+	color: var(--input-delete-color);
 }
 
 .error-counter {

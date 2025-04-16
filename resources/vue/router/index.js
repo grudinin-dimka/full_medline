@@ -203,6 +203,20 @@ const router = createRouter({
 					component: () => import("../views/admin/contacts/AdminContacts.vue"),
 				},
 				{
+					path: "enews",
+					name: "enews",
+					meta: { title: "(e) Новости" },
+					component: () => import("../views/admin/news/AdminNews.vue"),
+					redirect: { name: "enews-all" },
+					children: [
+						{
+							path: "",
+							name: "enews-all",
+							component: () => import("../views/admin/news/AdminNewsAll.vue"),
+						},
+					],
+				},
+				{
 					path: "eschedule",
 					name: "eschedule",
 					meta: { title: "(e) Расписание" },
