@@ -1,5 +1,5 @@
 <template>
-	<div class="modal-list" :class="{ create: type === 'create', delete: type === 'delete' }">
+	<div class="modal-list" :class="type">
 		<div class="item">
 			<div class="content default">
 				<slot name="title"></slot>
@@ -39,7 +39,6 @@ export default {
 		type: {
 			type: String,
 			default: "",
-			required: true,
 		},
 		array: {
 			type: Array,

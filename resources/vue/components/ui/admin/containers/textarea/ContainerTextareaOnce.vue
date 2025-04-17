@@ -1,7 +1,7 @@
 <template>
 	<div
 		class="container-textarea-once"
-		:class="{ create: type === 'create', delete: type === 'delete' }"
+		:class="type"
 	>
 		<label>
 			<slot name="title"></slot>
@@ -20,7 +20,6 @@ export default {
 		type: {
 			type: String,
 			default: "",
-			required: true,
 		},
 	},
 };

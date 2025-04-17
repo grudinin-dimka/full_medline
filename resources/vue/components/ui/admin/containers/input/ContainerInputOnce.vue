@@ -1,12 +1,7 @@
 <template>
 	<div
 		class="container-input-once"
-		:class="{
-			create: type === 'create',
-			delete: type === 'delete',
-			disabled: type === 'disabled',
-			password: type === 'password',
-		}"
+		:class="type"
 	>
 		<label>
 			<slot name="title"></slot>
@@ -22,7 +17,6 @@ export default {
 		type: {
 			type: String,
 			default: "",
-			required: true,
 		},
 	},
 };
@@ -129,7 +123,7 @@ export default {
 	caret-color: var(--input-error-color);
 }
 
-.container-input-once:is(.create, .delete) > input.error::file-selector-button {
+.container-input-once > input.error::file-selector-button {
 	background-color: var(--input-error-background-color-file);
 	border: var(--input-error-border);
 }

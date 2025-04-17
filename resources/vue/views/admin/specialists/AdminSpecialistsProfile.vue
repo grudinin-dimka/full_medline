@@ -125,13 +125,10 @@
 	<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
 	<admin-modal @touchCloseModal="closeModal('modalCertificates')" :modal="modalCertificates">
 		<template #title>
-			<span class="create" v-if="modalCertificates.type == 'create'">
-				СЕРТИФИКАТ (СОЗДАНИЕ)
-			</span>
-			<span v-if="modalCertificates.type == 'edit'">СЕРТИФИКАТ (РЕДАКТИРОВАНИЕ)</span>
+			{{ modalCertificates.title }}
 		</template>
 		<template #body>
-			<container-input-once :type="modalCertificates.type == 'create' ? 'create' : 'edit'">
+			<container-input-once>
 				<template #title>
 					<span>НАЗВАНИЕ*</span>
 					<span v-if="currentCertificate.data.name.edited"> (ИЗМЕНЕНО) </span>
@@ -143,7 +140,6 @@
 						:class="{ error: currentCertificate.errors.name.status }"
 						v-model="currentCertificate.data.name.body"
 						@input="currentCertificate.data.name.edited = true"
-						@blur="checkModalInput('currentCertificate', 'name', 'text')"
 					/>
 				</template>
 				<template #error>
@@ -153,7 +149,7 @@
 				</template>
 			</container-input-once>
 			<!-- Организация -->
-			<container-input-once :type="modalCertificates.type == 'create' ? 'create' : 'edit'">
+			<container-input-once>
 				<template #title>
 					<span>ОРГАНИЗАЦИЯ*</span>
 					<span v-if="currentCertificate.data.organization.edited"> (ИЗМЕНЕНО) </span>
@@ -165,7 +161,6 @@
 						:class="{ error: currentCertificate.errors.organization.status }"
 						v-model="currentCertificate.data.organization.body"
 						@input="currentCertificate.data.organization.edited = true"
-						@blur="checkModalInput('currentCertificate', 'organization', 'text')"
 					/>
 				</template>
 				<template #error>
@@ -175,7 +170,7 @@
 				</template>
 			</container-input-once>
 			<!-- Дата окончания обучения -->
-			<container-input-once :type="modalCertificates.type == 'create' ? 'create' : 'edit'">
+			<container-input-once>
 				<template #title>
 					<span>ОКОНЧАНИЕ ОБУЧЕНИЯ*</span>
 					<span v-if="currentCertificate.data.endEducation.edited"> (ИЗМЕНЕНО) </span>
@@ -186,7 +181,6 @@
 						placeholder="Введите дату"
 						:class="{ error: currentCertificate.errors.endEducation.status }"
 						v-model="currentCertificate.data.endEducation.body"
-						@blur="checkModalInput('currentCertificate', 'endEducation', 'text')"
 						@input="currentCertificate.data.endEducation.edited = true"
 					/>
 				</template>
@@ -199,29 +193,27 @@
 		</template>
 		<template #footer>
 			<block-buttons>
-				<button-claim @click="addCertificate" v-if="modalCertificates.type == 'create'">
+				<button-default @click="addCertificate" v-if="modalCertificates.type == 'create'">
 					Создать
-				</button-claim>
+				</button-default>
 				<button-default @click="updateCertificate" v-if="modalCertificates.type == 'edit'">
 					Обновить
 				</button-default>
 			</block-buttons>
 		</template>
 	</admin-modal>
+
 	<!--____________________________________________________-->
 	<!--4. Образования                                      -->
 	<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
 	<admin-modal @touchCloseModal="closeModal('modalEducations')" :modal="modalEducations">
 		<template #title>
-			<span class="create" v-if="modalEducations.type == 'create'">
-				ОБРАЗОВАНИЕ (СОЗДАНИЕ)
-			</span>
-			<span v-if="modalEducations.type == 'edit'">ОБРАЗОВАНИЕ (РЕДАКТИРОВАНИЕ)</span>
+			{{ modalEducations.title }}
 		</template>
 		<template #body>
 			<container-input>
 				<!-- Название -->
-				<container-input-once :type="modalEducations.type == 'create' ? 'create' : 'edit'">
+				<container-input-once>
 					<template #title>
 						<span>НАЗВАНИЕ*</span>
 						<span v-if="currentEducation.data.name.edited"> (ИЗМЕНЕНО) </span>
@@ -233,7 +225,6 @@
 							autocomplete="off"
 							:class="{ error: currentEducation.errors.name.status }"
 							v-model="currentEducation.data.name.body"
-							@blur="checkModalInput('currentEducation', 'name', 'text')"
 							@input="currentEducation.data.name.edited = true"
 						/>
 					</template>
@@ -244,7 +235,7 @@
 					</template>
 				</container-input-once>
 				<!-- Организация -->
-				<container-textarea-once :type="modalEducations.type == 'create' ? 'create' : 'edit'">
+				<container-textarea-once>
 					<template #title>
 						<span :class="{ create: modalEducations.type == 'create' }">ОРГАНИЗАЦИЯ*</span>
 						<span
@@ -261,7 +252,6 @@
 							autocomplete="off"
 							:class="{ error: currentEducation.errors.organization.status }"
 							v-model="currentEducation.data.organization.body"
-							@blur="checkModalInput('currentEducation', 'organization', 'text')"
 							@input="currentEducation.data.organization.edited = true"
 						></textarea>
 					</template>
@@ -272,7 +262,7 @@
 					</template>
 				</container-textarea-once>
 				<!-- Дата получения образования -->
-				<container-input-once :type="modalEducations.type == 'create' ? 'create' : 'edit'">
+				<container-input-once>
 					<template #title>
 						<span :class="{ create: modalEducations.type == 'create' }">ДАТА ПОЛУЧЕНИЯ*</span>
 						<span
@@ -289,7 +279,6 @@
 							autocomplete="off"
 							:class="{ error: currentEducation.errors.date.status }"
 							v-model="currentEducation.data.date.body"
-							@blur="checkModalInput('currentEducation', 'date', 'text')"
 							@input="currentEducation.data.date.edited = true"
 						/>
 					</template>
@@ -300,7 +289,7 @@
 					</template>
 				</container-input-once>
 				<!-- Выбор специализации -->
-				<container-input-once :type="modalEducations.type == 'create' ? 'create' : 'edit'">
+				<container-input-once>
 					<template #title>
 						<span :class="{ create: modalEducations.type == 'create' }">СПЕЦИАЛИЗАЦИЯ*</span>
 						<span
@@ -318,7 +307,6 @@
 							list="eduacation-specializations"
 							:class="{ error: currentEducation.errors.speсialization.status }"
 							v-model="currentEducation.data.speсialization.body"
-							@blur="checkModalInput('currentEducation', 'speсialization', 'text')"
 							@input="currentEducation.data.speсialization.edited = true"
 						/>
 						<datalist id="eduacation-specializations">
@@ -338,27 +326,27 @@
 		</template>
 		<template #footer>
 			<block-buttons>
-				<button-claim @click="addEducation" v-if="modalEducations.type == 'create'">
+				<button-default @click="addEducation" v-if="modalEducations.type == 'create'">
 					Создать
-				</button-claim>
+				</button-default>
 				<button-default @click="updateEducation" v-if="modalEducations.type == 'edit'">
 					Обновить
 				</button-default>
 			</block-buttons>
 		</template>
 	</admin-modal>
+
 	<!--____________________________________________________-->
 	<!--5. Прошлые работы                                   -->
 	<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
 	<admin-modal @touchCloseModal="closeModal('modalWorks')" :modal="modalWorks">
 		<template #title>
-			<span class="create" v-if="modalWorks.type == 'create'"> РАБОТА (СОЗДАНИЕ) </span>
-			<span v-if="modalWorks.type == 'edit'">РАБОТА (РЕДАКТИРОВАНИЕ)</span>
+			{{ modalWorks.title }}
 		</template>
 		<template #body>
 			<container-input>
 				<!-- Название -->
-				<container-input-once :type="modalWorks.type == 'create' ? 'create' : 'edit'">
+				<container-input-once>
 					<template #title>
 						<span>НАЗВАНИЕ*</span>
 						<span v-if="currentWork.data.name.edited"> (ИЗМЕНЕНО) </span>
@@ -370,7 +358,6 @@
 							v-model="currentWork.data.name.body"
 							:class="{ error: currentWork.errors.name.status }"
 							@input="currentWork.data.name.edited = true"
-							@blur="checkModalInput('currentWork', 'name', 'text')"
 						/>
 					</template>
 					<template #error>
@@ -380,7 +367,7 @@
 					</template>
 				</container-input-once>
 				<!-- Организация -->
-				<container-textarea-once :type="modalWorks.type == 'create' ? 'create' : 'edit'">
+				<container-textarea-once>
 					<template #title>
 						<span>ОРГАНИЗАЦИЯ*</span>
 						<span v-if="currentWork.data.organization.edited"> (ИЗМЕНЕНО) </span>
@@ -392,7 +379,6 @@
 							v-model="currentWork.data.organization.body"
 							:class="{ error: currentWork.errors.organization.status }"
 							@input="currentWork.data.organization.edited = true"
-							@blur="checkModalInput('currentWork', 'organization', 'text')"
 						></textarea>
 					</template>
 					<template #error>
@@ -402,10 +388,7 @@
 					</template>
 				</container-textarea-once>
 				<!-- Начало и конец -->
-				<container-input-two
-					:fieldset="true"
-					:type="modalWorks.type == 'create' ? 'create' : 'default'"
-				>
+				<container-input-two :fieldset="true">
 					<template #legend>
 						<span>НАЧАЛО И ОКОНЧАНИЕ РАБОТЫ</span>
 					</template>
@@ -421,7 +404,6 @@
 							v-model="currentWork.data.startWork.body"
 							:class="{ error: currentWork.errors.startWork.status }"
 							@input="currentWork.data.startWork.edited = true"
-							@blur="checkModalInput('currentWork', 'startWork', 'text')"
 						/>
 					</template>
 					<template #error-one>
@@ -442,7 +424,6 @@
 							v-model="currentWork.data.endWork.body"
 							:class="{ error: currentWork.errors.endWork.status }"
 							@input="currentWork.data.endWork.edited = true"
-							@blur="checkModalInput('currentWork', 'endWork', 'text')"
 						/>
 					</template>
 					<template #error-two>
@@ -455,15 +436,16 @@
 		</template>
 		<template #footer>
 			<block-buttons>
-				<button-claim @click="addWork" v-if="modalWorks.type == 'create'">
+				<button-default @click="addWork" v-if="modalWorks.type == 'create'">
 					Создать
-				</button-claim>
+				</button-default>
 				<button-default @click="updateWork" v-if="modalWorks.type == 'edit'">
 					Обновить
 				</button-default>
 			</block-buttons>
 		</template>
 	</admin-modal>
+
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                   СПЕЦИАЛИСТ                      |-->
 	<!--|___________________________________________________|-->
@@ -478,8 +460,7 @@
 	<!-- Основные данные врача -->
 	<block-once :minHeight="400">
 		<template #title>
-			<span :class="{ create: $route.params.id == 'new' }">ПРОФИЛЬ</span>
-			<span v-if="$route.params.id == 'new'" class="create"> (СОЗДАНИЕ)</span>
+			<span>ПРОФИЛЬ</span>
 		</template>
 
 		<template #options>
@@ -522,12 +503,9 @@
 					></div>
 				</div>
 				<div class="profile-info">
-					<container-input-two
-						:fieldset="true"
-						:type="$route.params.id == 'new' ? 'create' : 'edit'"
-					>
+					<container-input-two :fieldset="true">
 						<template #legend>
-							<span :class="{ create: $route.params.id === 'new' }">АВАТАР И ССЫЛКА</span>
+							<span>АВАТАР И ССЫЛКА</span>
 						</template>
 						<template #title-one>
 							<span>ФОТО ВРАЧА<span v-if="$route.params.id == 'new'">*</span></span>
@@ -559,7 +537,6 @@
 								v-model="specialist.profile.data.link.body"
 								:class="{ error: specialist.profile.errors.link.status }"
 								@input="specialist.profile.data.link.edited = true"
-								@blur="checkSpecialistInput('link', 'text')"
 							/>
 						</template>
 						<template #error-two>
@@ -568,12 +545,10 @@
 							</span>
 						</template>
 					</container-input-two>
-					<container-input-three
-						:fieldset="true"
-						:type="$route.params.id == 'new' ? 'create' : 'edit'"
-					>
+
+					<container-input-three :fieldset="true">
 						<template #legend>
-							<span :class="{ create: $route.params.id == 'new' }">Ф.И.О.</span>
+							<span>Ф.И.О.</span>
 						</template>
 						<template #title-one>
 							<span>ФАМИЛИЯ*</span>
@@ -587,7 +562,6 @@
 								v-model="specialist.profile.data.family.body"
 								:class="{ error: specialist.profile.errors.family.status }"
 								@input="specialist.profile.data.family.edited = true"
-								@blur="checkSpecialistInput('family', 'text')"
 							/>
 						</template>
 						<template #error-one>
@@ -607,7 +581,6 @@
 								v-model="specialist.profile.data.name.body"
 								:class="{ error: specialist.profile.errors.name.status }"
 								@input="specialist.profile.data.name.edited = true"
-								@blur="checkSpecialistInput('name', 'text')"
 							/>
 						</template>
 						<template #error-two>
@@ -639,14 +612,9 @@
 			</div>
 			<div class="container-profile-other" v-show="loading.sections.profile">
 				<container-input>
-					<container-select-three
-						:fieldset="true"
-						:type="$route.params.id == 'new' ? 'create' : 'edit'"
-					>
+					<container-select-three :fieldset="true">
 						<template #legend>
-							<span :class="{ create: $route.params.id === 'new' }"
-								>НАУЧНОЕ ОБРАЗОВАНИЕ</span
-							>
+							<span>НАУЧНОЕ ОБРАЗОВАНИЕ</span>
 						</template>
 						<template #title-one>
 							<span>КАТЕГОРИЯ*</span>
@@ -656,13 +624,7 @@
 							<Selector
 								v-model="specialist.profile.data.category.body"
 								:placeholder="'Выберите категорию'"
-								:type="
-									specialist.profile.errors.category.status
-										? 'error'
-										: $route.params.id == 'new'
-										? 'create'
-										: 'default'
-								"
+								:type="specialist.profile.errors.category.status ? 'error' : 'default'"
 								:filter="false"
 								:list="[
 									{
@@ -729,12 +691,9 @@
 						</template>
 					</container-select-three>
 					<!-- Первая работа -->
-					<container-input-two
-						:fieldset="true"
-						:type="$route.params.id == 'new' ? 'create' : 'edit'"
-					>
+					<container-input-two :fieldset="true">
 						<template #legend>
-							<span :class="{ create: $route.params.id === 'new' }">НАЧАЛО КАРЪЕРЫ</span>
+							<span>НАЧАЛО КАРЪЕРЫ</span>
 						</template>
 						<template #title-one>
 							<span
@@ -749,7 +708,6 @@
 								v-model="specialist.profile.data.startWorkAge.body"
 								:class="{ error: specialist.profile.errors.startWorkAge.status }"
 								@input="specialist.profile.data.startWorkAge.edited = true"
-								@blur="checkSpecialistInput('startWorkAge', 'text')"
 							/>
 						</template>
 						<template #error-one>
@@ -776,10 +734,9 @@
 						:fieldset="true"
 						:subOne="false"
 						:subTwo="specialist.profile.data.childrenDoctor.body ? true : false"
-						:type="$route.params.id == 'new' ? 'create' : 'edit'"
 					>
 						<template #legend>
-							<span :class="{ create: $route.params.id === 'new' }">ПРИЁМ ВРАЧА</span>
+							<span>ПРИЁМ ВРАЧА</span>
 						</template>
 						<template #title-one>
 							<span>У ВЗРОСЛЫХ*</span>
@@ -789,13 +746,7 @@
 							<Selector
 								v-model="specialist.profile.data.adultDoctor.body"
 								:placeholder="'Выберите статус'"
-								:type="
-									specialist.profile.errors.adultDoctor.status
-										? 'error'
-										: $route.params.id == 'new'
-										? 'create'
-										: 'default'
-								"
+								:type="specialist.profile.errors.adultDoctor.status ? 'error' : 'default'"
 								:filter="false"
 								:list="[
 									{
@@ -823,11 +774,7 @@
 								v-model="specialist.profile.data.childrenDoctor.body"
 								:placeholder="'Выберите статус'"
 								:type="
-									specialist.profile.errors.childrenDoctor.status
-										? 'error'
-										: $route.params.id == 'new'
-										? 'create'
-										: 'default'
+									specialist.profile.errors.childrenDoctor.status ? 'error' : 'default'
 								"
 								:filter="false"
 								:list="[
@@ -860,7 +807,6 @@
 								v-model="specialist.profile.data.childrenDoctorAge.body"
 								:class="{ error: specialist.profile.errors.childrenDoctorAge.status }"
 								@input="specialist.profile.data.childrenDoctorAge.edited = true"
-								@blur="checkSpecialistInput('childrenDoctorAge', 'number')"
 							/>
 						</template>
 						<template #error-sub-two>
@@ -1250,7 +1196,7 @@ export default {
 			},
 
 			modalCertificates: {
-				title: "",
+				title: "СЕРТИФИКАТ",
 				status: false,
 				type: null,
 				style: {
@@ -1269,6 +1215,47 @@ export default {
 				},
 			},
 
+			modalEducations: {
+				title: "ОБУЧЕНИЕ",
+				status: false,
+				type: null,
+				style: {
+					create: false,
+					delete: false,
+				},
+				modules: {
+					title: true,
+					buttons: {
+						hide: false,
+						close: true,
+					},
+					images: false,
+					body: true,
+					footer: true,
+				},
+			},
+
+			modalWorks: {
+				title: "РАБОТА",
+				status: false,
+				type: null,
+				style: {
+					create: false,
+					delete: false,
+				},
+				modules: {
+					title: true,
+					buttons: {
+						hide: false,
+						close: true,
+					},
+					images: false,
+					body: true,
+					footer: true,
+				},
+			},
+
+			/* Форма */
 			currentCertificate: {
 				errors: {
 					id: {
@@ -1316,47 +1303,6 @@ export default {
 				},
 			},
 
-			modalEducations: {
-				title: "",
-				status: false,
-				type: null,
-				style: {
-					create: false,
-					delete: false,
-				},
-				modules: {
-					title: true,
-					buttons: {
-						hide: false,
-						close: true,
-					},
-					images: false,
-					body: true,
-					footer: true,
-				},
-			},
-
-			modalWorks: {
-				title: "",
-				status: false,
-				type: null,
-				style: {
-					create: false,
-					delete: false,
-				},
-				modules: {
-					title: true,
-					buttons: {
-						hide: false,
-						close: true,
-					},
-					images: false,
-					body: true,
-					footer: true,
-				},
-			},
-
-			/* Форма */
 			currentEducation: {
 				errors: {
 					id: {
@@ -1878,8 +1824,6 @@ export default {
 						}
 						this[modalName].type = "create";
 						this[modalName].status = true;
-						this[modalName].style.create = true;
-						this[modalName].style.delete = false;
 					}
 					document.body.classList.add("modal-open");
 					break;
@@ -1887,8 +1831,6 @@ export default {
 					{
 						this[modalName].type = "edit";
 						this[modalName].status = true;
-						this[modalName].style.create = false;
-						this[modalName].style.delete = false;
 					}
 					document.body.classList.add("modal-open");
 					break;
@@ -1934,7 +1876,7 @@ export default {
 		/* 2. Работа с полями ввода модального окна             */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		checkSelect(value) {
-			if (validate.checkEmpty(value)) {
+			if (validate.isEmpty(value)) {
 				return {
 					status: true,
 					message: "Поле не может быть пустым.",
@@ -2192,6 +2134,8 @@ export default {
 					return;
 
 				if (this.specialist.profile.data.childrenDoctor.body) {
+					console.log(this.specialist.profile.data.childrenDoctorAge.body);
+
 					if (this.checkSpecialistInputsAll(["childrenDoctorAge"])) return;
 				} else {
 					this.specialist.profile.errors.childrenDoctorAge.status = false;

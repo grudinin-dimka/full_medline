@@ -3,14 +3,16 @@
 	<!--|                  МОДАЛЬНОЕ ОКНО                   |-->
 	<!--|___________________________________________________|-->
 	<admin-modal ref="modal" @touchCloseModal="closeModal" :modal="modal">
-		<template #title v-if="!currentInfoBlock.data.delete.body && !modal.style.create">
+		<template
+			#title
+			v-if="(modal.type == 'edit') & !currentInfoBlock.data.delete.body && !modal.style.create"
+		>
 			<icon-arrow :width="16" :height="16" :rotate="-90" @click="changeInfoBlockOrder('down')" />
 			#{{ currentInfoBlock.data.order.body }}
 			<icon-arrow :width="16" :height="16" :rotate="90" @click="changeInfoBlockOrder('up')" />
 		</template>
 		<template #title v-else>
-			<span v-if="modal.type == 'create'">БЛОК (СОЗДАНИЕ)</span>
-			<span v-if="modal.type == 'edit'">БЛОК (РЕДАКТИРОВАНИЕ)</span>
+			{{ modal.title }}
 		</template>
 		<template #body>
 			<div class="modal-images">
@@ -103,9 +105,7 @@
 				</div>
 			</div>
 			<ContainerInput>
-				<container-textarea-once
-					:type="modal.type == 'create' ? 'create' : modal.style.delete ? 'delete' : 'edit'"
-				>
+				<container-textarea-once>
 					<template #title>
 						<span>ЗАГОЛОВОК</span>
 						<span v-if="currentInfoBlock.data.title.edited"> (ИЗМЕНЕНО) </span>
@@ -124,9 +124,8 @@
 						<span class="error" v-if="false"> Ошибка </span>
 					</template>
 				</container-textarea-once>
-				<container-textarea-once
-					:type="modal.type == 'create' ? 'create' : modal.style.delete ? 'delete' : 'edit'"
-				>
+
+				<container-textarea-once>
 					<template #title>
 						<span>ОПИСАНИЕ</span>
 						<span v-if="currentInfoBlock.data.description.edited"> (ИЗМЕНЕНО) </span>
@@ -149,9 +148,9 @@
 		</template>
 		<template #footer>
 			<BlockButtons>
-				<button-claim @click="addInfoBlock" v-if="modal.type == 'create'">
+				<ButtonDefault @click="addInfoBlock" v-if="modal.type == 'create'">
 					Создать
-				</button-claim>
+				</ButtonDefault>
 				<button-remove
 					@click="deleteInfoBlock"
 					v-if="
@@ -169,20 +168,19 @@
 					Обновить
 				</ButtonDefault>
 				<ButtonDefault @click="deleteInfoBlock" v-if="currentInfoBlock.data.delete.body">
-					Восстановить
+					Вернуть
 				</ButtonDefault>
 			</BlockButtons>
 		</template>
 	</admin-modal>
+
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|            МОДАЛЬНОЕ ОКНО (ДОЧЕРНЕЕ)              |-->
 	<!--|___________________________________________________|-->
 	<admin-sub-modal ref="sub-modal" @touchCloseModal="closeModal('subModal')" :modal="subModal">
 		<template #title>ЗАГРУЗКА ИЗОБРАЖЕНИЯ</template>
 		<template #body>
-			<container-input-once
-				:type="subModal.type == 'create' ? 'create' : subModal.style.delete ? 'delete' : 'edit'"
-			>
+			<container-input-once>
 				<template #title>
 					<span>НОВЫЙ ФАЙЛ*</span>
 					<span v-if="currentImage.data.edited"> (ИЗМЕНЕНО) </span>
@@ -212,13 +210,13 @@
 				>
 					Обновить
 				</button-default>
-				<button-claim
+				<button-default
 					v-if="subModal.type == 'create'"
 					@click="updateImage"
 					:disabled="disabled.image.add"
 				>
-					Добавить
-				</button-claim>
+					Создать
+				</button-default>
 			</block-buttons>
 		</template>
 	</admin-sub-modal>
@@ -335,7 +333,7 @@ export default {
 	data() {
 		return {
 			modal: {
-				title: "",
+				title: "БЛОК",
 				status: false,
 				type: null,
 				style: {
@@ -512,8 +510,7 @@ export default {
 					{
 						this[name].type = "create";
 						this[name].status = true;
-						this[name].style.create = true;
-						this[name].style.delete = false;
+
 						if (name === "modal") {
 							this.clearModalData("currentInfoBlock");
 						}
@@ -524,14 +521,6 @@ export default {
 					{
 						this[name].type = "edit";
 						this[name].status = true;
-						this[name].style.delete = false;
-						this[name].style.create = false;
-
-						if (this.currentInfoBlock.data.delete.body) {
-							this[name].style.delete = true;
-						} else {
-							this[name].style.delete = false;
-						}
 					}
 					document.body.classList.add("modal-open");
 					break;

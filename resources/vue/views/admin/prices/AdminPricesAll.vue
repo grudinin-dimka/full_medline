@@ -4,11 +4,10 @@
 	<!--|___________________________________________________|-->
 	<admin-modal ref="modal" @touchCloseModal="closeModal('modal')" :modal="modal">
 		<template #title>
-			<span class="create" v-if="modal.type == 'create'"> ЗАГРУЗКА ФАЙЛА С ЦЕНАМИ </span>
-			<span v-if="modal.type == 'edit'"> ФАЙЛ С ЦЕНАМИ (РЕДАКТИРОВАНИЕ)</span>
+			{{ modal.title }}
 		</template>
 		<template #body>
-			<container-input-once :type="(modal.type = 'create')">
+			<container-input-once>
 				<template #title>
 					<span>ФАЙЛ*</span>
 					<span v-if="false"> (ИЗМЕНЕНО) </span>
@@ -31,9 +30,9 @@
 		</template>
 		<template #footer>
 			<block-buttons>
-				<ButtonClaim @click="createPrice" :disabled="disabled.prices.create">
+				<ButtonDefault @click="createPrice" :disabled="disabled.prices.create">
 					Загрузить
-				</ButtonClaim>
+				</ButtonDefault>
 			</block-buttons>
 		</template>
 	</admin-modal>
@@ -129,7 +128,7 @@ export default {
 		return {
 			/* Модальное окно */
 			modal: {
-				title: "",
+				title: "ЦЕНЫ",
 				status: false,
 				type: null,
 				style: {
@@ -240,8 +239,6 @@ export default {
 					{
 						this[name].type = "create";
 						this[name].status = true;
-						this[name].style.create = true;
-						this[name].style.delete = false;
 					}
 					document.body.classList.add("modal-open");
 					break;
@@ -249,8 +246,6 @@ export default {
 					{
 						this[name].type = "edit";
 						this[name].status = true;
-						this[name].style.delete = false;
-						this[name].style.create = false;
 					}
 					document.body.classList.add("modal-open");
 					break;

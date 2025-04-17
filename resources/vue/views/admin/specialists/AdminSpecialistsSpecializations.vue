@@ -4,11 +4,10 @@
 	<!--|___________________________________________________|-->
 	<admin-modal ref="modal" @touchCloseModal="closeModal" :modal="modal">
 		<template #title>
-			<span class="create" v-if="modal.type == 'create'"> СПЕЦИАЛИЗАЦИЯ (СОЗДАНИЕ) </span>
-			<span v-if="modal.type == 'edit'">СПЕЦИАЛИЗАЦИЯ (РЕДАКТИРОВАНИЕ)</span>
+			{{ modal.title }}
 		</template>
 		<template #body>
-			<container-input-once :type="modal.type == 'create' ? 'create' : 'edit'">
+			<container-input-once>
 				<template #title>
 					<span>НАЗВАНИЕ*</span>
 					<span v-if="currentSpecialization.data.name.edited"> (ИЗМЕНЕНО) </span>
@@ -35,9 +34,9 @@
 		</template>
 		<template #footer>
 			<block-buttons>
-				<button-claim @click="addSpecialization" v-if="modal.type == 'create'">
+				<button-default @click="addSpecialization" v-if="modal.type == 'create'">
 					Создать
-				</button-claim>
+				</button-default>
 				<button-default @click="updateSpecialization" v-if="modal.type == 'edit'">
 					Обновить
 				</button-default>
@@ -130,7 +129,7 @@ export default {
 		return {
 			/* Модальное окно */
 			modal: {
-				title: "",
+				title: "СПЕЦИАЛИЗАЦИЯ",
 				status: false,
 				type: null,
 				style: {
@@ -246,8 +245,7 @@ export default {
 					{
 						this.modal.type = "create";
 						this.modal.status = true;
-						this.modal.style.create = true;
-						this.modal.style.delete = false;
+
 						this.clearModalData();
 					}
 					document.body.classList.add("modal-open");
@@ -256,8 +254,6 @@ export default {
 					{
 						this.modal.type = "edit";
 						this.modal.status = true;
-						this.modal.style.create = false;
-						this.modal.style.delete = false;
 					}
 					document.body.classList.add("modal-open");
 					break;

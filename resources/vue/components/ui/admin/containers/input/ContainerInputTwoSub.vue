@@ -1,9 +1,5 @@
 <template>
-	<fieldset
-		class="container-input-two-sub-sub"
-		:class="{ create: type === 'create' }"
-		v-if="fieldset"
-	>
+	<fieldset class="container-input-two-sub-sub" :class="type" v-if="fieldset">
 		<legend>
 			<slot name="legend"></slot>
 		</legend>
@@ -45,7 +41,7 @@
 		</div>
 	</fieldset>
 
-	<div class="container-input-two-sub" :class="{ create: type === 'create' }" v-else>
+	<div class="container-input-two-sub" :class="type" v-else>
 		<div class="item">
 			<div class="input">
 				<div class="item">
@@ -106,7 +102,6 @@ export default {
 		type: {
 			type: String,
 			default: "",
-			required: true,
 		},
 	},
 };
@@ -131,7 +126,7 @@ fieldset.container-input-two-sub-sub.create:focus-within {
 }
 
 fieldset.container-input-two-sub-sub:focus-within {
-	border: 1px solid var(--input-border-color-active);
+	border: var(--input-border-focus);
 }
 
 fieldset.container-input-two-sub.create > legend > span {
@@ -185,7 +180,7 @@ fieldset.container-input-two-sub.create > legend > span {
 }
 
 .container-input-two-sub-sub > .item > .input > .item > :is(input:focus, select:focus) {
-	border: 1px solid var(--input-border-color-active);
+	border: var(--input-border-focus);
 }
 
 .container-input-two-sub-sub.create > .item > .input > .item > :is(input:focus, select:focus) {
@@ -197,10 +192,10 @@ fieldset.container-input-two-sub.create > legend > span {
 }
 
 .container-input-two-sub-sub > .item > .input > .item > :is(input.error, select.error) {
-	background-color: var(--input-background-color-error);
-	border: 1px solid var(--input-border-color-error);
+	background-color: var(--input-error-background-color);
+	border: var(--input-error-border);
 
-	caret-color: red;
+	caret-color: var(--input-error-color);
 }
 
 @media screen and (width <= 450px) {

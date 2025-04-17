@@ -3,20 +3,20 @@
 	<!--|                  МОДАЛЬНОЕ ОКНО                   |-->
 	<!--|___________________________________________________|-->
 	<admin-modal ref="modal" @touchCloseModal="closeModal('modal')" :modal="modal">
-		<template #title v-if="!currentContact.data.delete.body && !modal.style.create">
+		<template
+			#title
+			v-if="modal.type == 'edit' && !currentContact.data.delete.body && !modal.style.create"
+		>
 			<icon-arrow :width="16" :height="16" :rotate="-90" @click="changeContactsOrder('down')" />
 			#{{ currentContact.data.order.body }}
 			<icon-arrow :width="16" :height="16" :rotate="90" @click="changeContactsOrder('up')" />
 		</template>
 		<template #title v-else>
-			<span v-if="modal.type == 'create'">КОНТАКТ (СОЗДАНИЕ)</span>
-			<span v-if="modal.type == 'edit'">КОНТАКТ (РЕДАКТИРОВАНИЕ)</span>
+			{{ modal.title }}
 		</template>
 		<template #body>
 			<ContainerInput>
-				<container-textarea-once
-					:type="modal.type == 'create' ? 'create' : modal.style.delete ? 'delete' : 'edit'"
-				>
+				<container-textarea-once>
 					<template #title>
 						<span>ЗАГОЛОВОК</span>
 						<span v-if="currentContact.data.name.edited"> (ИЗМЕНЕНО) </span>
@@ -38,9 +38,7 @@
 						</span>
 					</template>
 				</container-textarea-once>
-				<ContainerInputOnce
-					:type="modal.type == 'create' ? 'create' : modal.style.delete ? 'delete' : 'edit'"
-				>
+				<ContainerInputOnce>
 					<template #title>
 						<span>КЛИНИКА</span>
 					</template>
@@ -54,34 +52,24 @@
 					</template>
 				</ContainerInputOnce>
 				<admin-modal-list
-					:type="modal.type == 'create' ? 'create' : modal.style.delete ? 'delete' : 'edit'"
 					:array="currentContact.data.phones.body"
 					@touchCreate="createContactPhone"
 					@touchEdit="editContactPhone"
 					@touchDelete="deleteContactPhone"
 				>
 					<template #title>
-						<IconContactPhone
-							:width="16"
-							:height="14"
-							:type="modal.type == 'create' ? 'create' : 'edit'"
-						/>
+						<IconContactPhone :width="16" :height="14" :type="'edit'" />
 						ТЕЛЕФОНЫ
 					</template>
 				</admin-modal-list>
 				<admin-modal-list
-					:type="modal.type == 'create' ? 'create' : modal.style.delete ? 'delete' : 'edit'"
 					:array="currentContact.data.mails.body"
 					@touchCreate="createContactMail"
 					@touchEdit="editContactMail"
 					@touchDelete="deleteContactMail"
 				>
 					<template #title>
-						<IconContactMail
-							:width="20"
-							:height="14"
-							:type="modal.type == 'create' ? 'create' : 'edit'"
-						/>
+						<IconContactMail :width="20" :height="14" :type="'edit'" />
 						ПОЧТА
 					</template>
 				</admin-modal-list>
@@ -89,9 +77,13 @@
 		</template>
 		<template #footer>
 			<BlockButtons>
-				<button-claim v-if="modal.type == 'create'" @click="addContact"> Создать </button-claim>
+				<button-default v-if="modal.type == 'create'" @click="addContact">
+					Создать
+				</button-default>
 				<template v-if="modal.type == 'edit' && !currentContact.data.delete.body">
-					<button-remove @click="deleteContact"> Удалить </button-remove>
+					<button-remove v-if="!currentContact.data.create.body" @click="deleteContact">
+						Удалить
+					</button-remove>
 					<ButtonDefault @click="updateContact"> Обновить </ButtonDefault>
 				</template>
 				<ButtonDefault
@@ -114,15 +106,7 @@
 	>
 		<template #title>ТЕЛЕФОН</template>
 		<template #body>
-			<container-input-once
-				:type="
-					subModalPhone.type == 'create'
-						? 'create'
-						: subModalPhone.style.delete
-						? 'delete'
-						: 'edit'
-				"
-			>
+			<container-input-once>
 				<template #title>
 					<span>НОМЕР ТЕЛЕФОНА*</span>
 					<span v-if="currentPhone.data.name.edited"> (ИЗМЕНЕНО) </span>
@@ -151,9 +135,9 @@
 				<button-default v-if="subModalPhone.type == 'edit'" @click="updateContactPhone">
 					Обновить
 				</button-default>
-				<button-claim v-if="subModalPhone.type == 'create'" @click="addContactPhone">
+				<button-default v-if="subModalPhone.type == 'create'" @click="addContactPhone">
 					Создать
-				</button-claim>
+				</button-default>
 			</block-buttons>
 		</template>
 	</admin-sub-modal>
@@ -168,15 +152,7 @@
 	>
 		<template #title>ПОЧТА</template>
 		<template #body>
-			<container-input-once
-				:type="
-					subModalMail.type == 'create'
-						? 'create'
-						: subModalPhone.style.delete
-						? 'delete'
-						: 'edit'
-				"
-			>
+			<container-input-once>
 				<template #title>
 					<span>ЭЛЕКТРОННЫЙ АДРЕС*</span>
 					<span v-if="currentMail.data.name.edited"> (ИЗМЕНЕНО) </span>
@@ -205,14 +181,13 @@
 				<button-default v-if="subModalMail.type == 'edit'" @click="updateContactMail">
 					Обновить
 				</button-default>
-				<button-claim v-if="subModalMail.type == 'create'" @click="addContactMail">
+				<button-default v-if="subModalMail.type == 'create'" @click="addContactMail">
 					Создать
-				</button-claim>
+				</button-default>
 			</block-buttons>
 		</template>
 	</admin-sub-modal>
 
-	
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                     КОНТАКТЫ                      |-->
 	<!--|___________________________________________________|-->
@@ -356,7 +331,7 @@ export default {
 				},
 			},
 			modal: {
-				title: "",
+				title: "КОНТАКТ",
 				status: false,
 				type: null,
 				style: {
@@ -561,8 +536,6 @@ export default {
 					{
 						this[name].type = "create";
 						this[name].status = true;
-						this[name].style.create = true;
-						this[name].style.delete = false;
 						if (name === "modal") {
 							this.clearModalData("currentContact");
 						}
@@ -573,14 +546,6 @@ export default {
 					{
 						this[name].type = "edit";
 						this[name].status = true;
-						this[name].style.delete = false;
-						this[name].style.create = false;
-
-						if (name === "modal" && this.currentContact.data.delete.body) {
-							this[name].style.delete = true;
-						} else {
-							this[name].style.delete = false;
-						}
 					}
 					document.body.classList.add("modal-open");
 					break;
@@ -772,12 +737,11 @@ export default {
 					}
 				})
 				.catch((error) => {
-					let debbugStory = {
+					this.$store.commit("addDebugger", {
 						title: "Ошибка.",
 						body: error,
-						type: "Error",
-					};
-					this.$store.commit("debuggerState", debbugStory);
+						type: "error",
+					});
 				})
 				.finally(() => {
 					this.disabled.contacts.save = false;

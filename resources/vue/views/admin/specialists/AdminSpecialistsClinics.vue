@@ -4,16 +4,12 @@
 	<!--|___________________________________________________|-->
 	<admin-modal ref="modal" @touchCloseModal="closeModal" :modal="modal">
 		<template #title>
-			<span v-if="modal.type == 'create'" class="create">КЛИНИКА (СОЗДАНИЕ)</span>
-			<span v-if="modal.type == 'edit'">КЛИНИКА (РЕДАКТИРОВАНИЕ)</span>
+			{{ modal.title }}
 		</template>
 		<template #body>
 			<container-input>
 				<!-- Название и другое -->
-				<container-input-two
-					:fieldset="true"
-					:type="modal.type == 'create' ? 'create' : 'edit'"
-				>
+				<container-input-two :fieldset="true">
 					<template #legend>
 						<span>НАЗВАНИЕ И ДРУГОЕ</span>
 					</template>
@@ -58,10 +54,7 @@
 				</container-input-two>
 
 				<!-- Город и улица -->
-				<container-input-two
-					:fieldset="true"
-					:type="modal.type == 'create' ? 'create' : 'default'"
-				>
+				<container-input-two :fieldset="true">
 					<template #legend>
 						<span>ГОРОД И УЛИЦА</span>
 					</template>
@@ -108,10 +101,7 @@
 				</container-input-two>
 
 				<!-- Дом и индекс -->
-				<container-input-two
-					:fieldset="true"
-					:type="modal.type == 'create' ? 'create' : 'default'"
-				>
+				<container-input-two :fieldset="true">
 					<template #legend>
 						<span>ДОМ И ИНДЕКС</span>
 					</template>
@@ -159,10 +149,7 @@
 				</container-input-two>
 
 				<!-- Географические координаты -->
-				<container-input-two
-					:fieldset="true"
-					:type="modal.type == 'create' ? 'create' : 'default'"
-				>
+				<container-input-two :fieldset="true">
 					<template #legend>
 						<span>ГЕОГРАФИЧЕСКИЕ КООРДИНАТЫ</span>
 					</template>
@@ -213,7 +200,9 @@
 		</template>
 		<template #footer>
 			<block-buttons>
-				<button-claim v-if="modal.type == 'create'" @click="addClinic"> Создать </button-claim>
+				<button-default v-if="modal.type == 'create'" @click="addClinic">
+					Создать
+				</button-default>
 				<button-default v-if="modal.type == 'edit'" @click="updateClinic">
 					Обновить
 				</button-default>
@@ -329,7 +318,7 @@ export default {
 
 			/* Модальное окно */
 			modal: {
-				title: "",
+				title: "КЛИНИКА",
 				status: false,
 				type: null,
 				style: {
@@ -511,8 +500,6 @@ export default {
 				case "create":
 					this.modal.type = "create";
 					this.modal.status = true;
-					this.modal.style.create = true;
-					this.modal.style.delete = false;
 
 					this.clearModalData();
 
@@ -521,8 +508,6 @@ export default {
 				case "edit":
 					this.modal.type = "edit";
 					this.modal.status = true;
-					this.modal.style.create = false;
-					this.modal.style.delete = false;
 
 					document.body.classList.add("modal-open");
 					break;

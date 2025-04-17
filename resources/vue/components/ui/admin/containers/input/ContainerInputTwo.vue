@@ -1,9 +1,5 @@
 <template>
-	<fieldset
-		class="container-input-two"
-		:class="{ create: type === 'create', delete: type === 'delete' }"
-		v-if="fieldset"
-	>
+	<fieldset class="container-input-two" :class="type" v-if="fieldset">
 		<legend>
 			<slot name="legend"></slot>
 		</legend>
@@ -23,7 +19,7 @@
 		</div>
 	</fieldset>
 
-	<div class="container-input-two" :class="{ create: type === 'create' }" v-else>
+	<div class="container-input-two" :class="type" v-else>
 		<div class="item">
 			<label>
 				<slot name="title-one"></slot>
@@ -52,7 +48,6 @@ export default {
 		type: {
 			type: String,
 			default: "",
-			required: true,
 		},
 	},
 };

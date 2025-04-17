@@ -1,20 +1,83 @@
 export default {
 	/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+	/* |               МОДУЛЬНАЯ ПРОВЕРКА                  |*/
+	/* |___________________________________________________|*/
+	/* Множественная проверка полей ввода */
+	checkInputsAll(obj, keys) {
+		let errorCount = 0;
+
+		for (let i = 0; i < keys.length; i++) {
+			if (this.checkInput(obj, keys[i].key, keys[i].type)) {
+				errorCount++;
+			}
+		}
+
+		if (errorCount > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	},
+	/* Проверка одного поля */
+	checkInput(obj, key, type) {
+		let logs = {};
+
+		switch (type) {
+			case "text":
+				logs = this.checkInputText(obj.data[key].value);
+				break;
+			case "number":
+				logs = this.checkInputNumber(obj.data[key].value);
+				break;
+			case "boolean":
+				logs = this.checkInputBoolean(obj.data[key].value);
+				break;
+			case "date":
+				logs = this.checkInputDate(obj.data[key].value);
+				break;
+			case "email":
+				logs = this.checkInputEmail(obj.data[key].value);
+				break;
+			case "phone":
+				logs = this.checkInputPhone(obj.data[key].value);
+				break;
+			default:
+				logs = {
+					status: true,
+					message: "Неизвестный тип проверки.",
+				};
+				break;
+		}
+
+		if (logs.status) {
+			obj.errors[key].message = logs.message;
+			obj.errors[key].status = true;
+
+			return true;
+		} else {
+			obj.errors[key].message = "";
+			obj.errors[key].status = false;
+
+			return false;
+		}
+	},
+
+	/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 	/* |                 ОБЩИЕ ПРОВЕРКИ                    |*/
 	/* |___________________________________________________|*/
 	/* Проверка введенного текстового */
 	checkInputText(value) {
-		if (this.checkEmpty(value)) {
+		if (this.isEmpty(value)) {
 			return {
 				status: true,
-				message: "Поле не может быть пустым.",
+				message: "Пустое поле.",
 			};
 		}
 
-		if (this.checkTypeString(value)) {
+		if (this.isString(value)) {
 			return {
 				status: true,
-				message: "Тип данных не совпадает.",
+				message: "Введите текст.",
 			};
 		}
 
@@ -23,23 +86,60 @@ export default {
 			message: "Ошибок нет.",
 		};
 	},
-	// Проверка введенного текстового значения
+	/* Проверка введенного текстового значения */
 	checkInputNumber(value) {
-		/* Проверка на пустую строку */
-		if (this.checkEmpty(value)) {
+		// Проверка на пустую строку
+		if (this.isEmpty(value)) {
 			return {
 				status: true,
-				message: "Поле не может быть пустым.",
+				message: "Пустое поле.",
 			};
 		}
 
-		/* Проверка на пустую строку */
-		if (this.checkTypeNumber(value)) {
+		// Проверка на пустую строку
+		if (this.isNumber(value)) {
 			return {
 				status: true,
-				message: "Тип данных не совпадает.",
+				message: "Введите число.",
 			};
 		}
+
+		return {
+			status: false,
+			message: "Ошибок нет.",
+		};
+	},
+	/* Проверка введенного текстового значения */
+	checkInputBoolean(value) {
+		// Проверка на пустую строку
+		if (this.isEmpty(value)) {
+			return {
+				status: true,
+				message: "Пустое поле.",
+			};
+		}
+
+		return {
+			status: false,
+			message: "Ошибок нет.",
+		};
+	},
+	/* Проверка введенной даты */
+	checkInputDate(value) {
+		// Проверка на пустую строку
+		if (this.isEmpty(value)) {
+			return {
+				status: true,
+				message: "Пустое поле.",
+			};
+		}
+
+		if (!this.isDate(value)) {
+			return {
+				status: true,
+				message: "Некорректная дата.",
+			};
+		};
 
 		return {
 			status: false,
@@ -54,10 +154,10 @@ export default {
 			return chekText;
 		}
 
-		if (!this.checkMail(value)) {
+		if (!this.isMail(value)) {
 			return {
 				status: true,
-				message: "Почта не прошла проверку.",
+				message: "Некорректная почта.",
 			};
 		}
 
@@ -74,10 +174,10 @@ export default {
 			return chekText;
 		}
 
-		if (!this.checkPhone(value)) {
+		if (!this.isPhone(value)) {
 			return {
 				status: true,
-				message: "Телефон не прошел проверку.",
+				message: "Некорректный телефон.",
 			};
 		}
 
@@ -88,15 +188,15 @@ export default {
 	},
 	/* Проверка введенного файла */
 	checkInputFile(value, types = ["image/png"]) {
-		/* Проверка на загрузку файла пользователем */
+		// Проверка на загрузку файла пользователем
 		if (!value) {
 			return {
 				status: true,
-				message: "Поле не может быть пустым.",
+				message: "Пустое поле.",
 			};
 		}
 
-		/* Проверка на тип загруженного файла */
+		// Проверка на тип загруженного файла
 		if (!types.includes(value.type)) {
 			let typesStr = types.join(", ");
 
@@ -106,7 +206,7 @@ export default {
 			};
 		}
 
-		/* Проверка на размер загруженного файла */
+		// Проверка на размер загруженного файла
 		if (value.size / 1024 / 1024 > 10) {
 			return {
 				status: true,
@@ -123,7 +223,7 @@ export default {
 	/* |                ТОЧЕЧНЫЕ ПРОВЕРКИ                  |*/
 	/* |___________________________________________________|*/
 	/* Проверка на пустоту */
-	checkEmpty(value) {
+	isEmpty(value) {
 		if (value === "" || value === null) {
 			return true;
 		}
@@ -131,7 +231,7 @@ export default {
 		return false;
 	},
 	/* Проверка на тип данных: string */
-	checkTypeString(value) {
+	isString(value) {
 		if (typeof value != "string") {
 			return true;
 		}
@@ -139,22 +239,26 @@ export default {
 		return false;
 	},
 	/* Проверка на тип данных: number */
-	checkTypeNumber(value) {
+	isNumber(value) {
 		if (Number.isNaN(Number(value))) {
 			return true;
 		}
 
 		return false;
 	},
+	isDate(value) {
+		let date = new Date(value);
+		return !Number.isNaN(date.getTime());		
+	},
 	/* Валидация почты */
-	checkMail(mail) {
+	isMail(mail) {
 		let mailRegexp =
 			/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 		return mailRegexp.test(mail);
 	},
 	/* Валидация телефона */
-	checkPhone(phone) {
+	isPhone(phone) {
 		let phoneRegexp = /^\+7\(\d{3}\)-\d{3}-\d{2}-\d{2}$/;
 
 		return phoneRegexp.test(phone);

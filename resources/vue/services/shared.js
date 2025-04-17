@@ -27,6 +27,70 @@ export default {
 		return Number(maxOrder);
 	},
 	/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+	/* |                 ЗАПИСЬ ЗНАЧЕНИЙ                   |*/
+	/* |___________________________________________________|*/
+	/* Запись значений */
+	setData(original, copy, section = "data", option = "value") {
+		for (let key in original) {
+			if (typeof original[key] == "object") {
+				copy[section][key][option] = this.getRecursiveCopy(original[key]);
+				continue;
+			}
+
+			if (copy[section].hasOwnProperty(key)) {
+				copy[section][key][option] = original[key];
+			}
+		}
+	},
+	/* Рекурсивное копирование */
+	getRecursiveCopy(obj) {
+		if (obj === null || typeof obj !== "object") {
+			return obj;
+		}
+
+		if (Array.isArray(obj)) {
+			let arrCopy = [];
+			for (let i = 0; i < obj.length; i++) {
+				arrCopy[i] = this.getRecursiveCopy(obj[i]);
+			}
+			return arrCopy;
+		}
+
+		let objCopy = {};
+		for (let key in obj) {
+			if (obj.hasOwnProperty(key)) {
+				objCopy[key] = this.getRecursiveCopy(obj[key]);
+			}
+		}
+
+		return objCopy;
+	},
+	getRecursiveCopyClear(obj) {
+		if (typeof obj !== "object") {
+			switch (typeof obj) {
+				case "boolean":
+					return false;
+				case "function":
+					return obj;
+				default:
+					return "";
+			}
+		}
+
+		if (Array.isArray(obj)) {
+			return [];
+		}
+
+		let objCopy = {};
+		for (let key in obj) {
+			if (obj.hasOwnProperty(key)) {
+				objCopy[key] = this.getRecursiveCopyClear(obj[key]);
+			}
+		}
+
+		return objCopy;
+	},
+	/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 	/* |              ОБНОВЛЕНИЕ ЗНАЧЕНИЙ                  |*/
 	/* |___________________________________________________|*/
 	/* Обновление значений id */
@@ -56,6 +120,53 @@ export default {
 	/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 	/* |                ОЧИСТКА ЗНАЧЕНИЙ                   |*/
 	/* |___________________________________________________|*/
+	/* Выборочная очистка объекта */
+	clearObjectSelective(obj, section = "data", option = ["value"]) {
+		for (let key in obj[section]) {
+			for (let i = 0; i < option.length; i++) {
+				switch (typeof obj[section][key][option[i]]) {
+					case "object":
+						if (Array.isArray(obj[section][key][option[i]])) {
+							obj[section][key][option[i]] = [];
+						}
+						break;
+					case "function":
+						continue;
+						break;
+					case "boolean":
+						obj[section][key][option[i]] = false;
+						break;
+					default:
+						obj[section][key][option[i]] = "";
+						break;
+				}
+			}
+		}
+	},
+	/* Полная очистка объекта */
+	clearObjectFull(obj) {
+		for (let key in obj) {
+			switch (typeof obj[key]) {
+				case "object":
+					if (Array.isArray(obj[key])) {
+						obj[key] = [];
+						continue;
+					}
+
+					this.clearObjectFull(obj[key]);
+					break;
+				case "boolean":
+					obj[key] = false;
+					break;
+				case "function":
+					continue;
+					break;
+				default:
+					obj[key] = "";
+					break;
+			}
+		}
+	},
 	/* Удаление элементов */
 	clearDeletes(array) {
 		let elementsDelete = array.filter((item) => {
@@ -108,74 +219,5 @@ export default {
 		} else {
 			return Math.floor(Math.random() * -Math.abs(range));
 		}
-	},
-	transliterate(text) {
-		return text
-			.replace(/\u0401/g, "YO")
-			.replace(/\u0419/g, "I")
-			.replace(/\u0426/g, "TS")
-			.replace(/\u0423/g, "U")
-			.replace(/\u041A/g, "K")
-			.replace(/\u0415/g, "E")
-			.replace(/\u041D/g, "N")
-			.replace(/\u0413/g, "G")
-			.replace(/\u0428/g, "SH")
-			.replace(/\u0429/g, "SCH")
-			.replace(/\u0417/g, "Z")
-			.replace(/\u0425/g, "H")
-			.replace(/\u042A/g, "")
-			.replace(/\u0451/g, "yo")
-			.replace(/\u0439/g, "i")
-			.replace(/\u0446/g, "ts")
-			.replace(/\u0443/g, "u")
-			.replace(/\u043A/g, "k")
-			.replace(/\u0435/g, "e")
-			.replace(/\u043D/g, "n")
-			.replace(/\u0433/g, "g")
-			.replace(/\u0448/g, "sh")
-			.replace(/\u0449/g, "sch")
-			.replace(/\u0437/g, "z")
-			.replace(/\u0445/g, "h")
-			.replace(/\u044A/g, "'")
-			.replace(/\u0424/g, "F")
-			.replace(/\u042B/g, "I")
-			.replace(/\u0412/g, "V")
-			.replace(/\u0410/g, "a")
-			.replace(/\u041F/g, "P")
-			.replace(/\u0420/g, "R")
-			.replace(/\u041E/g, "O")
-			.replace(/\u041B/g, "L")
-			.replace(/\u0414/g, "D")
-			.replace(/\u0416/g, "ZH")
-			.replace(/\u042D/g, "E")
-			.replace(/\u0444/g, "f")
-			.replace(/\u044B/g, "i")
-			.replace(/\u0432/g, "v")
-			.replace(/\u0430/g, "a")
-			.replace(/\u043F/g, "p")
-			.replace(/\u0440/g, "r")
-			.replace(/\u043E/g, "o")
-			.replace(/\u043B/g, "l")
-			.replace(/\u0434/g, "d")
-			.replace(/\u0436/g, "zh")
-			.replace(/\u044D/g, "e")
-			.replace(/\u042F/g, "Ya")
-			.replace(/\u0427/g, "CH")
-			.replace(/\u0421/g, "S")
-			.replace(/\u041C/g, "M")
-			.replace(/\u0418/g, "I")
-			.replace(/\u0422/g, "T")
-			.replace(/\u042C/g, "'")
-			.replace(/\u0411/g, "B")
-			.replace(/\u042E/g, "YU")
-			.replace(/\u044F/g, "ya")
-			.replace(/\u0447/g, "ch")
-			.replace(/\u0441/g, "s")
-			.replace(/\u043C/g, "m")
-			.replace(/\u0438/g, "i")
-			.replace(/\u0442/g, "t")
-			.replace(/\u044C/g, "'")
-			.replace(/\u0431/g, "b")
-			.replace(/\u044E/g, "yu");
 	},
 };

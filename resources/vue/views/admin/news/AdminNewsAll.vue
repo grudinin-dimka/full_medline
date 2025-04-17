@@ -1,7 +1,5 @@
 <template>
-	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
-	<!--|                     НОВОСТИ                       |-->
-	<!--|___________________________________________________|-->
+	<!-- Новости -->
 	<info-bar>
 		<template v-slot:title>Новости</template>
 		<template v-slot:addreas>news</template>
@@ -19,7 +17,7 @@
 			<BaseTable
 				v-if="loading.sections.news"
 				:table="table"
-				@create="console.log('create')"
+				@create="$router.push('enews/new')"
 				@edite="console.log('edite')"
 				@delete="console.log('delete')"
 			/>
@@ -29,12 +27,6 @@
 				:minHeight="200"
 				@loaderChildAfterLeave="loaderChildAfterLeave"
 			/>
-		</template>
-	</block-once>
-
-	<block-once :minHeight="200">
-		<template #body>
-			<Tiptap ref="tiptap" :content="content" :editable="true" @export="test" />
 		</template>
 	</block-once>
 </template>
@@ -51,6 +43,8 @@ import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vu
 
 import IconLoad from "../../../components/icons/IconLoad.vue";
 import IconSave from "../../../components/icons/IconSave.vue";
+
+import shared from "../../../services/shared";
 
 export default {
 	components: {
@@ -72,6 +66,7 @@ export default {
 			disabled: {
 				news: {
 					save: false,
+					update: false,
 				},
 			},
 
@@ -82,6 +77,46 @@ export default {
 				},
 				sections: {
 					news: false,
+				},
+			},
+
+			/* Форма */
+			currentNews: {
+				errors: {
+					id: {
+						status: false,
+						message: null,
+					},
+					image: {
+						status: false,
+						message: null,
+					},
+					title: {
+						status: false,
+						message: null,
+					},
+					discription: {
+						status: false,
+						message: null,
+					},
+				},
+				data: {
+					id: {
+						edited: false,
+						value: null,
+					},
+					image: {
+						edited: false,
+						value: null,
+					},
+					title: {
+						edited: false,
+						value: null,
+					},
+					discription: {
+						edited: false,
+						value: null,
+					},
 				},
 			},
 
@@ -135,6 +170,31 @@ export default {
 		/* После скрытия элементы */
 		loaderChildAfterLeave() {
 			this.loading.sections.news = true;
+		},
+
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                 Модальное окно                    |*/
+		/* |___________________________________________________|*/
+		/* Открытие модального окна */
+		openModal(name, title, look) {
+			this[name].values.title = title;
+			this[name].values.look = look;
+
+			this.$refs[name].open();
+		},
+
+		/* Открытие модального окна для добавления */
+		openNewsCreate() {
+			shared.clearObjectFull(this.currentNews);
+
+			this.openModal("modalNews", "НОВОСТЬ", "create");
+		},
+
+		/* Открытие модального окна для добавления */
+		openNewsDefault() {
+			shared.clearObjectFull(this.currentNews);
+
+			this.openModal("modalNews", "НОВОСТЬ", "default");
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/

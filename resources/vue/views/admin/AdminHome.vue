@@ -22,9 +22,8 @@
 				@click="currentSlide.data.hide.body = true"
 			/>
 		</template>
-		<template #title v-if="modal.style.create || modal.style.delete">
-			<span v-if="modal.style.create">СЛАЙД (СОЗДАНИЕ)</span>
-			<span v-if="modal.style.delete">СЛАЙД (УДАЛЕНИЕ)</span>
+		<template #title>
+			{{ modal.title }}
 		</template>
 		<template
 			#title
@@ -55,9 +54,7 @@
 			></div>
 			<container-input>
 				<!-- Название -->
-				<container-input-once
-					:type="modal.type == 'create' ? 'create' : modal.style.delete ? 'delete' : 'edit'"
-				>
+				<container-input-once>
 					<template #title>
 						<span>ИЗОБРАЖЕНИЕ*</span>
 						<span v-if="currentSlide.data.file.edited"> (ИЗМЕНЕНО) </span>
@@ -80,9 +77,7 @@
 					</template>
 				</container-input-once>
 				<!-- Название -->
-				<container-input-once
-					:type="modal.type == 'create' ? 'create' : modal.style.delete ? 'delete' : 'edit'"
-				>
+				<container-input-once>
 					<template #title>
 						<span>НАЗВАНИЕ*</span>
 						<span v-if="currentSlide.data.name.edited"> (ИЗМЕНЕНО) </span>
@@ -106,9 +101,7 @@
 					</template>
 				</container-input-once>
 				<!-- Ссылка -->
-				<container-input-once
-					:type="modal.type == 'create' ? 'create' : modal.style.delete ? 'delete' : 'edit'"
-				>
+				<container-input-once>
 					<template #title>
 						<span>ССЫЛКА*</span>
 						<span v-if="currentSlide.data.link.edited">(ИЗМЕНЕНО)</span>
@@ -149,13 +142,13 @@
 					Обновить
 				</button-default>
 				<button-default v-if="currentSlide.data.delete.body" @click.prevent="markDeleteSlide">
-					Восстановить
+					Вернуть
 				</button-default>
 			</block-buttons>
 			<block-buttons v-if="modal.type == 'create'">
-				<button-claim @click.prevent="addSlide" :disabled="disabled.slider.create">
+				<button-default @click.prevent="addSlide" :disabled="disabled.slider.create">
 					Создать
-				</button-claim>
+				</button-default>
 			</block-buttons>
 		</template>
 	</modal>
@@ -473,7 +466,7 @@ export default {
 			},
 			slides: [],
 			modal: {
-				title: "",
+				title: "СЛАЙД",
 				status: false,
 				type: null,
 				style: {
@@ -736,8 +729,6 @@ export default {
 							}
 
 							this.currentSlide.data.delete.body = false;
-							this.modal.style.create = true;
-							this.modal.style.delete = false;
 							// Открытие модального окна
 							this.openModal(type);
 						}
@@ -746,23 +737,6 @@ export default {
 						{
 							for (let key in selectedSlide) {
 								this.currentSlide.data[key].body = selectedSlide[key];
-							}
-
-							// Проверка, создан ли слайд или уже имеется
-							if (this.currentSlide.data.create.body === true) {
-								this.modal.style.create = true;
-							} else {
-								this.modal.title = "";
-								this.modal.style.create = false;
-							}
-
-							// Проверка, помечен ли слайд на удаление
-							if (this.currentSlide.data.delete.body === true) {
-								this.modal.title = "СЛАЙД (УДАЛЕНИЕ)";
-								this.modal.style.delete = true;
-							} else {
-								this.modal.title = "";
-								this.modal.style.delete = false;
 							}
 
 							// Открытие модального окна
