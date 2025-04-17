@@ -11,8 +11,13 @@
 		<template #title>НОВОСТЬ (СОЗДАНИЕ)</template>
 
 		<template #options>
-			<icon-load :width="28" :height="28" v-if="disabled.news.save" />
-			<icon-save :width="28" :height="28" @click="console.log('save')" v-else />
+			<template v-if="$route.params.id === 'new'">
+				test
+			</template>
+			<template v-else>
+				<icon-load :width="28" :height="28" v-if="disabled.news.save" />
+				<icon-save :width="28" :height="28" @click="console.log('save')" v-else />
+			</template>
 		</template>
 
 		<template #body>
@@ -40,6 +45,7 @@
 						:content="content"
 						:editable="true"
 						:limit="500"
+						:placeholder="'Заголовок'"
 						@export="test"
 					/>
 				</div>
@@ -49,6 +55,7 @@
 						:content="content"
 						:editable="true"
 						:limit="10_000"
+						:placeholder="'Текст новости'"
 						@export="test"
 					/>
 				</div>
@@ -241,6 +248,7 @@ export default {
 }
 
 .input__file-button {
+	user-select: none;
 	cursor: pointer;
 	display: -webkit-box;
 	display: -ms-flexbox;

@@ -146,8 +146,10 @@ export default {
 
 <style scoped>
 .select {
-	position: relative;
 	width: 100%;
+
+	position: relative;
+	display: inline-block;
 }
 
 .control {

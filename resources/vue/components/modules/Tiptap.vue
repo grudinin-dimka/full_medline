@@ -398,6 +398,7 @@ import Subscript from "@tiptap/extension-subscript";
 import Superscript from "@tiptap/extension-superscript";
 import Link from "@tiptap/extension-link";
 import TextAlign from "@tiptap/extension-text-align";
+import Placeholder from "@tiptap/extension-placeholder";
 
 import StarterKit from "@tiptap/starter-kit";
 
@@ -419,12 +420,16 @@ export default {
 		},
 		minHeight: {
 			type: Number,
-			default: 100,			
+			default: 100,
 		},
 		limit: {
 			type: Number,
 			default: 500,
 		},
+		placeholder: {
+			type: String,
+			default: "Введите текст",
+		}
 	},
 	data() {
 		return {
@@ -476,8 +481,6 @@ export default {
 	},
 	mounted() {
 		this.editor = new Editor({
-			content: "<p>I'm running Tiptap with Vue.js. 🎉</p>",
-
 			// Расширения Tiptap
 			extensions: [
 				StarterKit,
@@ -494,6 +497,9 @@ export default {
 				}),
 				CharacterCount.configure({
 					limit: this.limit,
+				}),
+				Placeholder.configure({
+					placeholder: this.placeholder,
 				}),
 			],
 
@@ -544,7 +550,6 @@ export default {
 	margin: 0px;
 	padding-left: 10px;
 }
-
 
 /* Кнопки */
 .tiptap__buttons {
@@ -621,6 +626,14 @@ export default {
 
 .tiptap p {
 	margin: 5px;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+	color: var(--input-placeholder-color);
+	content: attr(data-placeholder);
+	float: left;
+	height: 0;
+	pointer-events: none;
 }
 
 /* Вслпывающее меню */

@@ -464,24 +464,15 @@
 		</template>
 
 		<template #options>
-			<icon-load :width="28" :height="28" v-if="disabled.profile.save" />
-			<icon-save
-				:width="28"
-				:height="28"
-				@click="saveSpecialistModular('all')"
-				v-if="
-					$route.params.id !== 'new' &&
-					this.specialist.profile.data.id.body !== null &&
-					!disabled.profile.save
-				"
-			/>
-			<icon-add
-				:width="28"
-				:height="28"
-				@click="addSpecialist"
-				v-if="$route.params.id === 'new' && !disabled.profile.create"
-			></icon-add>
-			<icon-load :width="28" :height="28" v-if="disabled.profile.create" :type="'create'" />
+			<template v-if="$route.params.id === 'new'">
+				<icon-load :width="28" :height="28" v-if="disabled.profile.create" />
+				<icon-add :width="28" :height="28" v-else @click="addSpecialist" />
+			</template>
+
+			<template v-else>
+				<icon-load :width="28" :height="28" v-if="disabled.profile.save" />
+				<icon-save :width="28" :height="28" v-else @click="saveSpecialistModular('all')" />
+			</template>
 		</template>
 
 		<template #body>
@@ -827,7 +818,102 @@
 		</template>
 	</block-once>
 
-	<template v-if="$route.params.id !== 'new'">
+	<template v-if="$route.params.id === 'new'">
+		<block-two :minHeight="40">
+			<template #one-title> СПЕЦИАЛИЗАЦИИ </template>
+
+			<template #one-body>
+				<div class="profile-list" v-show="loading.sections.specializations">
+					<div class="item-empty">
+						<div class="item-title">Необходимо создать врача</div>
+					</div>
+				</div>
+
+				<!-- Загрузчик специализаций -->
+				<loader-child
+					:isLoading="loading.loader.specializations"
+					:minHeight="100"
+					@loaderChildAfterLeave="loaderChildAfterLeave"
+				/>
+			</template>
+
+			<template #two-title> КЛИНИКИ </template>
+
+			<template #two-body>
+				<div class="profile-list" v-show="loading.sections.clinics">
+					<div class="item-empty">
+						<div class="item-title">Необходимо создать врача</div>
+					</div>
+				</div>
+
+				<!-- Загрузчик клиник -->
+				<loader-child
+					:isLoading="loading.loader.clinics"
+					:minHeight="100"
+					@loaderChildAfterLeave="loaderChildAfterLeave"
+				/>
+			</template>
+		</block-two>
+
+		<block-once :minHeight="50">
+			<template #title> СЕРТИФИКАТЫ </template>
+
+			<template #body>
+				<div class="profile-list" v-show="loading.sections.certificates">
+					<div class="item-empty">
+						<div class="item-title">Необходимо создать врача</div>
+					</div>
+				</div>
+
+				<!-- Загрузчик профиля -->
+				<loader-child
+					:isLoading="loading.loader.certificates"
+					:minHeight="100"
+					@loaderChildAfterLeave="loaderChildAfterLeave"
+				/>
+			</template>
+		</block-once>
+
+		<block-once :minHeight="50">
+			<template #title> ОБРАЗОВАНИЕ </template>
+
+			<template #body>
+				<div class="profile-list" v-show="loading.sections.educations">
+					<div class="item-empty">
+						<div class="item-title">Необходимо создать врача</div>
+					</div>
+				</div>
+
+				<!-- Загрузчик профиля -->
+				<loader-child
+					:isLoading="loading.loader.educations"
+					:minHeight="100"
+					@loaderChildAfterLeave="loaderChildAfterLeave"
+				/>
+			</template>
+		</block-once>
+
+		<block-once :minHeight="50">
+			<template #title> МЕСТА РАБОТЫ </template>
+
+			<template #body>
+				<div class="profile-list" v-show="loading.sections.works">
+					<div class="item-empty">
+						<div class="item-title">Необходимо создать врача</div>
+					</div>
+				</div>
+
+				<!-- Загрузчик профиля -->
+				<loader-child
+					:isLoading="loading.loader.works"
+					:minHeight="100"
+					@loaderChildAfterLeave="loaderChildAfterLeave"
+				/>
+			</template>
+		</block-once>
+	</template>
+
+	<template v-else>
 		<block-two :minHeight="40">
 			<!--____________________________________________________-->
 			<!--2. Специализации                                    -->

@@ -24,10 +24,10 @@ export default {
 <style scoped>
 svg {
 	cursor: pointer;
-	fill: var(--svg-icon-add-item);
+	fill: var(--svg-icon-arrow-fill);
 }
 
 svg:hover {
-	fill: var(--svg-icon-add-item-hover);
+	fill: var(--svg-icon-arrow-fill-hover);
 }
 </style>
