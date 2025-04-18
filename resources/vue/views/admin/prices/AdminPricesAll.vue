@@ -23,7 +23,7 @@
 				</template>
 				<template #error>
 					<span class="error" v-if="currentPrice.errors.file.status">
-						{{ currentPrice.errors.file.body }}
+						{{ currentPrice.errors.file.message }}
 					</span>
 				</template>
 			</container-input-once>
@@ -169,13 +169,13 @@ export default {
 			currentPrice: {
 				errors: {
 					file: {
-						body: "",
+						message: "",
 						status: false,
 					},
 				},
 				data: {
 					file: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 				},
@@ -267,65 +267,7 @@ export default {
 				document.body.classList.remove("modal-open");
 			}
 		},
-		/* _____________________________________________________*/
-		/* 2. Работа с полями ввода модального окна             */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		// Проверка поля имени
-		checkModalInput(dataKey, inputType) {
-			let errorLog = {};
-			switch (inputType) {
-				case "text":
-					errorLog = validate.checkInputText(this.currentSpecialization.data[dataKey].body);
-					break;
-				case "file":
-					errorLog = validate.checkInputFile(this.$refs.fileUpload.files[0], [
-						"application/vnd.oasis.opendocument.spreadsheet",
-						"application/vnd.ms-excel",
-						"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-					]);
-					break;
-				default:
-					break;
-			}
 
-			if (errorLog.status) {
-				this.currentPrice.errors[dataKey].body = errorLog.message;
-				this.currentPrice.errors[dataKey].status = true;
-
-				return true;
-			} else {
-				this.currentPrice.errors[dataKey].body = "";
-				this.currentPrice.errors[dataKey].status = false;
-
-				return false;
-			}
-		},
-		// Проверка всех полей ввода модального окна
-		checkModalInputsAll(inputKeys) {
-			let errorCount = 0;
-			for (let i = 0; i < inputKeys.length; i++) {
-				switch (inputKeys[i]) {
-					// Для поля файл
-					case "file":
-						if (this.checkModalInput(inputKeys[i], "file")) {
-							errorCount++;
-						}
-						break;
-					// Для всех остальных полей
-					default:
-						if (this.checkModalInput(inputKeys[i], "text")) {
-							errorCount++;
-						}
-						break;
-				}
-			}
-
-			if (errorCount > 0) {
-				return true;
-			} else {
-				return false;
-			}
-		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                      ЦЕНЫ                         |*/
 		/* |___________________________________________________|*/
@@ -366,9 +308,17 @@ export default {
 
 		/* Создание цены */
 		createPrice() {
-			if (this.checkModalInputsAll(["file"])) {
+			if (
+				validate.checkInputsAll(this.currentPrice, [
+					{
+						key: "file",
+						type: "file",
+						value: this.$refs.fileUpload,
+						formats: ["ods", "xls", "xlsx"],
+					},
+				])
+			)
 				return;
-			}
 
 			/* Загрузка файла */
 			let formData = new FormData();

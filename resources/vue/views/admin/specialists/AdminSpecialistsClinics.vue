@@ -23,14 +23,13 @@
 							placeholder="Введите название"
 							autocomplete="off"
 							:class="{ error: currentClinic.errors.name.status }"
-							v-model="currentClinic.data.name.body"
+							v-model="currentClinic.data.name.value"
 							@input="currentClinic.data.name.edited = true"
-							@blur="checkModalInput('name', 'text')"
 						/>
 					</template>
 					<template #error-one>
 						<span class="error" v-if="currentClinic.errors.name.status">
-							{{ currentClinic.errors.name.body }}
+							{{ currentClinic.errors.name.message }}
 						</span>
 					</template>
 					<!-- ДРУГОЕ -->
@@ -42,13 +41,13 @@
 							type="text"
 							placeholder="Введите другое"
 							autocomplete="off"
-							v-model="currentClinic.data.other.body"
+							v-model="currentClinic.data.other.value"
 							@input="currentClinic.data.other.edited = true"
 						/>
 					</template>
 					<template #error-two>
 						<span class="error" v-if="currentClinic.errors.other.status">
-							{{ currentClinic.errors.other.body }}
+							{{ currentClinic.errors.other.message }}
 						</span>
 					</template>
 				</container-input-two>
@@ -68,14 +67,13 @@
 							placeholder="Введите город"
 							autocomplete="off"
 							:class="{ error: currentClinic.errors.city.status }"
-							v-model="currentClinic.data.city.body"
-							@blur="checkModalInput('city', 'text')"
+							v-model="currentClinic.data.city.value"
 							@input="currentClinic.data.city.edited = true"
 						/>
 					</template>
 					<template #error-one>
 						<span class="error" v-if="currentClinic.errors.city.status">
-							{{ currentClinic.errors.city.body }}
+							{{ currentClinic.errors.city.message }}
 						</span>
 					</template>
 					<!-- УЛИЦА -->
@@ -88,14 +86,13 @@
 							placeholder="Введите улицу"
 							autocomplete="off"
 							:class="{ error: currentClinic.errors.street.status }"
-							v-model="currentClinic.data.street.body"
-							@blur="checkModalInput('street', 'text')"
+							v-model="currentClinic.data.street.value"
 							@input="currentClinic.data.street.edited = true"
 						/>
 					</template>
 					<template #error-two>
 						<span class="error" v-if="currentClinic.errors.street.status">
-							{{ currentClinic.errors.street.body }}
+							{{ currentClinic.errors.street.message }}
 						</span>
 					</template>
 				</container-input-two>
@@ -115,14 +112,13 @@
 							placeholder="Введите дом"
 							autocomplete="off"
 							:class="{ error: currentClinic.errors.home.status }"
-							v-model="currentClinic.data.home.body"
-							@blur="checkModalInput('home', 'text')"
+							v-model="currentClinic.data.home.value"
 							@input="currentClinic.data.home.edited = true"
 						/>
 					</template>
 					<template #error-one>
 						<span class="error" v-if="currentClinic.errors.home.status">
-							{{ currentClinic.errors.home.body }}
+							{{ currentClinic.errors.home.message }}
 						</span>
 					</template>
 					<!-- ИНДЕКС -->
@@ -136,14 +132,13 @@
 							placeholder="______"
 							autocomplete="off"
 							:class="{ error: currentClinic.errors.index.status }"
-							v-model="currentClinic.data.index.body"
-							@blur="checkModalInput('index', 'number')"
+							v-model="currentClinic.data.index.value"
 							@input="currentClinic.data.index.edited = true"
 						/>
 					</template>
 					<template #error-two>
 						<span class="error" v-if="currentClinic.errors.index.status">
-							{{ currentClinic.errors.index.body }}
+							{{ currentClinic.errors.index.message }}
 						</span>
 					</template>
 				</container-input-two>
@@ -164,14 +159,13 @@
 							placeholder="00.000000"
 							v-mask="'##.######'"
 							:class="{ error: currentClinic.errors.geoWidth.status }"
-							v-model="currentClinic.data.geoWidth.body"
-							@blur="checkModalInput('geoWidth', 'number')"
+							v-model="currentClinic.data.geoWidth.value"
 							@input="currentClinic.data.geoWidth.edited = true"
 						/>
 					</template>
 					<template #error-one>
 						<span class="error" v-if="currentClinic.errors.geoWidth.status">
-							{{ currentClinic.errors.geoWidth.body }}
+							{{ currentClinic.errors.geoWidth.message }}
 						</span>
 					</template>
 					<!-- Долгота -->
@@ -185,14 +179,13 @@
 							placeholder="00.000000"
 							v-mask="'##.######'"
 							:class="{ error: currentClinic.errors.geoLongitude.status }"
-							v-model="currentClinic.data.geoLongitude.body"
-							@blur="checkModalInput('geoLongitude', 'number')"
+							v-model="currentClinic.data.geoLongitude.value"
 							@input="currentClinic.data.geoLongitude.edited = true"
 						/>
 					</template>
 					<template #error-two>
 						<span class="error" v-if="currentClinic.errors.geoLongitude.status">
-							{{ currentClinic.errors.geoLongitude.body }}
+							{{ currentClinic.errors.geoLongitude.message }}
 						</span>
 					</template>
 				</container-input-two>
@@ -341,93 +334,93 @@ export default {
 			currentClinic: {
 				errors: {
 					id: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					name: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					other: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					city: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					street: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					home: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					index: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					geoWidth: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					geoLongitude: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					create: {
-						body: false,
+						message: false,
 						status: false,
 					},
 					delete: {
-						body: false,
+						message: false,
 						status: false,
 					},
 				},
 				data: {
 					id: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					name: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					other: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					city: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					street: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					home: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					index: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					geoWidth: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					geoLongitude: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					create: {
-						body: false,
+						value: false,
 						edited: false,
 					},
 					delete: {
-						body: false,
+						value: false,
 						edited: false,
 					},
 				},
@@ -494,14 +487,14 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Открытие */
 		openModal(type) {
-			this.clearModalErrors();
+			shared.clearObjectSelective(this.currentClinic, "errors", ["status", "message"]);
 
 			switch (type) {
 				case "create":
 					this.modal.type = "create";
 					this.modal.status = true;
 
-					this.clearModalData();
+					shared.clearObjectFull(this.currentClinic);
 
 					document.body.classList.add("modal-open");
 					break;
@@ -527,87 +520,7 @@ export default {
 			this.modal.status = false;
 			document.body.classList.remove("modal-open");
 		},
-		/* _____________________________________________________*/
-		/* 2. Работа с полями ввода модального окна             */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		// Проверка поля ввода
-		checkModalInput(dataKey, inputType) {
-			let errorLog = {};
-			switch (inputType) {
-				case "text":
-					errorLog = validate.checkInputText(this.currentClinic.data[dataKey].body);
-					break;
-				case "number":
-					errorLog = validate.checkInputNumber(this.currentClinic.data[dataKey].body);
-					break;
-				default:
-					break;
-			}
 
-			if (errorLog.status) {
-				this.currentClinic.errors[dataKey].body = errorLog.message;
-				this.currentClinic.errors[dataKey].status = true;
-
-				return true;
-			} else {
-				this.currentClinic.errors[dataKey].body = "";
-				this.currentClinic.errors[dataKey].status = false;
-
-				return false;
-			}
-		},
-		// Проверка всех полей ввода модального окна
-		checkModalInputsAll(inputKeys) {
-			let errorCount = 0;
-			for (let i = 0; i < inputKeys.length; i++) {
-				switch (inputKeys[i]) {
-					// Для индекса
-					case "index":
-						if (this.checkModalInput(inputKeys[i], "number")) {
-							errorCount++;
-						}
-						break;
-					// Для числовых полей
-					case "geoWidth":
-						if (this.checkModalInput(inputKeys[i], "number")) {
-							errorCount++;
-						}
-						break;
-					// Для числовых полей
-					case "geoLongitude":
-						if (this.checkModalInput(inputKeys[i], "number")) {
-							errorCount++;
-						}
-						break;
-					// Для всех остальных полей
-					default:
-						if (this.checkModalInput(inputKeys[i], "text")) {
-							errorCount++;
-						}
-						break;
-				}
-			}
-
-			if (errorCount > 0) {
-				return true;
-			} else {
-				return false;
-			}
-		},
-		/* Очистка содержимого модального окна */
-		clearModalData() {
-			for (let key in this.currentClinic.data) {
-				this.currentClinic.data[key].body = "";
-				this.currentClinic.data[key].edited = false;
-			}
-		},
-		/* Очистка ошибок */
-		clearModalErrors() {
-			for (let key in this.currentClinic.errors) {
-				this.currentClinic.errors[key].body = "";
-				this.currentClinic.errors[key].status = false;
-			}
-		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                    КЛИНИКИ                        |*/
 		/* |___________________________________________________|*/
@@ -616,18 +529,17 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Открытие специализации для редактирования */
 		editClinic(clinic) {
-			this.clearModalData();
-
-			for (let key in this.currentClinic.data) {
-				this.currentClinic.data[key].body = clinic[key];
-			}
+			shared.clearObjectFull(this.currentClinic);
+			shared.setData(clinic, this.currentClinic);
 
 			this.openModal("edit");
 		},
+
 		/* Открытие специализации для создания */
 		createClinic() {
 			this.openModal("create");
 		},
+
 		/* _____________________________________________________*/
 		/* Сохранение, обновление и удаление                    */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
@@ -635,30 +547,52 @@ export default {
 		removeClinic(clinic) {
 			clinic.delete = !clinic.delete;
 		},
+
 		/* Обновление элемента */
 		updateClinic() {
 			if (
-				this.checkModalInputsAll([
-					"name",
-					"city",
-					"street",
-					"home",
-					"index",
-					"geoWidth",
-					"geoLongitude",
+				validate.checkInputsAll(this.currentClinic, [
+					{
+						key: "name",
+						type: "text",
+					},
+					{
+						key: "city",
+						type: "text",
+					},
+					{
+						key: "street",
+						type: "text",
+					},
+					{
+						key: "home",
+						type: "text",
+					},
+					{
+						key: "index",
+						type: "number",
+					},
+					{
+						key: "geoWidth",
+						type: "number",
+					},
+					{
+						key: "geoLongitude",
+						type: "number",
+					},
 				])
 			)
 				return;
 
 			try {
 				let clinicToUpdate = this.table.body.find((item) => {
-					if (item.id === this.currentClinic.data.id.body) {
+					if (item.id === this.currentClinic.data.id.value) {
 						return item;
 					}
 				});
 
 				for (let key in this.currentClinic.data) {
-					clinicToUpdate[key] = this.currentClinic.data[key].body;
+					clinicToUpdate[key] = this.currentClinic.data[key].value;
 				}
 
 				this.closeModal();
@@ -673,14 +607,35 @@ export default {
 		/* Добавление элемента в массив */
 		addClinic() {
 			if (
-				this.checkModalInputsAll([
-					"name",
-					"city",
-					"street",
-					"home",
-					"index",
-					"geoWidth",
-					"geoLongitude",
+				validate.checkInputsAll(this.currentClinic, [
+					{
+						key: "name",
+						type: "text",
+					},
+					{
+						key: "city",
+						type: "text",
+					},
+					{
+						key: "street",
+						type: "text",
+					},
+					{
+						key: "home",
+						type: "text",
+					},
+					{
+						key: "index",
+						type: "number",
+					},
+					{
+						key: "geoWidth",
+						type: "number",
+					},
+					{
+						key: "geoLongitude",
+						type: "number",
+					},
 				])
 			)
 				return;
@@ -688,13 +643,13 @@ export default {
 			try {
 				this.table.body.push({
 					id: shared.getMaxId(this.table.body) + 1,
-					name: this.currentClinic.data.name.body,
-					city: this.currentClinic.data.city.body,
-					street: this.currentClinic.data.street.body,
-					home: this.currentClinic.data.home.body,
-					index: this.currentClinic.data.index.body,
-					geoWidth: this.currentClinic.data.geoWidth.body,
-					geoLongitude: this.currentClinic.data.geoLongitude.body,
+					name: this.currentClinic.data.name.value,
+					city: this.currentClinic.data.city.value,
+					street: this.currentClinic.data.street.value,
+					home: this.currentClinic.data.home.value,
+					index: this.currentClinic.data.index.value,
+					geoWidth: this.currentClinic.data.geoWidth.value,
+					geoLongitude: this.currentClinic.data.geoLongitude.value,
 					create: true,
 					delete: false,
 				});

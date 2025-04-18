@@ -17,17 +17,16 @@
 						type="text"
 						ref="inputName"
 						placeholder="Название специализации"
-						v-model="currentSpecialization.data.name.body"
+						v-model="currentSpecialization.data.name.value"
 						:class="{
 							error: currentSpecialization.errors.name.status,
 						}"
 						@input="currentSpecialization.data.name.edited = true"
-						@blur="checkModalInput('name', 'text')"
 					/>
 				</template>
 				<template #error>
 					<span class="error" v-if="currentSpecialization.errors.name.status">
-						{{ this.currentSpecialization.errors.name.body }}
+						{{ this.currentSpecialization.errors.name.message }}
 					</span>
 				</template>
 			</container-input-once>
@@ -127,6 +126,23 @@ export default {
 	},
 	data() {
 		return {
+			/* Кнопки */
+			disabled: {
+				specializations: {
+					save: false,
+				},
+			},
+
+			/* Загрузчик */
+			loading: {
+				loader: {
+					specializations: true,
+				},
+				sections: {
+					specializations: false,
+				},
+			},
+
 			/* Модальное окно */
 			modal: {
 				title: "СПЕЦИАЛИЗАЦИЯ",
@@ -147,49 +163,34 @@ export default {
 					footer: true,
 				},
 			},
-			loading: {
-				loader: {
-					specializations: true,
-				},
-				sections: {
-					specializations: false,
-				},
-			},
-
-			/* Кнопки */
-			disabled: {
-				specializations: {
-					save: false,
-				},
-			},
 
 			/* Форма */
 			currentSpecialization: {
 				errors: {
 					id: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					name: {
-						body: "",
+						message: "",
 						status: false,
 					},
 				},
 				data: {
 					id: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					name: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					create: {
-						body: false,
+						value: false,
 						edited: false,
 					},
 					delete: {
-						body: false,
+						value: false,
 						edited: false,
 					},
 				},
@@ -238,15 +239,13 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Открытие */
 		openModal(type) {
-			this.clearModalErrors();
-
 			switch (type) {
 				case "create":
 					{
 						this.modal.type = "create";
 						this.modal.status = true;
 
-						this.clearModalData();
+						shared.clearObjectFull(this.currentSpecialization);
 					}
 					document.body.classList.add("modal-open");
 					break;
@@ -268,75 +267,13 @@ export default {
 					break;
 			}
 		},
+
 		/* Закрытие */
 		closeModal() {
 			this.modal.status = false;
 			document.body.classList.remove("modal-open");
 		},
-		/* _____________________________________________________*/
-		/* 2. Работа с полями ввода модального окна             */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		// Проверка поля имени
-		checkModalInput(dataKey, inputType) {
-			let errorLog = {};
-			switch (inputType) {
-				case "text":
-					errorLog = validate.checkInputText(this.currentSpecialization.data[dataKey].body);
-					break;
-				default:
-					break;
-			}
 
-			if (errorLog.status) {
-				this.currentSpecialization.errors[dataKey].body = errorLog.message;
-				this.currentSpecialization.errors[dataKey].status = true;
-
-				return true;
-			} else {
-				this.currentSpecialization.errors[dataKey].body = "";
-				this.currentSpecialization.errors[dataKey].status = false;
-
-				return false;
-			}
-		},
-		// Проверка всех полей ввода модального окна
-		checkModalInputsAll(inputKeys) {
-			let errorCount = 0;
-			for (let i = 0; i < inputKeys.length; i++) {
-				switch (inputKeys[i]) {
-					// Для поля файл
-					case "file":
-						console.log("Функция в разработке");
-						break;
-					// Для всех остальных полей
-					default:
-						if (this.checkModalInput(inputKeys[i], "text")) {
-							errorCount++;
-						}
-						break;
-				}
-			}
-
-			if (errorCount > 0) {
-				return true;
-			} else {
-				return false;
-			}
-		},
-		/* Очистка содержимого модального окна */
-		clearModalData() {
-			for (let key in this.currentSpecialization.data) {
-				this.currentSpecialization.data[key].body = "";
-				this.currentSpecialization.data[key].edited = false;
-			}
-		},
-		/* Очистка ошибок модального окна */
-		clearModalErrors() {
-			for (let key in this.currentSpecialization.errors) {
-				this.currentSpecialization.errors[key].body = "";
-				this.currentSpecialization.errors[key].status = false;
-			}
-		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                 Специализации                     |*/
 		/* |___________________________________________________|*/
@@ -345,14 +282,12 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Открытие специализации для редактирования */
 		editSpecialization(specialization) {
-			this.clearModalData();
-
-			for (let key in this.currentSpecialization.data) {
-				this.currentSpecialization.data[key].body = specialization[key];
-			}
+			shared.clearObjectFull(this.currentSpecialization);
+			shared.setData(specialization, this.currentSpecialization);
 
 			this.openModal("edit");
 		},
+
 		/* Открытие специализации для создания */
 		createSpecialization() {
 			this.openModal("create");
@@ -362,11 +297,20 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Добавление специализации */
 		addSpecialization() {
-			if (this.checkModalInputsAll(["name"])) return;
+			if (
+				validate.checkInputsAll(this.currentSpecialization, [
+					{
+						key: "name",
+						type: "text",
+					},
+				])
+			)
+				return;
+
 			try {
 				if (
 					this.table.body.some(
-						(item) => item.name === this.currentSpecialization.data.name.body
+						(item) => item.name === this.currentSpecialization.data.name.value
 					)
 				) {
 					this.$store.commit("addDebugger", {
@@ -380,7 +324,7 @@ export default {
 
 				this.table.body.push({
 					id: shared.getMaxId(this.table.body) + 1,
-					name: this.currentSpecialization.data.name.body,
+					name: this.currentSpecialization.data.name.value,
 					create: true,
 					delete: false,
 				});
@@ -394,22 +338,33 @@ export default {
 				});
 			}
 		},
+
 		/* Пометка на удаление */
 		removeSpecialization(specialization) {
 			specialization.delete = !specialization.delete;
 		},
+
 		/* Обновление содержимого */
 		updateSpecialization() {
-			if (this.checkModalInputsAll(["name"])) return;
+			if (
+				validate.checkInputsAll(this.currentSpecialization, [
+					{
+						key: "name",
+						type: "text",
+					},
+				])
+			)
+				return;
+
 			try {
 				let specializationToUpdate = this.table.body.find((item) => {
-					if (item.id === this.currentSpecialization.data.id.body) {
+					if (item.id === this.currentSpecialization.data.id.value) {
 						return item;
 					}
 				});
 
-				specializationToUpdate.name = this.currentSpecialization.data.name.body;
-				
+				specializationToUpdate.name = this.currentSpecialization.data.name.value;
+
 				this.closeModal();
 			} catch (error) {
 				this.$store.commit("addDebugger", {

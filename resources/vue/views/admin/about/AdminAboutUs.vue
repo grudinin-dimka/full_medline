@@ -5,10 +5,10 @@
 	<admin-modal ref="modal" @touchCloseModal="closeModal" :modal="modal">
 		<template
 			#title
-			v-if="(modal.type == 'edit') & !currentInfoBlock.data.delete.body && !modal.style.create"
+			v-if="(modal.type == 'edit') & !currentInfoBlock.data.delete.value && !modal.style.create"
 		>
 			<icon-arrow :width="16" :height="16" :rotate="-90" @click="changeInfoBlockOrder('down')" />
-			#{{ currentInfoBlock.data.order.body }}
+			#{{ currentInfoBlock.data.order.value }}
 			<icon-arrow :width="16" :height="16" :rotate="90" @click="changeInfoBlockOrder('up')" />
 		</template>
 		<template #title v-else>
@@ -16,14 +16,14 @@
 		</template>
 		<template #body>
 			<div class="modal-images">
-				<div class="item" v-if="currentInfoBlock.data.imageOne.body">
+				<div class="item" v-if="currentInfoBlock.data.imageOne.value">
 					<div
 						class="img"
 						:style="{
-							backgroundImage: `url(${currentInfoBlock.data.pathOne.body})`,
+							backgroundImage: `url(${currentInfoBlock.data.pathOne.value})`,
 						}"
 					></div>
-					<div class="buttons" v-if="!currentInfoBlock.data.delete.body">
+					<div class="buttons" v-if="!currentInfoBlock.data.delete.value">
 						<div class="icon edit" @click="editImage('imageOne')">
 							<IconEdit :width="24" :height="24" :type="'edit'"></IconEdit>
 						</div>
@@ -39,20 +39,20 @@
 							backgroundImage: `url(/storage/default/stones-none-default.png)`,
 						}"
 					></div>
-					<div class="buttons add" v-if="!currentInfoBlock.data.delete.body">
+					<div class="buttons add" v-if="!currentInfoBlock.data.delete.value">
 						<div class="icon create" @click="createImage('imageOne')">
 							<IconCreate :width="24" :height="24" :type="'create'"></IconCreate>
 						</div>
 					</div>
 				</div>
-				<div class="item" v-if="currentInfoBlock.data.imageTwo.body">
+				<div class="item" v-if="currentInfoBlock.data.imageTwo.value">
 					<div
 						class="img"
 						:style="{
-							backgroundImage: `url(${currentInfoBlock.data.pathTwo.body})`,
+							backgroundImage: `url(${currentInfoBlock.data.pathTwo.value})`,
 						}"
 					></div>
-					<div class="buttons" v-if="!currentInfoBlock.data.delete.body">
+					<div class="buttons" v-if="!currentInfoBlock.data.delete.value">
 						<div class="icon edit" @click="editImage('imageTwo')">
 							<IconEdit :width="24" :height="24" :type="'edit'"></IconEdit>
 						</div>
@@ -68,20 +68,20 @@
 							backgroundImage: `url(/storage/default/stones-none-default.png)`,
 						}"
 					></div>
-					<div class="buttons add" v-if="!currentInfoBlock.data.delete.body">
+					<div class="buttons add" v-if="!currentInfoBlock.data.delete.value">
 						<div class="icon create" @click="createImage('imageTwo')">
 							<IconCreate :width="24" :height="24" :type="'create'"></IconCreate>
 						</div>
 					</div>
 				</div>
-				<div class="item" v-if="currentInfoBlock.data.imageThree.body">
+				<div class="item" v-if="currentInfoBlock.data.imageThree.value">
 					<div
 						class="img"
 						:style="{
-							backgroundImage: `url(${currentInfoBlock.data.pathThree.body})`,
+							backgroundImage: `url(${currentInfoBlock.data.pathThree.value})`,
 						}"
 					></div>
-					<div class="buttons" v-if="!currentInfoBlock.data.delete.body">
+					<div class="buttons" v-if="!currentInfoBlock.data.delete.value">
 						<div class="icon edit" @click="editImage('imageThree')">
 							<IconEdit :width="24" :height="24" :type="'edit'"></IconEdit>
 						</div>
@@ -97,7 +97,7 @@
 							backgroundImage: `url(/storage/default/stones-none-default.png)`,
 						}"
 					></div>
-					<div class="buttons add" v-if="!currentInfoBlock.data.delete.body">
+					<div class="buttons add" v-if="!currentInfoBlock.data.delete.value">
 						<div class="icon create" @click="createImage('imageThree')">
 							<IconCreate :width="24" :height="24" :type="'create'"></IconCreate>
 						</div>
@@ -116,7 +116,7 @@
 							placeholder="Введите заголовок"
 							autocomplete="off"
 							:class="{ error: false }"
-							v-model="currentInfoBlock.data.title.body"
+							v-model="currentInfoBlock.data.title.value"
 							@input="currentInfoBlock.data.title.edited = true"
 						></textarea>
 					</template>
@@ -136,7 +136,7 @@
 							placeholder="Введите заголовок"
 							autocomplete="off"
 							:class="{ error: false }"
-							v-model="currentInfoBlock.data.description.body"
+							v-model="currentInfoBlock.data.description.value"
 							@input="currentInfoBlock.data.description.edited = true"
 						></textarea>
 					</template>
@@ -155,19 +155,19 @@
 					@click="deleteInfoBlock"
 					v-if="
 						modal.type == 'edit' &&
-						!currentInfoBlock.data.delete.body &&
-						!currentInfoBlock.data.create.body
+						!currentInfoBlock.data.delete.value &&
+						!currentInfoBlock.data.create.value
 					"
 				>
 					Удалить
 				</button-remove>
 				<ButtonDefault
 					@click="updateInfoBlock"
-					v-if="modal.type == 'edit' && !currentInfoBlock.data.delete.body"
+					v-if="modal.type == 'edit' && !currentInfoBlock.data.delete.value"
 				>
 					Обновить
 				</ButtonDefault>
-				<ButtonDefault @click="deleteInfoBlock" v-if="currentInfoBlock.data.delete.body">
+				<ButtonDefault @click="deleteInfoBlock" v-if="currentInfoBlock.data.delete.value">
 					Вернуть
 				</ButtonDefault>
 			</BlockButtons>
@@ -183,20 +183,20 @@
 			<container-input-once>
 				<template #title>
 					<span>НОВЫЙ ФАЙЛ*</span>
-					<span v-if="currentImage.data.edited"> (ИЗМЕНЕНО) </span>
+					<span v-if="currentImage.data.file.edited"> (ИЗМЕНЕНО) </span>
 				</template>
 				<template #input>
 					<input
 						type="file"
 						autocomplete="off"
 						ref="fileUpload"
-						:class="{ error: currentImage.errors.status }"
-						@input="currentImage.data.edited = true"
+						:class="{ error: currentImage.errors.file.status }"
+						@input="currentImage.data.file.edited = true"
 					/>
 				</template>
 				<template #error>
-					<span class="error" v-if="currentImage.errors.status">
-						{{ currentImage.errors.body }}
+					<span class="error" v-if="currentImage.errors.file.status">
+						{{ currentImage.errors.file.message }}
 					</span>
 				</template>
 			</container-input-once>
@@ -297,6 +297,7 @@ import ContainerTextareaOnce from "../../../components/ui/admin/containers/texta
 import axios from "axios";
 import shared from "../../../services/shared";
 import sorted from "../../../services/sorted";
+import validate from "../../../services/validate";
 
 export default {
 	components: {
@@ -332,6 +333,34 @@ export default {
 	},
 	data() {
 		return {
+			/* Кнопки */
+			disabled: {
+				about: {
+					update: false,
+					delete: false,
+					create: false,
+					add: false,
+					save: false,
+				},
+				image: {
+					update: false,
+					add: false,
+				},
+			},
+
+			/* Загрузчик */
+			loading: {
+				loader: {
+					title: true,
+					infoBlocks: true,
+				},
+				sections: {
+					title: false,
+					infoBlocks: false,
+				},
+			},
+
+			/* Модальное окно */
 			modal: {
 				title: "БЛОК",
 				status: false,
@@ -351,19 +380,7 @@ export default {
 					footer: true,
 				},
 			},
-			disabled: {
-				about: {
-					update: false,
-					delete: false,
-					create: false,
-					add: false,
-					save: false,
-				},
-				image: {
-					update: false,
-					add: false,
-				},
-			},
+
 			subModal: {
 				title: "",
 				status: false,
@@ -383,108 +400,107 @@ export default {
 					footer: true,
 				},
 			},
-			loading: {
-				loader: {
-					title: true,
-					infoBlocks: true,
-				},
-				sections: {
-					title: false,
-					infoBlocks: false,
-				},
-			},
+
+			/* Форма */
 			currentInfoBlock: {
 				errors: {
 					id: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					order: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					title: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					description: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					imageOne: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					imageTwo: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					imageThree: {
-						body: "",
+						message: "",
 						status: false,
 					},
 				},
 				data: {
 					id: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					order: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					title: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					description: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					imageOne: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					imageTwo: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					imageThree: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					pathOne: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					pathTwo: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					pathThree: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					create: {
-						body: false,
+						value: false,
 						edited: false,
 					},
 					delete: {
-						body: false,
+						value: false,
 						edited: false,
 					},
 				},
 			},
+
 			currentImage: {
 				errors: {
-					body: "",
-					status: false,
+					file: {
+						message: "",
+						status: false,
+					},
 				},
 				data: {
-					body: "",
-					edited: false,
+					file: {
+						value: "",
+						edited: false,
+					},
 				},
 			},
+
+			/* Список */
 			infoBlocks: [],
 		};
 	},
@@ -497,6 +513,7 @@ export default {
 			this.loading.sections.title = true;
 			this.loading.sections.infoBlocks = true;
 		},
+		
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                 Модальное окно                    |*/
 		/* |___________________________________________________|*/
@@ -512,7 +529,10 @@ export default {
 						this[name].status = true;
 
 						if (name === "modal") {
-							this.clearModalData("currentInfoBlock");
+							shared.clearObjectSelective(this.currentInfoBlock, "data", [
+								"value",
+								"edited",
+							]);
 						}
 					}
 					document.body.classList.add("modal-open");
@@ -535,6 +555,7 @@ export default {
 					break;
 			}
 		},
+		
 		/* Закрытие */
 		closeModal(name = "modal") {
 			this[name].status = false;
@@ -542,25 +563,7 @@ export default {
 				document.body.classList.remove("modal-open");
 			}
 		},
-		/* Очистка содержимого модального окна */
-		clearModalData(name = "currentInfoBlock") {
-			for (let key in this[name].data) {
-				this[name].data[key].body = "";
-			}
-		},
-		/* Очистка содержимого модального окна */
-		clearModalEdited(name = "currentInfoBlock") {
-			for (let key in this[name].data) {
-				this[name].data[key].edited = false;
-			}
-		},
-		/* Очистка ошибок */
-		clearModalErrors(name = "currentInfoBlock") {
-			for (let key in this[name].errors) {
-				this[name].errors[key].body = "";
-				this[name].errors[key].status = false;
-			}
-		},
+		
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |               SUB-МОДАЛЬНОЕ ОКНО                  |*/
 		/* |___________________________________________________|*/
@@ -573,6 +576,7 @@ export default {
 
 			this.openModal("edit", "subModal");
 		},
+
 		/* Изменение картинки */
 		createImage(name) {
 			this.clearDataImage(name);
@@ -580,31 +584,17 @@ export default {
 			this.openModal("create", "subModal");
 		},
 		updateImage() {
-			/* Проверка на загруженный файл */
-			if (!this.$refs.fileUpload.files[0]) {
-				this.currentImage.errors.status = true;
-				this.currentImage.errors.body = "Поле не может быть пустым.";
-				return;
-			}
-			/* Проверка на тип загруженного файла */
 			if (
-				this.$refs.fileUpload.files[0].type !== "image/png" &&
-				this.$refs.fileUpload.files[0].type !== "image/jpeg" &&
-				this.$refs.fileUpload.files[0].type !== "image/webp"
-			) {
-				this.currentImage.errors.status = true;
-				this.currentImage.errors.body = "Разрешенный формат файла: png, jpg, webp.";
+				validate.checkInputsAll(this.currentImage, [
+					{
+						key: "file",
+						type: "file",
+						value: this.$refs.fileUpload,
+						formats: ["jpg", "jpeg", "png", "webp"],
+					},
+				])
+			)
 				return;
-			}
-			/* Проверка на размер загруженного файла */
-			let fileSize = this.$refs.fileUpload.files[0].size / 1024 / 1024;
-			if (fileSize > 10) {
-				this.currentImage.errors.status = true;
-				this.currentImage.errors.body = "Размер файла более 10 МБ.";
-				return;
-			}
-
-			this.currentImage.errors.status = false;
 
 			/* Загрузка файла */
 			let formData = new FormData();
@@ -630,24 +620,24 @@ export default {
 				.then((response) => {
 					if (response.data.status) {
 						try {
-							switch (this.currentImage.data.body) {
+							switch (this.currentImage.data.file.value) {
 								case "imageOne":
-									this.currentInfoBlock.data.pathOne.body = response.data.data;
-									this.currentInfoBlock.data.imageOne.body = response.data.data.replace(
+									this.currentInfoBlock.data.pathOne.value = response.data.data;
+									this.currentInfoBlock.data.imageOne.value = response.data.data.replace(
 										"/storage/abouts/",
 										""
 									);
 									break;
 								case "imageTwo":
-									this.currentInfoBlock.data.pathTwo.body = response.data.data;
-									this.currentInfoBlock.data.imageTwo.body = response.data.data.replace(
+									this.currentInfoBlock.data.pathTwo.value = response.data.data;
+									this.currentInfoBlock.data.imageTwo.value = response.data.data.replace(
 										"/storage/abouts/",
 										""
 									);
 									break;
 								case "imageThree":
-									this.currentInfoBlock.data.pathThree.body = response.data.data;
-									this.currentInfoBlock.data.imageThree.body = response.data.data.replace(
+									this.currentInfoBlock.data.pathThree.value = response.data.data;
+									this.currentInfoBlock.data.imageThree.value = response.data.data.replace(
 										"/storage/abouts/",
 										""
 									);
@@ -685,13 +675,16 @@ export default {
 					}
 				});
 		},
+
 		/* Очистка */
 		clearDataImage(name) {
-			this.currentImage.data.body = name;
-			this.currentImage.data.edited = false;
-			this.currentImage.errors.status = false;
+			this.currentImage.data.file.value = name;
+			this.currentImage.data.file.edited = false;
+			this.currentImage.errors.file.status = false;
+
 			this.$refs.fileUpload.value = "";
 		},
+
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |              ИНФОРМАЦИОННЫЕ БЛОКИ                 |*/
 		/* |___________________________________________________|*/
@@ -699,51 +692,48 @@ export default {
 		/* 1. Основные действия                                 */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Открытие */
-		editInfoBlock(selectedBlock) {
+		editInfoBlock(block) {
 			this.modal.title = "БЛОК (РЕДАКТИРОВАНИЕ)";
 
-			for (let key in this.currentInfoBlock.data) {
-				this.currentInfoBlock.data[key].body = selectedBlock[key];
-			}
-
-			this.clearModalEdited("currentInfoBlock");
-			this.clearModalErrors("currentInfoBlock");
+			shared.clearObjectFull(this.currentInfoBlock);
+			shared.setData(block, this.currentInfoBlock);
 
 			this.openModal("edit", "modal");
 		},
+
 		/* Удаление */
 		deleteInfoBlock() {
 			try {
 				let block = this.infoBlocks.find(
-					(item) => item.id == this.currentInfoBlock.data.id.body
+					(item) => item.id == this.currentInfoBlock.data.id.value
 				);
 
 				block.delete = !block.delete;
 
 				this.closeModal("modal");
 			} catch (error) {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "Не удалось пометить блок на удаление.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					body: error,
+					type: "error",
+				});
 			}
 		},
+
 		/* Добавление */
 		addInfoBlock() {
 			try {
 				this.infoBlocks.push({
 					id: shared.getMaxId(this.infoBlocks) + 1,
 					order: shared.getMaxOrder(this.infoBlocks) + 1,
-					title: this.currentInfoBlock.data.title.body,
-					description: this.currentInfoBlock.data.description.body,
-					imageOne: this.currentInfoBlock.data.imageOne.body,
-					imageTwo: this.currentInfoBlock.data.imageTwo.body,
-					imageThree: this.currentInfoBlock.data.imageThree.body,
-					pathOne: this.currentInfoBlock.data.pathOne.body,
-					pathTwo: this.currentInfoBlock.data.pathTwo.body,
-					pathThree: this.currentInfoBlock.data.pathThree.body,
+					title: this.currentInfoBlock.data.title.value,
+					description: this.currentInfoBlock.data.description.value,
+					imageOne: this.currentInfoBlock.data.imageOne.value,
+					imageTwo: this.currentInfoBlock.data.imageTwo.value,
+					imageThree: this.currentInfoBlock.data.imageThree.value,
+					pathOne: this.currentInfoBlock.data.pathOne.value,
+					pathTwo: this.currentInfoBlock.data.pathTwo.value,
+					pathThree: this.currentInfoBlock.data.pathThree.value,
 					create: true,
 					delete: false,
 				});
@@ -757,20 +747,23 @@ export default {
 				});
 			}
 		},
+
 		/* Обновление */
 		updateInfoBlock() {
-			let block = this.infoBlocks.find((item) => item.id == this.currentInfoBlock.data.id.body);
+			let block = this.infoBlocks.find((item) => item.id == this.currentInfoBlock.data.id.value);
 
 			for (let key in this.currentInfoBlock.data) {
-				block[key] = this.currentInfoBlock.data[key].body;
+				block[key] = this.currentInfoBlock.data[key].value;
 			}
 
 			this.closeModal("modal");
 		},
+
 		/* Удаление */
 		removeInfoBlockImage(name) {
-			this.currentInfoBlock.data[name].body = "";
+			this.currentInfoBlock.data[name].value = "";
 		},
+
 		/* Изменение порядка */
 		changeInfoBlockOrder(type) {
 			if (this.infoBlocks.length <= 1) {
@@ -778,24 +771,24 @@ export default {
 			}
 
 			// Является ли текущий элемент первым
-			let firstBlockStatus = this.currentInfoBlock.data.order.body == 1;
+			let firstBlockStatus = this.currentInfoBlock.data.order.value == 1;
 			// Предидущей элемент
 			let blockPrevious = null;
 			if (firstBlockStatus) {
 				blockPrevious = this.infoBlocks.find((block) => block.order === this.infoBlocks.length);
 			} else {
 				blockPrevious = this.infoBlocks.find(
-					(block) => block.order === this.currentInfoBlock.data.order.body - 1
+					(block) => block.order === this.currentInfoBlock.data.order.value - 1
 				);
 			}
 
 			// Текущий элемент
 			let blockCurrent = this.infoBlocks.find(
-				(block) => block.order === this.currentInfoBlock.data.order.body
+				(block) => block.order === this.currentInfoBlock.data.order.value
 			);
 
 			// Является ли текущий элемент последним
-			let lastBlockStatus = this.currentInfoBlock.data.order.body == this.infoBlocks.length;
+			let lastBlockStatus = this.currentInfoBlock.data.order.value == this.infoBlocks.length;
 
 			// Следующий элемент
 			let blockNext = null;
@@ -803,7 +796,7 @@ export default {
 				blockNext = this.infoBlocks.find((block) => block.order === 1);
 			} else {
 				blockNext = this.infoBlocks.find(
-					(block) => block.order === this.currentInfoBlock.data.order.body + 1
+					(block) => block.order === this.currentInfoBlock.data.order.value + 1
 				);
 			}
 
@@ -812,11 +805,11 @@ export default {
 				case "up":
 					{
 						if (lastBlockStatus) {
-							this.currentInfoBlock.data.order.body = 1;
+							this.currentInfoBlock.data.order.value = 1;
 							blockCurrent.order = 1;
 							blockNext.order = this.infoBlocks.length;
 						} else {
-							this.currentInfoBlock.data.order.body++;
+							this.currentInfoBlock.data.order.value++;
 							blockCurrent.order++;
 							blockNext.order--;
 						}
@@ -826,11 +819,11 @@ export default {
 				case "down":
 					{
 						if (firstBlockStatus) {
-							this.currentInfoBlock.data.order.body = this.infoBlocks.length;
+							this.currentInfoBlock.data.order.value = this.infoBlocks.length;
 							blockCurrent.order = this.infoBlocks.length;
 							blockPrevious.order = 1;
 						} else {
-							this.currentInfoBlock.data.order.body--;
+							this.currentInfoBlock.data.order.value--;
 							blockCurrent.order--;
 							blockPrevious.order++;
 						}

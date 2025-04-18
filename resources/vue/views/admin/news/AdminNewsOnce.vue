@@ -8,11 +8,12 @@
 	</info-bar>
 
 	<block-once :minHeight="200">
-		<template #title>НОВОСТЬ (СОЗДАНИЕ)</template>
+		<template #title>БЛОК НОВОСТЕЙ</template>
 
 		<template #options>
 			<template v-if="$route.params.id === 'new'">
-				test
+				<icon-load :width="28" :height="28" v-if="disabled.news.add" />
+				<icon-add :width="28" :height="28" v-else @click="addNews" />
 			</template>
 			<template v-else>
 				<icon-load :width="28" :height="28" v-if="disabled.news.save" />
@@ -34,30 +35,50 @@
 								@change="handleFileChange"
 								multiple
 							/>
-							<label for="input__file" class="input__file-button">
-								<span class="input__file-icon-wrapper">Файл не загружен</span>
+							<label
+								for="input__file"
+								class="input__file-button"
+								:class="{
+									active: hasFile,
+									error: currentNews.errors.image.status,
+								}"
+							>
+								<span class="input__file-icon-wrapper" ref="imageWrapper">
+									Файл не загружен
+								</span>
 							</label>
+							<div class="input__file-button-error" v-if="currentNews.errors.image.status">
+								{{ currentNews.errors.image.message }}
+							</div>
 						</div>
 					</div>
 
 					<Tiptap
-						ref="tiptap"
-						:content="content"
+						ref="tiptapTitle"
+						v-model="currentNews.data.title.value"
 						:editable="true"
 						:limit="500"
 						:placeholder="'Заголовок'"
-						@export="test"
-					/>
+						:error="currentNews.errors.title.status"
+					>
+						<template #error>
+							{{ currentNews.errors.title.message }}
+						</template>
+					</Tiptap>
 				</div>
 				<div class="news__once-body">
 					<Tiptap
-						ref="tiptap"
-						:content="content"
+						ref="tiptapDescription"
+						v-model="currentNews.data.description.value"
 						:editable="true"
 						:limit="10_000"
 						:placeholder="'Текст новости'"
-						@export="test"
-					/>
+						:error="currentNews.errors.description.status"
+					>
+						<template #error>
+							{{ currentNews.errors.description.message }}
+						</template>
+					</Tiptap>
 				</div>
 			</div>
 
@@ -81,7 +102,11 @@ import Tiptap from "../../../components/modules/Tiptap.vue";
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 
 import IconLoad from "../../../components/icons/IconLoad.vue";
+import IconAdd from "../../../components/icons/IconAdd.vue";
 import IconSave from "../../../components/icons/IconSave.vue";
+
+import axios from "axios";
+import validate from "../../../services/validate";
 
 export default {
 	components: {
@@ -95,6 +120,7 @@ export default {
 		ButtonDefault,
 
 		IconLoad,
+		IconAdd,
 		IconSave,
 	},
 	data() {
@@ -103,6 +129,7 @@ export default {
 			disabled: {
 				news: {
 					save: false,
+					add: false,
 				},
 			},
 
@@ -115,6 +142,49 @@ export default {
 					news: false,
 				},
 			},
+
+			/* Форма */
+			currentNews: {
+				errors: {
+					id: {
+						status: false,
+						message: null,
+					},
+					image: {
+						status: false,
+						message: null,
+					},
+					title: {
+						status: false,
+						message: null,
+					},
+					description: {
+						status: false,
+						message: null,
+					},
+				},
+				data: {
+					id: {
+						value: "",
+						edited: false,
+					},
+					image: {
+						value: "",
+						edited: false,
+					},
+					title: {
+						value: "",
+						edited: false,
+					},
+					description: {
+						value: "",
+						edited: false,
+					},
+				},
+			},
+
+			/* Файл */
+			hasFile: false,
 
 			/* Таблица */
 			table: {
@@ -160,27 +230,81 @@ export default {
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                  Блок текста                      |*/
+		/* |                      Файл                         |*/
 		/* |___________________________________________________|*/
-		doTest() {
-			this.$refs.tiptap.exportHtml();
-		},
-
-		/* Тестовая функция */
-		test(value) {
-			console.log(value);
-		},
-
 		handleFileChange(event) {
-			let button = document.querySelector(".input__file-button");
-			let buttonWrapper = document.querySelector(".input__file-icon-wrapper");
-
 			const files = event.target.files;
 
 			if (files && files.length > 0) {
-				buttonWrapper.innerHTML = event.target.files[0].name;
-				button.classList.add("active");
+				this.hasFile = true;
+
+				this.$refs.imageWrapper.innerHTML = event.target.files[0].name;
 			}
+		},
+
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                  База данных                      |*/
+		/* |___________________________________________________|*/
+		addNews() {
+			if (
+				validate.checkInputsAll(this.currentNews, [
+					{
+						key: "image",
+						type: "file",
+						value: this.$refs.image,
+						formats: ["jpg", "jpeg", "png", "webp"],
+					},
+					{
+						key: "title",
+						type: "tiptap",
+						value: this.$refs.tiptapTitle,
+					},
+					{
+						key: "description",
+						type: "tiptap",
+						value: this.$refs.tiptapDescription,
+					},
+				])
+			)
+				return;
+
+			let formData = new FormData();
+			formData.append("image", this.$refs.image.files[0]);
+			formData.append("title", this.currentNews.data.title.value);
+			formData.append("description", this.currentNews.data.description.value);
+
+			this.disabled.news.add = true;
+
+			axios({
+				method: "post",
+				url: `${this.$store.getters.urlApi}` + `add-news`,
+				headers: {
+					ContentType: "multipart/form-data",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: formData,
+			})
+				.then((response) => {
+					if (response.data.status) {
+						console.log(response.data.data);
+					} else {
+						this.$store.commit("addDebugger", {
+							title: "Ошибка.",
+							body: response.data.message,
+							type: "error",
+						});
+					}
+				})
+				.catch((error) => {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка.",
+						body: error,
+						type: "error",
+					});
+				})
+				.finally(() => {
+					this.disabled.news.add = false;
+				});
 		},
 	},
 	mounted() {
@@ -209,7 +333,9 @@ export default {
 .news__once-image {
 	padding: 20px;
 	border: var(--input-border);
-	border-radius: var(--input-border-radius);
+	border-radius: calc(var(--default-border-radius) / 2);
+
+	background-color: var(--item-background-color);
 }
 
 .input__wrapper {
@@ -242,9 +368,9 @@ export default {
 	justify-content: center;
 }
 
-.input__file-button-text {
-	line-height: 1;
-	margin-top: 1px;
+.input__file-button-error {
+	color: var(--input-error-color);
+	margin-top: 5px;
 }
 
 .input__file-button {
@@ -260,7 +386,7 @@ export default {
 	-ms-flex-pack: start;
 	justify-content: center;
 
-	border-radius: 20px;
+	border-radius: calc(var(--default-border-radius) / 2);
 	margin: 0 auto;
 
 	width: max(250px, 700px);
@@ -269,6 +395,7 @@ export default {
 	font-size: 1.25rem;
 
 	color: rgba(0, 0, 0, 0.25);
+	background-color: white;
 	border: var(--input-border);
 	transition: all 0.2s;
 }
@@ -277,5 +404,12 @@ export default {
 	color: var(--primary-color);
 	background-color: var(--item-background-color-active);
 	border: var(--input-border-focus);
+}
+
+.input__file-button.error {
+	border: var(--input-error-border);
+	background-color: var(--input-error-background-color);
+
+	color: var(--input-error-color);
 }
 </style>

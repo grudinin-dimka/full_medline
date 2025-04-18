@@ -6,20 +6,22 @@
 		<template
 			#buttonHide
 			v-if="
-				(modal.type == 'edit') & !currentSlide.data.delete.body & !currentSlide.data.create.body
+				(modal.type == 'edit') &
+				!currentSlide.data.delete.value &
+				!currentSlide.data.create.value
 			"
 		>
 			<IconHide
-				v-if="currentSlide.data.hide.body"
+				v-if="currentSlide.data.hide.value"
 				:height="26"
 				:width="26"
-				@click="currentSlide.data.hide.body = false"
+				@click="currentSlide.data.hide.value = false"
 			/>
 			<IconVisible
 				v-else="currentSlide.data.hide.body"
 				:height="26"
 				:width="26"
-				@click="currentSlide.data.hide.body = true"
+				@click="currentSlide.data.hide.value = true"
 			/>
 		</template>
 		<template #title>
@@ -28,11 +30,13 @@
 		<template
 			#title
 			v-if="
-				(modal.type == 'edit') & !currentSlide.data.delete.body & !currentSlide.data.create.body
+				(modal.type == 'edit') &
+				!currentSlide.data.delete.value &
+				!currentSlide.data.create.value
 			"
 		>
 			<icon-arrow :width="16" :height="16" :rotate="-90" @click="changeSlideOrder('down')" />
-			#{{ currentSlide.data.order.body }}
+			#{{ currentSlide.data.order.value }}
 			<icon-arrow :width="16" :height="16" :rotate="90" @click="changeSlideOrder('up')" />
 		</template>
 		<template #body>
@@ -40,7 +44,7 @@
 				class="modal-slide-img"
 				v-if="modal.type == 'edit'"
 				:style="{
-					backgroundImage: `url(${currentSlide.data.path.body})`,
+					backgroundImage: `url(${currentSlide.data.path.value})`,
 				}"
 				ref="modalImg"
 			></div>
@@ -66,13 +70,13 @@
 							placeholder="Загрузите изображение"
 							ref="fileUpload"
 							:class="{ error: currentSlide.errors.file.status }"
-							:disabled="currentSlide.data.delete.body"
+							:disabled="currentSlide.data.delete.value"
 							@input="currentSlide.data.file.edited = true"
 						/>
 					</template>
 					<template #error>
 						<span class="error" v-if="currentSlide.errors.file.status">
-							{{ currentSlide.errors.file.value }}
+							{{ currentSlide.errors.file.message }}
 						</span>
 					</template>
 				</container-input-once>
@@ -85,18 +89,17 @@
 					<template #input>
 						<input
 							type="text"
-							v-model="currentSlide.data.name.body"
+							v-model="currentSlide.data.name.value"
 							ref="inputName"
 							@input="currentSlide.data.name.edited = true"
-							@blur="checkModalInput('name', 'text')"
 							:class="{ error: currentSlide.errors.name.status }"
 							placeholder="Введите название"
-							:disabled="currentSlide.data.delete.body"
+							:disabled="currentSlide.data.delete.value"
 						/>
 					</template>
 					<template #error>
 						<span class="error" v-if="currentSlide.errors.name.status">
-							{{ currentSlide.errors.name.value }}
+							{{ currentSlide.errors.name.message }}
 						</span>
 					</template>
 				</container-input-once>
@@ -104,23 +107,22 @@
 				<container-input-once>
 					<template #title>
 						<span>ССЫЛКА*</span>
-						<span v-if="currentSlide.data.link.edited">(ИЗМЕНЕНО)</span>
+						<span v-if="currentSlide.data.link.value">(ИЗМЕНЕНО)</span>
 					</template>
 					<template #input>
 						<input
 							type="text"
-							v-model="currentSlide.data.link.body"
+							v-model="currentSlide.data.link.value"
 							ref="inputLink"
 							@input="currentSlide.data.link.edited = true"
-							@blur="checkModalInput('link', 'text')"
 							:class="{ error: currentSlide.errors.link.status }"
 							placeholder="Введите ссылку"
-							:disabled="currentSlide.data.delete.body"
+							:disabled="currentSlide.data.delete.value"
 						/>
 					</template>
 					<template #error>
 						<span class="error" v-if="currentSlide.errors.link.status">
-							{{ currentSlide.errors.link.value }}
+							{{ currentSlide.errors.link.message }}
 						</span>
 					</template>
 				</container-input-once>
@@ -129,19 +131,19 @@
 		<template #footer>
 			<block-buttons v-if="modal.type == 'edit'">
 				<button-remove
-					v-if="!currentSlide.data.create.body & !currentSlide.data.delete.body"
+					v-if="!currentSlide.data.create.value & !currentSlide.data.delete.value"
 					@click.prevent="markDeleteSlide"
 				>
 					Удалить
 				</button-remove>
 				<button-default
-					v-if="!currentSlide.data.delete.body"
+					v-if="!currentSlide.data.delete.value"
 					@click.prevent="updateSlide"
 					:disabled="disabled.slider.update"
 				>
 					Обновить
 				</button-default>
-				<button-default v-if="currentSlide.data.delete.body" @click.prevent="markDeleteSlide">
+				<button-default v-if="currentSlide.data.delete.value" @click.prevent="markDeleteSlide">
 					Вернуть
 				</button-default>
 			</block-buttons>
@@ -456,6 +458,7 @@ export default {
 	},
 	data() {
 		return {
+			/* Загрузчик */
 			loading: {
 				loader: {
 					slider: true,
@@ -465,6 +468,8 @@ export default {
 				footer: false,
 			},
 			slides: [],
+
+			/* Модальное окно */
 			modal: {
 				title: "СЛАЙД",
 				status: false,
@@ -484,6 +489,8 @@ export default {
 					footer: true,
 				},
 			},
+
+			/* Кнопки */
 			disabled: {
 				slider: {
 					update: false,
@@ -496,62 +503,68 @@ export default {
 					save: false,
 				},
 			},
+
+			/* Форма */
 			currentSlide: {
 				status: false,
 				errors: {
 					name: {
 						status: false,
-						value: null,
+						message: null,
 					},
 					link: {
 						status: false,
-						value: null,
+						message: null,
 					},
 					file: {
 						status: false,
-						value: null,
+						message: null,
 					},
 				},
 				data: {
 					id: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					name: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					link: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					filename: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					path: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					order: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					file: {
-						body: null,
+						value: null,
 						edited: false,
 					},
 					hide: {
-						body: "",
+						value: "",
+						edited: false,
 					},
 					create: {
-						body: false,
+						value: false,
+						edited: false,
 					},
 					delete: {
-						body: false,
+						value: false,
+						edited: false,
 					},
 				},
 			},
+
 			footer: {
 				title: {
 					body: null,
@@ -603,79 +616,7 @@ export default {
 		/* |                 МОДАЛЬНОЕ ОКНО                    |*/
 		/* |___________________________________________________|*/
 		/* _____________________________________________________*/
-		/* 1. Работа с полями ввода                             */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		/* Проверка поля ввода */
-		checkModalInput(dataKey, inputType) {
-			let errorLog = {};
-			switch (inputType) {
-				case "text":
-					errorLog = validate.checkInputText(this.currentSlide.data[dataKey].body);
-					break;
-				case "file":
-					errorLog = validate.checkInputFile(this.$refs.fileUpload.files[0], [
-						"image/jpeg",
-						"image/jpg",
-						"image/png",
-						"image/webp",
-					]);
-					break;
-				default:
-					break;
-			}
-
-			if (errorLog.status) {
-				this.currentSlide.errors[dataKey].value = errorLog.message;
-				this.currentSlide.errors[dataKey].status = true;
-
-				return true;
-			} else {
-				this.currentSlide.errors[dataKey].value = "";
-				this.currentSlide.errors[dataKey].status = false;
-
-				return false;
-			}
-		},
-		/* Проверка массива полей ввода */
-		checkModalInputsAll(inputKeys) {
-			let errorCount = 0;
-			for (let i = 0; i < inputKeys.length; i++) {
-				switch (inputKeys[i]) {
-					// Для поля файл
-					case "file":
-						if (this.checkModalInput(inputKeys[i], "file")) {
-							errorCount++;
-						}
-						break;
-					// Для всех остальных полей
-					default:
-						if (this.checkModalInput(inputKeys[i], "text")) {
-							errorCount++;
-						}
-						break;
-				}
-			}
-
-			if (errorCount > 0) {
-				return true;
-			} else {
-				return false;
-			}
-		},
-		// Очистка состояния редактирования
-		clearSlideEdited() {
-			for (let key in this.currentSlide.data) {
-				this.currentSlide.data[key].edited = false;
-			}
-		},
-		// Очистка состояния редактирования
-		clearSlideErrors() {
-			for (let key in this.currentSlide.errors) {
-				this.currentSlide.errors[key].status = false;
-			}
-		},
-		/* _____________________________________________________*/
-		/* 2. Основные действия                                 */
+		/* Основные действия                                    */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		// Открытие модального окна
 		openModal(type) {
@@ -707,9 +648,11 @@ export default {
 		// Закрытие модального окна с выбранным слайдом
 		closeSlide() {
 			this.closeModal();
-			this.clearSlideEdited();
-			this.clearSlideErrors();
+
+			shared.clearObjectSelective(this.currentSlide, "data", ["edited"]);
+			shared.clearObjectSelective(this.currentSlide, "errors", ["status", "message"]);
 		},
+
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                     СЛАЙДЕР                       |*/
 		/* |___________________________________________________|*/
@@ -725,10 +668,10 @@ export default {
 					case "create":
 						{
 							for (let key in this.currentSlide.data) {
-								this.currentSlide.data[key].body = "";
+								this.currentSlide.data[key].value = "";
 							}
 
-							this.currentSlide.data.delete.body = false;
+							this.currentSlide.data.delete.value = false;
 							// Открытие модального окна
 							this.openModal(type);
 						}
@@ -736,7 +679,7 @@ export default {
 					case "edit":
 						{
 							for (let key in selectedSlide) {
-								this.currentSlide.data[key].body = selectedSlide[key];
+								this.currentSlide.data[key].value = selectedSlide[key];
 							}
 
 							// Открытие модального окна
@@ -763,7 +706,7 @@ export default {
 				}
 
 				// Является ли текущий элемент первым
-				let firstSlideStatus = this.currentSlide.data.order.body == 1;
+				let firstSlideStatus = this.currentSlide.data.order.value == 1;
 
 				// Предидущей элемент
 				let slidePrevious = null;
@@ -771,17 +714,17 @@ export default {
 					slidePrevious = this.slides.find((slide) => slide.order === this.slides.length);
 				} else {
 					slidePrevious = this.slides.find(
-						(slide) => slide.order === this.currentSlide.data.order.body - 1
+						(slide) => slide.order === this.currentSlide.data.order.value - 1
 					);
 				}
 
 				// Текущий элемент
 				let slideCurrent = this.slides.find(
-					(slide) => slide.order === this.currentSlide.data.order.body
+					(slide) => slide.order === this.currentSlide.data.order.value
 				);
 
 				// Является ли текущий элемент последним
-				let lastSlideStatus = this.currentSlide.data.order.body == this.slides.length;
+				let lastSlideStatus = this.currentSlide.data.order.value == this.slides.length;
 
 				// Следующий элемент
 				let slideNext = null;
@@ -789,7 +732,7 @@ export default {
 					slideNext = this.slides.find((slide) => slide.order === 1);
 				} else {
 					slideNext = this.slides.find(
-						(slide) => slide.order === this.currentSlide.data.order.body + 1
+						(slide) => slide.order === this.currentSlide.data.order.value + 1
 					);
 				}
 
@@ -798,12 +741,12 @@ export default {
 					case "up":
 						{
 							if (lastSlideStatus) {
-								this.currentSlide.data.order.body = 1;
+								this.currentSlide.data.order.value = 1;
 								slideCurrent.order = 1;
 								slideNext.order = this.slides.length;
 								sorted.sortByOrder("up", this.slides);
 							} else {
-								this.currentSlide.data.order.body++;
+								this.currentSlide.data.order.value++;
 								slideCurrent.order++;
 								slideNext.order--;
 								sorted.sortByOrder("up", this.slides);
@@ -813,12 +756,12 @@ export default {
 					case "down":
 						{
 							if (firstSlideStatus) {
-								this.currentSlide.data.order.body = this.slides.length;
+								this.currentSlide.data.order.value = this.slides.length;
 								slideCurrent.order = this.slides.length;
 								slidePrevious.order = 1;
 								sorted.sortByOrder("up", this.slides);
 							} else {
-								this.currentSlide.data.order.body--;
+								this.currentSlide.data.order.value--;
 								slideCurrent.order--;
 								slidePrevious.order++;
 								sorted.sortByOrder("up", this.slides);
@@ -840,14 +783,32 @@ export default {
 		// Создание нового слайда
 		addSlide() {
 			try {
-				if (this.checkModalInputsAll(["name", "link", "file"])) return;
+				if (
+					validate.checkInputsAll(this.currentSlide, [
+						{
+							key: "file",
+							type: "file",
+							value: this.$refs.fileUpload,
+							formats: ["png", "webp"],
+						},
+						{
+							key: "name",
+							type: "text",
+						},
+						{
+							key: "link",
+							type: "text",
+						},
+					])
+				)
+					return;
 
 				/* Загрузка файла */
 				this.currentSlide.file = this.$refs.fileUpload.files[0];
 				let formData = new FormData();
 				formData.append("image", this.currentSlide.file);
 				formData.append("type", "slide");
-				formData.append("formats", ["png", "jpg", "jpeg", "webp"]);
+				formData.append("formats", ["png", "webp"]);
 
 				this.disabled.slider.create = true;
 
@@ -915,10 +876,12 @@ export default {
 				});
 			}
 		},
-		// Пометка на удаление выбранного слайда
+
+		/* Пометка на удаление выбранного слайда */
 		markDeleteSlide() {
-			/* Получение текущего объекта из массива this.slides */
-			let slide = this.slides.find((slide) => slide.order === this.currentSlide.data.order.body);
+			let slide = this.slides.find(
+				(slide) => slide.order === this.currentSlide.data.order.value
+			);
 
 			if (slide.delete) {
 				slide.delete = false;
@@ -928,26 +891,35 @@ export default {
 
 			this.closeSlide();
 		},
-		// Обновление данных слайда по данным из модального окна
+
+		/* Обновление выбранного слайда */
 		updateSlide() {
 			try {
-				/* Получение текущего объекта из массива this.slides */
 				let slideCurrent = this.slides.find(
-					(slide) => slide.order === this.currentSlide.data.order.body
+					(slide) => slide.order === this.currentSlide.data.order.value
 				);
 
-				// Если файл не загружен, то закрываем модальное окно
+				// Проверка на файл
 				if (!this.$refs.fileUpload.files[0]) {
-					// Проверка на заполненность полей ввода
-					if (this.checkModalInputsAll(["name", "link"])) {
+					if (
+						validate.checkInputsAll(this.currentSlide, [
+							{
+								key: "name",
+								type: "text",
+							},
+							{
+								key: "link",
+								type: "text",
+							},
+						])
+					)
 						return;
-					}
 
 					for (let key in slideCurrent) {
 						if (key == "name" || key == "link") {
-							slideCurrent[key] = this.currentSlide.data[key].body;
+							slideCurrent[key] = this.currentSlide.data[key].value;
 						} else if (key == "hide") {
-							slideCurrent[key] = this.currentSlide.data[key].body;
+							slideCurrent[key] = this.currentSlide.data[key].value;
 						}
 					}
 
@@ -955,12 +927,28 @@ export default {
 					return;
 				}
 
-				// Проверка на заполненность полей ввода
-				if (this.checkModalInputsAll(["name", "link", "file"])) return;
+				if (
+					validate.checkInputsAll(this.currentSlide, [
+						{
+							key: "file",
+							type: "file",
+							value: this.$refs.fileUpload,
+							formats: ["png", "webp"],
+						},
+						{
+							key: "name",
+							type: "text",
+						},
+						{
+							key: "link",
+							type: "text",
+						},
+					])
+				)
+					return;
 
 				this.disabled.slider.update = true;
 
-				/* Загрузка файла */
 				let formData = new FormData();
 				formData.append("image", this.$refs.fileUpload.files[0]);
 				formData.append("type", "slide");
@@ -978,7 +966,7 @@ export default {
 					.then((response) => {
 						if (response.data.status) {
 							try {
-								this.currentSlide.data.path.body = response.data.data;
+								this.currentSlide.data.path.value = response.data.data;
 								slideCurrent.path = response.data.data;
 								slideCurrent.filename = response.data.data.replace("/storage/slides/", "");
 
@@ -1016,6 +1004,7 @@ export default {
 				});
 			}
 		},
+
 		/* Сохранение изменений в базе данных */
 		saveSlidesChanges() {
 			this.disabled.slider.save = true;
@@ -1073,13 +1062,14 @@ export default {
 					this.disabled.slider.save = false;
 				});
 		},
+
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                     ФУТЕР                         |*/
 		/* |___________________________________________________|*/
 		/* _____________________________________________________*/
 		/* 1. Работа с текстовыми полями                        */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		// Очистка всех полей футера
+		/* Очистка всех полей футера */
 		clearTextareaAll() {
 			for (const obj in this.footer) {
 				this.footer[obj].body = "";
@@ -1087,19 +1077,22 @@ export default {
 			}
 			return true;
 		},
-		// Очистка статуса изменения
+
+		/* Очистка статуса изменения */
 		clearTextareaEdited() {
 			for (const obj in this.footer) {
 				this.footer[obj].edited = false;
 			}
 			return true;
 		},
-		// Очистка всех полей футера
+
+		/* Очистка всех полей футера */
 		clearFooter() {
 			this.clearTextareaAll();
 			this.clearTextareaEdited();
 		},
-		// Контроль количества символов
+
+		/* Контроль количества символов */
 		controlSymbols(obj) {
 			this.footer[`${obj}`].edited = true;
 
@@ -1115,10 +1108,11 @@ export default {
 			// Отображение текущего количества символов
 			this.footer[`${obj}`].symbolsCount = this.footer[`${obj}`].body.length;
 		},
+
 		/* _____________________________________________________*/
 		/* 2. Сохранение, редактирование                        */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		// Сохранение всех полей
+		/* Сохранение всех полей */
 		saveFooterChanges() {
 			this.disabled.footer.save = true;
 

@@ -573,21 +573,21 @@ class AdminController extends Controller
          }
       };      
 
-      $specialist = Specialist::find($profile->id->body);
+      $specialist = Specialist::find($profile->id->value);
       if ($specialist) {
          $specialist->update([
-            'link' => $profile->link->body,
-            'family' => $profile->family->body,
-            'name' => $profile->name->body,
-            'surname' => $profile->surname->body,
-            'category' => $profile->category->body,
-            'degree' => $profile->degree->body,
-            'rank' => $profile->rank->body,
-            'startWorkAge' => $profile->startWorkAge->body ? $profile->startWorkAge->body : null,
-            'startWorkCity' => $profile->startWorkCity->body,
-            'adultDoctor' => $profile->adultDoctor->body,
-            'childrenDoctor' => $profile->childrenDoctor->body,
-            'childrenDoctorAge' => $profile->childrenDoctor->body ? $profile->childrenDoctorAge->body : 0,
+            'link' => $profile->link->value,
+            'family' => $profile->family->value,
+            'name' => $profile->name->value,
+            'surname' => $profile->surname->value,
+            'category' => $profile->category->value,
+            'degree' => $profile->degree->value,
+            'rank' => $profile->rank->value,
+            'startWorkAge' => $profile->startWorkAge->value ? $profile->startWorkAge->value : null,
+            'startWorkCity' => $profile->startWorkCity->value,
+            'adultDoctor' => $profile->adultDoctor->value,
+            'childrenDoctor' => $profile->childrenDoctor->value,
+            'childrenDoctorAge' => $profile->childrenDoctor->value ? $profile->childrenDoctorAge->value : 0,
          ]);
 
          if($path) $specialist->update(['filename' => str_replace("public/specialists/", "", $path)]);
@@ -1026,18 +1026,18 @@ class AdminController extends Controller
 
       try {
          $specialist = Specialist::create([
-            "link" => $profile->link->body,
-            "family" => $profile->family->body,
-            "name" => $profile->name->body,
-            "surname" => $profile->surname->body,
-            "category" => $profile->category->body,
-            "degree" => $profile->degree->body,
-            "rank" => $profile->rank->body,
-            "startWorkAge" => $profile->startWorkAge->body ? $profile->startWorkAge->body : null,
-            "startWorkCity" => $profile->startWorkCity->body,
-            "adultDoctor" => $profile->adultDoctor->body,
-            "childrenDoctor" => $profile->childrenDoctor->body,
-            "childrenDoctorAge" => $profile->childrenDoctor->body ? $profile->childrenDoctorAge->body : 0,
+            "link" => $profile->link->value,
+            "family" => $profile->family->value,
+            "name" => $profile->name->value,
+            "surname" => $profile->surname->value,
+            "category" => $profile->category->value,
+            "degree" => $profile->degree->value,
+            "rank" => $profile->rank->value,
+            "startWorkAge" => $profile->startWorkAge->value ? $profile->startWorkAge->value : null,
+            "startWorkCity" => $profile->startWorkCity->value,
+            "adultDoctor" => $profile->adultDoctor->value,
+            "childrenDoctor" => $profile->childrenDoctor->value,
+            "childrenDoctorAge" => $profile->childrenDoctor->value ? $profile->childrenDoctorAge->value : 0,
             "filename" => str_replace("public/specialists/", "", $path),
          ]);   
       } catch (Throwable $e) {
@@ -1639,4 +1639,56 @@ class AdminController extends Controller
 
       return $categories[count($categories) - 1]->id;
    }
+
+   /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+   /* |                    НОВОСТИ                        |*/
+   /* |___________________________________________________|*/
+   public function addNews(Request $request) {
+      $validator = Validator::make($request->all(), [
+         'image' => [
+            'required',
+            File::types(['png', 'webp', 'jpg', 'jpeg'])->max(10 * 1024),
+         ],
+         'title' => 'required|string',
+         'description' => 'required|string',
+      ]);
+
+      if ($validator->fails()) {
+         return response()->json([
+            "status" => false,
+            "message" => "Некорректные данные.",
+            "data" => null,
+         ]);
+      };
+
+      $path = request()->file('image')->store(
+         'public/news'
+      );
+
+      if (!$path) {
+         return response()->json([
+            "status" => false,
+            "message" => "Не удалось сохранить изображение.",
+            "data" => null,
+         ]);
+      };
+
+      // DB::table('news')->insert([
+      //    'image' => basename($path),
+      //    'title' => $title,
+      //    'description' => $description,
+      // ]);
+
+      return response()->json([
+         "status" => true,
+         "message" => "Новость добавлена.",
+         "data" => [
+            "path" => Storage::url($path),
+            "image" => basename($path),
+            "title" => $request->title,
+            "description" => $request->description,
+         ],
+      ]);
+   }
+
 }

@@ -1,3 +1,20 @@
+/* Типы загруженных файлов */
+const types = new Map([
+	["jpg", "image/jpeg"],
+	["jpeg", "image/jpeg"],
+	["png", "image/png"],
+	["webp", "image/webp"],
+	["gif", "image/gif"],
+	["svg", "image/svg+xml"],
+	["json", "application/json"],
+	["pdf", "application/pdf"],
+	["doc", "application/msword"],
+	["docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"],
+	["xls", "application/vnd.ms-excel"],
+	["xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"],
+	["ods", "application/vnd.oasis.opendocument.spreadsheet"],
+]);
+
 export default {
 	/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 	/* |               МОДУЛЬНАЯ ПРОВЕРКА                  |*/
@@ -7,7 +24,7 @@ export default {
 		let errorCount = 0;
 
 		for (let i = 0; i < keys.length; i++) {
-			if (this.checkInput(obj, keys[i].key, keys[i].type)) {
+			if (this.checkInput(obj, keys[i]?.key, keys[i]?.type, keys[i]?.value, keys[i]?.formats)) {
 				errorCount++;
 			}
 		}
@@ -19,7 +36,7 @@ export default {
 		}
 	},
 	/* Проверка одного поля */
-	checkInput(obj, key, type) {
+	checkInput(obj, key, type, value = null, formats = []) {
 		let logs = {};
 
 		switch (type) {
@@ -40,6 +57,12 @@ export default {
 				break;
 			case "phone":
 				logs = this.checkInputPhone(obj.data[key].value);
+				break;
+			case "file":
+				logs = this.checkInputFile(value, formats);
+				break;
+			case "tiptap":
+				logs = this.checkInputTiptap(value);
 				break;
 			default:
 				logs = {
@@ -86,6 +109,7 @@ export default {
 			message: "Ошибок нет.",
 		};
 	},
+
 	/* Проверка введенного текстового значения */
 	checkInputNumber(value) {
 		// Проверка на пустую строку
@@ -109,6 +133,7 @@ export default {
 			message: "Ошибок нет.",
 		};
 	},
+
 	/* Проверка введенного текстового значения */
 	checkInputBoolean(value) {
 		// Проверка на пустую строку
@@ -124,6 +149,7 @@ export default {
 			message: "Ошибок нет.",
 		};
 	},
+
 	/* Проверка введенной даты */
 	checkInputDate(value) {
 		// Проверка на пустую строку
@@ -139,13 +165,14 @@ export default {
 				status: true,
 				message: "Некорректная дата.",
 			};
-		};
+		}
 
 		return {
 			status: false,
 			message: "Ошибок нет.",
 		};
 	},
+
 	/* Проверка введенной почты */
 	checkInputEmail(value) {
 		let chekText = this.checkInputText(value);
@@ -166,6 +193,7 @@ export default {
 			message: "Ошибок нет.",
 		};
 	},
+
 	/* Проверка введенного телефона */
 	checkInputPhone(value) {
 		let chekText = this.checkInputText(value);
@@ -186,31 +214,44 @@ export default {
 			message: "Ошибок нет.",
 		};
 	},
+
+	/* Проверка введенного телефона */
+	checkInputTiptap(obj) {
+		if (obj.getSymbols() < 1) {
+			return {
+				status: true,
+				message: "Введите текст.",
+			};
+		}
+
+		return {
+			status: false,
+			message: "Ошибок нет.",
+		};
+	},
+
 	/* Проверка введенного файла */
-	checkInputFile(value, types = ["image/png"]) {
+	checkInputFile(file, formats = []) {
 		// Проверка на загрузку файла пользователем
-		if (!value) {
+		if (!file.files[0]) {
 			return {
 				status: true,
 				message: "Пустое поле.",
 			};
 		}
 
-		// Проверка на тип загруженного файла
-		if (!types.includes(value.type)) {
-			let typesStr = types.join(", ");
-
-			return {
-				status: true,
-				message: `Разрешённые типы файлов: ${typesStr}.`,
-			};
+		let inFormat = false;
+		for (let value of formats) {
+			if (file.files[0].type == types.get(value)) {
+				inFormat = true;
+				break;
+			}
 		}
 
-		// Проверка на размер загруженного файла
-		if (value.size / 1024 / 1024 > 10) {
+		if (!inFormat) {
 			return {
 				status: true,
-				message: "Разрешённые размер файлов: не более 10 МБ.",
+				message: `Разрешённые типы файлов: ${formats.join(", ")}.`,
 			};
 		}
 
@@ -248,7 +289,7 @@ export default {
 	},
 	isDate(value) {
 		let date = new Date(value);
-		return !Number.isNaN(date.getTime());		
+		return !Number.isNaN(date.getTime());
 	},
 	/* Валидация почты */
 	isMail(mail) {

@@ -107,6 +107,9 @@ Route::middleware(['auth:sanctum', 'admin-or-creator'])->group(function () {
    // Цены 
    Route::get('/get-prices-files-all', [AdminController::class, 'getPricesFilesAll']);
    Route::post('/save-prices-changes', [AdminController::class, 'savePricesChanges']);
+
+   // Новости 
+   Route::post('/add-news', [AdminController::class, 'addNews']);
 });
 
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/

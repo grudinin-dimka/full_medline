@@ -374,15 +374,19 @@
 						<circle r="6" cx="10" cy="10" fill="white" />
 					</svg>
 
-					{{ editor.storage.characterCount.characters() }} / {{ limit }} characters
+					{{ editor.storage.characterCount.characters() }} / {{ limit }} символов
 					<br />
-					{{ editor.storage.characterCount.words() }} words
+					{{ editor.storage.characterCount.words() }} слов
 				</div>
 			</div>
 		</div>
 
-		<div class="tiptap__editor" :class="{ 'disabled': !editable }">
+		<div class="tiptap__editor" :class="{ 'disabled': !editable, 'error': error }">
 			<editor-content :editor="editor" />
+		</div>
+
+		<div class="tiptap__error" v-if="error">
+			<slot name="error"></slot>
 		</div>
 	</div>
 </template>
@@ -403,20 +407,19 @@ import Placeholder from "@tiptap/extension-placeholder";
 import StarterKit from "@tiptap/starter-kit";
 
 export default {
-	emits: ["export"],
 	components: {
 		BubbleMenu,
 		EditorContent,
 	},
 	props: {
-		editable: {
-			type: Boolean,
-			default: true,
-		},
-		content: {
+		modelValue: {
 			type: String,
 			default: "",
 			required: true,
+		},
+		editable: {
+			type: Boolean,
+			default: true,
 		},
 		minHeight: {
 			type: Number,
@@ -429,7 +432,11 @@ export default {
 		placeholder: {
 			type: String,
 			default: "Введите текст",
-		}
+		},
+		error: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	data() {
 		return {
@@ -470,17 +477,26 @@ export default {
 		},
 
 		/* Экспорт в html */
-		exportHtml() {
-			this.$emit("export", this.editor.getHTML());
+		getSymbols() {
+			return this.editor.storage.characterCount.characters();
+		},
+
+		/* Экспорт в html */
+		getHTML() {
+			return this.editor.getHTML();
 		},
 
 		/* Экспорт в JSON */
-		exportJSON() {
-			this.$emit("export", this.editor.getJSON());
+		getJSON() {
+			return this.editor.getJSON();
 		},
 	},
 	mounted() {
 		this.editor = new Editor({
+			onUpdate: ({ editor }) => {
+				this.$emit("update:modelValue", editor.getHTML());
+			},
+
 			// Расширения Tiptap
 			extensions: [
 				StarterKit,
@@ -504,7 +520,7 @@ export default {
 			],
 
 			// Содержимое редактора
-			content: this.content,
+			content: this.modelValue,
 
 			// Установка фокуса при загрузке редактора
 			autofocus: false,
@@ -605,12 +621,21 @@ export default {
 	border-radius: 10px;
 	padding: 10px;
 	outline: 0px solid rgba(0, 0, 0, 0.2);
+
+	transition: all 0.2s;
 }
 
 .tiptap__editor.disabled {
 	border: 0px solid rgba(0, 0, 0, 0.25);
 	border-radius: 0px;
 	padding: 0px;
+}
+
+.tiptap__editor.error {
+	border: var(--input-error-border);
+	background-color: var(--input-error-background-color);
+
+	caret-color: var(--input-error-caret-color);
 }
 
 .tiptap {
@@ -626,6 +651,7 @@ export default {
 
 .tiptap p {
 	margin: 5px;
+	font-size: 1.125rem;
 }
 
 .tiptap p.is-editor-empty:first-child::before {
@@ -679,7 +705,7 @@ export default {
 	align-items: center;
 	color: var(--gray-5);
 	display: flex;
-	font-size: 0.75rem;
+	font-size: 1rem;
 	gap: 10px;
 }
 
@@ -690,5 +716,12 @@ export default {
 .character-count.--warning,
 .character-count.--warning svg {
 	color: var(--red);
+}
+
+/* error */
+.tiptap__error {
+	margin-top: 5px;
+
+	color: var(--input-error-color);
 }
 </style>

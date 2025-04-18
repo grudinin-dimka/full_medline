@@ -138,13 +138,13 @@
 						type="text"
 						placeholder="Название должности"
 						:class="{ error: currentCertificate.errors.name.status }"
-						v-model="currentCertificate.data.name.body"
+						v-model="currentCertificate.data.name.value"
 						@input="currentCertificate.data.name.edited = true"
 					/>
 				</template>
 				<template #error>
-					<span class="error" v-if="currentCertificate.errors.name.body">
-						{{ currentCertificate.errors.name.body }}
+					<span class="error" v-if="currentCertificate.errors.name.message">
+						{{ currentCertificate.errors.name.message }}
 					</span>
 				</template>
 			</container-input-once>
@@ -159,13 +159,13 @@
 						type="text"
 						placeholder="Название организации"
 						:class="{ error: currentCertificate.errors.organization.status }"
-						v-model="currentCertificate.data.organization.body"
+						v-model="currentCertificate.data.organization.value"
 						@input="currentCertificate.data.organization.edited = true"
 					/>
 				</template>
 				<template #error>
-					<span class="error" v-if="currentCertificate.errors.organization.body">
-						{{ currentCertificate.errors.organization.body }}
+					<span class="error" v-if="currentCertificate.errors.organization.message">
+						{{ currentCertificate.errors.organization.message }}
 					</span>
 				</template>
 			</container-input-once>
@@ -180,13 +180,13 @@
 						type="date"
 						placeholder="Введите дату"
 						:class="{ error: currentCertificate.errors.endEducation.status }"
-						v-model="currentCertificate.data.endEducation.body"
+						v-model="currentCertificate.data.endEducation.value"
 						@input="currentCertificate.data.endEducation.edited = true"
 					/>
 				</template>
 				<template #error>
-					<span class="error" v-if="currentCertificate.errors.endEducation.body">
-						{{ currentCertificate.errors.endEducation.body }}
+					<span class="error" v-if="currentCertificate.errors.endEducation.message">
+						{{ currentCertificate.errors.endEducation.message }}
 					</span>
 				</template>
 			</container-input-once>
@@ -224,13 +224,13 @@
 							placeholder="Введите название"
 							autocomplete="off"
 							:class="{ error: currentEducation.errors.name.status }"
-							v-model="currentEducation.data.name.body"
+							v-model="currentEducation.data.name.value"
 							@input="currentEducation.data.name.edited = true"
 						/>
 					</template>
 					<template #error>
 						<span class="error" v-if="currentEducation.errors.name.status">
-							{{ currentEducation.errors.name.body }}
+							{{ currentEducation.errors.name.message }}
 						</span>
 					</template>
 				</container-input-once>
@@ -251,13 +251,13 @@
 							placeholder="Введите организацию"
 							autocomplete="off"
 							:class="{ error: currentEducation.errors.organization.status }"
-							v-model="currentEducation.data.organization.body"
+							v-model="currentEducation.data.organization.value"
 							@input="currentEducation.data.organization.edited = true"
 						></textarea>
 					</template>
 					<template #error>
 						<span class="error" v-if="currentEducation.errors.organization.status">
-							{{ currentEducation.errors.organization.body }}
+							{{ currentEducation.errors.organization.message }}
 						</span>
 					</template>
 				</container-textarea-once>
@@ -278,13 +278,13 @@
 							placeholder="Введите организацию"
 							autocomplete="off"
 							:class="{ error: currentEducation.errors.date.status }"
-							v-model="currentEducation.data.date.body"
+							v-model="currentEducation.data.date.value"
 							@input="currentEducation.data.date.edited = true"
 						/>
 					</template>
 					<template #error>
 						<span class="error" v-if="currentEducation.errors.date.status">
-							{{ currentEducation.errors.date.body }}
+							{{ currentEducation.errors.date.message }}
 						</span>
 					</template>
 				</container-input-once>
@@ -306,7 +306,7 @@
 							autocomplete="off"
 							list="eduacation-specializations"
 							:class="{ error: currentEducation.errors.speсialization.status }"
-							v-model="currentEducation.data.speсialization.body"
+							v-model="currentEducation.data.speсialization.value"
 							@input="currentEducation.data.speсialization.edited = true"
 						/>
 						<datalist id="eduacation-specializations">
@@ -318,7 +318,7 @@
 					</template>
 					<template #error>
 						<span class="error" v-if="currentEducation.errors.speсialization.status">
-							{{ currentEducation.errors.speсialization.body }}
+							{{ currentEducation.errors.speсialization.message }}
 						</span>
 					</template>
 				</container-input-once>
@@ -355,14 +355,14 @@
 						<input
 							type="text"
 							placeholder="Название работы"
-							v-model="currentWork.data.name.body"
+							v-model="currentWork.data.name.value"
 							:class="{ error: currentWork.errors.name.status }"
 							@input="currentWork.data.name.edited = true"
 						/>
 					</template>
 					<template #error>
 						<span class="error" v-if="currentWork.errors.name.status">
-							{{ currentWork.errors.name.body }}
+							{{ currentWork.errors.name.message }}
 						</span>
 					</template>
 				</container-input-once>
@@ -376,14 +376,14 @@
 						<textarea
 							rows="4"
 							placeholder="Название организации"
-							v-model="currentWork.data.organization.body"
+							v-model="currentWork.data.organization.value"
 							:class="{ error: currentWork.errors.organization.status }"
 							@input="currentWork.data.organization.edited = true"
 						></textarea>
 					</template>
 					<template #error>
 						<span class="error" v-if="currentWork.errors.organization.status">
-							{{ currentWork.errors.organization.body }}
+							{{ currentWork.errors.organization.message }}
 						</span>
 					</template>
 				</container-textarea-once>
@@ -401,14 +401,14 @@
 						<input
 							type="date"
 							autocomplete="off"
-							v-model="currentWork.data.startWork.body"
+							v-model="currentWork.data.startWork.value"
 							:class="{ error: currentWork.errors.startWork.status }"
 							@input="currentWork.data.startWork.edited = true"
 						/>
 					</template>
 					<template #error-one>
 						<span class="error" v-if="currentWork.errors.startWork.status">
-							{{ currentWork.errors.startWork.body }}
+							{{ currentWork.errors.startWork.message }}
 						</span>
 					</template>
 					<!-- Конец работы -->
@@ -421,14 +421,14 @@
 							type="date"
 							placeholder="Введите улицу"
 							autocomplete="off"
-							v-model="currentWork.data.endWork.body"
+							v-model="currentWork.data.endWork.value"
 							:class="{ error: currentWork.errors.endWork.status }"
 							@input="currentWork.data.endWork.edited = true"
 						/>
 					</template>
 					<template #error-two>
 						<span class="error" v-if="currentWork.errors.endWork.status">
-							{{ currentWork.errors.endWork.body }}
+							{{ currentWork.errors.endWork.message }}
 						</span>
 					</template>
 				</container-input-two>
@@ -489,7 +489,7 @@
 					<div
 						class="item"
 						:style="{
-							backgroundImage: `url(${specialist.profile.data.path.body})`,
+							backgroundImage: `url(${specialist.profile.data.path.value})`,
 						}"
 					></div>
 				</div>
@@ -513,7 +513,7 @@
 						</template>
 						<template #error-one>
 							<span class="error" v-if="specialist.profile.errors.file.status">
-								{{ specialist.profile.errors.file.body }}
+								{{ specialist.profile.errors.file.message }}
 							</span>
 						</template>
 						<template #title-two>
@@ -525,14 +525,14 @@
 								type="text"
 								placeholder="Введите ссылку"
 								autocomplete="off"
-								v-model="specialist.profile.data.link.body"
+								v-model="specialist.profile.data.link.value"
 								:class="{ error: specialist.profile.errors.link.status }"
 								@input="specialist.profile.data.link.edited = true"
 							/>
 						</template>
 						<template #error-two>
 							<span class="error" v-if="true">
-								{{ specialist.profile.errors.link.body }}
+								{{ specialist.profile.errors.link.message }}
 							</span>
 						</template>
 					</container-input-two>
@@ -550,14 +550,14 @@
 								type="text"
 								placeholder="Введите фамилию"
 								autocomplete="off"
-								v-model="specialist.profile.data.family.body"
+								v-model="specialist.profile.data.family.value"
 								:class="{ error: specialist.profile.errors.family.status }"
 								@input="specialist.profile.data.family.edited = true"
 							/>
 						</template>
 						<template #error-one>
 							<span class="error" v-if="specialist.profile.errors.family.status">
-								{{ specialist.profile.errors.family.body }}
+								{{ specialist.profile.errors.family.message }}
 							</span>
 						</template>
 						<template #title-two>
@@ -569,14 +569,14 @@
 								type="text"
 								placeholder="Введите имя"
 								autocomplete="off"
-								v-model="specialist.profile.data.name.body"
+								v-model="specialist.profile.data.name.value"
 								:class="{ error: specialist.profile.errors.name.status }"
 								@input="specialist.profile.data.name.edited = true"
 							/>
 						</template>
 						<template #error-two>
 							<span class="error" v-if="specialist.profile.errors.name.status">
-								{{ specialist.profile.errors.name.body }}
+								{{ specialist.profile.errors.name.message }}
 							</span>
 						</template>
 						<template #title-three>
@@ -588,14 +588,14 @@
 								type="text"
 								placeholder="Введите отчество"
 								autocomplete="off"
-								v-model="specialist.profile.data.surname.body"
+								v-model="specialist.profile.data.surname.value"
 								:class="{ error: specialist.profile.errors.surname.status }"
 								@input="specialist.profile.data.surname.edited = true"
 							/>
 						</template>
 						<template #error-three>
 							<span class="error" v-if="specialist.profile.errors.surname.status">
-								{{ specialist.profile.errors.surname.body }}
+								{{ specialist.profile.errors.surname.message }}
 							</span>
 						</template>
 					</container-input-three>
@@ -613,7 +613,7 @@
 						</template>
 						<template #select-one>
 							<Selector
-								v-model="specialist.profile.data.category.body"
+								v-model="specialist.profile.data.category.value"
 								:placeholder="'Выберите категорию'"
 								:type="specialist.profile.errors.category.status ? 'error' : 'default'"
 								:filter="false"
@@ -639,7 +639,7 @@
 						</template>
 						<template #error-one>
 							<span class="error" v-if="specialist.profile.errors.category.status">
-								{{ specialist.profile.errors.category.body }}
+								{{ specialist.profile.errors.category.message }}
 							</span>
 						</template>
 						<template #title-two>
@@ -652,7 +652,7 @@
 								placeholder="Введите степень"
 								autocomplete="off"
 								list="specialist-dedgree"
-								v-model="specialist.profile.data.degree.body"
+								v-model="specialist.profile.data.degree.value"
 								@input="specialist.profile.data.degree.edited = true"
 							/>
 							<datalist id="specialist-dedgree">
@@ -671,7 +671,7 @@
 								placeholder="Введите звание"
 								autocomplete="off"
 								list="specialist-rank"
-								v-model="specialist.profile.data.rank.body"
+								v-model="specialist.profile.data.rank.value"
 								@input="specialist.profile.data.rank.edited = true"
 							/>
 							<datalist id="specialist-rank">
@@ -688,7 +688,7 @@
 						</template>
 						<template #title-one>
 							<span
-								>ДАТА* ({{ getAge(specialist.profile.data.startWorkAge.body) }} лет)</span
+								>ДАТА* ({{ getAge(specialist.profile.data.startWorkAge.value) }} лет)</span
 							>
 							<span v-if="specialist.profile.data.startWorkAge.edited"> (ИЗМЕНЕНО)</span>
 						</template>
@@ -696,14 +696,14 @@
 							<input
 								type="date"
 								autocomplete="off"
-								v-model="specialist.profile.data.startWorkAge.body"
+								v-model="specialist.profile.data.startWorkAge.value"
 								:class="{ error: specialist.profile.errors.startWorkAge.status }"
 								@input="specialist.profile.data.startWorkAge.edited = true"
 							/>
 						</template>
 						<template #error-one>
 							<span class="error" v-if="specialist.profile.errors.startWorkAge.status">
-								{{ specialist.profile.errors.startWorkAge.body }}
+								{{ specialist.profile.errors.startWorkAge.message }}
 							</span>
 						</template>
 						<template #title-two>
@@ -715,7 +715,7 @@
 								type="text"
 								placeholder="Введите название города"
 								autocomplete="off"
-								v-model="specialist.profile.data.startWorkCity.body"
+								v-model="specialist.profile.data.startWorkCity.value"
 								@input="specialist.profile.data.startWorkCity.edited = true"
 							/>
 						</template>
@@ -724,7 +724,7 @@
 					<container-input-two-sub
 						:fieldset="true"
 						:subOne="false"
-						:subTwo="specialist.profile.data.childrenDoctor.body ? true : false"
+						:subTwo="specialist.profile.data.childrenDoctor.value ? true : false"
 					>
 						<template #legend>
 							<span>ПРИЁМ ВРАЧА</span>
@@ -735,7 +735,7 @@
 						</template>
 						<template #input-one>
 							<Selector
-								v-model="specialist.profile.data.adultDoctor.body"
+								v-model="specialist.profile.data.adultDoctor.value"
 								:placeholder="'Выберите статус'"
 								:type="specialist.profile.errors.adultDoctor.status ? 'error' : 'default'"
 								:filter="false"
@@ -753,7 +753,7 @@
 						</template>
 						<template #error-one>
 							<span class="error" v-if="specialist.profile.errors.adultDoctor.status">
-								{{ specialist.profile.errors.adultDoctor.body }}
+								{{ specialist.profile.errors.adultDoctor.message }}
 							</span>
 						</template>
 						<template #title-two>
@@ -762,7 +762,7 @@
 						</template>
 						<template #input-two>
 							<Selector
-								v-model="specialist.profile.data.childrenDoctor.body"
+								v-model="specialist.profile.data.childrenDoctor.value"
 								:placeholder="'Выберите статус'"
 								:type="
 									specialist.profile.errors.childrenDoctor.status ? 'error' : 'default'
@@ -782,11 +782,11 @@
 						</template>
 						<template #error-two>
 							<span class="error" v-if="specialist.profile.errors.childrenDoctor.status">
-								{{ specialist.profile.errors.childrenDoctor.body }}
+								{{ specialist.profile.errors.childrenDoctor.message }}
 							</span>
 						</template>
 						<template #title-sub-two>
-							<span>ВОЗРАСТ* (+{{ specialist.profile.data.childrenDoctorAge.body }})</span>
+							<span>ВОЗРАСТ* (+{{ specialist.profile.data.childrenDoctorAge.value }})</span>
 							<span v-if="specialist.profile.data.childrenDoctorAge.edited">
 								(ИЗМЕНЕНО)</span
 							>
@@ -795,14 +795,14 @@
 							<input
 								type="number"
 								placeholder="Годы"
-								v-model="specialist.profile.data.childrenDoctorAge.body"
+								v-model="specialist.profile.data.childrenDoctorAge.value"
 								:class="{ error: specialist.profile.errors.childrenDoctorAge.status }"
 								@input="specialist.profile.data.childrenDoctorAge.edited = true"
 							/>
 						</template>
 						<template #error-sub-two>
 							<span class="error" v-if="specialist.profile.errors.childrenDoctorAge.status">
-								{{ specialist.profile.errors.childrenDoctorAge.body }}
+								{{ specialist.profile.errors.childrenDoctorAge.message }}
 							</span>
 						</template>
 					</container-input-two-sub>
@@ -973,12 +973,12 @@
 			</template>
 
 			<template #one-buttons>
-				<button-disabled v-if="this.specialist.profile.data.id.body == null">
+				<button-disabled v-if="this.specialist.profile.data.id.value == null">
 					Добавить
 				</button-disabled>
 				<button-default
 					@click="editSpecialization"
-					v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.body !== null"
+					v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.value !== null"
 				>
 					Добавить
 				</button-default>
@@ -1045,12 +1045,12 @@
 			</template>
 
 			<template #two-buttons>
-				<button-disabled v-if="this.specialist.profile.data.id.body == null">
+				<button-disabled v-if="this.specialist.profile.data.id.value == null">
 					Добавить
 				</button-disabled>
 				<button-default
 					@click="editClinics"
-					v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.body !== null"
+					v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.value !== null"
 				>
 					Добавить
 				</button-default>
@@ -1345,45 +1345,45 @@ export default {
 			currentCertificate: {
 				errors: {
 					id: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					organization: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					endEducation: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					name: {
-						body: "",
+						message: "",
 						status: false,
 					},
 				},
 				data: {
 					id: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					organization: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					endEducation: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					name: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					create: {
-						body: false,
+						value: false,
 						edited: false,
 					},
 					delete: {
-						body: false,
+						value: false,
 						edited: false,
 					},
 				},
@@ -1392,61 +1392,61 @@ export default {
 			currentEducation: {
 				errors: {
 					id: {
-						body: null,
+						message: null,
 						status: false,
 					},
 					name: {
-						body: null,
+						message: null,
 						status: false,
 					},
 					organization: {
-						body: null,
+						message: null,
 						status: false,
 					},
 					date: {
-						body: null,
+						message: null,
 						status: false,
 					},
 					speсialization: {
-						body: null,
+						message: null,
 						status: false,
 					},
 					create: {
-						body: false,
+						message: false,
 						status: false,
 					},
 					delete: {
-						body: false,
+						message: false,
 						status: false,
 					},
 				},
 				data: {
 					id: {
-						body: null,
+						value: null,
 						edited: false,
 					},
 					name: {
-						body: null,
+						value: null,
 						edited: false,
 					},
 					organization: {
-						body: null,
+						value: null,
 						edited: false,
 					},
 					date: {
-						body: null,
+						value: null,
 						edited: false,
 					},
 					speсialization: {
-						body: null,
+						value: null,
 						edited: false,
 					},
 					create: {
-						body: false,
+						value: false,
 						edited: false,
 					},
 					delete: {
-						body: false,
+						value: false,
 						edited: false,
 					},
 				},
@@ -1455,53 +1455,53 @@ export default {
 			currentWork: {
 				errors: {
 					id: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					startWork: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					endWork: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					organization: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					name: {
-						body: "",
+						message: "",
 						status: false,
 					},
 				},
 				data: {
 					id: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					startWork: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					endWork: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					organization: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					name: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					create: {
-						body: false,
+						value: false,
 						edited: false,
 					},
 					delete: {
-						body: false,
+						value: false,
 						edited: false,
 					},
 				},
@@ -1552,143 +1552,144 @@ export default {
 			specialist: {
 				// Основная информация
 				profile: {
-					data: {
-						id: {
-							body: "",
-							edited: false,
-						},
-						link: {
-							body: "",
-							edited: false,
-						},
-						family: {
-							body: "",
-							edited: false,
-						},
-						name: {
-							body: "",
-							edited: false,
-						},
-						surname: {
-							body: "",
-							edited: false,
-						},
-						category: {
-							body: "",
-							edited: false,
-						},
-						degree: {
-							body: "",
-							edited: false,
-						},
-						rank: {
-							body: "",
-							edited: false,
-						},
-						startWorkAge: {
-							body: "",
-							edited: false,
-						},
-						startWorkCity: {
-							body: "",
-							edited: false,
-						},
-						adultDoctor: {
-							body: "",
-							edited: false,
-						},
-						childrenDoctor: {
-							body: "",
-							edited: false,
-						},
-						childrenDoctorAge: {
-							body: "",
-							edited: false,
-						},
-						hide: {
-							body: false,
-							edited: false,
-						},
-						filename: {
-							body: "",
-							edited: false,
-						},
-						path: {
-							body: "",
-							edited: false,
-						},
-					},
 					errors: {
 						file: {
-							body: "",
+							message: "",
 							status: false,
 						},
 						id: {
-							body: "",
+							message: "",
 							status: false,
 						},
 						link: {
-							body: "",
+							message: "",
 							status: false,
 						},
 						family: {
-							body: "",
+							message: "",
 							status: false,
 						},
 						name: {
-							body: "",
+							message: "",
 							status: false,
 						},
 						surname: {
-							body: "",
+							message: "",
 							status: false,
 						},
 						category: {
-							body: "",
+							message: "",
 							status: false,
 						},
 						degree: {
-							body: "",
+							message: "",
 							status: false,
 						},
 						rank: {
-							body: "",
+							message: "",
 							status: false,
 						},
 						startWorkAge: {
-							body: "",
+							message: "",
 							status: false,
 						},
 						startWorkCity: {
-							body: "",
+							message: "",
 							status: false,
 						},
 						adultDoctor: {
-							body: "",
+							message: "",
 							status: false,
 						},
 						childrenDoctor: {
-							body: "",
+							message: "",
 							status: false,
 						},
 						childrenDoctorAge: {
-							body: "",
+							message: "",
 							status: false,
 						},
 						hide: {
-							body: "",
+							message: "",
 							status: false,
 						},
 						filename: {
-							body: "",
+							message: "",
 							status: false,
 						},
 						path: {
-							body: "",
+							message: "",
 							status: false,
+						},
+					},
+					data: {
+						id: {
+							value: "",
+							edited: false,
+						},
+						link: {
+							value: "",
+							edited: false,
+						},
+						family: {
+							value: "",
+							edited: false,
+						},
+						name: {
+							value: "",
+							edited: false,
+						},
+						surname: {
+							value: "",
+							edited: false,
+						},
+						category: {
+							value: "",
+							edited: false,
+						},
+						degree: {
+							value: "",
+							edited: false,
+						},
+						rank: {
+							value: "",
+							edited: false,
+						},
+						startWorkAge: {
+							value: "",
+							edited: false,
+						},
+						startWorkCity: {
+							value: "",
+							edited: false,
+						},
+						adultDoctor: {
+							value: "",
+							edited: false,
+						},
+						childrenDoctor: {
+							value: "",
+							edited: false,
+						},
+						childrenDoctorAge: {
+							value: "",
+							edited: false,
+						},
+						hide: {
+							value: false,
+							edited: false,
+						},
+						filename: {
+							value: "",
+							edited: false,
+						},
+						path: {
+							value: "",
+							edited: false,
 						},
 					},
 				},
+
 				// Связи
 				connections: {
 					certificates: [],
@@ -1894,20 +1895,17 @@ export default {
 		/* Открытие */
 		openModal(type, modalName, currentName) {
 			if (modalName !== "modalSpecializations" && modalName !== "modalClinics") {
-				this.clearModal(currentName, {
-					errors: true,
-					edited: true,
-				});
+				shared.clearObjectSelective(this[currentName], "errors", ["status", "message"]);
+				shared.clearObjectSelective(this[currentName], "data", ["edited"]);
 			}
 
 			switch (type) {
 				case "create":
 					{
 						if (modalName !== "modalSpecializations" && modalName !== "modalClinics") {
-							this.clearModal(currentName, {
-								data: true,
-							});
+							shared.clearObjectSelective(this[currentName], "data", ["value", "edited"]);
 						}
+
 						this[modalName].type = "create";
 						this[modalName].status = true;
 					}
@@ -1937,188 +1935,8 @@ export default {
 			this[modalName].status = false;
 			document.body.classList.remove("modal-open");
 		},
-		/* Очистка модального окна */
-		clearModal(currentName, settings = { data: false, errors: false, edited: false }) {
-			if (settings.data) {
-				for (let key in this[currentName].data) {
-					this[currentName].data[key].body = "";
-				}
-			}
 
-			if (settings.edited) {
-				for (let key in this[currentName].data) {
-					this[currentName].data[key].edited = "";
-				}
-			}
-
-			if (settings.errors) {
-				for (let key in this[currentName].errors) {
-					this[currentName].errors[key].body = "";
-					this[currentName].errors[key].status = false;
-				}
-			}
-		},
-		/* _____________________________________________________*/
-		/* 2. Работа с полями ввода модального окна             */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		checkSelect(value) {
-			if (validate.isEmpty(value)) {
-				return {
-					status: true,
-					message: "Поле не может быть пустым.",
-				};
-			}
-
-			return {
-				status: false,
-				message: "Ошибок нет.",
-			};
-		},
-		// Проверка поля имени
-		checkModalInput(currentName, dataKey, inputType) {
-			let errorLog = {};
-			switch (inputType) {
-				case "text":
-					errorLog = validate.checkInputText(this[currentName].data[dataKey].body);
-					break;
-				case "number":
-					errorLog = validate.checkInputNumber(this[currentName].data[dataKey].body);
-					break;
-				case "select":
-					errorLog = this.checkSelect(this[currentName].data[dataKey].body);
-					break;
-				default:
-					break;
-			}
-
-			if (errorLog.status) {
-				this[currentName].errors[dataKey].body = errorLog.message;
-				this[currentName].errors[dataKey].status = true;
-
-				return true;
-			} else {
-				this[currentName].errors[dataKey].body = "";
-				this[currentName].errors[dataKey].status = false;
-
-				return false;
-			}
-		},
-		// Проверка всех полей ввода модального окна
-		checkModalInputsAll(currentName, inputKeys) {
-			let errorCount = 0;
-			for (let i = 0; i < inputKeys.length; i++) {
-				switch (inputKeys[i]) {
-					// Для всех остальных полей
-					default:
-						if (this.checkModalInput(currentName, inputKeys[i], "text")) {
-							errorCount++;
-						}
-						break;
-				}
-			}
-
-			if (errorCount > 0) {
-				return true;
-			} else {
-				return false;
-			}
-		},
-		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                РАБОТА С ПОЛЯМИ ВВОДА              |*/
-		/* |___________________________________________________|*/
-		/* _____________________________________________________*/
-		/* 1. Специалист                                        */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		// Проверка конкретного поля ввода
-		checkSpecialistInput(dataKey, inputType) {
-			let errorLog = {};
-			switch (inputType) {
-				case "text":
-					errorLog = validate.checkInputText(this.specialist.profile.data[dataKey].body);
-					break;
-				case "number":
-					errorLog = validate.checkInputNumber(this.specialist.profile.data[dataKey].body);
-					break;
-				case "select":
-					errorLog = this.checkSelect(this.specialist.profile.data[dataKey].body);
-					break;
-				default:
-					break;
-			}
-
-			if (errorLog.status) {
-				this.specialist.profile.errors[dataKey].body = errorLog.message;
-				this.specialist.profile.errors[dataKey].status = true;
-
-				return true;
-			} else {
-				this.specialist.profile.errors[dataKey].body = "";
-				this.specialist.profile.errors[dataKey].status = false;
-
-				return false;
-			}
-		},
-		/* Проверка всех полей ввода */
-		checkSpecialistInputsAll(inputKeys) {
-			let errorCount = 0;
-			for (let i = 0; i < inputKeys.length; i++) {
-				switch (inputKeys[i]) {
-					case "file":
-						/* Проверка на тип загруженного файла */
-						if (
-							this.$refs.fileUpload.files[0].type !== "image/png" &&
-							this.$refs.fileUpload.files[0].type !== "image/webp"
-						) {
-							this.specialist.profile.errors.file.status = true;
-							this.specialist.profile.errors.file.body =
-								"Разрешенный формат файла: png, webp.";
-							errorCount++;
-
-							continue;
-						}
-
-						/* Проверка на размер загруженного файла */
-						let fileSize = this.$refs.fileUpload.files[0].size / 1024 / 1024;
-						if (fileSize > 10) {
-							this.specialist.profile.errors.file.status = true;
-							this.specialist.profile.errors.file.body = "Размер файла более 10 МБ.";
-							errorCount++;
-
-							continue;
-						}
-
-						this.specialist.profile.errors.file.status = false;
-
-						break;
-					// Для индекса
-					case "category":
-					case "adultDoctor":
-					case "childrenDoctor":
-						if (this.checkSpecialistInput(inputKeys[i], "select")) {
-							errorCount++;
-						}
-						break;
-					// Для возраста
-					case "childrenDoctorAge":
-						if (this.checkSpecialistInput(inputKeys[i], "number")) {
-							errorCount++;
-						}
-						break;
-					// Для всех остальных полей
-					default:
-						if (this.checkSpecialistInput(inputKeys[i], "text")) {
-							errorCount++;
-						}
-						break;
-				}
-			}
-
-			if (errorCount > 0) {
-				return true;
-			} else {
-				return false;
-			}
-		},
+		/*  */
 		getAge(age) {
 			let ageDiff = new Date().getFullYear() - new Date(age).getFullYear();
 
@@ -2128,6 +1946,7 @@ export default {
 				return 0;
 			}
 		},
+
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                    ПАГИНАЦИЯ                      |*/
 		/* |___________________________________________________|*/
@@ -2164,13 +1983,14 @@ export default {
 
 			this.paginationClinics.pages.current = pageNumber;
 		},
+
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                       ВРАЧ                        |*/
 		/* |___________________________________________________|*/
 		/* Модульное сохранение данных */
 		async saveSpecialistModular(type) {
 			// Проверка на статус добавления специалиста
-			if (this.specialist.profile.data.id.body === "new") return;
+			if (this.specialist.profile.data.id.value === "new") return;
 
 			switch (type) {
 				case "all":
@@ -2182,136 +2002,184 @@ export default {
 		},
 
 		/* Сохранение данных профиля */
-		async addSpecialist() {
+		addSpecialist() {
 			// Проверка на статус добавления специалиста
-			if (this.specialist.profile.data.id.body !== "new") return;
+			if (this.specialist.profile.data.id.value !== "new") return;
 
-			if (!this.$refs.fileUpload.files[0]) {
-				this.specialist.profile.errors.file.status = true;
-				this.specialist.profile.errors.file.body = "Файл не загружен.";
-
-				// Проверка на заполненность обязательных полей
-				if (
-					this.checkSpecialistInputsAll([
-						"link",
-						"family",
-						"name",
-						"category",
-						"adultDoctor",
-						"childrenDoctor",
-						"startWorkAge",
-					])
-				)
-					return;
-			} else {
-				// Проверка на заполненность обязательных полей
-				if (
-					this.checkSpecialistInputsAll([
-						"link",
-						"family",
-						"name",
-						"category",
-						"adultDoctor",
-						"childrenDoctor",
-						"startWorkAge",
-						"file",
-					])
-				)
-					return;
-
-				if (this.specialist.profile.data.childrenDoctor.body) {
-					console.log(this.specialist.profile.data.childrenDoctorAge.body);
-
-					if (this.checkSpecialistInputsAll(["childrenDoctorAge"])) return;
-				} else {
-					this.specialist.profile.errors.childrenDoctorAge.status = false;
-					this.specialist.profile.errors.childrenDoctorAge.body = "";
-				}
-
-				let formData = new FormData();
-				formData.append("image", this.$refs.fileUpload.files[0]);
-				formData.append("formats", ["	", "webp"]);
-				formData.append("profile", JSON.stringify(this.specialist.profile.data));
-
-				this.disabled.profile.create = true;
-
-				// Сохранение данных
-				await axios({
-					method: "post",
-					url: `${this.$store.getters.urlApi}` + `add-specialist`,
-					headers: {
-						Accept: "multipart/form-data",
-						Authorization: `Bearer ${localStorage.getItem("token")}`,
+			if (
+				validate.checkInputsAll(this.specialist.profile, [
+					{
+						key: "name",
+						type: "text",
 					},
-					data: formData,
-				})
-					.then((response) => {
-						this.clearSpecialistProfileEdited();
-						this.$refs.fileUpload.value = null;
+					{
+						key: "link",
+						type: "text",
+					},
+					{
+						key: "family",
+						type: "text",
+					},
+					{
+						key: "category",
+						type: "text",
+					},
+					{
+						key: "adultDoctor",
+						type: "boolean",
+					},
+					{
+						key: "childrenDoctor",
+						type: "boolean",
+					},
+					{
+						key: "startWorkAge",
+						type: "text",
+					},
+					{
+						key: "file",
+						type: "file",
+						value: this.$refs.fileUpload,
+						formats: ["png", "webp"],
+					},
+				])
+			)
+				return;
 
-						if (response.data.status) {
-							this.disabled.profile.create = false;
+			/* Если есть приём у детей */
+			if (this.specialist.profile.data.childrenDoctor.value) {
+				if (
+					validate.checkInputsAll(this.specialist.profile, [
+						{
+							key: "childrenDoctorAge",
+							type: "number",
+						},
+					])
+				)
+					return;
+			}
 
-							this.specialist.profile.data.id.body = response.data.data.id;
+			let formData = new FormData();
+			formData.append("image", this.$refs.fileUpload.files[0]);
+			formData.append("formats", ["png", "webp"]);
+			formData.append("profile", JSON.stringify(this.specialist.profile.data));
 
-							this.specialist.profile.data.path.body = response.data.data.path;
-							this.specialist.profile.data.filename.body = response.data.data.path.replace(
-								"/storage/specialists/",
-								""
-							);
+			this.disabled.profile.create = true;
 
-							this.$router.push(String(response.data.data.id));
+			// Сохранение данных
+			axios({
+				method: "post",
+				url: `${this.$store.getters.urlApi}` + `add-specialist`,
+				headers: {
+					Accept: "multipart/form-data",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: formData,
+			})
+				.then((response) => {
+					shared.clearObjectSelective(this.specialist.profile, "data", ["edited"]);
+					this.$refs.fileUpload.value = null;
 
-							this.$store.commit("addDebugger", {
-								title: "Успешно!",
-								body: response.data.message,
-								type: "completed",
-							});
-						} else {
-							this.$store.commit("addDebugger", {
-								title: "Ошибка.",
-								body: response.data.message,
-								type: "error",
-							});
-						}
-					})
-					.catch((error) => {
+					if (response.data.status) {
+						this.disabled.profile.create = false;
+
+						this.specialist.profile.data.id.value = response.data.data.id;
+
+						this.specialist.profile.data.path.value = response.data.data.path;
+						this.specialist.profile.data.filename.value = response.data.data.path.replace(
+							"/storage/specialists/",
+							""
+						);
+
+						this.$router.push(String(response.data.data.id));
+
+						this.$store.commit("addDebugger", {
+							title: "Успешно!",
+							body: response.data.message,
+							type: "completed",
+						});
+					} else {
 						this.$store.commit("addDebugger", {
 							title: "Ошибка.",
-							body: error,
+							body: response.data.message,
 							type: "error",
 						});
-					})
-					.finally(() => {
-						this.disabled.profile.create = false;
+					}
+				})
+				.catch((error) => {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка.",
+						body: error,
+						type: "error",
 					});
-			}
+				})
+				.finally(() => {
+					this.disabled.profile.create = false;
+				});
 		},
 
 		/* Сохранение всех данных */
 		saveSpecialistAll() {
 			if (
-				this.checkSpecialistInputsAll([
-					"link",
-					"family",
-					"name",
-					"category",
-					"adultDoctor",
-					"childrenDoctor",
-					"startWorkAge",
+				validate.checkInputsAll(this.specialist.profile, [
+					{
+						key: "name",
+						type: "text",
+					},
+					{
+						key: "link",
+						type: "text",
+					},
+					{
+						key: "family",
+						type: "text",
+					},
+					{
+						key: "category",
+						type: "text",
+					},
+					{
+						key: "adultDoctor",
+						type: "boolean",
+					},
+					{
+						key: "childrenDoctor",
+						type: "boolean",
+					},
+					{
+						key: "startWorkAge",
+						type: "text",
+					},
 				])
 			)
 				return;
 
-			if (this.specialist.profile.data.childrenDoctor.body) {
-				if (this.checkSpecialistInputsAll(["childrenDoctorAge"])) return;
-			} else {
-				this.specialist.profile.errors.childrenDoctorAge.status = false;
-				this.specialist.profile.errors.childrenDoctorAge.body = "";
+			/* Если есть приём у детей */
+			if (this.specialist.profile.data.childrenDoctor.value) {
+				if (
+					validate.checkInputsAll(this.specialist.profile, [
+						{
+							key: "childrenDoctorAge",
+							type: "number",
+						},
+					])
+				)
+					return;
 			}
 
+			/* Если загружен файл */
 			if (this.$refs.fileUpload.files[0]) {
-				if (this.checkSpecialistInputsAll(["file"])) return;
+				if (
+					validate.checkInputsAll(this.specialist.profile, [
+						{
+							key: "file",
+							type: "file",
+							value: this.$refs.fileUpload,
+							formats: ["png", "webp"],
+						},
+					])
+				)
+					return;
 			}
 
 			this.disabled.profile.save = true;
@@ -2325,7 +2193,7 @@ export default {
 			formData.append("profile", JSON.stringify(this.specialist.profile.data));
 
 			// Id специалиста
-			formData.append("id", JSON.stringify(this.specialist.profile.data.id.body));
+			formData.append("id", JSON.stringify(this.specialist.profile.data.id.value));
 
 			// Данные блока специализаций
 			formData.append(
@@ -2349,15 +2217,15 @@ export default {
 			})
 				.then((response) => {
 					if (response.data.status) {
-						this.clearSpecialistProfileEdited();
+						shared.clearObjectSelective(this.specialist.profile, "data", ["edited"]);
 
 						// Замена изображения профиля
 						if (response.data.data.imagePath != null) {
-							this.clearSpecialistProfileEdited();
+							shared.clearObjectSelective(this.specialist.profile, "data", ["edited"]);
 							this.$refs.fileUpload.value = "";
 
-							this.specialist.profile.data.path.body = response.data.data.imagePath;
-							this.specialist.profile.data.filename.body =
+							this.specialist.profile.data.path.value = response.data.data.imagePath;
+							this.specialist.profile.data.filename.value =
 								response.data.data.imagePath.replace("/storage/specialists/", "");
 						}
 
@@ -2397,12 +2265,7 @@ export default {
 					this.disabled.profile.save = false;
 				});
 		},
-		/* Очистка статуса изменений */
-		clearSpecialistProfileEdited() {
-			for (let key in this.specialist.profile.data) {
-				this.specialist.profile.data[key].edited = false;
-			}
-		},
+
 		/* _____________________________________________________*/
 		/* 2. Специализации                                     */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
@@ -2443,7 +2306,7 @@ export default {
 							id: maxId + 1,
 							id_specialist:
 								this.$route.params.id !== "new"
-									? this.specialist.profile.data.id.body
+									? this.specialist.profile.data.id.value
 									: "new",
 							id_specialization: item,
 						});
@@ -2470,7 +2333,7 @@ export default {
 		editClinics() {
 			try {
 				// Проверка на статус добавления специалиста
-				if (this.specialist.profile.data.id.body === "new") return;
+				if (this.specialist.profile.data.id.value === "new") return;
 
 				// Обнуление массива
 				this.cheked.clinics = [];
@@ -2494,6 +2357,7 @@ export default {
 				});
 			}
 		},
+
 		/* Обновление клиник */
 		updateClinics() {
 			try {
@@ -2522,7 +2386,7 @@ export default {
 							}).priem,
 							id_specialist:
 								this.$route.params.id !== "new"
-									? this.specialist.profile.data.id.body
+									? this.specialist.profile.data.id.value
 									: "new",
 							id_clinic: checkClinic,
 						});
@@ -2543,21 +2407,36 @@ export default {
 				});
 			}
 		},
+
 		/* _____________________________________________________*/
 		/* 4. Сертификаты                                       */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Добавление данных */
 		addCertificate() {
 			if (
-				this.checkModalInputsAll("currentCertificate", ["name", "organization", "endEducation"])
+				validate.checkInputsAll(this.currentCertificate, [
+					{
+						key: "name",
+						type: "text",
+					},
+					{
+						key: "organization",
+						type: "text",
+					},
+					{
+						key: "endEducation",
+						type: "text",
+					},
+				])
 			)
 				return;
+
 			try {
 				this.tableCertificates.body.push({
 					id: shared.getMaxId(this.tableCertificates.body) + 1,
-					name: this.currentCertificate.data.name.body,
-					organization: this.currentCertificate.data.organization.body,
-					endEducation: this.currentCertificate.data.endEducation.body,
+					name: this.currentCertificate.data.name.value,
+					organization: this.currentCertificate.data.organization.value,
+					endEducation: this.currentCertificate.data.endEducation.value,
 					create: true,
 					delete: false,
 				});
@@ -2573,18 +2452,34 @@ export default {
 		/* Обновление данных */
 		updateCertificate() {
 			if (
-				this.checkModalInputsAll("currentCertificate", ["name", "organization", "endEducation"])
+				validate.checkInputsAll(this.currentCertificate, [
+					{
+						key: "name",
+						type: "text",
+					},
+					{
+						key: "organization",
+						type: "text",
+					},
+					{
+						key: "endEducation",
+						type: "text",
+					},
+				])
 			)
 				return;
+
 			try {
-				let сertificateToUpdate = this.tableCertificates.body.filter((сertificate) => {
-					if (сertificate.id === this.currentCertificate.data.id.body) {
+				let сertificateToUpdate = this.tableCertificates.body.find((сertificate) => {
+					if (сertificate.id === this.currentCertificate.data.id.value) {
 						return сertificate;
 					}
 				});
+
 				for (let key in this.currentCertificate.data) {
-					сertificateToUpdate[0][key] = this.currentCertificate.data[key].body;
+					сertificateToUpdate[key] = this.currentCertificate.data[key].value;
 				}
+
 				this.closeModal("modalCertificates");
 			} catch (error) {
 				this.$store.commit("addDebugger", {
@@ -2594,17 +2489,30 @@ export default {
 				});
 			}
 		},
+
 		/* _____________________________________________________*/
 		/* 5. Образования                                       */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Добавление данных */
 		addEducation() {
 			if (
-				this.checkModalInputsAll("currentEducation", [
-					"name",
-					"organization",
-					"date",
-					"speсialization",
+				validate.checkInputsAll(this.currentEducation, [
+					{
+						key: "name",
+						type: "text",
+					},
+					{
+						key: "organization",
+						type: "text",
+					},
+					{
+						key: "date",
+						type: "text",
+					},
+					{
+						key: "speсialization",
+						type: "text",
+					},
 				])
 			)
 				return;
@@ -2612,10 +2520,10 @@ export default {
 			try {
 				this.tableEducations.body.push({
 					id: shared.getMaxId(this.tableEducations.body) + 1,
-					name: this.currentEducation.data.name.body,
-					organization: this.currentEducation.data.organization.body,
-					date: this.currentEducation.data.date.body,
-					speсialization: this.currentEducation.data.speсialization.body,
+					name: this.currentEducation.data.name.value,
+					organization: this.currentEducation.data.organization.value,
+					date: this.currentEducation.data.date.value,
+					speсialization: this.currentEducation.data.speсialization.value,
 					create: true,
 					delete: false,
 				});
@@ -2632,24 +2540,36 @@ export default {
 		/* Обновление данных */
 		updateEducation() {
 			if (
-				this.checkModalInputsAll("currentEducation", [
-					"name",
-					"organization",
-					"date",
-					"speсialization",
+				validate.checkInputsAll(this.currentEducation, [
+					{
+						key: "name",
+						type: "text",
+					},
+					{
+						key: "organization",
+						type: "text",
+					},
+					{
+						key: "date",
+						type: "text",
+					},
+					{
+						key: "speсialization",
+						type: "text",
+					},
 				])
 			)
 				return;
 
 			try {
 				let educationToUpdate = this.tableEducations.body.find((education) => {
-					if (education.id === this.currentEducation.data.id.body) {
+					if (education.id === this.currentEducation.data.id.value) {
 						return education;
 					}
 				});
 
 				for (let key in this.currentEducation.data) {
-					educationToUpdate[key] = this.currentEducation.data[key].body;
+					educationToUpdate[key] = this.currentEducation.data[key].value;
 				}
 
 				this.closeModal("modalEducations");
@@ -2667,11 +2587,23 @@ export default {
 		/* Добавление */
 		addWork() {
 			if (
-				this.checkModalInputsAll("currentWork", [
-					"name",
-					"organization",
-					"startWork",
-					"endWork",
+				validate.checkInputsAll(this.currentWork, [
+					{
+						key: "name",
+						type: "text",
+					},
+					{
+						key: "organization",
+						type: "text",
+					},
+					{
+						key: "startWork",
+						type: "text",
+					},
+					{
+						key: "endWork",
+						type: "text",
+					},
 				])
 			)
 				return;
@@ -2679,10 +2611,10 @@ export default {
 			try {
 				this.tableWorks.body.push({
 					id: shared.getMaxId(this.tableWorks.body) + 1,
-					name: this.currentWork.data.name.body,
-					organization: this.currentWork.data.organization.body,
-					startWork: this.currentWork.data.startWork.body,
-					endWork: this.currentWork.data.endWork.body,
+					name: this.currentWork.data.name.value,
+					organization: this.currentWork.data.organization.value,
+					startWork: this.currentWork.data.startWork.value,
+					endWork: this.currentWork.data.endWork.value,
 					create: true,
 					delete: false,
 				});
@@ -2696,27 +2628,40 @@ export default {
 				});
 			}
 		},
+
 		/* Обновление */
 		updateWork() {
 			if (
-				this.checkModalInputsAll("currentWork", [
-					"name",
-					"organization",
-					"startWork",
-					"endWork",
+				validate.checkInputsAll(this.currentWork, [
+					{
+						key: "name",
+						type: "text",
+					},
+					{
+						key: "organization",
+						type: "text",
+					},
+					{
+						key: "startWork",
+						type: "text",
+					},
+					{
+						key: "endWork",
+						type: "text",
+					},
 				])
 			)
 				return;
 
 			try {
 				let workToUpdate = this.tableWorks.body.find((work) => {
-					if (work.id === this.currentWork.data.id.body) {
+					if (work.id === this.currentWork.data.id.value) {
 						return work;
 					}
 				});
 
 				for (let key in this.currentWork.data) {
-					workToUpdate[key] = this.currentWork.data[key].body;
+					workToUpdate[key] = this.currentWork.data[key].value;
 				}
 
 				this.closeModal("modalWorks");
@@ -2748,17 +2693,6 @@ export default {
 			);
 		},
 
-		/* Метод пометки статуса на удаление */
-		updateDeleteValue(arrayName, value) {
-			let filterValue = this.specialist.connections[arrayName].filter((item) => {
-				if (item.id == value) {
-					return item;
-				}
-			});
-
-			filterValue[0].delete = !filterValue[0].delete;
-		},
-
 		/* Метод открытия модального окна для обновления значений */
 		editArrayValue(type, arrayName, value) {
 			switch (arrayName) {
@@ -2776,7 +2710,7 @@ export default {
 						});
 
 						for (let key in this.currentCertificate.data) {
-							this.currentCertificate.data[key].body = filterCertificate[key];
+							this.currentCertificate.data[key].value = filterCertificate[key];
 						}
 
 						this.openModal(type, "modalCertificates", "currentCertificate");
@@ -2796,7 +2730,7 @@ export default {
 						});
 
 						for (let key in this.currentEducation.data) {
-							this.currentEducation.data[key].body = filterEducation[key];
+							this.currentEducation.data[key].value = filterEducation[key];
 						}
 
 						this.openModal(type, "modalEducations", "currentEducation");
@@ -2817,7 +2751,7 @@ export default {
 						});
 
 						for (let key in this.currentWork.data) {
-							this.currentWork.data[key].body = filterWorks[key];
+							this.currentWork.data[key].value = filterWorks[key];
 						}
 
 						this.openModal(type, "modalWorks", "currentWork");
@@ -2843,7 +2777,7 @@ export default {
 					if (response.data.status) {
 						// Заполнение профиля
 						for (let key in response.data.data.specialist.profile) {
-							this.specialist.profile.data[key].body =
+							this.specialist.profile.data[key].value =
 								response.data.data.specialist.profile[key];
 						}
 						// Заполнение секций
@@ -2909,7 +2843,7 @@ export default {
 							return collator.compare(a.name, b.name);
 						});
 					} else {
-						this.specialist.profile.data.id.body = "none";
+						this.specialist.profile.data.id.value = "none";
 
 						this.$store.commit("addDebugger", {
 							title: "Ошибка.",
@@ -2926,7 +2860,7 @@ export default {
 					});
 				})
 				.finally(() => {
-					if (this.specialist.profile.data.id.body != "none") {
+					if (this.specialist.profile.data.id.value != "none") {
 						for (let key in this.loading.loader) {
 							this.loading.loader[key] = false;
 						}
@@ -2937,16 +2871,16 @@ export default {
 			for (let key in this.specialist.profile.data) {
 				switch (key) {
 					case "id":
-						this.specialist.profile.data[key].body = "new";
+						this.specialist.profile.data[key].value = "new";
 						break;
 					case "path":
-						this.specialist.profile.data[key].body = "storage/default/specialist.png";
+						this.specialist.profile.data[key].value = "storage/default/specialist.png";
 						break;
 					case "file":
 						this.specialist.profile.data[key] = "";
 						break;
 					default:
-						this.specialist.profile.data[key].body = "";
+						this.specialist.profile.data[key].value = "";
 						break;
 				}
 			}
@@ -2988,7 +2922,7 @@ export default {
 					}
 				});
 		} else {
-			this.specialist.profile.data.id.body = null;
+			this.specialist.profile.data.id.value = null;
 
 			this.$store.commit("addDebugger", {
 				title: "Ошибка.",

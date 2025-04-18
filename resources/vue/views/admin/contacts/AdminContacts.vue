@@ -5,10 +5,10 @@
 	<admin-modal ref="modal" @touchCloseModal="closeModal('modal')" :modal="modal">
 		<template
 			#title
-			v-if="modal.type == 'edit' && !currentContact.data.delete.body && !modal.style.create"
+			v-if="modal.type == 'edit' && !currentContact.data.delete.value && !modal.style.create"
 		>
 			<icon-arrow :width="16" :height="16" :rotate="-90" @click="changeContactsOrder('down')" />
-			#{{ currentContact.data.order.body }}
+			#{{ currentContact.data.order.value }}
 			<icon-arrow :width="16" :height="16" :rotate="90" @click="changeContactsOrder('up')" />
 		</template>
 		<template #title v-else>
@@ -27,14 +27,13 @@
 							placeholder="Введите заголовок"
 							autocomplete="off"
 							:class="{ error: currentContact.errors.name.status }"
-							v-model="currentContact.data.name.body"
+							v-model="currentContact.data.name.value"
 							@input="currentContact.data.name.edited = true"
-							@blur="checkModalInput('currentContact', 'name', 'text')"
 						></textarea>
 					</template>
 					<template #error>
 						<span class="error" v-if="currentContact.errors.name.status">
-							{{ currentContact.errors.name.body }}
+							{{ currentContact.errors.name.message }}
 						</span>
 					</template>
 				</container-textarea-once>
@@ -43,7 +42,7 @@
 						<span>КЛИНИКА</span>
 					</template>
 					<template #input>
-						<select v-model="currentContact.data.clinicId.body">
+						<select v-model="currentContact.data.clinicId.value">
 							<option value="null" selected>Ничего не выбрано</option>
 							<option v-for="clinic in clinics" :key="clinic.id" :value="clinic.id">
 								{{ clinic.name }}
@@ -52,7 +51,7 @@
 					</template>
 				</ContainerInputOnce>
 				<admin-modal-list
-					:array="currentContact.data.phones.body"
+					:array="currentContact.data.phones.value"
 					@touchCreate="createContactPhone"
 					@touchEdit="editContactPhone"
 					@touchDelete="deleteContactPhone"
@@ -63,7 +62,7 @@
 					</template>
 				</admin-modal-list>
 				<admin-modal-list
-					:array="currentContact.data.mails.body"
+					:array="currentContact.data.mails.value"
 					@touchCreate="createContactMail"
 					@touchEdit="editContactMail"
 					@touchDelete="deleteContactMail"
@@ -80,14 +79,14 @@
 				<button-default v-if="modal.type == 'create'" @click="addContact">
 					Создать
 				</button-default>
-				<template v-if="modal.type == 'edit' && !currentContact.data.delete.body">
-					<button-remove v-if="!currentContact.data.create.body" @click="deleteContact">
+				<template v-if="modal.type == 'edit' && !currentContact.data.delete.value">
+					<button-remove v-if="!currentContact.data.create.value" @click="deleteContact">
 						Удалить
 					</button-remove>
 					<ButtonDefault @click="updateContact"> Обновить </ButtonDefault>
 				</template>
 				<ButtonDefault
-					v-if="modal.type == 'edit' && currentContact.data.delete.body"
+					v-if="modal.type == 'edit' && currentContact.data.delete.value"
 					@click="deleteContact"
 				>
 					Вернуть
@@ -118,14 +117,13 @@
 						v-mask="'+7(###)-###-##-##'"
 						autocomplete="off"
 						:class="{ error: currentPhone.errors.name.status }"
-						v-model="currentPhone.data.name.body"
+						v-model="currentPhone.data.name.value"
 						@input="currentPhone.data.name.edited = true"
-						@blur="checkModalInput('currentPhone', 'name', 'phone')"
 					/>
 				</template>
 				<template #error>
 					<span class="error" v-if="currentPhone.errors.name.status">
-						{{ currentPhone.errors.name.body }}
+						{{ currentPhone.errors.name.message }}
 					</span>
 				</template>
 			</container-input-once>
@@ -164,14 +162,13 @@
 						autocomplete="off"
 						required
 						:class="{ error: currentMail.errors.name.status }"
-						v-model="currentMail.data.name.body"
+						v-model="currentMail.data.name.value"
 						@input="currentMail.data.name.edited = true"
-						@blur="checkModalInput('currentMail', 'name', 'email')"
 					/>
 				</template>
 				<template #error>
 					<span class="error" v-if="currentMail.errors.name.status">
-						{{ currentMail.errors.name.body }}
+						{{ currentMail.errors.name.message }}
 					</span>
 				</template>
 			</container-input-once>
@@ -311,12 +308,14 @@ export default {
 	},
 	data() {
 		return {
-			validator: {
-				email: null,
+			/* Кнопки */
+			disabled: {
+				contacts: {
+					save: false,
+				},
 			},
-			form: {
-				email: null,
-			},
+
+			/* Загрузчик */
 			loading: {
 				loader: {
 					clinics: true,
@@ -325,11 +324,8 @@ export default {
 					clinics: false,
 				},
 			},
-			disabled: {
-				contacts: {
-					save: false,
-				},
-			},
+
+			/* Модальное окно */
 			modal: {
 				title: "КОНТАКТ",
 				status: false,
@@ -349,6 +345,7 @@ export default {
 					footer: true,
 				},
 			},
+
 			subModalPhone: {
 				title: "",
 				status: false,
@@ -368,6 +365,7 @@ export default {
 					footer: true,
 				},
 			},
+
 			subModalMail: {
 				title: "",
 				status: false,
@@ -387,120 +385,126 @@ export default {
 					footer: true,
 				},
 			},
+
+			/* Форма */
 			currentContact: {
 				errors: {
 					id: {
-						body: null,
+						message: null,
 						status: false,
 					},
 					order: {
-						body: null,
+						message: null,
 						status: false,
 					},
 					name: {
-						body: null,
+						message: null,
 						status: false,
 					},
 					clinicId: {
-						body: null,
+						message: null,
 						status: false,
 					},
 					mails: {
-						body: null,
+						message: null,
 						status: false,
 					},
 					phones: {
-						body: null,
+						message: null,
 						status: false,
 					},
 					create: {
-						body: null,
+						message: null,
 						status: false,
 					},
 					delete: {
-						body: null,
+						message: null,
 						status: false,
 					},
 				},
 				data: {
 					id: {
-						body: null,
+						value: null,
 						edited: false,
 					},
 					order: {
-						body: null,
+						value: null,
 						edited: false,
 					},
 					name: {
-						body: null,
+						value: null,
 						edited: false,
 					},
 					clinicId: {
-						body: null,
+						value: null,
 						edited: false,
 					},
 					mails: {
-						body: [],
+						value: [],
 						edited: false,
 					},
 					phones: {
-						body: [],
+						value: [],
 						edited: false,
 					},
 					create: {
-						body: null,
+						value: null,
 						edited: false,
 					},
 					delete: {
-						body: null,
+						value: null,
 						edited: false,
 					},
 				},
 			},
+
 			currentPhone: {
 				errors: {
 					id: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					name: {
-						body: "",
+						message: "",
 						status: false,
 					},
 				},
 				data: {
 					id: {
-						body: null,
+						value: null,
 						edited: false,
 					},
 					name: {
-						body: null,
+						value: null,
 						edited: false,
 					},
 				},
 			},
+
 			currentMail: {
 				errors: {
 					id: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					name: {
-						body: "",
+						message: "",
 						status: false,
 					},
 				},
 				data: {
 					id: {
-						body: null,
+						value: null,
 						edited: false,
 					},
 					name: {
-						body: null,
+						value: null,
 						edited: false,
 					},
 				},
 			},
+
+			/* Данные */
 			contacts: [],
 			clinics: [
 				{
@@ -527,8 +531,8 @@ export default {
 		/* Открытие */
 		openModal(type = "edit", name = "modal") {
 			if (name === "modal") {
-				this.clearModalErrors("currentContact");
-				this.clearModalEdited("currentContact");
+				shared.clearObjectSelective(this.currentContact, "errors", ["status", "message"]);
+				shared.clearObjectSelective(this.currentContact, "data", ["edited", "value"]);
 			}
 
 			switch (type) {
@@ -537,7 +541,7 @@ export default {
 						this[name].type = "create";
 						this[name].status = true;
 						if (name === "modal") {
-							this.clearModalData("currentContact");
+							shared.clearObjectSelective(this.currentContact, "data", ["edited", "value"]);
 						}
 					}
 					document.body.classList.add("modal-open");
@@ -560,6 +564,7 @@ export default {
 					break;
 			}
 		},
+
 		/* Закрытие */
 		closeModal(name = "modal") {
 			this[name].status = false;
@@ -567,77 +572,30 @@ export default {
 				document.body.classList.remove("modal-open");
 			}
 		},
-		/* _____________________________________________________*/
-		/* 2. Работа с полями ввода модального окна             */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		// Проверка поля ввода
-		checkModalInput(currentName, dataKey, inputType) {
-			let errorLog = {};
-			switch (inputType) {
-				case "text":
-					errorLog = validate.checkInputText(this[currentName].data[dataKey].body);
-					break;
-				case "email":
-					errorLog = validate.checkInputEmail(this[currentName].data[dataKey].body);
-					break;
-				case "phone":
-					errorLog = validate.checkInputPhone(this[currentName].data[dataKey].body);
-					break;
-				default:
-					break;
-			}
-
-			if (errorLog.status) {
-				this[currentName].errors[dataKey].body = errorLog.message;
-				this[currentName].errors[dataKey].status = true;
-
-				return true;
-			} else {
-				this[currentName].errors[dataKey].body = "";
-				this[currentName].errors[dataKey].status = false;
-
-				return false;
-			}
-		},
-		/* Очистка содержимого модального окна */
-		clearModalData(name = "currentInfoBlock") {
-			for (let key in this[name].data) {
-				if (key === "phones" || key === "mails") {
-					this[name].data[key].body = [];
-					continue;
-				}
-
-				this[name].data[key].body = null;
-			}
-		},
-		/* Очистка содержимого модального окна */
-		clearModalEdited(name = "currentInfoBlock") {
-			for (let key in this[name].data) {
-				this[name].data[key].edited = false;
-			}
-		},
-		/* Очистка ошибок */
-		clearModalErrors(name = "currentInfoBlock") {
-			for (let key in this[name].errors) {
-				this[name].errors[key].body = null;
-				this[name].errors[key].status = false;
-			}
-		},
+		
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                    КОНТАКТЫ                       |*/
 		/* |___________________________________________________|*/
 		/* Добавление */
 		addContact() {
 			try {
-				if (this.checkModalInput("currentContact", "name", "text")) return;
+				if (
+					validate.checkInputsAll(this.currentContact, [
+						{
+							key: "name",
+							type: "text",
+						},
+					])
+				)
+					return;
 
 				this.contacts.push({
 					id: shared.getMaxId(this.contacts) + 1,
 					order: shared.getMaxOrder(this.contacts) + 1,
-					name: this.currentContact.data.name.body,
-					clinicId: this.currentContact.data.clinicId.body,
-					phones: [...this.currentContact.data.phones.body],
-					mails: [...this.currentContact.data.mails.body],
+					name: this.currentContact.data.name.value,
+					clinicId: this.currentContact.data.clinicId.value,
+					phones: [...this.currentContact.data.phones.value],
+					mails: [...this.currentContact.data.mails.value],
 					create: true,
 					delete: false,
 				});
@@ -655,7 +613,7 @@ export default {
 		editContact(selectedContact) {
 			for (let key in this.currentContact.data) {
 				if (key === "phones" || key === "mails") {
-					this.currentContact.data[key].body = Array.from(selectedContact[key]);
+					this.currentContact.data[key].value = Array.from(selectedContact[key]);
 					continue;
 				}
 
@@ -667,7 +625,7 @@ export default {
 		/* Обновление */
 		updateContact() {
 			let contact = this.contacts.find(
-				(contact) => contact.id === this.currentContact.data.id.body
+				(contact) => contact.id === this.currentContact.data.id.value
 			);
 
 			for (let key in this.currentContact.data) {
@@ -679,7 +637,9 @@ export default {
 		/* Удаление */
 		deleteContact() {
 			try {
-				let contact = this.contacts.find((item) => item.id == this.currentContact.data.id.body);
+				let contact = this.contacts.find(
+					(item) => item.id == this.currentContact.data.id.value
+				);
 
 				contact.delete = !contact.delete;
 
@@ -754,24 +714,24 @@ export default {
 			}
 
 			// Является ли текущий элемент первым
-			let firstElementStatus = this.currentContact.data.order.body == 1;
+			let firstElementStatus = this.currentContact.data.order.value == 1;
 			// Предидущей элемент
 			let elementPrevious = null;
 			if (firstElementStatus) {
 				elementPrevious = this.contacts.find((item) => item.order === this.contacts.length);
 			} else {
 				elementPrevious = this.contacts.find(
-					(item) => item.order === this.currentContact.data.order.body - 1
+					(item) => item.order === this.currentContact.data.order.value - 1
 				);
 			}
 
 			// Текущий элемент
 			let elementCurrent = this.contacts.find(
-				(item) => item.order === this.currentContact.data.order.body
+				(item) => item.order === this.currentContact.data.order.value
 			);
 
 			// Является ли текущий элемент последним
-			let lastElementStatus = this.currentContact.data.order.body == this.contacts.length;
+			let lastElementStatus = this.currentContact.data.order.value == this.contacts.length;
 
 			// Следующий элемент
 			let elementNext = null;
@@ -779,7 +739,7 @@ export default {
 				elementNext = this.contacts.find((item) => item.order === 1);
 			} else {
 				elementNext = this.contacts.find(
-					(item) => item.order === this.currentContact.data.order.body + 1
+					(item) => item.order === this.currentContact.data.order.value + 1
 				);
 			}
 
@@ -788,11 +748,11 @@ export default {
 				case "up":
 					{
 						if (lastElementStatus) {
-							this.currentContact.data.order.body = 1;
+							this.currentContact.data.order.value = 1;
 							elementCurrent.order = 1;
 							elementNext.order = this.contacts.length;
 						} else {
-							this.currentContact.data.order.body++;
+							this.currentContact.data.order.value++;
 							elementCurrent.order++;
 							elementNext.order--;
 						}
@@ -803,11 +763,11 @@ export default {
 				case "down":
 					{
 						if (firstElementStatus) {
-							this.currentContact.data.order.body = this.contacts.length;
+							this.currentContact.data.order.value = this.contacts.length;
 							elementCurrent.order = this.contacts.length;
 							elementPrevious.order = 1;
 						} else {
-							this.currentContact.data.order.body--;
+							this.currentContact.data.order.value--;
 							elementCurrent.order--;
 							elementPrevious.order++;
 						}
@@ -835,9 +795,7 @@ export default {
 		/* |___________________________________________________|*/
 		/* Создание */
 		createContactPhone() {
-			this.clearModalErrors("currentPhone");
-			this.clearModalEdited("currentPhone");
-			this.clearModalData("currentPhone");
+			shared.clearObjectFull(this.currentPhone);
 
 			this.openModal("create", "subModalPhone");
 		},
@@ -845,11 +803,19 @@ export default {
 		addContactPhone() {
 			// Поиск максимального id
 			try {
-				if (this.checkModalInput("currentPhone", "name", "phone")) return;
+				if (
+					validate.checkInputsAll(this.currentPhone, [
+						{
+							key: "name",
+							type: "phone",
+						},
+					])
+				)
+					return;
 
-				this.currentContact.data.phones.body.push({
-					id: shared.getMaxId(this.currentContact.data.phones.body) + 1,
-					name: this.currentPhone.data.name.body,
+				this.currentContact.data.phones.value.push({
+					id: shared.getMaxId(this.currentContact.data.phones.value) + 1,
+					name: this.currentPhone.data.name.value,
 				});
 
 				this.closeModal("subModalPhone");
@@ -861,24 +827,30 @@ export default {
 				});
 			}
 		},
-		/* Изменение */
-		editContactPhone(selectedPhone) {
-			this.clearModalErrors("currentPhone");
-			this.clearModalEdited("currentPhone");
 
-			for (let key in this.currentPhone.data) {
-				this.currentPhone.data[key].body = selectedPhone[key];
-			}
+		/* Изменение */
+		editContactPhone(phone) {
+			shared.clearObjectFull(this.currentPhone);
+			shared.setData(phone, this.currentPhone);
 
 			this.openModal("edit", "subModalPhone");
 		},
+
 		/* Обновление */
 		updateContactPhone() {
 			try {
-				if (this.checkModalInput("currentPhone", "name", "phone")) return;
+				if (
+					validate.checkInputsAll(this.currentPhone, [
+						{
+							key: "name",
+							type: "phone",
+						},
+					])
+				)
+					return;
 
-				let phone = this.currentContact.data.phones.body.find((item) => {
-					return item.id == this.currentPhone.data.id.body;
+				let phone = this.currentContact.data.phones.value.find((item) => {
+					return item.id == this.currentPhone.data.id.value;
 				});
 
 				for (let key in this.currentPhone.data) {
@@ -897,7 +869,7 @@ export default {
 		/* Удаление */
 		deleteContactPhone(selectedPhone) {
 			try {
-				this.currentContact.data.phones.body = this.currentContact.data.phones.body.filter(
+				this.currentContact.data.phones.value = this.currentContact.data.phones.value.filter(
 					(phone) => {
 						if (selectedPhone.id !== phone.id) {
 							return phone;
@@ -920,9 +892,7 @@ export default {
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Создание */
 		createContactMail() {
-			this.clearModalErrors("currentMail");
-			this.clearModalEdited("currentMail");
-			this.clearModalData("currentMail");
+			shared.clearObjectFull(this.currentMail);
 
 			this.openModal("create", "subModalMail");
 		},
@@ -930,11 +900,19 @@ export default {
 		addContactMail() {
 			// Поиск максимального id
 			try {
-				if (this.checkModalInput("currentMail", "name", "email")) return;
+				if (
+					validate.checkInputsAll(this.currentMail, [
+						{
+							key: "name",
+							type: "email",
+						},
+					])
+				)
+					return;
 
-				this.currentContact.data.mails.body.push({
-					id: shared.getMaxId(this.currentContact.data.mails.body) + 1,
-					name: this.currentMail.data.name.body,
+				this.currentContact.data.mails.value.push({
+					id: shared.getMaxId(this.currentContact.data.mails.value) + 1,
+					name: this.currentMail.data.name.value,
 				});
 
 				this.closeModal("subModalMail");
@@ -946,23 +924,30 @@ export default {
 				});
 			}
 		},
-		/* Изменение */
-		editContactMail(selectedMail) {
-			this.clearModalErrors("currentMail");
-			this.clearModalEdited("currentMail");
 
-			for (let key in this.currentMail.data) {
-				this.currentMail.data[key].body = selectedMail[key];
-			}
+		/* Изменение */
+		editContactMail(mail) {
+			shared.clearObjectFull(this.currentMail);
+			shared.setData(mail, this.currentMail);
 
 			this.openModal("edit", "subModalMail");
 		},
+
+		/* Обновление */
 		updateContactMail() {
 			try {
-				if (this.checkModalInput("currentMail", "name", "email")) return;
+				if (
+					validate.checkInputsAll(this.currentMail, [
+						{
+							key: "name",
+							type: "email",
+						},
+					])
+				)
+					return;
 
-				let mail = this.currentContact.data.mails.body.find((item) => {
-					return item.id == this.currentMail.data.id.body;
+				let mail = this.currentContact.data.mails.value.find((item) => {
+					return item.id == this.currentMail.data.id.value;
 				});
 
 				for (let key in this.currentMail.data) {
@@ -980,7 +965,7 @@ export default {
 		},
 		/* Удаление */
 		deleteContactMail(selectedMail) {
-			this.currentContact.data.mails.body = this.currentContact.data.mails.body.filter(
+			this.currentContact.data.mails.value = this.currentContact.data.mails.value.filter(
 				(mail) => {
 					if (selectedMail.id !== mail.id) {
 						return mail;

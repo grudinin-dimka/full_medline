@@ -237,7 +237,7 @@
 
 							<BaseTableButton
 								:wide="true"
-								:look="'delete'"
+								:look="this.table.body.find((item) => item.id == row.id).create ? 'disabled' : 'delete'"
 								v-if="
 									table.options.delete &&
 									!table.body.find((item) => item.id == row.id).delete
