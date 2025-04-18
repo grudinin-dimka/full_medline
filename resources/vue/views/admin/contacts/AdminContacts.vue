@@ -5,7 +5,7 @@
 	<admin-modal ref="modal" @touchCloseModal="closeModal('modal')" :modal="modal">
 		<template
 			#title
-			v-if="modal.type == 'edit' && !currentContact.data.delete.value && !modal.style.create"
+			v-if="(modal.type == 'edit') && !currentContact.data.delete.value && !modal.style.create"
 		>
 			<icon-arrow :width="16" :height="16" :rotate="-90" @click="changeContactsOrder('down')" />
 			#{{ currentContact.data.order.value }}
@@ -532,7 +532,7 @@ export default {
 		openModal(type = "edit", name = "modal") {
 			if (name === "modal") {
 				shared.clearObjectSelective(this.currentContact, "errors", ["status", "message"]);
-				shared.clearObjectSelective(this.currentContact, "data", ["edited", "value"]);
+				shared.clearObjectSelective(this.currentContact, "data", ["edited"]);
 			}
 
 			switch (type) {
@@ -572,7 +572,7 @@ export default {
 				document.body.classList.remove("modal-open");
 			}
 		},
-		
+
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                    КОНТАКТЫ                       |*/
 		/* |___________________________________________________|*/
@@ -609,19 +609,14 @@ export default {
 				});
 			}
 		},
-		/* Изменение */
-		editContact(selectedContact) {
-			for (let key in this.currentContact.data) {
-				if (key === "phones" || key === "mails") {
-					this.currentContact.data[key].value = Array.from(selectedContact[key]);
-					continue;
-				}
 
-				this.currentContact.data[key].body = selectedContact[key];
-			}
+		/* Изменение */
+		editContact(contact) {
+			shared.setData(contact, this.currentContact);
 
 			this.openModal("edit", "modal");
 		},
+
 		/* Обновление */
 		updateContact() {
 			let contact = this.contacts.find(
@@ -629,11 +624,12 @@ export default {
 			);
 
 			for (let key in this.currentContact.data) {
-				contact[key] = this.currentContact.data[key].body;
+				contact[key] = this.currentContact.data[key].value;
 			}
 
 			this.closeModal("modal");
 		},
+
 		/* Удаление */
 		deleteContact() {
 			try {

@@ -5,7 +5,7 @@
 	<admin-modal ref="modal" @touchCloseModal="closeModal" :modal="modal">
 		<template
 			#title
-			v-if="(modal.type == 'edit') & !currentInfoBlock.data.delete.value && !modal.style.create"
+			v-if="(modal.type == 'edit') && !currentInfoBlock.data.delete.value && !modal.style.create"
 		>
 			<icon-arrow :width="16" :height="16" :rotate="-90" @click="changeInfoBlockOrder('down')" />
 			#{{ currentInfoBlock.data.order.value }}

@@ -117,7 +117,15 @@ const router = createRouter({
 					path: "users",
 					name: "users",
 					meta: { title: "Пользователи" },
+					redirect: { name: "users-all" },
 					component: () => import("../views/admin/users/AdminUsers.vue"),
+					children: [
+						{
+							path: "",
+							name: "users-all",
+							component: () => import("../views/admin/users/AdminUsersAll.vue"),
+						},
+					],
 				},
 				{
 					path: "statistics",
