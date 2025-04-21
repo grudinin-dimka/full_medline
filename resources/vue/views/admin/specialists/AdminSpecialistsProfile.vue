@@ -2006,6 +2006,8 @@ export default {
 			// Проверка на статус добавления специалиста
 			if (this.specialist.profile.data.id.value !== "new") return;
 
+			let errors = 0;
+
 			if (
 				validate.checkInputsAll(this.specialist.profile, [
 					{
@@ -2044,7 +2046,7 @@ export default {
 					},
 				])
 			)
-				return;
+				errors++;
 
 			/* Если есть приём у детей */
 			if (this.specialist.profile.data.childrenDoctor.value) {
@@ -2056,8 +2058,10 @@ export default {
 						},
 					])
 				)
-					return;
+					errors++;
 			}
+
+			if (errors) return;
 
 			let formData = new FormData();
 			formData.append("image", this.$refs.fileUpload.files[0]);

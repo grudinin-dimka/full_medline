@@ -10,7 +10,7 @@
 
 		<template #options>
 			<icon-load :width="28" :height="28" v-if="disabled.news.save" />
-			<icon-save :width="28" :height="28" @click="console.log('save')" v-else />
+			<icon-save :width="28" :height="28" @click="saveNewsAll" v-else />
 		</template>
 
 		<template #body>
@@ -18,8 +18,8 @@
 				v-if="loading.sections.news"
 				:table="table"
 				@create="$router.push('enews/new')"
-				@edite="console.log('edite')"
-				@delete="console.log('delete')"
+				@edite="openNews"
+				@delete="setFlagDelete"
 			/>
 
 			<loader-child
@@ -45,6 +45,7 @@ import IconLoad from "../../../components/icons/IconLoad.vue";
 import IconSave from "../../../components/icons/IconSave.vue";
 
 import shared from "../../../services/shared";
+import axios from "axios";
 
 export default {
 	components: {
@@ -150,17 +151,6 @@ export default {
 				// Элементы
 				body: [],
 			},
-
-			content: `
-            <p style="text-align: left">qweqweqwe</p>
-            <p style="text-align: left">qeweqw</p>
-            <p style="text-align: left">qew</p>
-            <p style="text-align: left">qwe</p>
-            <p style="text-align: left">qwe</p>
-            <p style="text-align: left">qwe</p>
-            <p style="text-align: left">qwe</p>
-            <p style="text-align: left">qwewqewq</p>
-         `,
 		};
 	},
 	methods: {
@@ -200,17 +190,100 @@ export default {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                  Блок текста                      |*/
 		/* |___________________________________________________|*/
-		doTest() {
-			this.$refs.tiptap.exportHtml();
+		/* Открытие */
+		openNews(news) {
+			this.$router.push({
+				name: "enews-once",
+				params: { id: news.id },
+			});
 		},
 
-		/* Тестовая функция */
-		test(value) {
-			console.log(value);
+		/* Удаление */
+		setFlagDelete(news) {
+			news.delete = !news.delete;
+		},
+
+		/* Сохранение */
+		saveNewsAll() {
+			this.disabled.news.save = true;
+
+			axios({
+				method: "post",
+				url: `${this.$store.getters.urlApi}` + `save-news-changes-all`,
+				headers: {
+					ContentType: "multipart/form-data",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: {
+					news: this.table.body
+				},
+			})
+				.then((response) => {
+					if (response.data.status) {
+						shared.clearDeletes(this.table.body);
+						shared.clearFlags(this.table.body);
+
+						this.$store.commit("addDebugger", {
+							title: "Успешно!",
+							body: response.data.message,
+							type: "completed",
+						});
+					} else {
+						this.$store.commit("addDebugger", {
+							title: "Ошибка.",
+							body: response.data.message,
+							type: "error",
+						});
+					}
+				})
+				.catch((error) => {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка.",
+						body: error,
+						type: "error",
+					});
+				})
+				.finally(() => {
+					this.disabled.news.save = false;
+				});
 		},
 	},
 	mounted() {
-		this.loading.loader.news = false;
+		axios({
+			method: "get",
+			url: `${this.$store.getters.urlApi}` + `get-news-all`,
+		})
+			.then((response) => {
+				if (response.data.status) {
+					this.table.body = response.data.data;
+
+					for (let i = 0; i < this.table.body.length; i++) {
+						const tempDiv = document.createElement("div");
+						tempDiv.innerHTML = this.table.body[i].title;
+						const plainText = tempDiv.textContent || tempDiv.innerText;
+
+						this.table.body[i].title = plainText;
+						this.table.body[i].create = false;
+						this.table.body[i].delete = false;
+					}
+				} else {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка.",
+						body: response.data.message,
+						type: "error",
+					});
+				}
+			})
+			.catch((error) => {
+				this.$store.commit("addDebugger", {
+					title: "Ошибка.",
+					body: error,
+					type: "error",
+				});
+			})
+			.finally(() => {
+				this.loading.loader.news = false;
+			});
 	},
 };
 </script>

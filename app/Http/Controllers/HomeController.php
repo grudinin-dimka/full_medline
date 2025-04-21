@@ -9,6 +9,11 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
+use Throwable;
+
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
@@ -40,10 +45,7 @@ use App\Models\PriceAddress;
 use App\Models\PriceCategory;
 use App\Models\PriceValue;
 use App\Models\Tracking;
-
-use Illuminate\Support\Facades\Storage;
-use PhpOffice\PhpSpreadsheet\Calculation\Financial\Securities\Price;
-use Throwable;
+use App\Models\News;
 
 class HomeController extends Controller
 {
@@ -1052,6 +1054,64 @@ class HomeController extends Controller
       $stringReplace = str_replace(" ", "-", $stringUnderCase);
    
       return $stringReplace;
+   }
+
+   /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+   /* |                     НОВОСТИ                       |*/
+   /* |___________________________________________________|*/
+   /* Получение всех новостей */
+   public function getNewsAll(Request $request) {
+      try {
+         $news = News::all();
+
+         foreach ($news as $key => $value) {
+            $value->date = Carbon::parse($value->date)->format('d.m.Y H:i:s');
+         };
+      } catch (Throwable $th) {
+         return response()->json([
+            "status" => false,
+            "message" => "Не удалось получить данные.",
+            "data" => [],
+         ]);            
+      }
+
+      return response()->json([
+         "status" => true,
+         "message" => "Данные успешно получены.",
+         "data" => $news,
+      ]);
+   }
+
+   /* Получение одной новости */
+   public function getNewsOnce(Request $request) {
+      $validator = Validator::make($request->all(), [
+         'id' => [
+            'required',
+            Rule::exists('news', 'id'),
+         ],
+      ]);
+
+      if ($validator->fails()) {
+         return response()->json([
+            "status" => false,
+            "message" => "Некорректные данные.",
+            "data" => null,
+         ]);
+      };
+
+      $news = News::find($request->id);
+
+      return response()->json([
+         "status" => true,
+         "message" => "Новости получены.",
+         "data" => [
+            "id" => $news->id,
+            "path" => Storage::url('news/' . $news->image),
+            "image" => $news->image,
+            "title" => $news->title,
+            "description" => $news->description,
+         ],
+      ]);
    }
 
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/

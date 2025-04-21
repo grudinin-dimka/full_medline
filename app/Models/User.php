@@ -16,7 +16,7 @@ class User extends Authenticatable
 
     protected $table = 'users';
     protected $guarded = ['id'];
-    protected $hidden = ['password', 'remember_token'];
+    protected $hidden = ['password', 'remember_token', 'created_at', 'updated_at'];
 
     /**
      * Get the attributes that should be cast.

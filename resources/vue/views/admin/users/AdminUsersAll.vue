@@ -11,11 +11,11 @@
 			<div class="img-fio">
 				<div class="img">
 					<div
-						v-if="currentUser.data.path.body"
-						:style="{ backgroundImage: `url(${currentUser.data.path.body})` }"
+						v-if="currentUser.data.path.value"
+						:style="{ backgroundImage: `url(${currentUser.data.path.value})` }"
 					></div>
 					<div
-						v-if="!currentUser.data.path.body"
+						v-if="!currentUser.data.path.value"
 						:style="{ backgroundImage: `url(/storage/default/avatar.png)` }"
 					></div>
 				</div>
@@ -36,14 +36,13 @@
 							placeholder="Введите фамилию"
 							autocomplete="off"
 							:class="{ error: currentUser.errors.family.status }"
-							v-model="currentUser.data.family.body"
+							v-model="currentUser.data.family.value"
 							@input="currentUser.data.family.edited = true"
-							@blur="checkModalInput('currentUser', 'family', 'text')"
 						/>
 					</template>
 					<template #error-one>
 						<span class="error" v-if="currentUser.errors.family.status">
-							{{ currentUser.errors.family.body }}
+							{{ currentUser.errors.family.message }}
 						</span>
 					</template>
 					<!-- Вторник -->
@@ -57,14 +56,13 @@
 							placeholder="Введите имя"
 							autocomplete="off"
 							:class="{ error: currentUser.errors.name.status }"
-							v-model="currentUser.data.name.body"
+							v-model="currentUser.data.name.value"
 							@input="currentUser.data.name.edited = true"
-							@blur="checkModalInput('currentUser', 'name', 'text')"
 						/>
 					</template>
 					<template #error-two>
 						<span class="error" v-if="currentUser.errors.name.status">
-							{{ currentUser.errors.name.body }}
+							{{ currentUser.errors.name.message }}
 						</span>
 					</template>
 					<!-- Среда -->
@@ -77,7 +75,7 @@
 							type="text"
 							placeholder="Введите отчество"
 							autocomplete="off"
-							v-model="currentUser.data.surname.body"
+							v-model="currentUser.data.surname.value"
 							@input="currentUser.data.surname.edited = true"
 						/>
 					</template>
@@ -103,14 +101,13 @@
 						placeholder="Введите пароль"
 						autocomplete="off"
 						:class="{ error: currentUser.errors.password.status }"
-						v-model="currentUser.data.password.body"
+						v-model="currentUser.data.password.value"
 						@input="currentUser.data.password.edited = true"
-						@blur="checkModalInput('currentUser', 'password', 'text')"
 					/>
 				</template>
 				<template #error-one>
 					<span class="error" v-if="currentUser.errors.password.status">
-						{{ currentUser.errors.password.body }}
+						{{ currentUser.errors.password.message }}
 					</span>
 				</template>
 				<!-- Второй -->
@@ -139,7 +136,7 @@
 				</template>
 				<template #error-one>
 					<span class="error" v-if="currentUser.errors.file.status">
-						{{ currentUser.errors.file.body }}
+						{{ currentUser.errors.file.message }}
 					</span>
 				</template>
 				<!-- Второй -->
@@ -152,14 +149,13 @@
 						placeholder="Введите дату"
 						autocomplete="off"
 						:class="{ error: currentUser.errors.dateOfBirth.status }"
-						v-model="currentUser.data.dateOfBirth.body"
+						v-model="currentUser.data.dateOfBirth.value"
 						@input="currentUser.data.dateOfBirth.edited = true"
-						@blur="checkModalInput('currentUser', 'dateOfBirth', 'text')"
 					/>
 				</template>
 				<template #error-two>
 					<span class="error" v-if="currentUser.errors.dateOfBirth.status">
-						{{ currentUser.errors.dateOfBirth.body }}
+						{{ currentUser.errors.dateOfBirth.message }}
 					</span>
 				</template>
 			</container-input-two>
@@ -178,14 +174,13 @@
 						placeholder="Введите почту"
 						autocomplete="off"
 						:class="{ error: currentUser.errors.email.status }"
-						v-model="currentUser.data.email.body"
+						v-model="currentUser.data.email.value"
 						@input="currentUser.data.email.edited = true"
-						@blur="checkModalInput('currentUser', 'email', 'email')"
 					/>
 				</template>
 				<template #error-one>
 					<span class="error" v-if="currentUser.errors.email.status">
-						{{ currentUser.errors.email.body }}
+						{{ currentUser.errors.email.message }}
 					</span>
 				</template>
 				<!-- Второй -->
@@ -198,14 +193,13 @@
 						placeholder="Введите псевдоним"
 						autocomplete="off"
 						:class="{ error: currentUser.errors.nickname.status }"
-						v-model="currentUser.data.nickname.body"
+						v-model="currentUser.data.nickname.value"
 						@input="currentUser.data.nickname.edited = true"
-						@blur="checkModalInput('currentUser', 'nickname', 'text')"
 					/>
 				</template>
 				<template #error-two>
 					<span class="error" v-if="currentUser.errors.nickname.status">
-						{{ currentUser.errors.nickname.body }}
+						{{ currentUser.errors.nickname.message }}
 					</span>
 				</template>
 			</container-input-two>
@@ -218,34 +212,34 @@
 				<template #title-one> СТАТУС <span v-if="false">(ИЗМЕНЕНО)</span> </template>
 				<template #input-one>
 					<select
-						v-model="currentUser.data.statusId.body"
+						v-model="currentUser.data.statusId.value"
 						:class="{ error: currentUser.errors.statusId.status }"
-						@blur="checkModalInput('currentUser', 'statusId', 'select')"
 					>
+						<option :value="''" disabled>Выберите статус</option>
 						<option :value="null" disabled>Выберите статус</option>
 						<option :value="status.id" v-for="status in statuses">{{ status.name }}</option>
 					</select>
 				</template>
 				<template #error-one>
 					<span class="error" v-if="currentUser.errors.statusId.status">
-						{{ currentUser.errors.statusId.body }}
+						{{ currentUser.errors.statusId.message }}
 					</span>
 				</template>
 				<!-- Второй -->
 				<template #title-two> ПРАВА <span v-if="false">(ИЗМЕНЕНО)</span> </template>
 				<template #input-two>
 					<select
-						v-model="currentUser.data.rightsId.body"
+						v-model="currentUser.data.rightsId.value"
 						:class="{ error: currentUser.errors.rightsId.status }"
-						@blur="checkModalInput('currentUser', 'rightsId', 'select')"
 					>
+						<option :value="''" disabled>Выберите права</option>
 						<option :value="null" disabled>Выберите права</option>
 						<option :value="right.id" v-for="right in rights">{{ right.name }}</option>
 					</select>
 				</template>
 				<template #error-two>
 					<span class="error" v-if="currentUser.errors.rightsId.status">
-						{{ currentUser.errors.rightsId.body }}
+						{{ currentUser.errors.rightsId.message }}
 					</span>
 				</template>
 			</container-input-two>
@@ -289,13 +283,12 @@
 							type="text"
 							placeholder="Введите пароль"
 							:class="{ error: userPassword.errors.password.status }"
-							v-model="userPassword.data.password.body"
-							@blur="checkModalInput('userPassword', 'password', 'text')"
+							v-model="userPassword.data.password.value"
 						/>
 					</template>
 					<template #error>
 						<span class="error" v-if="userPassword.errors.password.status">
-							{{ userPassword.errors.password.body }}
+							{{ userPassword.errors.password.message }}
 						</span>
 					</template>
 				</container-input-once>
@@ -330,11 +323,11 @@
 				Вы действительно хотите <span class="delete">удалить</span> пользователя
 				<span class="delete">
 					{{
-						currentUser.data.family.body +
+						currentUser.data.family.value +
 						" " +
-						currentUser.data.name.body +
-						(currentUser.data.surname.body !== null
-							? " " + currentUser.data.surname.body
+						currentUser.data.name.value +
+						(currentUser.data.surname.value !== null
+							? " " + currentUser.data.surname.value
 							: "")
 					}} </span
 				>?
@@ -368,16 +361,16 @@
 			<div class="sub-modal-text">
 				Вы действительно хотите
 				<span class="block">
-					{{ currentUser.data.statusId.body === 1 ? "заблокировать" : "разблокировать" }}
+					{{ currentUser.data.statusId.value === 1 ? "заблокировать" : "разблокировать" }}
 				</span>
 				пользователя
 				<span class="block">
 					{{
-						currentUser.data.family.body +
+						currentUser.data.family.value +
 						" " +
-						currentUser.data.name.body +
-						(currentUser.data.surname.body !== null
-							? " " + currentUser.data.surname.body
+						currentUser.data.name.value +
+						(currentUser.data.surname.value !== null
+							? " " + currentUser.data.surname.value
 							: "")
 					}} </span
 				>?
@@ -502,6 +495,7 @@ import ButtonPasswordWide from "../../../components/ui/admin/buttons/ButtonPassw
 
 import axios from "axios";
 import validate from "../../../services/validate";
+import shared from "../../../services/shared";
 
 export default {
 	components: {
@@ -532,6 +526,7 @@ export default {
 	},
 	data() {
 		return {
+			/* Кнопки */
 			disabled: {
 				users: {
 					save: false,
@@ -545,6 +540,18 @@ export default {
 					save: false,
 				},
 			},
+
+			/* Загрузчик */
+			loading: {
+				loader: {
+					users: true,
+				},
+				sections: {
+					users: false,
+				},
+			},
+
+			/* Модальное окно */
 			modal: {
 				title: "",
 				status: false,
@@ -564,6 +571,7 @@ export default {
 					footer: true,
 				},
 			},
+
 			subModalPassword: {
 				title: "",
 				status: false,
@@ -583,6 +591,7 @@ export default {
 					footer: true,
 				},
 			},
+
 			subModalDelete: {
 				title: "",
 				status: false,
@@ -602,6 +611,7 @@ export default {
 					footer: true,
 				},
 			},
+
 			subModalBlock: {
 				title: "",
 				status: false,
@@ -621,130 +631,127 @@ export default {
 					footer: true,
 				},
 			},
-			loading: {
-				loader: {
-					users: true,
-				},
-				sections: {
-					users: false,
-				},
-			},
+
+			/* Форма */
 			currentUser: {
 				errors: {
 					family: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					name: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					surname: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					password: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					dateOfBirth: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					nickname: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					email: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					statusId: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					rightsId: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					filename: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					path: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					file: {
-						body: "",
+						message: "",
 						status: false,
 					},
 				},
 				data: {
 					id: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					family: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					name: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					surname: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					password: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					dateOfBirth: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					nickname: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					email: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					statusId: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					rightsId: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					filename: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					path: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 				},
 			},
+
 			userPassword: {
 				errors: {
 					password: {
-						body: "",
+						message: "",
 						status: false,
 					},
 				},
 				data: {
 					password: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 				},
 			},
+
+			/* Данные */
 			users: [],
 			rights: [],
 			statuses: [],
@@ -758,6 +765,7 @@ export default {
 		loaderChildAfterLeave() {
 			this.loading.sections.users = true;
 		},
+
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                 Модальное окно                    |*/
 		/* |___________________________________________________|*/
@@ -803,196 +811,56 @@ export default {
 			this[name].status = false;
 			document.body.classList.remove("modal-open");
 		},
-		/* _____________________________________________________*/
-		/* 2. Работа с полями ввода модального окна             */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		checkSelect(value) {
-			if (validate.checkEmpty(value)) {
-				return {
-					status: true,
-					message: "Поле не может быть пустым.",
-				};
-			}
 
-			return {
-				status: false,
-				message: "Ошибок нет.",
-			};
-		},
-		chekInputFile() {
-			let checkFile = validate.checkInputFile(this.$refs.fileUpload.files[0], [
-				"image/jpeg",
-				"image/png",
-			]);
-
-			if (checkFile.status) {
-				this.currentUser.errors.file.status = true;
-				this.currentUser.errors.file.body = checkFile.message;
-
-				return checkFile;
-			} else {
-				this.currentUser.errors.file.status = false;
-
-				return {
-					status: false,
-					message: "Ошибок нет.",
-				};
-			}
-		},
-		// Проверка поля имени
-		checkModalInput(currentName, dataKey, inputType) {
-			let errorLog = {};
-			switch (inputType) {
-				case "text":
-					errorLog = validate.checkInputText(this[currentName].data[dataKey].body);
-					break;
-				case "email":
-					errorLog = validate.checkInputEmail(this[currentName].data[dataKey].body);
-					break;
-				case "phone":
-					errorLog = validate.checkInputPhone(this[currentName].data[dataKey].body);
-					break;
-				case "file":
-					errorLog = this.chekInputFile();
-					break;
-				case "select":
-					errorLog = this.checkSelect(this[currentName].data[dataKey].body);
-					break;
-				default:
-					break;
-			}
-
-			if (errorLog.status) {
-				this[currentName].errors[dataKey].body = errorLog.message;
-				this[currentName].errors[dataKey].status = true;
-
-				return true;
-			} else {
-				this[currentName].errors[dataKey].body = "";
-				this[currentName].errors[dataKey].status = false;
-
-				return false;
-			}
-		},
-		// Проверка всех полей ввода модального окна
-		checkModalInputsAll(currentName, inputKeys) {
-			let errorCount = 0;
-			for (let i = 0; i < inputKeys.length; i++) {
-				switch (inputKeys[i]) {
-					case "file":
-						if (this.checkModalInput(currentName, inputKeys[i], "file")) {
-							errorCount++;
-						}
-						break;
-					case "email":
-						if (this.checkModalInput(currentName, inputKeys[i], "email")) {
-							errorCount++;
-						}
-						break;
-					case "statusId":
-					case "rightsId":
-						if (this.checkModalInput(currentName, inputKeys[i], "select")) {
-							errorCount++;
-						}
-						break;
-					// Для всех остальных полей
-					default:
-						if (this.checkModalInput(currentName, inputKeys[i], "text")) {
-							errorCount++;
-						}
-						break;
-				}
-			}
-
-			if (errorCount > 0) {
-				return true;
-			} else {
-				return false;
-			}
-		},
-		/* Очистка содержимого модального окна */
-		clearModalData(name = "currentUser") {
-			for (let key in this[name].data) {
-				if (typeof this[name].data[key].body === "array") {
-					this[name].data[key].body = [];
-					continue;
-				}
-
-				this[name].data[key].body = null;
-			}
-		},
-		/* Очистка содержимого модального окна */
-		clearModalEdited(name = "currentUser") {
-			for (let key in this[name].data) {
-				this[name].data[key].edited = false;
-			}
-		},
-		/* Очистка ошибок */
-		clearModalErrors(name = "currentUser") {
-			for (let key in this[name].errors) {
-				this[name].errors[key].body = null;
-				this[name].errors[key].status = false;
-			}
-		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                  ПОЛЬЗОВАТЕЛИ                     |*/
 		/* |___________________________________________________|*/
 		/* _____________________________________________________*/
 		/* 1. Основные действия                                 */
 		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* Создание пользователя */
 		createUser() {
-			this.clearModalErrors("currentUser");
-			this.clearModalData("currentUser");
+			shared.clearObjectFull(this.currentUser);
 
 			this.openModal("create", "modal");
 		},
-		editUserPassword(user) {
-			for (let key in this.currentUser.data) {
-				this.currentUser.data[key].body = user[key];
-			}
 
-			this.clearModalErrors("userPassword");
-			this.clearModalData("userPassword");
+		/* Редактирование информации пользователя */
+		editUser(user) {
+			shared.clearObjectFull(this.currentUser);
+			shared.setData(user, this.currentUser);
+
+			this.openModal("edit", "modal");
+		},
+
+		/* Редактирование пароля пользователя */
+		editUserPassword(user) {
+			shared.clearObjectFull(this.currentUser);
+			shared.setData(user, this.currentUser);
 
 			this.openModal("edit", "subModalPassword");
 		},
-		
+
 		/* Редактирование блокировки пользователя */
 		editUserBlock(user) {
-			for (let key in this.currentUser.data) {
-				this.currentUser.data[key].body = user[key];
-			}
+			shared.clearObjectFull(this.currentUser);
+			shared.setData(user, this.currentUser);
 
 			this.openModal("edit", "subModalBlock");
 		},
 
 		/* Редактирование удаления пользователя */
 		editUserDelete(user) {
-			this.subModalDelete.style.delete = true;
-
-			for (let key in this.currentUser.data) {
-				this.currentUser.data[key].body = user[key];
-			}
+			shared.clearObjectFull(this.currentUser);
+			shared.setData(user, this.currentUser);
 
 			this.openModal("edit", "subModalDelete");
-		},
-		
-		/* Редактирование информации пользователя */
-		editUser(user) {
-			for (let key in this.currentUser.data) {
-				this.currentUser.data[key].body = user[key];
-			}
-
-			this.clearModalErrors("currentUser");
-			this.clearModalEdited("currentUser");
-
-			this.openModal("edit", "modal");
 		},
 
 		/* Сохранение блокировки пользователя */
 		saveUserBlock() {
 			let formData = new FormData();
-			formData.append("userId", JSON.stringify(this.currentUser.data.id.body));
+			formData.append("userId", JSON.stringify(this.currentUser.data.id.value));
 
 			this.disabled.userBlock.save = true;
 
@@ -1008,7 +876,7 @@ export default {
 				.then((response) => {
 					if (response.data.status) {
 						let currentUser = this.users.find((user) => {
-							if (user.id === this.currentUser.data.id.body) {
+							if (user.id === this.currentUser.data.id.value) {
 								return user;
 							}
 						});
@@ -1040,12 +908,14 @@ export default {
 					this.disabled.userBlock.save = false;
 				});
 		},
+
+		/* Сохранение пароля пользователя */
 		saveUserPassword() {
 			if (this.checkModalInput("userPassword", "password", "text")) return;
 
 			let formData = new FormData();
-			formData.append("password", JSON.stringify(this.userPassword.data.password.body));
-			formData.append("userId", JSON.stringify(this.currentUser.data.id.body));
+			formData.append("password", JSON.stringify(this.userPassword.data.password.value));
+			formData.append("userId", JSON.stringify(this.currentUser.data.id.value));
 
 			this.disabled.userPassword.save = true;
 
@@ -1090,20 +960,58 @@ export default {
 
 		/* Редактирование информации пользователя */
 		saveUser() {
-			let checkArray = ["family", "name", "dateOfBirth", "email", "nickname"];
+			let errors = 0;
 
 			let formData = new FormData();
+
 			if (this.$refs.fileUpload.files[0]) {
-				checkArray.push("file");
+				if (
+					validate.checkInputsAll(this.currentUser, [
+						{
+							key: "file",
+							type: "file",
+							value: this.$refs.fileUpload,
+							formats: ["jpg", "jpeg", "png", "webp"],
+						},
+					])
+				)
+					errors++;
+
 				formData.append("image", this.$refs.fileUpload.files[0]);
 				formData.append("formats", ["png", "jpg", "jpeg"]);
 			}
 
-			if (this.checkModalInputsAll("currentUser", checkArray)) return;
+			if (
+				validate.checkInputsAll(this.currentUser, [
+					{
+						key: "family",
+						type: "text",
+					},
+					{
+						key: "name",
+						type: "text",
+					},
+					{
+						key: "dateOfBirth",
+						type: "text",
+					},
+					{
+						key: "email",
+						type: "email",
+					},
+					{
+						key: "nickname",
+						type: "text",
+					},
+				])
+			)
+				errors++;
+
+			if (errors) return;
 
 			let user = {};
 			for (let key in this.currentUser.data) {
-				user[key] = this.currentUser.data[key].body;
+				user[key] = this.currentUser.data[key].value;
 			}
 			formData.append("user", JSON.stringify(user));
 
@@ -1121,14 +1029,14 @@ export default {
 				.then((response) => {
 					if (response.data.status) {
 						let currentUser = this.users.find((user) => {
-							if (user.id === this.currentUser.data.id.body) {
+							if (user.id === this.currentUser.data.id.value) {
 								return user;
 							}
 						});
 
 						for (let key in currentUser) {
 							if (key === "created_at" || key === "updated_at") continue;
-							currentUser[key] = this.currentUser.data[key].body;
+							currentUser[key] = this.currentUser.data[key].value;
 						}
 
 						if (response.data.data.path) {
@@ -1165,27 +1073,59 @@ export default {
 
 		/* Добавление пользователя */
 		addUser() {
-			let checkArray = [
-				"family",
-				"name",
-				"dateOfBirth",
-				"email",
-				"nickname",
-				"password",
-				"file",
-				"rightsId",
-				"statusId",
-			];
-
-			if (this.checkModalInputsAll("currentUser", checkArray)) return;
+			if (
+				validate.checkInputsAll(this.currentUser, [
+					{
+						key: "family",
+						type: "text",
+					},
+					{
+						key: "name",
+						type: "text",
+					},
+					{
+						key: "dateOfBirth",
+						type: "text",
+					},
+					{
+						key: "email",
+						type: "email",
+					},
+					{
+						key: "nickname",
+						type: "text",
+					},
+					{
+						key: "password",
+						type: "text",
+					},
+					{
+						key: "rightsId",
+						type: "number",
+					},
+					{
+						key: "statusId",
+						type: "number",
+					},
+					{
+						key: "file",
+						type: "file",
+						value: this.$refs.fileUpload,
+						formats: ["jpg", "jpeg", "png", "webp"],
+					},
+				])
+			)
+				return;
 
 			let formData = new FormData();
 			formData.append("image", this.$refs.fileUpload.files[0]);
-			formData.append("formats", ["png", "jpg", "jpeg"]);
+			formData.append("formats", ["png", "jpg", "jpeg", "webp"]);
+
 			let user = {};
 			for (let key in this.currentUser.data) {
-				user[key] = this.currentUser.data[key].body;
+				user[key] = this.currentUser.data[key].value;
 			}
+
 			formData.append("user", JSON.stringify(user));
 
 			this.disabled.users.create = true;
@@ -1254,13 +1194,13 @@ export default {
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: {
-					id: this.currentUser.data.id.body,
+					id: this.currentUser.data.id.value,
 				},
 			})
 				.then((response) => {
 					if (response.data.status) {
 						this.users = this.users.filter(
-							(user) => user.id !== this.currentUser.data.id.body
+							(user) => user.id !== this.currentUser.data.id.value
 						);
 
 						this.closeModal("subModalDelete");

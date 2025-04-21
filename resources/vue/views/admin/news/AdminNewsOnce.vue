@@ -17,7 +17,7 @@
 			</template>
 			<template v-else>
 				<icon-load :width="28" :height="28" v-if="disabled.news.save" />
-				<icon-save :width="28" :height="28" @click="console.log('save')" v-else />
+				<icon-save :width="28" :height="28" @click="saveNews" v-else />
 			</template>
 		</template>
 
@@ -25,32 +25,83 @@
 			<div class="news__once" v-if="loading.sections.news">
 				<div class="news__once-head">
 					<div class="news__once-image">
-						<div class="input__wrapper">
-							<input
-								name="file"
-								type="file"
-								id="input__file"
-								class="input input__file"
-								ref="image"
-								@change="handleFileChange"
-								multiple
-							/>
-							<label
-								for="input__file"
-								class="input__file-button"
-								:class="{
-									active: hasFile,
-									error: currentNews.errors.image.status,
-								}"
-							>
-								<span class="input__file-icon-wrapper" ref="imageWrapper">
-									Файл не загружен
-								</span>
-							</label>
-							<div class="input__file-button-error" v-if="currentNews.errors.image.status">
-								{{ currentNews.errors.image.message }}
+						<template v-if="$route.params.id === 'new'">
+							<div class="input__wrapper">
+								<input
+									name="file"
+									type="file"
+									id="input__file"
+									class="input input__file"
+									ref="image"
+									@change="handleFileChange"
+									multiple
+								/>
+								<label
+									for="input__file"
+									class="input__file-button"
+									:class="{
+										active: hasFile,
+										error: currentNews.errors.image.status,
+									}"
+								>
+									<span class="input__file-icon-wrapper" ref="imageWrapper">
+										<span class="input__file-text" ref="imageText">Файл не загружен</span>
+									</span>
+								</label>
+								<div
+									class="input__file-button-error"
+									v-if="currentNews.errors.image.status"
+								>
+									{{ currentNews.errors.image.message }}
+								</div>
 							</div>
-						</div>
+						</template>
+
+						<template v-else>
+							<div class="input__wrapper image">
+								<input
+									name="file"
+									type="file"
+									id="input__file"
+									class="input input__file"
+									ref="image"
+									@change="handleFileChange"
+									multiple
+								/>
+								<label
+									for="input__file"
+									class="input__file-button"
+									:class="{
+										active: hasFile,
+										error: currentNews.errors.image.status,
+									}"
+								>
+									<div class="input__file-icon-wrapper" ref="imageWrapper">
+										<svg
+											v-if="!hasFile"
+											xmlns="http://www.w3.org/2000/svg"
+											height="60px"
+											viewBox="0 -960 960 960"
+											width="60px"
+										>
+											<path
+												d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"
+											/>
+										</svg>
+
+										<span class="input__file-text" ref="imageText"></span>
+									</div>
+								</label>
+								<div
+									class="input__file-button-error"
+									v-if="currentNews.errors.image.status"
+								>
+									{{ currentNews.errors.image.message }}
+								</div>
+							</div>
+
+							<img :src="currentNews.data.path.value" alt="Фото новости" />
+						</template>
 					</div>
 
 					<Tiptap
@@ -168,6 +219,10 @@ export default {
 						value: "",
 						edited: false,
 					},
+					path: {
+						value: "",
+						edited: false,
+					},
 					image: {
 						value: "",
 						edited: false,
@@ -238,13 +293,14 @@ export default {
 			if (files && files.length > 0) {
 				this.hasFile = true;
 
-				this.$refs.imageWrapper.innerHTML = event.target.files[0].name;
+				this.$refs.imageText.innerHTML = event.target.files[0].name;
 			}
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                  База данных                      |*/
 		/* |___________________________________________________|*/
+		/* Добавление данных */
 		addNews() {
 			if (
 				validate.checkInputsAll(this.currentNews, [
@@ -286,7 +342,22 @@ export default {
 			})
 				.then((response) => {
 					if (response.data.status) {
-						console.log(response.data.data);
+						for (let key in response.data.data) {
+							this.currentNews.data[key].value = response.data.data[key];
+						}
+
+						this.hasFile = false;
+
+						this.$router.push({
+							name: "enews-once",
+							params: { id: response.data.data.id },
+						});
+
+						this.$store.commit("addDebugger", {
+							title: "Успешно!",
+							body: response.data.message,
+							type: "completed",
+						});
 					} else {
 						this.$store.commit("addDebugger", {
 							title: "Ошибка.",
@@ -306,9 +377,133 @@ export default {
 					this.disabled.news.add = false;
 				});
 		},
+
+		/* Сохранение изменений */
+		saveNews() {
+			let errors = 0;
+
+			if (
+				validate.checkInputsAll(this.currentNews, [
+					{
+						key: "title",
+						type: "tiptap",
+						value: this.$refs.tiptapTitle,
+					},
+					{
+						key: "description",
+						type: "tiptap",
+						value: this.$refs.tiptapDescription,
+					},
+				])
+			)
+				errors++;
+
+			let formData = new FormData();
+			if (this.$refs.image.files[0]) {
+				if (
+					validate.checkInputsAll(this.currentNews, [
+						{
+							key: "image",
+							type: "file",
+							value: this.$refs.image,
+							formats: ["jpg", "jpeg", "png", "webp"],
+						},
+					])
+				)
+					errors++;
+
+				formData.append("image", this.$refs.image.files[0]);
+			}
+
+			if (errors) return;
+
+			formData.append("id", this.currentNews.data.id.value);
+			formData.append("title", this.currentNews.data.title.value);
+			formData.append("description", this.currentNews.data.description.value);
+
+			this.disabled.news.save = true;
+
+			axios({
+				method: "post",
+				url: `${this.$store.getters.urlApi}` + `save-news-changes-once`,
+				headers: {
+					ContentType: "multipart/form-data",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: formData,
+			})
+				.then((response) => {
+					if (response.data.status) {
+						for (let key in response.data.data) {
+							this.currentNews.data[key].value = response.data.data[key];
+						}
+
+						this.hasFile = false;
+						this.$refs.image.value = "";
+						this.$refs.imageText.innerHTML = "";
+
+						this.$store.commit("addDebugger", {
+							title: "Успешно!",
+							body: response.data.message,
+							type: "completed",
+						});
+					} else {
+						this.$store.commit("addDebugger", {
+							title: "Ошибка.",
+							body: response.data.message,
+							type: "error",
+						});
+					}
+				})
+				.catch((error) => {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка.",
+						body: error,
+						type: "error",
+					});
+				})
+				.finally(() => {
+					this.disabled.news.save = false;
+				});
+		},
 	},
 	mounted() {
-		this.loading.loader.news = false;
+		if (this.$route.params.id === "new") {
+			this.loading.loader.news = false;
+		} else {
+			axios({
+				method: "post",
+				url: `${this.$store.getters.urlApi}` + `get-news-once`,
+				headers: {
+					Accept: "application/json",
+				},
+				data: {
+					id: this.$route.params.id,
+				},
+			})
+				.then((response) => {
+					if (response.data.status) {
+						for (let key in response.data.data) {
+							this.currentNews.data[key].value = response.data.data[key];
+						}
+
+						this.loading.loader.news = false;
+					} else {
+						this.$store.commit("addDebugger", {
+							title: "Ошибка.",
+							body: response.data.message,
+							type: "error",
+						});
+					}
+				})
+				.catch((error) => {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка.",
+						body: error,
+						type: "error",
+					});
+				});
+		}
 	},
 	unmounted() {},
 };
@@ -331,17 +526,33 @@ export default {
 }
 
 .news__once-image {
+	position: relative;
 	padding: 20px;
 	border: var(--input-border);
 	border-radius: calc(var(--default-border-radius) / 2);
 
+	height: 400px;
+
 	background-color: var(--item-background-color);
 }
 
+.news__once-image > img {
+	user-select: none;
+	border-radius: calc(var(--default-border-radius) / 2);
+
+	object-fit: cover;
+	width: 100%;
+	height: 100%;
+}
+
 .input__wrapper {
+	height: 100%;
 	width: 100%;
 	position: relative;
 	text-align: center;
+
+	display: flex;
+	flex-direction: column;
 }
 
 .input__file {
@@ -374,6 +585,7 @@ export default {
 }
 
 .input__file-button {
+	flex: 1 0 100px;
 	user-select: none;
 	cursor: pointer;
 	display: -webkit-box;
@@ -389,8 +601,7 @@ export default {
 	border-radius: calc(var(--default-border-radius) / 2);
 	margin: 0 auto;
 
-	width: max(250px, 700px);
-	height: 300px;
+	width: 100%;
 
 	font-size: 1.25rem;
 
@@ -411,5 +622,55 @@ export default {
 	background-color: var(--input-error-background-color);
 
 	color: var(--input-error-color);
+}
+
+/* .image */
+.input__wrapper.image {
+	position: absolute;
+
+	width: calc(100% - 40px);
+	height: calc(100% - 40px);
+}
+
+.input__wrapper.image {
+	position: absolute;
+
+	width: calc(100% - 40px);
+	height: calc(100% - 40px);
+}
+
+.input__wrapper.image > .input__file-button {
+	color: rgba(0, 0, 0, 0.25);
+	background-color: rgba(255, 255, 255, 0);
+	border: 0px;
+	transition: all 0.2s;
+}
+
+.input__wrapper.image > .input__file-button:is(:hover, .active) {
+	background-color: rgba(0, 0, 0, 0.1);
+	color: white;
+}
+
+.input__wrapper.image > .input__file-button-error {
+	margin: 0px;
+	padding: 10px;
+	background-color: rgba(255, 0, 0, 0.3);
+
+	color: rgb(255, 255, 255);
+
+	border-radius: 0px 0px 10px 10px;
+}
+
+.input__wrapper.image > .input__file-button.error {
+	border-radius: 10px 10px 0px 0px;
+}
+
+.input__wrapper.image > .input__file-button > .input__file-icon-wrapper {
+	visibility: hidden;
+	fill: white;
+}
+
+.input__wrapper.image > .input__file-button:is(:hover, .active) > .input__file-icon-wrapper {
+	visibility: visible;
 }
 </style>

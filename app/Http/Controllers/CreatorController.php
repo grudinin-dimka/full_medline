@@ -18,6 +18,7 @@ use App\Models\Status;
 use App\Models\Tracking;
 use Carbon\Carbon;
 use Illuminate\Validation\Rule;
+use Throwable;
 
 class CreatorController extends Controller
 {
@@ -281,50 +282,55 @@ class CreatorController extends Controller
          ]);
       };
 
-      if (!$this->isCreator($request)) {
-         $user = User::find($request->id);
-         $user->delete();
-   
+      $user = User::find($request->id);
+
+      if ($user->isCreator()) {
          return response()->json([
-            "status" => true,
-            "message" => "Пользователь удалён.",
-            "data" => [],
+            "status" => false,
+            "message" => "Нельзя удалить создателя.",
+            "data" => null,
          ]);
       };
+
+      try {
+         $user->delete();
+      } catch (Throwable $e) {
+         return response()->json([
+            "status" => false,
+            "message" => "Не удалось удалить пользователя.",
+            "data" => null,
+         ]);
+      };
+   
+      return response()->json([
+         "status" => true,
+         "message" => "Пользователь удалён.",
+         "data" => [],
+      ]);
    }
 
    /* Установка нового пароля */
    public function setUserPassword(Request $request) {
-      $check = $this->isCreator($request);
+      $password = json_decode($request->password);
+      $userId = json_decode($request->userId);
+      $user = User::find($userId);
 
-      if (!$check) {
-            return response()->json([
-               "status" => false,
-               "message" => "Недостаточно прав.",
-               "data" => [],   
-            ]);
-      } else {        
-         $password = json_decode($request->password);
-         $userId = json_decode($request->userId);
-         $user = User::find($userId);
-
-         if (!$user) {
-            return response()->json([
-               "status" => false,
-               "message" => "Пользователь не нашелся.",
-               "data" => [],   
-            ]);
-         };
-
-         $user->password = Hash::make($password);
-         $user->save();
-
+      if (!$user) {
          return response()->json([
-            "status" => true,
-            "message" => "Данные обновлены.",
-            "data" => [],
+            "status" => false,
+            "message" => "Пользователь не нашелся.",
+            "data" => [],   
          ]);
       };
+
+      $user->password = Hash::make($password);
+      $user->save();
+
+      return response()->json([
+         "status" => true,
+         "message" => "Данные обновлены.",
+         "data" => [],
+      ]);
    }
    
    /* Установка нового статуса */

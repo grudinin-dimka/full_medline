@@ -15,6 +15,8 @@ Use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Rules\File;
+use Illuminate\Validation\Rule;
+
 
 use Exception;
 
@@ -42,6 +44,7 @@ use App\Models\SpecialistClinic;
 use App\Models\Certificate;
 use App\Models\SpecialistCertificate;
 use App\Models\Education;
+use App\Models\News;
 use App\Models\SpecialistEducation;
 use App\Models\Work;
 use App\Models\SpecialistWork;
@@ -206,14 +209,16 @@ class AdminController extends Controller
       if($filesSlides) {
          foreach ($filesSlides as $fileKey => $fileValue) {
             $useFile = false;
+
             /* Проверка на использование файла */
             foreach ($slides as $slideKey => $slideValue) {
-            /* Обрезание значения $fileValue до названия файла */
-            $str = str_replace('public/slides/', '', $fileValue);
-            /* Проверка значения названия файла на совпадение */
-            if ($slideValue->filename == $str) {
-               $useFile = true;
-            };
+               /* Обрезание значения $fileValue до названия файла */
+               $str = str_replace('public/slides/', '', $fileValue);
+
+               /* Проверка значения названия файла на совпадение */
+               if ($slideValue->filename == $str) {
+                  $useFile = true;
+               };
             };
    
             /* Удаление файла, если не используется */
@@ -1643,6 +1648,7 @@ class AdminController extends Controller
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                    НОВОСТИ                        |*/
    /* |___________________________________________________|*/
+   /* Добавление новости */
    public function addNews(Request $request) {
       $validator = Validator::make($request->all(), [
          'image' => [
@@ -1673,16 +1679,25 @@ class AdminController extends Controller
          ]);
       };
 
-      // DB::table('news')->insert([
-      //    'image' => basename($path),
-      //    'title' => $title,
-      //    'description' => $description,
-      // ]);
+      try {
+         $news = News::create([
+            'image' => basename($path),
+            'title' => $request->title,
+            'description' => $request->description,
+         ]);
+      } catch (Throwable $th) {
+         return response()->json([
+            "status" => false,
+            "message" => "Не удалось добавить новость.",
+            "data" => null,
+         ]);
+      }
 
       return response()->json([
          "status" => true,
          "message" => "Новость добавлена.",
          "data" => [
+            "id" => $news->id,
             "path" => Storage::url($path),
             "image" => basename($path),
             "title" => $request->title,
@@ -1691,4 +1706,151 @@ class AdminController extends Controller
       ]);
    }
 
+   /* Изменение новости */
+   public function saveNewsChangesOnce(Request $request) {
+      $validator = Validator::make($request->all(), [
+         'id' => [
+            'required',
+            Rule::exists('news', 'id'),
+         ],
+         'title' => 'required|string',
+         'description' => 'required|string',
+      ]);
+
+      if ($validator->fails()) {
+         return response()->json([
+            "status" => false,
+            "message" => "Некорректные данные.",
+            "data" => null,
+         ]);
+      };
+
+      $path = null;
+      
+      if ($request->hasFile('image')) {
+         $validated = validator($request->all(), [
+            'image' => [
+               'required',
+               File::types(['png', 'webp', 'jpg', 'jpeg'])->max(10 * 1024),
+            ],
+         ]);
+
+         if ($validated->fails()) {
+            return response()->json([
+               "status" => false,
+               "message" => "Некорректные данные.",
+               "data" => null,
+            ]);
+         };
+
+         $path = request()->file('image')->store(
+            'public/news'
+         );
+
+         if (!$path) {
+            return response()->json([
+               "status" => false,
+               "message" => "Не удалось сохранить изображение.",
+               "data" => null,
+            ]);
+         };
+      };
+
+      $news = News::find($request->id);
+
+      try {
+         $slideUpdate = $news->update([
+            "image" => $path ? basename($path) : $news->image,
+            "title" => $request->title,
+            "description" => $request->description,
+         ]);  
+      } catch (Throwable $th) {
+         return response()->json([
+            "status" => false,
+            "message" => "Не удалось изменить новость.",
+            "data" => null,
+         ]);
+      };
+
+      return response()->json([
+         "status" => true,
+         "message" => "Новость изменена.",
+         "data" => [
+            "id" => $news->id,
+            "path" => $path ? Storage::url($path) : Storage::url('news/' . $news->image),
+            "image" => $path ? basename($path) : $news->image,
+            "title" => $request->title,
+            "description" => $request->description,
+         ],
+      ]);
+   }
+
+   /* Изменение новости */
+   public function saveNewsChangesAll(Request $request) {
+      $validator = Validator::make($request->all(), [
+         'news' => 'required|array',
+      ]);
+
+      if ($validator->fails()) {
+         return response()->json([
+            "status" => false,
+            "message" => "Некорректные данные.",
+            "data" => null,
+         ]);
+      };
+
+      // Транзакция
+      DB::beginTransaction();
+
+      try {
+         // Удаление
+         foreach ($request->news as $key => $value) {
+            if ($value["delete"] === true){
+               $news = News::find($value['id']);
+               $news->delete();
+            };         
+         };
+
+         $news = News::all();
+
+         // Получение всех файлов
+         $filesNews = Storage::files('public/news');
+         if($filesNews) {
+            foreach ($filesNews as $fileKey => $fileValue) {
+               $useFile = false;
+               
+               /* Проверка на использование файла */
+               foreach ($news as $key => $value) {
+                  if ($value['image'] === basename($fileValue)) {
+                     $useFile = true;
+                     break;
+                  };
+               };
+               
+               /* Удаление файла, если не используется */
+               if (!$useFile) {
+                  Storage::delete($fileValue);
+               };
+            };
+         };
+
+         // Фиксация транзакции
+         DB::commit();
+
+         return response()->json([
+            "status" => true,
+            "message" => "Новости изменены.",
+            "data" => null,
+         ]);
+      } catch (Throwable $e) {
+         // Отмена транзакции
+         DB::rollBack();         
+         
+         return response()->json([
+            "success" => false,
+            "message" => $e->getMessage(),
+            "data" => null,
+         ]);
+      };
+   }
 }

@@ -20,51 +20,42 @@ Route::post('/login', [LoginController::class, 'login']);
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 /* |              ПОЛУЧЕНИЕ ДАННЫХ ИЗ БД               |*/
 /* |___________________________________________________|*/
-/* _____________________________________________________*/
-/* Главная                                              */
-/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-/* 1. Слайдер                                           */
+/* Главная */
 Route::get('/get-slides-all', [HomeController::class, 'getSlidesAll']);
-/* 2. Слайдер (без статуса скрытия)                     */
 Route::get('/get-slides-not-hide', [HomeController::class, 'getSlidesNotHide']);
-/* 3. Футер                                             */
 Route::get('/get-footer', [HomeController::class, 'getFooter']);
-/* _____________________________________________________*/
-/* О нас                                                */
-/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+
+/* О нас */
 Route::get('/get-abouts-all', [HomeController::class, 'getAboutsAll']);
-/* _____________________________________________________*/
-/* Специалисты                                          */
-/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-/* 1. Врачи                                             */
+
+/* Специалисты */
 Route::get('/get-specialists', [HomeController::class, 'getSpecialists']);
 Route::post('/get-specialist-profile', [HomeController::class, 'getSpecialistProfile']);
 Route::post('/get-specialist-all', [HomeController::class, 'getSpecialistAll']);
 Route::post('/get-specialist-sections', [HomeController::class, 'getSpecialistSections']);
 Route::get('/get-specialists-short', [HomeController::class, 'getSpecialistsShort']);
-/* 2. Специализации                                     */
+
 Route::get('/get-specializations-all', [HomeController::class, 'getSpecializationsAll']);
-/* 3. Клиники                                           */
 Route::get('/get-clinics-all', [HomeController::class, 'getClinicsAll']);
-/* _____________________________________________________*/
-/* Цены                                                 */
-/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+
+/* Цены */
 Route::get('/get-prices-choice', [HomeController::class, 'getPricesChoice']);
 Route::post('/get-prices-group', [HomeController::class, 'getPricesGruop']);
 Route::post('/get-prices-template', [HomeController::class, 'getPricesTemplate']);
 Route::get('/get-prices-all', [HomeController::class, 'getPricesAll']);
-/* _____________________________________________________*/
-/* Контакты                                             */
-/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+
+/* Контакты */
 Route::get('/get-contacts-all', [HomeController::class, 'getContactsAll']);
 Route::get('/get-contacts-clinics-all', [HomeController::class, 'getContactsClinicsAll']);
-/* _____________________________________________________*/
-/* Расписание                                           */
-/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+
+/* Расписание */
 Route::get('/get-shedules-all', [HomeController::class, 'getShedulesAll']);
-/* _____________________________________________________*/
-/* Запись нового события                                */
-/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+
+/* Новости */
+Route::get('/get-news-all', [HomeController::class, 'getNewsAll']);
+Route::post('/get-news-once', [HomeController::class, 'getNewsOnce']);
+
+/* Запись нового события */
 Route::post('/create-track', [HomeController::class, 'createTrack']);
 
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -110,6 +101,8 @@ Route::middleware(['auth:sanctum', 'admin-or-creator'])->group(function () {
 
    // Новости 
    Route::post('/add-news', [AdminController::class, 'addNews']);
+   Route::post('/save-news-changes-all', [AdminController::class, 'saveNewsChangesAll']);
+   Route::post('/save-news-changes-once', [AdminController::class, 'saveNewsChangesOnce']);
 });
 
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
