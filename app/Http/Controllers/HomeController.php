@@ -1066,8 +1066,8 @@ class HomeController extends Controller
 
          foreach ($news as $key => $value) {
             $value->date = Carbon::parse($value->created_at)->format('d.m.Y H:i:s');
-            $value->url_date = Carbon::parse($value->created_at)->format('d-m-Y');
-            $value->url_time = Carbon::parse($value->created_at)->format('H-i-s');
+            $value->url_date = Carbon::parse($value->created_at)->format('d.m.Y');
+            $value->url_time = Carbon::parse($value->created_at)->format('H:i:s');
             $value->path = Storage::url('news/' . $value->image);
          };
       } catch (Throwable $th) {
@@ -1093,8 +1093,8 @@ class HomeController extends Controller
 
          foreach ($sorted as $key => $value) {
             $value->date = Carbon::parse($value->created_at)->format('d.m.Y H:i:s');
-            $value->url_date = Carbon::parse($value->created_at)->format('d-m-Y');
-            $value->url_time = Carbon::parse($value->created_at)->format('H-i-s');
+            $value->url_date = Carbon::parse($value->created_at)->format('d.m.Y');
+            $value->url_time = Carbon::parse($value->created_at)->format('H:i:s');
             $value->path = Storage::url('news/' . $value->image);
          };
       } catch (Throwable $th) {
@@ -1115,10 +1115,8 @@ class HomeController extends Controller
    /* Получение одной новости */
    public function getNewsOnce(Request $request) {
       $validator = Validator::make($request->all(), [
-         'id' => [
-            'required',
-            Rule::exists('news', 'id'),
-         ],
+         'date' => 'required|date_format:d.m.Y',
+         'time' => 'required|date_format:H:i:s',
       ]);
 
       if ($validator->fails()) {
@@ -1129,7 +1127,15 @@ class HomeController extends Controller
          ]);
       };
 
-      $news = News::find($request->id);
+      try {
+         $news = News::whereDate('created_at', Carbon::parse($request->date))->whereTime('created_at', '=', $request->time)->first();
+      } catch (Throwable $th) {
+         return response()->json([
+            "status" => false,
+            "message" => "Новости не найдены.",
+            "data" => null,
+         ]);
+      };
 
       return response()->json([
          "status" => true,

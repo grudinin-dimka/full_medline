@@ -18,23 +18,15 @@
 			<p class="section-info-sub-title">Индивидуальный подход и лучшие врачи</p>
 		</div>
 
-		<div class="news" v-if="loading.sections.news">
-			<div class="news__head">
+		<div class="news__main" v-if="loading.sections.news">
+			<div class="news__main-head">
 				<div class="news__head-title">Новости</div>
 				<button class="news__head-button" @click="$router.push({ name: 'news-all' })">
 					Смотреть все
 				</button>
 			</div>
-			<div class="news__body">
-				<div
-					class="news__item"
-					v-for="item in news"
-					@click="$router.push({ name: 'news-once', params: { date: item.url_date, time: item.url_time } })"
-				>
-					<div class="news__item-date">{{ item.date }}</div>
-					<img class="news__item-image" :src="`${item.path}`" />
-					<div class="news__item-title" v-html="item.title"></div>
-				</div>
+			<div class="news__main-body">
+				<MainNewsItem v-for="item in news" :key="item.id" :item="item" />
 			</div>
 		</div>
 
@@ -52,7 +44,7 @@ import Block from "../../components/ui/main/blocks/Block.vue";
 import Empty from "../../components/modules/Empty.vue";
 import LoaderChild from "../../components/modules/LoaderChild.vue";
 
-import Tiptap from "../../components/modules/Tiptap.vue";
+import MainNewsItem from "./news/MainNewsItem.vue";
 
 import axios from "axios";
 import sorted from "../../services/sorted.js";
@@ -63,7 +55,8 @@ export default {
 		Block,
 		Empty,
 		LoaderChild,
-		Tiptap,
+
+		MainNewsItem,
 	},
 	data() {
 		return {
@@ -168,7 +161,7 @@ p {
 	font-size: 35px;
 }
 
-.news {
+.news__main {
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
@@ -178,7 +171,7 @@ p {
 	animation: show 0.5s ease-in-out;
 }
 
-.news__head {
+.news__main-head {
 	display: flex;
 	justify-content: space-between;
 	gap: 20px;
@@ -204,7 +197,7 @@ p {
 	color: rgba(0, 0, 0, 1);
 }
 
-.news__body {
+.news__main-body {
 	display: grid;
 	justify-content: space-between;
 	gap: 20px;
@@ -212,50 +205,16 @@ p {
 	grid-template-columns: repeat(3, 1fr);
 }
 
-.news__item {
-	cursor: pointer;
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
-
-	padding: 20px;
-	border: var(--input-border);
-	border-radius: var(--default-border-radius);
-	height: 400px;
-
-	transition: all 0.2s;
+@media screen and (max-width: 1450px) {
+	.news__main {
+		width: auto;
+	}
 }
 
-.news__item:hover {
-	border: var(--input-border-focus);
-	background-color: var(--item-background-color-active);
-}
-
-.news__item-date {
-	font-size: 1.125rem;
-	color: rgba(0, 0, 0, 0.5);
-}
-
-.news__item-image {
-	width: 100%;
-	height: 300px;
-	object-fit: cover;
-	border-radius: calc(var(--default-border-radius) / 2);
-}
-
-.news__item-title {
-	font-size: 1.25rem;
-}
-
-:is(.news__item-title, .news__item-content) > * {
-	margin: 0px;
-}
-
-.news__item-content {
-	height: 100px;
-	overflow-y: hidden;
-
-	font-size: 1.125rem;
+@media screen and (max-width: 1000px) {
+	.news__main-body {
+		grid-template-columns: repeat(2, 1fr);
+	}
 }
 
 @media screen and (max-width: 900px) {
@@ -265,6 +224,12 @@ p {
 
 	.section-info-sub-title {
 		font-size: 25px;
+	}
+}
+
+@media screen and (max-width: 700px) {
+	.news__main-body {
+		grid-template-columns: repeat(1, 1fr);
 	}
 }
 

@@ -286,7 +286,10 @@
 
 				<!-- Ссылки -->
 				<div class="tiptap__buttons-item">
-					<button @click="setLink" :class="{ 'is-active': editor.isActive('link') }">
+					<button
+						@click="setLink('default', 'Введите ссылку')"
+						:class="{ 'is-active': editor.isActive('link') }"
+					>
 						<svg
 							width="20"
 							height="10"
@@ -295,6 +298,32 @@
 						>
 							<path
 								d="M9 10H5C3.61667 10 2.4375 9.5125 1.4625 8.5375C0.4875 7.5625 0 6.38333 0 5C0 3.61667 0.4875 2.4375 1.4625 1.4625C2.4375 0.4875 3.61667 0 5 0H9V2H5C4.16667 2 3.45833 2.29167 2.875 2.875C2.29167 3.45833 2 4.16667 2 5C2 5.83333 2.29167 6.54167 2.875 7.125C3.45833 7.70833 4.16667 8 5 8H9V10ZM6 6V4H14V6H6ZM11 10V8H15C15.8333 8 16.5417 7.70833 17.125 7.125C17.7083 6.54167 18 5.83333 18 5C18 4.16667 17.7083 3.45833 17.125 2.875C16.5417 2.29167 15.8333 2 15 2H11V0H15C16.3833 0 17.5625 0.4875 18.5375 1.4625C19.5125 2.4375 20 3.61667 20 5C20 6.38333 19.5125 7.5625 18.5375 8.5375C17.5625 9.5125 16.3833 10 15 10H11Z"
+							/>
+						</svg>
+					</button>
+
+					<button @click="setLink('email', 'Введите email')">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							height="24px"
+							viewBox="0 -960 960 960"
+							width="24px"
+						>
+							<path
+								d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm320-280L160-640v400h640v-400L480-440Zm0-80 320-200H160l320 200ZM160-640v-80 480-400Z"
+							/>
+						</svg>
+					</button>
+
+					<button @click="setLink('phone', 'Введите номер телефона')">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							height="24px"
+							viewBox="0 -960 960 960"
+							width="24px"
+						>
+							<path
+								d="M798-120q-125 0-247-54.5T329-329Q229-429 174.5-551T120-798q0-18 12-30t30-12h162q14 0 25 9.5t13 22.5l26 140q2 16-1 27t-11 19l-97 98q20 37 47.5 71.5T387-386q31 31 65 57.5t72 48.5l94-94q9-9 23.5-13.5T670-390l138 28q14 4 23 14.5t9 23.5v162q0 18-12 30t-30 12ZM241-600l66-66-17-94h-89q5 41 14 81t26 79Zm358 358q39 17 79.5 27t81.5 13v-88l-94-19-67 67ZM241-600Zm358 358Z"
 							/>
 						</svg>
 					</button>
@@ -456,9 +485,24 @@ export default {
 	},
 	methods: {
 		/* Редактирование ссылки */
-		setLink() {
-			const previousUrl = this.editor.getAttributes("link").href;
-			const url = window.prompt("URL", previousUrl);
+		setLink(type, title) {
+			let previousUrl = this.editor.getAttributes("link").href;
+
+			if (previousUrl !== undefined && typeof previousUrl === "string") {
+				switch (type) {
+					case "email":
+						previousUrl = previousUrl.replace("mailto:", "");
+						break;
+					case "phone":
+						previousUrl = previousUrl.replace("tel:", "");
+						break;
+
+					default:
+						break;
+				}
+			}
+
+			let url = window.prompt(title, previousUrl);
 
 			// cancelled
 			if (url === null) {
@@ -472,8 +516,26 @@ export default {
 				return;
 			}
 
+			let prefix = "";
+
+			switch (type) {
+				case "email":
+					prefix = "mailto:";
+					break;
+				case "phone":
+					prefix = "tel:";
+					break;
+				default:
+					break;
+			}
+
 			// update link
-			this.editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
+			this.editor
+				.chain()
+				.focus()
+				.extendMarkRange("link")
+				.setLink({ href: `${prefix}` + url })
+				.run();
 		},
 
 		/* Экспорт в html */
@@ -554,17 +616,6 @@ export default {
 
 .ProseMirror p {
 	margin: 0;
-}
-
-.tiptap {
-	min-height: 200px;
-}
-
-/* Элементы */
-.tiptap blockquote {
-	border-left: 3px solid var(--default-border-color);
-	margin: 0px;
-	padding-left: 10px;
 }
 
 /* Кнопки */
@@ -660,6 +711,33 @@ export default {
 	float: left;
 	height: 0;
 	pointer-events: none;
+}
+
+.tiptap blockquote {
+	border-left: 3px solid var(--default-border-color);
+	margin: 0px;
+	padding-left: 10px;
+}
+
+.tiptap :is(h1, h2, h3, h4, h5, h6) {
+	color: var(--primary-color);
+	margin: 10px 0px;
+}
+
+.tiptap h1 {
+	font-size: 1.5rem;
+}
+
+.tiptap h2 {
+	font-size: 1.25rem;
+}
+
+.tiptap h3 {
+	font-size: 1.125rem;
+}
+
+.tiptap a {
+	color: var(--primary-color);
 }
 
 /* Вслпывающее меню */

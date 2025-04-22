@@ -242,7 +242,7 @@ const router = createRouter({
 							component: () => import("../views/admin/news/AdminNewsAll.vue"),
 						},
 						{
-							path: ":id",
+							path: ":date/:time",
 							name: "enews-once",
 							component: () => import("../views/admin/news/AdminNewsOnce.vue"),
 						},

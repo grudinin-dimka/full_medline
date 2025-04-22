@@ -1,5 +1,17 @@
 export default {
 	/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+	/* |                    ЗАГРУЗЧИК                      |*/
+	/* |___________________________________________________|*/
+	/* Поиск максимального id */
+	switchAssociatedValues(obj, reference, result) {
+		for (let key in obj[reference]) {
+			if (!obj[reference][key]) {
+				obj[result][key] = true;
+			}
+		}
+	},
+
+	/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 	/* |               ПОЛУЧЕНИЕ ЗНАЧЕНИЙ                  |*/
 	/* |___________________________________________________|*/
 	/* Поиск максимального id */
@@ -14,6 +26,7 @@ export default {
 
 		return Number(maxId);
 	},
+
 	/* Поиск максимального order */
 	getMaxOrder(array) {
 		let maxOrder = 0;
@@ -26,6 +39,7 @@ export default {
 
 		return Number(maxOrder);
 	},
+
 	/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 	/* |                 ЗАПИСЬ ЗНАЧЕНИЙ                   |*/
 	/* |___________________________________________________|*/
@@ -42,6 +56,7 @@ export default {
 			}
 		}
 	},
+
 	/* Рекурсивное копирование */
 	getRecursiveCopy(obj) {
 		if (obj === null || typeof obj !== "object") {
@@ -65,6 +80,7 @@ export default {
 
 		return objCopy;
 	},
+
 	getRecursiveCopyClear(obj) {
 		if (typeof obj !== "object") {
 			switch (typeof obj) {
@@ -90,6 +106,7 @@ export default {
 
 		return objCopy;
 	},
+
 	/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 	/* |              ОБНОВЛЕНИЕ ЗНАЧЕНИЙ                  |*/
 	/* |___________________________________________________|*/
@@ -108,6 +125,7 @@ export default {
 			}).new;
 		}
 	},
+
 	/* Обновление значений order */
 	updateOrders(array) {
 		let count = 0;
@@ -117,6 +135,7 @@ export default {
 			item.order = count;
 		});
 	},
+
 	/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 	/* |                ОЧИСТКА ЗНАЧЕНИЙ                   |*/
 	/* |___________________________________________________|*/
@@ -143,6 +162,7 @@ export default {
 			}
 		}
 	},
+
 	/* Полная очистка объекта */
 	clearObjectFull(obj) {
 		for (let key in obj) {
@@ -167,6 +187,7 @@ export default {
 			}
 		}
 	},
+
 	/* Удаление элементов */
 	clearDeletes(array) {
 		let elementsDelete = array.filter((item) => {
@@ -185,6 +206,7 @@ export default {
 			});
 		}
 	},
+
 	/* Очистка пометок на удаление и сохранение */
 	clearFlags(array) {
 		array.forEach((item) => {
@@ -192,6 +214,7 @@ export default {
 			item.delete = false;
 		});
 	},
+
 	/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 	/* |               ГЕНЕРАЦИЯ ЗНАЧЕНИЙ                  |*/
 	/* |___________________________________________________|*/

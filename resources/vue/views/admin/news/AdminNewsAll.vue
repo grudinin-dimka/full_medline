@@ -194,7 +194,10 @@ export default {
 		openNews(news) {
 			this.$router.push({
 				name: "enews-once",
-				params: { id: news.id },
+				params: {
+					date: news.url_date,
+					time: news.url_time,
+				},
 			});
 		},
 
@@ -215,7 +218,7 @@ export default {
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: {
-					news: this.table.body
+					news: this.table.body,
 				},
 			})
 				.then((response) => {

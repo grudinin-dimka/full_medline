@@ -4,7 +4,7 @@
 	<!--|___________________________________________________|-->
 	<info-bar>
 		<template v-slot:title>Новости</template>
-		<template v-slot:addreas>news/new</template>
+		<template v-slot:addreas>news/{{ $route.params.date }}/{{ $route.params.time }}</template>
 	</info-bar>
 
 	<block-once :minHeight="200">
@@ -478,7 +478,8 @@ export default {
 					Accept: "application/json",
 				},
 				data: {
-					id: this.$route.params.id,
+					date: this.$route.params.date,
+					time: this.$route.params.time,
 				},
 			})
 				.then((response) => {
