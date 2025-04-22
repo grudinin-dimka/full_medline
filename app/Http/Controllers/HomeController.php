@@ -1065,7 +1065,10 @@ class HomeController extends Controller
          $news = News::all();
 
          foreach ($news as $key => $value) {
-            $value->date = Carbon::parse($value->date)->format('d.m.Y H:i:s');
+            $value->date = Carbon::parse($value->created_at)->format('d.m.Y H:i:s');
+            $value->url_date = Carbon::parse($value->created_at)->format('d-m-Y');
+            $value->url_time = Carbon::parse($value->created_at)->format('H-i-s');
+            $value->path = Storage::url('news/' . $value->image);
          };
       } catch (Throwable $th) {
          return response()->json([
@@ -1079,6 +1082,33 @@ class HomeController extends Controller
          "status" => true,
          "message" => "Данные успешно получены.",
          "data" => $news,
+      ]);
+   }
+   
+   /* Получение всех новостей */
+   public function getNewsShort(Request $request) {
+      try {
+         $news = News::all()->take(6);
+         $sorted = $news->sortByDesc('created_at')->values()->all();
+
+         foreach ($sorted as $key => $value) {
+            $value->date = Carbon::parse($value->created_at)->format('d.m.Y H:i:s');
+            $value->url_date = Carbon::parse($value->created_at)->format('d-m-Y');
+            $value->url_time = Carbon::parse($value->created_at)->format('H-i-s');
+            $value->path = Storage::url('news/' . $value->image);
+         };
+      } catch (Throwable $th) {
+         return response()->json([
+            "status" => false,
+            "message" => "Не удалось получить данные.",
+            "data" => [],
+         ]);            
+      }
+
+      return response()->json([
+         "status" => true,
+         "message" => "Данные успешно получены.",
+         "data" => $sorted,
       ]);
    }
 

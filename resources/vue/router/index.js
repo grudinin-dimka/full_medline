@@ -93,6 +93,25 @@ const router = createRouter({
 					meta: { title: "Контакты" },
 					component: () => import("../views/main/contacts/MainContacts.vue"),
 				},
+				{
+					path: "news",
+					name: "news",
+					meta: { title: "Новости" },
+					redirect: { name: "news-all" },
+					component: () => import("../views/main/news/MainNews.vue"),
+					children: [
+						{
+							path: "",
+							name: "news-all",
+							component: () => import("../views/main/news/MainNewsAll.vue"),
+						},
+						{
+							path: ":date/:time",
+							name: "news-once",
+							component: () => import("../views/main/news/MainNewsOnce.vue"),
+						},
+					],
+				},
 			],
 		},
 		// Роутер для админки

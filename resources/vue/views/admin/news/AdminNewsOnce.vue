@@ -540,7 +540,7 @@ export default {
 	user-select: none;
 	border-radius: calc(var(--default-border-radius) / 2);
 
-	object-fit: cover;
+	object-fit: contain;
 	width: 100%;
 	height: 100%;
 }
@@ -579,11 +579,6 @@ export default {
 	justify-content: center;
 }
 
-.input__file-button-error {
-	color: var(--input-error-color);
-	margin-top: 5px;
-}
-
 .input__file-button {
 	flex: 1 0 100px;
 	user-select: none;
@@ -607,18 +602,17 @@ export default {
 
 	color: rgba(0, 0, 0, 0.25);
 	background-color: white;
-	border: var(--input-border);
+
 	transition: all 0.2s;
 }
 
 .input__file-button:is(:hover, .active) {
 	color: var(--primary-color);
 	background-color: var(--item-background-color-active);
-	border: var(--input-border-focus);
 }
 
 .input__file-button.error {
-	border: var(--input-error-border);
+	border-radius: 10px 10px 0px 0px;
 	background-color: var(--input-error-background-color);
 
 	color: var(--input-error-color);
@@ -647,14 +641,14 @@ export default {
 }
 
 .input__wrapper.image > .input__file-button:is(:hover, .active) {
-	background-color: rgba(0, 0, 0, 0.1);
+	background-color: rgba(0, 0, 0, 0.2);
 	color: white;
 }
 
-.input__wrapper.image > .input__file-button-error {
+.input__wrapper > .input__file-button-error {
 	margin: 0px;
 	padding: 10px;
-	background-color: rgba(255, 0, 0, 0.3);
+	background-color: rgba(135, 10, 10, 0.6);
 
 	color: rgb(255, 255, 255);
 

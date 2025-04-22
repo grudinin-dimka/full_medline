@@ -18,80 +18,31 @@
 			<p class="section-info-sub-title">Индивидуальный подход и лучшие врачи</p>
 		</div>
 
-		<div class="news">
+		<div class="news" v-if="loading.sections.news">
 			<div class="news__head">
 				<div class="news__head-title">Новости</div>
-				<button class="news__head-button">Смотреть все</button>
+				<button class="news__head-button" @click="$router.push({ name: 'news-all' })">
+					Смотреть все
+				</button>
 			</div>
 			<div class="news__body">
-				<div class="news__item">
-					<div class="news__item-date">15.04.2025</div>
-					<img class="news__item-image" :src="`storage/default/image-none-default.png`"/>
-					<div class="news__item-title">Прорыв в лечении Альцгеймера:</div>
-					<div class="news__item-content">
-						Ученые разработали новый препарат, который, кажется, замедляет прогрессирование
-						болезни Альцгеймера на ранних стадиях. Это огромный шаг вперед, потому что до
-						этого у нас не было лекарств, которые бы действительно влияли на ход болезни, а
-						только ...
-					</div>
-				</div>
-				<div class="news__item">
-					<div class="news__item-date">14.04.2025</div>
-					<img class="news__item-image" :src="`storage/default/image-none-default.png`"/>
-					<div class="news__item-title">Прорыв в лечении Альцгеймера:</div>
-					<div class="news__item-content">
-						Ученые разработали новый препарат, который, кажется, замедляет прогрессирование
-						болезни Альцгеймера на ранних стадиях. Это огромный шаг вперед, потому что до
-						этого у нас не было лекарств, которые бы действительно влияли на ход болезни, а
-						только ...
-					</div>
-				</div>
-				<div class="news__item">
-					<div class="news__item-date">13.04.2025</div>
-					<img class="news__item-image" :src="`storage/default/image-none-default.png`"/>
-					<div class="news__item-title">Прорыв в лечении Альцгеймера:</div>
-					<div class="news__item-content">
-						Ученые разработали новый препарат, который, кажется, замедляет прогрессирование
-						болезни Альцгеймера на ранних стадиях. Это огромный шаг вперед, потому что до
-						этого у нас не было лекарств, которые бы действительно влияли на ход болезни, а
-						только ...
-					</div>
-				</div>
-				<div class="news__item">
-					<div class="news__item-date">12.04.2025</div>
-					<img class="news__item-image" :src="`storage/default/image-none-default.png`"/>
-					<div class="news__item-title">Прорыв в лечении Альцгеймера:</div>
-					<div class="news__item-content">
-						Ученые разработали новый препарат, который, кажется, замедляет прогрессирование
-						болезни Альцгеймера на ранних стадиях. Это огромный шаг вперед, потому что до
-						этого у нас не было лекарств, которые бы действительно влияли на ход болезни, а
-						только ...
-					</div>
-				</div>
-				<div class="news__item">
-					<div class="news__item-date">11.04.2025</div>
-					<img class="news__item-image" :src="`storage/default/image-none-default.png`"/>
-					<div class="news__item-title">Прорыв в лечении Альцгеймера:</div>
-					<div class="news__item-content">
-						Ученые разработали новый препарат, который, кажется, замедляет прогрессирование
-						болезни Альцгеймера на ранних стадиях. Это огромный шаг вперед, потому что до
-						этого у нас не было лекарств, которые бы действительно влияли на ход болезни, а
-						только ...
-					</div>
-				</div>
-				<div class="news__item">
-					<div class="news__item-date">10.04.2025</div>
-					<img class="news__item-image" :src="`storage/default/image-none-default.png`"/>
-					<div class="news__item-title">Прорыв в лечении Альцгеймера:</div>
-					<div class="news__item-content">
-						Ученые разработали новый препарат, который, кажется, замедляет прогрессирование
-						болезни Альцгеймера на ранних стадиях. Это огромный шаг вперед, потому что до
-						этого у нас не было лекарств, которые бы действительно влияли на ход болезни, а
-						только ...
-					</div>
+				<div
+					class="news__item"
+					v-for="item in news"
+					@click="$router.push({ name: 'news-once', params: { date: item.url_date, time: item.url_time } })"
+				>
+					<div class="news__item-date">{{ item.date }}</div>
+					<img class="news__item-image" :src="`${item.path}`" />
+					<div class="news__item-title" v-html="item.title"></div>
 				</div>
 			</div>
 		</div>
+
+		<loader-child
+			:isLoading="loading.loader.news"
+			:minHeight="403"
+			@loaderChildAfterLeave="loaderChildAfterLeave"
+		/>
 	</block>
 </template>
 
@@ -100,6 +51,8 @@ import Slider from "../../components/modules/Slider.vue";
 import Block from "../../components/ui/main/blocks/Block.vue";
 import Empty from "../../components/modules/Empty.vue";
 import LoaderChild from "../../components/modules/LoaderChild.vue";
+
+import Tiptap from "../../components/modules/Tiptap.vue";
 
 import axios from "axios";
 import sorted from "../../services/sorted.js";
@@ -110,19 +63,24 @@ export default {
 		Block,
 		Empty,
 		LoaderChild,
-		axios,
+		Tiptap,
 	},
 	data() {
 		return {
 			loading: {
 				loader: {
 					slider: true,
+					news: true,
 				},
 				sections: {
 					slider: false,
+					news: false,
 				},
 			},
+
+			/* Данные */
 			slides: [],
+			news: [],
 		};
 	},
 	methods: {
@@ -131,10 +89,40 @@ export default {
 		/* |___________________________________________________|*/
 		/* После скрытия элементы */
 		loaderChildAfterLeave() {
-			this.loading.sections.slider = true;
+			for (let key in this.loading.loader) {
+				if (!this.loading.loader[key]) {
+					this.loading.sections[key] = true;
+				}
+			}
 		},
 	},
 	mounted() {
+		axios({
+			method: "get",
+			url: `${this.$store.getters.urlApi}` + `get-news-short`,
+		})
+			.then((response) => {
+				if (response.data.status) {
+					this.news = response.data.data;
+				} else {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка.",
+						body: response.data.message,
+						type: "error",
+					});
+				}
+			})
+			.catch((error) => {
+				this.$store.commit("addDebugger", {
+					title: "Ошибка.",
+					body: error,
+					type: "error",
+				});
+			})
+			.finally(() => {
+				this.loading.loader.news = false;
+			});
+
 		// Получение массива слайдов с сервера
 		axios({
 			method: "get",
@@ -186,6 +174,8 @@ p {
 	gap: 20px;
 
 	width: 1350px;
+
+	animation: show 0.5s ease-in-out;
 }
 
 .news__head {
@@ -223,14 +213,22 @@ p {
 }
 
 .news__item {
+	cursor: pointer;
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between;
 	gap: 10px;
 
 	padding: 20px;
 	border: var(--input-border);
 	border-radius: var(--default-border-radius);
+	height: 400px;
+
+	transition: all 0.2s;
+}
+
+.news__item:hover {
+	border: var(--input-border-focus);
+	background-color: var(--item-background-color-active);
 }
 
 .news__item-date {
@@ -240,18 +238,22 @@ p {
 
 .news__item-image {
 	width: 100%;
-	max-height: 200px;
-	object-fit: contain;
-	border-radius: var(--default-border-radius);
+	height: 300px;
+	object-fit: cover;
+	border-radius: calc(var(--default-border-radius) / 2);
 }
 
 .news__item-title {
 	font-size: 1.25rem;
 }
 
+:is(.news__item-title, .news__item-content) > * {
+	margin: 0px;
+}
+
 .news__item-content {
 	height: 100px;
-	overflow-y: auto;
+	overflow-y: hidden;
 
 	font-size: 1.125rem;
 }

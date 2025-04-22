@@ -53,6 +53,7 @@ Route::get('/get-shedules-all', [HomeController::class, 'getShedulesAll']);
 
 /* Новости */
 Route::get('/get-news-all', [HomeController::class, 'getNewsAll']);
+Route::get('/get-news-short', [HomeController::class, 'getNewsShort']);
 Route::post('/get-news-once', [HomeController::class, 'getNewsOnce']);
 
 /* Запись нового события */
