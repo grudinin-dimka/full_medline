@@ -70,43 +70,35 @@ class AdminController extends Controller
    public function uploadFile(Request $request) {
 		/* Проверка на наличие переменной image с файлом в запросе */  
 		if($request->hasFile('image')) {
-         $validated = validator($request->all(), [
+         $validator = Validator::make($request->all(), [
+            'type' => 'required',
+            'formats' => 'required',
             'image' => [
                'required',
                File::types($request->formats)->max(10 * 1024),
             ],
          ]);
-         if ($validated->fails()) return response()->json([
+
+         if ($validator->fails()) return response()->json([
             "status" => false,
             "message" => "Файл не прошёл проверку.",
             "data" => null,
-         ]);;
+         ]);
 
          $file = $request->file('image');
          $originalName = $file->getClientOriginalName();
 
          switch ($request->type) {
-            case 'slide':
-               $path = $request->file('image')->store(
-                  'public/slides'
-               );
-               break;
-            case 'specialist':
-               $path = $request->file('image')->store(
-                  'public/specialists'
-               );
-               break;
-            case 'abouts':
-               $path = $request->file('image')->store(
-                  'public/abouts'
-               );
-               break;
             case 'prices':
                $path = $request->file('image')->storeAs(
                   'public/prices',
                   $originalName, 
                   'local'
                );
+            default:
+               $path = $request->file('image')->store(
+                  'public/' . $request->type
+               );               
                break;
          }
 
@@ -1702,6 +1694,8 @@ class AdminController extends Controller
             "image" => basename($path),
             "title" => $request->title,
             "description" => $request->description,
+            "url_date" => Carbon::parse($news->created_at)->format('d.m.Y'),
+            "url_time" => Carbon::parse($news->created_at)->format('H:i:s'),
          ],
       ]);
    }
@@ -1825,6 +1819,11 @@ class AdminController extends Controller
                      $useFile = true;
                      break;
                   };
+
+                  if (News::where('title', 'like', basename($fileValue)) || News::where('description', 'like', basename($fileValue))) {
+                     $useFile = true;
+                     break;
+                  }
                };
                
                /* Удаление файла, если не используется */

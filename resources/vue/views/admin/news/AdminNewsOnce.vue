@@ -11,7 +11,7 @@
 		<template #title>БЛОК НОВОСТЕЙ</template>
 
 		<template #options>
-			<template v-if="$route.params.id === 'new'">
+			<template v-if="$route.params.date === 'new' || $route.params.time === 'new'">
 				<icon-load :width="28" :height="28" v-if="disabled.news.add" />
 				<icon-add :width="28" :height="28" v-else @click="addNews" />
 			</template>
@@ -25,7 +25,7 @@
 			<div class="news__once" v-if="loading.sections.news">
 				<div class="news__once-head">
 					<div class="news__once-image">
-						<template v-if="$route.params.id === 'new'">
+						<template v-if="$route.params.date === 'new' || $route.params.time === 'new'">
 							<div class="input__wrapper">
 								<input
 									name="file"
@@ -342,15 +342,20 @@ export default {
 			})
 				.then((response) => {
 					if (response.data.status) {
-						for (let key in response.data.data) {
-							this.currentNews.data[key].value = response.data.data[key];
-						}
+						this.currentNews.data.id.value = response.data.data.id;
+						this.currentNews.data.image.value = response.data.data.image;
+						this.currentNews.data.path.value = response.data.data.path;
+						this.currentNews.data.title.value = response.data.data.title;
+						this.currentNews.data.description.value = response.data.data.description;
 
 						this.hasFile = false;
 
 						this.$router.push({
 							name: "enews-once",
-							params: { id: response.data.data.id },
+							params: {
+								date: response.data.data.url_date,
+								time: response.data.data.url_time,
+							},
 						});
 
 						this.$store.commit("addDebugger", {
@@ -468,7 +473,7 @@ export default {
 		},
 	},
 	mounted() {
-		if (this.$route.params.id === "new") {
+		if (this.$route.params.date === "new" || this.$route.params.time === "new") {
 			this.loading.loader.news = false;
 		} else {
 			axios({
@@ -544,6 +549,8 @@ export default {
 	object-fit: contain;
 	width: 100%;
 	height: 100%;
+
+	animation: show 0.5s ease;
 }
 
 .input__wrapper {

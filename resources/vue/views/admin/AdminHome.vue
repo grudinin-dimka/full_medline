@@ -807,7 +807,7 @@ export default {
 				this.currentSlide.file = this.$refs.fileUpload.files[0];
 				let formData = new FormData();
 				formData.append("image", this.currentSlide.file);
-				formData.append("type", "slide");
+				formData.append("type", "slides");
 				formData.append("formats", ["png", "webp"]);
 
 				this.disabled.slider.create = true;

@@ -1062,7 +1062,7 @@ class HomeController extends Controller
    /* Получение всех новостей */
    public function getNewsAll(Request $request) {
       try {
-         $news = News::all();
+         $news = News::all()->sortByDesc('created_at')->values()->all();
 
          foreach ($news as $key => $value) {
             $value->date = Carbon::parse($value->created_at)->format('d.m.Y H:i:s');
@@ -1088,10 +1088,9 @@ class HomeController extends Controller
    /* Получение всех новостей */
    public function getNewsShort(Request $request) {
       try {
-         $news = News::all()->take(6);
-         $sorted = $news->sortByDesc('created_at')->values()->all();
+         $news = News::all()->sortByDesc('created_at')->take(6)->values()->all();
 
-         foreach ($sorted as $key => $value) {
+         foreach ($news as $key => $value) {
             $value->date = Carbon::parse($value->created_at)->format('d.m.Y H:i:s');
             $value->url_date = Carbon::parse($value->created_at)->format('d.m.Y');
             $value->url_time = Carbon::parse($value->created_at)->format('H:i:s');
@@ -1108,7 +1107,7 @@ class HomeController extends Controller
       return response()->json([
          "status" => true,
          "message" => "Данные успешно получены.",
-         "data" => $sorted,
+         "data" => $news,
       ]);
    }
 

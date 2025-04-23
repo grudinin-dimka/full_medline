@@ -290,6 +290,8 @@ export default {
 	font-size: 22px;
 	margin: 0px;
 	padding: 0px;
+
+	color: var(--primary-color);
 }
 
 .modal__head-buttons {

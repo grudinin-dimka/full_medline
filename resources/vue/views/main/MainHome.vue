@@ -25,9 +25,10 @@
 					Смотреть все
 				</button>
 			</div>
-			<div class="news__main-body">
+			<div class="news__main-body" v-if="news.length > 0">
 				<MainNewsItem v-for="item in news" :key="item.id" :item="item" />
 			</div>
+			<Empty :minHeight="300" v-else />
 		</div>
 
 		<loader-child

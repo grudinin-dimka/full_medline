@@ -1,4 +1,35 @@
 <template>
+	<Modal ref="modalImage" :settings="modalImage">
+		<template #title>Добавить картинку</template>
+		<template #body>
+			<container-input-once>
+				<template #title>
+					<span>НОВЫЙ ФАЙЛ*</span>
+					<span v-if="currentImage.data.file.edited"> (ИЗМЕНЕНО) </span>
+				</template>
+				<template #input>
+					<input
+						type="file"
+						autocomplete="off"
+						ref="fileUpload"
+						:class="{ error: currentImage.errors.file.status }"
+						@input="currentImage.data.file.edited = true"
+					/>
+				</template>
+				<template #error>
+					<span class="error" v-if="currentImage.errors.file.status">
+						{{ currentImage.errors.file.message }}
+					</span>
+				</template>
+			</container-input-once>
+		</template>
+		<template #footer>
+			<ButtonDefault :disabled="disabled.tiptap.image" @click="uploadImage">
+				Загрузить
+			</ButtonDefault>
+		</template>
+	</Modal>
+
 	<bubble-menu :editor="editor" :tippy-options="{ duration: 100 }" v-if="false">
 		<div class="bubble__menu">
 			<button
@@ -287,7 +318,7 @@
 				<!-- Ссылки -->
 				<div class="tiptap__buttons-item">
 					<button
-						@click="setLink('default', 'Введите ссылку')"
+						@click="insertBlockLink('default', 'Введите ссылку')"
 						:class="{ 'is-active': editor.isActive('link') }"
 					>
 						<svg
@@ -302,7 +333,7 @@
 						</svg>
 					</button>
 
-					<button @click="setLink('email', 'Введите email')">
+					<button @click="insertBlockLink('email', 'Введите email')">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							height="24px"
@@ -315,7 +346,7 @@
 						</svg>
 					</button>
 
-					<button @click="setLink('phone', 'Введите номер телефона')">
+					<button @click="insertBlockLink('phone', 'Введите номер телефона')">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							height="24px"
@@ -340,6 +371,22 @@
 						>
 							<path
 								d="M17.85 13.65L16.35 12.1C17.0167 11.9167 17.5583 11.5625 17.975 11.0375C18.3917 10.5125 18.6 9.9 18.6 9.2C18.6 8.36667 18.3083 7.65833 17.725 7.075C17.1417 6.49167 16.4333 6.2 15.6 6.2H11.6V4.2H15.6C16.9833 4.2 18.1625 4.6875 19.1375 5.6625C20.1125 6.6375 20.6 7.81667 20.6 9.2C20.6 10.15 20.3542 11.025 19.8625 11.825C19.3708 12.625 18.7 13.2333 17.85 13.65ZM14.45 10.2L12.45 8.2H14.6V10.2H14.45ZM18.4 19.8L0 1.4L1.4 0L19.8 18.4L18.4 19.8ZM9.6 14.2H5.6C4.21667 14.2 3.0375 13.7125 2.0625 12.7375C1.0875 11.7625 0.6 10.5833 0.6 9.2C0.6 8.05 0.95 7.025 1.65 6.125C2.35 5.225 3.25 4.63333 4.35 4.35L6.2 6.2H5.6C4.76667 6.2 4.05833 6.49167 3.475 7.075C2.89167 7.65833 2.6 8.36667 2.6 9.2C2.6 10.0333 2.89167 10.7417 3.475 11.325C4.05833 11.9083 4.76667 12.2 5.6 12.2H9.6V14.2ZM6.6 10.2V8.2H8.225L10.2 10.2H6.6Z"
+							/>
+						</svg>
+					</button>
+				</div>
+
+				<!-- Вставка контента -->
+				<div class="tiptap__buttons-item">
+					<button @click="openImage">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							height="24px"
+							viewBox="0 -960 960 960"
+							width="24px"
+						>
+							<path
+								d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm40-80h480L570-480 450-320l-90-120-120 160Zm-40 80v-560 560Z"
 							/>
 						</svg>
 					</button>
@@ -421,9 +468,11 @@
 </template>
 
 <script>
+import Modal from "./modal/Modal.vue";
 import { BubbleMenu, Editor, EditorContent } from "@tiptap/vue-3";
 
 import Blockquote from "@tiptap/extension-blockquote";
+import Image from "@tiptap/extension-image";
 import CharacterCount from "@tiptap/extension-character-count";
 
 import Underline from "@tiptap/extension-underline";
@@ -435,10 +484,21 @@ import Placeholder from "@tiptap/extension-placeholder";
 
 import StarterKit from "@tiptap/starter-kit";
 
+import ContainerInputOnce from "../ui/admin/containers/input/ContainerInputOnce.vue";
+import ButtonDefault from "../ui/admin/buttons/ButtonDefault.vue";
+
+import validate from "../../services/validate";
+import axios from "axios";
+
 export default {
 	components: {
+		Modal,
+
 		BubbleMenu,
 		EditorContent,
+
+		ContainerInputOnce,
+		ButtonDefault,
 	},
 	props: {
 		modelValue: {
@@ -469,6 +529,38 @@ export default {
 	},
 	data() {
 		return {
+			disabled: {
+				tiptap: {
+					image: false,
+				},
+			},
+
+			/* Модальное окно */
+			modalImage: {
+				thin: true,
+				clamped: false,
+				values: {
+					title: "",
+					look: "default",
+				},
+			},
+
+			/* Форма */
+			currentImage: {
+				errors: {
+					file: {
+						message: "",
+						status: false,
+					},
+				},
+				data: {
+					file: {
+						value: "",
+						edited: false,
+					},
+				},
+			},
+
 			editor: null,
 			isEditable: true,
 		};
@@ -484,8 +576,88 @@ export default {
 		},
 	},
 	methods: {
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                 Модальное окно                    |*/
+		/* |___________________________________________________|*/
+		/* Открытие модального окна */
+		openModal(name, title, look) {
+			this[name].values.title = title;
+			this[name].values.look = look;
+
+			this.$refs[name].open();
+		},
+
+		/* Открытие модального окна для добавления */
+		openImage() {
+			this.$refs.fileUpload.value = null;
+
+			this.openModal("modalImage", "КАРТИНКА", "default");
+		},
+
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                   База данных                     |*/
+		/* |___________________________________________________|*/
+		/* Открытие модального окна */
+		uploadImage() {
+			if (
+				validate.checkInputsAll(this.currentImage, [
+					{
+						key: "file",
+						type: "file",
+						value: this.$refs.fileUpload,
+						formats: ["jpg", "jpeg", "png", "webp"],
+					},
+				])
+			)
+				return;
+
+			/* Загрузка файла */
+			let formData = new FormData();
+			formData.append("image", this.$refs.fileUpload.files[0]);
+			formData.append("type", "news");
+			formData.append("formats", ["png", "jpg", "jpeg", "webp"]);
+
+			this.disabled.tiptap.image = true;
+
+			axios({
+				method: "post",
+				url: `${this.$store.getters.urlApi}` + `upload-file`,
+				headers: {
+					"Content-Type": "multipart/form-data",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: formData,
+			})
+				.then((response) => {
+					if (response.data.status) {
+						this.insertBlockImage(response.data.data);
+
+						this.$refs.modalImage.close();
+					} else {
+						this.$store.commit("addDebugger", {
+							title: "Ошибка.",
+							body: response.data.message,
+							type: "error",
+						});
+					}
+				})
+				.catch((error) => {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка.",
+						body: response.data.message,
+						type: "error",
+					});
+				})
+				.finally(() => {
+					this.disabled.tiptap.image = false;
+				});
+		},
+
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                    Редактор                       |*/
+		/* |___________________________________________________|*/
 		/* Редактирование ссылки */
-		setLink(type, title) {
+		insertBlockLink(type, title) {
 			let previousUrl = this.editor.getAttributes("link").href;
 
 			if (previousUrl !== undefined && typeof previousUrl === "string") {
@@ -529,7 +701,7 @@ export default {
 					break;
 			}
 
-			// update link
+			// Обновление ссылки
 			this.editor
 				.chain()
 				.focus()
@@ -538,6 +710,14 @@ export default {
 				.run();
 		},
 
+		/* Добавление картинки */
+		insertBlockImage(url) {
+			this.editor.chain().focus().setImage({ src: url }).run();
+		},
+
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                    Экспорт                        |*/
+		/* |___________________________________________________|*/
 		/* Экспорт в html */
 		getSymbols() {
 			return this.editor.storage.characterCount.characters();
@@ -579,6 +759,7 @@ export default {
 				Placeholder.configure({
 					placeholder: this.placeholder,
 				}),
+				Image,
 			],
 
 			// Содержимое редактора
@@ -738,6 +919,16 @@ export default {
 
 .tiptap a {
 	color: var(--primary-color);
+}
+
+.tiptap img {
+	width: 100%;
+	object-fit: contain;
+	height: 600px;
+}
+
+.tiptap img.ProseMirror-selectednode {
+	outline: 2px solid var(--primary-color);
 }
 
 /* Вслпывающее меню */

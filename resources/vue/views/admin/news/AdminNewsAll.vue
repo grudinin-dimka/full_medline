@@ -17,7 +17,15 @@
 			<BaseTable
 				v-if="loading.sections.news"
 				:table="table"
-				@create="$router.push('enews/new')"
+				@create="
+					$router.push({
+						name: 'enews-once',
+						params: {
+							date: 'new',
+							time: 'new',
+						},
+					})
+				"
 				@edite="openNews"
 				@delete="setFlagDelete"
 			/>
