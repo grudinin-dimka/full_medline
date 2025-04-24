@@ -92,12 +92,18 @@ export default {
 	},
 	mounted() {
 		axios({
-			method: "get",
+			method: "post",
 			url: `${this.$store.getters.urlApi}` + `get-news-short`,
+			headers: {
+				Accept: "application/json",
+			},
+			data: {
+				limit: 6,
+			}
 		})
 			.then((response) => {
 				if (response.data.status) {
-					this.news = response.data.data;
+					this.news = response.data.data.news;
 				} else {
 					this.$store.commit("addDebugger", {
 						title: "Ошибка.",

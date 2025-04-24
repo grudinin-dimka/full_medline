@@ -33,6 +33,7 @@ button.claim {
 	color: white;
 
 	background-color: var(--button-claim-color);
+	transition: all 0.2s;
 }
 
 button.claim:hover {

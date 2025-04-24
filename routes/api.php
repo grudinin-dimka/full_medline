@@ -53,8 +53,9 @@ Route::get('/get-shedules-all', [HomeController::class, 'getShedulesAll']);
 
 /* Новости */
 Route::get('/get-news-all', [HomeController::class, 'getNewsAll']);
-Route::get('/get-news-short', [HomeController::class, 'getNewsShort']);
+Route::post('/get-news-short', [HomeController::class, 'getNewsShort']);
 Route::post('/get-news-once', [HomeController::class, 'getNewsOnce']);
+Route::post('/get-news-more', [HomeController::class, 'getNewsMore']);
 
 /* Запись нового события */
 Route::post('/create-track', [HomeController::class, 'createTrack']);

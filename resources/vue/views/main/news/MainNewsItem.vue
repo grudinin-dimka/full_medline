@@ -36,6 +36,7 @@ export default {
 	min-height: 400px;
 
 	transition: all 0.2s;
+	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 .news__item:hover {

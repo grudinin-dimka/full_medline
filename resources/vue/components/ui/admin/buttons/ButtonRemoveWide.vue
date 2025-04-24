@@ -32,6 +32,7 @@ button {
 	border-radius: 10px;
 
 	font-size: 20px;
+	transition: all 0.2s;
 }
 
 button.default {

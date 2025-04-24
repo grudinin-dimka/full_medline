@@ -1087,8 +1087,20 @@ class HomeController extends Controller
    
    /* Получение всех новостей */
    public function getNewsShort(Request $request) {
+      $validator = Validator::make($request->all(), [
+         'limit' => 'required|integer',
+      ]);
+
+      if ($validator->fails()) {
+         return response()->json([
+            "status" => false,
+            "message" => "Некорректные данные.",
+            "data" => [],
+         ]);
+      };
+
       try {
-         $news = News::all()->sortByDesc('created_at')->take(6)->values()->all();
+         $news = News::all()->sortByDesc('created_at')->take($request->limit)->values()->all();
 
          foreach ($news as $key => $value) {
             $value->date = Carbon::parse($value->created_at)->format('d.m.Y H:i:s');
@@ -1107,7 +1119,10 @@ class HomeController extends Controller
       return response()->json([
          "status" => true,
          "message" => "Данные успешно получены.",
-         "data" => $news,
+         "data" => [
+            "news" => $news,
+            "count" => News::all()->count(),
+         ],
       ]);
    }
 
@@ -1153,6 +1168,53 @@ class HomeController extends Controller
             "image" => $news->image,
             "title" => $news->title,
             "description" => $news->description,
+         ],
+      ]);
+   }
+
+   /* Получение одной новости */
+   public function getNewsMore(Request $request) {
+      $validator = Validator::make($request->all(), [
+         'date' => 'required|date_format:d.m.Y',
+         'time' => 'required|date_format:H:i:s',
+         'limit' => 'required|integer',
+      ]);
+
+      if ($validator->fails()) {
+         return response()->json([
+            "status" => false,
+            "message" => "Некорректные данные.",
+            "data" => null,
+         ]);
+      };
+
+      $date = Carbon::parse($request->date . ' ' . $request->time);
+
+      try {
+         $news = News::where('created_at', '<', $date)->get();
+         
+         $newsSorted = $news->sortByDesc('created_at')->take($request->limit)->values()->all();
+
+         foreach ($newsSorted as $key => $value) {
+            $value->date = Carbon::parse($value->created_at)->format('d.m.Y H:i:s');
+            $value->url_date = Carbon::parse($value->created_at)->format('d.m.Y');
+            $value->url_time = Carbon::parse($value->created_at)->format('H:i:s');
+            $value->path = Storage::url('news/' . $value->image);
+         };
+      } catch (Throwable $th) {
+         return response()->json([
+            "status" => false,
+            "message" => "Не удалось получить данные.",
+            "data" => null,
+         ]);
+      };
+
+      return response()->json([
+         "status" => true,
+         "message" => "Новости получены.",
+         "data" => [
+            "news" => $newsSorted,
+            "count" => News::all()->count(),
          ],
       ]);
    }

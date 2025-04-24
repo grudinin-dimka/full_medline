@@ -20,6 +20,7 @@ button.disabled {
 	color: white;
 
 	background-color: var(--button-disabled-color);
+	transition: all 0.2s;
 }
 
 button.default:hover {

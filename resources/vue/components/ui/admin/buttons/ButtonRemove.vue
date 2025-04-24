@@ -22,6 +22,7 @@ button.remove {
 	color: white;
 
 	background-color: var(--button-remove-color);
+	transition: all 0.2s;
 }
 
 button.remove:hover {
