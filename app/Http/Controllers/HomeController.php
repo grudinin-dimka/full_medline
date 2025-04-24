@@ -1131,7 +1131,15 @@ class HomeController extends Controller
       } catch (Throwable $th) {
          return response()->json([
             "status" => false,
-            "message" => "Новости не найдены.",
+            "message" => "Не удалось получить данные.",
+            "data" => null,
+         ]);
+      };
+
+      if (!$news) {
+         return response()->json([
+            "status" => false,
+            "message" => "Такой новости нет.",
             "data" => null,
          ]);
       };

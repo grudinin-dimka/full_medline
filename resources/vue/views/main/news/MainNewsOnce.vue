@@ -7,11 +7,9 @@
 
 	<block :minHeight="500">
 		<template v-if="loading.sections.news">
-			<div class="news__once">
-				<TipTap :editable="false" :limit="10_000" v-model="title" />
-
+			<div class="news__once">				
 				<img :src="path ?? '/storage/default/image-none-default.png'" alt="Картинка" />
-
+				<TipTap :editable="false" :limit="10_000" v-model="title" />
 				<TipTap :editable="false" :limit="10_000" v-model="description" />
 			</div>
 		</template>

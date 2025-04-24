@@ -40,6 +40,7 @@
 					<div>Клиника</div>
 					<div></div>
 				</div>
+
 				<specialists-list :specialists="getFilteredSpecialists" />
 			</div>
 

@@ -109,6 +109,7 @@
 						v-model="currentNews.data.title.value"
 						:editable="true"
 						:limit="500"
+						:look="'title'"
 						:placeholder="'Заголовок'"
 						:error="currentNews.errors.title.status"
 					>

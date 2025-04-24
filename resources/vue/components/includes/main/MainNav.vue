@@ -2,44 +2,123 @@
 	<nav :class="{ active: $store.getters.burgerMainStatus }">
 		<a
 			class="element"
-			:class="{ active: isActive(page.href) }"
-			:href="page.href"
-			v-for="page in menu"
-			:key="page.id"
-			@click.prevent="insertPage(page)"
+			:class="{ active: isActive('/') }"
+			href="/"
+			@click.prevent="$router.push({ name: `home` })"
 		>
-			{{ page.title }}
+			Главная
 		</a>
+
+		<a
+			class="element"
+			:class="{ active: isActive('/specialists') }"
+			href="/specialists"
+			@click.prevent="$router.push({ name: `specialists-all` })"
+		>
+			Специалисты
+		</a>
+
+		<div class="dropdown">
+			<div class="dropdown-title element">
+				Цены
+				<IconArrowWhite :width="20" :height="20" :rotate="180" class="item-arrow" />
+			</div>
+			<div class="dropdown-body">
+				<div class="dropdown-body__list">
+					<a
+						class="element"
+						:class="{ active: isActive('/prices') }"
+						href="/prices"
+						@click.prevent="$router.push({ name: `prices-choice` })"
+					>
+						Список
+					</a>
+
+					<a
+						class="element"
+						:class="{ active: isActive('/prices/travels') }"
+						href="/prices/travels"
+						@click.prevent="
+							$router.push({ name: `prices-group`, params: { group: 'travels' } })
+						"
+					>
+						Путевки
+					</a>
+				</div>
+			</div>
+		</div>
+
+		<a
+			class="element"
+			:class="{ active: isActive('/plastic') }"
+			href="/plastic"
+			@click.prevent="$router.push({ name: `plastic` })"
+		>
+			Пластическая хирургия
+		</a>
+
+		<a
+			class="element"
+			:class="{ active: isActive('/schedule') }"
+			href="/schedule"
+			@click.prevent="$router.push({ name: `schedule-all` })"
+		>
+			Расписание
+		</a>
+
+		<div class="dropdown">
+			<div class="dropdown-title element">
+				Информация
+				<IconArrowWhite :width="20" :height="20" :rotate="180" class="item-arrow" />
+			</div>
+			<div class="dropdown-body">
+				<div class="dropdown-body__list">
+					<a
+						class="element"
+						:class="{ active: isActive('/news') }"
+						href="/news"
+						@click.prevent="$router.push({ name: `news-all` })"
+					>
+						Новости
+					</a>
+
+					<a
+						class="element"
+						:class="{ active: isActive('/contacts') }"
+						href="/contacts"
+						@click.prevent="$router.push({ name: `contacts` })"
+					>
+						Контакты
+					</a>
+
+					<a
+						class="element"
+						:class="{ active: isActive('/about') }"
+						href="/contacts"
+						@click.prevent="$router.push({ name: `about` })"
+					>
+						О нас
+					</a>
+				</div>
+			</div>
+		</div>
 	</nav>
 </template>
 
 <script>
+import IconArrowWhite from "../../icons/IconArrowWhite.vue";
+
 export default {
+	components: {
+		IconArrowWhite,
+	},
 	data() {
-		return {
-			menu: [
-				{ id: "1", title: "Главная", name: "home", href: "/", params: null },
-				{ id: "2", title: "Специалисты", name: "all", href: "/specialists", params: null },
-				{ id: "3", title: "Цены", name: "prices", href: "/prices", params: null },
-				{
-					id: "4",
-					title: "Путевки",
-					name: "prices-group",
-					href: "/prices/travels",
-					params: { group: "travels" },
-				},
-				{
-					id: "5",
-					title: "Пластическая хирургия",
-					name: "plastic",
-					href: "/plastic",
-					params: null,
-				},
-				{ id: "6", title: "Расписание", name: "schedule-all", href: "/schedule", params: null },
-				{ id: "7", title: "Контакты", name: "contacts", href: "/contacts", params: null },
-				{ id: "8", title: "О Нас", name: "about", href: "/about", params: null },
-			],
-		};
+		return {};
+	},
+	watch: {
+		$route() {
+			this.$store.commit("closeBurgerMain");
+		},
 	},
 	methods: {
 		/* Активная ссылка */
@@ -63,7 +142,7 @@ export default {
 <style scoped>
 nav {
 	display: grid;
-	grid-template-columns: repeat(8, auto);
+	grid-template-columns: repeat(6, auto);
 
 	padding: 10px;
 	margin: 0px 30px;
@@ -98,10 +177,74 @@ nav a:is(.active, :hover) {
 	cursor: pointer;
 }
 
-@media screen and (max-width: 1200px) {
+/* Дропдаун */
+.dropdown {
+	position: relative;
+}
+
+.dropdown-title {
+	position: relative;
+	padding: 18px 0px;
+	border-radius: 10px;
+
+	text-align: center;
+	font-size: 20px;
+	color: white;
+	text-decoration: none;
+
+	transition: all 0.15s ease-in-out;
+}
+
+.dropdown-title:hover {
+	cursor: pointer;
+	background-color: rgba(255, 255, 255, 0.15);
+}
+
+.dropdown-body {
+	visibility: hidden;
+	opacity: 0;
+
+	position: absolute;
+	width: 100%;
+	top: calc(100% - 15px);
+
+	z-index: 10;
+	left: -10px;
+
+	transition: all 0.3s ease-in-out;
+}
+
+.dropdown:hover .dropdown-body {
+	visibility: visible;
+	opacity: 1;
+	top: 100%;
+}
+
+.dropdown-body__list {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	min-width: 100%;
+
+	margin-top: 20px;
+
+	background-color: var(--primary-color);
+	padding: 10px;
+	border-radius: 10px;
+
+	box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.1);
+}
+
+.item-arrow {
+	position: absolute;
+	right: 10px;
+	top: 20px;
+}
+
+@media screen and (max-width: 1450px) {
 	nav {
 		display: grid;
-		grid-template-columns: repeat(4, 1fr);
+		grid-template-columns: repeat(3, 1fr);
 	}
 
 	nav a {
@@ -142,6 +285,32 @@ nav a:is(.active, :hover) {
 		left: 0px;
 		right: 0px;
 		bottom: 0;
+	}
+
+	.dropdown-body {
+		position: static;
+		top: 0px;
+
+		visibility: visible;
+		opacity: 1;
+
+		display: none;
+	}
+
+	.dropdown:hover .dropdown-body {
+		display: block;
+	}
+
+	.dropdown-body__list {
+		min-width: calc(100% - 20px);
+
+		margin-top: 10px;
+
+		background-color: rgba(255, 255, 255, 0.1);
+		padding: 10px;
+		border-radius: 10px;
+
+		box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0);
 	}
 }
 </style>

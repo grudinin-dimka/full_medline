@@ -7,6 +7,9 @@
       <meta http-equiv="X-UA-Compatible" content="ie=edge">
       <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 
+      <!-- PWA -->
+      <meta name="theme-color" content="var(--primary-color)">
+
       <!-- SEO -->
       <meta name="keywords" content="медлайн, МЕДЛАЙН, МедЛайн, медициниский центр, клиника, клиника медицинского центра, медецинская клиника, медицинский центр в г. Шадринск">
       <meta name="description" content="«МедЛайн» в Шадринске: врачебные приёмы, анализы, УЗИ, процедурный кабинет. Ваше здоровье – наша забота! Доступные цены, отличный сервис!">

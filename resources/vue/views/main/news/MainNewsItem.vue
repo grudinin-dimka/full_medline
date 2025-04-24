@@ -49,7 +49,7 @@ export default {
 
 .news__item-image {
 	width: 100%;
-	height: 300px;
+	min-height: 300px;
 	object-fit: cover;
 	border-radius: calc(var(--default-border-radius) / 2);
 }

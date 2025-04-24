@@ -49,7 +49,12 @@
 						<th width="300px">Ф.И.О.</th>
 						<th>Специализация</th>
 						<th width="110px" v-for="day in week">
-							{{ getDateDayNumberMonth(day.date) + " " + getDateDayWeekName(day.date) }}
+							<div>
+								{{ getDateDayNumberMonth(day.date) }}
+							</div>
+							<div>
+								{{ getDateDayWeekName(day.date) }}
+							</div>
 						</th>
 					</tr>
 				</thead>

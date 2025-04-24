@@ -28,18 +28,18 @@ const router = createRouter({
 				},
 				{
 					path: "specialists",
-					name: "specialist",
+					name: "specialists",
 					meta: { title: "Специалисты" },
 					component: () => import("../views/main/specialists/MainSpecialists.vue"),
 					children: [
 						{
 							path: "",
-							name: "all",
+							name: "specialists-all",
 							component: () => import("../views/main/specialists/MainSpecialistsAll.vue"),
 						},
 						{
 							path: ":name",
-							name: "doctorname",
+							name: "specialists-profile",
 							component: () => import("../views/main/specialists/MainSpecialistProfile.vue"),
 						},
 					],
