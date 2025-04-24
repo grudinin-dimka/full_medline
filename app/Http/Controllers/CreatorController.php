@@ -101,7 +101,10 @@ class CreatorController extends Controller
          'user' => 'required',
          'image' => [
             'required',
-            File::types($request->formats)->max(10 * 1024),
+            File::image()
+               ->types(['jpg', 'jpeg', 'png', 'webp'])
+               ->max(5 * 1024)
+               ->dimensions(Rule::dimensions()->maxWidth(1500)->maxHeight(1500)),
          ],
       ]);
 
@@ -188,7 +191,10 @@ class CreatorController extends Controller
          $validatorFile = Validator::make($request->all(), [
             'image' => [
                'required',
-               File::types($request->formats)->max(10 * 1024),
+               File::image()
+                  ->types(['jpg', 'jpeg', 'png', 'webp'])
+                  ->max(5 * 1024)
+                  ->dimensions(Rule::dimensions()->maxWidth(1500)->maxHeight(1500)),
             ],
          ]);
 

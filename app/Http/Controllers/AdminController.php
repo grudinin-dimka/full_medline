@@ -69,15 +69,29 @@ class AdminController extends Controller
    /* Загрузка файла на сервер */ 
    public function uploadFile(Request $request) {
 		/* Проверка на наличие переменной image с файлом в запросе */  
-		if($request->hasFile('image')) {
-         $validator = Validator::make($request->all(), [
+		if($request->hasFile('file')) {
+         $file = $request->file('file');
+         
+         // Проверка на картинку
+         $isImage = str_starts_with($file->getMimeType(), 'image/');
+
+         // Правила
+         $rules = [
             'type' => 'required',
             'formats' => 'required',
-            'image' => [
-               'required',
-               File::types($request->formats)->max(10 * 1024),
-            ],
-         ]);
+            'file' => ['required', 'max:' . (5 * 1024)], // общие правила
+         ];
+
+         // Добавление правил в зависимости от типа
+         if ($isImage) {
+            $rules['file'][] = File::image()
+               ->types($request->formats)
+               ->dimensions(Rule::dimensions()->maxWidth(2000)->maxHeight(2000));
+         } else {
+            $rules['file'][] = File::types($request->formats);
+         };
+
+         $validator = Validator::make($request->all(), $rules);
 
          if ($validator->fails()) return response()->json([
             "status" => false,
@@ -85,18 +99,18 @@ class AdminController extends Controller
             "data" => null,
          ]);
 
-         $file = $request->file('image');
+         // Получение оригинального названия
          $originalName = $file->getClientOriginalName();
-
+         
          switch ($request->type) {
             case 'prices':
-               $path = $request->file('image')->storeAs(
+               $path = $request->file('file')->storeAs(
                   'public/prices',
                   $originalName, 
                   'local'
                );
             default:
-               $path = $request->file('image')->store(
+               $path = $request->file('file')->store(
                   'public/' . $request->type
                );               
                break;
@@ -123,6 +137,7 @@ class AdminController extends Controller
          ]);
       };      
    } 
+   
    /* Получение данных о профиле пользователя */
    public function getProfileInfo(Request $request) {
       $user = $request->user();
@@ -547,7 +562,10 @@ class AdminController extends Controller
          $validated = validator($request->all(), [
             'image' => [
                'required',
-               File::types(['png', 'webp'])->max(10 * 1024),
+               File::image()
+                  ->types(['png', 'webp'])
+                  ->max(5 * 1024)
+                  ->dimensions(Rule::dimensions()->maxWidth(1500)->maxHeight(1500)),
             ],
          ]);
 
@@ -994,14 +1012,17 @@ class AdminController extends Controller
       $validator = Validator::make($request->all(), [
          'image' => [
             'required',
-            File::types(['png', 'webp'])->max(10 * 1024),
-         ],
+            File::image()
+               ->types(['png', 'webp'])
+               ->max(5 * 1024)
+               ->dimensions(Rule::dimensions()->maxWidth(1500)->maxHeight(1500)),
+            ],
       ]);
 
       if ($validator->fails()) {
          return response()->json([
             "status" => false,
-            "message" => "Некорректные данные.",
+            "message" => "Допустимые типы файлов: png, webp.\nМаксимальный размер 5MB.\nМаксимальное разрешение 1500x1500px.",
             "data" => null,
          ]);
       };
@@ -1645,7 +1666,10 @@ class AdminController extends Controller
       $validator = Validator::make($request->all(), [
          'image' => [
             'required',
-            File::types(['png', 'webp', 'jpg', 'jpeg'])->max(10 * 1024),
+            File::image()
+               ->types(['png', 'webp', 'jpg', 'jpeg'])
+               ->max(5 * 1024)
+               ->dimensions(Rule::dimensions()->maxWidth(2000)->maxHeight(2000)),
          ],
          'title' => 'required|string',
          'description' => 'required|string',
@@ -1725,14 +1749,17 @@ class AdminController extends Controller
          $validated = validator($request->all(), [
             'image' => [
                'required',
-               File::types(['png', 'webp', 'jpg', 'jpeg'])->max(10 * 1024),
+               File::image()
+                  ->types(['png', 'webp', 'jpg', 'jpeg'])
+                  ->max(5 * 1024)
+                  ->dimensions(Rule::dimensions()->maxWidth(2000)->maxHeight(2000)),
             ],
          ]);
 
          if ($validated->fails()) {
             return response()->json([
                "status" => false,
-               "message" => "Некорректные данные.",
+               "message" => "Допустимые типы файлов: png, webp, jpg, jpeg.\nМаксимальный размер 5MB.\nМаксимальное разрешение 2000x2000px.",
                "data" => null,
             ]);
          };

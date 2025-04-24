@@ -978,7 +978,6 @@ export default {
 					errors++;
 
 				formData.append("image", this.$refs.fileUpload.files[0]);
-				formData.append("formats", ["png", "jpg", "jpeg"]);
 			}
 
 			if (
@@ -1119,7 +1118,6 @@ export default {
 
 			let formData = new FormData();
 			formData.append("image", this.$refs.fileUpload.files[0]);
-			formData.append("formats", ["png", "jpg", "jpeg", "webp"]);
 
 			let user = {};
 			for (let key in this.currentUser.data) {

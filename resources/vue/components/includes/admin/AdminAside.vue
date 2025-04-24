@@ -44,21 +44,7 @@
 						ГЛАВНАЯ
 					</a>
 				</div>
-				<div class="aside__item" :class="{ active: isActive('/admin/eabout') }">
-					<a class="aside__item-title" href="#" @click.prevent="insertPage(links.about)">
-						<svg
-							width="22"
-							height="22"
-							viewBox="0 0 30 30"
-							xmlns="http://www.w3.org/2000/svg"
-						>
-							<path
-								d="M13.5 22.5H16.5V13.5H13.5V22.5ZM15 10.5C15.425 10.5 15.7813 10.3563 16.0688 10.0688C16.3563 9.78125 16.5 9.425 16.5 9C16.5 8.575 16.3563 8.21875 16.0688 7.93125C15.7813 7.64375 15.425 7.5 15 7.5C14.575 7.5 14.2188 7.64375 13.9313 7.93125C13.6438 8.21875 13.5 8.575 13.5 9C13.5 9.425 13.6438 9.78125 13.9313 10.0688C14.2188 10.3563 14.575 10.5 15 10.5ZM15 30C12.925 30 10.975 29.6063 9.15 28.8188C7.325 28.0313 5.7375 26.9625 4.3875 25.6125C3.0375 24.2625 1.96875 22.675 1.18125 20.85C0.39375 19.025 0 17.075 0 15C0 12.925 0.39375 10.975 1.18125 9.15C1.96875 7.325 3.0375 5.7375 4.3875 4.3875C5.7375 3.0375 7.325 1.96875 9.15 1.18125C10.975 0.39375 12.925 0 15 0C17.075 0 19.025 0.39375 20.85 1.18125C22.675 1.96875 24.2625 3.0375 25.6125 4.3875C26.9625 5.7375 28.0313 7.325 28.8188 9.15C29.6063 10.975 30 12.925 30 15C30 17.075 29.6063 19.025 28.8188 20.85C28.0313 22.675 26.9625 24.2625 25.6125 25.6125C24.2625 26.9625 22.675 28.0313 20.85 28.8188C19.025 29.6063 17.075 30 15 30ZM15 27C18.35 27 21.1875 25.8375 23.5125 23.5125C25.8375 21.1875 27 18.35 27 15C27 11.65 25.8375 8.8125 23.5125 6.4875C21.1875 4.1625 18.35 3 15 3C11.65 3 8.8125 4.1625 6.4875 6.4875C4.1625 8.8125 3 11.65 3 15C3 18.35 4.1625 21.1875 6.4875 23.5125C8.8125 25.8375 11.65 27 15 27Z"
-							/>
-						</svg>
-						О НАС
-					</a>
-				</div>
+
 				<div class="aside__item">
 					<a
 						class="aside__item-title"
@@ -109,6 +95,7 @@
 						</a>
 					</div>
 				</div>
+
 				<div class="aside__item">
 					<a
 						class="aside__item-title"
@@ -146,6 +133,7 @@
 						</a>
 					</div>
 				</div>
+
 				<div class="aside__item" :class="{ active: isActive('/admin/eschedule') }">
 					<a class="aside__item-title" href="#" @click.prevent="insertPage(links.schedule)">
 						<svg
@@ -161,35 +149,59 @@
 						РАСПИСАНИЕ
 					</a>
 				</div>
-				<div class="aside__item" :class="{ active: isActive('/admin/econtacts') }">
-					<a class="aside__item-title" href="#" @click.prevent="insertPage(links.contacts)">
-						<svg
-							width="25"
-							height="25"
-							viewBox="0 0 30 33"
-							xmlns="http://www.w3.org/2000/svg"
-						>
-							<path
-								d="M3 33V30H27V33H3ZM3 3V0H27V3H3ZM15 18C16.25 18 17.3125 17.5625 18.1875 16.6875C19.0625 15.8125 19.5 14.75 19.5 13.5C19.5 12.25 19.0625 11.1875 18.1875 10.3125C17.3125 9.4375 16.25 9 15 9C13.75 9 12.6875 9.4375 11.8125 10.3125C10.9375 11.1875 10.5 12.25 10.5 13.5C10.5 14.75 10.9375 15.8125 11.8125 16.6875C12.6875 17.5625 13.75 18 15 18ZM3 28.5C2.175 28.5 1.46875 28.2063 0.88125 27.6188C0.29375 27.0313 0 26.325 0 25.5V7.5C0 6.675 0.29375 5.96875 0.88125 5.38125C1.46875 4.79375 2.175 4.5 3 4.5H27C27.825 4.5 28.5313 4.79375 29.1188 5.38125C29.7063 5.96875 30 6.675 30 7.5V25.5C30 26.325 29.7063 27.0313 29.1188 27.6188C28.5313 28.2063 27.825 28.5 27 28.5H3ZM5.625 25.5C6.75 24.1 8.1125 23 9.7125 22.2C11.3125 21.4 13.075 21 15 21C16.925 21 18.6875 21.4 20.2875 22.2C21.8875 23 23.25 24.1 24.375 25.5H27V7.5H3V25.5H5.625ZM10.05 25.5H19.95C19.225 25 18.4438 24.625 17.6063 24.375C16.7688 24.125 15.9 24 15 24C14.1 24 13.2313 24.125 12.3938 24.375C11.5563 24.625 10.775 25 10.05 25.5ZM15 15C14.575 15 14.2188 14.8563 13.9313 14.5688C13.6438 14.2813 13.5 13.925 13.5 13.5C13.5 13.075 13.6438 12.7188 13.9313 12.4313C14.2188 12.1438 14.575 12 15 12C15.425 12 15.7813 12.1438 16.0688 12.4313C16.3563 12.7188 16.5 13.075 16.5 13.5C16.5 13.925 16.3563 14.2813 16.0688 14.5688C15.7813 14.8563 15.425 15 15 15Z"
-							/>
-						</svg>
-						КОНТАКТЫ
-					</a>
-				</div>
-				<div class="aside__item" :class="{ active: isActive('/admin/enews') }">
-					<a class="aside__item-title" href="#" @click.prevent="insertPage(links.news)">
+
+				<div class="aside__item">
+					<a
+						class="aside__item-title"
+						:class="{ active: links.info.status }"
+						href="#"
+						@click.prevent="openList('info')"
+					>
 						<svg
 							width="24"
 							height="24"
-							viewBox="0 0 18 18"
+							viewBox="0 0 20 20"
 							xmlns="http://www.w3.org/2000/svg"
 						>
 							<path
-								d="M2 18C1.45 18 0.979167 17.8042 0.5875 17.4125C0.195833 17.0208 0 16.55 0 16V2C0 1.45 0.195833 0.979167 0.5875 0.5875C0.979167 0.195833 1.45 0 2 0H13L18 5V16C18 16.55 17.8042 17.0208 17.4125 17.4125C17.0208 17.8042 16.55 18 16 18H2ZM2 16H16V6H12V2H2V16ZM4 14H14V12H4V14ZM4 6H9V4H4V6ZM4 10H14V8H4V10Z"
+								d="M9 15H11V9H9V15ZM10 7C10.2833 7 10.5208 6.90417 10.7125 6.7125C10.9042 6.52083 11 6.28333 11 6C11 5.71667 10.9042 5.47917 10.7125 5.2875C10.5208 5.09583 10.2833 5 10 5C9.71667 5 9.47917 5.09583 9.2875 5.2875C9.09583 5.47917 9 5.71667 9 6C9 6.28333 9.09583 6.52083 9.2875 6.7125C9.47917 6.90417 9.71667 7 10 7ZM10 20C8.61667 20 7.31667 19.7375 6.1 19.2125C4.88333 18.6875 3.825 17.975 2.925 17.075C2.025 16.175 1.3125 15.1167 0.7875 13.9C0.2625 12.6833 0 11.3833 0 10C0 8.61667 0.2625 7.31667 0.7875 6.1C1.3125 4.88333 2.025 3.825 2.925 2.925C3.825 2.025 4.88333 1.3125 6.1 0.7875C7.31667 0.2625 8.61667 0 10 0C11.3833 0 12.6833 0.2625 13.9 0.7875C15.1167 1.3125 16.175 2.025 17.075 2.925C17.975 3.825 18.6875 4.88333 19.2125 6.1C19.7375 7.31667 20 8.61667 20 10C20 11.3833 19.7375 12.6833 19.2125 13.9C18.6875 15.1167 17.975 16.175 17.075 17.075C16.175 17.975 15.1167 18.6875 13.9 19.2125C12.6833 19.7375 11.3833 20 10 20ZM10 18C12.2333 18 14.125 17.225 15.675 15.675C17.225 14.125 18 12.2333 18 10C18 7.76667 17.225 5.875 15.675 4.325C14.125 2.775 12.2333 2 10 2C7.76667 2 5.875 2.775 4.325 4.325C2.775 5.875 2 7.76667 2 10C2 12.2333 2.775 14.125 4.325 15.675C5.875 17.225 7.76667 18 10 18Z"
 							/>
 						</svg>
-						НОВОСТИ
+
+						<IconArrowWhite :width="20" :height="20" :rotate="180" class="item-arrow" />
+
+						ИНФОРМАЦИЯ
 					</a>
+					<div class="item-list" ref="einfo" :class="{ active: links.info.status }">
+						<a
+							href="#"
+							:class="{ active: isActive('/admin/enews') }"
+							@click.prevent="insertPage(links.info, links.info.list.news)"
+						>
+							НОВОСТИ
+						</a>
+						<a
+							href="#"
+							:class="{ active: isActive('/admin/evideo') }"
+							@click.prevent="insertPage(links.info, links.info.list.video)"
+						>
+							ВИДЕО
+						</a>
+						<a
+							href="#"
+							:class="{ active: isActive('/admin/econtacts') }"
+							@click.prevent="insertPage(links.info, links.info.list.contacts)"
+						>
+							КОНТАКТЫ
+						</a>
+						<a
+							href="#"
+							:class="{ active: isActive('/admin/eabout') }"
+							@click.prevent="insertPage(links.info, links.info.list.about)"
+						>
+							О НАС
+						</a>
+					</div>
 				</div>
 			</template>
 
@@ -278,16 +290,13 @@ export default {
 					status: false,
 					list: null,
 				},
+
 				home: {
 					name: "ehome",
 					status: false,
 					list: null,
 				},
-				about: {
-					name: "eabout",
-					status: false,
-					list: null,
-				},
+
 				specialists: {
 					name: "especialists",
 					status: false,
@@ -309,6 +318,7 @@ export default {
 						},
 					},
 				},
+
 				prices: {
 					name: "eprices",
 					status: false,
@@ -325,26 +335,46 @@ export default {
 						},
 					},
 				},
+
 				schedule: {
 					name: "eschedule",
 					status: false,
 					list: null,
 				},
-				contacts: {
-					name: "econtacts",
+
+				info: {
+					name: "einfo",
 					status: false,
-					list: null,
+					list: {
+						news: {
+							name: "enews",
+							status: false,
+							list: null,
+						},
+						video: {
+							name: "evideo",
+							status: false,
+							list: null,
+						},
+						contacts: {
+							name: "econtacts",
+							status: false,
+							list: null,
+						},
+						about: {
+							name: "eabout",
+							status: false,
+							list: null,
+						},
+					},
 				},
-				news: {
-					name: "enews",
-					status: false,
-					list: null,
-				},
+
 				users: {
 					name: "users",
 					status: false,
 					list: null,
 				},
+				
 				statistics: {
 					name: "statistics",
 					status: false,

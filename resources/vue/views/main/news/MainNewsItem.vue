@@ -32,7 +32,8 @@ export default {
 	padding: 20px;
 	border: var(--input-border);
 	border-radius: var(--default-border-radius);
-	height: 400px;
+	height: auto;
+	min-height: 400px;
 
 	transition: all 0.2s;
 }
@@ -49,7 +50,7 @@ export default {
 
 .news__item-image {
 	width: 100%;
-	min-height: 300px;
+	max-height: 300px;
 	object-fit: cover;
 	border-radius: calc(var(--default-border-radius) / 2);
 }

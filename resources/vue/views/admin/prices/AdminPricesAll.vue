@@ -322,7 +322,7 @@ export default {
 
 			/* Загрузка файла */
 			let formData = new FormData();
-			formData.append("image", this.$refs.fileUpload.files[0]);
+			formData.append("file", this.$refs.fileUpload.files[0]);
 			formData.append("type", "prices");
 			formData.append("formats", ["ods", "xls", "xlsx"]);
 

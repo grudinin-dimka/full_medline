@@ -249,6 +249,20 @@ const router = createRouter({
 					],
 				},
 				{
+					path: "evideo",
+					name: "evideo",
+					meta: { title: "(e) Видео" },
+					component: () => import("../views/admin/video/AdminVideo.vue"),
+					redirect: { name: "evideo-all" },
+					children: [
+						{
+							path: "",
+							name: "evideo-all",
+							component: () => import("../views/admin/video/AdminVideoAll.vue"),
+						},
+					],
+				},
+				{
 					path: "eschedule",
 					name: "eschedule",
 					meta: { title: "(e) Расписание" },

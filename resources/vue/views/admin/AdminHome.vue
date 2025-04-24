@@ -806,7 +806,7 @@ export default {
 				/* Загрузка файла */
 				this.currentSlide.file = this.$refs.fileUpload.files[0];
 				let formData = new FormData();
-				formData.append("image", this.currentSlide.file);
+				formData.append("file", this.currentSlide.file);
 				formData.append("type", "slides");
 				formData.append("formats", ["png", "webp"]);
 
@@ -950,7 +950,7 @@ export default {
 				this.disabled.slider.update = true;
 
 				let formData = new FormData();
-				formData.append("image", this.$refs.fileUpload.files[0]);
+				formData.append("file", this.$refs.fileUpload.files[0]);
 				formData.append("type", "slide");
 				formData.append("formats", ["png", "jpg", "jpeg", "webp"]);
 
