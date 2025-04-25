@@ -8,8 +8,11 @@
 		<template #title>СПИСОК ВРАЧЕЙ</template>
 
 		<template #options>
-			<icon-load :width="28" :height="28" v-if="disabled.specialists.save" />
-			<icon-save :width="28" :height="28" @click="saveSpecialistChanges" v-else />
+			<button-default @click.prevent="saveSpecialistChanges" :disabled="disabled.specialists.save" :look="'white'">
+				<icon-save :width="28" :height="28"/>
+
+				Сохранить
+			</button-default>
 		</template>
 
 		<template #body>

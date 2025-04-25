@@ -48,14 +48,9 @@
 		</template>
 		<template #footer>
 			<block-buttons>
-				<button-claim @click="" v-if="modalSpecializations.type == 'create'">
-					Создать
-				</button-claim>
-				<button-default
-					@click="updateSpecialization"
-					v-if="modalSpecializations.type == 'edit'"
-				>
-					Обновить
+				<button-default @click="updateSpecialization">
+					<icon-add :width="28" :height="28" :look="'white'" />
+					Добавить
 				</button-default>
 			</block-buttons>
 		</template>
@@ -113,9 +108,9 @@
 		</template>
 		<template #footer>
 			<block-buttons>
-				<button-claim @click="" v-if="modalClinics.type == 'create'"> Создать </button-claim>
-				<button-default @click="updateClinics" v-if="modalClinics.type == 'edit'">
-					Обновить
+				<button-default @click="updateClinics">
+					<icon-add :width="28" :height="28" :look="'white'" />
+					Добавить
 				</button-default>
 			</block-buttons>
 		</template>
@@ -194,9 +189,13 @@
 		<template #footer>
 			<block-buttons>
 				<button-default @click="addCertificate" v-if="modalCertificates.type == 'create'">
-					Создать
+					<icon-add :width="28" :height="28" :look="'white'" />
+
+					Добавить
 				</button-default>
 				<button-default @click="updateCertificate" v-if="modalCertificates.type == 'edit'">
+					<icon-edit :width="28" :height="28" :look="'white'" />
+
 					Обновить
 				</button-default>
 			</block-buttons>
@@ -327,9 +326,11 @@
 		<template #footer>
 			<block-buttons>
 				<button-default @click="addEducation" v-if="modalEducations.type == 'create'">
-					Создать
+					<icon-add :width="28" :height="28" :look="'white'" />
+					Добавить
 				</button-default>
 				<button-default @click="updateEducation" v-if="modalEducations.type == 'edit'">
+					<icon-edit :width="28" :height="28" :look="'white'" />
 					Обновить
 				</button-default>
 			</block-buttons>
@@ -437,9 +438,12 @@
 		<template #footer>
 			<block-buttons>
 				<button-default @click="addWork" v-if="modalWorks.type == 'create'">
-					Создать
+					<icon-add :width="28" :height="28" :look="'white'" />
+
+					Добавить
 				</button-default>
 				<button-default @click="updateWork" v-if="modalWorks.type == 'edit'">
+					<icon-edit :width="28" :height="28" :look="'white'" />
 					Обновить
 				</button-default>
 			</block-buttons>
@@ -465,13 +469,27 @@
 
 		<template #options>
 			<template v-if="$route.params.id === 'new'">
-				<icon-load :width="28" :height="28" v-if="disabled.profile.create" />
-				<icon-add :width="28" :height="28" v-else @click="addSpecialist" />
+				<button-default
+					@click.prevent="addSpecialist"
+					:disabled="disabled.profile.create"
+					:look="'white'"
+				>
+					<icon-add :width="28" :height="28" />
+
+					Сохранить
+				</button-default>
 			</template>
 
 			<template v-else>
-				<icon-load :width="28" :height="28" v-if="disabled.profile.save" />
-				<icon-save :width="28" :height="28" v-else @click="saveSpecialistModular('all')" />
+				<button-default
+					@click.prevent="saveSpecialistModular('all')"
+					:disabled="disabled.profile.save"
+					:look="'white'"
+				>
+					<icon-save :width="28" :height="28" />
+
+					Сохранить
+				</button-default>
 			</template>
 		</template>
 
@@ -974,15 +992,21 @@
 
 			<template #one-buttons>
 				<button-disabled v-if="this.specialist.profile.data.id.value == null">
+					<icon-add :width="28" :height="28" :look="'white'" />
+
 					Добавить
 				</button-disabled>
 				<button-default
 					@click="editSpecialization"
 					v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.value !== null"
 				>
+					<icon-add :width="28" :height="28" :look="'white'" />
+
 					Добавить
 				</button-default>
 				<button-claim @click="editSpecialization" v-if="$route.params.id === 'new'">
+					<icon-add :width="28" :height="28" :look="'white'" />
+
 					Добавить
 				</button-claim>
 			</template>
@@ -1046,12 +1070,16 @@
 
 			<template #two-buttons>
 				<button-disabled v-if="this.specialist.profile.data.id.value == null">
+					<icon-add :width="28" :height="28" :look="'white'" />
+
 					Добавить
 				</button-disabled>
 				<button-default
 					@click="editClinics"
 					v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.value !== null"
 				>
+					<icon-add :width="28" :height="28" :look="'white'" />
+
 					Добавить
 				</button-default>
 			</template>
@@ -1180,6 +1208,7 @@ import IconSave from "../../../components/icons/IconSave.vue";
 import IconSaveAll from "../../../components/icons/IconSaveAll.vue";
 import IconAdd from "../../../components/icons/IconAdd.vue";
 import IconLoad from "../../../components/icons/IconLoad.vue";
+import IconEdit from "../../../components/icons/IconEdit.vue";
 
 import axios from "axios";
 
@@ -1222,6 +1251,7 @@ export default {
 		ButtonRemove,
 		ButtonClaim,
 
+		IconEdit,
 		IconSave,
 		IconSaveAll,
 		IconAdd,

@@ -194,9 +194,11 @@
 		<template #footer>
 			<block-buttons>
 				<button-default v-if="modal.type == 'create'" @click="addClinic">
-					Создать
+					<icon-add :width="28" :height="28" :look="'white'"/>
+					Добавить
 				</button-default>
 				<button-default v-if="modal.type == 'edit'" @click="updateClinic">
+					<icon-edit :width="28" :height="28" :look="'white'"/>
 					Обновить
 				</button-default>
 			</block-buttons>
@@ -212,8 +214,15 @@
 		<template #title>КЛИНИКИ</template>
 
 		<template #options>
-			<icon-load :width="28" :height="28" v-if="disabled.clinics.save" />
-			<icon-save :width="28" :height="28" @click="saveClinicsChanges" v-else />
+			<button-default
+				@click.prevent="saveClinicsChanges"
+				:disabled="disabled.clinics.save"
+				:look="'white'"
+			>
+				<icon-save :width="28" :height="28" />
+
+				Сохранить
+			</button-default>
 		</template>
 
 		<template #body>
@@ -257,6 +266,8 @@ import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue"
 import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 
 import IconSave from "../../../components/icons/IconSave.vue";
+import IconAdd from "../../../components/icons/IconAdd.vue";
+import IconEdit from "../../../components/icons/IconEdit.vue";
 import IconLoad from "../../../components/icons/IconLoad.vue";
 
 import axios from "axios";
@@ -286,6 +297,8 @@ export default {
 		ButtonClaim,
 
 		IconSave,
+		IconAdd,
+		IconEdit,
 		IconLoad,
 
 		axios,

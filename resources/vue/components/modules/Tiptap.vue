@@ -25,7 +25,8 @@
 		</template>
 		<template #footer>
 			<ButtonDefault :disabled="disabled.tiptap.image" @click="uploadImage">
-				Загрузить
+				<icon-add :width="28" :height="28" :look="'white'" />
+				Добавить
 			</ButtonDefault>
 		</template>
 	</Modal>
@@ -489,6 +490,8 @@ import StarterKit from "@tiptap/starter-kit";
 import ContainerInputOnce from "../ui/admin/containers/input/ContainerInputOnce.vue";
 import ButtonDefault from "../ui/admin/buttons/ButtonDefault.vue";
 
+import IconAdd from "../icons/IconAdd.vue";
+
 import validate from "../../services/validate";
 import axios from "axios";
 
@@ -501,6 +504,8 @@ export default {
 
 		ContainerInputOnce,
 		ButtonDefault,
+
+		IconAdd,
 	},
 	props: {
 		modelValue: {
@@ -619,7 +624,7 @@ export default {
 
 			/* Загрузка файла */
 			let formData = new FormData();
-			formData.append("image", this.$refs.fileUpload.files[0]);
+			formData.append("file", this.$refs.fileUpload.files[0]);
 			formData.append("type", "news");
 			formData.append("formats", ["png", "jpg", "jpeg", "webp"]);
 

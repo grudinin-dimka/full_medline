@@ -17,7 +17,7 @@
 					<IconEdit :width="24" :height="24" :type="'edit'"></IconEdit>
 				</div>
 				<div class="icon delete" @click="$emit('touchDelete', item)">
-					<IconRemove :width="24" :height="24" :type="'delete'"></IconRemove>
+					<icon-remove :width="24" :height="22" :look="'delete'"/>
 				</div>
 			</div>
 		</div>

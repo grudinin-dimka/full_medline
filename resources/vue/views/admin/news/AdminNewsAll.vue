@@ -9,8 +9,14 @@
 		<template #title>НОВОСТИ</template>
 
 		<template #options>
-			<icon-load :width="28" :height="28" v-if="disabled.news.save" />
-			<icon-save :width="28" :height="28" @click="saveNewsAll" v-else />
+			<button-default
+				@click.prevent="saveNewsAll"
+				:disabled="disabled.news.save"
+				:look="'white'"
+			>
+				<icon-save :width="28" :height="28" />
+				Сохранить
+			</button-default>
 		</template>
 
 		<template #body>
@@ -28,7 +34,12 @@
 				"
 				@edite="openNews"
 				@delete="setFlagDelete"
-			/>
+			>
+				<template v-slot:hideNews="{ row }">
+					<div class="table__hide" v-if="row.hide" @click="setHideNews(row)">Да</div>
+					<div class="table__hide" v-else @click="setHideNews(row)">Нет</div>
+				</template>
+			</BaseTable>
 
 			<loader-child
 				:isLoading="loading.loader.news"
@@ -154,6 +165,13 @@ export default {
 						columnType: "default",
 						columnSize: "auto",
 					},
+					{
+						name: "hideNews",
+						text: "Публикация",
+						columnType: "hideNews",
+						columnSize: "100px",
+						columnJustify: "center",
+					},
 				],
 
 				// Элементы
@@ -212,6 +230,11 @@ export default {
 		/* Удаление */
 		setFlagDelete(news) {
 			news.delete = !news.delete;
+		},
+
+		/* Скрытие */
+		setHideNews(news) {
+			news.hide = !news.hide;
 		},
 
 		/* Сохранение */
@@ -372,5 +395,15 @@ export default {
 	overflow-y: auto;
 
 	font-size: 1.125rem;
+}
+
+/* Таблица */
+.table__hide {
+	user-select: none;
+	cursor: pointer;
+}
+
+.table__hide:hover {
+	color: var(--primary-color);
 }
 </style>

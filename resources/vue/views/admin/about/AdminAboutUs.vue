@@ -5,7 +5,7 @@
 	<admin-modal ref="modal" @touchCloseModal="closeModal" :modal="modal">
 		<template
 			#title
-			v-if="(modal.type == 'edit') && !currentInfoBlock.data.delete.value && !modal.style.create"
+			v-if="modal.type == 'edit' && !currentInfoBlock.data.delete.value && !modal.style.create"
 		>
 			<icon-arrow :width="16" :height="16" :rotate="-90" @click="changeInfoBlockOrder('down')" />
 			#{{ currentInfoBlock.data.order.value }}
@@ -28,7 +28,7 @@
 							<IconEdit :width="24" :height="24" :type="'edit'"></IconEdit>
 						</div>
 						<div class="icon delete" @click="removeInfoBlockImage('imageOne')">
-							<IconRemove :width="24" :height="24" :type="'delete'"></IconRemove>
+							<icon-remove :width="24" :height="22" :look="'delete'" />
 						</div>
 					</div>
 				</div>
@@ -57,7 +57,7 @@
 							<IconEdit :width="24" :height="24" :type="'edit'"></IconEdit>
 						</div>
 						<div class="icon delete" @click="removeInfoBlockImage('imageTwo')">
-							<IconRemove :width="24" :height="24" :type="'delete'"></IconRemove>
+							<icon-remove :width="24" :height="22" :look="'delete'" />
 						</div>
 					</div>
 				</div>
@@ -86,7 +86,7 @@
 							<IconEdit :width="24" :height="24" :type="'edit'"></IconEdit>
 						</div>
 						<div class="icon delete" @click="removeInfoBlockImage('imageThree')">
-							<IconRemove :width="24" :height="24" :type="'delete'"></IconRemove>
+							<icon-remove :width="24" :height="22" :look="'delete'" />
 						</div>
 					</div>
 				</div>
@@ -149,7 +149,8 @@
 		<template #footer>
 			<BlockButtons>
 				<ButtonDefault @click="addInfoBlock" v-if="modal.type == 'create'">
-					Создать
+					<icon-add :width="28" :height="28" :look="'white'" />
+					Добавить
 				</ButtonDefault>
 				<button-remove
 					@click="deleteInfoBlock"
@@ -159,12 +160,14 @@
 						!currentInfoBlock.data.create.value
 					"
 				>
+					<icon-remove :width="24" :height="22" :look="'white'" />
 					Удалить
 				</button-remove>
 				<ButtonDefault
 					@click="updateInfoBlock"
 					v-if="modal.type == 'edit' && !currentInfoBlock.data.delete.value"
 				>
+					<icon-edit :width="28" :height="28" :look="'white'" />
 					Обновить
 				</ButtonDefault>
 				<ButtonDefault @click="deleteInfoBlock" v-if="currentInfoBlock.data.delete.value">
@@ -208,6 +211,7 @@
 					@click="updateImage"
 					:disabled="disabled.image.update"
 				>
+					<icon-edit :width="28" :height="28" :look="'white'" />
 					Обновить
 				</button-default>
 				<button-default
@@ -215,7 +219,8 @@
 					@click="updateImage"
 					:disabled="disabled.image.add"
 				>
-					Создать
+					<icon-add :width="28" :height="28" :look="'white'" />
+					Добавить
 				</button-default>
 			</block-buttons>
 		</template>
@@ -233,8 +238,14 @@
 		<template #title>ИНФОРМАЦИОННЫЕ БЛОКИ</template>
 
 		<template #options>
-			<icon-load :width="28" :height="28" v-if="disabled.about.save" />
-			<icon-save :width="28" :height="28" @click="saveInfoBlocks" v-else />
+			<button-default
+				@click.prevent="saveInfoBlocks"
+				:disabled="disabled.about.save"
+				:look="'white'"
+			>
+				<icon-save :width="28" :height="28" />
+				Сохранить
+			</button-default>
 		</template>
 
 		<template #body>
@@ -257,7 +268,10 @@
 		</template>
 
 		<template #buttons>
-			<button-default @click="openModal('create')"> Добавить </button-default>
+			<button-default @click="openModal('create')">
+				<icon-add :width="28" :height="28" :look="'white'" />
+				Добавить
+			</button-default>
 		</template>
 	</block-once>
 </template>
@@ -277,6 +291,7 @@ import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue"
 import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 
 import IconArrow from "../../../components/icons/IconArrow.vue";
+import IconAdd from "../../../components/icons/IconAdd.vue";
 import IconSave from "../../../components/icons/IconSave.vue";
 import IconHide from "../../../components/icons/IconHide.vue";
 import IconVisible from "../../../components/icons/IconVisible.vue";
@@ -318,6 +333,7 @@ export default {
 		IconHide,
 		IconVisible,
 		IconEdit,
+		IconAdd,
 		IconRemove,
 		IconCreate,
 		IconLoad,
@@ -513,7 +529,7 @@ export default {
 			this.loading.sections.title = true;
 			this.loading.sections.infoBlocks = true;
 		},
-		
+
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                 Модальное окно                    |*/
 		/* |___________________________________________________|*/
@@ -555,7 +571,7 @@ export default {
 					break;
 			}
 		},
-		
+
 		/* Закрытие */
 		closeModal(name = "modal") {
 			this[name].status = false;
@@ -563,7 +579,7 @@ export default {
 				document.body.classList.remove("modal-open");
 			}
 		},
-		
+
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |               SUB-МОДАЛЬНОЕ ОКНО                  |*/
 		/* |___________________________________________________|*/

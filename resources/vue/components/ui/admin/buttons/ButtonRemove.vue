@@ -1,23 +1,33 @@
 <template>
-	<button class="remove">
-		<slot></slot>
+	<button :disabled="disabled">
+		<span class="loader" v-if="disabled"></span>
+		<div class="content" :class="{ disabled: disabled }">
+			<slot></slot>
+		</div>
 	</button>
 </template>
 
 <script>
-export default {};
+export default {
+	props: {
+		disabled: {
+			type: Boolean,
+			default: false,
+		},
+	},
+};
 </script>
 
 <style scoped>
-button.remove {
+button {
+	position: relative;
 	cursor: pointer;
 
 	padding: 15px 30px;
 	max-height: 54px;
 	min-width: 160px;
 	border: 0px solid black;
-	border-radius: 10px;
-
+	border-radius: 100px;
 	font-size: 20px;
 	color: white;
 
@@ -25,11 +35,26 @@ button.remove {
 	transition: all 0.2s;
 }
 
-button.remove:hover {
+button > .content {
+	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+}
+
+button > .content.disabled {
+	visibility: hidden;
+	opacity: 0;
+}
+
+button:hover {
 	background-color: var(--button-remove-color-hover);
 }
 
 .loader {
+	position: absolute;
+
 	width: 26px;
 	height: 26px;
 	border: 3px solid #fff;

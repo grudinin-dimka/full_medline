@@ -5,7 +5,7 @@
 	<admin-modal ref="modal" @touchCloseModal="closeModal('modal')" :modal="modal">
 		<template
 			#title
-			v-if="(modal.type == 'edit') && !currentContact.data.delete.value && !modal.style.create"
+			v-if="modal.type == 'edit' && !currentContact.data.delete.value && !modal.style.create"
 		>
 			<icon-arrow :width="16" :height="16" :rotate="-90" @click="changeContactsOrder('down')" />
 			#{{ currentContact.data.order.value }}
@@ -77,13 +77,18 @@
 		<template #footer>
 			<BlockButtons>
 				<button-default v-if="modal.type == 'create'" @click="addContact">
-					Создать
+					<icon-add :width="28" :height="28" :look="'white'" />
+					Добавить
 				</button-default>
 				<template v-if="modal.type == 'edit' && !currentContact.data.delete.value">
 					<button-remove v-if="!currentContact.data.create.value" @click="deleteContact">
+						<icon-remove :width="24" :height="22" :look="'white'" />
 						Удалить
 					</button-remove>
-					<ButtonDefault @click="updateContact"> Обновить </ButtonDefault>
+					<ButtonDefault @click="updateContact">
+						<icon-add :width="28" :height="28" :look="'white'" />
+						Обновить
+					</ButtonDefault>
 				</template>
 				<ButtonDefault
 					v-if="modal.type == 'edit' && currentContact.data.delete.value"
@@ -131,10 +136,12 @@
 		<template #footer>
 			<block-buttons>
 				<button-default v-if="subModalPhone.type == 'edit'" @click="updateContactPhone">
+					<icon-add :width="28" :height="28" :look="'white'" />
 					Обновить
 				</button-default>
 				<button-default v-if="subModalPhone.type == 'create'" @click="addContactPhone">
-					Создать
+					<icon-add :width="28" :height="28" :look="'white'" />
+					Добавить
 				</button-default>
 			</block-buttons>
 		</template>
@@ -176,10 +183,12 @@
 		<template #footer>
 			<block-buttons>
 				<button-default v-if="subModalMail.type == 'edit'" @click="updateContactMail">
+					<icon-edit :width="28" :height="28" :look="'white'" />
 					Обновить
 				</button-default>
 				<button-default v-if="subModalMail.type == 'create'" @click="addContactMail">
-					Создать
+					<icon-add :width="28" :height="28" :look="'white'" />
+					Добавить
 				</button-default>
 			</block-buttons>
 		</template>
@@ -197,8 +206,14 @@
 		<template #title>КОНТАКТЫ</template>
 
 		<template #options>
-			<icon-load :width="28" :height="28" v-if="disabled.contacts.save" />
-			<icon-save :width="28" :height="28" @click="saveContact" v-else />
+			<button-default
+				@click.prevent="saveContact"
+				:disabled="disabled.contacts.save"
+				:look="'white'"
+			>
+				<icon-save :width="28" :height="28" />
+				Сохранить
+			</button-default>
 		</template>
 
 		<template #body>
@@ -223,7 +238,10 @@
 		</template>
 
 		<template #buttons>
-			<ButtonDefault @click="openModal('create')"> Добавить </ButtonDefault>
+			<ButtonDefault @click="openModal('create')">
+				<icon-add :width="28" :height="28" :look="'white'" />
+				Добавить
+			</ButtonDefault>
 		</template>
 	</block-once>
 </template>
@@ -260,6 +278,7 @@ import IconRemove from "../../../components/icons/IconRemove.vue";
 import IconCreate from "../../../components/icons/IconCreate.vue";
 import IconSave from "../../../components/icons/IconSave.vue";
 import IconLoad from "../../../components/icons/IconLoad.vue";
+import IconAdd from "../../../components/icons/IconAdd.vue";
 import IconContactHome from "../../../components/icons/contacts/IconContactHome.vue";
 import IconContactMail from "../../../components/icons/contacts/IconContactMail.vue";
 import IconContactPhone from "../../../components/icons/contacts/IconContactPhone.vue";
@@ -292,6 +311,7 @@ export default {
 		ButtonRemove,
 		ButtonClaim,
 
+		IconAdd,
 		IconArrow,
 		IconHide,
 		IconVisible,

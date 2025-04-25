@@ -31,7 +31,8 @@
 		<template #footer>
 			<block-buttons>
 				<ButtonDefault @click="createPrice" :disabled="disabled.prices.create">
-					Загрузить
+					<icon-add :width="28" :height="28" :look="'white'"/>
+					Добавить
 				</ButtonDefault>
 			</block-buttons>
 		</template>
@@ -49,8 +50,14 @@
 		<template #title>СПИСОК ЦЕН</template>
 
 		<template #options>
-			<icon-load :width="28" :height="28" v-if="disabled.prices.save" />
-			<icon-save :width="28" :height="28" @click="savePricesFiles" v-else />
+			<button-default
+				@click.prevent="savePricesFiles"
+				:disabled="disabled.prices.save"
+				:look="'white'"
+			>
+				<icon-save :width="28" :height="28" />
+				Сохранить
+			</button-default>
 		</template>
 
 		<template #body>
@@ -92,6 +99,8 @@ import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 import BlockButtons from "../../../components/ui/admin/blocks/BlockButtons.vue";
 
 import IconSave from "../../../components/icons/IconSave.vue";
+import IconAdd from "../../../components/icons/IconAdd.vue";
+import IconEdit from "../../../components/icons/IconEdit.vue";
 import IconLoad from "../../../components/icons/IconLoad.vue";
 
 import validate from "../../../services/validate";
@@ -118,8 +127,12 @@ export default {
 		BlockButtons,
 		ButtonClaim,
 		ButtonDefault,
+		
 		IconSave,
+		IconAdd,
+		IconEdit,
 		IconLoad,
+
 		validate,
 		shared,
 		axios,

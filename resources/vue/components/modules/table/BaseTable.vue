@@ -829,8 +829,8 @@ input.filter-field {
 
 	background-color: white;
 	border: var(--default-border);
-	border-radius: calc(var(--default-border-radius) / 2);
-	padding: calc(var(--default-padding) / 2);
+	border-radius: 100px;
+	padding: calc(var(--default-padding) / 2) var(--default-padding);
 
 	height: 50px;
 

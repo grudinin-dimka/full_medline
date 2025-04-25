@@ -11,8 +11,14 @@
 		<template #title>КЛИНИКИ</template>
 
 		<template #options>
-			<icon-load :width="28" :height="28" v-if="disabled.schedule.save" />
-			<icon-save :width="28" :height="28" @click="updateSheduleFromServe" v-else />
+			<button-default
+				@click.prevent="updateSheduleFromServe"
+				:disabled="disabled.schedule.save"
+				:look="'white'"
+			>
+				<icon-save :width="28" :height="28" />
+				Сохранить
+			</button-default>
 		</template>
 
 		<template #body>

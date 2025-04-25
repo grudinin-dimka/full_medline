@@ -12,12 +12,36 @@
 
 		<template #options>
 			<template v-if="$route.params.date === 'new' || $route.params.time === 'new'">
-				<icon-load :width="28" :height="28" v-if="disabled.news.add" />
-				<icon-add :width="28" :height="28" v-else @click="addNews" />
+				<ButtonDefault look="white" :disabled="disabled.news.add" @click="addNews">
+					<icon-add :width="28" :height="28" />
+					Добавить
+				</ButtonDefault>
 			</template>
 			<template v-else>
-				<icon-load :width="28" :height="28" v-if="disabled.news.save" />
-				<icon-save :width="28" :height="28" @click="saveNews" v-else />
+				<template v-if="loading.sections.news">
+					<ButtonDefault
+						look="white"
+						:disabled="disabled.news.publish"
+						@click="publishNews"
+						v-if="!currentNews.data.hide.value"
+					>
+						<IconPublicsh :width="28" :height="28" />
+						Опубликовать
+					</ButtonDefault>
+					<ButtonDefault
+						look="white"
+						:disabled="disabled.news.publish"
+						@click="publishNews"
+						v-else
+					>
+						<IconUnpublished :width="28" :height="28" />
+						Убрать с публикации
+					</ButtonDefault>
+				</template>
+				<ButtonDefault look="white" :disabled="disabled.news.save" @click="saveNews">
+					<icon-save :width="28" :height="28" />
+					Сохранить
+				</ButtonDefault>
 			</template>
 		</template>
 
@@ -153,6 +177,8 @@ import Tiptap from "../../../components/modules/Tiptap.vue";
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 
+import IconPublicsh from "../../../components/icons/buttons/IconPublicsh.vue";
+import IconUnpublished from "../../../components/icons/buttons/IconUnpublished.vue";
 import IconLoad from "../../../components/icons/IconLoad.vue";
 import IconAdd from "../../../components/icons/IconAdd.vue";
 import IconSave from "../../../components/icons/IconSave.vue";
@@ -171,6 +197,8 @@ export default {
 
 		ButtonDefault,
 
+		IconPublicsh,
+		IconUnpublished,
 		IconLoad,
 		IconAdd,
 		IconSave,
@@ -182,6 +210,7 @@ export default {
 				news: {
 					save: false,
 					add: false,
+					publish: false,
 				},
 			},
 
@@ -218,6 +247,10 @@ export default {
 				data: {
 					id: {
 						value: "",
+						edited: false,
+					},
+					hide: {
+						value: false,
 						edited: false,
 					},
 					path: {
@@ -472,6 +505,49 @@ export default {
 					this.disabled.news.save = false;
 				});
 		},
+
+		publishNews() {
+			this.disabled.news.publish = true;
+
+			axios({
+				method: "post",
+				url: `${this.$store.getters.urlApi}` + `publish-news-once`,
+				headers: {
+					ContentType: "multipart/form-data",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: {
+					id: this.currentNews.data.id.value,
+				},
+			})
+				.then((response) => {
+					if (response.data.status) {
+						this.currentNews.data.hide.value = response.data.data;
+
+						this.$store.commit("addDebugger", {
+							title: "Успешно!",
+							body: response.data.message,
+							type: "completed",
+						});
+					} else {
+						this.$store.commit("addDebugger", {
+							title: "Ошибка.",
+							body: response.data.message,
+							type: "error",
+						});
+					}
+				})
+				.catch((error) => {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка.",
+						body: error,
+						type: "error",
+					});
+				})
+				.finally(() => {
+					this.disabled.news.publish = false;
+				});
+		},
 	},
 	mounted() {
 		if (this.$route.params.date === "new" || this.$route.params.time === "new") {
@@ -482,6 +558,7 @@ export default {
 				url: `${this.$store.getters.urlApi}` + `get-news-once`,
 				headers: {
 					Accept: "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: {
 					date: this.$route.params.date,
@@ -512,7 +589,6 @@ export default {
 				});
 		}
 	},
-	unmounted() {},
 };
 </script>
 

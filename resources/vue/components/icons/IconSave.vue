@@ -29,10 +29,10 @@ export default {
 <style scoped>
 svg {
 	cursor: pointer;
-	fill: var(--svg-icon-arrow-fill);
-}
-
-svg:hover {
 	fill: var(--svg-icon-arrow-fill-hover);
 }
+
+/* svg:hover {
+	fill: var(--svg-icon-arrow-fill-hover);
+} */
 </style>

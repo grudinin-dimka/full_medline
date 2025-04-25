@@ -54,7 +54,7 @@ Route::get('/get-shedules-all', [HomeController::class, 'getShedulesAll']);
 /* Новости */
 Route::get('/get-news-all', [HomeController::class, 'getNewsAll']);
 Route::post('/get-news-short', [HomeController::class, 'getNewsShort']);
-Route::post('/get-news-once', [HomeController::class, 'getNewsOnce']);
+Route::post('/get-news-once-without', [HomeController::class, 'getNewsOnceWithout']);
 Route::post('/get-news-more', [HomeController::class, 'getNewsMore']);
 
 /* Запись нового события */
@@ -91,7 +91,6 @@ Route::middleware(['auth:sanctum', 'admin-or-creator'])->group(function () {
    Route::post('/add-specialist', [AdminController::class, 'addSpecialist'])->middleware('auth:sanctum');
 
    Route::post('/save-specializations-changes', [AdminController::class, 'saveSpecializationsChanges'])->middleware('auth:sanctum');
-
    Route::post('/save-clinics-changes', [AdminController::class, 'saveClinicsChanges'])->middleware('auth:sanctum');
 
    // Расписание 
@@ -99,12 +98,16 @@ Route::middleware(['auth:sanctum', 'admin-or-creator'])->group(function () {
 
    // Цены 
    Route::get('/get-prices-files-all', [AdminController::class, 'getPricesFilesAll']);
+
    Route::post('/save-prices-changes', [AdminController::class, 'savePricesChanges']);
 
    // Новости 
+   Route::post('/get-news-once', [HomeController::class, 'getNewsOnce']);
+
    Route::post('/add-news', [AdminController::class, 'addNews']);
    Route::post('/save-news-changes-all', [AdminController::class, 'saveNewsChangesAll']);
    Route::post('/save-news-changes-once', [AdminController::class, 'saveNewsChangesOnce']);
+   Route::post('/publish-news-once', [AdminController::class, 'publishNewsOnce']);
 });
 
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/

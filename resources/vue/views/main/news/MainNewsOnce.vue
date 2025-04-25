@@ -73,7 +73,7 @@ export default {
 	mounted() {
 		axios({
 			method: "post",
-			url: `${this.$store.getters.urlApi}` + `get-news-once`,
+			url: `${this.$store.getters.urlApi}` + `get-news-once-without`,
 			headers: {
 				Accept: "application/json",
 			},

@@ -2,12 +2,12 @@
 	<svg
 		:width="width"
 		:height="height"
-		:class="type"
+		:class="look"
+		viewBox="0 0 16 18"
 		xmlns="http://www.w3.org/2000/svg"
-		viewBox="0 -960 960 960"
 	>
 		<path
-			d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"
+			d="M3 18C2.45 18 1.97917 17.8042 1.5875 17.4125C1.19583 17.0208 1 16.55 1 16V3H0V1H5V0H11V1H16V3H15V16C15 16.55 14.8042 17.0208 14.4125 17.4125C14.0208 17.8042 13.55 18 13 18H3ZM13 3H3V16H13V3ZM5 14H7V5H5V14ZM9 14H11V5H9V14Z"
 		/>
 	</svg>
 </template>
@@ -23,7 +23,7 @@ export default {
 			type: Number,
 			default: 20,
 		},
-		type: {
+		look: {
 			type: String,
 			default: "edit",
 		},
@@ -33,6 +33,11 @@ export default {
 
 <style scoped>
 svg {
+	cursor: pointer;
+}
+
+svg.white {
+	fill: white;
 	cursor: pointer;
 }
 

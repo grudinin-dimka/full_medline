@@ -20,10 +20,7 @@
 					></div>
 				</div>
 				<!-- Фамилия, имя, отчество -->
-				<container-input-three
-					:fieldset="true"
-					:type="modal.type == 'create' ? 'create' : 'edit'"
-				>
+				<container-input-three :fieldset="true">
 					<template #legend> Ф.И.О. </template>
 					<!-- Первая -->
 					<template #title-one>
@@ -86,8 +83,9 @@
 					</template>
 				</container-input-three>
 			</div>
+
 			<!-- Пароль и генератор пароля -->
-			<container-input-two :fieldset="true" :type="modal.type == 'create' ? 'create' : 'edit'">
+			<container-input-two :fieldset="true">
 				<template #legend>
 					<span>ПАРОЛЬ И ГЕНЕРАТОР</span>
 				</template>
@@ -119,8 +117,9 @@
 					<span class="error" v-if="false"> Ошибка </span>
 				</template>
 			</container-input-two>
+
 			<!-- Аватар и дата рождения -->
-			<container-input-two :fieldset="true" :type="modal.type == 'create' ? 'create' : 'edit'">
+			<container-input-two :fieldset="true">
 				<template #legend>
 					<span>АВАТАР И ДАТА РОЖДЕНИЯ</span>
 				</template>
@@ -159,8 +158,9 @@
 					</span>
 				</template>
 			</container-input-two>
+
 			<!-- Почта и псевдоним -->
-			<container-input-two :fieldset="true" :type="modal.type == 'create' ? 'create' : 'edit'">
+			<container-input-two :fieldset="true">
 				<template #legend>
 					<span>ПОЧТА И ПСЕВДОНИМ</span>
 				</template>
@@ -203,8 +203,9 @@
 					</span>
 				</template>
 			</container-input-two>
+
 			<!-- Статус и права -->
-			<container-input-two :fieldset="true" :type="modal.type == 'create' ? 'create' : 'edit'">
+			<container-input-two :fieldset="true">
 				<template #legend>
 					<span>СТАТУС И ПРАВА</span>
 				</template>
@@ -251,15 +252,17 @@
 					:disabled="disabled.users.save"
 					v-if="modal.type === 'edit'"
 				>
-					Сохранить
+					<icon-edit :width="28" :height="28" :look="'white'" />
+					Обновить
 				</ButtonDefault>
-				<ButtonClaim
+				<ButtonDefault
 					@click="addUser"
 					:disabled="disabled.users.create"
 					v-if="modal.type === 'create'"
 				>
-					Создать
-				</ButtonClaim>
+					<icon-add :width="28" :height="28" :look="'white'" />
+					Добавить
+				</ButtonDefault>
 			</BlockButtons>
 		</template>
 	</admin-modal>
@@ -458,7 +461,10 @@
 		</template>
 
 		<template #buttons>
-			<ButtonDefault @click="createUser"> Добавить </ButtonDefault>
+			<ButtonDefault @click="createUser">
+				<icon-add :width="28" :height="28" :look="'white'" />
+				Добавить
+			</ButtonDefault>
 		</template>
 	</block-once>
 </template>
@@ -480,6 +486,7 @@ import ContainerInputTwo from "../../../components/ui/admin/containers/input/Con
 import ContainerInputThree from "../../../components/ui/admin/containers/input/ContainerInputThree.vue";
 
 import IconEdit from "../../../components/icons/IconEdit.vue";
+import IconAdd from "../../../components/icons/IconAdd.vue";
 import IconRemove from "../../../components/icons/IconRemove.vue";
 import IconLockClose from "../../../components/icons/users/IconLockClose.vue";
 import IconLockOpen from "../../../components/icons/users/IconLockOpen.vue";
@@ -504,17 +511,21 @@ export default {
 		AdminSubModal,
 		PasswordGenerator,
 		BlockOnce,
-		IconLoad,
-		IconSave,
+
 		ContainerInput,
 		ContainerInputOnce,
 		ContainerInputTwo,
 		ContainerInputThree,
+
+		IconLoad,
+		IconSave,
+		IconAdd,
 		IconEdit,
 		IconRemove,
 		IconLockClose,
 		IconLockOpen,
 		IconPassword,
+
 		BlockButtons,
 		BlockButtonsWide,
 		ButtonClaim,
@@ -522,6 +533,7 @@ export default {
 		ButtonRemoveWide,
 		ButtonDefaultWide,
 		ButtonPasswordWide,
+
 		axios,
 	},
 	data() {
@@ -781,8 +793,6 @@ export default {
 					{
 						this[name].type = "create";
 						this[name].status = true;
-						this[name].style.create = true;
-						this[name].style.delete = false;
 					}
 					document.body.classList.add("modal-open");
 					break;
@@ -790,8 +800,6 @@ export default {
 					{
 						this[name].type = "edit";
 						this[name].status = true;
-						this[name].style.delete = false;
-						this[name].style.create = false;
 					}
 					document.body.classList.add("modal-open");
 					break;

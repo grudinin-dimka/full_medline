@@ -34,7 +34,7 @@ export default {
 
 	background-color: white;
 	border: var(--default-border);
-	border-radius: var(--button-border-radius);
+	border-radius: 100px;
 	color: black;
 	height: 50px;
 	min-width: 100px;

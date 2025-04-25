@@ -1100,7 +1100,7 @@ class HomeController extends Controller
       };
 
       try {
-         $news = News::all()->sortByDesc('created_at')->take($request->limit)->values()->all();
+         $news = News::all()->where('hide', 1)->sortByDesc('created_at')->take($request->limit)->values()->all();
 
          foreach ($news as $key => $value) {
             $value->date = Carbon::parse($value->created_at)->format('d.m.Y H:i:s');
@@ -1142,7 +1142,7 @@ class HomeController extends Controller
       };
 
       try {
-         $news = News::whereDate('created_at', Carbon::parse($request->date))->whereTime('created_at', '=', $request->time)->first();
+         $news = News::whereDate('created_at', Carbon::parse($request->date))->whereTime('created_at', '=', $request->time)->first();         
       } catch (Throwable $th) {
          return response()->json([
             "status" => false,
@@ -1168,6 +1168,63 @@ class HomeController extends Controller
             "image" => $news->image,
             "title" => $news->title,
             "description" => $news->description,
+            "hide" => $news->hide,
+         ],
+      ]);
+   }
+
+   /* Получение одной новости */
+   public function getNewsOnceWithout(Request $request) {
+      $validator = Validator::make($request->all(), [
+         'date' => 'required|date_format:d.m.Y',
+         'time' => 'required|date_format:H:i:s',
+      ]);
+
+      if ($validator->fails()) {
+         return response()->json([
+            "status" => false,
+            "message" => "Некорректные данные.",
+            "data" => null,
+         ]);
+      };
+
+      try { 
+         $news = News::whereDate('created_at', Carbon::parse($request->date))->whereTime('created_at', '=', $request->time)->first();
+         
+         if (!$news->hide) {
+            return response()->json([
+               "status" => false,
+               "message" => "Такой новости нет.",
+               "data" => null,
+            ]);
+         }
+      
+      } catch (Throwable $th) {
+         return response()->json([
+            "status" => false,
+            "message" => "Не удалось получить данные.",
+            "data" => null,
+         ]);
+      };
+      
+      if (!$news) {
+         return response()->json([
+            "status" => false,
+            "message" => "Такой новости нет.",
+            "data" => null,
+         ]);
+      };
+
+      return response()->json([
+         "status" => true,
+         "message" => "Новости получены.",
+         "data" => [
+            "id" => $news->id,
+            "path" => Storage::url('news/' . $news->image),
+            "image" => $news->image,
+            "title" => $news->title,
+            "description" => $news->description,
+            "hide" => $news->hide,
          ],
       ]);
    }
@@ -1191,7 +1248,7 @@ class HomeController extends Controller
       $date = Carbon::parse($request->date . ' ' . $request->time);
 
       try {
-         $news = News::where('created_at', '<', $date)->get();
+         $news = News::where('created_at', '<', $date)->where('hide', 1)->get();
          
          $newsSorted = $news->sortByDesc('created_at')->take($request->limit)->values()->all();
 
@@ -1214,7 +1271,7 @@ class HomeController extends Controller
          "message" => "Новости получены.",
          "data" => [
             "news" => $newsSorted,
-            "count" => News::all()->count(),
+            "count" => News::all()->where('hide', 1)->count(),
          ],
       ]);
    }

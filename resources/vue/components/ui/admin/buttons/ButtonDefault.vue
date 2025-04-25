@@ -1,7 +1,9 @@
 <template>
-	<button class="default" :class="look" :disabled="disabled">
+	<button :class="look" :disabled="disabled">
 		<span class="loader" v-if="disabled"></span>
-		<slot v-else></slot>
+		<div class="content" :class="{ disabled: disabled }">
+			<slot></slot>
+		</div>
 	</button>
 </template>
 
@@ -21,17 +23,19 @@ export default {
 </script>
 
 <style scoped>
-button.default {
+button {
+	position: relative;
 	cursor: pointer;
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	gap: 10px;
 
-	padding: 15px 30px;
+	padding: 15px 20px;
 	max-height: 54px;
 	min-width: 160px;
 	border: 0px solid black;
-	border-radius: 10px;
+	border-radius: 100px;
 
 	font-size: 20px;
 	color: white;
@@ -40,7 +44,20 @@ button.default {
 	transition: all 0.2s;
 }
 
-button.default:hover {
+button > .content {
+	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+}
+
+button > .content.disabled {
+	visibility: hidden;
+	opacity: 0;
+}
+
+button:hover {
 	background-color: var(--button-default-color-hover);
 }
 
@@ -57,6 +74,8 @@ button.white:hover {
 }
 
 .loader {
+	position: absolute;
+
 	width: 26px;
 	height: 26px;
 	border: 3px solid #fff;

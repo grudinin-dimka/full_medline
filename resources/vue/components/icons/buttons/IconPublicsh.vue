@@ -3,11 +3,11 @@
 		:width="width"
 		:height="height"
 		:class="look"
+		viewBox="0 0 16 16"
 		xmlns="http://www.w3.org/2000/svg"
-		viewBox="0 -960 960 960"
 	>
 		<path
-			d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"
+			d="M7 16V7.85L4.4 10.45L3 9L8 4L13 9L11.6 10.45L9 7.85V16H7ZM0 5V2C0 1.45 0.195833 0.979167 0.5875 0.5875C0.979167 0.195833 1.45 0 2 0H14C14.55 0 15.0208 0.195833 15.4125 0.5875C15.8042 0.979167 16 1.45 16 2V5H14V2H2V5H0Z"
 		/>
 	</svg>
 </template>
@@ -35,14 +35,6 @@ export default {
 svg {
 	cursor: pointer;
 	fill: var(--primary-color);
-}
-
-svg.delete {
-	fill: #d74949;
-}
-
-svg.create {
-	fill: rgb(62, 208, 76);
 }
 
 svg.white {

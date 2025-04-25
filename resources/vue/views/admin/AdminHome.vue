@@ -134,6 +134,7 @@
 					v-if="!currentSlide.data.create.value & !currentSlide.data.delete.value"
 					@click.prevent="markDeleteSlide"
 				>
+					<icon-remove :width="24" :height="22" :look="'white'"/>
 					Удалить
 				</button-remove>
 				<button-default
@@ -141,6 +142,7 @@
 					@click.prevent="updateSlide"
 					:disabled="disabled.slider.update"
 				>
+					<icon-edit :width="28" :height="28" :look="'white'" />
 					Обновить
 				</button-default>
 				<button-default v-if="currentSlide.data.delete.value" @click.prevent="markDeleteSlide">
@@ -149,7 +151,8 @@
 			</block-buttons>
 			<block-buttons v-if="modal.type == 'create'">
 				<button-default @click.prevent="addSlide" :disabled="disabled.slider.create">
-					Создать
+					<icon-add :width="28" :height="28" :look="'white'" />
+					Добавить
 				</button-default>
 			</block-buttons>
 		</template>
@@ -167,8 +170,10 @@
 		<template #title>СЛАЙДЕР</template>
 
 		<template #options>
-			<icon-load :width="28" :height="28" v-if="disabled.slider.save" />
-			<icon-save :width="28" :height="28" @click="saveSlidesChanges" v-else />
+			<ButtonDefault look="white" :disabled="disabled.slider.save" @click="saveSlidesChanges">
+				<icon-save :width="28" :height="28" />
+				Сохранить
+			</ButtonDefault>
 		</template>
 
 		<template #body>
@@ -233,6 +238,8 @@
 
 		<template #buttons>
 			<ButtonDefault @click="openSlide(null, 'create')" :disabled="disabled.slider.add">
+				<icon-add :width="28" :height="28" :look="'white'" />
+
 				Добавить
 			</ButtonDefault>
 		</template>
@@ -245,8 +252,10 @@
 		<template #title>ФУТЕР</template>
 
 		<template #options>
-			<icon-load :width="28" :height="28" v-if="disabled.footer.save" />
-			<icon-save :width="28" :height="28" @click="saveFooterChanges" v-else />
+			<ButtonDefault look="white" :disabled="disabled.footer.save" @click="saveFooterChanges">
+				<icon-save :width="28" :height="28" />
+				Сохранить
+			</ButtonDefault>
 		</template>
 
 		<template #body>
@@ -425,6 +434,9 @@ import IconHide from "../../components/icons/IconHide.vue";
 import IconVisible from "../../components/icons/IconVisible.vue";
 import IconSave from "../../components/icons/IconSave.vue";
 import IconLoad from "../../components/icons/IconLoad.vue";
+import IconAdd from "../../components/icons/IconAdd.vue";
+import IconEdit from "../../components/icons/IconEdit.vue";
+import IconRemove from "../../components/icons/IconRemove.vue";
 
 import axios from "axios";
 import shared from "../../services/shared";
@@ -450,6 +462,10 @@ export default {
 		SlideUserCard,
 		SlideLink,
 		SlidePath,
+
+		IconRemove,
+		IconEdit,
+		IconAdd,
 		IconArrow,
 		IconHide,
 		IconVisible,

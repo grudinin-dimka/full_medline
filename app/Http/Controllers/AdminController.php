@@ -1806,6 +1806,45 @@ class AdminController extends Controller
       ]);
    }
 
+   /* Публикация новости */
+   public function publishNewsOnce(Request $request) {
+      $validator = Validator::make($request->all(), [
+         'id' => [
+            'required',
+            Rule::exists('news', 'id'),
+         ],
+      ]);
+
+      if ($validator->fails()) {
+         return response()->json([
+            "status" => false,
+            "message" => "Некорректные данные.",
+            "data" => null,
+         ]);
+      };
+
+      $news = News::find($request->id);
+      $message = $news->hide ? 'Снято с публикации.' : 'Опубликовано.';
+
+      try {
+         $newsUpdate = $news->update([
+            "hide" => !$news->hide,
+         ]);  
+      } catch (Throwable $th) {
+         return response()->json([
+            "status" => false,
+            "message" => "Не удалось опубликовать новость.",
+            "data" => null,
+         ]);
+      };
+
+      return response()->json([
+         "status" => true,
+         "message" => $message,
+         "data" => $news->hide,
+      ]);
+   }
+
    /* Изменение новости */
    public function saveNewsChangesAll(Request $request) {
       $validator = Validator::make($request->all(), [
@@ -1826,10 +1865,16 @@ class AdminController extends Controller
       try {
          // Удаление
          foreach ($request->news as $key => $value) {
+            $news = News::find($value['id']);
+
             if ($value["delete"] === true){
-               $news = News::find($value['id']);
                $news->delete();
+               continue;
             };         
+
+            $news->update([
+               "hide" => $value['hide'],
+            ]);
          };
 
          $news = News::all();
