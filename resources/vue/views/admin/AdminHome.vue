@@ -1278,7 +1278,7 @@ export default {
 
 .slider-block:hover {
 	border: var(--input-border-focus);
-	background-color: #f2feff;
+	background-color: var(--item-background-color-active);
 }
 
 .slider-block > .head {

@@ -160,7 +160,7 @@ p {
 }
 
 .section-info-title {
-	color: #00abbd;
+	color: var(--primary-color);
 	font-size: 55px;
 }
 

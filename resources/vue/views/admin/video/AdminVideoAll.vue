@@ -9,23 +9,49 @@
 		<template #title>ВИДЕО</template>
 
 		<template #options>
-			<icon-load :width="28" :height="28" v-if="disabled.video.save" />
-			<icon-save :width="28" :height="28" @click="console.log('save')" v-else />
+			<button-default
+				@click.prevent="console.log('save')"
+				:disabled="disabled.video.save"
+				:look="'white'"
+			>
+				<icon-save :width="28" :height="28" />
+				Сохранить
+			</button-default>
 		</template>
 
 		<template #body>
 			<div class="evideo">
 				<div class="evideo__item">
+					<div class="evideo__item-video">
+						<video controls width="100%" preload="metadata">
+							<source :src="`/storage/video/IMG_8240.webm`" type="video/webm" />
+						</video>
+					</div>
 					<div class="evideo__item-title">Заголовок</div>
-					<div class="evideo__item-input"></div>
+				</div>
+				<div class="evideo__item">
+					<div class="evideo__item-video">
+						<video controls width="100%" preload="metadata">
+							<source :src="`/storage/video/IMG_8240.webm`" type="video/webm" />
+						</video>
+					</div>
+					<div class="evideo__item-title">Заголовок</div>
+				</div>
+				<div class="evideo__item">
+					<div class="evideo__item-video">
+						<video controls width="100%" preload="metadata">
+							<source :src="`/storage/video/IMG_8240.webm`" type="video/webm" />
+						</video>
+					</div>
+					<div class="evideo__item-title">Заголовок</div>
 				</div>
 			</div>
 
-			<loader-child
+			<!-- <loader-child
 				:isLoading="loading.loader.video"
 				:minHeight="200"
 				@loaderChildAfterLeave="loaderChildAfterLeave"
-			/>
+			/> -->
 		</template>
 	</block-once>
 </template>
@@ -93,4 +119,16 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.evideo {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 20px;
+}
+
+.evideo__item-video {
+	width: 100%;
+	max-height: 400px;
+	object-fit: cover;
+}
+</style>

@@ -180,13 +180,13 @@
 						>
 							НОВОСТИ
 						</a>
-						<!-- <a
+						<a
 							href="#"
 							:class="{ active: isActive('/admin/evideo') }"
 							@click.prevent="insertPage(links.info, links.info.list.video)"
 						>
 							ВИДЕО
-						</a> -->
+						</a>
 						<a
 							href="#"
 							:class="{ active: isActive('/admin/econtacts') }"
