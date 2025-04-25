@@ -171,6 +171,7 @@
 					Обновить
 				</ButtonDefault>
 				<ButtonDefault @click="deleteInfoBlock" v-if="currentInfoBlock.data.delete.value">
+					<icon-unremove :width="28" :height="28" :look="'white'" />
 					Вернуть
 				</ButtonDefault>
 			</BlockButtons>
@@ -297,6 +298,7 @@ import IconHide from "../../../components/icons/IconHide.vue";
 import IconVisible from "../../../components/icons/IconVisible.vue";
 import IconEdit from "../../../components/icons/IconEdit.vue";
 import IconRemove from "../../../components/icons/IconRemove.vue";
+import IconUnremove from "../../../components/icons/IconUnremove.vue";
 import IconCreate from "../../../components/icons/IconCreate.vue";
 import IconLoad from "../../../components/icons/IconLoad.vue";
 
@@ -335,6 +337,7 @@ export default {
 		IconEdit,
 		IconAdd,
 		IconRemove,
+		IconUnremove,
 		IconCreate,
 		IconLoad,
 		LoaderChild,

@@ -94,6 +94,7 @@
 					v-if="modal.type == 'edit' && currentContact.data.delete.value"
 					@click="deleteContact"
 				>
+					<icon-unremove :width="28" :height="28" :look="'white'" />
 					Вернуть
 				</ButtonDefault>
 			</BlockButtons>
@@ -275,6 +276,7 @@ import IconHide from "../../../components/icons/IconHide.vue";
 import IconVisible from "../../../components/icons/IconVisible.vue";
 import IconEdit from "../../../components/icons/IconEdit.vue";
 import IconRemove from "../../../components/icons/IconRemove.vue";
+import IconUnremove from "../../../components/icons/IconUnremove.vue";
 import IconCreate from "../../../components/icons/IconCreate.vue";
 import IconSave from "../../../components/icons/IconSave.vue";
 import IconLoad from "../../../components/icons/IconLoad.vue";
@@ -318,6 +320,7 @@ export default {
 		IconSave,
 		IconEdit,
 		IconRemove,
+		IconUnremove,
 		IconCreate,
 		IconLoad,
 		IconContactHome,

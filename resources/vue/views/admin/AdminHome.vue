@@ -146,6 +146,7 @@
 					Обновить
 				</button-default>
 				<button-default v-if="currentSlide.data.delete.value" @click.prevent="markDeleteSlide">
+					<icon-unremove :width="28" :height="28" :look="'white'" />
 					Вернуть
 				</button-default>
 			</block-buttons>
@@ -437,6 +438,7 @@ import IconLoad from "../../components/icons/IconLoad.vue";
 import IconAdd from "../../components/icons/IconAdd.vue";
 import IconEdit from "../../components/icons/IconEdit.vue";
 import IconRemove from "../../components/icons/IconRemove.vue";
+import IconUnremove from "../../components/icons/IconUnremove.vue";
 
 import axios from "axios";
 import shared from "../../services/shared";
@@ -464,6 +466,7 @@ export default {
 		SlidePath,
 
 		IconRemove,
+		IconUnremove,
 		IconEdit,
 		IconAdd,
 		IconArrow,

@@ -432,21 +432,21 @@
 							@click="editUserBlock(user)"
 						>
 							<IconLockOpen
-								:width="22"
-								:height="22"
+								:width="24"
+								:height="24"
 								:type="'default'"
 								v-if="user.statusId === 1"
 							></IconLockOpen>
 							<IconLockClose
-								:width="22"
-								:height="22"
+								:width="24"
+								:height="24"
 								:type="'delete'"
 								v-if="user.statusId === 2"
 							></IconLockClose>
 							<div class="label">Блокировка</div>
 						</div>
 						<div class="icon delete" @click="editUserDelete(user)">
-							<IconRemove :width="24" :height="24" :type="'delete'"></IconRemove>
+							<IconRemove :width="24" :height="22" :look="'delete'"></IconRemove>
 							<div class="label">Удаление</div>
 						</div>
 					</div>
@@ -1299,7 +1299,7 @@ export default {
 	align-items: center;
 
 	border: var(--input-border);
-	border-radius: 15px;
+	border-radius: calc(var(--default-border-radius) / 2);
 	padding: 10px 20px;
 	transition: all 0.2s;
 }

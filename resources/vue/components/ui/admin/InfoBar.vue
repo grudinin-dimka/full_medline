@@ -26,7 +26,7 @@
     flex: 1 0 350px;
 
     padding: 15px 20px;
-    border-radius: 10px;
+    border-radius: var(--default-border-radius);
 
     font-size: 20px;
     background-color: white;    

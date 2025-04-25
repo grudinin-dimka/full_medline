@@ -77,7 +77,11 @@
 					<ul>
 						<li v-for="certificate in specialist.certificates">
 							<article>
-								<div>{{ certificate.name }}.</div>
+								<div>
+									{{
+										`${formatDate(certificate.endEducation)} - ${certificate.name} (${certificate.organization}) `
+									}}.
+								</div>
 							</article>
 						</li>
 					</ul>
@@ -87,7 +91,7 @@
 					<ul>
 						<li v-for="education in specialist.educations">
 							<article>
-								<div>{{ education.name + " (" + education.organization + ")." }}</div>
+								<div>{{ `${formatDate(education.date)} - ${education.name} (${education.organization}).` }}</div>
 							</article>
 						</li>
 					</ul>
@@ -179,6 +183,17 @@ export default {
 		loaderChildAfterLeave() {
 			this.loading.sections.profile = true;
 		},
+
+		formatDate(date) {
+			let options = {
+				month: "numeric",
+				day: "numeric",
+				year: "numeric",
+			};
+
+			return new Date(date).toLocaleString("ru", options);
+		},
+
 		getWorkAges(date) {
 			let startDate = new Date(date);
 			let currentDate = new Date();

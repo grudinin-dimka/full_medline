@@ -1121,7 +1121,7 @@ class HomeController extends Controller
          "message" => "Данные успешно получены.",
          "data" => [
             "news" => $news,
-            "count" => News::all()->count(),
+            "count" => News::all()->where('hide', 1)->count(),
          ],
       ]);
    }
