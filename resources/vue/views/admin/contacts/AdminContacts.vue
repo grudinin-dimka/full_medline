@@ -77,7 +77,7 @@
 		<template #footer>
 			<BlockButtons>
 				<button-default v-if="modal.type == 'create'" @click="addContact">
-					<icon-add :width="28" :height="28" :look="'white'" />
+					<icon-add :width="23" :height="23" :look="'white'" />
 					Добавить
 				</button-default>
 				<template v-if="modal.type == 'edit' && !currentContact.data.delete.value">
@@ -112,10 +112,6 @@
 		<template #title>ТЕЛЕФОН</template>
 		<template #body>
 			<container-input-once>
-				<template #title>
-					<span>НОМЕР ТЕЛЕФОНА*</span>
-					<span v-if="currentPhone.data.name.edited"> (ИЗМЕНЕНО) </span>
-				</template>
 				<template #input>
 					<input
 						type="tel"
@@ -141,7 +137,7 @@
 					Обновить
 				</button-default>
 				<button-default v-if="subModalPhone.type == 'create'" @click="addContactPhone">
-					<icon-add :width="28" :height="28" :look="'white'" />
+					<icon-add :width="23" :height="23" :look="'white'" />
 					Добавить
 				</button-default>
 			</block-buttons>
@@ -159,10 +155,6 @@
 		<template #title>ПОЧТА</template>
 		<template #body>
 			<container-input-once>
-				<template #title>
-					<span>ЭЛЕКТРОННЫЙ АДРЕС*</span>
-					<span v-if="currentMail.data.name.edited"> (ИЗМЕНЕНО) </span>
-				</template>
 				<template #input>
 					<input
 						type="mail"
@@ -188,7 +180,7 @@
 					Обновить
 				</button-default>
 				<button-default v-if="subModalMail.type == 'create'" @click="addContactMail">
-					<icon-add :width="28" :height="28" :look="'white'" />
+					<icon-add :width="23" :height="23" :look="'white'" />
 					Добавить
 				</button-default>
 			</block-buttons>
@@ -240,7 +232,7 @@
 
 		<template #buttons>
 			<ButtonDefault @click="openModal('create')">
-				<icon-add :width="28" :height="28" :look="'white'" />
+				<icon-add :width="23" :height="23" :look="'white'" />
 				Добавить
 			</ButtonDefault>
 		</template>

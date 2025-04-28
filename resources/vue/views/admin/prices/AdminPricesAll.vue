@@ -31,7 +31,7 @@
 		<template #footer>
 			<block-buttons>
 				<ButtonDefault @click="createPrice" :disabled="disabled.prices.create">
-					<icon-add :width="28" :height="28" :look="'white'" />
+					<icon-add :width="23" :height="23" :look="'white'" />
 					Добавить
 				</ButtonDefault>
 			</block-buttons>
@@ -357,14 +357,7 @@ export default {
 								id: shared.getMaxId(this.table.body) + 1,
 								filename: response.data.data.replace("/storage/prices/", ""),
 								path: response.data.data,
-								date: new Date().toLocaleDateString("ru", {
-									year: "numeric",
-									month: "numeric",
-									day: "numeric",
-									hour: "numeric",
-									minute: "numeric",
-									second: "numeric",
-								}),
+								date: "Не определено",
 								delete: false,
 								create: true,
 							});

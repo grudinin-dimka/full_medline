@@ -8,10 +8,6 @@
 		</template>
 		<template #body>
 			<container-input-once>
-				<template #title>
-					<span>НАЗВАНИЕ*</span>
-					<span v-if="currentSpecialization.data.name.edited"> (ИЗМЕНЕНО) </span>
-				</template>
 				<template #input>
 					<input
 						type="text"
@@ -34,7 +30,7 @@
 		<template #footer>
 			<block-buttons>
 				<button-default @click="addSpecialization" v-if="modal.type == 'create'">
-					<icon-add :width="28" :height="28" :look="'white'"/>
+					<icon-add :width="23" :height="23" :look="'white'"/>
 					Добавить
 				</button-default>
 				<button-default @click="updateSpecialization" v-if="modal.type == 'edit'">

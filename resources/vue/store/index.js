@@ -4,6 +4,7 @@ import { createStore } from "vuex";
 import user from "./user.js";	
 import other from "./other.js";
 import debug from "./debug.js";
+import modal from "./modal.js";
 
 /* Создание хранилища */
 const store = createStore({
@@ -11,6 +12,7 @@ const store = createStore({
 		user,
 		other,
 		debug,
+		modal,
 	},
 });
 

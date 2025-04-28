@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- пропишем заголовок окна -->
+		<title>Технические работы</title>
+		<!-- не забываем о кодировке -->
+		<meta charset="utf-8" />
+		<!-- подключаем стили -->
+		<style>
+			body {
+            font-family: Verdana, Arial, sans-serif;
+            color: #000;
+				height: 100dvh;
+            margin: 0px;
+			}
+
+			h1 {
+				font-size: 30px;
+			}
+
+			p {
+				font-size: 22px;
+				margin: 0;
+			}
+
+			.template {
+				padding: 0 0 10px 50px;
+				text-align: center;
+			}
+
+			.block {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+
+				width: 100%;
+				height: 100%;
+			}
+
+			.bender {
+				max-width: 400px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="block">
+			<div class="template">
+				<h1>На сайте ведутся технические работы</h1>
+				<p>
+					На текущий момент наш интернет-ресурс недоступен. Матрица не сломалась. Мы просто
+					решили сделать ее немного лучше.
+				</p>
+				<p>Обновите страницу через пару минут. Все будет работать.</p>
+			</div>
+		</div>
+	</body>
+</html>

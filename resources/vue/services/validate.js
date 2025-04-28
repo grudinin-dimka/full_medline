@@ -6,6 +6,7 @@ const types = new Map([
 	["webp", "image/webp"],
 	["gif", "image/gif"],
 	["svg", "image/svg+xml"],
+
 	["json", "application/json"],
 	["pdf", "application/pdf"],
 	["doc", "application/msword"],
@@ -13,6 +14,10 @@ const types = new Map([
 	["xls", "application/vnd.ms-excel"],
 	["xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"],
 	["ods", "application/vnd.oasis.opendocument.spreadsheet"],
+
+	["webm", "video/webm"],
+	["mp4", "video/mp4"],
+	["mov", "video/quicktime"],
 ]);
 
 export default {

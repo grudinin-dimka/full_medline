@@ -260,7 +260,7 @@
 					:disabled="disabled.users.create"
 					v-if="modal.type === 'create'"
 				>
-					<icon-add :width="28" :height="28" :look="'white'" />
+					<icon-add :width="23" :height="23" :look="'white'" />
 					Добавить
 				</ButtonDefault>
 			</BlockButtons>
@@ -462,7 +462,7 @@
 
 		<template #buttons>
 			<ButtonDefault @click="createUser">
-				<icon-add :width="28" :height="28" :look="'white'" />
+				<icon-add :width="23" :height="23" :look="'white'" />
 				Добавить
 			</ButtonDefault>
 		</template>

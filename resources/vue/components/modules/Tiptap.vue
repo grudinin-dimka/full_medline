@@ -104,169 +104,173 @@
 					</button>
 				</div>
 
-				<!-- Форматирование -->
-				<div class="tiptap__buttons-item">
-					<button
-						@click="editor.chain().focus().toggleBold().run()"
-						:class="{ 'is-active': editor.isActive('bold') }"
-					>
-						<svg
-							width="11"
-							height="14"
-							viewBox="0 0 11 14"
-							xmlns="http://www.w3.org/2000/svg"
+				<template v-if="options.includes('format')">
+					<!-- Форматирование -->
+					<div class="tiptap__buttons-item">
+						<button
+							@click="editor.chain().focus().toggleBold().run()"
+							:class="{ 'is-active': editor.isActive('bold') }"
 						>
-							<path
-								d="M0 14V0H5.525C6.60833 0 7.60833 0.333333 8.525 1C9.44167 1.66667 9.9 2.59167 9.9 3.775C9.9 4.625 9.70833 5.27917 9.325 5.7375C8.94167 6.19583 8.58333 6.525 8.25 6.725C8.66667 6.90833 9.12917 7.25 9.6375 7.75C10.1458 8.25 10.4 9 10.4 10C10.4 11.4833 9.85833 12.5208 8.775 13.1125C7.69167 13.7042 6.675 14 5.725 14H0ZM3.025 11.2H5.625C6.425 11.2 6.9125 10.9958 7.0875 10.5875C7.2625 10.1792 7.35 9.88333 7.35 9.7C7.35 9.51667 7.2625 9.22083 7.0875 8.8125C6.9125 8.40417 6.4 8.2 5.55 8.2H3.025V11.2ZM3.025 5.5H5.35C5.9 5.5 6.3 5.35833 6.55 5.075C6.8 4.79167 6.925 4.475 6.925 4.125C6.925 3.725 6.78333 3.4 6.5 3.15C6.21667 2.9 5.85 2.775 5.4 2.775H3.025V5.5Z"
-							/>
-						</svg>
-					</button>
+							<svg
+								width="11"
+								height="14"
+								viewBox="0 0 11 14"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<path
+									d="M0 14V0H5.525C6.60833 0 7.60833 0.333333 8.525 1C9.44167 1.66667 9.9 2.59167 9.9 3.775C9.9 4.625 9.70833 5.27917 9.325 5.7375C8.94167 6.19583 8.58333 6.525 8.25 6.725C8.66667 6.90833 9.12917 7.25 9.6375 7.75C10.1458 8.25 10.4 9 10.4 10C10.4 11.4833 9.85833 12.5208 8.775 13.1125C7.69167 13.7042 6.675 14 5.725 14H0ZM3.025 11.2H5.625C6.425 11.2 6.9125 10.9958 7.0875 10.5875C7.2625 10.1792 7.35 9.88333 7.35 9.7C7.35 9.51667 7.2625 9.22083 7.0875 8.8125C6.9125 8.40417 6.4 8.2 5.55 8.2H3.025V11.2ZM3.025 5.5H5.35C5.9 5.5 6.3 5.35833 6.55 5.075C6.8 4.79167 6.925 4.475 6.925 4.125C6.925 3.725 6.78333 3.4 6.5 3.15C6.21667 2.9 5.85 2.775 5.4 2.775H3.025V5.5Z"
+								/>
+							</svg>
+						</button>
 
-					<button
-						@click="editor.chain().focus().toggleItalic().run()"
-						:class="{ 'is-active': editor.isActive('italic') }"
-					>
-						<svg
-							width="13"
-							height="14"
-							viewBox="0 0 13 14"
-							xmlns="http://www.w3.org/2000/svg"
+						<button
+							@click="editor.chain().focus().toggleItalic().run()"
+							:class="{ 'is-active': editor.isActive('italic') }"
 						>
-							<path d="M0 14V11.5H4L7 2.5H3V0H13V2.5H9.5L6.5 11.5H10V14H0Z" />
-						</svg>
-					</button>
+							<svg
+								width="13"
+								height="14"
+								viewBox="0 0 13 14"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<path d="M0 14V11.5H4L7 2.5H3V0H13V2.5H9.5L6.5 11.5H10V14H0Z" />
+							</svg>
+						</button>
 
-					<button
-						@click="editor.chain().focus().toggleUnderline().run()"
-						:class="{ 'is-active': editor.isActive('underline') }"
-					>
-						<svg
-							width="14"
-							height="18"
-							viewBox="0 0 14 18"
-							xmlns="http://www.w3.org/2000/svg"
+						<button
+							@click="editor.chain().focus().toggleUnderline().run()"
+							:class="{ 'is-active': editor.isActive('underline') }"
 						>
-							<path
-								d="M0 18V16H14V18H0ZM7 14C5.31667 14 4.00833 13.475 3.075 12.425C2.14167 11.375 1.675 9.98333 1.675 8.25V0H4.25V8.4C4.25 9.33333 4.48333 10.0917 4.95 10.675C5.41667 11.2583 6.1 11.55 7 11.55C7.9 11.55 8.58333 11.2583 9.05 10.675C9.51667 10.0917 9.75 9.33333 9.75 8.4V0H12.325V8.25C12.325 9.98333 11.8583 11.375 10.925 12.425C9.99167 13.475 8.68333 14 7 14Z"
-							/>
-						</svg>
-					</button>
+							<svg
+								width="14"
+								height="18"
+								viewBox="0 0 14 18"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<path
+									d="M0 18V16H14V18H0ZM7 14C5.31667 14 4.00833 13.475 3.075 12.425C2.14167 11.375 1.675 9.98333 1.675 8.25V0H4.25V8.4C4.25 9.33333 4.48333 10.0917 4.95 10.675C5.41667 11.2583 6.1 11.55 7 11.55C7.9 11.55 8.58333 11.2583 9.05 10.675C9.51667 10.0917 9.75 9.33333 9.75 8.4V0H12.325V8.25C12.325 9.98333 11.8583 11.375 10.925 12.425C9.99167 13.475 8.68333 14 7 14Z"
+								/>
+							</svg>
+						</button>
 
-					<button
-						@click="editor.chain().focus().toggleSubscript().run()"
-						:class="{ 'is-active': editor.isActive('subscript') }"
-					>
-						<svg
-							width="18"
-							height="16"
-							viewBox="0 0 18 16"
-							xmlns="http://www.w3.org/2000/svg"
+						<button
+							@click="editor.chain().focus().toggleSubscript().run()"
+							:class="{ 'is-active': editor.isActive('subscript') }"
 						>
-							<path
-								d="M13.125 16V14C13.125 13.7167 13.2208 13.4792 13.4125 13.2875C13.6042 13.0958 13.8417 13 14.125 13H16.125V12H13.125V11H16.125C16.4083 11 16.6458 11.0958 16.8375 11.2875C17.0292 11.4792 17.125 11.7167 17.125 12V13C17.125 13.2833 17.0292 13.5208 16.8375 13.7125C16.6458 13.9042 16.4083 14 16.125 14H14.125V15H17.125V16H13.125ZM0 14L4.625 6.725L0.325 0H2.975L6.075 5H6.175L9.25 0H11.925L7.6 6.725L12.25 14H9.575L6.175 8.575H6.075L2.675 14H0Z"
-							/>
-						</svg>
-					</button>
+							<svg
+								width="18"
+								height="16"
+								viewBox="0 0 18 16"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<path
+									d="M13.125 16V14C13.125 13.7167 13.2208 13.4792 13.4125 13.2875C13.6042 13.0958 13.8417 13 14.125 13H16.125V12H13.125V11H16.125C16.4083 11 16.6458 11.0958 16.8375 11.2875C17.0292 11.4792 17.125 11.7167 17.125 12V13C17.125 13.2833 17.0292 13.5208 16.8375 13.7125C16.6458 13.9042 16.4083 14 16.125 14H14.125V15H17.125V16H13.125ZM0 14L4.625 6.725L0.325 0H2.975L6.075 5H6.175L9.25 0H11.925L7.6 6.725L12.25 14H9.575L6.175 8.575H6.075L2.675 14H0Z"
+								/>
+							</svg>
+						</button>
 
-					<button
-						@click="editor.chain().focus().toggleSuperscript().run()"
-						:class="{ 'is-active': editor.isActive('superscript') }"
-					>
-						<svg
-							width="18"
-							height="16"
-							viewBox="0 0 18 16"
-							xmlns="http://www.w3.org/2000/svg"
+						<button
+							@click="editor.chain().focus().toggleSuperscript().run()"
+							:class="{ 'is-active': editor.isActive('superscript') }"
 						>
-							<path
-								d="M13.125 5V3C13.125 2.71667 13.2208 2.47917 13.4125 2.2875C13.6042 2.09583 13.8417 2 14.125 2H16.125V1H13.125V0H16.125C16.4083 0 16.6458 0.0958333 16.8375 0.2875C17.0292 0.479167 17.125 0.716667 17.125 1V2C17.125 2.28333 17.0292 2.52083 16.8375 2.7125C16.6458 2.90417 16.4083 3 16.125 3H14.125V4H17.125V5H13.125ZM0 16L4.625 8.725L0.325 2H2.975L6.075 7H6.175L9.25 2H11.925L7.6 8.725L12.25 16H9.575L6.175 10.575H6.075L2.675 16H0Z"
-							/>
-						</svg>
-					</button>
+							<svg
+								width="18"
+								height="16"
+								viewBox="0 0 18 16"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<path
+									d="M13.125 5V3C13.125 2.71667 13.2208 2.47917 13.4125 2.2875C13.6042 2.09583 13.8417 2 14.125 2H16.125V1H13.125V0H16.125C16.4083 0 16.6458 0.0958333 16.8375 0.2875C17.0292 0.479167 17.125 0.716667 17.125 1V2C17.125 2.28333 17.0292 2.52083 16.8375 2.7125C16.6458 2.90417 16.4083 3 16.125 3H14.125V4H17.125V5H13.125ZM0 16L4.625 8.725L0.325 2H2.975L6.075 7H6.175L9.25 2H11.925L7.6 8.725L12.25 16H9.575L6.175 10.575H6.075L2.675 16H0Z"
+								/>
+							</svg>
+						</button>
 
-					<button
-						@click="editor.chain().focus().unsetAllMarks().clearNodes().run()"
-						:class="{ 'is-active': editor.isActive('superscript') }"
-					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							height="24px"
-							viewBox="0 -960 960 960"
-							width="24px"
+						<button
+							@click="editor.chain().focus().unsetAllMarks().clearNodes().run()"
+							:class="{ 'is-active': editor.isActive('superscript') }"
 						>
-							<path
-								d="m528-546-93-93-121-121h486v120H568l-40 94ZM792-56 460-388l-80 188H249l119-280L56-792l56-56 736 736-56 56Z"
-							/>
-						</svg>
-					</button>
-				</div>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								height="24px"
+								viewBox="0 -960 960 960"
+								width="24px"
+							>
+								<path
+									d="m528-546-93-93-121-121h486v120H568l-40 94ZM792-56 460-388l-80 188H249l119-280L56-792l56-56 736 736-56 56Z"
+								/>
+							</svg>
+						</button>
+					</div>
+				</template>
 
-				<!-- Выравнивание -->
-				<div class="tiptap__buttons-item">
-					<button
-						@click="editor.chain().focus().setTextAlign('left').run()"
-						:class="{ 'is-active': editor.isActive({ textAlign: 'left' }) }"
-					>
-						<svg
-							width="18"
-							height="18"
-							viewBox="0 0 18 18"
-							xmlns="http://www.w3.org/2000/svg"
+				<template v-if="options.includes('align')">
+					<!-- Выравнивание -->
+					<div class="tiptap__buttons-item">
+						<button
+							@click="editor.chain().focus().setTextAlign('left').run()"
+							:class="{ 'is-active': editor.isActive({ textAlign: 'left' }) }"
 						>
-							<path
-								d="M0 18V16H18V18H0ZM0 14V12H12V14H0ZM0 10V8H18V10H0ZM0 6V4H12V6H0ZM0 2V0H18V2H0Z"
-							/>
-						</svg>
-					</button>
-					<button
-						@click="editor.chain().focus().setTextAlign('center').run()"
-						:class="{ 'is-active': editor.isActive({ textAlign: 'center' }) }"
-					>
-						<svg
-							width="18"
-							height="18"
-							viewBox="0 0 18 18"
-							xmlns="http://www.w3.org/2000/svg"
+							<svg
+								width="18"
+								height="18"
+								viewBox="0 0 18 18"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<path
+									d="M0 18V16H18V18H0ZM0 14V12H12V14H0ZM0 10V8H18V10H0ZM0 6V4H12V6H0ZM0 2V0H18V2H0Z"
+								/>
+							</svg>
+						</button>
+						<button
+							@click="editor.chain().focus().setTextAlign('center').run()"
+							:class="{ 'is-active': editor.isActive({ textAlign: 'center' }) }"
 						>
-							<path
-								d="M0 18V16H18V18H0ZM4 14V12H14V14H4ZM0 10V8H18V10H0ZM4 6V4H14V6H4ZM0 2V0H18V2H0Z"
-							/>
-						</svg>
-					</button>
-					<button
-						@click="editor.chain().focus().setTextAlign('right').run()"
-						:class="{ 'is-active': editor.isActive({ textAlign: 'right' }) }"
-					>
-						<svg
-							width="18"
-							height="18"
-							viewBox="0 0 18 18"
-							xmlns="http://www.w3.org/2000/svg"
+							<svg
+								width="18"
+								height="18"
+								viewBox="0 0 18 18"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<path
+									d="M0 18V16H18V18H0ZM4 14V12H14V14H4ZM0 10V8H18V10H0ZM4 6V4H14V6H4ZM0 2V0H18V2H0Z"
+								/>
+							</svg>
+						</button>
+						<button
+							@click="editor.chain().focus().setTextAlign('right').run()"
+							:class="{ 'is-active': editor.isActive({ textAlign: 'right' }) }"
 						>
-							<path
-								d="M0 2V0H18V2H0ZM6 6V4H18V6H6ZM0 10V8H18V10H0ZM6 14V12H18V14H6ZM0 18V16H18V18H0Z"
-							/>
-						</svg>
-					</button>
-					<button
-						@click="editor.chain().focus().setTextAlign('justify').run()"
-						:class="{ 'is-active': editor.isActive({ textAlign: 'justify' }) }"
-					>
-						<svg
-							width="18"
-							height="18"
-							viewBox="0 0 18 18"
-							xmlns="http://www.w3.org/2000/svg"
+							<svg
+								width="18"
+								height="18"
+								viewBox="0 0 18 18"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<path
+									d="M0 2V0H18V2H0ZM6 6V4H18V6H6ZM0 10V8H18V10H0ZM6 14V12H18V14H6ZM0 18V16H18V18H0Z"
+								/>
+							</svg>
+						</button>
+						<button
+							@click="editor.chain().focus().setTextAlign('justify').run()"
+							:class="{ 'is-active': editor.isActive({ textAlign: 'justify' }) }"
 						>
-							<path
-								d="M0 18V16H18V18H0ZM0 14V12H18V14H0ZM0 10V8H18V10H0ZM0 6V4H18V6H0ZM0 2V0H18V2H0Z"
-							/>
-						</svg>
-					</button>
-				</div>
+							<svg
+								width="18"
+								height="18"
+								viewBox="0 0 18 18"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<path
+									d="M0 18V16H18V18H0ZM0 14V12H18V14H0ZM0 10V8H18V10H0ZM0 6V4H18V6H0ZM0 2V0H18V2H0Z"
+								/>
+							</svg>
+						</button>
+					</div>
+				</template>
 
-				<template v-if="look !== 'title'">
-					<!-- Доп. элементы -->
+				<template v-if="options.includes('list')">
+					<!-- Списки -->
 					<div class="tiptap__buttons-item">
 						<button
 							@click="editor.chain().focus().toggleBlockquote().run()"
@@ -316,7 +320,9 @@
 							</svg>
 						</button>
 					</div>
+				</template>
 
+				<template v-if="options.includes('link')">
 					<!-- Ссылки -->
 					<div class="tiptap__buttons-item">
 						<button
@@ -377,7 +383,9 @@
 							</svg>
 						</button>
 					</div>
+				</template>
 
+				<template v-if="options.includes('image')">
 					<!-- Вставка контента -->
 					<div class="tiptap__buttons-item">
 						<button @click="openImage">
@@ -517,9 +525,9 @@ export default {
 			type: Boolean,
 			default: true,
 		},
-		look: {
-			type: String,
-			default: "default",
+		options: {
+			type: Array,
+			default: ["format", "align", "list", "link", "image"],
 		},
 		minHeight: {
 			type: Number,
@@ -817,9 +825,9 @@ export default {
 	display: flex;
 	flex-direction: column;
 	flex-wrap: wrap;
-	gap: 20px;
+	gap: 10px;
 
-	margin-bottom: 20px;
+	margin-bottom: 10px;
 }
 
 .tiptap__buttons-body {

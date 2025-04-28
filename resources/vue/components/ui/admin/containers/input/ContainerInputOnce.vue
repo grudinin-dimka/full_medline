@@ -3,7 +3,7 @@
 		class="container-input-once"
 		:class="type"
 	>
-		<label>
+		<label v-if="$slots.title">
 			<slot name="title"></slot>
 		</label>
 		<slot name="input"></slot>

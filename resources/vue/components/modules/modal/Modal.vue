@@ -86,11 +86,18 @@ export default {
 	methods: {
 		open() {
 			this.isOpen = true;
+			this.$store.commit("registerModal", this);
+
 			document.body.classList.add("modal-open");
 		},
 		close() {
 			this.isOpen = false;
-			document.body.classList.remove("modal-open");
+
+			if (!this.$store.getters.isOpenMoreModal) {
+				document.body.classList.remove("modal-open");
+			}
+
+			this.$store.commit("unregisterModal", this);
 		},
 	},
 };
@@ -119,6 +126,7 @@ export default {
 }
 
 .modal {
+	box-sizing: border-box;
 	position: fixed;
 	z-index: 500;
 	top: 0px;
@@ -126,6 +134,7 @@ export default {
 
 	border: var(--modal-border);
 	border-radius: var(--modal-border-radius);
+	padding: 20px;
 
 	width: 100%;
 	height: 100%;
@@ -242,8 +251,6 @@ export default {
 .modal.unclamped {
 	display: grid;
 	grid-template-columns: auto;
-
-	padding: 30px;
 
 	overflow: auto;
 }
@@ -380,6 +387,10 @@ export default {
 }
 
 @media screen and (max-width: 500px) {
+	.modal {
+		padding: 0px;
+	}
+
 	.modal__body {
 		height: 100%;
 	}

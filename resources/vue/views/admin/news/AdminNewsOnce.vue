@@ -13,7 +13,7 @@
 		<template #options>
 			<template v-if="$route.params.date === 'new' || $route.params.time === 'new'">
 				<ButtonDefault look="white" :disabled="disabled.news.add" @click="addNews">
-					<icon-add :width="28" :height="28" />
+					<icon-add :width="23" :height="23" />
 					Добавить
 				</ButtonDefault>
 			</template>
@@ -133,7 +133,7 @@
 						v-model="currentNews.data.title.value"
 						:editable="true"
 						:limit="500"
-						:look="'title'"
+						:options="['format', 'align']"
 						:placeholder="'Заголовок'"
 						:error="currentNews.errors.title.status"
 					>
@@ -148,6 +148,7 @@
 						v-model="currentNews.data.description.value"
 						:editable="true"
 						:limit="10_000"
+						:options="['format', 'align', 'list', 'link', 'image']"
 						:placeholder="'Текст новости'"
 						:error="currentNews.errors.description.status"
 					>

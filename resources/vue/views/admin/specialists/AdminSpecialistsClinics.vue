@@ -194,7 +194,7 @@
 		<template #footer>
 			<block-buttons>
 				<button-default v-if="modal.type == 'create'" @click="addClinic">
-					<icon-add :width="28" :height="28" :look="'white'"/>
+					<icon-add :width="23" :height="23" :look="'white'"/>
 					Добавить
 				</button-default>
 				<button-default v-if="modal.type == 'edit'" @click="updateClinic">

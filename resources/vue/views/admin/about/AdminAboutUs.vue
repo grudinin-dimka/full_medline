@@ -41,7 +41,7 @@
 					></div>
 					<div class="buttons add" v-if="!currentInfoBlock.data.delete.value">
 						<div class="icon create" @click="createImage('imageOne')">
-							<IconCreate :width="24" :height="24" :type="'create'"></IconCreate>
+							<IconAdd :width="19" :height="19" :look="'create'"></IconAdd>
 						</div>
 					</div>
 				</div>
@@ -70,7 +70,7 @@
 					></div>
 					<div class="buttons add" v-if="!currentInfoBlock.data.delete.value">
 						<div class="icon create" @click="createImage('imageTwo')">
-							<IconCreate :width="24" :height="24" :type="'create'"></IconCreate>
+							<IconAdd :width="19" :height="19" :look="'create'"></IconAdd>
 						</div>
 					</div>
 				</div>
@@ -99,7 +99,7 @@
 					></div>
 					<div class="buttons add" v-if="!currentInfoBlock.data.delete.value">
 						<div class="icon create" @click="createImage('imageThree')">
-							<IconCreate :width="24" :height="24" :type="'create'"></IconCreate>
+							<IconAdd :width="19" :height="19" :look="'create'"></IconAdd>
 						</div>
 					</div>
 				</div>
@@ -149,7 +149,7 @@
 		<template #footer>
 			<BlockButtons>
 				<ButtonDefault @click="addInfoBlock" v-if="modal.type == 'create'">
-					<icon-add :width="28" :height="28" :look="'white'" />
+					<icon-add :width="23" :height="23" :look="'white'" />
 					Добавить
 				</ButtonDefault>
 				<button-remove
@@ -185,10 +185,6 @@
 		<template #title>ЗАГРУЗКА ИЗОБРАЖЕНИЯ</template>
 		<template #body>
 			<container-input-once>
-				<template #title>
-					<span>НОВЫЙ ФАЙЛ*</span>
-					<span v-if="currentImage.data.file.edited"> (ИЗМЕНЕНО) </span>
-				</template>
 				<template #input>
 					<input
 						type="file"
@@ -220,7 +216,7 @@
 					@click="updateImage"
 					:disabled="disabled.image.add"
 				>
-					<icon-add :width="28" :height="28" :look="'white'" />
+					<icon-add :width="23" :height="23" :look="'white'" />
 					Добавить
 				</button-default>
 			</block-buttons>
@@ -270,7 +266,7 @@
 
 		<template #buttons>
 			<button-default @click="openModal('create')">
-				<icon-add :width="28" :height="28" :look="'white'" />
+				<icon-add :width="23" :height="23" :look="'white'" />
 				Добавить
 			</button-default>
 		</template>
@@ -299,7 +295,6 @@ import IconVisible from "../../../components/icons/IconVisible.vue";
 import IconEdit from "../../../components/icons/IconEdit.vue";
 import IconRemove from "../../../components/icons/IconRemove.vue";
 import IconUnremove from "../../../components/icons/IconUnremove.vue";
-import IconCreate from "../../../components/icons/IconCreate.vue";
 import IconLoad from "../../../components/icons/IconLoad.vue";
 
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
@@ -338,7 +333,6 @@ export default {
 		IconAdd,
 		IconRemove,
 		IconUnremove,
-		IconCreate,
 		IconLoad,
 		LoaderChild,
 
@@ -948,24 +942,31 @@ export default {
 	display: flex;
 	align-items: center;
 	flex-wrap: wrap;
-	gap: 10px;
+	gap: 20px;
+
+	border: var(--default-border);
+	border-radius: var(--default-border-radius);
+	padding: var(--default-padding);
+
+	background-color: var(--item-background-color);
 }
 
 .modal-images > .item {
 	position: relative;
-	flex: 1 0 300px;
+	flex: 1 0 200px;
 	gap: 10px;
 
 	border-radius: calc(var(--default-border-radius) / 1.5);
 	min-width: 100px;
 	min-height: 300px;
+
+	background-color: white;
 }
 
 .modal-images > .item.default {
 	box-sizing: border-box;
 	width: 100px;
 	height: 100px;
-	border: 6px dotted #e4e4e4;
 }
 
 .modal-images > .item > .img {
@@ -987,12 +988,15 @@ export default {
 }
 
 .modal-images > .item > .buttons.add {
-	top: 5px;
-	right: 5px;
+	top: 10px;
+	right: 10px;
 }
 
 .modal-images > .item > .buttons > .icon {
 	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	padding: 10px;
 	border-radius: 100px;
 

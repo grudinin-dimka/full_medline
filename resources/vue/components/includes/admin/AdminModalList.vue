@@ -6,7 +6,7 @@
 			</div>
 			<div class="buttons">
 				<div class="icon create" @click="$emit('touchCreate', item)">
-					<IconCreate :width="24" :height="24" :type="'create'"></IconCreate>
+					<IconAdd :width="19" :height="19" :look="'create'"></IconAdd>
 				</div>
 			</div>
 		</div>
@@ -25,13 +25,13 @@
 </template>
 
 <script>
-import IconCreate from "../../icons/IconCreate.vue";
+import IconAdd from "../../icons/IconAdd.vue";
 import IconEdit from "../../icons/IconEdit.vue";
 import IconRemove from "../../icons/IconRemove.vue";
 
 export default {
 	components: {
-		IconCreate,
+		IconAdd,
 		IconEdit,
 		IconRemove,
 	},
@@ -103,6 +103,9 @@ export default {
 }
 
 .modal-list > .item > .buttons > .icon {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	cursor: pointer;
 	padding: 10px;
 	border-radius: 100px;

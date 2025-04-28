@@ -152,7 +152,7 @@
 			</block-buttons>
 			<block-buttons v-if="modal.type == 'create'">
 				<button-default @click.prevent="addSlide" :disabled="disabled.slider.create">
-					<icon-add :width="28" :height="28" :look="'white'" />
+					<icon-add :width="23" :height="23" :look="'white'" />
 					Добавить
 				</button-default>
 			</block-buttons>
@@ -239,8 +239,7 @@
 
 		<template #buttons>
 			<ButtonDefault @click="openSlide(null, 'create')" :disabled="disabled.slider.add">
-				<icon-add :width="28" :height="28" :look="'white'" />
-
+				<icon-add :width="23" :height="23" :look="'white'" />
 				Добавить
 			</ButtonDefault>
 		</template>

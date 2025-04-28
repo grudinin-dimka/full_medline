@@ -101,7 +101,7 @@ class AdminController extends Controller
 
          // Получение оригинального названия
          $originalName = $file->getClientOriginalName();
-         
+
          switch ($request->type) {
             case 'prices':
                $path = $request->file('file')->storeAs(
@@ -109,6 +109,7 @@ class AdminController extends Controller
                   $originalName, 
                   'local'
                );
+               break;
             default:
                $path = $request->file('file')->store(
                   'public/' . $request->type
