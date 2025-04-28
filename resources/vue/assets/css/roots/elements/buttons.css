@@ -4,7 +4,7 @@
 
 	--button-padding: 15px 30px;
 	--button-border: 0px;
-	--button-border-radius: calc(var(--default-border-radius) / 2);
+	--button-border-radius: 100px;
 
 	/* По умолчанию */
 	--button-font-color: rgb(255, 255, 255);

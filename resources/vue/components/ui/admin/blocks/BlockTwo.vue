@@ -67,7 +67,7 @@ export default {
 
 	background-color: white;
 	height: auto;
-	border-radius: 15px;
+	border-radius: var(--default-border-radius);
 	padding: 20px;
 
 	max-width: 100%;

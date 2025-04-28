@@ -956,7 +956,7 @@ export default {
 	flex: 1 0 300px;
 	gap: 10px;
 
-	border-radius: 10px;
+	border-radius: calc(var(--default-border-radius) / 1.5);
 	min-width: 100px;
 	min-height: 300px;
 }
@@ -970,7 +970,7 @@ export default {
 
 .modal-images > .item > .img {
 	flex: 1 0 300px;
-	border-radius: 10px;
+	border-radius: calc(var(--default-border-radius) / 1.5);
 	min-width: 100px;
 	min-height: 300px;
 	background-position: center center;

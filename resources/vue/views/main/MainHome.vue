@@ -8,8 +8,9 @@
 		</template>
 
 		<loader-child
+			class="slider__loader"
 			:isLoading="loading.loader.slider"
-			:minHeight="403"
+			:minHeight="375"
 			@loaderChildAfterLeave="loaderChildAfterLeave"
 		/>
 
@@ -247,6 +248,10 @@ p {
 
 	.section-info-sub-title {
 		font-size: 20px;
+	}
+
+	.slider__loader {
+		margin-top: 70px;
 	}
 }
 </style>

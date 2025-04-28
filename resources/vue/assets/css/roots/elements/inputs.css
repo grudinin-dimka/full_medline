@@ -10,7 +10,7 @@
    --input-caret-color: var(--primary-color);
 
 	--input-border: var(--default-border);
-	--input-border-radius: calc(var(--default-border-radius) / 2);
+	--input-border-radius: calc(var(--default-border-radius) / 1.5);
 	--input-border-focus: var(--default-border-width) var(--default-border-style) var(--primary-color);
 
    --input-placeholder-color: rgba(0, 0, 0, 0.5);

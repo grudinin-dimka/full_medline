@@ -88,18 +88,13 @@ export default {
 }
 
 .contacts > .item {
-	border: var(--input-border);
-	border-radius: calc(var(--input-border-radius) / 2);
-}
-
-.contacts > .item {
 	cursor: pointer;
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
 
 	border: var(--input-border);
-	border-radius: var(--input-border-radius);
+	border-radius: calc(var(--default-border-radius) / 1.5);
 	padding: 10px;
 
 	font-size: 16px;
@@ -149,7 +144,7 @@ export default {
 
 .contacts > .item > .head > div {
 	padding: 5px 10px;
-	border-radius: calc(var(--input-border-radius) / 2);
+	border-radius: calc(var(--default-border-radius) / 2);
 	border: var(--default-border);
 
 	transition: all 0.2s;

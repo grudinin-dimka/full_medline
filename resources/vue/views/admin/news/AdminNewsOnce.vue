@@ -612,7 +612,7 @@ export default {
 	position: relative;
 	padding: 20px;
 	border: var(--input-border);
-	border-radius: calc(var(--default-border-radius) / 2);
+	border-radius: calc(var(--default-border-radius) / 1.5);
 
 	height: 400px;
 
@@ -621,7 +621,7 @@ export default {
 
 .news__once-image > img {
 	user-select: none;
-	border-radius: calc(var(--default-border-radius) / 2);
+	border-radius: calc(var(--default-border-radius) / 1.5);
 
 	object-fit: contain;
 	width: 100%;

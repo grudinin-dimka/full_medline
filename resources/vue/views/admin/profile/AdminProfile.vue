@@ -207,7 +207,7 @@ export default {
 	flex: 1 0 400px;
 	padding: 20px;
 	background-color: rgb(245, 245, 245);
-	border-radius: 10px;
+	border-radius: calc(var(--default-border-radius) / 1.5);
 }
 
 .item > .title {

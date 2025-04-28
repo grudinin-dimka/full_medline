@@ -23,27 +23,30 @@
 			<div class="evideo">
 				<div class="evideo__item">
 					<div class="evideo__item-video">
-						<video controls width="100%" preload="metadata">
+						<video width="100%" height="300px" preload="metadata">
 							<source :src="`/storage/video/IMG_8240.webm`" type="video/webm" />
 						</video>
 					</div>
 					<div class="evideo__item-title">Заголовок</div>
+					<div class="evideo__item-description">Описание видео блока</div>
 				</div>
 				<div class="evideo__item">
 					<div class="evideo__item-video">
-						<video controls width="100%" preload="metadata">
+						<video width="100%" height="300px" preload="metadata">
 							<source :src="`/storage/video/IMG_8240.webm`" type="video/webm" />
 						</video>
 					</div>
 					<div class="evideo__item-title">Заголовок</div>
+					<div class="evideo__item-description">Описание видео блока</div>
 				</div>
 				<div class="evideo__item">
 					<div class="evideo__item-video">
-						<video controls width="100%" preload="metadata">
+						<video width="100%" height="300px" preload="metadata">
 							<source :src="`/storage/video/IMG_8240.webm`" type="video/webm" />
 						</video>
 					</div>
 					<div class="evideo__item-title">Заголовок</div>
+					<div class="evideo__item-description">Описание видео блока</div>
 				</div>
 			</div>
 
@@ -124,6 +127,24 @@ export default {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
 	gap: 20px;
+}
+
+.evideo__item {
+	cursor: pointer;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+
+	padding: var(--default-padding);
+	border: var(--default-border);
+	border-radius: calc(var(--default-border-radius) / 1.5);
+	
+	transition: all 0.2s;
+}
+
+.evideo__item:hover {
+	border: var(--input-border-focus);
+	background-color: var(--item-background-color-active);
 }
 
 .evideo__item-video {

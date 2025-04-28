@@ -106,8 +106,8 @@ export default {
 	gap: 10px;
 
 	border: var(--input-border);
-	border-radius: var(--input-border-radius);
-	padding: 10px;
+	border-radius: calc(var(--default-border-radius) / 1.5);
+	padding: calc(var(--default-padding));
 
 	font-size: 16px;
 

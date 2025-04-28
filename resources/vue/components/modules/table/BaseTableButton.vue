@@ -33,7 +33,7 @@ export default {
 	height: 30px;
 
 	font-size: 1rem;
-	padding: 5px;
+	padding: 5px 10px;
 
 	transition: all 0.2s;
 }

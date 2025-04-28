@@ -31,7 +31,7 @@
 		<template #footer>
 			<block-buttons>
 				<ButtonDefault @click="createPrice" :disabled="disabled.prices.create">
-					<icon-add :width="28" :height="28" :look="'white'"/>
+					<icon-add :width="28" :height="28" :look="'white'" />
 					Добавить
 				</ButtonDefault>
 			</block-buttons>
@@ -127,7 +127,7 @@ export default {
 		BlockButtons,
 		ButtonClaim,
 		ButtonDefault,
-		
+
 		IconSave,
 		IconAdd,
 		IconEdit,
@@ -497,98 +497,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.eprices {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
-
-	font-size: 18px;
-
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
-}
-
-.eprices > .item {
-	display: flex;
-
-	padding: 15px;
-
-	border: 2px solid var(--input-border-color-inactive);
-	border-radius: 10px;
-
-	transition: all 0.2s;
-}
-
-.eprices > .item > .info {
-	flex: 1 0 300px;
-	display: flex;
-}
-
-.eprices > .item > .info > div {
-	flex: 1 0 300px;
-	display: flex;
-	align-items: center;
-}
-
-.eprices > .item.delete {
-	border: 2px solid #ec7b7b;
-	background-color: #fff2f2;
-}
-
-.eprices > .item.create {
-	border: 2px solid var(--create-border-color);
-	background-color: var(--create-background-color);
-}
-
-.eprices > .item > .buttons {
-	display: flex;
-	align-items: center;
-	gap: 10px;
-}
-
-.eprices > .item > .buttons > a {
-	flex: 1 0 120px;
-	cursor: pointer;
-	min-width: 120px;
-
-	padding: 7.5px 0px;
-	border: 0px solid black;
-	border-radius: 7.5px;
-
-	font-size: 1rem;
-	text-align: center;
-	text-decoration: none;
-	color: white;
-
-	background-color: var(--button-default-color);
-}
-
-.eprices > .item > .buttons > a:hover {
-	background-color: var(--button-default-color-hover);
-}
-
-@media screen and (width <= 1300px) {
-	.eprices > .item > .info > .date {
-		display: none;
-	}
-
-	.eprices > .item > .info {
-		flex: 1 0 0px;
-		display: flex;
-	}
-}
-
-@media screen and (width <= 700px) {
-	.eprices > .item {
-		display: flex;
-		flex-direction: column;
-		gap: 10px;
-	}
-
-	.eprices > .item > .buttons {
-		display: flex;
-		justify-content: flex-end;
-		align-items: center;
-	}
-}
-</style>
+<style scoped></style>

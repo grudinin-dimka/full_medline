@@ -86,7 +86,7 @@
 						Удалить
 					</button-remove>
 					<ButtonDefault @click="updateContact">
-						<icon-add :width="28" :height="28" :look="'white'" />
+						<icon-edit :width="28" :height="28" :look="'white'" />
 						Обновить
 					</ButtonDefault>
 				</template>

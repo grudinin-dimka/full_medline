@@ -2980,7 +2980,7 @@ export default {
 
 	padding: 10px;
 	border: 2px solid var(--input-border-color-inactive);
-	border-radius: 10px;
+	border-radius: calc(var(--default-border-radius) / 1.5);
 
 	width: 100%;
 	height: 58px;
@@ -3021,7 +3021,7 @@ export default {
 	display: grid;
 	gap: 10px;
 	border: var(--input-border);
-	border-radius: var(--input-border-radius);
+	border-radius: calc(var(--default-border-radius) / 1.5);
 	padding: 15px;
 
 	font-size: 18px;
@@ -3071,7 +3071,7 @@ export default {
 
 	border: 0px;
 	padding: 0px 10px;
-	border-radius: 10px;
+	border-radius: calc(var(--default-border-radius) / 1.5);
 
 	font-size: 18px;
 	color: var(--input-border-color-active);
@@ -3138,7 +3138,7 @@ export default {
 	gap: 10px;
 
 	border: var(--input-border);
-	border-radius: var(--input-border-radius);
+	border-radius: calc(var(--default-border-radius) / 1.5);
 	padding: 10px;
 
 	font-size: 18px;
@@ -3153,7 +3153,7 @@ export default {
 	gap: 10px;
 
 	border: 0px;
-	border-radius: 10px;
+	border-radius: calc(var(--default-border-radius) / 1.5);
 	padding: 0px 10px;
 
 	color: var(--input-border-color-active);

@@ -474,7 +474,7 @@ export default {
 						name: "home",
 						text: "Дом",
 						columnType: "default",
-						columnSize: "100px",
+						columnSize: "auto",
 					},
 				],
 

@@ -1,43 +1,39 @@
 <template>
 	<div class="specialist" v-for="specialist in specialists" :key="specialist.id">
-		<div class="specialist-img" :style="{ backgroundImage: `url(${specialist.path})` }"></div>
-		<div class="specialist-body">
-			<div class="specialist-body-options">
-				<div class="specialist-body-options-other">
+		<img class="specialist__img" :src="specialist.path" alt="Фото специалиста" />
+
+		<div class="specialist__body">
+			<div class="specialist__body-options">
+				<div class="clinics__item-other">
 					{{ getSpecializationString(specialist.specialization) }}.
 				</div>
-				<div
-					class="specialist-body-options-title label"
-					@click="openspecialistProfile(specialist)"
-				>
+				<div class="clinics__item-title label" @click="openspecialistProfile(specialist)">
 					{{ specialist.name }}
 				</div>
 			</div>
-			<div class="specialist-body-clinics" v-if="specialist.clinics.length > 0">
-				<div class="clinic" v-for="clinic in specialist.clinics">
-					<div class="specialist-body-options-other">
+			<div class="specialist__body-clinics" v-if="specialist.clinics.length > 0">
+				<div class="specialist__clinics-item" v-for="clinic in specialist.clinics">
+					<div class="clinics__item-other">
 						{{ `г. ${clinic.city}, ул. ${clinic.street}, д. ${clinic.home}` }}.
 					</div>
-					<div
-						class="specialist-body-options-title label"
-						@click="openspecialistProfile(specialist)"
-					>
+					<div class="clinics__item-title label" @click="openspecialistProfile(specialist)">
 						{{ clinic.name }}
 					</div>
 				</div>
 			</div>
-			<div class="specialist-body-clinics" v-else>
-				<div class="clinic">
-					<div class="specialist-body-options-other">Неизвестно.</div>
-					<div
-						class="specialist-body-options-title label"
-						@click="openspecialistProfile(specialist)"
-					>
+			<div class="specialist__body-clinics" v-else>
+				<div class="specialist__clinics-item">
+					<div class="clinics__item-other">Неизвестно.</div>
+					<div class="clinics__item-title label" @click="openspecialistProfile(specialist)">
 						Не указано.
 					</div>
 				</div>
 			</div>
-			<a @click.prevent="openspecialistProfile(specialist)" :href="`/specialists/${specialist.url}`">Подробнее</a>
+			<a
+				@click.prevent="openspecialistProfile(specialist)"
+				:href="`/specialists/${specialist.url}`"
+				>Подробнее</a
+			>
 		</div>
 	</div>
 </template>
@@ -134,39 +130,34 @@ export default {
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
-.specialist > :is(img, .specialist-img) {
+.specialist__img {
 	width: 90px;
 	border-radius: 300px;
-	border: 2px solid var(--input-border-color-inactive);
-	background-size: contain;
-	background-position: center center;
-	background-repeat: no-repeat;
+	border: var(--default-border);
 	height: 90px;
+	object-fit: contain;
 }
 
-.specialist > :is(img:hover, .specialist-img:hover) {
-	border: 2px solid var(--input-border-color-inactive);
-}
-
-.specialist-body {
+.specialist__body {
 	flex: 1 0 0px;
 	display: grid;
+	width: 100%;
 	grid-template-columns: 1fr 1fr 150px;
 	gap: 20px;
 	align-items: center;
 }
 
-.specialist-body-clinics {
+.specialist__body-clinics {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
 }
 
-.specialist-body-clinics > .clinic.empty {
+.specialist__body-clinics > .specialist__clinics-item.empty {
 	font-size: 1.125rem;
 }
 
-.specialist-body > a {
+.specialist__body > a {
 	cursor: pointer;
 	padding: 15px;
 	font-size: 1.125em;
@@ -181,32 +172,32 @@ export default {
 	transition: all 0.2s;
 }
 
-.specialist-body > a:hover {
+.specialist__body > a:hover {
 	background-color: var(--button-default-color-hover);
 	color: white;
 }
 
-.specialist-body-options {
+.specialist__body-options {
 	display: flex;
 	flex-direction: column;
 	gap: 7px;
 }
 
-.specialist-body-options-title {
+.clinics__item-title {
 	font-size: 24px;
 
 	transition: all 0.2s;
 }
 
-.specialist-body-options-title.label {
+.clinics__item-title.label {
 	cursor: pointer;
 }
 
-.specialist-body-options-title.label:hover {
+.clinics__item-title.label:hover {
 	color: var(--primary-color);
 }
 
-.specialist-body-options-other {
+.clinics__item-other {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
@@ -250,11 +241,11 @@ export default {
 }
 
 @media screen and (max-width: 1100px) {
-	.specialist-body {
+	.specialist__body {
 		grid-template-columns: 1fr 150px;
 	}
 
-	.specialist-body-clinics {
+	.specialist__body-clinics {
 		display: none;
 	}
 }
@@ -266,27 +257,31 @@ export default {
 		align-items: center;
 	}
 
-	.specialist > :is(img, .specialist-img) {
-		width: 150px;
+	.specialist__img {
+		width: 200px;
 		border-radius: 300px;
-		background-size: contain;
-		background-position: center center;
-		background-repeat: no-repeat;
-		height: 150px;
+		border: var(--default-border);
+		height: 200px;
+		object-fit: contain;
 	}
 }
 
 @media screen and (max-width: 440px) {
-	.specialist-body-options-other {
+	.clinics__item-other {
 		display: none;
 	}
 
-	.specialist > img {
+	.specialist__img {
 		width: 100%;
-		max-width: 230px;
+		border-radius: 300px;
+		border: var(--default-border);
+		height: auto;
+		aspect-ratio: 1/1;
+		max-width: 300px;
+		object-fit: contain;
 	}
 
-	.specialist-body {
+	.specialist__body {
 		text-align: center;
 		grid-template-columns: 1fr;
 	}

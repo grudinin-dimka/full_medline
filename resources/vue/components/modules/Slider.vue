@@ -1,7 +1,8 @@
 <template>
 	<carousel
-		:items-to-show="calcItemsToShow"
-		:wrap-around="true"
+		:itemsToShow="calcItemsToShow"
+		:clamp="true"
+		:wrapAround="true"
 		:transition="750"
 		:autoplay="5000"
 		:mouseDrag="false"
@@ -25,7 +26,7 @@
 
 		<template #addons>
 			<navigation />
-			<pagination />
+			<!-- <pagination /> -->
 		</template>
 	</carousel>
 </template>
@@ -144,7 +145,7 @@ export default {
 	animation: show 0.5s ease-out;
 }
 
-@media screen and (width <= 600px) {
+@media screen and (width <= 500px) {
 	.carousel {
 		margin-top: 70px;
 	}
