@@ -91,8 +91,9 @@ export default {
 	},
 	computed: {
 		getFilteredList() {
+			console.log(this.list);
 			let filteredList = shared.getRecursiveCopy(this.list);
-			
+
 			if (this.name !== "") {
 				/* Фильтрация повторений по названия */
 				filteredList = filteredList.filter(
@@ -158,6 +159,18 @@ export default {
 			for (let i = 0; i < array.length; i++) {
 				if (array[i].name.toLowerCase().includes(name.toLowerCase())) {
 					filterArray.push(array[i]);
+					
+					continue;
+				}
+
+				if (array[i]?.children && array[i].children.length > 0) {
+					let innerChildrens = this.getChidrensByName(array[i].children, name);
+
+					if (innerChildrens.length > 0) {
+						array[i].children = innerChildrens;
+
+						filterArray.push(array[i]);
+					}
 				}
 			}
 
