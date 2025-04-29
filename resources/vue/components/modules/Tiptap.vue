@@ -468,7 +468,7 @@
 			</div>
 		</div>
 
-		<div class="tiptap__editor" :class="{ 'disabled': !editable, 'error': error }">
+		<div class="tiptap__editor" :class="{ 'disabled': !editable, 'error': error }" :style="{ '--min-height': `${minHeight}px` }">
 			<editor-content :editor="editor" />
 		</div>
 
@@ -531,7 +531,7 @@ export default {
 		},
 		minHeight: {
 			type: Number,
-			default: 100,
+			default: 0,
 		},
 		limit: {
 			type: Number,
@@ -814,6 +814,8 @@ export default {
 .ProseMirror {
 	outline: none;
 	white-space: pre-wrap;
+
+	min-height: var(--min-height);
 }
 
 .ProseMirror p {

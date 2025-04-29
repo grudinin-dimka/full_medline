@@ -148,6 +148,7 @@
 						v-model="currentNews.data.description.value"
 						:editable="true"
 						:limit="10_000"
+						:minHeight="300"
 						:options="['format', 'align', 'list', 'link', 'image']"
 						:placeholder="'Текст новости'"
 						:error="currentNews.errors.description.status"
@@ -628,6 +629,8 @@ export default {
 	width: 100%;
 	height: 100%;
 
+	background-color: black;
+
 	animation: show 0.5s ease;
 }
 
@@ -666,6 +669,7 @@ export default {
 }
 
 .input__file-button {
+	box-sizing: border-box;
 	flex: 1 0 100px;
 	user-select: none;
 	cursor: pointer;
@@ -679,6 +683,7 @@ export default {
 	-ms-flex-pack: start;
 	justify-content: center;
 
+	border: var(--default-border);
 	border-radius: calc(var(--default-border-radius) / 2);
 	margin: 0 auto;
 
@@ -693,15 +698,17 @@ export default {
 }
 
 .input__file-button:is(:hover, .active) {
+	border: var(--input-border-focus);
 	color: var(--primary-color);
 	background-color: var(--item-background-color-active);
 }
 
 .input__file-button.error {
+	border: var(--input-error-border);
 	border-radius: 10px 10px 0px 0px;
-	background-color: var(--input-error-background-color);
 
 	color: var(--input-error-color);
+	background-color: var(--input-error-background-color);
 }
 
 /* .image */

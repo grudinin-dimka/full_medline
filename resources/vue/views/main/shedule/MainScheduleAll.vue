@@ -251,11 +251,14 @@ export default {
 						!specializations.find((item) =>
 							item.value.toLowerCase().includes(key.toLowerCase())
 						)
-					)
+					) {
+						let formatKey = key.slice(0, 1).toUpperCase() + key.slice(1);
+
 						specializations.push({
-							value: key,
-							label: key,
+							value: formatKey,
+							label: formatKey,
 						});
+					}
 				});
 			});
 

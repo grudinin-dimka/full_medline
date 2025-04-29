@@ -7,13 +7,14 @@
 				<div
 					v-if="currentVideo.data.path.value === ''"
 					class="modal__video-clear"
+					:class="{ error: currentVideo.errors.file.status }"
 					:style="{ backgroundImage: `url(/storage/default/video-none-default.webp)` }"
 				></div>
 
-				<video v-else controls preload="metadata">
+				<video v-else ref="videoPlayer" controls>
 					<source
-						:src="currentVideo.data.path.value"
-						:type="`video/${getVideoType(currentVideo.data.path.value)}`"
+						:src="`${currentVideo.data.path.value}`"
+						:type="`video/${getVideoType(currentVideo.data.video.value)}`"
 					/>
 				</video>
 
@@ -28,32 +29,32 @@
 						<div class="modal__buttons-icon edit" @click="openVideoUpload">
 							<icon-edit :width="24" :height="24" :type="'edit'"></icon-edit>
 						</div>
-						<div class="modal__buttons-icon delete" @click="console.log('delete')">
-							<icon-remove :width="24" :height="22" :look="'delete'" />
-						</div>
 					</template>
 				</div>
 			</div>
 
 			<Tiptap
 				ref="tiptapDescription"
-				v-model="currentVideo.data.title.value"
+				v-model="currentVideo.data.description.value"
 				:editable="true"
 				:limit="10_000"
+				:minHeight="300"
 				:options="['format', 'align', 'list', 'link']"
 				:placeholder="'Текст новости'"
-				:error="false"
+				:error="currentVideo.errors.description.status"
 			>
-				<template #error> Ошибка. </template>
+				<template #error>
+					{{ currentVideo.errors.description.message }}
+				</template>
 			</Tiptap>
 		</template>
 
 		<template #footer>
-			<ButtonDefault @click="openVideoCreate" v-if="modalVideo.values.look == 'create'">
+			<ButtonDefault @click="addVideo" v-if="modalVideo.values.look == 'create'">
 				<icon-add :width="23" :height="23" :look="'white'" />
 				Добавить
 			</ButtonDefault>
-			<ButtonDefault @click="openVideoCreate" v-else>
+			<ButtonDefault @click="updateVideo" v-else>
 				<icon-edit :width="28" :height="28" :look="'white'" />
 				Обновить
 			</ButtonDefault>
@@ -83,13 +84,13 @@
 			<button-default
 				v-if="modalVideoUpload.values.look == 'default'"
 				@click="uploadVideo"
-				:disabled="false"
+				:disabled="disabled.video.upload"
 			>
 				<icon-add :width="23" :height="23" :look="'white'" />
 				Добавить
 			</button-default>
 
-			<button-default v-else @click="console.log('create')" :disabled="false">
+			<button-default v-else @click="uploadVideo" :disabled="disabled.video.upload">
 				<icon-edit :width="28" :height="28" :look="'white'" />
 				Обновить
 			</button-default>
@@ -120,29 +121,18 @@
 			<div class="evideo">
 				<div class="evideo__item" @click="openVideoEdite">
 					<div class="evideo__item-video">
-						<video width="100%" height="300px" preload="metadata">
+						<video preload="metadata">
 							<source :src="`/storage/video/IMG_8240.webm`" type="video/webm" />
 						</video>
 					</div>
-					<div class="evideo__item-title">Заголовок</div>
 					<div class="evideo__item-description">Описание видео блока</div>
 				</div>
 				<div class="evideo__item" @click="openVideoEdite">
 					<div class="evideo__item-video">
-						<video width="100%" height="300px" preload="metadata">
-							<source :src="`/storage/video/IMG_8240.webm`" type="video/webm" />
+						<video preload="metadata">
+							<source :src="`/storage/video/IMG_1817.MP4`" type="video/mp4" />
 						</video>
 					</div>
-					<div class="evideo__item-title">Заголовок</div>
-					<div class="evideo__item-description">Описание видео блока</div>
-				</div>
-				<div class="evideo__item" @click="openVideoEdite">
-					<div class="evideo__item-video">
-						<video width="100%" height="300px" preload="metadata">
-							<source :src="`/storage/video/IMG_8240.webm`" type="video/webm" />
-						</video>
-					</div>
-					<div class="evideo__item-title">Заголовок</div>
 					<div class="evideo__item-description">Описание видео блока</div>
 				</div>
 			</div>
@@ -183,6 +173,7 @@ import IconSave from "../../../components/icons/IconSave.vue";
 
 import shared from "../../../services/shared";
 import validate from "../../../services/validate";
+import files from "../../../services/files";
 import axios from "axios";
 
 export default {
@@ -211,6 +202,7 @@ export default {
 				video: {
 					save: false,
 					update: false,
+					upload: false,
 				},
 			},
 
@@ -246,11 +238,11 @@ export default {
 			/* Форма */
 			currentVideo: {
 				errors: {
-					title: {
+					file: {
 						message: "",
 						status: false,
 					},
-					file: {
+					description: {
 						message: "",
 						status: false,
 					},
@@ -268,7 +260,7 @@ export default {
 						value: "",
 						edited: false,
 					},
-					title: {
+					description: {
 						value: "",
 						edited: false,
 					},
@@ -282,6 +274,9 @@ export default {
 					},
 				},
 			},
+
+			/* Данные */
+			videos: [],
 		};
 	},
 	methods: {
@@ -321,10 +316,61 @@ export default {
 
 		/* Загрузка видео */
 		openVideoUpload() {
-			// shared.clearObjectFull(this.currentVideo);
-			// shared.setData(video, this.currentVideo);
+			this.$refs.fileUpload.value = "";
 
 			this.openModal("modalVideoUpload", "Загрузка видео", "default");
+		},
+
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                Блоки информации                   |*/
+		/* |___________________________________________________|*/
+		addVideo() {
+			if (
+				validate.checkInputsAll(this.currentVideo, [
+					{
+						key: "file",
+						type: "file",
+						value: this.$refs.fileUpload,
+						formats: ["webm", "mp4", "mov"],
+					},
+					{
+						key: "description",
+						type: "tiptap",
+						value: this.$refs.tiptapDescription,
+					},
+				])
+			)
+				return;
+
+			this.videos.push({
+				id: shared.getMaxId(this.videos) + 1,
+				path: this.currentVideo.data.path.value,
+				video: this.currentVideo.data.video.value,
+				description: this.currentVideo.data.description.value,
+				create: true,
+				delete: false,
+			});
+		},
+
+		updateVideo() {
+			if (
+				validate.checkInputsAll(this.currentVideo, [
+					{
+						key: "file",
+						type: "file",
+						value: this.$refs.fileUpload,
+						formats: ["webm", "mp4", "mov"],
+					},
+					{
+						key: "description",
+						type: "tiptap",
+						value: this.$refs.tiptapDescription,
+					},
+				])
+			)
+				return;
+
+			console.log("upload");
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -343,11 +389,58 @@ export default {
 			)
 				return;
 
-			console.log("upload");
+			/* Загрузка файла */
+			let formData = new FormData();
+			formData.append("file", this.$refs.fileUpload.files[0]);
+			formData.append("type", "video");
+			formData.append("formats", ["wemb", "mp4", "mov"]);
+
+			this.disabled.video.upload = true;
+
+			axios({
+				method: "post",
+				url: `${this.$store.getters.urlApi}` + `upload-file`,
+				headers: {
+					"Content-Type": "multipart/form-data",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: formData,
+			})
+				.then((response) => {
+					if (response.data.status) {
+						this.currentVideo.data.video.value = files.basename(response.data.data);
+						this.currentVideo.data.path.value = response.data.data;
+
+						// Перезагружаем видео
+						this.$nextTick(() => {
+							if (this.$refs.videoPlayer) {
+								this.$refs.videoPlayer.load();
+							}
+						});
+
+						this.$refs.modalVideoUpload.close();
+					} else {
+						this.$store.commit("addDebugger", {
+							title: "Ошибка.",
+							body: response.data.message,
+							type: "error",
+						});
+					}
+				})
+				.catch((error) => {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка.",
+						body: response.data.message,
+						type: "error",
+					});
+				})
+				.finally(() => {
+					this.disabled.video.upload = false;
+				});
 		},
 
 		getVideoType(value) {
-			return value.slice(value.lastIndexOf(".") + 1, value.length);
+			return files.basetype(value);
 		},
 	},
 };
@@ -370,6 +463,8 @@ export default {
 	border-radius: calc(var(--default-border-radius) / 2);
 	width: 100%;
 	height: 100%;
+
+	border: var(--default-border);
 	object-fit: contain;
 
 	background-color: black;
@@ -377,6 +472,8 @@ export default {
 
 .modal__video-clear {
 	border-radius: calc(var(--default-border-radius) / 1.5);
+	border: var(--default-border);
+
 	background-position: center center;
 	background-repeat: no-repeat;
 	background-size: contain;
@@ -384,6 +481,11 @@ export default {
 	width: 100%;
 	height: 100%;
 	background-color: white;
+}
+
+.modal__video-clear.error {
+	border: var(--input-error-border);
+	background-color: var(--input-error-background-color);
 }
 
 .modal__video-buttons {
@@ -455,9 +557,11 @@ export default {
 	background-color: var(--item-background-color-active);
 }
 
-.evideo__item-video {
+.evideo__item-video > video {
+	border-radius: calc(var(--default-border-radius) / 1.75);
+
 	width: 100%;
-	max-height: 400px;
+	height: 300px;
 	object-fit: cover;
 }
 </style>

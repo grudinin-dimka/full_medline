@@ -17,8 +17,10 @@ use Throwable;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
+
 use App\Models\Slide;
 use App\Models\Footer;
+
 use App\Models\Specialist;
 use App\Models\Specialization;
 use App\Models\SpecialistSpecialization;
@@ -30,22 +32,29 @@ use App\Models\Work;
 use App\Models\SpecialistWork;
 use App\Models\Certificate;
 use App\Models\SpecialistCertificate;
+
 use App\Models\About;
+
 use App\Models\Contact;
 use App\Models\Phone;
 use App\Models\ContactPhone;
 use App\Models\Mail;
 use App\Models\ContactMail;
+
 use App\Models\Shedule;
 use App\Models\ShedulesDay;
 use App\Models\ShedulesDaysTime;
 use App\Models\ShedulesClinic;
 use App\Models\ShedulesCurrentDay;
+
 use App\Models\PriceAddress;
 use App\Models\PriceCategory;
 use App\Models\PriceValue;
-use App\Models\Tracking;
+
 use App\Models\News;
+use App\Models\Video;
+
+use App\Models\Tracking;
 
 class HomeController extends Controller
 {
@@ -1273,6 +1282,28 @@ class HomeController extends Controller
             "news" => $newsSorted,
             "count" => News::all()->where('hide', 1)->count(),
          ],
+      ]);
+   }
+
+   /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+   /* |                      ВИДЕО                        |*/
+   /* |___________________________________________________|*/
+   /* Получение всех видео */
+   public function getVideosAll(Request $request) {
+      try {
+         $videos = Video::all();
+      } catch (Throwable $th) {
+         return response()->json([
+            "status" => false,
+            "message" => "Не удалось получить данные.",
+            "data" => [],
+         ]);            
+      }
+
+      return response()->json([
+         "status" => true,
+         "message" => "Данные успешно получены.",
+         "data" => $videos,
       ]);
    }
 

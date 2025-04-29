@@ -54,6 +54,7 @@ import FIlterList from "./FIlterList.vue";
 
 import sorted from "../../services/sorted";
 import { nextTick } from "vue";
+import shared from "../../services/shared";
 
 export default {
 	components: {
@@ -90,19 +91,31 @@ export default {
 	},
 	computed: {
 		getFilteredList() {
-			let filteredList = this.list;
+			let filteredList = shared.getRecursiveCopy(this.list);
+			
+			if (this.name !== "") {
+				/* Фильтрация повторений по названия */
+				filteredList = filteredList.filter(
+					(item, index, arr) => index === arr.findIndex((t) => t.name === item.name)
+				);
 
-			/* Фильтрация повторений по названия */
-			filteredList = this.list.filter(
-				(item, index, arr) => index === arr.findIndex((t) => t.name === item.name)
-			);
+				/* Фильтрация по вводу значения */
+				filteredList = filteredList.filter((item) => {
+					if (item.name.toLowerCase().includes(this.name.toLowerCase())) {
+						return item;
+					}
 
-			/* Фильтрация по вводу значения */
-			filteredList = filteredList.filter((item) => {
-				if (item.name.toLowerCase().includes(this.name.toLowerCase())) {
-					return item;
-				}
-			});
+					if (item?.children && item.children.length > 0) {
+						let innerChildrens = this.getChidrensByName(item.children, this.name);
+
+						if (innerChildrens.length > 0) {
+							item.children = innerChildrens;
+
+							return item;
+						}
+					}
+				});
+			}
 
 			sorted.sortByName("up", filteredList);
 
@@ -116,6 +129,7 @@ export default {
 				this.$emit("changeFilterStatus", false, this.filter.name);
 			}
 		},
+
 		/* Изменение позиции компонента */
 		changeFilterBodyPosition() {
 			let filterTitle = this.$refs.filter.children[0];
@@ -136,11 +150,28 @@ export default {
 				filterBody.classList.remove("left");
 			}
 		},
-		selectChild(item) {
-			this.$emit("selectItemChild", item, this.filter.name);
+
+		/* Получение списка элементов по значению */
+		getChidrensByName(array, name) {
+			let filterArray = [];
+
+			for (let i = 0; i < array.length; i++) {
+				if (array[i].name.toLowerCase().includes(name.toLowerCase())) {
+					filterArray.push(array[i]);
+				}
+			}
+
+			return filterArray;
 		},
+
+		/* Выбор родителя */
 		selectParent(item) {
 			this.$emit("selectItemParent", item, this.filter.name);
+		},
+
+		/* Выбор наследника */
+		selectChild(item) {
+			this.$emit("selectItemChild", item, this.filter.name);
 		},
 	},
 	mounted() {

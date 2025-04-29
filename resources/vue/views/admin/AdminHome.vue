@@ -134,7 +134,7 @@
 					v-if="!currentSlide.data.create.value & !currentSlide.data.delete.value"
 					@click.prevent="markDeleteSlide"
 				>
-					<icon-remove :width="24" :height="22" :look="'white'"/>
+					<icon-remove :width="24" :height="22" :look="'white'" />
 					Удалить
 				</button-remove>
 				<button-default
@@ -441,6 +441,7 @@ import IconUnremove from "../../components/icons/IconUnremove.vue";
 
 import axios from "axios";
 import shared from "../../services/shared";
+import files from "../../services/files";
 import sorted from "../../services/sorted";
 import validate from "../../services/validate";
 
@@ -848,7 +849,7 @@ export default {
 									name: this.$refs.inputName.value,
 									link: this.$refs.inputLink.value,
 									path: response.data.data,
-									filename: response.data.data.replace("/storage/slides/", ""),
+									filename: files.basename(response.data.data),
 									hide: false,
 									create: true,
 									delete: false,
@@ -986,7 +987,7 @@ export default {
 							try {
 								this.currentSlide.data.path.value = response.data.data;
 								slideCurrent.path = response.data.data;
-								slideCurrent.filename = response.data.data.replace("/storage/slides/", "");
+								slideCurrent.filename = files.basename(response.data.data);
 
 								this.closeSlide();
 							} catch (error) {

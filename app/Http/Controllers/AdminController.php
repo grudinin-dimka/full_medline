@@ -75,6 +75,9 @@ class AdminController extends Controller
          // Проверка на картинку
          $isImage = str_starts_with($file->getMimeType(), 'image/');
 
+         // Проверка на видео
+         $isVideo = str_starts_with($file->getMimeType(), 'video/');
+
          // Правила
          $rules = [
             'type' => 'required',
@@ -87,6 +90,8 @@ class AdminController extends Controller
             $rules['file'][] = File::image()
                ->types($request->formats)
                ->dimensions(Rule::dimensions()->maxWidth(2000)->maxHeight(2000));
+         } else if ($isVideo) {
+            $rules['file'][] = 'mimetypes:video/mp4,video/quicktime,video/webm';
          } else {
             $rules['file'][] = File::types($request->formats);
          };
@@ -1924,5 +1929,13 @@ class AdminController extends Controller
             "data" => null,
          ]);
       };
+   }
+
+   public function addVideo(Request $request) {
+      return response()->json([
+         "success" => true,
+         "message" => 'Успешно!',
+         "data" => null,
+      ]);
    }
 }

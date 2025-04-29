@@ -57,6 +57,9 @@ Route::post('/get-news-short', [HomeController::class, 'getNewsShort']);
 Route::post('/get-news-once-without', [HomeController::class, 'getNewsOnceWithout']);
 Route::post('/get-news-more', [HomeController::class, 'getNewsMore']);
 
+/* Видео */
+Route::get('/get-videos-all', [HomeController::class, 'getVideosAll']);
+
 /* Запись нового события */
 Route::post('/create-track', [HomeController::class, 'createTrack']);
 
@@ -108,6 +111,9 @@ Route::middleware(['auth:sanctum', 'admin-or-creator'])->group(function () {
    Route::post('/save-news-changes-all', [AdminController::class, 'saveNewsChangesAll']);
    Route::post('/save-news-changes-once', [AdminController::class, 'saveNewsChangesOnce']);
    Route::post('/publish-news-once', [AdminController::class, 'publishNewsOnce']);
+
+   // Новости 
+   Route::post('/add-video', [AdminController::class, 'addVideo']);
 });
 
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/

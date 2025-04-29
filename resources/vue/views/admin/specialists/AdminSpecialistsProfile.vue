@@ -1210,6 +1210,7 @@ import axios from "axios";
 
 import { RouterView, RouterLink } from "vue-router";
 import validate from "../../../services/validate";
+import files from "../../../services/files";
 import shared from "../../../services/shared";
 import sorted from "../../../services/sorted";
 
@@ -2116,9 +2117,8 @@ export default {
 						this.specialist.profile.data.id.value = response.data.data.id;
 
 						this.specialist.profile.data.path.value = response.data.data.path;
-						this.specialist.profile.data.filename.value = response.data.data.path.replace(
-							"/storage/specialists/",
-							""
+						this.specialist.profile.data.filename.value = files.basename(
+							response.data.data.path
 						);
 
 						this.$router.push(String(response.data.data.id));
@@ -2255,8 +2255,9 @@ export default {
 							this.$refs.fileUpload.value = "";
 
 							this.specialist.profile.data.path.value = response.data.data.imagePath;
-							this.specialist.profile.data.filename.value =
-								response.data.data.imagePath.replace("/storage/specialists/", "");
+							this.specialist.profile.data.filename.value = files.basename(
+								response.data.data.imagePath
+							);
 						}
 
 						shared.updateId(this.tableCertificates.body, response.data.data.certificates);

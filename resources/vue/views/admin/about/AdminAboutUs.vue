@@ -308,6 +308,7 @@ import ContainerTextareaOnce from "../../../components/ui/admin/containers/texta
 
 import axios from "axios";
 import shared from "../../../services/shared";
+import files from "../../../services/files";
 import sorted from "../../../services/sorted";
 import validate from "../../../services/validate";
 
@@ -636,23 +637,20 @@ export default {
 							switch (this.currentImage.data.file.value) {
 								case "imageOne":
 									this.currentInfoBlock.data.pathOne.value = response.data.data;
-									this.currentInfoBlock.data.imageOne.value = response.data.data.replace(
-										"/storage/abouts/",
-										""
+									this.currentInfoBlock.data.imageOne.value = files.basename(
+										response.data.data
 									);
 									break;
 								case "imageTwo":
 									this.currentInfoBlock.data.pathTwo.value = response.data.data;
-									this.currentInfoBlock.data.imageTwo.value = response.data.data.replace(
-										"/storage/abouts/",
-										""
+									this.currentInfoBlock.data.imageTwo.value = files.basename(
+										response.data.data
 									);
 									break;
 								case "imageThree":
 									this.currentInfoBlock.data.pathThree.value = response.data.data;
-									this.currentInfoBlock.data.imageThree.value = response.data.data.replace(
-										"/storage/abouts/",
-										""
+									this.currentInfoBlock.data.imageThree.value = files.basename(
+										response.data.data
 									);
 									break;
 							}

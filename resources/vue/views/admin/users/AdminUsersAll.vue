@@ -502,6 +502,7 @@ import ButtonPasswordWide from "../../../components/ui/admin/buttons/ButtonPassw
 
 import axios from "axios";
 import validate from "../../../services/validate";
+import files from "../../../services/files";
 import shared from "../../../services/shared";
 
 export default {
@@ -1048,7 +1049,7 @@ export default {
 
 						if (response.data.data.path) {
 							currentUser.path = response.data.data.path;
-							currentUser.filename = response.data.data.path.replace("/storage/users/", "");
+							currentUser.filename = files.basename(response.data.data.path);
 						}
 
 						this.closeModal("modal");
