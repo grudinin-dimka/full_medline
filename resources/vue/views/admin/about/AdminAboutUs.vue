@@ -777,72 +777,17 @@ export default {
 
 		/* Изменение порядка */
 		changeInfoBlockOrder(type) {
-			if (this.infoBlocks.length <= 1) {
-				return;
-			}
-
-			// Является ли текущий элемент первым
-			let firstBlockStatus = this.currentInfoBlock.data.order.value == 1;
-			// Предидущей элемент
-			let blockPrevious = null;
-			if (firstBlockStatus) {
-				blockPrevious = this.infoBlocks.find((block) => block.order === this.infoBlocks.length);
-			} else {
-				blockPrevious = this.infoBlocks.find(
-					(block) => block.order === this.currentInfoBlock.data.order.value - 1
-				);
-			}
-
-			// Текущий элемент
-			let blockCurrent = this.infoBlocks.find(
-				(block) => block.order === this.currentInfoBlock.data.order.value
-			);
-
-			// Является ли текущий элемент последним
-			let lastBlockStatus = this.currentInfoBlock.data.order.value == this.infoBlocks.length;
-
-			// Следующий элемент
-			let blockNext = null;
-			if (lastBlockStatus) {
-				blockNext = this.infoBlocks.find((block) => block.order === 1);
-			} else {
-				blockNext = this.infoBlocks.find(
-					(block) => block.order === this.currentInfoBlock.data.order.value + 1
-				);
-			}
-
-			// Изменение порядка
-			switch (type) {
-				case "up":
-					{
-						if (lastBlockStatus) {
-							this.currentInfoBlock.data.order.value = 1;
-							blockCurrent.order = 1;
-							blockNext.order = this.infoBlocks.length;
-						} else {
-							this.currentInfoBlock.data.order.value++;
-							blockCurrent.order++;
-							blockNext.order--;
-						}
-						sorted.sortByOrder("up", this.infoBlocks);
-					}
-					break;
-				case "down":
-					{
-						if (firstBlockStatus) {
-							this.currentInfoBlock.data.order.value = this.infoBlocks.length;
-							blockCurrent.order = this.infoBlocks.length;
-							blockPrevious.order = 1;
-						} else {
-							this.currentInfoBlock.data.order.value--;
-							blockCurrent.order--;
-							blockPrevious.order++;
-						}
-						sorted.sortByOrder("up", this.infoBlocks);
-					}
-					break;
+			try {
+				shared.changeOrder(this.infoBlocks, this.currentInfoBlock, type);
+			} catch (error) {
+				this.$store.commit("addDebugger", {
+					title: "Ошибка",
+					body: error,
+					type: "error",
+				});
 			}
 		},
+
 		/* Сохранение */
 		saveInfoBlocks() {
 			this.disabled.about.save = true;

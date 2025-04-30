@@ -234,7 +234,7 @@ nav a:is(.active, :hover) {
 	z-index: 10;
 	left: -10px;
 
-	transition: all 0.3s ease-in-out;
+	transition: all 0.2s ease-in-out;
 }
 
 .dropdown:hover .dropdown-body {

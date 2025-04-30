@@ -101,7 +101,7 @@
 						</td>
 					</tr>
 					<tr class="empty" v-else>
-						<td colspan="9">Ничего нет.</td>
+						<td colspan="10">Ничего нет.</td>
 					</tr>
 				</tbody>
 			</table>

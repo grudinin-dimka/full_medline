@@ -114,6 +114,7 @@ export default {
 	transition: all 0.2s;
 }
 
+/* delete */
 .about > .item.delete {
 	border: var(--input-delete-border);
 }
@@ -123,6 +124,7 @@ export default {
 	background-color: var(--input-delete-background-color-hover);
 }
 
+/* create */
 .about > .item.create {
 	border: var(--input-create-border-focus);
 }

@@ -720,74 +720,7 @@ export default {
 		// Изменение порядка выбранного слайда
 		changeSlideOrder(type) {
 			try {
-				if (this.slides.length <= 1) {
-					return;
-				}
-
-				// Является ли текущий элемент первым
-				let firstSlideStatus = this.currentSlide.data.order.value == 1;
-
-				// Предидущей элемент
-				let slidePrevious = null;
-				if (firstSlideStatus) {
-					slidePrevious = this.slides.find((slide) => slide.order === this.slides.length);
-				} else {
-					slidePrevious = this.slides.find(
-						(slide) => slide.order === this.currentSlide.data.order.value - 1
-					);
-				}
-
-				// Текущий элемент
-				let slideCurrent = this.slides.find(
-					(slide) => slide.order === this.currentSlide.data.order.value
-				);
-
-				// Является ли текущий элемент последним
-				let lastSlideStatus = this.currentSlide.data.order.value == this.slides.length;
-
-				// Следующий элемент
-				let slideNext = null;
-				if (lastSlideStatus) {
-					slideNext = this.slides.find((slide) => slide.order === 1);
-				} else {
-					slideNext = this.slides.find(
-						(slide) => slide.order === this.currentSlide.data.order.value + 1
-					);
-				}
-
-				// Изменение порядка
-				switch (type) {
-					case "up":
-						{
-							if (lastSlideStatus) {
-								this.currentSlide.data.order.value = 1;
-								slideCurrent.order = 1;
-								slideNext.order = this.slides.length;
-								sorted.sortByOrder("up", this.slides);
-							} else {
-								this.currentSlide.data.order.value++;
-								slideCurrent.order++;
-								slideNext.order--;
-								sorted.sortByOrder("up", this.slides);
-							}
-						}
-						break;
-					case "down":
-						{
-							if (firstSlideStatus) {
-								this.currentSlide.data.order.value = this.slides.length;
-								slideCurrent.order = this.slides.length;
-								slidePrevious.order = 1;
-								sorted.sortByOrder("up", this.slides);
-							} else {
-								this.currentSlide.data.order.value--;
-								slideCurrent.order--;
-								slidePrevious.order++;
-								sorted.sortByOrder("up", this.slides);
-							}
-						}
-						break;
-				}
+				shared.changeOrder(this.slides, this.currentSlide, type);
 			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка",

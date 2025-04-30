@@ -1,3 +1,5 @@
+import sorted from "./sorted";
+
 export default {
 	/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 	/* |                    ЗАГРУЗЧИК                      |*/
@@ -134,6 +136,75 @@ export default {
 			count++;
 			item.order = count;
 		});
+	},
+
+	/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+	/* |               ИЗМЕНЕНИЕ ЗНАЧЕНИЙ                  |*/
+	/* |___________________________________________________|*/
+	/* Изменение свойства order */
+	changeOrder(array, obj, type) {
+		if (array.length <= 1) {
+			return;
+		}
+
+		// Является ли текущий элемент первым
+		let firstItemStatus = obj.data.order.value == 1;
+
+		// Предидущей элемент
+		let itemPrevious = null;
+
+		if (firstItemStatus) {
+			itemPrevious = array.find((block) => block.order === array.length);
+		} else {
+			itemPrevious = array.find((block) => block.order === obj.data.order.value - 1);
+		}
+
+		// Текущий элемент
+		let itemCurrent = array.find((block) => block.order === obj.data.order.value);
+
+		// Является ли текущий элемент последним
+		let lastItemStatus = obj.data.order.value == array.length;
+
+		// Следующий элемент
+		let itemNext = null;
+
+		if (lastItemStatus) {
+			itemNext = array.find((block) => block.order === 1);
+		} else {
+			itemNext = array.find((block) => block.order === obj.data.order.value + 1);
+		}
+
+		// Изменение порядка
+		switch (type) {
+			case "up":
+				{
+					if (lastItemStatus) {
+						obj.data.order.value = 1;
+						itemCurrent.order = 1;
+						itemNext.order = array.length;
+					} else {
+						obj.data.order.value++;
+						itemCurrent.order++;
+						itemNext.order--;
+					}
+					sorted.sortByOrder("up", array);
+				}
+				break;
+			case "down":
+				{
+					if (firstItemStatus) {
+						obj.data.order.value = array.length;
+						itemCurrent.order = array.length;
+						itemPrevious.order = 1;
+					} else {
+						obj.data.order.value--;
+						itemCurrent.order--;
+						itemPrevious.order++;
+					}
+					sorted.sortByOrder("up", array);
+				}
+				break;
+		}
 	},
 
 	/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/

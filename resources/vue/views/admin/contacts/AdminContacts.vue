@@ -43,7 +43,7 @@
 					</template>
 					<template #input>
 						<select v-model="currentContact.data.clinicId.value">
-							<option value="null" selected>Ничего не выбрано</option>
+							<option value="" selected disabled>Ничего не выбрано</option>
 							<option v-for="clinic in clinics" :key="clinic.id" :value="clinic.id">
 								{{ clinic.name }}
 							</option>
@@ -439,19 +439,19 @@ export default {
 				},
 				data: {
 					id: {
-						value: null,
+						value: "",
 						edited: false,
 					},
 					order: {
-						value: null,
+						value: "",
 						edited: false,
 					},
 					name: {
-						value: null,
+						value: "",
 						edited: false,
 					},
 					clinicId: {
-						value: null,
+						value: "",
 						edited: false,
 					},
 					mails: {
@@ -463,11 +463,11 @@ export default {
 						edited: false,
 					},
 					create: {
-						value: null,
+						value: false,
 						edited: false,
 					},
 					delete: {
-						value: null,
+						value: false,
 						edited: false,
 					},
 				},
@@ -718,76 +718,20 @@ export default {
 					this.disabled.contacts.save = false;
 				});
 		},
+
 		/* Изменение порядка */
 		changeContactsOrder(type) {
-			if (this.contacts.length <= 1) {
-				return;
-			}
-
-			// Является ли текущий элемент первым
-			let firstElementStatus = this.currentContact.data.order.value == 1;
-			// Предидущей элемент
-			let elementPrevious = null;
-			if (firstElementStatus) {
-				elementPrevious = this.contacts.find((item) => item.order === this.contacts.length);
-			} else {
-				elementPrevious = this.contacts.find(
-					(item) => item.order === this.currentContact.data.order.value - 1
-				);
-			}
-
-			// Текущий элемент
-			let elementCurrent = this.contacts.find(
-				(item) => item.order === this.currentContact.data.order.value
-			);
-
-			// Является ли текущий элемент последним
-			let lastElementStatus = this.currentContact.data.order.value == this.contacts.length;
-
-			// Следующий элемент
-			let elementNext = null;
-			if (lastElementStatus) {
-				elementNext = this.contacts.find((item) => item.order === 1);
-			} else {
-				elementNext = this.contacts.find(
-					(item) => item.order === this.currentContact.data.order.value + 1
-				);
-			}
-
-			// Изменение порядка
-			switch (type) {
-				case "up":
-					{
-						if (lastElementStatus) {
-							this.currentContact.data.order.value = 1;
-							elementCurrent.order = 1;
-							elementNext.order = this.contacts.length;
-						} else {
-							this.currentContact.data.order.value++;
-							elementCurrent.order++;
-							elementNext.order--;
-						}
-
-						sorted.sortByOrder("up", this.contacts);
-					}
-					break;
-				case "down":
-					{
-						if (firstElementStatus) {
-							this.currentContact.data.order.value = this.contacts.length;
-							elementCurrent.order = this.contacts.length;
-							elementPrevious.order = 1;
-						} else {
-							this.currentContact.data.order.value--;
-							elementCurrent.order--;
-							elementPrevious.order++;
-						}
-
-						sorted.sortByOrder("up", this.contacts);
-					}
-					break;
+			try {
+				shared.changeOrder(this.contacts, this.currentContact, type);
+			} catch (error) {
+				this.$store.commit("addDebugger", {
+					title: "Ошибка",
+					body: error,
+					type: "error",
+				});
 			}
 		},
+
 		/* Соритровка */
 		sortContacts(type) {
 			switch (type) {

@@ -599,60 +599,68 @@ class HomeController extends Controller
       // Все адреса
       $addresses = [];
       
-      // Формирование ссылок на клиники в заголовке
-      foreach($priceAddresses as $key => $value) {
-         $splitAddress = explode(', ', $value->name);
-
-         $city = trim(str_ireplace($cityFlags, "", $splitAddress[0]), " ");
-         $street = trim(str_ireplace($streetFlags, "", $splitAddress[1]), " ");
-         $house = trim(str_ireplace($houseFlags, "", $splitAddress[2]), " ");
-
-         if ($this->makeUrl($city) != $request->city) {
-            continue;
+      try {
+         // Формирование ссылок на клиники в заголовке
+         foreach($priceAddresses as $key => $value) {
+            $splitAddress = explode(', ', $value->name);
+   
+            $city = trim(str_ireplace($cityFlags, "", $splitAddress[0]), " ");
+            $street = trim(str_ireplace($streetFlags, "", $splitAddress[1]), " ");
+            $house = trim(str_ireplace($houseFlags, "", $splitAddress[2]), " ");
+   
+            if ($this->makeUrl($city) != $request->city) {
+               continue;
+            };
+   
+            if ($this->makeUrl($street) != $request->street) {
+               continue;
+            };
+   
+            if ($this->makeUrl($house) != $request->house) {
+               continue;
+            };
+   
+            $currentAddress = $value;
+            break;
          };
-
-         if ($this->makeUrl($street) != $request->street) {
-            continue;
+   
+         $categories = PriceCategory::where('addressId', $currentAddress->id)->get();
+         if (!$categories) {
+            return response()->json([
+               "status" => false,
+               "message" => "Категории не найдены.",
+               "data" => null,
+            ]);
          };
-
-         if ($this->makeUrl($house) != $request->house) {
-            continue;
-         };
-
-         $currentAddress = $value;
-         break;
-      };
-
-      $categories = PriceCategory::where('addressId', $currentAddress->id)->get();
-      if (!$categories) {
-         return response()->json([
-            "status" => false,
-            "message" => "Категории не найдены.",
-            "data" => null,
-         ]);
-      };
-
-      // Форматируем категории
-      $categoriesFormat = [];
-      foreach($categories as $categoriesKey => $categoriesValue) {
-         if ($categoriesValue->categoryId != null) continue;
+   
+         // Форматируем категории
+         $categoriesFormat = [];
+         foreach($categories as $categoriesKey => $categoriesValue) {
+            if ($categoriesValue->categoryId != null) continue;
+            
+            $categoriesFormat[] = $this->getCategoryArray($categoriesValue);
+         }
+   
+         // Получаем ID категорий
+         $categoryIds = $categories->pluck('id');
+   
+         // Получаем цены, привязанные к этим категориям
+         $prices = PriceValue::whereIn('categoryId', $categoryIds)->get();
          
-         $categoriesFormat[] = $this->getCategoryArray($categoriesValue);
-      }
-
-      // Получаем ID категорий
-      $categoryIds = $categories->pluck('id');
-
-      // Получаем цены, привязанные к этим категориям
-      $prices = PriceValue::whereIn('categoryId', $categoryIds)->get();
-      
-      if (!$currentAddress) {
+         if (!$currentAddress) {
+            return response()->json([
+               "status" => false,
+               "message" => "Адрес не найден.",
+               "data" => null,
+            ]);
+         };
+      } catch (Throwable $th) {
          return response()->json([
             "status" => false,
-            "message" => "Адрес не найден.",
+            "message" => "Не получилось получить данные.",
             "data" => null,
          ]);
-      };
+      }
 
       return response()->json([
          "status" => true,

@@ -468,7 +468,11 @@
 			</div>
 		</div>
 
-		<div class="tiptap__editor" :class="{ 'disabled': !editable, 'error': error }" :style="{ '--min-height': `${minHeight}px` }">
+		<div
+			class="tiptap__editor"
+			:class="{ 'disabled': !editable, 'error': error }"
+			:style="{ '--min-height': `${minHeight}px` }"
+		>
 			<editor-content :editor="editor" />
 		</div>
 
@@ -587,6 +591,15 @@ export default {
 	watch: {
 		isEditable(value) {
 			this.editor.setEditable(value);
+		},
+
+		modelValue: {
+			handler(newValue) {
+				if (this.editor && this.editor.getHTML() !== newValue) {
+					this.editor.commands.setContent(newValue, false);
+				}
+			},
+			deep: true,
 		},
 	},
 	computed: {
@@ -755,7 +768,10 @@ export default {
 	mounted() {
 		this.editor = new Editor({
 			onUpdate: ({ editor }) => {
-				this.$emit("update:modelValue", editor.getHTML());
+				const html = editor.getHTML();
+				if (html !== this.modelValue) {
+					this.$emit("update:modelValue", html);
+				}
 			},
 
 			// Расширения Tiptap

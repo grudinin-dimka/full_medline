@@ -91,7 +91,6 @@ export default {
 	},
 	computed: {
 		getFilteredList() {
-			console.log(this.list);
 			let filteredList = shared.getRecursiveCopy(this.list);
 
 			if (this.name !== "") {

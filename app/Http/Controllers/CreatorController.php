@@ -374,7 +374,7 @@ class CreatorController extends Controller
    /* |                    СТАТИСТИКА                     |*/
    /* |___________________________________________________|*/
    public function getTrackingStatistics(Request $request) {
-      $statistics = Tracking::all();
+      $statistics = Tracking::all()->reverse()->values()->take(1000);
 
       foreach ($statistics as $key => $statistic) {
          $date = Carbon::parse($statistic->created_at);

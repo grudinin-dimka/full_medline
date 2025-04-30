@@ -1,6 +1,21 @@
 <template>
+	<!-- Модальное окно: Видео -->
 	<Modal ref="modalVideo" :settings="modalVideo">
-		<template #title>{{ modalVideo.values.title }}</template>
+		<template #title>
+			<template v-if="modalVideo.values.look == 'default' && !currentVideo.data.delete.value">
+				<icon-arrow
+					:width="16"
+					:height="16"
+					:rotate="-90"
+					@click="changeInfoBlockOrder('down')"
+				/>
+				#{{ currentVideo.data.order.value }}
+				<icon-arrow :width="16" :height="16" :rotate="90" @click="changeInfoBlockOrder('up')" />
+			</template>
+			<template v-else>
+				{{ modalVideo.values.title }}
+			</template>
+		</template>
 
 		<template #body>
 			<div class="modal__video">
@@ -33,12 +48,12 @@
 				</div>
 			</div>
 
-			<Tiptap
+			<TipTap
 				ref="tiptapDescription"
 				v-model="currentVideo.data.description.value"
 				:editable="true"
 				:limit="10_000"
-				:minHeight="300"
+				:minHeight="200"
 				:options="['format', 'align', 'list', 'link']"
 				:placeholder="'Текст новости'"
 				:error="currentVideo.errors.description.status"
@@ -46,7 +61,7 @@
 				<template #error>
 					{{ currentVideo.errors.description.message }}
 				</template>
-			</Tiptap>
+			</TipTap>
 		</template>
 
 		<template #footer>
@@ -61,6 +76,7 @@
 		</template>
 	</Modal>
 
+	<!-- Модальное окно: Видео -> Загрузка -->
 	<Modal ref="modalVideoUpload" :settings="modalVideoUpload">
 		<template #title>{{ modalVideoUpload.values.title }}</template>
 		<template #body>
@@ -118,30 +134,40 @@
 		</template>
 
 		<template #body>
-			<div class="evideo">
-				<div class="evideo__item" @click="openVideoEdite">
-					<div class="evideo__item-video">
-						<video preload="metadata">
-							<source :src="`/storage/video/IMG_8240.webm`" type="video/webm" />
-						</video>
-					</div>
-					<div class="evideo__item-description">Описание видео блока</div>
+			<template v-if="loading.sections.video">
+				<div class="evideo" v-if="videos.length > 0">
+					<template v-for="video in videos">
+						<div
+							class="evideo__item"
+							:class="{ create: video.create, delete: video.delete }"
+							@click="openVideoEdite(video)"
+						>
+							<div class="evideo__item-head">
+								<!-- <div class="evideo__head-id">id: {{ video.create ? "?" : video.id }}</div> -->
+								<div class="evideo__head-id">id: {{ video.id }}</div>
+								<div class="evideo__head-order">order: {{ video.order }}</div>
+							</div>
+							<div class="evideo__item-video">
+								<video preload="metadata" :key="video.video">
+									<source :src="video.path" :type="`video/${getVideoType(video.video)}`" />
+								</video>
+							</div>
+							<div class="evideo__item-description">
+								<TipTap :editable="false" :limit="10_000" v-model="video.description" />
+							</div>
+						</div>
+					</template>
 				</div>
-				<div class="evideo__item" @click="openVideoEdite">
-					<div class="evideo__item-video">
-						<video preload="metadata">
-							<source :src="`/storage/video/IMG_1817.MP4`" type="video/mp4" />
-						</video>
-					</div>
-					<div class="evideo__item-description">Описание видео блока</div>
-				</div>
-			</div>
 
-			<!-- <loader-child
+				<!-- Элемент пустой страницы -->
+				<empty :minHeight="300" v-else />
+			</template>
+
+			<loader-child
 				:isLoading="loading.loader.video"
 				:minHeight="200"
 				@loaderChildAfterLeave="loaderChildAfterLeave"
-			/> -->
+			/>
 		</template>
 
 		<template #buttons>
@@ -158,13 +184,15 @@ import Modal from "../../../components/modules/modal/Modal.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
+import Empty from "../../../components/modules/Empty.vue";
 
 import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
 import BaseTable from "../../../components/modules/table/BaseTable.vue";
-import Tiptap from "../../../components/modules/Tiptap.vue";
+import TipTap from "../../../components/modules/Tiptap.vue";
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 
+import IconArrow from "../../../components/icons/IconArrow.vue";
 import IconLoad from "../../../components/icons/IconLoad.vue";
 import IconAdd from "../../../components/icons/IconAdd.vue";
 import IconEdit from "../../../components/icons/IconEdit.vue";
@@ -182,13 +210,15 @@ export default {
 		BlockOnce,
 		LoaderChild,
 		InfoBar,
+		Empty,
 
 		ContainerInputOnce,
 		BaseTable,
-		Tiptap,
+		TipTap,
 
 		ButtonDefault,
 
+		IconArrow,
 		IconLoad,
 		IconAdd,
 		IconEdit,
@@ -248,6 +278,14 @@ export default {
 					},
 				},
 				data: {
+					id: {
+						value: "",
+						edited: false,
+					},
+					order: {
+						value: "",
+						edited: false,
+					},
 					path: {
 						value: "/storage/video/IMG_8240.webm",
 						edited: false,
@@ -308,8 +346,11 @@ export default {
 
 		/* Открытие модального окна для редактирования */
 		openVideoEdite(video) {
-			// shared.clearObjectFull(this.currentVideo);
-			// shared.setData(video, this.currentVideo);
+			shared.clearObjectFull(this.currentVideo);
+			shared.setData(video, this.currentVideo);
+
+			// Перезагружаем видео
+			this.reloadVideo();
 
 			this.openModal("modalVideo", "Видео", "default");
 		},
@@ -342,14 +383,25 @@ export default {
 			)
 				return;
 
-			this.videos.push({
-				id: shared.getMaxId(this.videos) + 1,
-				path: this.currentVideo.data.path.value,
-				video: this.currentVideo.data.video.value,
-				description: this.currentVideo.data.description.value,
-				create: true,
-				delete: false,
-			});
+			try {
+				this.videos.push({
+					id: shared.getMaxId(this.videos) + 1,
+					order: shared.getMaxOrder(this.videos) + 1,
+					path: this.currentVideo.data.path.value,
+					video: this.currentVideo.data.video.value,
+					description: this.currentVideo.data.description.value,
+					create: true,
+					delete: false,
+				});
+
+				this.$refs.modalVideo.close();
+			} catch (error) {
+				this.$store.commit("addDebugger", {
+					title: "Ошибка.",
+					body: error,
+					type: "error",
+				});
+			}
 		},
 
 		updateVideo() {
@@ -370,7 +422,29 @@ export default {
 			)
 				return;
 
-			console.log("upload");
+			try {
+				let selectedVideo = this.videos.find(
+					(item, index) => item.id == this.currentVideo.data.id.value
+				);
+
+				selectedVideo.order = this.currentVideo.data.order.value;
+				selectedVideo.path = this.currentVideo.data.path.value;
+				selectedVideo.video = this.currentVideo.data.video.value;
+				selectedVideo.description = this.currentVideo.data.description.value;
+
+				this.$refs.modalVideo.close();
+			} catch (error) {
+				this.$store.commit("addDebugger", {
+					title: "Ошибка.",
+					body: error,
+					type: "error",
+				});
+			}
+		},
+
+		/* Изменение порядка */
+		changeInfoBlockOrder(type) {
+			shared.changeOrder(this.videos, this.currentVideo, type);
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -412,11 +486,7 @@ export default {
 						this.currentVideo.data.path.value = response.data.data;
 
 						// Перезагружаем видео
-						this.$nextTick(() => {
-							if (this.$refs.videoPlayer) {
-								this.$refs.videoPlayer.load();
-							}
-						});
+						this.reloadVideo();
 
 						this.$refs.modalVideoUpload.close();
 					} else {
@@ -430,7 +500,7 @@ export default {
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
 						title: "Ошибка.",
-						body: response.data.message,
+						body: error,
 						type: "error",
 					});
 				})
@@ -439,9 +509,54 @@ export default {
 				});
 		},
 
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                     Другое                        |*/
+		/* |___________________________________________________|*/
+		/* Тип видеофайла */
 		getVideoType(value) {
 			return files.basetype(value);
 		},
+
+		/* Ручное обновление видео */
+		reloadVideo(value) {
+			this.$nextTick(() => {
+				if (this.$refs.videoPlayer) {
+					this.$refs.videoPlayer.load();
+				}
+			});
+		},
+	},
+	mounted() {
+		axios({
+			method: "get",
+			url: `${this.$store.getters.urlApi}` + `get-videos-all`,
+		})
+			.then((response) => {
+				if (response.data.status) {
+					this.videos = response.data.data;
+
+					for (let i = 0; i < this.videos.length; i++) {
+						this.table.body[i].create = false;
+						this.table.body[i].delete = false;
+					}
+				} else {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка.",
+						body: response.data.message,
+						type: "error",
+					});
+				}
+			})
+			.catch((error) => {
+				this.$store.commit("addDebugger", {
+					title: "Ошибка.",
+					body: error,
+					type: "error",
+				});
+			})
+			.finally(() => {
+				this.loading.loader.video = false;
+			});
 	},
 };
 </script>
@@ -550,6 +665,8 @@ export default {
 	border-radius: calc(var(--default-border-radius) / 1.5);
 
 	transition: all 0.2s;
+
+	overflow: hidden;
 }
 
 .evideo__item:hover {
@@ -557,11 +674,67 @@ export default {
 	background-color: var(--item-background-color-active);
 }
 
+.evideo__item-description {
+	height: 100px;
+	overflow: hidden;
+}
+
+/* create */
+.evideo__item.create {
+	border: var(--input-create-border-focus);
+}
+
+.evideo__item.create:hover {
+	border: var(--input-create-border-focus);
+	background-color: var(--input-create-background-color-hover);
+}
+
+/* delete */
+.evideo__item.delete {
+	border: var(--input-delete-border);
+}
+
+.evideo__item.delete:hover {
+	border: var(--input-delete-border);
+	background-color: var(--input-delete-background-color-hover);
+}
+
+.evideo__item-head {
+	display: flex;
+	gap: 10px;
+}
+
+/* head */
+.evideo__item-head > div {
+	padding: 5px 10px;
+	border-radius: calc(var(--input-border-radius) / 2);
+	border: var(--input-border);
+
+	transition: all 0.2s;
+}
+
+.evideo__item:hover > .evideo__item-head > div {
+	border: var(--input-border-focus);
+}
+
+.evideo__item.create > .evideo__item-head > div {
+	border: var(--input-create-border);
+}
+
+.evideo__item.delete > .evideo__item-head > div {
+	border: var(--input-delete-border);
+}
+
+.evideo__item.delete:hover > .evideo__item-head > div {
+	border: var(--input-delete-border);
+}
+
+/* video */
 .evideo__item-video > video {
 	border-radius: calc(var(--default-border-radius) / 1.75);
 
 	width: 100%;
-	height: 300px;
+	height: 200px;
 	object-fit: cover;
 }
 </style>
