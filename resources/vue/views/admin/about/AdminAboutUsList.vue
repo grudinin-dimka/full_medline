@@ -11,12 +11,8 @@
 			:key="block.order"
 		>
 			<div class="head">
-				<div>
-					id: {{ block.create ? "?" : block.id }}
-				</div>
-				<div>
-					order: {{ block.order }}
-				</div>
+				<div>id: {{ block.create ? "?" : block.id }}</div>
+				<div>order: {{ block.order }}</div>
 			</div>
 			<div class="body">
 				<div class="images">
@@ -64,10 +60,15 @@
 					></div>
 				</div>
 				<div class="title" :class="{ none: !block.title }">
-					{{ block.title ? block.title : "Пусто" }}
+					<Tiptap v-model="block.title" :editable="false" :limit="500" :minHeight="0" />
 				</div>
 				<div class="description" :class="{ none: !block.description }">
-					{{ block.description ? block.description : "Пусто" }}
+					<Tiptap
+						v-model="block.description"
+						:editable="false"
+						:limit="10_000"
+						:minHeight="0"
+					/>
 				</div>
 			</div>
 		</div>
@@ -75,6 +76,8 @@
 </template>
 
 <script>
+import Tiptap from "../../../components/modules/Tiptap.vue";
+
 export default {
 	props: {
 		infoBlocks: {
@@ -82,6 +85,9 @@ export default {
 			required: true,
 			default: [],
 		},
+	},
+	components: {
+		Tiptap,
 	},
 	data() {
 		return {};
@@ -260,12 +266,12 @@ export default {
 @media screen and (width <= 1700px) {
 	.about {
 		grid-template-columns: repeat(2, 1fr);
-	}	
+	}
 }
 
 @media screen and (width <= 1200px) {
 	.about {
 		grid-template-columns: repeat(1, 1fr);
-	}	
+	}
 }
 </style>

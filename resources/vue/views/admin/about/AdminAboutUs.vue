@@ -11,9 +11,11 @@
 			#{{ currentInfoBlock.data.order.value }}
 			<icon-arrow :width="16" :height="16" :rotate="90" @click="changeInfoBlockOrder('up')" />
 		</template>
+
 		<template #title v-else>
 			{{ modal.title }}
 		</template>
+
 		<template #body>
 			<div class="modal-images">
 				<div class="item" v-if="currentInfoBlock.data.imageOne.value">
@@ -105,47 +107,28 @@
 				</div>
 			</div>
 			<ContainerInput>
-				<container-textarea-once>
-					<template #title>
-						<span>ЗАГОЛОВОК</span>
-						<span v-if="currentInfoBlock.data.title.edited"> (ИЗМЕНЕНО) </span>
-					</template>
-					<template #textarea>
-						<textarea
-							rows="4"
-							placeholder="Введите заголовок"
-							autocomplete="off"
-							:class="{ error: false }"
-							v-model="currentInfoBlock.data.title.value"
-							@input="currentInfoBlock.data.title.edited = true"
-						></textarea>
-					</template>
-					<template #error>
-						<span class="error" v-if="false"> Ошибка </span>
-					</template>
-				</container-textarea-once>
+				<Tiptap
+					ref="tiptapTitle"
+					v-model="currentInfoBlock.data.title.value"
+					:editable="true"
+					:limit="500"
+					:minHeight="100"
+					:options="['format', 'align']"
+					:placeholder="'Заголовок'"
+				/>
 
-				<container-textarea-once>
-					<template #title>
-						<span>ОПИСАНИЕ</span>
-						<span v-if="currentInfoBlock.data.description.edited"> (ИЗМЕНЕНО) </span>
-					</template>
-					<template #textarea>
-						<textarea
-							rows="8"
-							placeholder="Введите заголовок"
-							autocomplete="off"
-							:class="{ error: false }"
-							v-model="currentInfoBlock.data.description.value"
-							@input="currentInfoBlock.data.description.edited = true"
-						></textarea>
-					</template>
-					<template #error>
-						<span class="error" v-if="false"> Ошибка </span>
-					</template>
-				</container-textarea-once>
+				<Tiptap
+					ref="tiptapDescription"
+					v-model="currentInfoBlock.data.description.value"
+					:editable="true"
+					:limit="10_000"
+					:minHeight="200"
+					:options="['format', 'align', 'list', 'link']"
+					:placeholder="'Заголовок'"
+				/>
 			</ContainerInput>
 		</template>
+
 		<template #footer>
 			<BlockButtons>
 				<ButtonDefault @click="addInfoBlock" v-if="modal.type == 'create'">
@@ -278,6 +261,7 @@ import AdminModal from "../../../components/includes/admin/AdminModal.vue";
 import AdminSubModal from "../../../components/includes/admin/AdminSubModal.vue";
 
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
+import Tiptap from "../../../components/modules/Tiptap.vue";
 
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTwo from "../../../components/ui/admin/blocks/BlockTwo.vue";
@@ -317,6 +301,7 @@ export default {
 		AdminModal,
 		AdminSubModal,
 		InfoBar,
+		Tiptap,
 
 		BlockOnce,
 		BlockTwo,

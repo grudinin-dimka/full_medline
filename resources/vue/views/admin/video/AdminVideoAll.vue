@@ -264,7 +264,7 @@ export default {
 			/* Модальное окно */
 			modalVideo: {
 				thin: false,
-				clamped: false,
+				clamped: true,
 				values: {
 					title: "",
 					look: "default",
@@ -273,7 +273,7 @@ export default {
 
 			modalVideoUpload: {
 				thin: true,
-				clamped: false,
+				clamped: true,
 				values: {
 					title: "",
 					look: "default",
