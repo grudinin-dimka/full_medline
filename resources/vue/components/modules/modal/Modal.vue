@@ -291,6 +291,7 @@ export default {
 }
 
 .modal__head-title {
+	user-select: none;
 	display: flex;
 	align-items: center;
 	gap: 5px;

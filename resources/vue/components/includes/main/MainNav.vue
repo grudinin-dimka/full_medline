@@ -84,6 +84,15 @@
 
 					<a
 						class="element"
+						:class="{ active: isActive('/videos') }"
+						href="/videos"
+						@click.prevent="$router.push({ name: `videos-all` })"
+					>
+						Видео
+					</a>
+
+					<a
+						class="element"
 						:class="{ active: isActive('/contacts') }"
 						href="/contacts"
 						@click.prevent="$router.push({ name: `contacts` })"

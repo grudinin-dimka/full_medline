@@ -158,13 +158,7 @@ class HomeController extends Controller
       return response()->json([
          "status" => true,
          "message" => "Футер найден.",
-         "data" => (object) [
-            "title" => $footer->title,        
-            "titleDesc" => $footer->titleDesc,        
-            "license" => $footer->license,        
-            "licenseDesc" => $footer->licenseDesc,        
-            "footer" => $footer->footer,        
-         ],
+         "data" => $footer->description,
       ]);
    } 
    
@@ -1299,7 +1293,11 @@ class HomeController extends Controller
    /* Получение всех видео */
    public function getVideosAll(Request $request) {
       try {
-         $videos = Video::all();
+         $videos = Video::all()->sortBy('order')->values();
+
+         foreach ($videos as $key => $value) {
+            $value->path = Storage::url('video/' . $value->video);
+         };
       } catch (Throwable $th) {
          return response()->json([
             "status" => false,

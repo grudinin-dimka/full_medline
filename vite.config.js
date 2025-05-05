@@ -4,6 +4,7 @@ import vue from "@vitejs/plugin-vue";
 import { fileURLToPath } from "url";
 
 export default defineConfig({
+	/* Плагины */
 	plugins: [
 		vue(),
 		laravel({
@@ -11,9 +12,16 @@ export default defineConfig({
 			refresh: true,
 		}),
 	],
+
+	/* Алиасы */
 	resolve: {
 		alias: {
 			"@": fileURLToPath(new URL("/resources/vue/", import.meta.url)),
 		},
+	},
+
+	/* Настройка сборки */
+	build: {
+		chunkSizeWarningLimit: 1000, // теперь предупреждение будет при 1 МБ
 	},
 });

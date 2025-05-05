@@ -14,20 +14,12 @@ return new class extends Migration
     {
         Schema::create('footers', function (Blueprint $table) {
             $table->id();
-            $table->string('title', length: 500)->nullable();
-            $table->string('titleDesc', length: 1000)->nullable();
-            $table->string('license', length: 500)->nullable();
-            $table->string('licenseDesc', length: 1000)->nullable();
-            $table->string('footer', length: 1000)->nullable();
+            $table->text('description')->nullable();
             $table->timestamps();
         });
 
         DB::table('footers')->insert([
-            "title" => "",
-            "titleDesc" => "",
-            "license" => "",
-            "licenseDesc" => "",
-            "footer" => "",
+            "description" => "Пустая строка.",
         ]);
     }
 

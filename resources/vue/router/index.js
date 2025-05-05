@@ -112,6 +112,20 @@ const router = createRouter({
 						},
 					],
 				},
+				{
+					path: "videos",
+					name: "videos",
+					meta: { title: "Видео" },
+					redirect: { name: "videos-all" },
+					component: () => import("../views/main/video/MainVideoAll.vue"),
+					children: [
+						{
+							path: "",
+							name: "videos-all",
+							component: () => import("../views/main/video/MainVideoAll.vue"),
+						},
+					],
+				},
 			],
 		},
 		// Роутер для админки

@@ -63,19 +63,16 @@
 		<template v-if="loading.sections.footer">
 			<section
 				class="bottom"
-				v-if="
-					footer.title ||
-					footer.titleDesc ||
-					footer.license ||
-					footer.licenseDesc ||
-					footer.footer
-				"
+				v-if="footer !== ''"
 			>
-				<p v-if="footer.title">{{ footer.title }}</p>
-				<p v-if="footer.titleDesc">{{ footer.titleDesc }}</p>
-				<p v-if="footer.license">{{ footer.license }}</p>
-				<p v-if="footer.licenseDesc">{{ footer.licenseDesc }}</p>
-				<p v-if="footer.footer">{{ footer.footer }}</p>
+				<Tiptap
+					v-model="footer"
+					:editable="false"
+					:limit="10_000"
+					:minHeight="50"
+					:options="['format', 'align', 'list', 'link']"
+					:placeholder="'Введите текст футера'"
+				/>
 			</section>
 
 			<Empty :minHeight="250" v-else />
@@ -91,23 +88,27 @@
 </template>
 
 <script>
-import axios from "axios";
+import LoaderChild from "../../modules/LoaderChild.vue";
+import Empty from "../../modules/Empty.vue";
+import Tiptap from "../../modules/Tiptap.vue";
 
 import IconVisa from "../../icons/IconVisa.vue";
 import IconMasterCard from "../../icons/IconMasterCard.vue";
 import IconMir from "../../icons/IconMir.vue";
 
-import LoaderChild from "../../modules/LoaderChild.vue";
-import Empty from "../../modules/Empty.vue";
+import axios from "axios";
 
 export default {
 	components: {
-		axios,
+		LoaderChild,
+		Empty,
+		Tiptap,
+
 		IconVisa,
 		IconMasterCard,
 		IconMir,
-		LoaderChild,
-		Empty,
+
+		axios,
 	},
 	data() {
 		return {
@@ -120,13 +121,7 @@ export default {
 				},
 			},
 			nameTitle: "",
-			footer: {
-				title: "",
-				titleDesc: "",
-				license: "",
-				licenseDesc: "",
-				footer: "",
-			},
+			footer: "",
 		};
 	},
 	methods: {
@@ -155,9 +150,7 @@ export default {
 		})
 			.then((response) => {
 				if (response.data.status) {
-					for (let key in response.data.data) {
-						this.footer[key] = response.data.data[key];
-					}
+					this.footer = response.data.data;
 				} else {
 					this.$store.commit("addDebugger", {
 						title: "Ошибка.",

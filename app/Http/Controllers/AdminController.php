@@ -57,7 +57,7 @@ use App\Models\PriceFile;
 use App\Models\PriceAddress;
 use App\Models\PriceCategory;
 use App\Models\PriceValue;
-
+use App\Models\Video;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Throwable;
 
@@ -82,7 +82,7 @@ class AdminController extends Controller
          $rules = [
             'type' => 'required',
             'formats' => 'required',
-            'file' => ['required', 'max:' . (5 * 1024)], // общие правила
+            'file' => ['required'], // общие правила
          ];
 
          // Добавление правил в зависимости от типа
@@ -90,10 +90,19 @@ class AdminController extends Controller
             $rules['file'][] = File::image()
                ->types($request->formats)
                ->dimensions(Rule::dimensions()->maxWidth(2000)->maxHeight(2000));
+
+            // Допустимый размер
+            $rules['file'][] = 'max:' . (5 * 1024);
          } else if ($isVideo) {
             $rules['file'][] = 'mimetypes:video/mp4,video/quicktime,video/webm';
+
+            // Допустимый размер
+            $rules['file'][] = 'max:' . (100 * 1024);
          } else {
             $rules['file'][] = File::types($request->formats);
+
+            // Допустимый размер
+            $rules['file'][] = 'max:' . (2 * 1024);
          };
 
          $validator = Validator::make($request->all(), $rules);
@@ -252,15 +261,24 @@ class AdminController extends Controller
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
    /* Сохранение футера */ 
    public function saveFooter(Request $request) {
-      $footer = Footer::find(1);
+      // Валидация
+      $validator = Validator::make($request->all(), [
+         'description' => 'required|string',
+      ]);
+
+      if ($validator->fails()) {
+         return response()->json([
+            "status" => false,
+            "message" => "Некорректные данные.",
+            "data" => null,
+         ]);
+      };
       
       try {
+         $footer = Footer::find(1);
+
          $footerUpdate = $footer->update([
-            'title' => $request->title,
-            'titleDesc' => $request->titleDesc,
-            'license' => $request->license,
-            'licenseDesc' => $request->licenseDesc,
-            'footer' => $request->footer,
+            'description' => $request->description,
          ]);
       } catch (Throwable $th) {
          return response()->json([
@@ -276,6 +294,7 @@ class AdminController extends Controller
          "data" => null         
       ]);
    }
+
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                     О НАС                         |*/
    /* |___________________________________________________|*/
@@ -1854,7 +1873,7 @@ class AdminController extends Controller
    /* Изменение новости */
    public function saveNewsChangesAll(Request $request) {
       $validator = Validator::make($request->all(), [
-         'news' => 'required|array',
+         'news' => 'nullable|array',
       ]);
 
       if ($validator->fails()) {
@@ -1931,11 +1950,96 @@ class AdminController extends Controller
       };
    }
 
-   public function addVideo(Request $request) {
+   /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+   /* |                     ВИДЕО                         |*/
+   /* |___________________________________________________|*/
+   /* Добавление */
+   public function saveVideoChanges(Request $request) {
+      $validator = Validator::make($request->all(), [
+         'videos' => 'nullable|array',
+      ]);
+
+      if ($validator->fails()) {
+         return response()->json([
+            "status" => false,
+            "message" => "Некорректные данные.",
+            "data" => null,
+         ]);
+      };
+
+      $arrayID = [];
+
+      foreach ($request->videos as $key => $value) {
+         // Удаление
+         if ($value["delete"] === true) {
+            $video = Video::find($value["id"]);
+            $video->delete();
+            
+            continue;
+         };
+
+         // Добавление
+         if ($value["create"] === true){
+            $videoCreate = Video::create([
+               "order" => $value["order"],
+               "video" => $value["video"],
+               "description" => $value["description"],
+            ]);
+
+            /* Запись нового объекта в массив */
+            $arrayID[] = (object) [
+               // Прошлый id
+               'old' => $value["id"], 
+               // Новый id
+               'new' => $videoCreate->id
+            ];
+            continue;
+         };
+
+         // Обновление
+         $video = Video::find($value["id"]);
+         $video->update([
+            "order" => $value["order"],
+            "video" => $value["video"],
+            "description" => $value["description"],
+         ]);   
+      };
+
+      // Сортировка слайдов по порядку от наименьшего до наибольшого
+      $videosAll = Video::all()->SortBy('order');
+
+      // Обновление порядковых номеров
+      $count = 0;
+      foreach ($videosAll as $videoKey => $videoValue) {
+         $count++;
+         $videoValue["order"] = $count;
+         $videoValue->save();
+      };
+
+      // Получение всех файлов
+      $filesVideos = Storage::files('public/video');
+      if($filesVideos) {
+         foreach ($filesVideos as $fileKey => $fileValue) {
+            $useFile = false;
+            /* Проверка на использование файла */
+            foreach ($videosAll as $aboutKey => $videoValue) {
+               /* Проверка значения названия файла на совпадение */
+               if ($videoValue->video == basename($fileValue)) {
+                  $useFile = true;
+               };
+            };
+   
+            /* Удаление файла, если не используется */
+            if (!$useFile) {
+               Storage::delete($fileValue);
+            };
+         };
+      };
+
       return response()->json([
-         "success" => true,
-         "message" => 'Успешно!',
-         "data" => null,
+         "status" => true,
+         "message" => "Данные обновлены.",
+         "data" => $arrayID,
       ]);
    }
 }

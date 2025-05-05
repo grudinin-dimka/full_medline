@@ -114,6 +114,7 @@ Route::middleware(['auth:sanctum', 'admin-or-creator'])->group(function () {
 
    // Новости 
    Route::post('/add-video', [AdminController::class, 'addVideo']);
+   Route::post('/save-videos-changes', [AdminController::class, 'saveVideoChanges']);
 });
 
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/

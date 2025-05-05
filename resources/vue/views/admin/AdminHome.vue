@@ -260,139 +260,14 @@
 
 		<template #body>
 			<div class="footer-container" v-show="loading.footer">
-				<containerInput>
-					<!-- Заголовок -->
-					<div class="block-textarea">
-						<container-textarea-once :type="'edit'">
-							<template #title>
-								<span>ЗАГОЛОВОК</span>
-								<span v-if="footer.title.edited"> (ИЗМЕНЕНО)</span>
-							</template>
-							<template #textarea>
-								<textarea
-									rows="4"
-									placeholder="Введите заголовок"
-									autocomplete="off"
-									:class="{ error: false }"
-									v-model="footer.title.body"
-									@input="controlSymbols('title')"
-								></textarea>
-							</template>
-							<template #error>
-								<span class="error" v-if="false"> Ошибка </span>
-							</template>
-						</container-textarea-once>
-						<span>{{ footer.title.symbolsCount }}/{{ footer.title.symbolsCountMax }}</span>
-					</div>
-					<!-- Дополнение к заголовку -->
-					<div class="block-textarea">
-						<container-textarea-once :type="'edit'">
-							<template #title>
-								<span>ДОПОЛНЕНИЕ К ЗАГОЛОВКУ</span>
-								<span v-if="footer.titleDesc.edited"> (ИЗМЕНЕНО)</span>
-							</template>
-							<template #textarea>
-								<textarea
-									rows="10"
-									placeholder="Введите дополнение"
-									autocomplete="off"
-									:class="{ error: false }"
-									v-model="footer.titleDesc.body"
-									@input="controlSymbols('titleDesc')"
-								></textarea>
-							</template>
-							<template #error>
-								<span class="error" v-if="false"> Ошибка </span>
-							</template>
-						</container-textarea-once>
-						<span
-							>{{ footer.titleDesc.symbolsCount }}/{{
-								footer.titleDesc.symbolsCountMax
-							}}</span
-						>
-					</div>
-					<!-- Лицензия -->
-					<div class="block-textarea">
-						<container-textarea-once :type="'edit'">
-							<template #title>
-								<span>ЛИЦЕНЗИЯ</span>
-								<span v-if="footer.license.edited"> (ИЗМЕНЕНО)</span>
-							</template>
-							<template #textarea>
-								<textarea
-									rows="4"
-									placeholder="Введите лицензию"
-									autocomplete="off"
-									:class="{ error: false }"
-									v-model="footer.license.body"
-									@input="controlSymbols('license')"
-								></textarea>
-							</template>
-							<template #error>
-								<span class="error" v-if="false"> Ошибка </span>
-							</template>
-						</container-textarea-once>
-						<span
-							>{{ footer.license.symbolsCount }}/{{ footer.license.symbolsCountMax }}</span
-						>
-					</div>
-					<!-- Лицензия -->
-					<div class="block-textarea">
-						<container-textarea-once :type="'edit'">
-							<template #title>
-								<span>ОСНОВНОЙ ТЕКСТ</span>
-								<span v-if="footer.licenseDesc.edited"> (ИЗМЕНЕНО)</span>
-							</template>
-							<template #textarea>
-								<textarea
-									rows="10"
-									placeholder="Введите основной текст"
-									autocomplete="off"
-									:class="{ error: false }"
-									v-model="footer.licenseDesc.body"
-									@input="controlSymbols('licenseDesc')"
-								></textarea>
-							</template>
-							<template #error>
-								<span class="error" v-if="false"> Ошибка </span>
-							</template>
-						</container-textarea-once>
-						<span
-							>{{ footer.licenseDesc.symbolsCount }}/{{
-								footer.licenseDesc.symbolsCountMax
-							}}</span
-						>
-					</div>
-					<!-- Лицензия -->
-					<div class="block-textarea">
-						<container-textarea-once :type="'edit'">
-							<template #title>
-								<span>ПОДВАЛ</span>
-								<span v-if="footer.footer.edited"> (ИЗМЕНЕНО)</span>
-							</template>
-							<template #textarea>
-								<textarea
-									rows="10"
-									placeholder="Введите подвал"
-									autocomplete="off"
-									:class="{ error: false }"
-									v-model="footer.footer.body"
-									@input="controlSymbols('footer')"
-								></textarea>
-							</template>
-							<template #error>
-								<span class="error" v-if="false"> Ошибка </span>
-							</template>
-							<template #counter>
-								<span class="counter"
-									>{{ footer.footer.symbolsCount }}/{{
-										footer.footer.symbolsCountMax
-									}}</span
-								>
-							</template>
-						</container-textarea-once>
-					</div>
-				</containerInput>
+				<Tiptap
+					v-model="footer"
+					:editable="true"
+					:limit="10_000"
+					:minHeight="300"
+					:options="['format', 'align', 'list', 'link']"
+					:placeholder="'Введите текст футера'"
+				/>
 			</div>
 
 			<!-- Загрузка футера -->
@@ -413,6 +288,7 @@ import Empty from "../../components/modules/Empty.vue";
 
 import Modal from "../../components/includes/admin/AdminModal.vue";
 import InfoBar from "../../components/ui/admin/InfoBar.vue";
+import Tiptap from "../../components/modules/Tiptap.vue";
 
 import ContainerInput from "../../components/ui/admin/containers/ContainerInput.vue";
 import ContainerInputOnce from "../../components/ui/admin/containers/input/ContainerInputOnce.vue";
@@ -451,8 +327,11 @@ export default {
 		ElementInputLabel,
 		LoaderChild,
 		Empty,
+
 		Modal,
 		InfoBar,
+		Tiptap,
+
 		ContainerInput,
 		ContainerInputOnce,
 		ContainerTextareaOnce,
@@ -584,38 +463,7 @@ export default {
 				},
 			},
 
-			footer: {
-				title: {
-					body: null,
-					symbolsCount: 0,
-					symbolsCountMax: 500,
-					edited: false,
-				},
-				titleDesc: {
-					body: null,
-					symbolsCount: 0,
-					symbolsCountMax: 1000,
-					edited: false,
-				},
-				license: {
-					body: null,
-					symbolsCount: 0,
-					symbolsCountMax: 500,
-					edited: false,
-				},
-				licenseDesc: {
-					body: null,
-					symbolsCount: 0,
-					symbolsCountMax: 1000,
-					edited: false,
-				},
-				footer: {
-					body: null,
-					symbolsCount: 0,
-					symbolsCountMax: 1000,
-					edited: false,
-				},
-			},
+			footer: "",
 		};
 	},
 	methods: {
@@ -1018,52 +866,6 @@ export default {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                     ФУТЕР                         |*/
 		/* |___________________________________________________|*/
-		/* _____________________________________________________*/
-		/* 1. Работа с текстовыми полями                        */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		/* Очистка всех полей футера */
-		clearTextareaAll() {
-			for (const obj in this.footer) {
-				this.footer[obj].body = "";
-				this.footer[obj].symbolsCount = 0;
-			}
-			return true;
-		},
-
-		/* Очистка статуса изменения */
-		clearTextareaEdited() {
-			for (const obj in this.footer) {
-				this.footer[obj].edited = false;
-			}
-			return true;
-		},
-
-		/* Очистка всех полей футера */
-		clearFooter() {
-			this.clearTextareaAll();
-			this.clearTextareaEdited();
-		},
-
-		/* Контроль количества символов */
-		controlSymbols(obj) {
-			this.footer[`${obj}`].edited = true;
-
-			// Проверка поля на максимальное количество символов
-			if (this.footer[`${obj}`].body.length >= this.footer[`${obj}`].symbolsCountMax) {
-				// Если больше, то обрезаем
-				this.footer[`${obj}`].body = this.footer[`${obj}`].body.slice(
-					0,
-					this.footer[`${obj}`].symbolsCountMax
-				);
-			}
-
-			// Отображение текущего количества символов
-			this.footer[`${obj}`].symbolsCount = this.footer[`${obj}`].body.length;
-		},
-
-		/* _____________________________________________________*/
-		/* 2. Сохранение, редактирование                        */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Сохранение всех полей */
 		saveFooterChanges() {
 			this.disabled.footer.save = true;
@@ -1077,17 +879,11 @@ export default {
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: {
-					title: this.footer.title.body,
-					titleDesc: this.footer.titleDesc.body,
-					license: this.footer.license.body,
-					licenseDesc: this.footer.licenseDesc.body,
-					footer: this.footer.footer.body,
+					description: this.footer,
 				},
 			})
 				.then((response) => {
 					if (response.data.status) {
-						this.clearTextareaEdited();
-
 						this.$store.commit("addDebugger", {
 							title: "Успешно!",
 							body: response.data.message,
@@ -1147,14 +943,7 @@ export default {
 		})
 			.then((response) => {
 				if (response.data.status) {
-					for (let key in response.data.data) {
-						// Проверка полученного поля в объекте на пустоту
-						if (response.data.data[key] !== null) {
-							// Заполнение полей данными с сервера
-							this.footer[key].body = response.data.data[key];
-							this.footer[key].symbolsCount = response.data.data[key].length;
-						}
-					}
+					this.footer = response.data.data;
 				} else {
 					this.$store.commit("addDebugger", {
 						title: "Ошибка",

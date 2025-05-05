@@ -245,7 +245,7 @@ export default {
 				method: "post",
 				url: `${this.$store.getters.urlApi}` + `save-news-changes-all`,
 				headers: {
-					ContentType: "multipart/form-data",
+					Accept: "application/json",
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: {

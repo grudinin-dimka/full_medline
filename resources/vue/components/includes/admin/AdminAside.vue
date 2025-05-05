@@ -374,7 +374,7 @@ export default {
 					status: false,
 					list: null,
 				},
-				
+
 				statistics: {
 					name: "statistics",
 					status: false,
@@ -462,6 +462,14 @@ aside {
 
 	max-height: 100%;
 	overflow-y: auto;
+}
+
+aside.active {
+	padding-top: 60px;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0;
 }
 
 /* Скролбар блока с контентом. */

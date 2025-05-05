@@ -3,14 +3,9 @@
 	<Modal ref="modalVideo" :settings="modalVideo">
 		<template #title>
 			<template v-if="modalVideo.values.look == 'default' && !currentVideo.data.delete.value">
-				<icon-arrow
-					:width="16"
-					:height="16"
-					:rotate="-90"
-					@click="changeInfoBlockOrder('down')"
-				/>
+				<icon-arrow :width="16" :height="16" :rotate="-90" @click="changeOrderItem('down')" />
 				#{{ currentVideo.data.order.value }}
-				<icon-arrow :width="16" :height="16" :rotate="90" @click="changeInfoBlockOrder('up')" />
+				<icon-arrow :width="16" :height="16" :rotate="90" @click="changeOrderItem('up')" />
 			</template>
 			<template v-else>
 				{{ modalVideo.values.title }}
@@ -69,10 +64,26 @@
 				<icon-add :width="23" :height="23" :look="'white'" />
 				Добавить
 			</ButtonDefault>
-			<ButtonDefault @click="updateVideo" v-else>
-				<icon-edit :width="28" :height="28" :look="'white'" />
-				Обновить
-			</ButtonDefault>
+
+			<template v-else>
+				<button-remove
+					@click="deleteItem"
+					v-if="!currentVideo.data.delete.value && !currentVideo.data.create.value"
+				>
+					<icon-remove :width="24" :height="22" :look="'white'" />
+					Удалить
+				</button-remove>
+
+				<ButtonDefault @click="updateVideo" v-if="!currentVideo.data.delete.value">
+					<icon-edit :width="28" :height="28" :look="'white'" />
+					Обновить
+				</ButtonDefault>
+
+				<ButtonDefault @click="deleteItem" v-if="currentVideo.data.delete.value">
+					<icon-unremove :width="28" :height="28" :look="'white'" />
+					Вернуть
+				</ButtonDefault>
+			</template>
 		</template>
 	</Modal>
 
@@ -124,7 +135,7 @@
 
 		<template #options>
 			<button-default
-				@click.prevent="console.log('save')"
+				@click.prevent="saveVideosChanges"
 				:disabled="disabled.video.save"
 				:look="'white'"
 			>
@@ -144,7 +155,7 @@
 						>
 							<div class="evideo__item-head">
 								<!-- <div class="evideo__head-id">id: {{ video.create ? "?" : video.id }}</div> -->
-								<div class="evideo__head-id">id: {{ video.id }}</div>
+								<div class="evideo__head-id">id: {{ video.create ? "?" : video.id }}</div>
 								<div class="evideo__head-order">order: {{ video.order }}</div>
 							</div>
 							<div class="evideo__item-video">
@@ -191,12 +202,14 @@ import BaseTable from "../../../components/modules/table/BaseTable.vue";
 import TipTap from "../../../components/modules/Tiptap.vue";
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
+import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
 
 import IconArrow from "../../../components/icons/IconArrow.vue";
 import IconLoad from "../../../components/icons/IconLoad.vue";
 import IconAdd from "../../../components/icons/IconAdd.vue";
 import IconEdit from "../../../components/icons/IconEdit.vue";
 import IconRemove from "../../../components/icons/IconRemove.vue";
+import IconUnremove from "../../../components/icons/IconUnremove.vue";
 import IconSave from "../../../components/icons/IconSave.vue";
 
 import shared from "../../../services/shared";
@@ -217,12 +230,14 @@ export default {
 		TipTap,
 
 		ButtonDefault,
+		ButtonRemove,
 
 		IconArrow,
 		IconLoad,
 		IconAdd,
 		IconEdit,
 		IconRemove,
+		IconUnremove,
 		IconSave,
 	},
 	data() {
@@ -405,14 +420,24 @@ export default {
 		},
 
 		updateVideo() {
+			let errors = 0;
+
+			if (this.$refs.fileUpload.files[0]) {
+				if (
+					validate.checkInputsAll(this.currentVideo, [
+						{
+							key: "file",
+							type: "file",
+							value: this.$refs.fileUpload,
+							formats: ["webm", "mp4", "mov"],
+						},
+					])
+				)
+					errors++;
+			}
+
 			if (
 				validate.checkInputsAll(this.currentVideo, [
-					{
-						key: "file",
-						type: "file",
-						value: this.$refs.fileUpload,
-						formats: ["webm", "mp4", "mov"],
-					},
 					{
 						key: "description",
 						type: "tiptap",
@@ -420,7 +445,9 @@ export default {
 					},
 				])
 			)
-				return;
+				errors++;
+
+			if (errors > 0) return;
 
 			try {
 				let selectedVideo = this.videos.find(
@@ -443,8 +470,25 @@ export default {
 		},
 
 		/* Изменение порядка */
-		changeInfoBlockOrder(type) {
+		changeOrderItem(type) {
 			shared.changeOrder(this.videos, this.currentVideo, type);
+		},
+
+		/* Удаление */
+		deleteItem() {
+			try {
+				let block = this.videos.find((item) => item.id == this.currentVideo.data.id.value);
+
+				block.delete = !block.delete;
+
+				this.$refs.modalVideo.close();
+			} catch (error) {
+				this.$store.commit("addDebugger", {
+					title: "Ошибка.",
+					body: error,
+					type: "error",
+				});
+			}
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -509,6 +553,53 @@ export default {
 				});
 		},
 
+		/* Сохранение всех изменений */
+		saveVideosChanges() {
+			this.disabled.video.save = true;
+
+			axios({
+				method: "post",
+				url: `${this.$store.getters.urlApi}` + `save-videos-changes`,
+				headers: {
+					Accept: "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				data: {
+					videos: this.videos,
+				},
+			})
+				.then((response) => {
+					if (response.data.status) {
+						shared.updateId(this.videos, response.data.data);
+						shared.clearDeletes(this.videos);
+						shared.clearFlags(this.videos);
+						shared.updateOrders(this.videos);
+
+						this.$store.commit("addDebugger", {
+							title: "Успешно!",
+							body: response.data.message,
+							type: "completed",
+						});
+					} else {
+						this.$store.commit("addDebugger", {
+							title: "Ошибка.",
+							body: response.data.message,
+							type: "error",
+						});
+					}
+				})
+				.catch((error) => {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка.",
+						body: error,
+						type: "error",
+					});
+				})
+				.finally(() => {
+					this.disabled.video.save = false;
+				});
+		},
+
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                     Другое                        |*/
 		/* |___________________________________________________|*/
@@ -536,8 +627,8 @@ export default {
 					this.videos = response.data.data;
 
 					for (let i = 0; i < this.videos.length; i++) {
-						this.table.body[i].create = false;
-						this.table.body[i].delete = false;
+						this.videos[i].create = false;
+						this.videos[i].delete = false;
 					}
 				} else {
 					this.$store.commit("addDebugger", {
@@ -652,6 +743,8 @@ export default {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
 	gap: 20px;
+
+	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 .evideo__item {
@@ -736,5 +829,18 @@ export default {
 	width: 100%;
 	height: 200px;
 	object-fit: cover;
+}
+
+/* Адаптив */
+@media screen and (width <= 1600px) {
+	.evideo {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media screen and (width <= 750px) {
+	.evideo {
+		grid-template-columns: repeat(1, 1fr);
+	}
 }
 </style>

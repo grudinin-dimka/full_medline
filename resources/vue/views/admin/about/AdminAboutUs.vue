@@ -799,7 +799,7 @@ export default {
 				method: "post",
 				url: `${this.$store.getters.urlApi}` + `save-abouts-changes`,
 				headers: {
-					"Content-Type": "multipart/form-data",
+					ContentType: "multipart/form-data",
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: formData,
