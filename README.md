@@ -32,10 +32,10 @@ Vue:
 - [Axios](https://axios-http.com/) (обращение посредством запросов к api).
 - plugin-vue v5.1.2 (плагин для работы со vue).
 - laravel-vite-plugin v1.0.5 (плагин для работы с laravel).
-- [vue-router v4.4.3] (https://router.vuejs.org/) (маршрутизация для vue 3).
-- [vue-the-mask v0.11.1] (https://vuejs-tips.github.io/vue-the-mask/) (готовые input маски с готовой логикой работы).
-- [vue3-carousel v0.3.3] (https://github.com/ismail9k/vue3-carousel) (слайдер).
-- [vuex v4.1.0] (https://vuex.vuejs.org/) (глобальное хранилище проекта).
+- [vue-router v4.4.3](https://router.vuejs.org/) (маршрутизация для vue 3).
+- [vue-the-mask v0.11.1](https://vuejs-tips.github.io/vue-the-mask/) (готовые input маски с готовой логикой работы).
+- [vue3-carousel v0.3.3](https://github.com/ismail9k/vue3-carousel) (слайдер).
+- [vuex v4.1.0](https://vuex.vuejs.org/) (глобальное хранилище проекта).
 
 ## Лицензия
 
