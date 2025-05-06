@@ -59,8 +59,10 @@ export default {
 
 .block-once__head {
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: space-between;
 	align-items: center;
+	gap: 10px;
 }
 
 .block-once__options {

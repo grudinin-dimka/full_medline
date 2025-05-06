@@ -269,12 +269,6 @@ export default {
 	max-width: 1000px;
 }
 
-.modal.clamped > .modal__container {
-	margin: 30px;
-
-	max-height: calc(100% - 60px);
-}
-
 .modal.unclamped > .modal__container {
 	margin: auto;
 }
