@@ -23,9 +23,8 @@
 
 Laravel:
 
-- [Laravel v11](https://laravel.com/) (backend).
-- [Vue v3](https://ru.vuejs.org/) (frontend).
-- [Vite](https://vite.dev/) (сборщик + live server).
+- [Sanctum](https://laravel.com/docs/12.x/sanctum) (для системы авторизации через api -> token).
+- [Phpspreadsheet](https://phpspreadsheet.readthedocs.io/en/latest/) (для работы с табличными файлами).
 
 Vue:
 
