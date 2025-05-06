@@ -121,14 +121,16 @@ Route::middleware(['auth:sanctum', 'admin-or-creator'])->group(function () {
 /* |                    СОЗДАТЕЛЬ                      |*/
 /* |___________________________________________________|*/
 Route::middleware(['auth:sanctum', 'creator'])->group(function () {
+   // Пользователи
    Route::get('/get-users-all', [CreatorController::class, 'getUsersAll']);
-   Route::get('/get-tracking-statistics', [CreatorController::class, 'getTrackingStatistics']);
-
    Route::post('/save-user', [CreatorController::class, 'saveUser'])->middleware('auth:sanctum');
    Route::post('/create-user', [CreatorController::class, 'createUser'])->middleware('auth:sanctum');
    Route::post('/delete-user', [CreatorController::class, 'deleteUser'])->middleware('auth:sanctum');
    Route::post('/set-user-password', [CreatorController::class, 'setUserPassword'])->middleware('auth:sanctum');
    Route::post('/set-user-status', [CreatorController::class, 'setUserStatus'])->middleware('auth:sanctum');
+   
+   // Статистика
+   Route::post('/get-tracking-statistics-range', [CreatorController::class, 'getTrackingStatisticsRange']);
 });
 
 

@@ -165,12 +165,17 @@ const router = createRouter({
 					name: "statistics",
 					meta: { title: "Статистика" },
 					component: () => import("../views/admin/statistics/AdminStatistics.vue"),
-					redirect: { name: "statistics-load" },
+					redirect: { name: "statistics-graph" },
 					children: [
 						{
-							path: "",
-							name: "statistics-load",
-							component: () => import("../views/admin/statistics/AdminStatisticsLoad.vue"),
+							path: "graphs",
+							name: "statistics-graph",
+							component: () => import("../views/admin/statistics/AdminStatisticsGraph.vue"),
+						},
+						{
+							path: "list",
+							name: "statistics-list",
+							component: () => import("../views/admin/statistics/AdminStatisticsList.vue"),
 						},
 					],
 				},

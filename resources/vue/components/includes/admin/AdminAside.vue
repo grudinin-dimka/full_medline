@@ -222,8 +222,13 @@
 					</a>
 				</div>
 
-				<div class="aside__item" :class="{ active: isActive('/admin/statistics') }">
-					<a class="aside__item-title" href="#" @click.prevent="insertPage(links.statistics)">
+				<div class="aside__item">
+					<a
+						class="aside__item-title"
+						:class="{ active: links.statistics.status }"
+						href="#"
+						@click.prevent="openList('statistics')"
+					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							viewBox="0 -960 960 960"
@@ -234,8 +239,27 @@
 								d="M120-120v-80l80-80v160h-80Zm160 0v-240l80-80v320h-80Zm160 0v-320l80 81v239h-80Zm160 0v-239l80-80v319h-80Zm160 0v-400l80-80v480h-80ZM120-327v-113l280-280 160 160 280-280v113L560-447 400-607 120-327Z"
 							/>
 						</svg>
+
+						<IconArrowWhite :width="20" :height="20" :rotate="180" class="item-arrow" />
+
 						СТАТИСТИКА
 					</a>
+					<div class="item-list" ref="einfo" :class="{ active: links.statistics.status }">
+						<a
+							href="#"
+							:class="{ active: isActive('/admin/statistics/graphs') }"
+							@click.prevent="insertPage(links.statistics, links.statistics.list.graphs)"
+						>
+							ГРАФИКИ
+						</a>
+						<a
+							href="#"
+							:class="{ active: isActive('/admin/statistics/list') }"
+							@click.prevent="insertPage(links.statistics, links.statistics.list.lists)"
+						>
+							СПИСОК
+						</a>
+					</div>
 				</div>
 			</template>
 		</div>
@@ -378,7 +402,18 @@ export default {
 				statistics: {
 					name: "statistics",
 					status: false,
-					list: null,
+					list: {
+						graphs: {
+							name: "statistics-graph",
+							status: false,
+							list: null,
+						},
+						lists: {
+							name: "statistics-list",
+							status: false,
+							list: null,
+						},
+					},
 				},
 			},
 		};

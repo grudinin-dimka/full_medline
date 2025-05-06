@@ -24,8 +24,10 @@
         "@tiptap/starter-kit": "^2.11.7",
         "@tiptap/vue-3": "^2.11.7",
         "@vitejs/plugin-vue": "^5.1.2",
+        "apexcharts": "^4.7.0",
         "vue-router": "^4.4.3",
         "vue-the-mask": "^0.11.1",
+        "vue3-apexcharts": "^1.8.0",
         "vue3-carousel": "^0.3.3",
         "vuex": "^4.1.0"
     }

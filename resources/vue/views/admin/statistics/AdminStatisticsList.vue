@@ -45,6 +45,21 @@ export default {
 				},
 			},
 
+			options: {
+				chart: {
+					id: "vuechart-example",
+				},
+				xaxis: {
+					categories: ["30.04", "01.05", "02.05", "03.05", "04.05", "05.05", "06.05"],
+				},
+			},
+			series: [
+				{
+					name: "series-1",
+					data: [30, 40, 45, 50, 49, 60, 70, 91],
+				},
+			],
+
 			/* Таблица */
 			table: {
 				// Настройки

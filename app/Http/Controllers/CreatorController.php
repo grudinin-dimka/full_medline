@@ -373,22 +373,43 @@ class CreatorController extends Controller
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                    СТАТИСТИКА                     |*/
    /* |___________________________________________________|*/
-   public function getTrackingStatistics(Request $request) {
-      $statistics = Tracking::all()->reverse()->values()->take(1000);
+   
 
-      foreach ($statistics as $key => $statistic) {
-         $date = Carbon::parse($statistic->created_at);
+   public function getTrackingStatisticsRange(Request $request) {
+      $validator = Validator::make($request->all(), [
+         'start' => 'required|date_format:d.m.Y',
+         'end' => 'required|date_format:d.m.Y',
+      ]);
 
-         // Форматируем дату в нужный формат
-         $dateShort = $date->format('d.m.Y H:i:s');
-
-         $statistic->created = $dateShort;
+      if ($validator->fails()) {
+         return response()->json([
+            "status" => false,
+            "message" => "Некорректные данные.",
+            "data" => null,
+         ]);
       };
+
+      $statistics = Tracking::all()
+         ->where('created_at', '>=', Carbon::parse($request->start))
+         ->where('created_at', '<=', Carbon::parse($request->end))
+         ->groupBy(function($item) {
+            return $item->created_at->format('d.m.Y'); // Группируем только по дате (без времени)
+         });
       
+      $countDays = Carbon::parse($request->start)->diffInDays(Carbon::parse($request->end));
+      $statisticsFormated = [];
+      $firsDay = Carbon::parse($request->start);
+      
+      for ($i = $countDays; $i >= 1; $i--) { 
+         $statisticsFormated[Carbon::parse($firsDay)->format('d.m.Y')] = $statistics[Carbon::parse($firsDay)->format('d.m.Y')] ?? [];
+
+         $firsDay->addDay();
+      };
+
       return response()->json([
          "status" => true,
          "message" => "Данные успешно получены.",
-         "data" => $statistics,
+         "data" => $statisticsFormated,
       ]);
    }
 }

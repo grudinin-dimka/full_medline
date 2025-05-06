@@ -15,10 +15,14 @@ import VueTheMask from "vue-the-mask";
 /* Хранилище */
 import store from "./store/index";
 
+/* Графики */
+import VueApexCharts from "vue3-apexcharts";
+
 const app = createApp(App);
 
 app.use(store);
 app.use(router);
 app.use(VueTheMask);
+app.use(VueApexCharts);
 
 app.mount("#app");
