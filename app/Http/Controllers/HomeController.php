@@ -69,44 +69,53 @@ class HomeController extends Controller
       $formData = $request->formData;
       $json = json_decode($formData, true);
 
-      // Создание трека
-      $request->merge([
-         'type' => 'form_request_telegram_bot',
-         'meta' => 'Заявка - ' . $json['title'],
-      ]);
-      $this->createTrack($request);
-
-      // Отправка сообщения
-      $str =
-         "Заявка: ". $json['title'] . "\n" . 
-         "ФИО : " . $json['name'] . "\n" . 
-         "Телефон : " . $json['phone'] . "\n" . 
-         "Дата рождения : " . $json['date'] . "\n" . 
-         "Специализация : " . $json['specialization'];
-   
-      $ch = curl_init("https://api.telegram.org/bot" . "6465405714:AAHJTFfNkmKgSwtOgQHV1HxAZovcalaAbNU" . "/sendMessage?" . http_build_query(   
-         [
-            "chat_id" => '6348437826',
-            "text" => $str,
-         ]
-      ));
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-      curl_setopt($ch, CURLOPT_HEADER, false);
-      if (curl_exec($ch)) {
-         curl_close($ch);   
-
-         return response()->json([
-            "status" => true,
-            "message" => "Заявка отправлена.",
-            "data" => null,
+      try {
+         // Добавление заголовков
+         $request->merge([
+            'type' => 'form_request_telegram_bot',
+            'meta' => 'Заявка - ' . $json['title'],
          ]);
-      } else {
-         curl_close($ch);   
-         
+   
+         $this->createTrack($request);
+   
+         // Отправка сообщения
+         $str =
+            "Заявка: ". $json['title'] . "\n" . 
+            "ФИО : " . $json['name'] . "\n" . 
+            "Телефон : " . $json['phone'] . "\n" . 
+            "Дата рождения : " . $json['date'] . "\n" . 
+            "Специализация : " . $json['specialization'];
+      
+         $ch = curl_init("https://api.telegram.org/bot" . "6465405714:AAHJTFfNkmKgSwtOgQHV1HxAZovcalaAbNU" . "/sendMessage?" . http_build_query(   
+            [
+               "chat_id" => '6348437826',
+               "text" => $str,
+            ]
+         ));
+         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+         curl_setopt($ch, CURLOPT_HEADER, false);
+         if (curl_exec($ch)) {
+            curl_close($ch);   
+   
+            return response()->json([
+               "status" => true,
+               "message" => "Заявка отправлена.",
+               "data" => null,
+            ]);
+         } else {
+            curl_close($ch);   
+            
+            return response()->json([
+               "status" => false,
+               "message" => "Сервис отправки не работает.",
+               "data" => null,
+            ]);
+         };
+      } catch (Throwable $e) {
          return response()->json([
             "status" => false,
-            "message" => "Заявку не удалость отправить.",
+            "message" => "При отправке что-то пошло не так.",
             "data" => null,
          ]);
       }

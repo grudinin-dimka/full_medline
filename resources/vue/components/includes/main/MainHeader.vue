@@ -2,12 +2,13 @@
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                  МОДАЛЬНОЕ ОКНО                   |-->
 	<!--|___________________________________________________|-->
-	<admin-modal ref="modal" @touchCloseModal="closeModal" :modal="modal">
+	<!-- Модальное окно: Видео -->
+	<Modal ref="modal" :settings="modal">
 		<template #title>
-			<span>{{ modal.title }}</span>
+			{{ modal.values.title }}
 		</template>
+
 		<template #body>
-			<!-- Ф.И.О. Пациента -->
 			<container-input>
 				<container-input-once type="edit">
 					<template #title>
@@ -18,19 +19,18 @@
 						<input
 							type="text"
 							placeholder="Введите Ф.И.О."
-							v-model="modalForm.data.name.body"
+							v-model="modalForm.data.name.value"
 							:class="{ error: modalForm.errors.name.status }"
 							@input="modalForm.data.name.edited = true"
-							@blur="checkModalInput('modalForm', 'name', 'text')"
 						/>
 					</template>
 					<template #error>
 						<span class="error" v-if="modalForm.errors.name.status">
-							{{ modalForm.errors.name.body }}
+							{{ modalForm.errors.name.message }}
 						</span>
 					</template>
 				</container-input-once>
-				<!-- Номер телефона -->
+
 				<container-input-once type="edit">
 					<template #title>
 						<span>НОМЕР ТЕЛЕФОНА*</span>
@@ -41,19 +41,18 @@
 							type="tel"
 							v-mask="'+7(###)-###-##-##'"
 							placeholder="+7(___)___-__-__"
-							v-model="modalForm.data.phone.body"
+							v-model="modalForm.data.phone.value"
 							:class="{ error: modalForm.errors.phone.status }"
 							@input="modalForm.data.phone.edited = true"
-							@blur="checkModalInput('modalForm', 'phone', 'phone')"
 						/>
 					</template>
 					<template #error>
 						<span class="error" v-if="modalForm.errors.phone.status">
-							{{ modalForm.errors.phone.body }}
+							{{ modalForm.errors.phone.message }}
 						</span>
 					</template>
 				</container-input-once>
-				<!-- Дата рождения -->
+
 				<container-input-once type="edit">
 					<template #title>
 						<span>ДАТА РОЖДЕНИЯ</span>
@@ -63,13 +62,13 @@
 						<input
 							type="date"
 							placeholder="Введите дату"
-							v-model="modalForm.data.date.body"
+							v-model="modalForm.data.date.value"
 							@input="modalForm.data.date.edited = true"
 						/>
 					</template>
 					<template #error></template>
 				</container-input-once>
-				<!-- Специальность врача -->
+
 				<container-input-once type="edit">
 					<template #title>
 						<span>СПЕЦИАЛИЗАЦИЯ ВРАЧА</span>
@@ -79,7 +78,7 @@
 						<input
 							type="text"
 							placeholder="Введите специализацию"
-							v-model="modalForm.data.specialization.body"
+							v-model="modalForm.data.specialization.value"
 							:class="{ error: modalForm.errors.specialization.status }"
 							@input="modalForm.data.specialization.edited = true"
 						/>
@@ -87,15 +86,21 @@
 					<template #error></template>
 				</container-input-once>
 			</container-input>
+
 			<div class="checkbox" :class="{ error: modalForm.errors.checkbox.status }">
 				<div class="content">
-					<input type="checkbox" id="checkboxApprove" v-model="modalForm.data.checkbox.body" />
+					<input
+						type="checkbox"
+						id="checkboxApprove"
+						v-model="modalForm.data.checkbox.value"
+					/>
 					<label for="checkboxApprove">
 						Согласие на обработку указанных персональных данных в соответствии с
 						законодательством Российской Федерации.
 					</label>
 				</div>
 			</div>
+
 			<div class="captcha">
 				<div class="content">
 					<div class="text">
@@ -119,22 +124,20 @@
 					<input
 						placeholder="Введите текст"
 						autocomplete="off"
-						v-model="modalForm.data.captcha.body"
+						v-model="modalForm.data.captcha.value"
 						:class="{ error: modalForm.errors.captcha.status }"
-						@blur="checkModalInput('modalForm', 'captcha', 'captcha')"
 					/>
-					<div class="input-error">{{ modalForm.errors.captcha.body }}</div>
+					<div class="input-error">{{ modalForm.errors.captcha.message }}</div>
 				</div>
 			</div>
 		</template>
+
 		<template #footer>
-			<BlockButtons>
-				<ButtonDefault @click="sendRequest" :disabled="disabled.modalForm.request">
-					Отправить
-				</ButtonDefault>
-			</BlockButtons>
+			<ButtonDefault @click="sendRequest" :disabled="disabled.modalForm.request">
+				Отправить
+			</ButtonDefault>
 		</template>
-	</admin-modal>
+	</Modal>
 
 	<!-- Шапка страницы -->
 	<header :class="{ slide: isShadow }">
@@ -167,10 +170,10 @@
 			</div>
 		</div>
 		<div class="header-buttons">
-			<button class="button" @click="openModal('edit', 'ЗАПИСЬ НА ПРИЁМ')">
+			<button class="button" @click="openModalEdite('ЗАПИСЬ НА ПРИЕМ')">
 				Записаться на прием
 			</button>
-			<button class="button" @click="openModal('edit', 'ВЫЗОВ ВРАЧА НА ДОМ')">
+			<button class="button" @click="openModalEdite('ВЫЗОВ ВРАЧА НА ДОМ')">
 				Вызов врача на дом
 			</button>
 		</div>
@@ -189,6 +192,7 @@
 
 <script>
 import AdminModal from "../admin/AdminModal.vue";
+import Modal from "../../modules/modal/Modal.vue";
 import Captcha from "../../modules/Captcha.vue";
 
 import ContainerInput from "../../ui/admin/containers/ContainerInput.vue";
@@ -205,6 +209,7 @@ import shared from "../../../services/shared";
 export default {
 	components: {
 		AdminModal,
+		Modal,
 		Captcha,
 		ContainerInput,
 		ContainerInputOnce,
@@ -218,77 +223,69 @@ export default {
 	data() {
 		return {
 			isShadow: false,
-			nameTitle: "",
+
+			/* Модальное окно */
 			modal: {
-				title: "",
-				status: false,
-				type: null,
-				style: {
-					create: false,
-					delete: false,
-				},
-				modules: {
-					title: true,
-					buttons: {
-						hide: false,
-						close: true,
-					},
-					images: false,
-					body: true,
-					footer: true,
+				thin: false,
+				clamped: true,
+				values: {
+					title: "",
+					look: "default",
 				},
 			},
+
+			/* Форма */
 			modalForm: {
-				data: {
-					name: {
-						body: null,
-						edited: false,
-					},
-					phone: {
-						body: null,
-						edited: false,
-					},
-					date: {
-						body: null,
-						edited: false,
-					},
-					specialization: {
-						body: null,
-						edited: false,
-					},
-					checkbox: {
-						body: null,
-						edited: false,
-					},
-					captcha: {
-						body: null,
-						edited: false,
-					},
-				},
 				errors: {
 					name: {
-						body: "",
 						status: false,
+						message: "",
 					},
 					phone: {
-						body: "",
 						status: false,
+						message: "",
 					},
 					date: {
-						body: "",
 						status: false,
+						message: "",
 					},
 					specialization: {
-						body: "",
 						status: false,
+						message: "",
 					},
 					checkbox: {
-						body: "",
 						status: false,
+						message: "",
 					},
 					captcha: {
-						body: "",
 						status: false,
+						message: "",
+					},
+				},
+				data: {
+					name: {
+						value: null,
+						edited: false,
+					},
+					phone: {
+						value: null,
+						edited: false,
+					},
+					date: {
+						value: null,
+						edited: false,
+					},
+					specialization: {
+						value: null,
+						edited: false,
+					},
+					checkbox: {
+						value: false,
+						edited: false,
+					},
+					captcha: {
+						value: null,
+						edited: false,
 					},
 				},
 			},
@@ -309,298 +306,76 @@ export default {
 				this.isShadow = false;
 			}
 		},
+
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                 Модальное окно                    |*/
+		/* |                Модальное окно                     |*/
 		/* |___________________________________________________|*/
-		/* _____________________________________________________*/
-		/* 1. Основные действия                                 */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		/* Открытие */
-		openModal(type, title) {
-			this.clearModalData("modalForm");
-			this.clearModalErrors("modalForm");
+		/* Открытие модального окна */
+		openModal(name, title, look) {
+			this[name].values.title = title;
+			this[name].values.look = look;
+
+			this.$refs[name].open();
+		},
+
+		/* Открытие модального окна для добавления */
+		openModalEdite(type) {
+			shared.clearObjectFull(this.modalForm);
 			this.reloadCaptcha();
-			this.modal.title = title;
 
-			switch (type) {
-				case "create":
-					{
-						this.modal.type = "create";
-						this.modal.status = true;
-						this.modal.style.create = true;
-						this.modal.style.delete = false;
-						// this.clearModalData();
-					}
-					document.body.classList.add("modal-open");
-					break;
-				case "edit":
-					{
-						this.modal.type = "edit";
-						this.modal.status = true;
-						this.modal.style.create = false;
-						this.modal.style.delete = false;
-					}
-					document.body.classList.add("modal-open");
-					break;
-				default:
-					{
-						let debbugStory = {
-							title: "Ошибка.",
-							body: "Низвестный тип открытия модального окна.",
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
-					}
-					break;
-			}
-		},
-		/* Закрытие */
-		closeModal() {
-			this.modal.status = false;
-			document.body.classList.remove("modal-open");
+			this.openModal("modal", type, "default");
 		},
 
-		changeModal(title) {
-			if (title == "priem") {
-				this.$store.commit("changeModal", "Записаться на прием");
-			} else if (title == "vizov") {
-				this.$store.commit("changeModal", "Вызов врача на дом");
-			}
-		},
-		/* _____________________________________________________*/
-		/* 2. Работа с полями ввода модального окна             */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		// Проверка введенного текстового значения
-		checkInputText(value) {
-			/* Проверка на пустую строку */
-			if (value === "" || value === null) {
-				return {
-					status: true,
-					message: "Поле не может быть пустым.",
-				};
-			}
-
-			/* Проверка на соответствие типу string */
-			if (typeof value != "string") {
-				return {
-					status: true,
-					message: "Тип данных не совпадает.",
-				};
-			}
-
-			return {
-				status: false,
-				message: "Ошибок нет.",
-			};
-		},
-		// Проверка введенного текстового значения
-		checkInputNumber(value) {
-			/* Проверка на пустую строку */
-			if (value === "" || value === null) {
-				return {
-					status: true,
-					message: "Поле не может быть пустым.",
-				};
-			}
-
-			/* Проверка на соответствие типу Number */
-			if (Number.isNaN(Number(value))) {
-				return {
-					status: true,
-					message: "Тип данных не совпадает.",
-				};
-			}
-
-			return {
-				status: false,
-				message: "Ошибок нет.",
-			};
-		},
-		/* Проверка введенного текстового значения */
-		checkInputPhone(value) {
-			/* Проверка на пустую строку */
-			if (value === "" || value === null) {
-				return {
-					status: true,
-					message: "Поле не может быть пустым.",
-				};
-			}
-
-			/* Проверка на соответствие типу string */
-			if (typeof value != "string") {
-				return {
-					status: true,
-					message: "Тип данных не совпадает.",
-				};
-			}
-
-			if (!validate.checkPhone(value)) {
-				return {
-					status: true,
-					message: "Телефон не прошел проверку.",
-				};
-			}
-
-			return {
-				status: false,
-				message: "Ошибок нет.",
-			};
-		},
-		checkInputCaptcha(value) {
-			/* Проверка на пустую строку */
-			if (value === "" || value === null) {
-				return {
-					status: true,
-					message: "Поле не может быть пустым.",
-				};
-			}
-
-			/* Проверка на соответствие типу string */
-			if (typeof value != "string") {
-				return {
-					status: true,
-					message: "Тип данных не совпадает.",
-				};
-			}
-
-			if (value != this.captcha) {
-				return {
-					status: true,
-					message: "Значение не совпадает.",
-				};
-			}
-
-			return {
-				status: false,
-				message: "Ошибок нет.",
-			};
-		},
-		checkInputCheckbox(value) {
-			/* Проверка на пустую строку */
-			if (!value) {
-				return {
-					status: true,
-					message: "Поле не может быть пустым.",
-				};
-			}
-
-			return {
-				status: false,
-				message: "Ошибок нет.",
-			};
-		},
-		// Проверка поля имени
-		checkModalInput(currentName, dataKey, inputType) {
-			let errorLog = {};
-			switch (inputType) {
-				case "text":
-					errorLog = this.checkInputText(this[currentName].data[dataKey].body);
-					break;
-				case "number":
-					errorLog = this.checkInputNumber(this[currentName].data[dataKey].body);
-					break;
-				case "phone":
-					errorLog = this.checkInputPhone(this[currentName].data[dataKey].body);
-					break;
-				case "captcha":
-					errorLog = this.checkInputCaptcha(this[currentName].data[dataKey].body);
-					break;
-				case "checkbox":
-					errorLog = this.checkInputCheckbox(this[currentName].data[dataKey].body);
-					break;
-				default:
-					break;
-			}
-
-			if (errorLog.status) {
-				this[currentName].errors[dataKey].body = errorLog.message;
-				this[currentName].errors[dataKey].status = true;
-
-				return true;
-			} else {
-				this[currentName].errors[dataKey].body = "";
-				this[currentName].errors[dataKey].status = false;
-
-				return false;
-			}
-		},
-		// Проверка всех полей ввода модального окна
-		checkModalInputsAll(inputKeys) {
-			let errorCount = 0;
-			for (let i = 0; i < inputKeys.length; i++) {
-				switch (inputKeys[i]) {
-					case "phone":
-						if (this.checkModalInput("modalForm", inputKeys[i], "phone")) {
-							errorCount++;
-						}
-						break;
-					case "captcha":
-						if (this.checkModalInput("modalForm", inputKeys[i], "captcha")) {
-							errorCount++;
-						}
-						break;
-					case "checkbox":
-						if (this.checkModalInput("modalForm", inputKeys[i], "checkbox")) {
-							errorCount++;
-						}
-						break;
-					default:
-						if (this.checkModalInput("modalForm", inputKeys[i], "text")) {
-							errorCount++;
-						}
-						break;
-				}
-			}
-
-			if (errorCount > 0) {
-				return true;
-			} else {
-				return false;
-			}
-		},
-		/* Очистка содержимого модального окна */
-		clearModalData(currentName) {
-			for (let key in this[currentName].data) {
-				this[currentName].data[key].body = "";
-				this[currentName].data[key].edited = false;
-			}
-		},
-		/* Очистка ошибок */
-		clearModalErrors(currentName) {
-			for (let key in this[currentName].errors) {
-				this[currentName].errors[key].body = "";
-				this[currentName].errors[key].status = false;
-			}
-		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                     КАПТЧА                        |*/
 		/* |___________________________________________________|*/
-		/* _____________________________________________________*/
-		/* 1. Основные действия                                 */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Обновление */
 		reloadCaptcha() {
 			this.captcha = shared.generateRandomString(5);
 			this.$refs.line.style.transform = `rotate(${shared.generateRandomAngle(25)}deg)`;
 		},
+
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                 ОТПРАВКА ЗАПРОСА                  |*/
 		/* |___________________________________________________|*/
 		/* Отправка запроса */
 		sendRequest() {
-			if (this.checkModalInputsAll(["name", "phone", "captcha", "checkbox"])) return;
+			if (
+				validate.checkInputsAll(this.modalForm, [
+					{
+						key: "name",
+						type: "text",
+					},
+					{
+						key: "phone",
+						type: "phone",
+					},
+					{
+						key: "checkbox",
+						type: "boolean",
+						reference: true,
+					},
+					{
+						key: "captcha",
+						type: "twice",
+						reference: this.captcha,
+					},
+				])
+			)
+				return;
 
 			this.disabled.modalForm.request = true;
 
 			let formData = new FormData();
+
 			formData.append(
 				"formData",
 				JSON.stringify({
-					title: this.modal.title,
-					name: this.modalForm.data.name.body,
-					phone: this.modalForm.data.phone.body,
-					date: this.modalForm.data.date.body,
-					specialization: this.modalForm.data.specialization.body,
+					title: this.modal.values.title,
+					name: this.modalForm.data.name.value,
+					phone: this.modalForm.data.phone.value,
+					date: this.modalForm.data.date.value,
+					specialization: this.modalForm.data.specialization.value,
 				})
 			);
 
@@ -608,7 +383,7 @@ export default {
 				method: "post",
 				url: `${this.$store.getters.urlApi}` + `request-telegram-bot`,
 				headers: {
-					"Content-Type": "multipart/form-data",
+					ContentType: "multipart/form-data",
 				},
 				data: formData,
 			})
@@ -620,7 +395,7 @@ export default {
 							type: "completed",
 						});
 
-						this.closeModal();
+						this.$refs.modal.close();
 					} else {
 						this.$store.commit("addDebugger", {
 							title: "Ошибка.",
@@ -737,7 +512,7 @@ header.slide {
 }
 
 .button:hover {
-	background-color: var(--button-default-color-hover);
+	background-color: var(--button-background-color-hover);
 }
 
 .burger {

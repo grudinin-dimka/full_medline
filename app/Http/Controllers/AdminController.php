@@ -1694,7 +1694,7 @@ class AdminController extends Controller
             File::image()
                ->types(['png', 'webp', 'jpg', 'jpeg'])
                ->max(5 * 1024)
-               ->dimensions(Rule::dimensions()->maxWidth(2000)->maxHeight(2000)),
+               ->dimensions(Rule::dimensions()->maxWidth(3000)->maxHeight(3000)),
          ],
          'title' => 'required|string',
          'description' => 'required|string',

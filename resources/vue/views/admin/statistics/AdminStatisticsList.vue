@@ -121,8 +121,8 @@ export default {
 	},
 	mounted() {
 		axios({
-			method: "get",
-			url: `${this.$store.getters.urlApi}` + `get-tracking-statistics`,
+			method: "post",
+			url: `${this.$store.getters.urlApi}` + `get-tracking-statistics-list`,
 			headers: {
 				Accept: "application/json",
 				Authorization: `Bearer ${localStorage.getItem("token")}`,

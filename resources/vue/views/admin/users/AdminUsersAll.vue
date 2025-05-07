@@ -216,8 +216,15 @@
 						v-model="currentUser.data.statusId.value"
 						:class="{ error: currentUser.errors.statusId.status }"
 					>
-						<option :value="''" disabled>Выберите статус</option>
-						<option :value="null" disabled>Выберите статус</option>
+						<template
+							v-if="
+								currentUser.data.statusId.value === '' ||
+								currentUser.data.statusId.value === null
+							"
+						>
+							<option :value="''" disabled>Выберите статус</option>
+						</template>
+
 						<option :value="status.id" v-for="status in statuses">{{ status.name }}</option>
 					</select>
 				</template>
@@ -233,8 +240,15 @@
 						v-model="currentUser.data.rightsId.value"
 						:class="{ error: currentUser.errors.rightsId.status }"
 					>
-						<option :value="''" disabled>Выберите права</option>
-						<option :value="null" disabled>Выберите права</option>
+						<template
+							v-if="
+								currentUser.data.rightsId.value === '' ||
+								currentUser.data.rightsId.value === null
+							"
+						>
+							<option :value="''" disabled>Выберите права</option>
+						</template>
+
 						<option :value="right.id" v-for="right in rights">{{ right.name }}</option>
 					</select>
 				</template>
@@ -845,6 +859,7 @@ export default {
 		/* Редактирование пароля пользователя */
 		editUserPassword(user) {
 			shared.clearObjectFull(this.currentUser);
+			shared.clearObjectFull(this.userPassword);
 			shared.setData(user, this.currentUser);
 
 			this.openModal("edit", "subModalPassword");
@@ -920,7 +935,15 @@ export default {
 
 		/* Сохранение пароля пользователя */
 		saveUserPassword() {
-			if (this.checkModalInput("userPassword", "password", "text")) return;
+			if (
+				validate.checkInputsAll(this.userPassword, [
+					{
+						key: "password",
+						type: "text",
+					},
+				])
+			)
+				return;
 
 			let formData = new FormData();
 			formData.append("password", JSON.stringify(this.userPassword.data.password.value));
@@ -1274,11 +1297,6 @@ export default {
 			.finally(() => {
 				this.loading.loader.users = false;
 			});
-	},
-	beforeCreate() {
-		if (this.$store.getters.userRights !== "creator") {
-			this.$router.push("/404");
-		}
 	},
 };
 </script>

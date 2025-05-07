@@ -17,18 +17,6 @@ export default {
 		},
 	},
 	mutations: {
-		/* Отображение модального окна */
-		changeModal(state, title) {
-			state.modal.title = title;
-
-			if (state.modal.status) {
-				document.body.classList.remove("modal-open");
-				state.modal.status = false;
-			} else {
-				document.body.classList.add("modal-open");
-				state.modal.status = true;
-			}
-		},
 		/* Изменение меню навигации (главная) */
 		setBurgerMain(state) {
 			if (state.burger.main.status) {

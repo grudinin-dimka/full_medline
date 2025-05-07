@@ -5,7 +5,7 @@
 		<router-link to="/contacts">Контакты</router-link>
 	</info-bar>
 
-	<block :minHeight="500">
+	<block>
 		<template v-if="loading.sections.contacts">
 			<MainContactsList :contacts="contacts" v-if="contacts.length > 0"></MainContactsList>
 

@@ -5,7 +5,7 @@
 		<router-link to="/news">Новости</router-link>
 	</info-bar>
 
-	<block :minHeight="500">
+	<block>
 		<template v-if="loading.sections.news">
 			<div class="news__all" v-if="news.length > 0">
 				<div class="news__all-body">

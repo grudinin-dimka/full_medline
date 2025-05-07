@@ -22,6 +22,6 @@ export default defineConfig({
 
 	/* Настройка сборки */
 	build: {
-		chunkSizeWarningLimit: 1000, // теперь предупреждение будет при 1 МБ
+		chunkSizeWarningLimit: 10000, // теперь предупреждение будет при 10 МБ
 	},
 });

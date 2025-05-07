@@ -5,7 +5,7 @@
 		<router-link to="/videos">Видео</router-link>
 	</info-bar>
 
-	<block :minHeight="500">
+	<block>
 		<template v-if="loading.sections.videos">
 			<div class="video" v-if="videos.length > 0">
 				<div class="video__item" v-for="video in videos">

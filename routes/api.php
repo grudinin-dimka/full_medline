@@ -130,6 +130,7 @@ Route::middleware(['auth:sanctum', 'creator'])->group(function () {
    Route::post('/set-user-status', [CreatorController::class, 'setUserStatus'])->middleware('auth:sanctum');
    
    // Статистика
+   Route::post('/get-tracking-statistics-list', [CreatorController::class, 'getTrackingStatisticsList']);
    Route::post('/get-tracking-statistics-range', [CreatorController::class, 'getTrackingStatisticsRange']);
 });
 

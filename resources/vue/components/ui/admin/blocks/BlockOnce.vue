@@ -83,5 +83,7 @@ export default {
 .block-once__title {
 	font-size: 24px;
 	font-weight: 500;
+	
+	width: 100%;
 }
 </style>

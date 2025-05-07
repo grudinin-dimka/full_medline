@@ -190,11 +190,12 @@ export default {
 	user-select: none;
 	position: absolute;
 	right: 10px;
-	top: 15px;
+	top: -10px;
+	font-size: 1rem;
 
 	border: var(--input-error-border);
-	border-radius: var(--input-error-border-radius);
-	padding: 5px 10px;
+	border-radius: var(--default-border-radius);
+	padding: 2.5px 10px;
 
 	background-color: var(--input-error-background-color);
 	color: var(--input-error-color);

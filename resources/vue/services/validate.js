@@ -29,7 +29,7 @@ export default {
 		let errorCount = 0;
 
 		for (let i = 0; i < keys.length; i++) {
-			if (this.checkInput(obj, keys[i]?.key, keys[i]?.type, keys[i]?.value, keys[i]?.formats)) {
+			if (this.checkInput(obj, keys[i])) {
 				errorCount++;
 			}
 		}
@@ -40,34 +40,51 @@ export default {
 			return false;
 		}
 	},
-	/* Проверка одного поля */
-	checkInput(obj, key, type, value = null, formats = []) {
+	/* Проверка одного поля
+		
+		Ключи для проверки: 
+			1) key - название свойства для проверки 
+			2) type - тип данных
+			3) value - значение, переданное вручную
+			4) formats - форматы для проверки
+			5) reference - данные для сравнения
+ 	*/
+	checkInput(obj, keys) {
 		let logs = {};
 
-		switch (type) {
+		switch (keys["type"]) {
 			case "text":
-				logs = this.checkInputText(obj.data[key].value);
+				logs = this.checkInputText(obj.data[keys["key"]].value ?? null);
 				break;
 			case "number":
-				logs = this.checkInputNumber(obj.data[key].value);
+				logs = this.checkInputNumber(obj.data[keys["key"]].value ?? null);
 				break;
 			case "boolean":
-				logs = this.checkInputBoolean(obj.data[key].value);
+				logs = this.checkInputBoolean(
+					obj.data[keys["key"]].value ?? null,
+					keys["reference"] ?? null
+				);
 				break;
 			case "date":
-				logs = this.checkInputDate(obj.data[key].value);
+				logs = this.checkInputDate(obj.data[keys["key"]].value ?? null);
 				break;
 			case "email":
-				logs = this.checkInputEmail(obj.data[key].value);
+				logs = this.checkInputEmail(obj.data[keys["key"]].value ?? null);
 				break;
 			case "phone":
-				logs = this.checkInputPhone(obj.data[key].value);
+				logs = this.checkInputPhone(obj.data[keys["key"]].value ?? null);
 				break;
 			case "file":
-				logs = this.checkInputFile(value, formats);
+				logs = this.checkInputFile(keys["value"] ?? null, keys["formats"] ?? []);
 				break;
 			case "tiptap":
-				logs = this.checkInputTiptap(value);
+				logs = this.checkInputTiptap(keys["value"] ?? null);
+				break;
+			case "twice":
+				logs = this.checkInputTwice(
+					obj.data[keys["key"]].value ?? null,
+					keys["reference"] ?? null
+				);
 				break;
 			default:
 				logs = {
@@ -78,13 +95,13 @@ export default {
 		}
 
 		if (logs.status) {
-			obj.errors[key].message = logs.message;
-			obj.errors[key].status = true;
+			obj.errors[keys["key"]].message = logs.message;
+			obj.errors[keys["key"]].status = true;
 
 			return true;
 		} else {
-			obj.errors[key].message = "";
-			obj.errors[key].status = false;
+			obj.errors[keys["key"]].message = "";
+			obj.errors[keys["key"]].status = false;
 
 			return false;
 		}
@@ -139,13 +156,52 @@ export default {
 		};
 	},
 
-	/* Проверка введенного текстового значения */
-	checkInputBoolean(value) {
+	/* Проверка введенного логического значения */
+	checkInputBoolean(value, reference) {
 		// Проверка на пустую строку
 		if (this.isEmpty(value)) {
 			return {
 				status: true,
 				message: "Пустое поле.",
+			};
+		}
+
+		if (reference !== null) {
+			if (value !== reference) {
+				return {
+					status: true,
+					message: "Значение должно быть выбрано.",
+				};
+			}
+		}
+
+		return {
+			status: false,
+			message: "Ошибок нет.",
+		};
+	},
+
+	/* Проверка на совпадение нескольких значений */
+	checkInputTwice(value, reference) {
+		// Проверка на пустую строку
+		if (this.isEmpty(value) || this.isEmpty(reference)) {
+			return {
+				status: true,
+				message: "Есть пустой параметр.",
+			};
+		}
+
+		if (typeof value !==  typeof reference) {
+			return {
+				status: true,
+				message: "Разные типы данных.",
+			};
+		}
+
+		if (value !== reference) {
+			return {
+				status: true,
+				message: "Совпадение отстуствует.",
 			};
 		}
 
