@@ -269,6 +269,11 @@ export default {
 	max-width: 1000px;
 }
 
+.modal.clamped > .modal__container {
+	max-height: calc(100dvh - 60px);
+	overflow-y: auto;
+}
+
 .modal.unclamped > .modal__container {
 	margin: auto;
 }
@@ -396,6 +401,11 @@ export default {
 		height: 100%;
 		border-radius: 0px;
 		max-height: 100%;
+	}
+
+	.modal.clamped > .modal__container {
+		max-height: 100dvh;
+		overflow-y: auto;
 	}
 }
 </style>

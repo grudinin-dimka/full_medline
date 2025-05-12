@@ -660,6 +660,7 @@ export default {
 	border: var(--input-border);
 	border-radius: calc(var(--default-border-radius) / 1.5);
 
+	flex: 1 0 300px;
 	height: 350px;
 
 	background-color: var(--item-background-color);
