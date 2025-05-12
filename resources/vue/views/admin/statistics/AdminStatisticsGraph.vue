@@ -1,11 +1,51 @@
 <template>
-	<block-once :minHeight="100">
-		<template #title> ГРАФИК СТАТИСТИКИ САЙТА </template>
+	<BlockTwo :minHeight="100">
+		<template #one-title> ПОСЕЩАЕМОСТЬ </template>
+		<template #one-body>
+			<apexchart
+				v-if="loading.sections.attendance"
+				class="apex"
+				width="100%"
+				height="150px"
+				type="heatmap"
+				:options="attendance.options"
+				:series="attendance.series"
+			></apexchart>
+
+			<LoaderChild
+				:isLoading="loading.loader.attendance"
+				:minHeight="150"
+				@loaderChildAfterLeave="loaderChildAfterLeave"
+			></LoaderChild>
+		</template>
+
+		<template #two-title> ЗАПИСЬ НА ПРИЕМ </template>
+		<template #two-body>
+			<apexchart
+				v-if="loading.sections.recordPriem"
+				class="apex"
+				width="100%"
+				height="150px"
+				type="heatmap"
+				:options="recordPriem.options"
+				:series="recordPriem.series"
+			></apexchart>
+
+			<LoaderChild
+				:isLoading="loading.loader.recordPriem"
+				:minHeight="150"
+				@loaderChildAfterLeave="loaderChildAfterLeave"
+			></LoaderChild>
+		</template>
+	</BlockTwo>
+
+	<BlockOnce :minHeight="100">
+		<template #title> ОБЩИЕ ДАННЫЕ </template>
 		<template #body>
 			<div class="apexchart__buttons">
 				<ContainerInputOnce
 					v-model.trim="currentDate.data.dateStart.value"
-					:type="'datetime-local'"
+					:type="'date'"
 					:error="currentDate.errors.dateStart.status"
 					@input="currentDate.data.dateStart.edited = true"
 				>
@@ -14,7 +54,7 @@
 
 				<ContainerInputOnce
 					v-model.trim="currentDate.data.dateEnd.value"
-					:type="'datetime-local'"
+					:type="'date'"
 					:error="currentDate.errors.dateEnd.status"
 					@input="currentDate.data.dateEnd.edited = true"
 				>
@@ -32,29 +72,14 @@
 			</div>
 
 			<apexchart
+				v-if="loading.sections.week"
 				class="apex"
 				width="100%"
-				height="500px"
+				height="700px"
 				type="area"
 				:options="apexchart.options"
 				:series="apexchart.series"
 			></apexchart>
-		</template>
-	</block-once>
-
-	<block-once :minHeight="100">
-		<template #title> НЕДЕЛЯ </template>
-		<template #body>
-			<template v-if="loading.sections.week">
-				<apexchart
-					class="apex"
-					width="100%"
-					height="500px"
-					type="area"
-					:options="week.options"
-					:series="week.series"
-				></apexchart>
-			</template>
 
 			<LoaderChild
 				:isLoading="loading.loader.week"
@@ -62,55 +87,12 @@
 				@loaderChildAfterLeave="loaderChildAfterLeave"
 			></LoaderChild>
 		</template>
-	</block-once>
-
-	<block-once :minHeight="100">
-		<template #title> МЕСЯЦ </template>
-		<template #body>
-			<template v-if="loading.sections.month">
-				<apexchart
-					class="apex"
-					width="100%"
-					height="500px"
-					type="area"
-					:options="month.options"
-					:series="month.series"
-				></apexchart>
-			</template>
-
-			<LoaderChild
-				:isLoading="loading.loader.month"
-				:minHeight="300"
-				@loaderChildAfterLeave="loaderChildAfterLeave"
-			></LoaderChild>
-		</template>
-	</block-once>
-
-	<block-once :minHeight="100">
-		<template #title> ГОД </template>
-		<template #body>
-			<template v-if="loading.sections.year">
-				<apexchart
-					class="apex"
-					width="100%"
-					height="500px"
-					type="area"
-					:options="year.options"
-					:series="year.series"
-				></apexchart>
-			</template>
-
-			<LoaderChild
-				:isLoading="loading.loader.year"
-				:minHeight="300"
-				@loaderChildAfterLeave="loaderChildAfterLeave"
-			></LoaderChild>
-		</template>
-	</block-once>
+	</BlockOnce>
 </template>
 
 <script>
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
+import BlockTwo from "../../../components/ui/admin/blocks/BlockTwo.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 
 import ContainerInputOnce from "../../../components/modules/input/ContainerInputOnce.vue";
@@ -125,6 +107,7 @@ import validate from "../../../services/validate";
 export default {
 	components: {
 		BlockOnce,
+		BlockTwo,
 		LoaderChild,
 
 		ButtonDefault,
@@ -146,13 +129,13 @@ export default {
 			loading: {
 				loader: {
 					week: true,
-					month: true,
-					year: true,
+					attendance: true,
+					recordPriem: true,
 				},
 				sections: {
 					week: false,
-					month: false,
-					year: false,
+					attendance: false,
+					recordPriem: false,
 				},
 			},
 
@@ -180,6 +163,50 @@ export default {
 			},
 
 			/* Данные */
+			attendance: {
+				options: {
+					colors: [
+						this.getPrimaryColor(),
+						"rgb(255, 85, 77)",
+						"rgb(255, 174, 0)",
+						"rgb(27, 197, 35)",
+						"rgb(60, 107, 236)",
+					],
+					chart: {
+						id: "vuechart-attendance",
+					},
+					xaxis: {
+						categories: [],
+						labels: {
+							rotate: 0,
+						},
+					},
+				},
+				series: [],
+			},
+
+			recordPriem: {
+				options: {
+					colors: [
+						this.getPrimaryColor(),
+						"rgb(255, 85, 77)",
+						"rgb(255, 174, 0)",
+						"rgb(27, 197, 35)",
+						"rgb(60, 107, 236)",
+					],
+					chart: {
+						id: "vuechart-record-priem",
+					},
+					xaxis: {
+						categories: [],
+						labels: {
+							rotate: 0,
+						},
+					},
+				},
+				series: [],
+			},
+
 			apexchart: {
 				options: {
 					colors: [
@@ -200,89 +227,6 @@ export default {
 						labels: {
 							rotate: 0,
 						},
-						tickAmount: 7,
-					},
-				},
-				series: [],
-			},
-
-			/* Данные */
-			week: {
-				theme: {
-					palette: "palette2",
-				},
-				options: {
-					colors: [
-						this.getPrimaryColor(),
-						"rgb(255, 85, 77)",
-						"rgb(255, 174, 0)",
-						"rgb(27, 197, 35)",
-						"rgb(60, 107, 236)",
-					],
-					markers: {
-						size: 0,
-					},
-					chart: {
-						id: "vuechart-week",
-						toolbar: {
-							show: true,
-							style: {
-								colors: ["#00abbd"], // Аналогично для месячного графика
-							},
-						},
-					},
-					xaxis: {
-						categories: [],
-						labels: {
-							rotate: 0,
-						},
-						tickAmount: 7,
-					},
-				},
-				series: [],
-			},
-
-			month: {
-				options: {
-					colors: [
-						this.getPrimaryColor(),
-						"rgb(255, 85, 77)",
-						"rgb(255, 174, 0)",
-						"rgb(27, 197, 35)",
-						"rgb(60, 107, 236)",
-					],
-					chart: {
-						id: "vuechart-month",
-					},
-					xaxis: {
-						categories: [],
-						labels: {
-							rotate: 0,
-						},
-						tickAmount: 7,
-					},
-				},
-				series: [],
-			},
-
-			year: {
-				options: {
-					colors: [
-						this.getPrimaryColor(),
-						"rgb(255, 85, 77)",
-						"rgb(255, 174, 0)",
-						"rgb(27, 197, 35)",
-						"rgb(60, 107, 236)",
-					],
-					chart: {
-						id: "vuechart-year",
-					},
-					xaxis: {
-						categories: [],
-						labels: {
-							rotate: 0,
-						},
-						tickAmount: 12,
 					},
 				},
 				series: [],
@@ -314,70 +258,99 @@ export default {
 		getStatsValues() {
 			if (
 				validate.checkInputsAll(this.currentDate, [
-					{
-						key: "dateStart",
-						type: "text",
-					},
-					{
-						key: "dateEnd",
-						type: "text",
-					},
+					{ key: "dateStart", type: "text" },
+					{ key: "dateEnd", type: "text" },
 				])
 			)
 				return;
 
-			/* Текущий день */
 			let start = new Date(this.currentDate.data.dateStart.value);
-
-			/* Предидущий день */
 			let end = new Date(this.currentDate.data.dateEnd.value);
 
 			this.disabled.apexchart.load = true;
 
+			// Скрываем график перед загрузкой новых данных
+			this.loading.sections.week = false;
+			this.loading.loader.week = true;
+
 			axios({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `get-tracking-statistics-range`,
+				url: `${this.$store.getters.urlApi}get-tracking-statistics-range`,
 				headers: {
 					Accept: "application/json",
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: {
-					start: start.toLocaleString("ru", {
-						day: "numeric",
-						month: "numeric",
-						year: "numeric",
-					}),
-					end: end.toLocaleString("ru", {
-						day: "numeric",
-						month: "numeric",
-						year: "numeric",
-					}),
+					start: start.toISOString().split("T")[0],
+					end: end.toISOString().split("T")[0],
 				},
 			})
 				.then((response) => {
-					console.log(response.data.data);
-
 					if (response.data.status) {
+						// Полностью сбрасываем данные графика
+						this.apexchart.series = [];
+
+						// Собираем все уникальные даты
+						const allDates = new Set();
+						const seriesData = {};
+
+						// Сначала собираем все даты и данные
 						for (let requestType in response.data.data) {
-							let counts = [];
+							seriesData[requestType] = [];
 
 							for (let key in response.data.data[requestType]) {
-								let countRequests = 0;
-
-								if (Array.isArray(response.data.data[requestType][key])) {
-									countRequests = response.data.data[requestType][key].length;
-								}
-
-								counts.push(countRequests);
-
-								this.apexchart.options.xaxis.categories.push(key);
+								allDates.add(key);
 							}
+						}
+
+						// Определение количество дней для вывода по группам
+						if (allDates.size / 7 > 4) {
+							this.apexchart.options.xaxis.tickAmount = 7;
+						} else if (allDates.size / 30 > 3) {
+							this.apexchart.options.xaxis.tickAmount = 14;
+						} else if (allDates.size / 30 > 6) {
+							this.apexchart.options.xaxis.tickAmount = 31;
+						} else {
+							delete this.apexchart.options.xaxis.tickAmount;
+						}
+
+						// Сортируем даты
+						const sortedDates = Array.from(allDates).sort(
+							(a, b) => new Date(a) - new Date(b)
+						);
+
+						// Форматируем даты для отображения
+						this.apexchart.options.xaxis.categories = sortedDates.map((dateStr) => {
+							return new Date(dateStr).toLocaleDateString("ru", {
+								day: "numeric",
+								month: "short",
+							});
+						});
+
+						// Заполняем данные для каждой серии
+						for (let requestType in response.data.data) {
+							const counts = sortedDates.map((dateStr) => {
+								const dataForDate = response.data.data[requestType][dateStr];
+								return Array.isArray(dataForDate) ? dataForDate.length : 0;
+							});
 
 							this.apexchart.series.push({
 								name: requestType,
 								data: counts,
 							});
 						}
+
+						// Форсируем обновление опций
+						this.apexchart = {
+							...this.apexchart,
+							options: {
+								...this.apexchart.options,
+								xaxis: {
+									...this.apexchart.options.xaxis,
+									categories: [...this.apexchart.options.xaxis.categories],
+								},
+							},
+						};
 					} else {
 						this.$store.commit("addDebugger", {
 							title: "Ошибка.",
@@ -395,18 +368,23 @@ export default {
 				})
 				.finally(() => {
 					this.disabled.apexchart.load = false;
+
+					// Показываем график с новыми данными
+					this.loading.loader.week = false;
 				});
 		},
 	},
 	mounted() {
 		/* Текущий день */
 		let currentDay = new Date();
+		this.currentDate.data.dateEnd.value = currentDay.toISOString().slice(0, 10);
 
 		/* Предидущий день */
 		let previousDay = new Date(currentDay.getTime());
 
 		/* На неделю */
 		previousDay.setDate(currentDay.getDate() - 7);
+		this.currentDate.data.dateStart.value = previousDay.toISOString().slice(0, 10);
 
 		axios({
 			method: "post",
@@ -416,36 +394,44 @@ export default {
 				Authorization: `Bearer ${localStorage.getItem("token")}`,
 			},
 			data: {
-				start: previousDay.toLocaleString("ru", {
-					day: "numeric",
-					month: "numeric",
-					year: "numeric",
-				}),
-				end: currentDay.toLocaleString("ru", {
-					day: "numeric",
-					month: "numeric",
-					year: "numeric",
-				}),
+				start: previousDay.toISOString().split("T")[0],
+				end: currentDay.toISOString().split("T")[0],
 			},
 		})
 			.then((response) => {
 				if (response.data.status) {
+					// Полностью сбрасываем данные графика
+					this.apexchart.series = [];
+
+					// Собираем все уникальные даты
+					const allDates = new Set();
+
+					// Сначала собираем все даты и данные
 					for (let requestType in response.data.data) {
-						let counts = [];
-
 						for (let key in response.data.data[requestType]) {
-							let countRequests = 0;
-
-							if (Array.isArray(response.data.data[requestType][key])) {
-								countRequests = response.data.data[requestType][key].length;
-							}
-
-							counts.push(countRequests);
-
-							this.week.options.xaxis.categories.push(key);
+							allDates.add(key);
 						}
+					}
 
-						this.week.series.push({
+					// Сортируем даты
+					const sortedDates = Array.from(allDates).sort((a, b) => new Date(a) - new Date(b));
+
+					// Форматируем даты для отображения
+					this.apexchart.options.xaxis.categories = sortedDates.map((dateStr) => {
+						return new Date(dateStr).toLocaleDateString("ru", {
+							day: "numeric",
+							month: "short",
+						});
+					});
+
+					// Заполняем данные для каждой серии
+					for (let requestType in response.data.data) {
+						const counts = sortedDates.map((dateStr) => {
+							const dataForDate = response.data.data[requestType][dateStr];
+							return Array.isArray(dataForDate) ? dataForDate.length : 0;
+						});
+
+						this.apexchart.series.push({
 							name: requestType,
 							data: counts,
 						});
@@ -469,9 +455,6 @@ export default {
 				this.loading.loader.week = false;
 			});
 
-		/* На месяц */
-		previousDay.setDate(currentDay.getDate() - 31);
-
 		axios({
 			method: "post",
 			url: `${this.$store.getters.urlApi}` + `get-tracking-statistics-range`,
@@ -480,40 +463,29 @@ export default {
 				Authorization: `Bearer ${localStorage.getItem("token")}`,
 			},
 			data: {
-				start: previousDay.toLocaleString("ru", {
-					day: "numeric",
-					month: "numeric",
-					year: "numeric",
-				}),
-				end: currentDay.toLocaleString("ru", {
-					day: "numeric",
-					month: "numeric",
-					year: "numeric",
-				}),
+				start: previousDay.toISOString().split("T")[0],
+				end: currentDay.toISOString().split("T")[0],
+				type: "page_load",
 			},
 		})
 			.then((response) => {
 				if (response.data.status) {
-					for (let requestType in response.data.data) {
-						let counts = [];
+					let counts = [];
 
-						for (let key in response.data.data[requestType]) {
-							let countRequests = 0;
-
-							if (Array.isArray(response.data.data[requestType][key])) {
-								countRequests = response.data.data[requestType][key].length;
-							}
-
-							counts.push(countRequests);
-
-							this.month.options.xaxis.categories.push(key);
-						}
-
-						this.month.series.push({
-							name: requestType,
-							data: counts,
+					for (let key in response.data.data) {
+						counts.push({
+							x: new Date(key).toLocaleDateString("ru", {
+								day: "numeric",
+								month: "short",
+							}),
+							y: response.data.data[key].length,
 						});
 					}
+
+					this.attendance.series.push({
+						name: "",
+						data: counts,
+					});
 				} else {
 					this.$store.commit("addDebugger", {
 						title: "Ошибка.",
@@ -530,12 +502,9 @@ export default {
 				});
 			})
 			.finally(() => {
-				this.loading.loader.month = false;
+				this.loading.loader.attendance = false;
 			});
 
-		/* На год */
-		previousDay.setDate(currentDay.getDate() - 365);
-
 		axios({
 			method: "post",
 			url: `${this.$store.getters.urlApi}` + `get-tracking-statistics-range`,
@@ -544,40 +513,29 @@ export default {
 				Authorization: `Bearer ${localStorage.getItem("token")}`,
 			},
 			data: {
-				start: previousDay.toLocaleString("ru", {
-					day: "numeric",
-					month: "numeric",
-					year: "numeric",
-				}),
-				end: currentDay.toLocaleString("ru", {
-					day: "numeric",
-					month: "numeric",
-					year: "numeric",
-				}),
+				start: previousDay.toISOString().split("T")[0],
+				end: currentDay.toISOString().split("T")[0],
+				type: "form_request_telegram_bot",
 			},
 		})
 			.then((response) => {
 				if (response.data.status) {
-					for (let requestType in response.data.data) {
-						let counts = [];
+					let counts = [];
 
-						for (let key in response.data.data[requestType]) {
-							let countRequests = 0;
-
-							if (Array.isArray(response.data.data[requestType][key])) {
-								countRequests = response.data.data[requestType][key].length;
-							}
-
-							counts.push(countRequests);
-
-							this.year.options.xaxis.categories.push(key);
-						}
-
-						this.year.series.push({
-							name: requestType,
-							data: counts,
+					for (let key in response.data.data) {
+						counts.push({
+							x: new Date(key).toLocaleDateString("ru", {
+								day: "numeric",
+								month: "short",
+							}),
+							y: response.data.data[key].length,
 						});
 					}
+
+					this.recordPriem.series.push({
+						name: "",
+						data: counts,
+					});
 				} else {
 					this.$store.commit("addDebugger", {
 						title: "Ошибка.",
@@ -594,7 +552,7 @@ export default {
 				});
 			})
 			.finally(() => {
-				this.loading.loader.year = false;
+				this.loading.loader.recordPriem = false;
 			});
 	},
 };

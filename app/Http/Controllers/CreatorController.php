@@ -394,8 +394,8 @@ class CreatorController extends Controller
 
    public function getTrackingStatisticsRange(Request $request) {
       $validator = Validator::make($request->all(), [
-         'start' => 'required|date_format:d.m.Y',
-         'end' => 'required|date_format:d.m.Y',
+         'start' => 'required|date',
+         'end' => 'required|date',
       ]);
 
       if ($validator->fails()) {
@@ -406,30 +406,54 @@ class CreatorController extends Controller
          ]);
       };
 
-      $statistics = Tracking::all()
+      if ($request->type) {
+         $statistics = Tracking::all()
          ->where('created_at', '>=', Carbon::parse($request->start))
          ->where('created_at', '<=', Carbon::parse($request->end)->addDay())
-         ->groupBy([
-            'type',
+         ->where('type', $request->type)
+         ->groupBy(
             function($item) {
-               return $item->created_at->format('d.m.Y'); // Группируем только по дате (без времени)
-            }, 
-         ]);
+               return $item->created_at->format('Y-m-d'); // Группируем только по дате (без времени)
+            }
+         );
+
+         $statisticsFormated = $statistics;
+
+         $countDays = Carbon::parse($request->start)->diffInDays(Carbon::parse($request->end));
+         $statisticsFormated = [];
+         $firsDay = Carbon::parse($request->start);
+
+         for ($i = $countDays; $i >= 0; $i--) {
+            $statisticsFormated[Carbon::parse($firsDay)->format('Y-m-d')] = $statistics[Carbon::parse($firsDay)->format('Y-m-d')] ?? [];
+
+            $firsDay->addDay();
+         };
+      } else {
+         $statistics = Tracking::all()
+            ->where('created_at', '>=', Carbon::parse($request->start))
+            ->where('created_at', '<=', Carbon::parse($request->end)->addDay())
+            ->groupBy([
+               'type',
+               function($item) {
+                  return $item->created_at->format('Y-m-d'); // Группируем только по дате (без времени)
+               }, 
+            ]);
       
-      $countDays = Carbon::parse($request->start)->diffInDays(Carbon::parse($request->end));
-      $statisticsFormated = [];
-      $firsDay = Carbon::parse($request->start);
+         $countDays = Carbon::parse($request->start)->diffInDays(Carbon::parse($request->end));
+         $statisticsFormated = [];
+         $firsDay = Carbon::parse($request->start);
 
-      foreach ($statistics as $key => $statistic) {
-         $statisticsFormated[$key] = [];
-      };
-
-      for ($i = $countDays; $i >= 0; $i--) {
          foreach ($statistics as $key => $statistic) {
-            $statisticsFormated[$key][Carbon::parse($firsDay)->format('d.m.Y')] = $statistic[Carbon::parse($firsDay)->format('d.m.Y')] ?? [];
-         } 
+            $statisticsFormated[$key] = [];
+         };
 
-         $firsDay->addDay();
+         for ($i = $countDays; $i >= 0; $i--) {
+            foreach ($statistics as $key => $statistic) {
+               $statisticsFormated[$key][Carbon::parse($firsDay)->format('Y-m-d')] = $statistic[Carbon::parse($firsDay)->format('Y-m-d')] ?? [];
+            } 
+
+            $firsDay->addDay();
+         };
       };
 
       return response()->json([

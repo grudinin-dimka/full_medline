@@ -59,15 +59,19 @@ export default {
 
 .block-once__head {
 	display: flex;
-	flex-wrap: wrap;
 	justify-content: space-between;
+	flex-wrap: wrap;
 	align-items: center;
 	gap: 10px;
 }
 
 .block-once__options {
 	display: flex;
+	justify-content: flex-end;
+	flex-wrap: wrap;
 	gap: 10px;
+
+	flex: 1 0 300px;
 }
 
 .block-once__body {
@@ -84,6 +88,6 @@ export default {
 	font-size: 24px;
 	font-weight: 500;
 	
-	width: 100%;
+	flex: 1 0 300px;
 }
 </style>
