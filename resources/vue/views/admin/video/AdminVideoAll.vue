@@ -3,9 +3,27 @@
 	<Modal ref="modalVideo" :settings="modalVideo">
 		<template #title>
 			<template v-if="modalVideo.values.look == 'default' && !currentVideo.data.delete.value">
-				<icon-arrow :width="16" :height="16" :rotate="-90" @click="changeOrderItem('down')" />
+				<Icon
+					:name="'arrow'"
+					:fill="'var(--icon-multi-fill)'"
+					:hover="'var(--icon-nulti-fill-hover)'"
+					:width="'16px'"
+					:height="'16px'"
+					:rotate="-90"
+					:cursor="'pointer'"
+					@click="changeOrderItem('down')"
+				/>
 				#{{ currentVideo.data.order.value }}
-				<icon-arrow :width="16" :height="16" :rotate="90" @click="changeOrderItem('up')" />
+				<Icon
+					:name="'arrow'"
+					:fill="'var(--icon-multi-fill)'"
+					:hover="'var(--icon-nulti-fill-hover)'"
+					:width="'16px'"
+					:height="'16px'"
+					:rotate="90"
+					:cursor="'pointer'"
+					@click="changeOrderItem('up')"
+				/>
 			</template>
 			<template v-else>
 				{{ modalVideo.values.title }}
@@ -220,7 +238,6 @@ import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vu
 import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
 
 import Icon from "../../../components/modules/icon/Icon.vue";
-import IconArrow from "../../../components/icons/IconArrow.vue";
 
 import shared from "../../../services/shared";
 import validate from "../../../services/validate";
@@ -243,7 +260,6 @@ export default {
 		ButtonRemove,
 
 		Icon,
-		IconArrow,
 	},
 	data() {
 		return {

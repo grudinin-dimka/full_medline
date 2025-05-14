@@ -18,7 +18,9 @@
 			<p class="section-info-title">Добро Пожаловать в "Медлайн"</p>
 			<p class="section-info-sub-title">Индивидуальный подход и лучшие врачи</p>
 		</div>
+	</block>
 
+	<block :minHeight="450">
 		<div class="news__main" v-if="loading.sections.news">
 			<div class="news__main-head">
 				<div class="news__head-title">Новости</div>
@@ -100,7 +102,7 @@ export default {
 			},
 			data: {
 				limit: 6,
-			}
+			},
 		})
 			.then((response) => {
 				if (response.data.status) {

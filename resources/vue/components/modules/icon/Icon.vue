@@ -1,10 +1,11 @@
 <template>
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
+		ref="svg"
 		:height="height"
 		:width="width"
-		:fill="fill"
 		:viewBox="getIconViewBox(name)"
+		:style="{ '--fill': `${fill}`, '--fill-hover': `${hover || fill}` }"
 	>
 		<path :d="getIconPath(name)" />
 	</svg>
@@ -26,6 +27,10 @@ export default {
 			type: String,
 			default: "black",
 		},
+		hover: {
+			type: String,
+			default: "",
+		},
 		width: {
 			type: String,
 			default: "26px",
@@ -34,13 +39,20 @@ export default {
 			type: String,
 			default: "26px",
 		},
+		cursor: {
+			type: String,
+			default: "auto",
+		},
+		rotate: {
+			type: Number,
+			default: 0,
+		},
 	},
 	data() {
 		return {
 			icons: Icons,
 		};
 	},
-
 	methods: {
 		getIconPath(name) {
 			let icon = this.icons.find((item) => item.name == name);
@@ -53,7 +65,19 @@ export default {
 			return icon?.viewBox ?? "0 0 24 24"; // значение по умолчанию
 		},
 	},
+	mounted() {
+		this.$refs.svg.style.cursor = `${this.cursor}`;
+		this.$refs.svg.style.transform = `rotate(${this.rotate}deg)`;
+	},
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+svg {
+	fill: var(--fill);
+}
+
+svg:hover {
+	fill: var(--fill-hover);
+}
+</style>

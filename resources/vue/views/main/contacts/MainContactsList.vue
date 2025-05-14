@@ -12,11 +12,11 @@
 						<div class="contacts__phones-title">Телефоны:</div>
 						<ul>
 							<li v-for="phone in contact.phones" v-if="contact.phones.length > 0">
-								<IconContactPhone :width="16" :height="16" />
+								<Icon :name="'phone'" :fill="'black'" :width="'16px'" :height="'16px'" />
 								<a :href="`tel:${phone.name}`" :key="phone.id">{{ phone.name }}</a>
 							</li>
 							<li v-else>
-								<IconContactPhone :width="16" :height="16" />
+								<Icon :name="'phone'" :fill="'black'" :width="'16px'" :height="'16px'" />
 								<span class="empty"> Отсутствует </span>
 							</li>
 						</ul>
@@ -25,11 +25,11 @@
 						<div class="contacts__mails-title">Почта:</div>
 						<ul>
 							<li v-for="mail in contact.mails" v-if="contact.mails.length > 0">
-								<IconContactMail :width="18" :height="16" />
+								<Icon :name="'mail'" :fill="'black'" :width="'18px'" :height="'18px'" />
 								<a :href="`mailto:${mail.name}`">{{ mail.name }}</a>
 							</li>
 							<li v-else>
-								<IconContactMail :width="18" :height="16" />
+								<Icon :name="'mail'" :fill="'black'" :width="'14px'" :height="'14px'" />
 								<span class="empty"> Отсутствует </span>
 							</li>
 						</ul>
@@ -38,7 +38,7 @@
 						<div class="contacts__address-title">Адрес:</div>
 						<ul>
 							<li>
-								<IconContactHome :width="18" :height="18" />
+								<Icon :name="'home'" :fill="'black'" :width="'20px'" :height="'18px'" />
 								{{
 									`г. ${contact.clinic.city}, ул. ${contact.clinic.street}, д. ${contact.clinic.home}`
 								}}
@@ -92,10 +92,6 @@
 </template>
 
 <script>
-import IconContactMail from "../../../components/icons/contacts/IconContactMail.vue";
-import IconContactPhone from "../../../components/icons/contacts/IconContactPhone.vue";
-import IconContactHome from "../../../components/icons/contacts/IconContactHome.vue";
-
 async function initMap(mapId, coordinates) {
 	ymaps3.ready.then(() => {
 		let { YMap, YMapDefaultSchemeLayer, YMapMarker, YMapDefaultFeaturesLayer, Placemark } =
@@ -133,11 +129,11 @@ async function initMap(mapId, coordinates) {
 	});
 }
 
+import Icon from "../../../components/modules/icon/Icon.vue";
+
 export default {
 	components: {
-		IconContactMail,
-		IconContactPhone,
-		IconContactHome,
+		Icon,
 	},
 	props: {
 		contacts: {

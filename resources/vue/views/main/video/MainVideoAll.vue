@@ -28,19 +28,6 @@
 			@loaderChildAfterLeave="loaderChildAfterLeave"
 		/>
 	</block>
-
-	<!-- <div class="video">
-		<div class="video__item" v-for="video in videos">
-			<div class="evideo__item-video">
-				<video preload="metadata" :key="video.video">
-					<source :src="video.path" :type="`video/${getVideoType(video.video)}`" />
-				</video>
-			</div>
-			<div class="evideo__item-description">
-				<TipTap :editable="false" :limit="10_000" v-model="video.description" />
-			</div>
-		</div>
-	</div> -->
 </template>
 
 <script>

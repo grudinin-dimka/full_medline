@@ -4,6 +4,10 @@
 	--icon-background-color: rgb(240, 240, 240);
 	--icon-background-color-hover: rgb(230, 230, 230);
 
+	/* multi */
+	--icon-multi-fill: var(--primary-color);
+	--icon-nulti-fill-hover: var(--primary-color-hover);
+	
 	/* edit */
 	--icon-edit-fill: var(--primary-color);
 	--icon-edit-background-color: rgb(234, 253, 255);

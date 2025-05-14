@@ -11,16 +11,24 @@
 				!currentSlide.data.create.value
 			"
 		>
-			<IconHide
+			<Icon
 				v-if="currentSlide.data.hide.value"
-				:height="26"
-				:width="26"
+				:name="'hide'"
+				:fill="'var(--primary-color)'"
+				:hover="'var(--primary-color-hover)'"
+				:cursor="'pointer'"
+				:width="'26px'"
+				:height="'26px'"
 				@click="currentSlide.data.hide.value = false"
 			/>
-			<IconVisible
-				v-else="currentSlide.data.hide.body"
-				:height="26"
-				:width="26"
+			<Icon
+				v-else
+				:name="'visible'"
+				:fill="'var(--primary-color)'"
+				:hover="'var(--primary-color-hover)'"
+				:cursor="'pointer'"
+				:width="'26px'"
+				:height="'26px'"
 				@click="currentSlide.data.hide.value = true"
 			/>
 		</template>
@@ -35,9 +43,27 @@
 				!currentSlide.data.create.value
 			"
 		>
-			<icon-arrow :width="16" :height="16" :rotate="-90" @click="changeSlideOrder('down')" />
+			<Icon
+				:name="'arrow'"
+				:fill="'var(--icon-multi-fill)'"
+				:hover="'var(--icon-nulti-fill-hover)'"
+				:width="'16px'"
+				:height="'16px'"
+				:rotate="-90"
+				:cursor="'pointer'"
+				@click="changeSlideOrder('down')"
+			/>
 			#{{ currentSlide.data.order.value }}
-			<icon-arrow :width="16" :height="16" :rotate="90" @click="changeSlideOrder('up')" />
+			<Icon
+				:name="'arrow'"
+				:fill="'var(--icon-multi-fill)'"
+				:hover="'var(--icon-nulti-fill-hover)'"
+				:width="'16px'"
+				:height="'16px'"
+				:rotate="90"
+				:cursor="'pointer'"
+				@click="changeSlideOrder('up')"
+			/>
 		</template>
 		<template #body>
 			<div
@@ -207,19 +233,34 @@
 						<!-- <div class="slider-block-id">#{{ slide.order }}</div> -->
 						<div class="slider-block-info">
 							<article>
-								<SlideUserCard />
+								<Icon
+									:name="'user-card'"
+									:fill="'var(--primary-color)'"
+									:width="'30px'"
+									:height="'30px'"
+								/>
 								<label>
 									{{ slide.name }}
 								</label>
 							</article>
 							<article>
-								<SlideLink />
+								<Icon
+									:name="'link'"
+									:fill="'var(--primary-color)'"
+									:width="'30px'"
+									:height="'30px'"
+								/>
 								<label>
 									{{ slide.link }}
 								</label>
 							</article>
 							<article>
-								<SlidePath />
+								<Icon
+									:name="'directory-link'"
+									:fill="'var(--primary-color)'"
+									:width="'30px'"
+									:height="'30px'"
+								/>
 								<label> {{ slide.path }} </label>
 							</article>
 						</div>
@@ -301,14 +342,7 @@ import ButtonDefault from "../../components/ui/admin/buttons/ButtonDefault.vue";
 import ButtonRemove from "../../components/ui/admin/buttons/ButtonRemove.vue";
 import ButtonClaim from "../../components/ui/admin/buttons/ButtonClaim.vue";
 
-import SlideUserCard from "../../components/icons/SlideUserCard.vue";
-import SlideLink from "../../components/icons/SlideLink.vue";
-import SlidePath from "../../components/icons/SlidePath.vue";
-
 import Icon from "../../components/modules/icon/Icon.vue";
-import IconArrow from "../../components/icons/IconArrow.vue";
-import IconHide from "../../components/icons/IconHide.vue";
-import IconVisible from "../../components/icons/IconVisible.vue";
 
 import axios from "axios";
 import shared from "../../services/shared";
@@ -326,23 +360,18 @@ export default {
 		Modal,
 		InfoBar,
 		Tiptap,
+		
 		Icon,
 
 		ContainerInput,
 		ContainerInputOnce,
 		ContainerTextareaOnce,
+		
 		BlockOnce,
 		BlockButtons,
 		ButtonDefault,
 		ButtonRemove,
 		ButtonClaim,
-		SlideUserCard,
-		SlideLink,
-		SlidePath,
-
-		IconArrow,
-		IconHide,
-		IconVisible,
 	},
 	data() {
 		return {

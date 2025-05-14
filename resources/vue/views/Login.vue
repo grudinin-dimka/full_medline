@@ -6,7 +6,7 @@
 	<div class="container-login" v-if="loader.other">
 		<div class="login">
 			<div class="logo">
-				<Logo />
+				<img src="../assets/svg/logo.svg" alt="Медлайн" width="130"/>
 			</div>
 			<container-input>
 				<container-input-once :type="'edit'">
@@ -63,8 +63,6 @@ import Loader from "../components/modules/loader.vue";
 
 import axios from "axios";
 
-import Logo from "../components/icons/logo.vue";
-
 import ContainerInput from "../components/ui/admin/containers/ContainerInput.vue";
 import ContainerInputOnce from "../components/ui/admin/containers/input/ContainerInputOnce.vue";
 import ButtonDefault from "../components/ui/admin/buttons/ButtonDefault.vue";
@@ -75,11 +73,13 @@ export default {
 	components: {
 		Debugger,
 		Loader,
-		axios,
-		Logo,
+
+		ButtonDefault,
+
 		ContainerInput,
 		ContainerInputOnce,
-		ButtonDefault,
+		
+		axios,
 		validate,
 	},
 	data() {

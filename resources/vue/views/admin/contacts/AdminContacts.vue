@@ -7,9 +7,27 @@
 			#title
 			v-if="modal.type == 'edit' && !currentContact.data.delete.value && !modal.style.create"
 		>
-			<icon-arrow :width="16" :height="16" :rotate="-90" @click="changeContactsOrder('down')" />
+			<Icon
+				:name="'arrow'"
+				:fill="'var(--icon-multi-fill)'"
+				:hover="'var(--icon-nulti-fill-hover)'"
+				:width="'16px'"
+				:height="'16px'"
+				:rotate="-90"
+				:cursor="'pointer'"
+				@click="changeContactsOrder('down')"
+			/>
 			#{{ currentContact.data.order.value }}
-			<icon-arrow :width="16" :height="16" :rotate="90" @click="changeContactsOrder('up')" />
+			<Icon
+				:name="'arrow'"
+				:fill="'var(--icon-multi-fill)'"
+				:hover="'var(--icon-nulti-fill-hover)'"
+				:width="'16px'"
+				:height="'16px'"
+				:rotate="90"
+				:cursor="'pointer'"
+				@click="changeContactsOrder('up')"
+			/>
 		</template>
 		<template #title v-else>
 			{{ modal.title }}
@@ -57,7 +75,7 @@
 					@touchDelete="deleteContactPhone"
 				>
 					<template #title>
-						<IconContactPhone :width="16" :height="14" :type="'edit'" />
+						<Icon :name="'phone'" :fill="'var(--primary-color)'" :width="'20px'" :height="'16px'" />
 						ТЕЛЕФОНЫ
 					</template>
 				</admin-modal-list>
@@ -68,7 +86,7 @@
 					@touchDelete="deleteContactMail"
 				>
 					<template #title>
-						<IconContactMail :width="20" :height="14" :type="'edit'" />
+						<Icon :name="'mail'" :fill="'var(--primary-color)'" :width="'20px'" :height="'14px'" />
 						ПОЧТА
 					</template>
 				</admin-modal-list>
@@ -264,12 +282,6 @@ import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue"
 import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 
 import Icon from "../../../components/modules/icon/Icon.vue";
-import IconArrow from "../../../components/icons/IconArrow.vue";
-import IconHide from "../../../components/icons/IconHide.vue";
-import IconVisible from "../../../components/icons/IconVisible.vue";
-import IconContactHome from "../../../components/icons/contacts/IconContactHome.vue";
-import IconContactMail from "../../../components/icons/contacts/IconContactMail.vue";
-import IconContactPhone from "../../../components/icons/contacts/IconContactPhone.vue";
 
 import axios from "axios";
 import shared from "../../../services/shared.js";
@@ -300,12 +312,6 @@ export default {
 		ButtonClaim,
 
 		Icon,
-		IconArrow,
-		IconHide,
-		IconVisible,
-		IconContactHome,
-		IconContactMail,
-		IconContactPhone,
 
 		axios,
 	},

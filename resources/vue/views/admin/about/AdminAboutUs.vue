@@ -7,9 +7,27 @@
 			#title
 			v-if="modal.type == 'edit' && !currentInfoBlock.data.delete.value && !modal.style.create"
 		>
-			<icon-arrow :width="16" :height="16" :rotate="-90" @click="changeInfoBlockOrder('down')" />
+			<Icon
+				:name="'arrow'"
+				:fill="'var(--icon-multi-fill)'"
+				:hover="'var(--icon-nulti-fill-hover)'"
+				:width="'16px'"
+				:height="'16px'"
+				:rotate="-90"
+				:cursor="'pointer'"
+				@click="changeInfoBlockOrder('down')"
+			/>
 			#{{ currentInfoBlock.data.order.value }}
-			<icon-arrow :width="16" :height="16" :rotate="90" @click="changeInfoBlockOrder('up')" />
+			<Icon
+				:name="'arrow'"
+				:fill="'var(--icon-multi-fill)'"
+				:hover="'var(--icon-nulti-fill-hover)'"
+				:width="'16px'"
+				:height="'16px'"
+				:rotate="90"
+				:cursor="'pointer'"
+				@click="changeInfoBlockOrder('up')"
+			/>
 		</template>
 
 		<template #title v-else>
@@ -317,9 +335,6 @@ import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue"
 import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 
 import Icon from "../../../components/modules/icon/Icon.vue";
-import IconArrow from "../../../components/icons/IconArrow.vue";
-import IconHide from "../../../components/icons/IconHide.vue";
-import IconVisible from "../../../components/icons/IconVisible.vue";
 
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import Empty from "../../../components/modules/Empty.vue";
@@ -353,9 +368,6 @@ export default {
 		ButtonClaim,
 
 		Icon,
-		IconArrow,
-		IconHide,
-		IconVisible,
 
 		Empty,
 		AdminAboutUsList,

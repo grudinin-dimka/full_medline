@@ -923,8 +923,12 @@ export default {
 }
 
 .tiptap p {
-	margin: 5px;
+	margin: 20px 0px;
 	font-size: 1.125rem;
+}
+
+.tiptap p:first-child {
+	margin: 0px 0px;
 }
 
 .tiptap p.is-editor-empty:first-child::before {

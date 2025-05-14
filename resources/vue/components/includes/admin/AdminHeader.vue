@@ -1,6 +1,8 @@
 <template>
 	<header>
-		<img src="../../../assets/svg/logo.svg" alt="Медлайн" />
+		<a @click.prevent="$router.push({ name: 'home' })" href="/" alt="Медлайн">
+			<img src="../../../assets/svg/logo.svg" alt="Медлайн" />
+		</a>
 		<div class="user">
 			<p>{{ $store.getters.userNickname }}</p>
 		</div>
@@ -18,13 +20,7 @@
 </template>
 
 <script>
-import Logo from "../../icons/logo.vue";
-
-export default {
-	components: {
-		Logo,
-	},
-};
+export default {};
 </script>
 
 <style scoped>

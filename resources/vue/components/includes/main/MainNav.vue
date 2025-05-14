@@ -13,7 +13,14 @@
 			<div class="dropdown">
 				<div class="dropdown-title element">
 					Цены
-					<IconArrowWhite :width="20" :height="20" :rotate="180" class="item-arrow" />
+					<Icon
+						class="item-arrow"
+						:name="'arrow'"
+						:fill="'white'"
+						:width="'20px'"
+						:height="'20px'"
+						:rotate="180"
+					/>
 				</div>
 				<div class="dropdown-body">
 					<div class="dropdown-body__list">
@@ -61,7 +68,14 @@
 			<div class="dropdown">
 				<div class="dropdown-title element">
 					Информация
-					<IconArrowWhite :width="20" :height="20" :rotate="180" class="item-arrow" />
+					<Icon
+						class="item-arrow"
+						:name="'arrow'"
+						:fill="'white'"
+						:width="'20px'"
+						:height="'20px'"
+						:rotate="180"
+					/>
 				</div>
 				<div class="dropdown-body">
 					<div class="dropdown-body__list">
@@ -118,11 +132,11 @@
 </template>
 
 <script>
-import IconArrowWhite from "../../icons/IconArrowWhite.vue";
+import Icon from "../../modules/icon/Icon.vue";
 
 export default {
 	components: {
-		IconArrowWhite,
+		Icon,
 	},
 	data() {
 		return {};

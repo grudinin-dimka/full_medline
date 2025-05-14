@@ -23,11 +23,11 @@
 						<div>Номера:</div>
 						<ul>
 							<li v-if="contact.phones.length > 0" v-for="phone in contact.phones">
-								<IconContactPhone :width="14" :height="14" />
+								<Icon :name="'phone'" :fill="'black'" :width="'16px'" :height="'16px'" />
 								{{ phone.name }}
 							</li>
 							<li v-else>
-								<IconContactPhone :width="14" :height="14" />
+								<Icon :name="'phone'" :fill="'black'" :width="'16px'" :height="'16px'" />
 								<span class="empty"> Отсутствует </span>
 							</li>
 						</ul>
@@ -36,11 +36,11 @@
 						<div>Почта:</div>
 						<ul>
 							<li v-if="contact.mails.length > 0" v-for="mail in contact.mails">
-								<IconContactMail :width="16" :height="14" />
+								<Icon :name="'mail'" :fill="'black'" :width="'14px'" :height="'14px'" />
 								{{ mail.name }}
 							</li>
 							<li v-else>
-								<IconContactMail :width="16" :height="14" />
+								<Icon :name="'mail'" :fill="'black'" :width="'14px'" :height="'14px'" />
 								<span class="empty"> Отсутствует </span>
 							</li>
 						</ul>
@@ -52,15 +52,11 @@
 </template>
 
 <script>
-import IconContactHome from "../../../components/icons/contacts/IconContactHome.vue";
-import IconContactMail from "../../../components/icons/contacts/IconContactMail.vue";
-import IconContactPhone from "../../../components/icons/contacts/IconContactPhone.vue";
+import Icon from '../../../components/modules/icon/Icon.vue';
 
 export default {
 	components: {
-		IconContactHome,
-		IconContactMail,
-		IconContactPhone,
+		Icon,
 	},
 	props: {
 		contacts: {
