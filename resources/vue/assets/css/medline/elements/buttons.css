@@ -1,0 +1,39 @@
+/* Кнопки */
+:root {
+	--button-padding: 15px 30px;
+	--button-border: 0px;
+	--button-border-radius: 100px;
+
+	--button-font-size: 1.125rem;
+	--button-font-color: rgb(255, 255, 255);
+	--button-font-color-hover: rgb(255, 255, 255);
+
+	--button-background-color: var(--primary-color);
+	--button-background-color-hover: var(--primary-color-hover);
+
+	/* invertion */
+	--button-inverse-font-color: rgb(255, 255, 255);
+	--button-inverse-font-color-hover: rgb(255, 255, 255);
+	--button-inverse-background-color: var(--primary-color);
+	--button-inverse-background-color-hover: var(--primary-color-hover);
+
+	/* create */
+	--button-create-font-color: rgb(255, 255, 255);
+	--button-create-font-color-hover: rgb(255, 255, 255);
+	--button-create-background-color: #44a533;
+	--button-create-background-color-hover: rgb(78, 175, 61);
+
+	/* delete */
+	--button-delete-font-color: rgb(255, 255, 255);
+	--button-delete-font-color-hover: rgb(255, 255, 255);
+	--button-delete-background-color: rgb(212, 65, 65);
+	--button-delete-background-color-hover: rgb(229, 81, 81);
+
+	/* disabled */
+	--button-disabled-background-color: rgb(150, 150, 150);
+	--button-disabled-background-color-hover: rgb(160, 160, 160);
+
+	/* admin */
+	--button-admin-background-color: #cf913e;
+	--button-admin-background-color-hover: #d79744;
+}

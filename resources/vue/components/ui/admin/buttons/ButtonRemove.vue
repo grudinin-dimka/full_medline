@@ -31,7 +31,7 @@ button {
 	font-size: 20px;
 	color: white;
 
-	background-color: var(--button-remove-color);
+	background-color: var(--button-delete-background-color);
 	transition: all 0.2s;
 }
 
@@ -49,7 +49,7 @@ button > .content.disabled {
 }
 
 button:hover {
-	background-color: var(--button-remove-color-hover);
+	background-color: var(--button-delete-background-color-hover);
 }
 
 .loader {

@@ -1,0 +1,12 @@
+/* Error.vue */
+:root {
+	--color-error-text: #52525b;
+	--color-error-background: #d4d4d8;
+	--color-error-container: #fff;
+
+	--color-error-header-background: #ef4444;
+	--color-error-header-text: #fff;
+
+	--color-error-button-text: #fff;
+	--color-error-button-background: #27272a;
+}

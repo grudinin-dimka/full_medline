@@ -37,21 +37,21 @@ button {
 
 button.default {
 	color: white;
-	background-color: var(--button-password-color);
+	background-color: var(--button-admin-background-color);
 }
 
 button.default:hover {
 	color: white;
-	background-color: var(--button-password-color-hover);
+	background-color: var(--button-admin-background-color-hover);
 }
 
 button.other {
-	color: #cf913e;
+	color: var(--button-admin-background-color-hover);
 	background-color: #ffe9cd;
 }
 
 button.other:hover {
-	color: #cf913e;
+	color: var(--button-admin-background-color-hover);
 	background-color: #f5e1c6;
 }
 

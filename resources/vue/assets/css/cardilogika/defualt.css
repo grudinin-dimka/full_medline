@@ -1,0 +1,25 @@
+/* По умолчанию */
+:root {
+	--default-gap: 20px;
+
+	--default-padding: 20px;
+	
+	--default-border-color: rgba(0, 0, 0, 0.25);
+	--default-border-width: 1px;
+	--default-border-style: solid;
+	--default-border: var(--default-border-style) var(--default-border-width) var(--default-border-color);
+	--default-border-active: 1px solid var(--primary-color);
+	--default-border-radius: 20px;
+
+	--default-background-color: white;
+	--secondary-background-color: rgb(220, 220, 220);
+
+	--default-font-color: black;
+
+	--default-outline: 0px solid rgba(0, 0, 0, 0.2);
+
+	--default-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.05);
+
+	--item-background-color: rgb(235, 235, 235);
+	--item-background-color-active: #fff4f8;
+}

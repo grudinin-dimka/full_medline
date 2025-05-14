@@ -19,11 +19,11 @@ button.disabled {
 	font-size: 20px;
 	color: white;
 
-	background-color: var(--button-disabled-color);
+	background-color: var(--button-disabled-background-color);
 	transition: all 0.2s;
 }
 
 button.default:hover {
-	background-color: var(--button-disabled-color-hover);
+	background-color: var(--button-disabled-background-color-hover);
 }
 </style>

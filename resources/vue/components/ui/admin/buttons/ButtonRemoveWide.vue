@@ -37,21 +37,21 @@ button {
 
 button.default {
 	color: white;
-	background-color: var(--button-remove-color);
+	background-color: var(--button-delete-background-color);
 }
 
 button.default:hover {
 	color: white;
-	background-color: var(--button-remove-color-hover);
+	background-color: var(--button-delete-background-color-hover);
 }
 
 button.other {
-	color: var(--button-remove-color-hover);
+	color: var(--button-delete-background-color-hover);
 	background-color: #ffdddd;
 }
 
 button.other:hover {
-	color: var(--button-remove-color-hover);
+	color: var(--button-delete-background-color-hover);
 	background-color: #f3d3d3;
 }
 

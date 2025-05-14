@@ -40,21 +40,21 @@ button {
 
 button.default {
 	color: white;
-	background-color: var(--button-default-color);
+	background-color: var(--button-background-color);
 }
 
 button.default:hover {
 	color: white;
-	background-color: var(--button-default-color-hover);
+	background-color: var(--button-background-color-hover);
 }
 
 button.other {
-	color: var(--button-default-color);
+	color: var(--button-background-color-hover);
 	background-color: #dcfbff;
 }
 
 button.other:hover {
-	color: var(--button-default-color);
+	color: var(--button-background-color-hover);
 	background-color: #d3f1f5;
 }
 

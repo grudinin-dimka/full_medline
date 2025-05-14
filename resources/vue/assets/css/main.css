@@ -15,24 +15,6 @@
 }
 
 :root {
-	/* Кнопки */
-	--button-default-color: var(--primary-color);
-	--button-default-color-hover: #26b8c7;
-	--button-disabled-color: #969696;
-	--button-disabled-color-hover: #a0a0a0;
-	--button-remove-color: #cd3f3f;
-	--button-remove-color-hover: #d74949;
-	--button-password-color: #cf913e;
-	--button-password-color-hover: #d79744;
-	--button-claim-color: #44a533;
-	--button-claim-color-hover: rgb(78, 175, 61);
-
-	/* svg */
-	--svg-icon-arrow-fill: rgba(0, 171, 189, 0.5);
-	--svg-icon-arrow-fill-hover: var(--primary-color);
-	--svg-icon-add-item: rgba(68, 165, 51, 0.5);
-	--svg-icon-add-item-hover: #44a533;
-
 	--span-color-error: #ff5b5b;
 	--span-color-create: #44a533;
 }

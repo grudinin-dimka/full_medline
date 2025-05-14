@@ -1,0 +1,15 @@
+/* Акценты */
+:root {
+	/* Основные цвета */
+	--primary-color: #b5013e;
+	--primary-color-hover: #cf1855;
+	
+	--secondary-color: #f4e7ec;
+
+	/* Второстепенные цвета */
+	--create-color: var(--primary-color);
+	--create-color-hover: var(--primary-color-hover);
+
+	--delete-color: #cd3f3f;
+	--delete-color-hover: #d74949;
+}

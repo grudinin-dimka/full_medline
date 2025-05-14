@@ -1,0 +1,48 @@
+/* пагинация */
+:root {
+	/* input */
+	--input-gap: 5px;
+
+   --input-label-color: var(--primary-color);
+   --input-color: black;
+
+   --input-padding: 30px 15px;
+   --input-caret-color: var(--primary-color);
+
+	--input-border: var(--default-border);
+	--input-border-radius: calc(var(--default-border-radius) / 1.5);
+	--input-border-focus: var(--default-border-width) var(--default-border-style) var(--primary-color);
+
+   --input-placeholder-color: rgba(0, 0, 0, 0.5);
+
+   /* textarea */
+   --textarea-padding: 15px;
+
+   /* error */
+   --input-error-border: var(--default-border-width) var(--default-border-style) #ff9b9b;
+
+   --input-error-background-color: #fff4f4;
+   --input-error-background-color-file: #ff9b9b;
+   --input-error-caret-color: red;
+   --input-error-color: red;
+
+   /* create */
+   --input-create-background-color: rgb(255, 255, 255);
+   --input-create-background-color-hover: rgb(243, 255, 240);
+
+   --input-create-color: #44a533;
+   --input-create-caret-color: #44a533;
+
+   --input-create-border: var(--default-border-width) var(--default-border-style) #44a533;
+   --input-create-border-focus: var(--default-border-width) var(--default-border-style) #44a533;
+
+   /* delete */
+   --input-delete-background-color: rgb(255, 255, 255);
+   --input-delete-background-color-hover: rgb(255, 245, 245);
+
+   --input-delete-color: #cd3f3f;
+   --input-delete-caret-color: #cd3f3f;
+   
+   --input-delete-border: var(--default-border-width) var(--default-border-style) #ec7b7b;
+   --input-delete-border-focus: var(--default-border-width) var(--default-border-style) #f79999;
+}

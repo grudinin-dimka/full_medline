@@ -3,12 +3,12 @@
 	/* Основные цвета */
 	--primary-color: #00abbd;
 	--primary-color-hover: #26b8c7;
-	
+
 	--secondary-color: #dbf1f3;
 
 	/* Второстепенные цвета */
-	--create-color: #00abbd;
-	--create-color-hover: #26b8c7;
+	--create-color: var(--primary-color);
+	--create-color-hover: var(--primary-color-hover);
 
 	--delete-color: #cd3f3f;
 	--delete-color-hover: #d74949;

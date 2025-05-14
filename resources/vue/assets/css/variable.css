@@ -1,13 +1,13 @@
 /* Базовые */
-@import url("./roots/accents.css");
-@import url("./roots/defualt.css");
+@import url("./medline/accents.css");
+@import url("./medline/defualt.css");
 
 /* Модули */
-@import url("./roots/modules/pagination.css");
-@import url("./roots/modules/modal.css");
+@import url("./medline/modules/pagination.css");
+@import url("./medline/modules/modal.css");
 
 /* Элементы */
-@import url("./roots/elements/icons.css");
-@import url("./roots/elements/buttons.css");
-@import url("./roots/elements/table.css");
-@import url("./roots/elements/inputs.css");
+@import url("./medline/elements/icons.css");
+@import url("./medline/elements/buttons.css");
+@import url("./medline/elements/table.css");
+@import url("./medline/elements/inputs.css");
