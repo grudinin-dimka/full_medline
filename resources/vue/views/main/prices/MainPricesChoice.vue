@@ -60,6 +60,14 @@ export default {
 
 			sorted.sortString("up", cities);
 
+			// Перемещение Шадринска наверх
+			let cityShadrinsk = cities.find((item) => item === "Шадринск");
+			
+			if (cityShadrinsk) {
+				cities.splice(cities.indexOf(cityShadrinsk), 1);
+				cities.unshift(cityShadrinsk);
+			}
+
 			return cities;
 		},
 	},
@@ -201,7 +209,7 @@ export default {
 }
 
 .prices__item > ul > li > button:hover {
-	background-color: var(--button-default-color-hover);
+	background-color: var(--button-background-color-hover);
 	color: white;
 }
 

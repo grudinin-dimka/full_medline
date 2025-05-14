@@ -58,7 +58,7 @@ button > .content.disabled {
 }
 
 button:hover {
-	background-color: var(--button-default-color-hover);
+	background-color: var(--button-background-color-hover);
 }
 
 button.white {

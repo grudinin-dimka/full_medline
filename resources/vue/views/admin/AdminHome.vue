@@ -60,7 +60,7 @@
 				<!-- Название -->
 				<container-input-once>
 					<template #title>
-						<span>ИЗОБРАЖЕНИЕ*</span>
+						<span>ИЗОБРАЖЕНИЕ (820х958)*</span>
 						<span v-if="currentSlide.data.file.edited"> (ИЗМЕНЕНО) </span>
 					</template>
 					<template #input>

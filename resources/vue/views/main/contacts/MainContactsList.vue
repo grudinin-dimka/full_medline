@@ -353,7 +353,7 @@ span.empty {
 }
 
 .contacts__map-wall:hover {
-	background-color: #f2feff;
+	background-color: var(--item-background-color-active);
 }
 
 .contacts__map-wall > svg {
@@ -366,7 +366,7 @@ span.empty {
 }
 
 .contacts__map-wall:hover > svg {
-	fill: #dbf1f3;
+	fill: var(--secondary-color);
 }
 
 .contacts__map-wall:hover > .contacts__map-wall-title {

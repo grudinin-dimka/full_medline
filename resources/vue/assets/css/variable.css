@@ -7,6 +7,7 @@
 @import url("./roots/modules/modal.css");
 
 /* Элементы */
+@import url("./roots/elements/icons.css");
 @import url("./roots/elements/buttons.css");
 @import url("./roots/elements/table.css");
 @import url("./roots/elements/inputs.css");

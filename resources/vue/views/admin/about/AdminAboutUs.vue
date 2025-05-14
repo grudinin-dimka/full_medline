@@ -933,27 +933,27 @@ export default {
 }
 
 .modal-images > .item > .buttons > .icon.delete {
-	background-color: rgb(255, 237, 237);
+	background-color: var(--icon-delete-background-color);
 }
 
 .modal-images > .item > .buttons > .icon.delete:hover {
-	background-color: rgb(245, 227, 227);
+	background-color: var(--icon-delete-background-color-hover);
 }
 
 .modal-images > .item > .buttons > .icon.edit {
-	background-color: rgb(234, 253, 255);
+	background-color: var(--icon-edit-background-color);
 }
 
 .modal-images > .item > .buttons > .icon.edit:hover {
-	background-color: rgb(224, 243, 245);
+	background-color: var(--icon-edit-background-color-hover);
 }
 
 .modal-images > .item > .buttons > .icon.create {
-	background-color: rgb(234, 255, 236);
+	background-color: var(--icon-create-background-color);
 }
 
 .modal-images > .item > .buttons > .icon.create:hover {
-	background-color: rgb(224, 245, 226);
+	background-color: var(--icon-create-background-color-hover);
 }
 
 .textarea-show {

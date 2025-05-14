@@ -3,9 +3,9 @@
 	<debugger />
 
 	<!-- Шапка -->
-	<main-header />
+	<main-header ref="mainHeader"/>
 	<!-- Навигация -->
-	<main-nav />
+	<main-nav @openModal="openModal"/>
 	<!-- Содержимое -->
 	<router-view />
 	<!-- Подвал -->
@@ -34,6 +34,11 @@ export default {
 		MainHeader,
 		MainNav,
 		MainFooter,
+	},
+	methods: {
+		openModal(title) {
+			this.$refs.mainHeader.openModalEdite(title);
+		}
 	},
 	created() {
 		axios({

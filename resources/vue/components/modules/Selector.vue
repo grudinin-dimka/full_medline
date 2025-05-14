@@ -206,6 +206,11 @@ export default {
 	width: 100%;
 
 	font-size: 1.125rem;
+	transition: all 0.2s;
+}
+
+.input > input:focus {
+	border: var(--input-border-focus);
 }
 
 .select.error > .control {

@@ -356,6 +356,7 @@ export default {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                   РАСПИСАНИЕ                      |*/
 		/* |___________________________________________________|*/
+		/* Получение даты */
 		getDateDayNumberMonth(date) {
 			let dayDate = new Date(date);
 
@@ -366,6 +367,8 @@ export default {
 
 			return dayDate.toLocaleString("ru", options);
 		},
+
+		/* Получение дня недели */
 		getDateDayWeekName(date) {
 			let dayDate = new Date(date);
 
@@ -375,11 +378,13 @@ export default {
 
 			return dayDate.toLocaleString("ru", options);
 		},
+
 		/* Очистка фильтра */
 		clearFilter(filterName) {
 			this.filters[filterName].status = false;
 			this.filters[filterName].data.body = "";
 		},
+
 		/* Получение текущего дня и связка с таблицей недели */
 		getDateNow() {
 			let date = new Date();
@@ -397,6 +402,7 @@ export default {
 
 			return dayNow.date;
 		},
+
 		/* После скрытия элементы */
 		getDayTime(sheduleId, dayDate, clinicId) {
 			let shedule = this.shedules.find((item) => item.id === sheduleId);
@@ -405,6 +411,8 @@ export default {
 
 			return day.time;
 		},
+
+		/* Получение статуса клиники */
 		getClinicStatus(sheduleId, clinicId) {
 			let shedule = this.shedules.find((item) => item.id === sheduleId);
 			let week = shedule.weeks.find((item) => item.clinicId === clinicId);
@@ -420,14 +428,15 @@ export default {
 				// Если выбраны "Все"
 				if (this.activeClinic.name === "Все") {
 					return {
-						color: "var(--primary-color)",
-						borderBottomColor: "var(--primary-color)",
+						color: "black",
+						border: "1px solid var(--primary-color)",
+						backgroundColor: 'var(--item-background-color-active)',
 					};
 				}
 
 				// Если выбрана другая клиника
 				return {
-					borderBottomColor: "var(--primary-color)",
+					border: "1px solid var(--primary-color)",
 				};
 			}
 
@@ -442,13 +451,14 @@ export default {
 
 			if (this.activeClinic.id === id) {
 				return {
-					color: this.getColor(number, count, "primary"),
-					borderBottomColor: this.getColor(number, count, "primary"),
+					color: "black",
+					border: `1px solid ${this.getColor(number, count, "primary")}`,
+					backgroundColor: this.getColor(number, count, "secondary"),
 				};
 			}
 
 			return {
-				borderBottomColor: this.getColor(number, count, "primary"),
+				border: `1px solid ${this.getColor(number, count, "primary")}`,
 			};
 		},
 
@@ -479,7 +489,7 @@ export default {
 			};
 		},
 
-		// Формирование цвета в зависимости от id
+		/* Формирование цвета в зависимости от id */
 		getColor(id, count, option) {
 			return (
 				"hsl(" +
@@ -569,18 +579,12 @@ export default {
 }
 
 .filter__list-item {
+	user-select: none;
 	cursor: pointer;
 
-	padding: 5px;
-	border-top: 2px;
-	border-top-color: white;
-	border-right: 2px;
-	border-right-color: white;
-	border-bottom: 2px;
-	border-bottom-color: var(--input-border-color-active);
-	border-left: 2px;
-	border-left-color: white;
-	border-style: solid;
+	padding: 5px 10px;
+	border: 1px solid;
+	border-radius: 100px;
 
 	font-size: 18px;
 
@@ -720,10 +724,15 @@ th {
 	white-space: pre-wrap;
 	text-align: center;
 	min-width: 110px;
+	font-size: 1rem;
+	font-weight: 600;
+
+	color: var(--primary-color);
 }
 
 td {
 	text-align: left;
+	font-size: 1rem;
 }
 
 th,
@@ -732,55 +741,30 @@ td {
 	transition: all 0.2s;
 }
 
-tr {
-	background-color: #d2f2f5;
+td,
+th {
+	border-top: 1px;
+	border-right: 1px;
+	border-bottom: 1px;
+	border-left: 1px;
+	border-style: solid;
+	border-color: rgb(200, 200, 200);
+
+	height: 100%;
+
 	transition: all 0.2s;
 }
 
-tr.create > td {
-	border: 1px solid #3cae1f;
-	background-color: #d7f5d2;
+tr:nth-child(even) > td {
+	background-color: var(--table-td-even-background-color);
 }
 
-tr.delete > td {
-	border: 1px solid #ae1f1f;
-	background-color: #f5d2d2;
-}
-
-tr > th {
-	position: relative;
-	font-weight: 400;
-	border: 1px solid #2d9aa7;
-	background-color: #3fbecd;
-	color: white;
-}
-
-tr > td {
-	border: 1px solid #3fbecd;
+tr:nth-child(odd) > td {
+	background-color: var(--table-td-odd-background-color);
 }
 
 tr > td:nth-child(2) {
 	word-break: break-all;
-}
-
-tr:hover > td {
-	background-color: rgba(255, 255, 255, 0.3);
-}
-
-tr.delete {
-	background-color: #f5d2d2;
-}
-
-tr.delete:hover > td {
-	background-color: rgba(255, 255, 255, 0.3);
-}
-
-tr.create {
-	background-color: #d7f5d2;
-}
-
-tr.create:hover > td {
-	background-color: rgba(255, 255, 255, 0.3);
 }
 
 .days {
@@ -833,8 +817,9 @@ tr.create:hover > td {
 }
 
 tr.empty > td {
+	height: 30px;
 	text-align: center;
-	color: #90cad1;
+	color: black;
 }
 
 @keyframes show {

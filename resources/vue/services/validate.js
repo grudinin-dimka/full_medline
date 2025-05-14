@@ -201,7 +201,7 @@ export default {
 		if (value !== reference) {
 			return {
 				status: true,
-				message: "Совпадение отстуствует.",
+				message: "Совпадение отсутcтвует.",
 			};
 		}
 

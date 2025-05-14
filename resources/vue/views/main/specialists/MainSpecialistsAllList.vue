@@ -32,8 +32,9 @@
 			<a
 				@click.prevent="openspecialistProfile(specialist)"
 				:href="`/specialists/${specialist.url}`"
-				>Подробнее</a
 			>
+				Подробнее
+			</a>
 		</div>
 	</div>
 </template>

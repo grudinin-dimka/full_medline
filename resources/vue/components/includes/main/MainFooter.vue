@@ -5,7 +5,7 @@
 			<!-- Блок с платёжными системами -->
 			<div class="pay">
 				<a href="/">
-					<img src="../../../assets/svg/logo.svg" width="250" height="150" alt="логотип" />
+					<img src="../../../assets/svg/logo-full.svg" width="250" height="150" alt="логотип" />
 				</a>
 				<p>Мы принимаем к оплате</p>
 				<div class="pay-cards">
@@ -25,7 +25,19 @@
 			</div>
 			<!-- Блок с кнопками -->
 			<div class="buttons">
-				<div @click="goToContacts">Контакты</div>
+				<a @click.prevent="$router.push({ name: `news` })" :href="`/news`" alt="контакты">
+					Новости
+				</a>
+				<a @click.prevent="$router.push({ name: `about` })" :href="`/about`" alt="о нас">
+					О нас
+				</a>
+				<a
+					@click.prevent="$router.push({ name: `contacts` })"
+					:href="`/contacts`"
+					alt="контакты"
+				>
+					Контакты
+				</a>
 			</div>
 			<!-- Блок доп. информации -->
 			<div class="more">
@@ -61,10 +73,7 @@
 
 		<!-- Нижняя секция -->
 		<template v-if="loading.sections.footer">
-			<section
-				class="bottom"
-				v-if="footer !== ''"
-			>
+			<section class="bottom" v-if="footer !== ''">
 				<Tiptap
 					v-model="footer"
 					:editable="false"
@@ -192,12 +201,19 @@ section.up {
 	margin: 0px 30px 20px 30px;
 }
 
+section.up > div {
+	border-radius: var(--default-border-radius);
+}
+
 section.up .pay {
+	flex: 1 0 300px;
 	display: flex;
 	flex-direction: column;
 	text-transform: uppercase;
+	justify-content: center;
+	align-items: center;
 
-	margin: 30px;
+	padding: 30px;
 }
 
 section.up .pay p {
@@ -217,7 +233,7 @@ section.up .pay p {
 	justify-content: center;
 	align-items: center;
 
-	border-radius: 10px;
+	border-radius: calc(var(--default-border-radius) / 2);
 
 	width: 80px;
 	height: 50px;
@@ -236,40 +252,49 @@ section.up .pay p {
 }
 
 section.up .buttons {
+	flex: 1 0 300px;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	gap: 20px;
+
+	padding: 30px;
 }
 
-section.up .buttons div {
+section.up .buttons a {
 	align-self: center;
 	cursor: pointer;
 	text-align: center;
 
-	border: none;
-	border-radius: 10px;
+	border: var(--input-border);
+	border-radius: var(--button-border-radius);
 	margin: 5px;
 
 	text-transform: uppercase;
+	text-decoration: none;
 	font-size: 20px;
 
-	color: white;
-	background-color: var(--button-default-color);
+	color: black;
+	background-color: white;
 	padding: 15px 30px;
 	min-width: 200px;
 
 	transition: background-color 0.15s;
 }
 
-section.up .buttons div:hover {
-	background-color: var(--button-default-color-hover);
+section.up .buttons a:hover {
+	border: var(--input-border-focus);
+	background-color: var(--item-background-color-active);
 }
 
 section.up .more {
+	flex: 1 0 300px;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
+	align-items: center;
+
+	padding: 30px;
 }
 
 section.up .more .button {
@@ -342,7 +367,7 @@ section.up .more .links > a:hover > svg {
 section.bottom {
 	padding: 30px;
 	margin: 0px 30px 20px 30px;
-	border-radius: 10px;
+	border-radius: calc(var(--default-border-radius) / 2);
 
 	font-size: 20px;
 
@@ -354,7 +379,7 @@ section.bottom {
 footer article {
 	text-align: center;
 
-	border-radius: 10px;
+	border-radius: calc(var(--default-border-radius) / 2);
 	margin-bottom: 10px;
 
 	text-transform: uppercase;

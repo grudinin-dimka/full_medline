@@ -1,115 +1,118 @@
 <template>
 	<nav :class="{ active: $store.getters.burgerMainStatus }">
-		<a
-			class="element"
-			:class="{ active: isActive('/') }"
-			href="/"
-			@click.prevent="$router.push({ name: `home` })"
-		>
-			Главная
-		</a>
+		<div class="nav__list">
+			<a
+				class="element"
+				:class="{ active: isActive('/specialists') }"
+				href="/specialists"
+				@click.prevent="$router.push({ name: `specialists-all` })"
+			>
+				Специалисты
+			</a>
 
-		<a
-			class="element"
-			:class="{ active: isActive('/specialists') }"
-			href="/specialists"
-			@click.prevent="$router.push({ name: `specialists-all` })"
-		>
-			Специалисты
-		</a>
+			<div class="dropdown">
+				<div class="dropdown-title element">
+					Цены
+					<IconArrowWhite :width="20" :height="20" :rotate="180" class="item-arrow" />
+				</div>
+				<div class="dropdown-body">
+					<div class="dropdown-body__list">
+						<a
+							class="element"
+							:class="{ active: isActive('/prices') }"
+							href="/prices"
+							@click.prevent="$router.push({ name: `prices-choice` })"
+						>
+							Список
+						</a>
 
-		<div class="dropdown">
-			<div class="dropdown-title element">
-				Цены
-				<IconArrowWhite :width="20" :height="20" :rotate="180" class="item-arrow" />
+						<a
+							class="element"
+							:class="{ active: isActive('/prices/travels') }"
+							href="/prices/travels"
+							@click.prevent="
+								$router.push({ name: `prices-group`, params: { group: 'travels' } })
+							"
+						>
+							Путевки
+						</a>
+					</div>
+				</div>
 			</div>
-			<div class="dropdown-body">
-				<div class="dropdown-body__list">
-					<a
-						class="element"
-						:class="{ active: isActive('/prices') }"
-						href="/prices"
-						@click.prevent="$router.push({ name: `prices-choice` })"
-					>
-						Список
-					</a>
 
-					<a
-						class="element"
-						:class="{ active: isActive('/prices/travels') }"
-						href="/prices/travels"
-						@click.prevent="
-							$router.push({ name: `prices-group`, params: { group: 'travels' } })
-						"
-					>
-						Путевки
-					</a>
+			<a
+				class="element"
+				:class="{ active: isActive('/plastic') }"
+				href="/plastic"
+				@click.prevent="$router.push({ name: `plastic` })"
+			>
+				Пластическая хирургия
+			</a>
+
+			<a
+				class="element"
+				:class="{ active: isActive('/schedule') }"
+				href="/schedule"
+				@click.prevent="$router.push({ name: `schedule-all` })"
+			>
+				Расписание
+			</a>
+
+			<div class="dropdown">
+				<div class="dropdown-title element">
+					Информация
+					<IconArrowWhite :width="20" :height="20" :rotate="180" class="item-arrow" />
+				</div>
+				<div class="dropdown-body">
+					<div class="dropdown-body__list">
+						<a
+							class="element"
+							:class="{ active: isActive('/news') }"
+							href="/news"
+							@click.prevent="$router.push({ name: `news-all` })"
+						>
+							Новости
+						</a>
+
+						<a
+							class="element"
+							:class="{ active: isActive('/videos') }"
+							href="/videos"
+							@click.prevent="$router.push({ name: `videos-all` })"
+						>
+							Видео
+						</a>
+
+						<a
+							class="element"
+							:class="{ active: isActive('/contacts') }"
+							href="/contacts"
+							@click.prevent="$router.push({ name: `contacts` })"
+						>
+							Контакты
+						</a>
+
+						<a
+							class="element"
+							:class="{ active: isActive('/about') }"
+							href="/contacts"
+							@click.prevent="$router.push({ name: `about` })"
+						>
+							О нас
+						</a>
+					</div>
 				</div>
 			</div>
 		</div>
 
-		<a
-			class="element"
-			:class="{ active: isActive('/plastic') }"
-			href="/plastic"
-			@click.prevent="$router.push({ name: `plastic` })"
-		>
-			Пластическая хирургия
-		</a>
+		<div class="nav__buttons">
+			<button @click.prevent="$emit('openModal', 'ЗАПИСАТЬСЯ НА ПРИЕМ')">
+				ЗАПИСАТЬСЯ НА ПРИЕМ
+			</button>
 
-		<a
-			class="element"
-			:class="{ active: isActive('/schedule') }"
-			href="/schedule"
-			@click.prevent="$router.push({ name: `schedule-all` })"
-		>
-			Расписание
-		</a>
-
-		<div class="dropdown">
-			<div class="dropdown-title element">
-				Информация
-				<IconArrowWhite :width="20" :height="20" :rotate="180" class="item-arrow" />
-			</div>
-			<div class="dropdown-body">
-				<div class="dropdown-body__list">
-					<a
-						class="element"
-						:class="{ active: isActive('/news') }"
-						href="/news"
-						@click.prevent="$router.push({ name: `news-all` })"
-					>
-						Новости
-					</a>
-
-					<a
-						class="element"
-						:class="{ active: isActive('/videos') }"
-						href="/videos"
-						@click.prevent="$router.push({ name: `videos-all` })"
-					>
-						Видео
-					</a>
-
-					<a
-						class="element"
-						:class="{ active: isActive('/contacts') }"
-						href="/contacts"
-						@click.prevent="$router.push({ name: `contacts` })"
-					>
-						Контакты
-					</a>
-
-					<a
-						class="element"
-						:class="{ active: isActive('/about') }"
-						href="/contacts"
-						@click.prevent="$router.push({ name: `about` })"
-					>
-						О нас
-					</a>
-				</div>
-			</div>
+			<button @click.prevent="$emit('openModal', 'ЗАПИСАТЬСЯ К ВРАЧУ')">
+				ЗАПИСАТЬСЯ К ВРАЧУ
+			</button>
 		</div>
 	</nav>
 </template>
@@ -150,16 +153,17 @@ export default {
 
 <style scoped>
 nav {
-	display: grid;
-	grid-template-columns: repeat(6, auto);
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	gap: 10px;
 
 	padding: 10px;
 	margin: 0px 30px;
-	gap: 10px;
 
 	background-color: var(--primary-color);
 	color: white;
-	border-radius: 15px;
+	border-radius: var(--default-border-radius);
 
 	transition: all 0.5s ease-out;
 }
@@ -187,9 +191,21 @@ nav::-webkit-scrollbar-thumb:hover {
 }
 /* Конец. */
 
-nav a {
+.nav__list {
+	display: grid;
+	grid-template-columns: repeat(5, auto);
+	gap: 10px;
+
+	background-color: var(--primary-color);
+	color: white;
+	border-radius: var(--default-border-radius);
+
+	transition: all 0.5s ease-out;
+}
+
+.nav__list a {
 	padding: 18px 0px;
-	border-radius: 10px;
+	border-radius: calc(var(--default-border-radius) / 1.5);
 
 	text-align: center;
 	font-size: 20px;
@@ -199,7 +215,7 @@ nav a {
 	transition: all 0.15s ease-in-out;
 }
 
-nav a:is(.active, :hover) {
+.nav__list a:is(.active, :hover) {
 	background-color: rgba(255, 255, 255, 0.15);
 }
 
@@ -210,14 +226,14 @@ nav a:is(.active, :hover) {
 }
 
 /* Дропдаун */
-.dropdown {
+.nav__list > .dropdown {
 	position: relative;
 }
 
 .dropdown-title {
 	position: relative;
 	padding: 18px 0px;
-	border-radius: 10px;
+	border-radius: calc(var(--default-border-radius) / 1.5);
 
 	text-align: center;
 	font-size: 20px;
@@ -262,7 +278,7 @@ nav a:is(.active, :hover) {
 
 	background-color: var(--primary-color);
 	padding: 10px;
-	border-radius: 10px;
+	border-radius: var(--default-border-radius);
 
 	box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.1);
 }
@@ -273,24 +289,48 @@ nav a:is(.active, :hover) {
 	top: 20px;
 }
 
+.nav__buttons {
+	display: none;
+	gap: 10px;
+	flex-direction: column;
+}
+
+.nav__buttons > button {
+	padding: 18px 0px;
+	border-radius: calc(var(--default-border-radius) / 1.5);
+	border: 0px;
+
+	text-align: center;
+	font-size: 20px;
+	color: white;
+	text-decoration: none;
+	background-color: rgba(0, 0, 0, 0.15);
+
+	transition: all 0.15s ease-in-out;
+}
+
+.nav__buttons > button:hover {
+	background-color: rgba(0, 0, 0, 0.3);
+}
+
 @media screen and (max-width: 1450px) {
-	nav {
+	.nav__list {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
 	}
 
-	nav a {
+	.nav__list a {
 		width: auto;
 	}
 }
 
 @media screen and (max-width: 800px) {
-	nav {
+	.nav__list {
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);
 	}
 
-	nav a {
+	.nav__list a {
 		width: auto;
 	}
 }
@@ -311,6 +351,11 @@ nav a:is(.active, :hover) {
 		margin: 0px;
 
 		overflow-y: auto;
+	}
+
+	.nav__list {
+		display: grid;
+		grid-template-columns: repeat(1, 1fr);
 	}
 
 	nav.active {
@@ -345,6 +390,10 @@ nav a:is(.active, :hover) {
 		border-radius: 10px;
 
 		box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0);
+	}
+
+	.nav__buttons {
+		display: flex;
 	}
 }
 </style>

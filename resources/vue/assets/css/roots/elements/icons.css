@@ -1,0 +1,21 @@
+:root {
+	--icon-color: rgb(240, 240, 240);
+	--icon-background-color: rgb(240, 240, 240);
+	--icon-background-color-hover: rgb(230, 230, 230);
+
+	/* delete */
+	--icon-delete-background-color: rgb(255, 237, 237);
+	--icon-delete-background-color-hover: rgb(245, 227, 227);
+
+	/* create */
+	--icon-create-background-color: rgb(234, 255, 236);
+	--icon-create-background-color-hover: rgb(224, 245, 226);
+
+	/* edit */
+	--icon-edit-background-color: rgb(234, 253, 255);
+	--icon-edit-background-color-hover: rgb(224, 243, 245);
+
+	/* admin */
+	--icon-admin-background-color: rgb(255, 242, 222);
+	--icon-admin-background-color-hover: rgb(248, 232, 208);
+}

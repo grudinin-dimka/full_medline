@@ -27,4 +27,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+svg {
+	fill: var(--primary-color);
+}
+</style>

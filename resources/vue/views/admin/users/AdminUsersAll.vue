@@ -1385,19 +1385,19 @@ export default {
 }
 
 .users > .item > .buttons > .icon.delete {
-	background-color: rgb(255, 237, 237);
+	background-color: var(--icon-delete-background-color);
 }
 
 .users > .item > .buttons > .icon.delete:hover {
-	background-color: rgb(245, 227, 227);
+	background-color: var(--icon-delete-background-color-hover);
 }
 
 .users > .item > .buttons > .icon.edit {
-	background-color: rgb(234, 253, 255);
+	background-color: var(--icon-edit-background-color);
 }
 
 .users > .item > .buttons > .icon.edit:hover {
-	background-color: rgb(224, 243, 245);
+	background-color: var(--icon-edit-background-color-hover);
 }
 
 .users > .item > .buttons > .icon.admin {
@@ -1409,11 +1409,11 @@ export default {
 }
 
 .users > .item > .buttons > .icon.default {
-	background-color: rgb(240, 240, 240);
+	background-color: var(--icon-background-color);
 }
 
 .users > .item > .buttons > .icon.default:hover {
-	background-color: rgb(230, 230, 230);
+	background-color: var(--icon-background-color-hover);
 }
 
 .sub-modal-text {

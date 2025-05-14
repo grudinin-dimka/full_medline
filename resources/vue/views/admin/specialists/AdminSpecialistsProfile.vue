@@ -475,7 +475,7 @@
 				>
 					<icon-add :width="23" :height="23" />
 
-					Сохранить
+					Добавить
 				</button-default>
 			</template>
 
@@ -516,7 +516,7 @@
 							<span>АВАТАР И ССЫЛКА</span>
 						</template>
 						<template #title-one>
-							<span>ФОТО ВРАЧА<span v-if="$route.params.id == 'new'">*</span></span>
+							<span>ФОТО ВРАЧА (700x700)<span v-if="$route.params.id == 'new'">*</span></span>
 							<span v-if="specialist.profile.data.filename.edited"> (ИЗМЕНЕНО)</span>
 						</template>
 						<template #input-one>
@@ -3047,7 +3047,7 @@ export default {
 
 :is(.specializations-list, .clinics-list) > .item.active {
 	border: var(--input-border-focus);
-	background-color: #f2feff;
+	background-color: var(--item-background-color-active);
 }
 
 :is(.specializations-list, .clinics-list) > .item > input[type="checkbox"] {
@@ -3058,7 +3058,7 @@ export default {
 }
 
 :is(.specializations-list, .clinics-list) > .item > input[type="checkbox"]:checked {
-	accent-color: #8fe5ee;
+	accent-color: var(--primary-color);
 }
 
 :is(.specializations-list, .clinics-list) > .item:first-of-type {
@@ -3076,7 +3076,7 @@ export default {
 
 :is(.specializations-list, .clinics-list) > .item:not(:first-of-type):hover {
 	border: var(--input-border-focus);
-	background-color: #f2feff;
+	background-color: var(--item-background-color-active);
 }
 
 :is(.specializations-list, .clinics-list) > .item > label {

@@ -88,7 +88,7 @@
 			</container-input>
 
 			<div class="checkbox" :class="{ error: modalForm.errors.checkbox.status }">
-				<div class="content">
+				<div class="captcha__content">
 					<input
 						type="checkbox"
 						id="checkboxApprove"
@@ -102,12 +102,16 @@
 			</div>
 
 			<div class="captcha">
-				<div class="content">
-					<div class="text">
-						{{ captcha }}
-						<div class="line" ref="line"></div>
+				<div class="captcha__content">
+					<div class="captcha__content-text">
+						<span v-for="letter in getCaptchaSplited" :style="getLetterStyle()">
+							{{ letter }}
+						</span>
+
+						<div class="content__text-line" ref="line"></div>
+						<div class="content__text-trash"></div>
 					</div>
-					<div class="update" @click="reloadCaptcha">
+					<div class="captcha__content-update" @click="reloadCaptcha">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							height="26px"
@@ -120,7 +124,7 @@
 						</svg>
 					</div>
 				</div>
-				<div class="input">
+				<div class="captcha__input">
 					<input
 						placeholder="Введите текст"
 						autocomplete="off"
@@ -141,41 +145,48 @@
 
 	<!-- Шапка страницы -->
 	<header :class="{ slide: isShadow }">
-		<div class="header-block">
+		<div class="header__item">
 			<a href="/" class="header-logo-avatar" @click.prevent="$router.push({ name: 'home' })">
 				<img src="../../../assets/svg/logo.svg" width="100" alt="логотип" />
 			</a>
 		</div>
 
-		<div class="header-logo">
-			<div class="header-logo-name">
+		<div class="header__logo">
+			<div class="header__logo-name">
 				<p>Многопрофильный</p>
 				<h2>Медицинский Центр</h2>
 				<p class="colorblue">В Шадринске и Курганской области</p>
 			</div>
 		</div>
-		<div class="header-block">
-			<img src="../../../assets/svg/home.svg" width="50" alt="адреса" />
-			<div class="header-block-list">
+		<div class="header__item">
+			<div class="header__item-icon">
+				<img src="../../../assets/svg/1.svg" width="30" alt="адреса" />
+			</div>
+
+			<div class="header__item-list">
 				<a href="https://yandex.ru/maps/-/CDtEvOl2" target="_blank">ул. Комсомольская, 16</a>
 				<a href="https://yandex.ru/maps/-/CDtEvSjk" target="_blank">ул. Карла Либкнехта, 10</a>
 				<a href="https://yandex.ru/maps/-/CDtEvS~W" target="_blank">ул. Октябрьская, 3</a>
 			</div>
 		</div>
-		<div class="header-block">
-			<img src="../../../assets/svg/phone.svg" width="50" alt="номера" />
-			<div class="header-block-list">
+		<div class="header__item">
+			<div class="header__item-icon">
+				<img src="../../../assets/svg/2.svg" width="30" alt="адреса" />
+			</div>
+
+			<div class="header__item-list">
 				<a href="tel:+73525390009" target="_blank">+7 (35253) 9-000-9</a>
 				<a href="tel:+79630070006" target="_blank">+7 (963) 007-00-06</a>
 			</div>
 		</div>
 		<div class="header-buttons">
-			<button class="button" @click="openModalEdite('ЗАПИСЬ НА ПРИЕМ')">
+			<ButtonDefault :look="'white'" @click="openModalEdite('ЗАПИСЬ НА ПРИЕМ')">
 				Записаться на прием
-			</button>
-			<button class="button" @click="openModalEdite('ВЫЗОВ ВРАЧА НА ДОМ')">
+			</ButtonDefault>
+
+			<ButtonDefault :look="'white'" @click="openModalEdite('ВЫЗОВ ВРАЧА НА ДОМ')">
 				Вызов врача на дом
-			</button>
+			</ButtonDefault>
 		</div>
 	</header>
 	<!-- Кнопка "бургер" -->
@@ -294,9 +305,21 @@ export default {
 					request: false,
 				},
 			},
-			captcha: null,
+			captcha: "",
 			rotate: 0,
 		};
+	},
+	computed: {
+		/* Разделение капчи на отдельные символы */
+		getCaptchaSplited() {
+			let slplited = [];
+
+			for (let i = 0; i < this.captcha.length; i++) {
+				slplited.push(this.captcha[i]);
+			}
+
+			return slplited;
+		},
 	},
 	methods: {
 		setShadow() {
@@ -333,6 +356,14 @@ export default {
 		reloadCaptcha() {
 			this.captcha = shared.generateRandomString(5);
 			this.$refs.line.style.transform = `rotate(${shared.generateRandomAngle(25)}deg)`;
+		},
+
+		/* Стилизация */
+		getLetterStyle() {
+			return {
+				transform: `translateY(${shared.generateRandomAngle(25)}deg)`,
+				transform: `rotate(${shared.generateRandomAngle(25)}deg)`,
+			};
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -425,10 +456,10 @@ export default {
 <style scoped>
 header {
 	display: flex;
-	justify-content: space-evenly;
+	justify-content: space-between;
 	align-items: center;
 	flex-wrap: wrap;
-	padding: 10px;
+	padding: 10px 30px;
 	margin: 0px 0px;
 
 	transition: box-shadow 0.5s;
@@ -439,36 +470,41 @@ header.slide {
 	box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.2);
 }
 
-.header-logo {
+.header-logo-avatar {
+	display: flex;
+	justify-content: center;
+	width: 200px;
+}
+
+.header__logo {
 	display: flex;
 	flex-direction: row;
 	text-transform: uppercase;
 }
 
-.header-logo p,
-.header-logo h2 {
+.header__logo p,
+.header__logo h2 {
 	text-align: center;
 	text-transform: uppercase;
 	margin: 0px;
 	padding: 0px;
 }
 
-.header-block {
+.header__item {
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
 	align-items: center;
 }
 
-.header-block .header-block-list {
+.header__item-list {
 	display: flex;
 	flex-direction: column;
 
 	margin-left: 20px;
 }
 
-.header-block .header-block-list p,
-.header-block .header-block-list a {
+.header__item-list :is(p, a) {
 	margin: 0px;
 	padding: 0px;
 
@@ -476,20 +512,33 @@ header.slide {
 	font-weight: 500;
 }
 
-.header-block a {
+.header__item a {
 	text-decoration: none;
 	color: black;
 
 	transition: all 0.15s;
 }
 
-.header-block a:hover {
+.header__item a:hover {
 	color: var(--button-default-color);
+}
+
+.header__item-icon {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	width: 50px;
+	height: 50px;
+	border-radius: 100px;
+
+	background-color: var(--primary-color-hover);	
 }
 
 .header-buttons {
 	display: flex;
 	flex-wrap: wrap;
+	gap: 10px;
 }
 
 .button {
@@ -497,7 +546,7 @@ header.slide {
 	cursor: pointer;
 
 	border: none;
-	border-radius: 10px;
+	border-radius: var(--button-border-radius);
 	margin: 5px;
 
 	text-transform: uppercase;
@@ -570,22 +619,22 @@ header.slide {
 	box-shadow: -5px 0px 20px rgba(0, 0, 0, 0.3);
 }
 
-.checkbox > .content {
+.checkbox > .captcha__content {
 	display: flex;
 	justify-content: center;
 	font-size: 18px;
 }
 
-.checkbox.error > .content > label {
+.checkbox.error > .captcha__content > label {
 	color: var(--span-color-error);
 }
 
-.checkbox > .content > input {
+.checkbox > .captcha__content > input {
 	width: 17.5px;
 	height: 17.5px;
 }
 
-.checkbox > .content > input:checked {
+.captcha__content > input:checked {
 	accent-color: #8fe5ee;
 }
 
@@ -597,7 +646,7 @@ header.slide {
 	gap: 10px;
 }
 
-.captcha > .input > input {
+.captcha__input > input {
 	user-select: none;
 	box-sizing: border-box;
 	outline: none;
@@ -617,31 +666,31 @@ header.slide {
 	transition: all 0.2s;
 }
 
-.captcha > .input > input.error {
+.captcha__input > input.error {
 	background-color: var(--input-error-background-color);
 	border: var(--input-error-border);
 
 	caret-color: var(--input-error-color);
 }
 
-.captcha > .input > input:focus {
+.captcha__input > input:focus {
 	border: var(--input-border-focus);
 }
 
-.captcha > .input > input.error:focus {
+.captcha__input > input.error:focus {
 	border: var(--input-error-border);
 }
 
-.captcha > .input > .input-error {
+.captcha__input > .input-error {
 	margin-top: 5px;
 	color: var(--input-error-color);
 }
 
-.captcha > .content {
+.captcha__content {
 	position: relative;
 }
 
-.captcha > .content > .text {
+.captcha__content-text {
 	box-sizing: border-box;
 	overflow: hidden;
 	display: flex;
@@ -652,35 +701,62 @@ header.slide {
 	border: var(--input-border);
 
 	border-radius: var(--input-border-radius);
-	background-color: rgb(245, 245, 245);
+	color: rgb(0, 0, 0);
 
 	width: 300px;
 	height: 58px;
 
-	font-family: "Azeret Mono";
-	font-style: italic;
-	font-weight: 100;
-	font-size: 22px;
+	font-family: "Henny Penny";
+	font-weight: lighter;
+	font-size: 2rem;
+	letter-spacing: 10px;
 }
 
-.captcha > .content > .text > .line {
+.captcha__content-text > span {
+	font-family: "Henny Penny";
+	font-weight: lighter;
+	font-size: 2rem;
+}
+
+.content__text-line {
 	position: absolute;
-	width: 100px;
+	z-index: 0;
+	width: 350px;
 	height: 1px;
 
-	background-color: rgb(0, 0, 0);
+	background-color: rgb(140, 140, 140);
 }
 
-.captcha > .content > .update {
+.content__text-trash {
+	position: absolute;
+	z-index: 0;
+	width: 100%;
+	height: 100%;
+
+	background-image: url("../../../assets/img/trash.webp");
+	background-position: center center;
+	background-size: cover;
+	opacity: 0.7;
+}
+
+.captcha__content-update {
 	position: absolute;
 	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 
-	top: 16px;
+	background-color: white;
+	padding: 5px;
+	border-radius: 100px;
+	border: var(--default-border);
+
+	top: 11px;
 	right: 5px;
 }
 
-.captcha > .content > .update > svg {
-	fill: rgb(150, 150, 150);
+.captcha__content-update > svg {
+	fill: rgb(0, 0, 0);
 }
 
 @media screen and (max-width: 1650px) {
@@ -690,7 +766,7 @@ header.slide {
 }
 
 @media screen and (max-width: 1150px) {
-	.header-block:nth-child(3) {
+	.header__item:nth-child(3) {
 		display: none;
 	}
 }
@@ -701,13 +777,13 @@ header.slide {
 		justify-content: space-between;
 	}
 
-	.header-logo {
+	.header__logo {
 		display: none;
 	}
 }
 
 @media screen and (max-width: 600px) {
-	.header-block:nth-child(4) {
+	.header__item:nth-child(4) {
 		display: none;
 	}
 }
@@ -723,17 +799,17 @@ header.slide {
 		justify-content: center;
 		top: 0px;
 
-		padding: 10px;
+		padding: 20px 0px;
 
 		width: 100%;
 		margin: 0px;
 		background-color: white;
 	}
 
-	.captcha > .content,
-	.captcha > .input,
-	.captcha > .input > input,
-	.captcha > .content > .text {
+	.captcha > .captcha__content,
+	.captcha > .captcha__input,
+	.captcha > .captcha__input > input,
+	.captcha > .captcha__content > .captcha__content-text {
 		width: 100%;
 	}
 }

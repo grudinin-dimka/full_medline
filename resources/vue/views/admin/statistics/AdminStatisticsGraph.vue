@@ -83,7 +83,7 @@
 
 			<LoaderChild
 				:isLoading="loading.loader.week"
-				:minHeight="300"
+				:minHeight="700"
 				@loaderChildAfterLeave="loaderChildAfterLeave"
 			></LoaderChild>
 		</template>

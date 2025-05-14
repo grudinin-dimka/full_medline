@@ -10,7 +10,7 @@
 			</div>
 		</div>
 		<div class="filter-body" :class="{ active: filter.status }">
-			<div class="container-input">
+			<div class="filter__body-input">
 				<input type="text" placeholder="Введите название" v-model="name" />
 			</div>
 			<ol>
@@ -278,12 +278,12 @@ export default {
 	right: 0px;
 }
 
-.filter > .filter-body > .container-input {
+.filter__body-input {
 	display: flex;
 	flex-direction: column;
 }
 
-.filter > .filter-body > .container-input > input {
+.filter__body-input > input {
 	box-sizing: border-box;
 
 	outline: none;
@@ -294,7 +294,11 @@ export default {
 	font-size: 1.125rem;
 }
 
-.filter > .filter-body > .container-input > .clear {
+.filter__body-input > input:focus {
+	border: var(--input-border-focus);
+}
+
+.filter__body-input > .clear {
 	position: absolute;
 	top: 9px;
 	right: 15px;
@@ -314,7 +318,7 @@ export default {
 	background-color: rgba(0, 0, 0, 0);
 }
 
-.filter > .filter-body > .container-input > .clear > svg {
+.filter__body-input > .clear > svg {
 	fill: rgba(0, 0, 0, 1);
 }
 
