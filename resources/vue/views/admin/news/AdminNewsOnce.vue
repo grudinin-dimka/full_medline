@@ -13,7 +13,12 @@
 		<template #options>
 			<template v-if="$route.params.date === 'new' || $route.params.time === 'new'">
 				<ButtonDefault look="white" :disabled="disabled.news.add" @click="addNews">
-					<icon-add :width="23" :height="23" />
+					<Icon
+						:name="'add'"
+						:fill="'var(--primary-color)'"
+						:width="'23px'"
+						:height="'23px'"
+					/>
 					Добавить
 				</ButtonDefault>
 			</template>
@@ -25,7 +30,12 @@
 						@click="publishNews"
 						v-if="!currentNews.data.hide.value"
 					>
-						<IconPublicsh :width="28" :height="28" />
+						<Icon
+							:name="'publish'"
+							:fill="'var(--primary-color)'"
+							:width="'28px'"
+							:height="'28px'"
+						/>
 						Опубликовать
 					</ButtonDefault>
 					<ButtonDefault
@@ -34,12 +44,22 @@
 						@click="publishNews"
 						v-else
 					>
-						<IconUnpublished :width="28" :height="28" />
+						<Icon
+							:name="'unpublish'"
+							:fill="'var(--primary-color)'"
+							:width="'28px'"
+							:height="'28px'"
+						/>
 						Убрать с публикации
 					</ButtonDefault>
 				</template>
 				<ButtonDefault look="white" :disabled="disabled.news.save" @click="saveNews">
-					<icon-save :width="28" :height="28" />
+					<Icon
+						:name="'save'"
+						:fill="'var(--primary-color)'"
+						:width="'28px'"
+						:height="'28px'"
+					/>
 					Сохранить
 				</ButtonDefault>
 			</template>
@@ -179,11 +199,7 @@ import Tiptap from "../../../components/modules/Tiptap.vue";
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 
-import IconPublicsh from "../../../components/icons/buttons/IconPublicsh.vue";
-import IconUnpublished from "../../../components/icons/buttons/IconUnpublished.vue";
-import IconLoad from "../../../components/icons/IconLoad.vue";
-import IconAdd from "../../../components/icons/IconAdd.vue";
-import IconSave from "../../../components/icons/IconSave.vue";
+import Icon from "../../../components/modules/icon/Icon.vue";
 
 import axios from "axios";
 import validate from "../../../services/validate";
@@ -199,11 +215,7 @@ export default {
 
 		ButtonDefault,
 
-		IconPublicsh,
-		IconUnpublished,
-		IconLoad,
-		IconAdd,
-		IconSave,
+		Icon,
 	},
 	data() {
 		return {

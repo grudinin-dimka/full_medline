@@ -25,7 +25,7 @@
 		</template>
 		<template #footer>
 			<ButtonDefault :disabled="disabled.tiptap.image" @click="uploadImage">
-				<icon-add :width="28" :height="28" :look="'white'" />
+				<Icon :name="'add'" :fill="'white'" :width="'28px'" :height="'28px'" />
 				Добавить
 			</ButtonDefault>
 		</template>
@@ -502,7 +502,7 @@ import StarterKit from "@tiptap/starter-kit";
 import ContainerInputOnce from "../ui/admin/containers/input/ContainerInputOnce.vue";
 import ButtonDefault from "../ui/admin/buttons/ButtonDefault.vue";
 
-import IconAdd from "../icons/IconAdd.vue";
+import Icon from "./icon/Icon.vue";
 
 import validate from "../../services/validate";
 import axios from "axios";
@@ -517,7 +517,7 @@ export default {
 		ContainerInputOnce,
 		ButtonDefault,
 
-		IconAdd,
+		Icon,
 	},
 	props: {
 		modelValue: {

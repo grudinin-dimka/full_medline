@@ -77,16 +77,16 @@
 		<template #footer>
 			<BlockButtons>
 				<button-default v-if="modal.type == 'create'" @click="addContact">
-					<icon-add :width="23" :height="23" :look="'white'" />
+					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-default>
 				<template v-if="modal.type == 'edit' && !currentContact.data.delete.value">
 					<button-remove v-if="!currentContact.data.create.value" @click="deleteContact">
-						<icon-remove :width="24" :height="22" :look="'white'" />
+						<Icon :name="'delete'" :fill="'white'" :width="'24px'" :height="'22px'" />
 						Удалить
 					</button-remove>
 					<ButtonDefault @click="updateContact">
-						<icon-edit :width="28" :height="28" :look="'white'" />
+						<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 						Обновить
 					</ButtonDefault>
 				</template>
@@ -94,7 +94,7 @@
 					v-if="modal.type == 'edit' && currentContact.data.delete.value"
 					@click="deleteContact"
 				>
-					<icon-unremove :width="28" :height="28" :look="'white'" />
+					<Icon :name="'restore'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Вернуть
 				</ButtonDefault>
 			</BlockButtons>
@@ -133,11 +133,11 @@
 		<template #footer>
 			<block-buttons>
 				<button-default v-if="subModalPhone.type == 'edit'" @click="updateContactPhone">
-					<icon-add :width="28" :height="28" :look="'white'" />
+					<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</button-default>
 				<button-default v-if="subModalPhone.type == 'create'" @click="addContactPhone">
-					<icon-add :width="23" :height="23" :look="'white'" />
+					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-default>
 			</block-buttons>
@@ -176,11 +176,11 @@
 		<template #footer>
 			<block-buttons>
 				<button-default v-if="subModalMail.type == 'edit'" @click="updateContactMail">
-					<icon-edit :width="28" :height="28" :look="'white'" />
+					<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</button-default>
 				<button-default v-if="subModalMail.type == 'create'" @click="addContactMail">
-					<icon-add :width="23" :height="23" :look="'white'" />
+					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-default>
 			</block-buttons>
@@ -204,7 +204,7 @@
 				:disabled="disabled.contacts.save"
 				:look="'white'"
 			>
-				<icon-save :width="28" :height="28" />
+				<Icon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
 			</button-default>
 		</template>
@@ -232,7 +232,7 @@
 
 		<template #buttons>
 			<ButtonDefault @click="openModal('create')">
-				<icon-add :width="23" :height="23" :look="'white'" />
+				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</ButtonDefault>
 		</template>
@@ -263,16 +263,10 @@ import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vu
 import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
 import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 
+import Icon from "../../../components/modules/icon/Icon.vue";
 import IconArrow from "../../../components/icons/IconArrow.vue";
 import IconHide from "../../../components/icons/IconHide.vue";
 import IconVisible from "../../../components/icons/IconVisible.vue";
-import IconEdit from "../../../components/icons/IconEdit.vue";
-import IconRemove from "../../../components/icons/IconRemove.vue";
-import IconUnremove from "../../../components/icons/IconUnremove.vue";
-import IconCreate from "../../../components/icons/IconCreate.vue";
-import IconSave from "../../../components/icons/IconSave.vue";
-import IconLoad from "../../../components/icons/IconLoad.vue";
-import IconAdd from "../../../components/icons/IconAdd.vue";
 import IconContactHome from "../../../components/icons/contacts/IconContactHome.vue";
 import IconContactMail from "../../../components/icons/contacts/IconContactMail.vue";
 import IconContactPhone from "../../../components/icons/contacts/IconContactPhone.vue";
@@ -305,16 +299,10 @@ export default {
 		ButtonRemove,
 		ButtonClaim,
 
-		IconAdd,
+		Icon,
 		IconArrow,
 		IconHide,
 		IconVisible,
-		IconSave,
-		IconEdit,
-		IconRemove,
-		IconUnremove,
-		IconCreate,
-		IconLoad,
 		IconContactHome,
 		IconContactMail,
 		IconContactPhone,

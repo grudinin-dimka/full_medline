@@ -132,8 +132,7 @@ import Tiptap from "../../../components/modules/Tiptap.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import LoadText from "../../../components/ui/main/LoadText.vue";
 
-import IconSpecialistChild from "../../../components/icons/specialists/IconSpecialistChild.vue";
-import IconSpecialistAdult from "../../../components/icons/specialists/IconSpecialistAdult.vue";
+import Icon from "../../../components/modules/icon/Icon.vue";
 
 import axios from "axios";
 import sorted from "../../../services/sorted";
@@ -146,8 +145,9 @@ export default {
 
 		LoaderChild,
 		LoadText,
-		IconSpecialistChild,
-		IconSpecialistAdult,
+
+		Icon,
+
 		axios,
 	},
 	data() {

@@ -31,7 +31,7 @@
 		<template #footer>
 			<block-buttons>
 				<ButtonDefault @click="createPrice" :disabled="disabled.prices.create">
-					<icon-add :width="23" :height="23" :look="'white'" />
+					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</ButtonDefault>
 			</block-buttons>
@@ -55,7 +55,16 @@
 				:disabled="disabled.prices.save"
 				:look="'white'"
 			>
-				<icon-save :width="28" :height="28" />
+				<Icon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
+				Выгрузить
+			</button-default>
+
+			<button-default
+				@click.prevent="savePricesFiles"
+				:disabled="disabled.prices.save"
+				:look="'white'"
+			>
+				<Icon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
 			</button-default>
 		</template>
@@ -98,10 +107,7 @@ import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vu
 import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 import BlockButtons from "../../../components/ui/admin/blocks/BlockButtons.vue";
 
-import IconSave from "../../../components/icons/IconSave.vue";
-import IconAdd from "../../../components/icons/IconAdd.vue";
-import IconEdit from "../../../components/icons/IconEdit.vue";
-import IconLoad from "../../../components/icons/IconLoad.vue";
+import Icon from "../../../components/modules/icon/Icon.vue";
 
 import validate from "../../../services/validate";
 import shared from "../../../services/shared";
@@ -128,10 +134,7 @@ export default {
 		ButtonClaim,
 		ButtonDefault,
 
-		IconSave,
-		IconAdd,
-		IconEdit,
-		IconLoad,
+		Icon,
 
 		validate,
 		shared,

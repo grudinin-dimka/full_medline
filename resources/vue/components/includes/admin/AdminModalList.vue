@@ -6,7 +6,12 @@
 			</div>
 			<div class="buttons">
 				<div class="icon create" @click="$emit('touchCreate', item)">
-					<IconAdd :width="19" :height="19" :look="'create'"></IconAdd>
+					<Icon
+						:name="'add'"
+						:fill="'var(--icon-create-fill)'"
+						:width="'19px'"
+						:height="'19px'"
+					/>
 				</div>
 			</div>
 		</div>
@@ -14,10 +19,20 @@
 			<div class="content">{{ item.name }}</div>
 			<div class="buttons">
 				<div class="icon edit" @click="$emit('touchEdit', item)">
-					<IconEdit :width="24" :height="24" :type="'edit'"></IconEdit>
+					<Icon
+						:name="'edit'"
+						:fill="'var(--icon-edit-fill)'"
+						:width="'24px'"
+						:height="'24px'"
+					/>
 				</div>
 				<div class="icon delete" @click="$emit('touchDelete', item)">
-					<icon-remove :width="24" :height="22" :look="'delete'"/>
+					<Icon
+						:name="'delete'"
+						:fill="'var(--icon-delete-fill)'"
+						:width="'20px'"
+						:height="'20px'"
+					/>
 				</div>
 			</div>
 		</div>
@@ -25,15 +40,11 @@
 </template>
 
 <script>
-import IconAdd from "../../icons/IconAdd.vue";
-import IconEdit from "../../icons/IconEdit.vue";
-import IconRemove from "../../icons/IconRemove.vue";
+import Icon from "../../modules/icon/Icon.vue";
 
 export default {
 	components: {
-		IconAdd,
-		IconEdit,
-		IconRemove,
+		Icon,
 	},
 	props: {
 		type: {

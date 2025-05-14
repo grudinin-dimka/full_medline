@@ -266,7 +266,7 @@
 					:disabled="disabled.users.save"
 					v-if="modal.type === 'edit'"
 				>
-					<icon-edit :width="28" :height="28" :look="'white'" />
+					<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</ButtonDefault>
 				<ButtonDefault
@@ -274,7 +274,7 @@
 					:disabled="disabled.users.create"
 					v-if="modal.type === 'create'"
 				>
-					<icon-add :width="23" :height="23" :look="'white'" />
+					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</ButtonDefault>
 			</BlockButtons>
@@ -433,11 +433,21 @@
 					</div>
 					<div class="buttons">
 						<div class="icon edit" @click="editUser(user)">
-							<IconEdit :width="24" :height="24" :type="'edit'"></IconEdit>
+							<Icon
+								:name="'edit'"
+								:fill="'var(--icon-edit-fill)'"
+								:width="'24px'"
+								:height="'24px'"
+							/>
 							<div class="label">Редактирование</div>
 						</div>
 						<div class="icon admin" @click="editUserPassword(user)">
-							<IconPassword :width="22" :height="22" :type="'admin'"></IconPassword>
+							<Icon
+								:name="'password'"
+								:fill="'var(--icon-admin-fill)'"
+								:width="'22px'"
+								:height="'22px'"
+							/>
 							<div class="label">Смена пароля</div>
 						</div>
 						<div
@@ -445,22 +455,29 @@
 							:class="{ default: user.statusId === 1, delete: user.statusId === 2 }"
 							@click="editUserBlock(user)"
 						>
-							<IconLockOpen
-								:width="24"
-								:height="24"
-								:type="'default'"
+							<Icon
+								:name="'lock-open'"
+								:fill="'var(--icon-fill)'"
+								:width="'24px'"
+								:height="'24px'"
 								v-if="user.statusId === 1"
-							></IconLockOpen>
-							<IconLockClose
-								:width="24"
-								:height="24"
-								:type="'delete'"
+							/>
+							<Icon
+								:name="'lock-close'"
+								:fill="'var(--icon-fill)'"
+								:width="'24px'"
+								:height="'24px'"
 								v-if="user.statusId === 2"
-							></IconLockClose>
+							/>
 							<div class="label">Блокировка</div>
 						</div>
 						<div class="icon delete" @click="editUserDelete(user)">
-							<IconRemove :width="24" :height="22" :look="'delete'"></IconRemove>
+							<Icon
+								:name="'delete'"
+								:fill="'var(--icon-delete-fill)'"
+								:width="'24px'"
+								:height="'22px'"
+							/>
 							<div class="label">Удаление</div>
 						</div>
 					</div>
@@ -476,7 +493,7 @@
 
 		<template #buttons>
 			<ButtonDefault @click="createUser">
-				<icon-add :width="23" :height="23" :look="'white'" />
+				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</ButtonDefault>
 		</template>
@@ -491,20 +508,12 @@ import PasswordGenerator from "../../../components/modules/PasswordGenerator.vue
 
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 
-import IconLoad from "../../../components/icons/IconLoad.vue";
-import IconSave from "../../../components/icons/IconSave.vue";
-
 import ContainerInput from "../../../components/ui/admin/containers/ContainerInput.vue";
 import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
 import ContainerInputTwo from "../../../components/ui/admin/containers/input/ContainerInputTwo.vue";
 import ContainerInputThree from "../../../components/ui/admin/containers/input/ContainerInputThree.vue";
 
-import IconEdit from "../../../components/icons/IconEdit.vue";
-import IconAdd from "../../../components/icons/IconAdd.vue";
-import IconRemove from "../../../components/icons/IconRemove.vue";
-import IconLockClose from "../../../components/icons/users/IconLockClose.vue";
-import IconLockOpen from "../../../components/icons/users/IconLockOpen.vue";
-import IconPassword from "../../../components/icons/users/IconPassword.vue";
+import Icon from "../../../components/modules/icon/Icon.vue";
 
 import BlockButtons from "../../../components/ui/admin/blocks/BlockButtons.vue";
 import BlockButtonsWide from "../../../components/ui/admin/blocks/BlockButtonsWide.vue";
@@ -532,14 +541,7 @@ export default {
 		ContainerInputTwo,
 		ContainerInputThree,
 
-		IconLoad,
-		IconSave,
-		IconAdd,
-		IconEdit,
-		IconRemove,
-		IconLockClose,
-		IconLockOpen,
-		IconPassword,
+		Icon,
 
 		BlockButtons,
 		BlockButtonsWide,

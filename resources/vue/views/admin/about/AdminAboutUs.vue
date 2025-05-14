@@ -27,10 +27,20 @@
 					></div>
 					<div class="buttons" v-if="!currentInfoBlock.data.delete.value">
 						<div class="icon edit" @click="editImage('imageOne')">
-							<IconEdit :width="24" :height="24" :type="'edit'"></IconEdit>
+							<Icon
+								:name="'edit'"
+								:fill="'var(--icon-edit-fill)'"
+								:width="'24px'"
+								:height="'24px'"
+							/>
 						</div>
 						<div class="icon delete" @click="removeInfoBlockImage('imageOne')">
-							<icon-remove :width="24" :height="22" :look="'delete'" />
+							<Icon
+								:name="'delete'"
+								:fill="'var(--icon-delete-fill)'"
+								:width="'24px'"
+								:height="'22px'"
+							/>
 						</div>
 					</div>
 				</div>
@@ -43,7 +53,12 @@
 					></div>
 					<div class="buttons add" v-if="!currentInfoBlock.data.delete.value">
 						<div class="icon create" @click="createImage('imageOne')">
-							<IconAdd :width="19" :height="19" :look="'create'"></IconAdd>
+							<Icon
+								:name="'add'"
+								:fill="'var(--icon-create-fill)'"
+								:width="'19px'"
+								:height="'19px'"
+							/>
 						</div>
 					</div>
 				</div>
@@ -56,10 +71,20 @@
 					></div>
 					<div class="buttons" v-if="!currentInfoBlock.data.delete.value">
 						<div class="icon edit" @click="editImage('imageTwo')">
-							<IconEdit :width="24" :height="24" :type="'edit'"></IconEdit>
+							<Icon
+								:name="'edit'"
+								:fill="'var(--icon-edit-fill)'"
+								:width="'24px'"
+								:height="'24px'"
+							/>
 						</div>
 						<div class="icon delete" @click="removeInfoBlockImage('imageTwo')">
-							<icon-remove :width="24" :height="22" :look="'delete'" />
+							<Icon
+								:name="'delete'"
+								:fill="'var(--icon-delete-fill)'"
+								:width="'24px'"
+								:height="'22px'"
+							/>
 						</div>
 					</div>
 				</div>
@@ -72,7 +97,12 @@
 					></div>
 					<div class="buttons add" v-if="!currentInfoBlock.data.delete.value">
 						<div class="icon create" @click="createImage('imageTwo')">
-							<IconAdd :width="19" :height="19" :look="'create'"></IconAdd>
+							<Icon
+								:name="'add'"
+								:fill="'var(--icon-create-fill)'"
+								:width="'19px'"
+								:height="'19px'"
+							/>
 						</div>
 					</div>
 				</div>
@@ -85,10 +115,20 @@
 					></div>
 					<div class="buttons" v-if="!currentInfoBlock.data.delete.value">
 						<div class="icon edit" @click="editImage('imageThree')">
-							<IconEdit :width="24" :height="24" :type="'edit'"></IconEdit>
+							<Icon
+								:name="'edit'"
+								:fill="'var(--icon-edit-fill)'"
+								:width="'24px'"
+								:height="'24px'"
+							/>
 						</div>
 						<div class="icon delete" @click="removeInfoBlockImage('imageThree')">
-							<icon-remove :width="24" :height="22" :look="'delete'" />
+							<Icon
+								:name="'delete'"
+								:fill="'var(--icon-delete-fill)'"
+								:width="'24px'"
+								:height="'22px'"
+							/>
 						</div>
 					</div>
 				</div>
@@ -101,7 +141,12 @@
 					></div>
 					<div class="buttons add" v-if="!currentInfoBlock.data.delete.value">
 						<div class="icon create" @click="createImage('imageThree')">
-							<IconAdd :width="19" :height="19" :look="'create'"></IconAdd>
+							<Icon
+								:name="'add'"
+								:fill="'var(--icon-create-fill)'"
+								:width="'19px'"
+								:height="'19px'"
+							/>
 						</div>
 					</div>
 				</div>
@@ -132,7 +177,7 @@
 		<template #footer>
 			<BlockButtons>
 				<ButtonDefault @click="addInfoBlock" v-if="modal.type == 'create'">
-					<icon-add :width="23" :height="23" :look="'white'" />
+					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</ButtonDefault>
 				<button-remove
@@ -143,18 +188,18 @@
 						!currentInfoBlock.data.create.value
 					"
 				>
-					<icon-remove :width="24" :height="22" :look="'white'" />
+					<Icon :name="'delete'" :fill="'white'" :width="'24px'" :height="'22px'" />
 					Удалить
 				</button-remove>
 				<ButtonDefault
 					@click="updateInfoBlock"
 					v-if="modal.type == 'edit' && !currentInfoBlock.data.delete.value"
 				>
-					<icon-edit :width="28" :height="28" :look="'white'" />
+					<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</ButtonDefault>
 				<ButtonDefault @click="deleteInfoBlock" v-if="currentInfoBlock.data.delete.value">
-					<icon-unremove :width="28" :height="28" :look="'white'" />
+					<Icon :name="'restore'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Вернуть
 				</ButtonDefault>
 			</BlockButtons>
@@ -191,7 +236,7 @@
 					@click="updateImage"
 					:disabled="disabled.image.update"
 				>
-					<icon-edit :width="28" :height="28" :look="'white'" />
+					<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</button-default>
 				<button-default
@@ -199,7 +244,7 @@
 					@click="updateImage"
 					:disabled="disabled.image.add"
 				>
-					<icon-add :width="23" :height="23" :look="'white'" />
+					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-default>
 			</block-buttons>
@@ -223,7 +268,7 @@
 				:disabled="disabled.about.save"
 				:look="'white'"
 			>
-				<icon-save :width="28" :height="28" />
+				<Icon :name="'save'" :fill="'white'" :width="'28px'" :height="'28px'" />
 				Сохранить
 			</button-default>
 		</template>
@@ -249,7 +294,7 @@
 
 		<template #buttons>
 			<button-default @click="openModal('create')">
-				<icon-add :width="23" :height="23" :look="'white'" />
+				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</button-default>
 		</template>
@@ -271,15 +316,10 @@ import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vu
 import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
 import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 
+import Icon from "../../../components/modules/icon/Icon.vue";
 import IconArrow from "../../../components/icons/IconArrow.vue";
-import IconAdd from "../../../components/icons/IconAdd.vue";
-import IconSave from "../../../components/icons/IconSave.vue";
 import IconHide from "../../../components/icons/IconHide.vue";
 import IconVisible from "../../../components/icons/IconVisible.vue";
-import IconEdit from "../../../components/icons/IconEdit.vue";
-import IconRemove from "../../../components/icons/IconRemove.vue";
-import IconUnremove from "../../../components/icons/IconUnremove.vue";
-import IconLoad from "../../../components/icons/IconLoad.vue";
 
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import Empty from "../../../components/modules/Empty.vue";
@@ -302,6 +342,7 @@ export default {
 		AdminSubModal,
 		InfoBar,
 		Tiptap,
+		LoaderChild,
 
 		BlockOnce,
 		BlockTwo,
@@ -311,16 +352,10 @@ export default {
 		ButtonRemove,
 		ButtonClaim,
 
+		Icon,
 		IconArrow,
-		IconSave,
 		IconHide,
 		IconVisible,
-		IconEdit,
-		IconAdd,
-		IconRemove,
-		IconUnremove,
-		IconLoad,
-		LoaderChild,
 
 		Empty,
 		AdminAboutUsList,

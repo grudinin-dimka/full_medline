@@ -80,9 +80,6 @@ import LoaderChild from "../../../components/modules/LoaderChild.vue";
 
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 
-import IconLoad from "../../../components/icons/IconLoad.vue";
-import IconSave from "../../../components/icons/IconSave.vue";
-
 import ContainerInput from "../../../components/ui/admin/containers/ContainerInput.vue";
 import ContainerInputTwo from "../../../components/ui/admin/containers/input/ContainerInputTwo.vue";
 import ContainerInputThree from "../../../components/ui/admin/containers/input/ContainerInputThree.vue";
@@ -93,9 +90,6 @@ export default {
 	components: {
 		LoaderChild,
 		BlockOnce,
-
-		IconLoad,
-		IconSave,
 
 		ContainerInput,
 		ContainerInputTwo,

@@ -134,7 +134,7 @@
 					v-if="!currentSlide.data.create.value & !currentSlide.data.delete.value"
 					@click.prevent="markDeleteSlide"
 				>
-					<icon-remove :width="24" :height="22" :look="'white'" />
+					<Icon :name="'delete'" :fill="'white'" :width="'24px'" :height="'22px'" />
 					Удалить
 				</button-remove>
 				<button-default
@@ -142,17 +142,17 @@
 					@click.prevent="updateSlide"
 					:disabled="disabled.slider.update"
 				>
-					<icon-edit :width="28" :height="28" :look="'white'" />
+					<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</button-default>
 				<button-default v-if="currentSlide.data.delete.value" @click.prevent="markDeleteSlide">
-					<icon-unremove :width="28" :height="28" :look="'white'" />
+					<Icon :name="'restore'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Вернуть
 				</button-default>
 			</block-buttons>
 			<block-buttons v-if="modal.type == 'create'">
 				<button-default @click.prevent="addSlide" :disabled="disabled.slider.create">
-					<icon-add :width="23" :height="23" :look="'white'" />
+					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-default>
 			</block-buttons>
@@ -172,7 +172,7 @@
 
 		<template #options>
 			<ButtonDefault look="white" :disabled="disabled.slider.save" @click="saveSlidesChanges">
-				<icon-save :width="28" :height="28" />
+				<Icon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
 			</ButtonDefault>
 		</template>
@@ -239,7 +239,7 @@
 
 		<template #buttons>
 			<ButtonDefault @click="openSlide(null, 'create')" :disabled="disabled.slider.add">
-				<icon-add :width="23" :height="23" :look="'white'" />
+				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</ButtonDefault>
 		</template>
@@ -253,7 +253,7 @@
 
 		<template #options>
 			<ButtonDefault look="white" :disabled="disabled.footer.save" @click="saveFooterChanges">
-				<icon-save :width="28" :height="28" />
+				<Icon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
 			</ButtonDefault>
 		</template>
@@ -305,15 +305,10 @@ import SlideUserCard from "../../components/icons/SlideUserCard.vue";
 import SlideLink from "../../components/icons/SlideLink.vue";
 import SlidePath from "../../components/icons/SlidePath.vue";
 
+import Icon from "../../components/modules/icon/Icon.vue";
 import IconArrow from "../../components/icons/IconArrow.vue";
 import IconHide from "../../components/icons/IconHide.vue";
 import IconVisible from "../../components/icons/IconVisible.vue";
-import IconSave from "../../components/icons/IconSave.vue";
-import IconLoad from "../../components/icons/IconLoad.vue";
-import IconAdd from "../../components/icons/IconAdd.vue";
-import IconEdit from "../../components/icons/IconEdit.vue";
-import IconRemove from "../../components/icons/IconRemove.vue";
-import IconUnremove from "../../components/icons/IconUnremove.vue";
 
 import axios from "axios";
 import shared from "../../services/shared";
@@ -331,6 +326,7 @@ export default {
 		Modal,
 		InfoBar,
 		Tiptap,
+		Icon,
 
 		ContainerInput,
 		ContainerInputOnce,
@@ -344,15 +340,9 @@ export default {
 		SlideLink,
 		SlidePath,
 
-		IconRemove,
-		IconUnremove,
-		IconEdit,
-		IconAdd,
 		IconArrow,
 		IconHide,
 		IconVisible,
-		IconSave,
-		IconLoad,
 	},
 	data() {
 		return {

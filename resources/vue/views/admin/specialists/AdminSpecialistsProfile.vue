@@ -49,7 +49,7 @@
 		<template #footer>
 			<block-buttons>
 				<button-default @click="updateSpecialization">
-					<icon-add :width="23" :height="23" :look="'white'" />
+					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-default>
 			</block-buttons>
@@ -109,7 +109,7 @@
 		<template #footer>
 			<block-buttons>
 				<button-default @click="updateClinics">
-					<icon-add :width="23" :height="23" :look="'white'" />
+					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-default>
 			</block-buttons>
@@ -189,13 +189,11 @@
 		<template #footer>
 			<block-buttons>
 				<button-default @click="addCertificate" v-if="modalCertificates.type == 'create'">
-					<icon-add :width="23" :height="23" :look="'white'" />
-
+					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-default>
 				<button-default @click="updateCertificate" v-if="modalCertificates.type == 'edit'">
-					<icon-edit :width="28" :height="28" :look="'white'" />
-
+					<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</button-default>
 			</block-buttons>
@@ -326,11 +324,11 @@
 		<template #footer>
 			<block-buttons>
 				<button-default @click="addEducation" v-if="modalEducations.type == 'create'">
-					<icon-add :width="23" :height="23" :look="'white'" />
+					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-default>
 				<button-default @click="updateEducation" v-if="modalEducations.type == 'edit'">
-					<icon-edit :width="28" :height="28" :look="'white'" />
+					<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</button-default>
 			</block-buttons>
@@ -438,11 +436,11 @@
 		<template #footer>
 			<block-buttons>
 				<button-default @click="addWork" v-if="modalWorks.type == 'create'">
-					<icon-add :width="23" :height="23" :look="'white'" />
+					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-default>
 				<button-default @click="updateWork" v-if="modalWorks.type == 'edit'">
-					<icon-edit :width="28" :height="28" :look="'white'" />
+					<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</button-default>
 			</block-buttons>
@@ -473,8 +471,7 @@
 					:disabled="disabled.profile.create"
 					:look="'white'"
 				>
-					<icon-add :width="23" :height="23" />
-
+					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-default>
 			</template>
@@ -485,8 +482,12 @@
 					:disabled="disabled.profile.save"
 					:look="'white'"
 				>
-					<icon-save :width="28" :height="28" />
-
+					<Icon
+						:name="'save'"
+						:fill="'var(--primary-color)'"
+						:width="'28px'"
+						:height="'28px'"
+					/>
 					Сохранить
 				</button-default>
 			</template>
@@ -832,11 +833,11 @@
 					v-model="specialist.profile.data.description.value"
 					:editable="true"
 					:minHeight="200"
-					:limit="500"
+					:limit="10_000"
 					:options="['format', 'align', 'list', 'link']"
 					:placeholder="'Описание'"
 				/>
-			</div>	
+			</div>
 			<!-- Загрузчик профиля -->
 			<loader-child
 				:isLoading="loading.loader.profile"
@@ -953,15 +954,6 @@
 				</span>
 			</template>
 
-			<template one-options>
-				<icon-save
-					:width="28"
-					:height="28"
-					@click="saveSpecialistModular('specializations')"
-					v-if="false"
-				/>
-			</template>
-
 			<template #one-body>
 				<div class="profile-list" v-show="loading.sections.specializations">
 					<!-- Если специализации не выбраны -->
@@ -1002,7 +994,7 @@
 
 			<template #one-buttons>
 				<button-disabled v-if="this.specialist.profile.data.id.value == null">
-					<icon-add :width="23" :height="23" :look="'white'" />
+					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-disabled>
 
@@ -1010,11 +1002,11 @@
 					@click="editSpecialization"
 					v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.value !== null"
 				>
-					<icon-add :width="23" :height="23" :look="'white'" />
+					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-default>
 				<button-claim @click="editSpecialization" v-if="$route.params.id === 'new'">
-					<icon-add :width="23" :height="23" :look="'white'" />
+					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-claim>
 			</template>
@@ -1026,15 +1018,6 @@
 				<span v-show="loading.sections.clinics">
 					({{ specialist.connections.clinics.length }})
 				</span>
-			</template>
-
-			<template #two-options>
-				<icon-save
-					:width="28"
-					:height="28"
-					@click="saveSpecialistModular('clinics')"
-					v-if="false"
-				/>
 			</template>
 
 			<template #two-body>
@@ -1078,7 +1061,7 @@
 
 			<template #two-buttons>
 				<button-disabled v-if="this.specialist.profile.data.id.value == null">
-					<icon-add :width="23" :height="23" :look="'white'" />
+					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-disabled>
 
@@ -1086,7 +1069,7 @@
 					@click="editClinics"
 					v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.value !== null"
 				>
-					<icon-add :width="23" :height="23" :look="'white'" />
+					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-default>
 			</template>
@@ -1194,8 +1177,6 @@ import SpanError from "../../../components/ui/admin/SpanError.vue";
 import TableButtonDefault from "../../../components/ui/admin/tables/TableButtonDefault.vue";
 import TableButtonRemove from "../../../components/ui/admin/tables/TableButtonRemove.vue";
 
-import IconClose from "../../../components/icons/IconClose.vue";
-
 import ContainerInput from "../../../components/ui/admin/containers/ContainerInput.vue";
 import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
 import ContainerInputTwo from "../../../components/ui/admin/containers/input/ContainerInputTwo.vue";
@@ -1212,11 +1193,8 @@ import ButtonDisabled from "../../../components/ui/admin/buttons/ButtonDisabled.
 import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
 import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 
-import IconSave from "../../../components/icons/IconSave.vue";
-import IconSaveAll from "../../../components/icons/IconSaveAll.vue";
-import IconAdd from "../../../components/icons/IconAdd.vue";
-import IconLoad from "../../../components/icons/IconLoad.vue";
-import IconEdit from "../../../components/icons/IconEdit.vue";
+import Icon from "../../../components/modules/icon/Icon.vue";
+import IconClose from "../../../components/icons/IconClose.vue";
 
 import axios from "axios";
 
@@ -1240,7 +1218,6 @@ export default {
 		BlockTwo,
 		BlockButtons,
 
-		IconClose,
 		SpanError,
 
 		ContainerInput,
@@ -1261,11 +1238,8 @@ export default {
 		ButtonRemove,
 		ButtonClaim,
 
-		IconEdit,
-		IconSave,
-		IconSaveAll,
-		IconAdd,
-		IconLoad,
+		Icon,
+		IconClose,
 
 		axios,
 		RouterView,
@@ -2251,7 +2225,7 @@ export default {
 				"specializations",
 				JSON.stringify(this.specialist.connections.specializations)
 			);
-			
+
 			formData.append("clinics", JSON.stringify(this.specialist.connections.clinics));
 			formData.append("certificates", JSON.stringify(this.tableCertificates.body));
 			formData.append("educations", JSON.stringify(this.tableEducations.body));

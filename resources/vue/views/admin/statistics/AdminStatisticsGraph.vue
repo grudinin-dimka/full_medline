@@ -66,7 +66,12 @@
 					:disabled="disabled.apexchart.load"
 					:look="'white'"
 				>
-					<IconPublicsh :width="28" :height="28" />
+					<Icon
+						:name="'publish'"
+						:fill="'var(--icon-edit-fill)'"
+						:width="'28px'"
+						:height="'28px'"
+					/>
 					Загрузить
 				</button-default>
 			</div>
@@ -99,7 +104,8 @@ import ContainerInputOnce from "../../../components/modules/input/ContainerInput
 import BaseTable from "../../../components/modules/table/BaseTable.vue";
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
-import IconPublicsh from "../../../components/icons/buttons/IconPublicsh.vue";
+
+import Icon from "../../../components/modules/icon/Icon.vue";
 
 import axios from "axios";
 import validate from "../../../services/validate";
@@ -111,7 +117,8 @@ export default {
 		LoaderChild,
 
 		ButtonDefault,
-		IconPublicsh,
+
+		Icon,
 
 		ContainerInputOnce,
 		BaseTable,

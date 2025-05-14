@@ -194,11 +194,11 @@
 		<template #footer>
 			<block-buttons>
 				<button-default v-if="modal.type == 'create'" @click="addClinic">
-					<icon-add :width="23" :height="23" :look="'white'"/>
+					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-default>
 				<button-default v-if="modal.type == 'edit'" @click="updateClinic">
-					<icon-edit :width="28" :height="28" :look="'white'"/>
+					<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</button-default>
 			</block-buttons>
@@ -219,8 +219,7 @@
 				:disabled="disabled.clinics.save"
 				:look="'white'"
 			>
-				<icon-save :width="28" :height="28" />
-
+				<Icon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
 			</button-default>
 		</template>
@@ -265,10 +264,7 @@ import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vu
 import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
 import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 
-import IconSave from "../../../components/icons/IconSave.vue";
-import IconAdd from "../../../components/icons/IconAdd.vue";
-import IconEdit from "../../../components/icons/IconEdit.vue";
-import IconLoad from "../../../components/icons/IconLoad.vue";
+import Icon from "../../../components/modules/icon/Icon.vue";
 
 import axios from "axios";
 import shared from "../../../services/shared";
@@ -296,10 +292,7 @@ export default {
 		ButtonRemove,
 		ButtonClaim,
 
-		IconSave,
-		IconAdd,
-		IconEdit,
-		IconLoad,
+		Icon,
 
 		axios,
 	},

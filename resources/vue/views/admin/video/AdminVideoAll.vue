@@ -31,13 +31,23 @@
 				<div class="modal__video-buttons">
 					<template v-if="currentVideo.data.path.value === ''">
 						<div class="modal__buttons-icon create" @click="openVideoUpload">
-							<icon-add :width="19" :height="19" :look="'create'"></icon-add>
+							<Icon
+								:name="'add'"
+								:fill="'var(--icon-create-fill)'"
+								:width="'19px'"
+								:height="'19px'"
+							/>
 						</div>
 					</template>
 
 					<template v-else>
 						<div class="modal__buttons-icon edit" @click="openVideoUpload">
-							<icon-edit :width="24" :height="24" :type="'edit'"></icon-edit>
+							<Icon
+								:name="'edit'"
+								:fill="'var(--icon-edit-fill)'"
+								:width="'24px'"
+								:height="'24px'"
+							/>
 						</div>
 					</template>
 				</div>
@@ -61,7 +71,7 @@
 
 		<template #footer>
 			<ButtonDefault @click="addVideo" v-if="modalVideo.values.look == 'create'">
-				<icon-add :width="23" :height="23" :look="'white'" />
+				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</ButtonDefault>
 
@@ -70,17 +80,22 @@
 					@click="deleteItem"
 					v-if="!currentVideo.data.delete.value && !currentVideo.data.create.value"
 				>
-					<icon-remove :width="24" :height="22" :look="'white'" />
+					<Icon
+						:name="'delete'"
+						:fill="'var(--icon-delete-fill)'"
+						:width="'22px'"
+						:height="'22px'"
+					/>
 					Удалить
 				</button-remove>
 
 				<ButtonDefault @click="updateVideo" v-if="!currentVideo.data.delete.value">
-					<icon-edit :width="28" :height="28" :look="'white'" />
+					<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</ButtonDefault>
 
 				<ButtonDefault @click="deleteItem" v-if="currentVideo.data.delete.value">
-					<icon-unremove :width="28" :height="28" :look="'white'" />
+					<Icon :name="'restore'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Вернуть
 				</ButtonDefault>
 			</template>
@@ -113,12 +128,12 @@
 				@click="uploadVideo"
 				:disabled="disabled.video.upload"
 			>
-				<icon-add :width="23" :height="23" :look="'white'" />
+				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</button-default>
 
 			<button-default v-else @click="uploadVideo" :disabled="disabled.video.upload">
-				<icon-edit :width="28" :height="28" :look="'white'" />
+				<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 				Обновить
 			</button-default>
 		</template>
@@ -139,7 +154,7 @@
 				:disabled="disabled.video.save"
 				:look="'white'"
 			>
-				<icon-save :width="28" :height="28" />
+				<Icon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
 			</button-default>
 		</template>
@@ -183,7 +198,7 @@
 
 		<template #buttons>
 			<ButtonDefault @click="openVideoCreate">
-				<icon-add :width="23" :height="23" :look="'white'" />
+				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</ButtonDefault>
 		</template>
@@ -204,13 +219,8 @@ import TipTap from "../../../components/modules/Tiptap.vue";
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
 
+import Icon from "../../../components/modules/icon/Icon.vue";
 import IconArrow from "../../../components/icons/IconArrow.vue";
-import IconLoad from "../../../components/icons/IconLoad.vue";
-import IconAdd from "../../../components/icons/IconAdd.vue";
-import IconEdit from "../../../components/icons/IconEdit.vue";
-import IconRemove from "../../../components/icons/IconRemove.vue";
-import IconUnremove from "../../../components/icons/IconUnremove.vue";
-import IconSave from "../../../components/icons/IconSave.vue";
 
 import shared from "../../../services/shared";
 import validate from "../../../services/validate";
@@ -232,13 +242,8 @@ export default {
 		ButtonDefault,
 		ButtonRemove,
 
+		Icon,
 		IconArrow,
-		IconLoad,
-		IconAdd,
-		IconEdit,
-		IconRemove,
-		IconUnremove,
-		IconSave,
 	},
 	data() {
 		return {

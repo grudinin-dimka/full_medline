@@ -14,7 +14,7 @@
 				:disabled="disabled.news.save"
 				:look="'white'"
 			>
-				<icon-save :width="28" :height="28" />
+				<Icon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
 			</button-default>
 		</template>
@@ -60,8 +60,7 @@ import Tiptap from "../../../components/modules/Tiptap.vue";
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 
-import IconLoad from "../../../components/icons/IconLoad.vue";
-import IconSave from "../../../components/icons/IconSave.vue";
+import Icon from "../../../components/modules/icon/Icon.vue";
 
 import shared from "../../../services/shared";
 import axios from "axios";
@@ -77,8 +76,7 @@ export default {
 
 		ButtonDefault,
 
-		IconLoad,
-		IconSave,
+		Icon,
 	},
 	data() {
 		return {
