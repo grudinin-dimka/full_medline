@@ -516,7 +516,9 @@
 							<span>АВАТАР И ССЫЛКА</span>
 						</template>
 						<template #title-one>
-							<span>ФОТО ВРАЧА (700x700)<span v-if="$route.params.id == 'new'">*</span></span>
+							<span
+								>ФОТО ВРАЧА (700x700)<span v-if="$route.params.id == 'new'">*</span></span
+							>
 							<span v-if="specialist.profile.data.filename.edited"> (ИЗМЕНЕНО)</span>
 						</template>
 						<template #input-one>
@@ -824,8 +826,17 @@
 						</template>
 					</container-input-two-sub>
 				</container-input>
-			</div>
 
+				<Tiptap
+					ref="tiptapDescription"
+					v-model="specialist.profile.data.description.value"
+					:editable="true"
+					:minHeight="200"
+					:limit="500"
+					:options="['format', 'align', 'list', 'link']"
+					:placeholder="'Описание'"
+				/>
+			</div>	
 			<!-- Загрузчик профиля -->
 			<loader-child
 				:isLoading="loading.loader.profile"
@@ -1168,6 +1179,7 @@
 <script>
 import AdminModal from "../../../components/includes/admin/AdminModal.vue";
 import BaseTable from "../../../components/modules/table/BaseTable.vue";
+import Tiptap from "../../../components/modules/Tiptap.vue";
 
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import Selector from "../../../components/modules/Selector.vue";
@@ -1218,6 +1230,7 @@ export default {
 	components: {
 		AdminModal,
 		BaseTable,
+		Tiptap,
 		InfoBar,
 		Selector,
 		LoaderChild,
@@ -1604,6 +1617,10 @@ export default {
 							message: "",
 							status: false,
 						},
+						description: {
+							message: "",
+							status: false,
+						},
 						category: {
 							message: "",
 							status: false,
@@ -1667,6 +1684,10 @@ export default {
 							edited: false,
 						},
 						surname: {
+							value: "",
+							edited: false,
+						},
+						description: {
 							value: "",
 							edited: false,
 						},
@@ -2230,6 +2251,7 @@ export default {
 				"specializations",
 				JSON.stringify(this.specialist.connections.specializations)
 			);
+			
 			formData.append("clinics", JSON.stringify(this.specialist.connections.clinics));
 			formData.append("certificates", JSON.stringify(this.tableCertificates.body));
 			formData.append("educations", JSON.stringify(this.tableEducations.body));
@@ -3093,6 +3115,10 @@ export default {
 }
 
 .container-profile-other {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+
 	animation: show-bottom-to-top-15 0.4s ease-in-out;
 }
 
