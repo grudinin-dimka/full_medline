@@ -1,3 +1,4 @@
 :root {
-
+	--debugger-completed-background-color: var(--edit-background-color);
+	--debugger-error-background-color: var(--delete-background-color);
 }

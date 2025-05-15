@@ -22,14 +22,14 @@
 	/* create */
 	--button-create-font-color: rgb(255, 255, 255);
 	--button-create-font-color-hover: rgb(255, 255, 255);
-	--button-create-background-color: #44a533;
-	--button-create-background-color-hover: rgb(78, 175, 61);
+	--button-create-background-color: var(--create-background-color);
+	--button-create-background-color-hover: var(--create-background-color-hover);
 
 	/* delete */
-	--button-delete-font-color: rgb(255, 255, 255);
-	--button-delete-font-color-hover: rgb(255, 255, 255);
-	--button-delete-background-color: rgb(212, 65, 65);
-	--button-delete-background-color-hover: rgb(229, 81, 81);
+	--button-delete-font-color: var(--delete-color);
+	--button-delete-font-color-hover: var(--delete-color-hover);
+	--button-delete-background-color: var(--delete-background-color);
+	--button-delete-background-color-hover: var(--delete-background-color-hover);
 	--button-delete-secondary-background-color: #ffdddd;
 	--button-delete-secondary-background-color-hover: #f3d3d3;
 

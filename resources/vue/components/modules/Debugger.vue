@@ -77,11 +77,11 @@
 }
 
 .debugger__item.completed {
-	background-color: #00abbd;
+	background-color: var(--debugger-completed-background-color);
 }
 
 .debugger__item.error {
-	background-color: #bd0000;
+	background-color: var(--debugger-error-background-color);
 }
 
 .debugger__close {

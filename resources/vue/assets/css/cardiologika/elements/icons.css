@@ -7,22 +7,22 @@
 	/* multi */
 	--icon-multi-fill: var(--primary-color);
 	--icon-nulti-fill-hover: var(--primary-color-hover);
-	
+
 	/* edit */
-	--icon-edit-fill: var(--primary-color);
-	--icon-edit-background-color: #ffeff4;
-	--icon-edit-background-color-hover: #f2dee5;
-	
+	--icon-edit-fill: var(--edit-secondary-color);
+	--icon-edit-background-color: var(--edit-secondary-background-color);
+	--icon-edit-background-color-hover: var(--edit-secondary-background-color-hover);
+
 	/* create */
-	--icon-create-fill: #44a533;
-	--icon-create-background-color: rgb(234, 255, 236);
-	--icon-create-background-color-hover: rgb(224, 245, 226);
-	
+	--icon-create-fill: var(--create-secondary-color);
+	--icon-create-background-color: var(--create-secondary-background-color);
+	--icon-create-background-color-hover: var(--create-secondary-background-color-hover);
+
 	/* delete */
-	--icon-delete-fill: rgb(152, 146, 42);
-	--icon-delete-background-color: rgb(242, 240, 202);
-	--icon-delete-background-color-hover: rgb(228, 225, 182);
-	
+	--icon-delete-fill: var(--delete-secondary-color);
+	--icon-delete-background-color: var(--delete-secondary-background-color);
+	--icon-delete-background-color-hover: var(--delete-secondary-background-color-hover);
+
 	/* admin */
 	--icon-admin-fill: #d0913e;
 	--icon-admin-background-color: rgb(255, 242, 222);

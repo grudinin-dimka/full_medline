@@ -3,13 +3,39 @@
 	/* Основные цвета */
 	--primary-color: #b5013e;
 	--primary-color-hover: #cf1855;
-	
+
 	--secondary-color: #f4e7ec;
 
-	/* Второстепенные цвета */
-	--create-color: var(--primary-color);
-	--create-color-hover: var(--primary-color-hover);
+	/* edit */
+	--edit-color: white;
+	--edit-color-hover: white;
+	--edit-secondary-color: var(--primary-color);
+	--edit-secondary-color-hover: var(--primary-color);
 
-	--delete-color: #cd3f3f;
-	--delete-color-hover: #d74949;
+	--edit-background-color: var(--primary-color);
+	--edit-background-color-hover: var(--primary-color-hover);
+	--edit-secondary-background-color: #ffeff4;
+	--edit-secondary-background-color-hover: #f2dee5;
+
+	/* create */
+	--create-color: white;
+	--create-color-hover: white;
+	--create-secondary-color: #44a533;
+	--create-secondary-color-hover: #44a533;
+
+	--create-background-color: #44a533;
+	--create-background-color-hover: rgb(78, 175, 61);
+	--create-secondary-background-color: rgb(234, 255, 236);
+	--create-secondary-background-color-hover: rgb(224, 245, 226);
+
+	/* delete */
+	--delete-color: white;
+	--delete-color-hover: white;
+	--delete-secondary-color: rgb(152, 146, 42);
+	--delete-secondary-color-hover: rgb(152, 146, 42);
+
+	--delete-background-color: rgb(152, 146, 42);
+	--delete-background-color-hover: rgb(186, 179, 62);
+	--delete-secondary-background-color: rgb(255, 242, 222);
+	--delete-secondary-background-color-hover: rgb(248, 232, 208);
 }

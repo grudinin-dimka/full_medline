@@ -40,8 +40,8 @@
    --input-delete-background-color: rgb(255, 255, 255);
    --input-delete-background-color-hover: rgb(255, 245, 245);
 
-   --input-delete-color: #cd3f3f;
-   --input-delete-caret-color: #cd3f3f;
+   --input-delete-color: var(--delete-background-color);
+   --input-delete-caret-color: var(--delete-background-color);
    
    --input-delete-border: var(--default-border-width) var(--default-border-style) #ec7b7b;
    --input-delete-border-focus: var(--default-border-width) var(--default-border-style) #f79999;
