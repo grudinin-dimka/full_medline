@@ -51,11 +51,16 @@
 
 		<template #options>
 			<button-default
-				@click.prevent="savePricesFiles"
-				:disabled="disabled.prices.save"
+				@click.prevent="downloadPricesFiles"
+				:disabled="disabled.prices.download"
 				:look="'white'"
 			>
-				<Icon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
+				<Icon
+					:name="'download'"
+					:fill="'var(--primary-color)'"
+					:width="'28px'"
+					:height="'28px'"
+				/>
 				Выгрузить
 			</button-default>
 
@@ -168,6 +173,7 @@ export default {
 				prices: {
 					save: false,
 					create: false,
+					download: false,
 				},
 			},
 
@@ -392,6 +398,8 @@ export default {
 					this.disabled.prices.create = false;
 				});
 		},
+
+		/* Сохранение изменений */
 		savePricesFiles() {
 			let formData = new FormData();
 			formData.append("pricesFiles", JSON.stringify(this.table.body));
@@ -451,6 +459,46 @@ export default {
 				})
 				.finally(() => {
 					this.disabled.prices.save = false;
+				});
+		},
+
+		/* Выгрузка */
+		downloadPricesFiles() {
+			this.disabled.prices.download = true;
+			
+			axios({
+				method: "post",
+				url: `${this.$store.getters.urlApi}` + `make-prices-files`,
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+			})
+				.then((response) => {
+					if (response.data.status) {
+						console.log(response.data.data);
+
+						this.$store.commit("addDebugger", {
+							title: "Успешно!",
+							body: response.data.message,
+							type: "completed",
+						});
+					} else {
+						this.$store.commit("addDebugger", {
+							title: "Ошибка.",
+							body: response.data.message,
+							type: "error",
+						});
+					}
+				})
+				.catch((error) => {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка.",
+						body: error,
+						type: "error",
+					});
+				})
+				.finally(() => {
+					this.disabled.prices.download = false;
 				});
 		},
 	},

@@ -16,7 +16,7 @@
 
 		<div class="section-info">
 			<!-- NOTE: Название клиники -->
-			<p class="section-info-title">Добро Пожаловать в "МедЛайн"</p>
+			<p class="section-info-title">Добро Пожаловать в "Медлайн"</p>
 			<p class="section-info-sub-title">Индивидуальный подход и лучшие врачи</p>
 		</div>
 	</block>

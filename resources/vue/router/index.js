@@ -329,7 +329,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
 	// NOTE: Заголовок документа
-	document.title = `${to.meta.title} | Медицинский центр «МедЛайн»`;
+	document.title = `${to.meta.title} | Медицинский центр «Медлайн»`;
 	next();
 });
 

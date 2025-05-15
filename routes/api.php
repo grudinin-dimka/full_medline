@@ -103,6 +103,7 @@ Route::middleware(['auth:sanctum', 'admin-or-creator'])->group(function () {
    Route::get('/get-prices-files-all', [AdminController::class, 'getPricesFilesAll']);
 
    Route::post('/save-prices-changes', [AdminController::class, 'savePricesChanges']);
+   Route::post('/make-prices-files', [AdminController::class, 'makePricesFiles']);
 
    // Новости 
    Route::post('/get-news-once', [HomeController::class, 'getNewsOnce']);

@@ -19,7 +19,7 @@
 	--icon-create-background-color-hover: var(--create-secondary-background-color-hover);
 	
 	/* delete */
-	--icon-delete-fill: var(--delete-secondary-color);
+	--icon-delete-fill: white;
 	--icon-delete-background-color: var(--delete-secondary-background-color);
 	--icon-delete-background-color-hover: var(--delete-secondary-background-color-hover);
 	

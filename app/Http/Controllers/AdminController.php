@@ -59,6 +59,10 @@ use App\Models\PriceCategory;
 use App\Models\PriceValue;
 use App\Models\Video;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 use Throwable;
 
 class AdminController extends Controller
@@ -1581,6 +1585,7 @@ class AdminController extends Controller
          "data" => count($arrayID) > 0 ? $arrayID : null,
       ]);            
    }
+
    /* Считывание данных с файла .ods, .xls, .xlsx */
    protected function getDataFromFile($path) {
       try {
@@ -1649,6 +1654,7 @@ class AdminController extends Controller
          ];
       };
    }
+
    /* Проверка на пустой лист */
    function isExcelEmpty($sheet) {
       $highestRow = $sheet->getHighestRow();
@@ -1665,6 +1671,7 @@ class AdminController extends Controller
 
       return true; 
    }
+
    /* Поиск общей категории */
    function getMainCategory($categories, $categorylevel) {
       $lentghCurrentCategory = strlen($categorylevel);
@@ -1683,6 +1690,83 @@ class AdminController extends Controller
       };
 
       return $categories[count($categories) - 1]->id;
+   }
+
+   public function makePricesFiles(Request $request) {
+      try {
+         // $fieldsNames = [
+         //    1 => 'A',
+         //    2 => 'B',
+         //    3 => 'C',
+         // ];
+
+         // // Создание нового табличного документа
+         // $spreadsheet = new Spreadsheet();
+         // $sheet = $spreadsheet->getActiveSheet();
+
+         // // Установка ширины столбцов
+         // foreach ($fieldsNames as $key => $value) {
+         //    $sheet->getColumnDimension($value)->setAutoSize(true);
+         // }
+
+         // $fields = [
+         //    1 => 'Категория',
+         //    2 => 'Название',
+         //    3 => 'Цена',
+         // ];
+
+         // // Заполнение заголовков
+         // foreach ($fields as $key => $value) {
+         //    $sheet->setCellValue($fieldsNames[$key] . '1', $value);
+         // };
+
+         // // Заполнение данных
+         // $logs = Log::all()->where('time', '<=', $request->end)->where('time', '>=', $request->start);
+
+         // if (count($logs) == 0) {   
+         //    return response()->json([
+         //       "success" => false,
+         //       "message" => 'Нет данных.',
+         //       "result" => null,         
+         //    ]);
+         // }
+
+         // foreach ($logs as $key => $value) {
+         //    $logs[$key]->device = Device::withTrashed()->where('id', $value->device_id)->value('name');
+
+         //    foreach ($request->fields as $fieldKey => $fieldValue) {
+         //       $sheet->setCellValue(
+         //          $this->fieldsNames[$fieldKey + 1] . $key + 2, 
+         //          $value[$fieldValue['value']]
+         //       );
+         //    };   
+         // }
+
+         // // Сохранение файла в папке storage
+         // $writer = new Xlsx($spreadsheet);
+         
+         // if (!Storage::exists('public/reports')) {
+         //    Storage::makeDirectory('public/reports');
+         // };
+
+         // $fileName = 'prices-' . time() . '.xlsx';
+         // $filePath = storage_path('app/public/reports/' . $fileName);
+         // $writer->save($filePath);
+
+         $addresses = PriceValue::all()->groupBy('categoryId', 'addressId')->toArray();
+
+         return response()->json([
+            "status" => true,
+            "message" => 'Файл успешно создан.',
+            "data" => $addresses,
+         ]);
+      } catch (Throwable $e) {
+         return response()->json([
+            "success" => false,
+            "message" => "Не удалось создать файл.",
+            "data" => null,
+         ]);
+      };
    }
 
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
