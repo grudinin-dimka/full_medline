@@ -10,8 +10,8 @@
 	
 	/* edit */
 	--icon-edit-fill: var(--primary-color);
-	--icon-edit-background-color: rgb(234, 253, 255);
-	--icon-edit-background-color-hover: rgb(224, 243, 245);
+	--icon-edit-background-color: #ffeff4;
+	--icon-edit-background-color-hover: #f2dee5;
 	
 	/* create */
 	--icon-create-fill: #44a533;
@@ -19,9 +19,9 @@
 	--icon-create-background-color-hover: rgb(224, 245, 226);
 	
 	/* delete */
-	--icon-delete-fill: #cd3f3f;
-	--icon-delete-background-color: rgb(255, 237, 237);
-	--icon-delete-background-color-hover: rgb(245, 227, 227);
+	--icon-delete-fill: rgb(152, 146, 42);
+	--icon-delete-background-color: rgb(242, 240, 202);
+	--icon-delete-background-color-hover: rgb(228, 225, 182);
 	
 	/* admin */
 	--icon-admin-fill: #d0913e;

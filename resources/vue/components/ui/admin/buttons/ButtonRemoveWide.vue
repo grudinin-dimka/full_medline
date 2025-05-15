@@ -47,12 +47,12 @@ button.default:hover {
 
 button.other {
 	color: var(--button-delete-background-color-hover);
-	background-color: #ffdddd;
+	background-color: var(--button-delete-secondary-background-color);
 }
 
 button.other:hover {
 	color: var(--button-delete-background-color-hover);
-	background-color: #f3d3d3;
+	background-color: var(--button-delete-secondary-background-color-hover);
 }
 
 .loader {

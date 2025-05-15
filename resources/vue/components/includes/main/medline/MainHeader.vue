@@ -147,7 +147,7 @@
 	<header :class="{ slide: isShadow }">
 		<div class="header__item">
 			<a href="/" class="header-logo-avatar" @click.prevent="$router.push({ name: 'home' })">
-				<img src="../../../assets/svg/logo.svg" width="100" alt="логотип" />
+				<img src="../../../../assets/svg/medline/logo.svg" width="100" alt="логотип" />
 			</a>
 		</div>
 
@@ -160,7 +160,7 @@
 		</div>
 		<div class="header__item">
 			<div class="header__item-icon">
-				<img src="../../../assets/svg/1.svg" width="30" alt="адреса" />
+				<img src="../../../../assets/svg/1.svg" width="30" alt="адреса" />
 			</div>
 
 			<div class="header__item-list">
@@ -171,7 +171,7 @@
 		</div>
 		<div class="header__item">
 			<div class="header__item-icon">
-				<img src="../../../assets/svg/2.svg" width="30" alt="адреса" />
+				<img src="../../../../assets/svg/2.svg" width="30" alt="адреса" />
 			</div>
 
 			<div class="header__item-list">
@@ -202,20 +202,20 @@
 </template>
 
 <script>
-import AdminModal from "../admin/AdminModal.vue";
-import Modal from "../../modules/modal/Modal.vue";
-import Captcha from "../../modules/Captcha.vue";
+import AdminModal from "../../admin/AdminModal.vue";
+import Modal from "../../../modules/modal/Modal.vue";
+import Captcha from "../../../modules/Captcha.vue";
 
-import ContainerInput from "../../ui/admin/containers/ContainerInput.vue";
-import ContainerInputOnce from "../../ui/admin/containers/input/ContainerInputOnce.vue";
-import ContainerSelectOnce from "../../ui/admin/containers/select/ContainerSelectOnce.vue";
+import ContainerInput from "../../../ui/admin/containers/ContainerInput.vue";
+import ContainerInputOnce from "../../../ui/admin/containers/input/ContainerInputOnce.vue";
+import ContainerSelectOnce from "../../../ui/admin/containers/select/ContainerSelectOnce.vue";
 
-import BlockButtons from "../../ui/admin/blocks/BlockButtons.vue";
-import ButtonDefault from "../../ui/admin/buttons/ButtonDefault.vue";
+import BlockButtons from "../../../ui/admin/blocks/BlockButtons.vue";
+import ButtonDefault from "../../../ui/admin/buttons/ButtonDefault.vue";
 
 import axios from "axios";
-import validate from "../../../services/validate";
-import shared from "../../../services/shared";
+import validate from "../../../../services/validate";
+import shared from "../../../../services/shared";
 
 export default {
 	components: {
@@ -473,7 +473,7 @@ header.slide {
 .header-logo-avatar {
 	display: flex;
 	justify-content: center;
-	width: 200px;
+	width: 150px;
 }
 
 .header__logo {
@@ -520,7 +520,7 @@ header.slide {
 }
 
 .header__item a:hover {
-	color: var(--button-default-color);
+	color: var(--primary-color);
 }
 
 .header__item-icon {
@@ -733,7 +733,7 @@ header.slide {
 	width: 100%;
 	height: 100%;
 
-	background-image: url("../../../assets/img/trash.webp");
+	background-image: url("../../../../assets/img/trash.webp");
 	background-position: center center;
 	background-size: cover;
 	opacity: 0.7;

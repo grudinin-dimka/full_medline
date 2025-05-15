@@ -43,8 +43,6 @@
 </template>
 
 <script>
-import { h } from "vue";
-
 export default {
 	name: "FilterList",
 	emits: ["selectChild", "selectParent"],

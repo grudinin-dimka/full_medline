@@ -3,9 +3,9 @@
 	<debugger />
 
 	<!-- Шапка -->
-	<main-header ref="mainHeader"/>
+	<main-header ref="mainHeader" />
 	<!-- Навигация -->
-	<main-nav @openModal="openModal"/>
+	<main-nav @openModal="openModal" />
 	<!-- Содержимое -->
 	<router-view />
 	<!-- Подвал -->
@@ -14,9 +14,11 @@
 
 <script>
 import Debugger from "../components/modules/Debugger.vue";
-import MainHeader from "../components/includes/main/MainHeader.vue";
-import MainNav from "../components/includes/main/MainNav.vue";
-import MainFooter from "../components/includes/main/MainFooter.vue";
+
+// NOTE: Модули на главной
+import MainHeader from "../components/includes/main/medline/MainHeader.vue";
+import MainNav from "../components/includes/main/medline/MainNav.vue";
+import MainFooter from "../components/includes/main/medline/MainFooter.vue";
 
 import axios from "axios";
 
@@ -38,7 +40,7 @@ export default {
 	methods: {
 		openModal(title) {
 			this.$refs.mainHeader.openModalEdite(title);
-		}
+		},
 	},
 	created() {
 		axios({

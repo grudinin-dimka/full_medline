@@ -13,7 +13,13 @@
 					<ul>
 						<li v-for="street in getStreet(city)" @click="pushStreet(street)">
 							<div class="address">{{ `ул. ${street.street}, д. ${street.house}` }}</div>
-							<button @click="pushStreet(street)">Смотреть</button>
+							<a
+								@click.prevent="pushStreet(street)"
+								:href="`/prices/${street.cityUrl}/${street.streetUrl}/${street.houseUrl}`"
+								alt="смотреть"
+							>
+								Смотреть
+							</a>
 						</li>
 					</ul>
 				</div>
@@ -62,7 +68,7 @@ export default {
 
 			// Перемещение Шадринска наверх
 			let cityShadrinsk = cities.find((item) => item === "Шадринск");
-			
+
 			if (cityShadrinsk) {
 				cities.splice(cities.indexOf(cityShadrinsk), 1);
 				cities.unshift(cityShadrinsk);
@@ -195,20 +201,22 @@ export default {
 	transition: all 0.2s;
 }
 
-.prices__item > ul > li > button {
+.prices__item > ul > li > a {
 	cursor: pointer;
 	padding: 10px 20px;
 	font-size: 1.125rem;
 
+	text-decoration: none;
+
 	border: 0px;
 	border-radius: 10px;
 	color: white;
-	background-color: var(--button-default-color);
+	background-color: var(--button-background-color);
 
 	transition: all 0.2s;
 }
 
-.prices__item > ul > li > button:hover {
+.prices__item > ul > li > a:hover {
 	background-color: var(--button-background-color-hover);
 	color: white;
 }

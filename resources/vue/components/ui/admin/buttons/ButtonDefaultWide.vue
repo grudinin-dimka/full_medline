@@ -50,12 +50,12 @@ button.default:hover {
 
 button.other {
 	color: var(--button-background-color-hover);
-	background-color: #dcfbff;
+	background-color: var(--button-secondary-background-color);
 }
 
 button.other:hover {
 	color: var(--button-background-color-hover);
-	background-color: #d3f1f5;
+	background-color: var(--button-secondary-background-color-hover);
 }
 
 .loader {

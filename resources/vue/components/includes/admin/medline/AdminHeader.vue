@@ -1,7 +1,7 @@
 <template>
 	<header>
 		<a @click.prevent="$router.push({ name: 'home' })" href="/" alt="Медлайн">
-			<img src="../../../assets/svg/logo.svg" alt="Медлайн" />
+			<img src="../../../../assets/svg/medline/logo.svg" alt="Медлайн" />
 		</a>
 		<div class="user">
 			<p>{{ $store.getters.userNickname }}</p>

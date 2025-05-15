@@ -12,7 +12,9 @@ import { RouterLink, RouterView } from "vue-router";
 import Debugger from "../components/modules/Debugger.vue";
 import Loader from "../components/modules/loader.vue";
 import axios from "axios";
-import AdminHeader from "../components/includes/admin/AdminHeader.vue";
+
+// NOTE: Модули в админке
+import AdminHeader from "../components/includes/admin/medline/AdminHeader.vue";
 import AdminAside from "../components/includes/admin/AdminAside.vue";
 import AdminContent from "../components/includes/admin/AdminContent.vue";
 import { compile } from "vue";

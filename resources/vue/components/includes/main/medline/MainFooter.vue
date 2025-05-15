@@ -5,7 +5,7 @@
 			<!-- Блок с платёжными системами -->
 			<div class="pay">
 				<a href="/">
-					<img src="../../../assets/svg/logo-full.svg" width="250" height="150" alt="логотип" />
+					<img src="../../../../assets/svg/medline/logo-full.svg" width="250" height="150" alt="логотип" />
 				</a>
 				<p>Мы принимаем к оплате</p>
 				<div class="pay-cards">
@@ -97,13 +97,13 @@
 </template>
 
 <script>
-import LoaderChild from "../../modules/LoaderChild.vue";
-import Empty from "../../modules/Empty.vue";
-import Tiptap from "../../modules/Tiptap.vue";
+import LoaderChild from "../../../modules/LoaderChild.vue";
+import Empty from "../../../modules/Empty.vue";
+import Tiptap from "../../../modules/Tiptap.vue";
 
-import IconVisa from "../../icons/IconVisa.vue";
-import IconMasterCard from "../../icons/IconMasterCard.vue";
-import IconMir from "../../icons/IconMir.vue";
+import IconVisa from "../../../icons/IconVisa.vue";
+import IconMasterCard from "../../../icons/IconMasterCard.vue";
+import IconMir from "../../../icons/IconMir.vue";
 
 import axios from "axios";
 

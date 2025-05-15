@@ -286,7 +286,7 @@
 				:disabled="disabled.about.save"
 				:look="'white'"
 			>
-				<Icon :name="'save'" :fill="'white'" :width="'28px'" :height="'28px'" />
+				<Icon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
 			</button-default>
 		</template>

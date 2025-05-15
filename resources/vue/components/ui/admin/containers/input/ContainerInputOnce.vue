@@ -72,7 +72,7 @@ export default {
 .container-input-once > input::file-selector-button {
 	cursor: pointer;
 
-	background-color: red;
+	background-color: var(--primary-color);
 	border: 0px;
 	border-radius: 5px;
 	color: white;

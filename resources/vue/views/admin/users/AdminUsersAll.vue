@@ -1369,7 +1369,7 @@ export default {
 }
 
 .users > .item > .buttons > .icon.delete > .label {
-	color: #d74949;
+	color: var(--icon-delete-font-color);
 }
 
 .users > .item > .buttons > .icon.default > .label {

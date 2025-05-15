@@ -205,8 +205,6 @@ import Empty from "../../../components/modules/Empty.vue";
 import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
 import ContainerInputSearch from "../../../components/ui/admin/containers/input/ContainerInputSearch.vue";
 
-import IconContactHome from "../../../components/icons/contacts/IconContactHome.vue";
-
 import axios from "axios";
 import sorted from "../../../services/sorted.js";
 
@@ -218,9 +216,10 @@ export default {
 		LoadText,
 		Filter,
 		Empty,
+
 		ContainerInputOnce,
 		ContainerInputSearch,
-		IconContactHome,
+
 		axios,
 		sorted,
 	},
@@ -563,7 +562,7 @@ export default {
 	gap: 5px;
 
 	padding: 5px 10px;
-	background-color: var(--button-default-color);
+	background-color: var(--button-background-color);
 	border-radius: 10px;
 	color: white;
 
@@ -571,7 +570,7 @@ export default {
 }
 
 .filter_blocks > .filter_blocks-item > .filter__subject:hover {
-	background-color: var(--button-default-color-hover);
+	background-color: var(--button-background-color-hover);
 }
 
 .filter_blocks > .filter_blocks-item > .filter__subject:last-child {

@@ -10,6 +10,8 @@
 
 	--button-background-color: var(--primary-color);
 	--button-background-color-hover: var(--primary-color-hover);
+	--button-secondary-background-color: #ffe8f0;
+	--button-secondary-background-color-hover: #eed2db;
 
 	/* invertion */
 	--button-inverse-font-color: rgb(255, 255, 255);
@@ -26,8 +28,10 @@
 	/* delete */
 	--button-delete-font-color: rgb(255, 255, 255);
 	--button-delete-font-color-hover: rgb(255, 255, 255);
-	--button-delete-background-color: rgb(212, 65, 65);
-	--button-delete-background-color-hover: rgb(229, 81, 81);
+	--button-delete-background-color: rgb(212, 205, 65);
+	--button-delete-background-color-hover: rgb(222, 215, 77);
+	--button-delete-secondary-background-color: rgb(255, 253, 215);
+	--button-delete-secondary-background-color-hover: rgb(242, 240, 205);
 
 	/* disabled */
 	--button-disabled-background-color: rgb(150, 150, 150);

@@ -444,7 +444,7 @@ export default {
 	opacity: 0;
 	visibility: hidden;
 
-	fill: var(--button-default-color);
+	fill: var(--button-background-color);
 	transition: all 0.2s;
 }
 

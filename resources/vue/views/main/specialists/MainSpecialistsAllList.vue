@@ -168,13 +168,13 @@ export default {
 
 	border-radius: 10px;
 	color: white;
-	background-color: var(--button-default-color);
+	background-color: var(--button-background-color);
 
 	transition: all 0.2s;
 }
 
 .specialist__body > a:hover {
-	background-color: var(--button-default-color-hover);
+	background-color: var(--button-background-color-hover);
 	color: white;
 }
 
