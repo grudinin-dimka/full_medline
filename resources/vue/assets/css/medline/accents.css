@@ -29,6 +29,9 @@
 	--create-secondary-background-color-hover: rgb(224, 245, 226);
 
 	/* delete */
+	--delete-border-color: #ec7b7b;
+	--delete-border-color-hover: #f79999;
+
 	--delete-color: white;
 	--delete-color-hover: white;
 	--delete-secondary-color: rgb(212, 65, 65);

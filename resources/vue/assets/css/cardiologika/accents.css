@@ -29,13 +29,16 @@
 	--create-secondary-background-color-hover: rgb(224, 245, 226);
 
 	/* delete */
+	--delete-border-color: rgb(201, 195, 66);
+	--delete-border-color-hover: rgb(212, 206, 86);
+
 	--delete-color: white;
 	--delete-color-hover: white;
-	--delete-secondary-color: rgb(152, 146, 42);
-	--delete-secondary-color-hover: rgb(152, 146, 42);
+	--delete-secondary-color: rgb(201, 195, 66);
+	--delete-secondary-color-hover: rgb(201, 195, 66);
 
-	--delete-background-color: rgb(152, 146, 42);
-	--delete-background-color-hover: rgb(186, 179, 62);
+	--delete-background-color: rgb(201, 195, 66);
+	--delete-background-color-hover: rgb(212, 206, 86);
 	--delete-secondary-background-color: rgb(255, 242, 222);
 	--delete-secondary-background-color-hover: rgb(248, 232, 208);
 }

@@ -1040,7 +1040,7 @@ export default {
 }
 
 .slider-block.create > .head > div {
-	border: var(--input-create-border);
+	border: var(--input-create-border-focus);
 }
 
 .slider-block.delete > .head > div {
@@ -1062,12 +1062,12 @@ export default {
 }
 
 .slider-block.delete {
-	border: 1px solid #ec7b7b;
+	border: var(--input-delete-border);
 }
 
 .slider-block.delete:hover {
-	border: 1px solid #f79999;
-	background-color: rgb(255, 240, 240);
+	border: var(--input-delete-border);
+	background-color: var(--input-delete-background-color-hover);
 }
 
 .slider-block-id {
