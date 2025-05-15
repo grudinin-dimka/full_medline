@@ -1,0 +1,24 @@
+:root {
+   --list-background-color: rgba(0, 0, 0, 0);
+   
+   --list-gap: calc(var(--default-gap) / 4);
+   --list-border-radius: var(--default-border-radius);
+
+   /* list */
+   --list-list-gap: calc(var(--default-gap) / 2);
+   --list-list-border: var(--default-border);
+   --list-list-border-radius: calc(var(--default-border-radius) / 2);
+   --list-list-background-color: var(--default-background-color);
+
+   /* checkbox */
+   --list-checkbox-border: var(--default-border);
+   --list-checkbox-border-radius: calc(var(--default-border-radius) / 2);
+   --list-checkbox-padding: 10px 10px;
+   --list-checkbox-background-color: var(--default-background-color);
+
+   /* input */
+   --list-input-border: var(--default-border);
+   --list-input-border-radius: calc(var(--default-border-radius) / 2);
+   --list-input-padding: calc(var(--default-padding) / 2);
+   --list-input-background-color: rgba(255, 255, 255, 1);
+}

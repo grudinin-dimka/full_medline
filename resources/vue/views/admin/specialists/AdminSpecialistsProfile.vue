@@ -13,6 +13,11 @@
 			<span v-if="modalSpecializations.type == 'edit'">СПЕЦИАЛИЗАЦИИ</span>
 		</template>
 		<template #body>
+			<ContainerInputSearch
+				v-model="search.specializations"
+				:placeholder="'Введите специализацию'"
+			/>
+
 			<!-- Список специализаций -->
 			<div class="specializations-list">
 				<label class="item">
@@ -26,11 +31,12 @@
 					:class="{ active: cheked.specializations.includes(specialization.id) }"
 				>
 					<div>
-						#{{
+						{{
 							index +
 							1 +
 							paginationSpecializations.elements.range *
-								(paginationSpecializations.pages.current - 1)
+							(paginationSpecializations.pages.current - 1)
+							+ ')'
 						}}
 					</div>
 					<input type="checkbox" :value="specialization.id" v-model="cheked.specializations" />
@@ -39,10 +45,9 @@
 			</div>
 
 			<!-- Пагинация -->
-			<pagination
-				v-if="sections.specializations.length > paginationSpecializations.elements.range"
-				:arrayLength="sections.specializations.length"
+			<Pagination
 				:settings="paginationSpecializations"
+				:arrayLength="sections.specializations.length"
 				@changePage="changePageSpecializations"
 			/>
 		</template>
@@ -64,6 +69,8 @@
 			<span v-if="modalClinics.type == 'edit'">КЛИНИКИ</span>
 		</template>
 		<template #body>
+			<ContainerInputSearch v-model="search.clinics" :placeholder="'Введите клинику'" />
+
 			<!-- Список специализаций -->
 			<div class="clinics-list">
 				<label class="item">
@@ -79,10 +86,11 @@
 					:class="{ active: cheked.clinics.includes(clinic.id) }"
 				>
 					<div>
-						#{{
+						{{
 							index +
 							1 +
 							paginationClinics.elements.range * (paginationClinics.pages.current - 1)
+							+ ')'
 						}}
 					</div>
 					<input
@@ -99,10 +107,9 @@
 				</label>
 			</div>
 			<!-- Пагинация -->
-			<pagination
-				v-if="sections.clinics.length > paginationClinics.elements.range"
-				:arrayLength="sections.clinics.length"
+			<Pagination
 				:settings="paginationClinics"
+				:arrayLength="sections.clinics.length"
 				@changePage="changePageClinics"
 			/>
 		</template>
@@ -471,7 +478,12 @@
 					:disabled="disabled.profile.create"
 					:look="'white'"
 				>
-					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+					<Icon
+						:name="'add'"
+						:fill="'var(--primary-color)'"
+						:width="'23px'"
+						:height="'23px'"
+					/>
 					Добавить
 				</button-default>
 			</template>
@@ -1178,6 +1190,7 @@ import TableButtonDefault from "../../../components/ui/admin/tables/TableButtonD
 import TableButtonRemove from "../../../components/ui/admin/tables/TableButtonRemove.vue";
 
 import ContainerInput from "../../../components/ui/admin/containers/ContainerInput.vue";
+import ContainerInputSearch from "../../../components/ui/admin/containers/input/ContainerInputSearch.vue";
 import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
 import ContainerInputTwo from "../../../components/ui/admin/containers/input/ContainerInputTwo.vue";
 import ContainerInputTwoSub from "../../../components/ui/admin/containers/input/ContainerInputTwoSub.vue";
@@ -1186,12 +1199,12 @@ import ContainerSelectOnce from "../../../components/ui/admin/containers/select/
 import ContainerSelectThree from "../../../components/ui/admin/containers/select/ContainerSelectThree.vue";
 import ContainerTextareaOnce from "../../../components/ui/admin/containers/textarea/ContainerTextareaOnce.vue";
 
-import Pagination from "../../../components/ui/admin/pagination/Pagination.vue";
-
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 import ButtonDisabled from "../../../components/ui/admin/buttons/ButtonDisabled.vue";
 import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
 import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
+
+import Pagination from "../../../components/modules/Pagination.vue";
 
 import Icon from "../../../components/modules/icon/Icon.vue";
 import IconClose from "../../../components/icons/IconClose.vue";
@@ -1221,6 +1234,7 @@ export default {
 		SpanError,
 
 		ContainerInput,
+		ContainerInputSearch,
 		ContainerInputOnce,
 		ContainerInputTwo,
 		ContainerInputTwoSub,
@@ -1229,7 +1243,6 @@ export default {
 		ContainerSelectThree,
 		ContainerTextareaOnce,
 
-		Pagination,
 		TableButtonDefault,
 		TableButtonRemove,
 
@@ -1237,6 +1250,8 @@ export default {
 		ButtonDisabled,
 		ButtonRemove,
 		ButtonClaim,
+
+		Pagination,
 
 		Icon,
 		IconClose,
@@ -1544,8 +1559,8 @@ export default {
 			/* Пагинация */
 			paginationSpecializations: {
 				pages: {
-					current: 1,
 					range: 5,
+					current: 1,
 				},
 				elements: {
 					range: 10,
@@ -1554,8 +1569,8 @@ export default {
 
 			paginationClinics: {
 				pages: {
-					current: 1,
 					range: 5,
+					current: 1,
 				},
 				elements: {
 					range: 10,
@@ -1838,6 +1853,12 @@ export default {
 				specializationsCategory: [],
 				clinics: [],
 			},
+
+			/* Поисковые переменные */
+			search: {
+				specializations: "",
+				clinics: "",
+			},
 		};
 	},
 	computed: {
@@ -1860,6 +1881,10 @@ export default {
 		getSortedSpecializations() {
 			let specializations = [...this.sections.specializations];
 
+			specializations = specializations.filter((item) => {
+				return item.name.toLowerCase().includes(this.search.specializations.toLowerCase());
+			});
+
 			sorted.sortStringByKey("up", specializations, "name");
 
 			return specializations.splice(
@@ -1876,6 +1901,10 @@ export default {
 
 		getSortedClinics() {
 			let clinics = [...this.sections.clinics];
+
+			clinics = clinics.filter((item) => {
+				return item.name.toLowerCase().includes(this.search.clinics.toLowerCase());
+			});
 
 			sorted.sortStringByKey("up", clinics, "name");
 
@@ -3004,6 +3033,8 @@ export default {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
+
+	min-height: 678px;
 }
 
 :is(.specializations-list, .clinics-list) > .item {

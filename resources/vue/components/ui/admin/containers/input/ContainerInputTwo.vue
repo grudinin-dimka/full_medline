@@ -143,7 +143,7 @@ fieldset.container-input-two.delete > legend > span {
 .container-input-two > .item > input::file-selector-button {
 	cursor: pointer;
 
-	background-color: var(--button-default-color);
+	background-color: var(--button-background-color);
 	border: 0px;
 	border-radius: 5px;
 	color: white;

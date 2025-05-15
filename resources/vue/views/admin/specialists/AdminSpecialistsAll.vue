@@ -41,7 +41,6 @@
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import BaseTable from "../../../components/modules/table/BaseTable.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
-import Pagination from "../../../components/ui/admin/pagination/Pagination.vue";
 
 import ElementInputLabel from "../../../components/ui/admin/elements/ElementInputLabel.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
@@ -64,7 +63,6 @@ export default {
 		InfoBar,
 		BaseTable,
 		LoaderChild,
-		Pagination,
 		ElementInputLabel,
 
 		BlockOnce,

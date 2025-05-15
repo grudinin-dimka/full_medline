@@ -43,20 +43,20 @@ export default {
 }
 
 .table-button.delete {
-	background-color: var(--button-background-color-delete);
+	background-color: var(--button-delete-background-color);
 }
 
 .table-button.delete:hover {
-	background-color: var(--button-background-color-delete-hover);
+	background-color: var(--button-delete-background-color-hover);
 }
 
 .table-button.disabled {
 	cursor: not-allowed;
-	background-color: var(--button-background-color-disabled);
+	background-color: var(--button-disabled-background-color);
 }
 
 .table-button.disabled:hover {
-	background-color: var(--button-background-color-disabled-hover);
+	background-color: var(--button-disabled-background-color-hover);
 }
 
 .wide {

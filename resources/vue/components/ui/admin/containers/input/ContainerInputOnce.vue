@@ -72,7 +72,7 @@ export default {
 .container-input-once > input::file-selector-button {
 	cursor: pointer;
 
-	background-color: var(--button-default-color);
+	background-color: red;
 	border: 0px;
 	border-radius: 5px;
 	color: white;
@@ -80,8 +80,8 @@ export default {
 }
 
 .container-input-once > input.error::file-selector-button {
-	background-color: var(--input-border-color-error);
-	border: 1px solid var(--input-border-color-error);
+	background-color: var(--input-error-border-color);
+	border: 1px solid var(--input-error-border-color);
 }
 
 .container-input-once.create > :is(input:focus, select:focus) {

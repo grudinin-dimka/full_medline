@@ -312,7 +312,7 @@
 			</container-input>
 		</template>
 		<template #footer>
-			<block-buttons-wide>
+			<BlockButtons :wide="true">
 				<button-password-wide
 					:type="'default'"
 					@click="saveUserPassword"
@@ -323,7 +323,7 @@
 				<button-password-wide :type="'other'" @click="closeModal('subModalPassword')">
 					Закрыть
 				</button-password-wide>
-			</block-buttons-wide>
+			</BlockButtons>
 		</template>
 	</admin-sub-modal>
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
@@ -351,7 +351,7 @@
 			</div>
 		</template>
 		<template #footer>
-			<block-buttons-wide>
+			<BlockButtons :wide="true">
 				<button-remove-wide
 					:type="'default'"
 					@click="deleteUser"
@@ -362,7 +362,7 @@
 				<button-remove-wide :type="'other'" @click="closeModal('subModalDelete')">
 					Нет
 				</button-remove-wide>
-			</block-buttons-wide>
+			</BlockButtons>
 		</template>
 	</admin-sub-modal>
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
@@ -394,7 +394,7 @@
 			</div>
 		</template>
 		<template #footer>
-			<block-buttons-wide>
+			<BlockButtons :wide="true">
 				<ButtonDefaultWide
 					:type="'default'"
 					@click="saveUserBlock"
@@ -405,7 +405,7 @@
 				<ButtonDefaultWide :type="'other'" @click="closeModal('subModalBlock')">
 					Нет
 				</ButtonDefaultWide>
-			</block-buttons-wide>
+			</BlockButtons>
 		</template>
 	</admin-sub-modal>
 
@@ -516,7 +516,6 @@ import ContainerInputThree from "../../../components/ui/admin/containers/input/C
 import Icon from "../../../components/modules/icon/Icon.vue";
 
 import BlockButtons from "../../../components/ui/admin/blocks/BlockButtons.vue";
-import BlockButtonsWide from "../../../components/ui/admin/blocks/BlockButtonsWide.vue";
 import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 import ButtonRemoveWide from "../../../components/ui/admin/buttons/ButtonRemoveWide.vue";
@@ -544,7 +543,6 @@ export default {
 		Icon,
 
 		BlockButtons,
-		BlockButtonsWide,
 		ButtonClaim,
 		ButtonDefault,
 		ButtonRemoveWide,
