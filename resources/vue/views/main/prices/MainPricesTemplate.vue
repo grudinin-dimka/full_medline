@@ -673,7 +673,7 @@ export default {
 
 	font-size: 1.25rem;
 	font-weight: 600;
-	color: var(--button-default-color);
+	color: var(--primary-color);
 	padding: 10px 0px;
 
 	border-radius: 20px 20px 0px 0px;
@@ -682,7 +682,7 @@ export default {
 }
 
 .prices__category > .prices__address-title > svg {
-	fill: var(--button-default-color);
+	fill: var(--primary-color);
 }
 
 .prices__category.disabled > .prices__address-title {
@@ -725,7 +725,7 @@ export default {
 .prices__values-price {
 	font-family: "Roboto", sans-serif;
 	text-align: right;
-	color: var(--button-default-color);
+	color: var(--primary-color);
 }
 
 @media screen and (width <= 1450px) {

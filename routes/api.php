@@ -39,6 +39,8 @@ Route::get('/get-specializations-all', [HomeController::class, 'getSpecializatio
 Route::get('/get-clinics-all', [HomeController::class, 'getClinicsAll']);
 
 /* Цены */
+Route::get('/download-prices-archive', [AdminController::class, 'downloadPricesArchive']);
+
 Route::get('/get-prices-choice', [HomeController::class, 'getPricesChoice']);
 Route::post('/get-prices-group', [HomeController::class, 'getPricesGruop']);
 Route::post('/get-prices-template', [HomeController::class, 'getPricesTemplate']);

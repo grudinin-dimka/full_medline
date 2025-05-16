@@ -465,7 +465,7 @@ export default {
 		/* Выгрузка */
 		downloadPricesFiles() {
 			this.disabled.prices.download = true;
-			
+
 			axios({
 				method: "post",
 				url: `${this.$store.getters.urlApi}` + `make-prices-files`,
@@ -475,13 +475,14 @@ export default {
 			})
 				.then((response) => {
 					if (response.data.status) {
-						console.log(response.data.data);
-
 						this.$store.commit("addDebugger", {
 							title: "Успешно!",
 							body: response.data.message,
 							type: "completed",
 						});
+
+						// Перенаправляем пользователя на ссылку для скачивания архива
+						window.location.href = `/api/download-prices-archive`;
 					} else {
 						this.$store.commit("addDebugger", {
 							title: "Ошибка.",

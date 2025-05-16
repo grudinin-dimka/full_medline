@@ -64,6 +64,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 use Throwable;
+use ZipArchive;
 
 class AdminController extends Controller
 {
@@ -1692,73 +1693,112 @@ class AdminController extends Controller
       return $categories[count($categories) - 1]->id;
    }
 
+   /* Получение файла и удаление */
+   public function downloadPricesArchive() {
+      // Получаем список файлов без полных путей
+      $files = Storage::disk('public')->files('reports');
+      
+      if (empty($files)) {
+         return response()->json(['message' => 'No files to download'], 404);
+      }
+
+      $zip = new ZipArchive;
+      $zipFileName = 'prices' . time() . '.zip';
+      $zipPath = storage_path('app/public/' . $zipFileName);
+
+      if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
+         foreach ($files as $file) {
+            // Получаем только имя файла без директории
+            $fileName = basename($file);
+
+            // Добавляем файл в архив с указанием правильного пути
+            $zip->addFile(storage_path('app/public/' . $file), $fileName);
+         }
+
+         $zip->close();
+      } else {
+         return response()->json(['message' => 'Failed to create zip archive'], 500);
+      }
+
+      return response()->download($zipPath)->deleteFileAfterSend(true);
+   }
+
+   /* Создание файлов с ценами */   
    public function makePricesFiles(Request $request) {
       try {
-         // $fieldsNames = [
-         //    1 => 'A',
-         //    2 => 'B',
-         //    3 => 'C',
-         // ];
+         // Проверка наличия директории
+         if (!Storage::exists('public/reports')) {
+            Storage::makeDirectory('public/reports');
+         };
 
-         // // Создание нового табличного документа
-         // $spreadsheet = new Spreadsheet();
-         // $sheet = $spreadsheet->getActiveSheet();
+         // Удаление старых файлов
+         $files = Storage::disk('public')->allFiles('reports');
+         Storage::disk('public')->delete($files);
 
-         // // Установка ширины столбцов
-         // foreach ($fieldsNames as $key => $value) {
-         //    $sheet->getColumnDimension($value)->setAutoSize(true);
-         // }
+         $fields = [
+            1 => 'A',
+            2 => 'B',
+            3 => 'C',
+         ];
 
-         // $fields = [
-         //    1 => 'Категория',
-         //    2 => 'Название',
-         //    3 => 'Цена',
-         // ];
+         $fieldsTitles = [
+            1 => 'Категория',
+            2 => 'Название',
+            3 => 'Цена',
+         ];
 
-         // // Заполнение заголовков
-         // foreach ($fields as $key => $value) {
-         //    $sheet->setCellValue($fieldsNames[$key] . '1', $value);
-         // };
+         $addressesAll = PriceAddress::all();
+         $categoriesAll = PriceCategory::all()->groupBy('addressId');
 
-         // // Заполнение данных
-         // $logs = Log::all()->where('time', '<=', $request->end)->where('time', '>=', $request->start);
+         $test = [];
 
-         // if (count($logs) == 0) {   
-         //    return response()->json([
-         //       "success" => false,
-         //       "message" => 'Нет данных.',
-         //       "result" => null,         
-         //    ]);
-         // }
+         foreach ($addressesAll as $key => $value) {
+            // Создание нового табличного документа
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
 
-         // foreach ($logs as $key => $value) {
-         //    $logs[$key]->device = Device::withTrashed()->where('id', $value->device_id)->value('name');
+            // Установка ширины столбцов
+            foreach ($fields as $fieldsKey => $fieldsValue) {
+               $sheet->getColumnDimension($fieldsValue)->setAutoSize(true);
+            }
 
-         //    foreach ($request->fields as $fieldKey => $fieldValue) {
-         //       $sheet->setCellValue(
-         //          $this->fieldsNames[$fieldKey + 1] . $key + 2, 
-         //          $value[$fieldValue['value']]
-         //       );
-         //    };   
-         // }
+            // Заполнение заголовков
+            foreach ($fieldsTitles as $fieldsTitlesKey => $fieldsTitlesValue) {
+               $sheet->setCellValue($fields[$fieldsTitlesKey] . '1', $fieldsTitlesValue);
+            };
 
-         // // Сохранение файла в папке storage
-         // $writer = new Xlsx($spreadsheet);
+            // Получение всех категорий по адресу
+            $categories = $categoriesAll[$value->id]->groupBy('id');
+
+            // Получение всех цен
+            $prices = PriceValue::all()->whereIn(
+               'categoryId', 
+               $categories->keys()->toArray()
+            );
+            
+            // Заполнение данных
+            $count = 2;
+            foreach ($prices as $priceKey => $priceValue) {
+               $sheet->setCellValue($fields[1] . ($count), $categories[$priceValue->categoryId][0]->name);
+               $sheet->setCellValue($fields[2] . ($count), $priceValue->name);
+               $sheet->setCellValue($fields[3] . ($count), $priceValue->price);
+
+               $count++;
+            };
+
+            // Сохранение файла в папке storage
+            $fileName = $value->name . '.xlsx';
+            $files[] = $fileName;
+
+            $writer = new Xlsx($spreadsheet);
+            $filePath = storage_path('app/public/reports/' . $fileName);
+            $writer->save($filePath);
+         }
          
-         // if (!Storage::exists('public/reports')) {
-         //    Storage::makeDirectory('public/reports');
-         // };
-
-         // $fileName = 'prices-' . time() . '.xlsx';
-         // $filePath = storage_path('app/public/reports/' . $fileName);
-         // $writer->save($filePath);
-
-         $addresses = PriceValue::all()->groupBy('categoryId', 'addressId')->toArray();
-
          return response()->json([
             "status" => true,
             "message" => 'Файл успешно создан.',
-            "data" => $addresses,
+            "data" => $files,
          ]);
       } catch (Throwable $e) {
          return response()->json([
