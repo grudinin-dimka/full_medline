@@ -1,42 +1,46 @@
 <template>
-	<div class="specialist" v-for="specialist in specialists" :key="specialist.id">
-		<img class="specialist__img" :src="specialist.path" alt="Фото специалиста" />
+	<TransitionGroup name="specialists" tag="div" class="specialists__list">
+		<div class="specialists__list-item" v-for="specialist in specialists" :key="specialist.id">
+			<img class="specialists__list-img" :src="specialist.path" alt="Фото специалиста" />
 
-		<div class="specialist__body">
-			<div class="specialist__body-options">
-				<div class="clinics__item-other">
-					{{ getSpecializationString(specialist.specialization) }}.
-				</div>
-				<div class="clinics__item-title label" @click="openspecialistProfile(specialist)">
-					{{ specialist.name }}
-				</div>
-			</div>
-			<div class="specialist__body-clinics" v-if="specialist.clinics.length > 0">
-				<div class="specialist__clinics-item" v-for="clinic in specialist.clinics">
-					<div class="clinics__item-other">
-						{{ `г. ${clinic.city}, ул. ${clinic.street}, д. ${clinic.home}` }}.
+			<div class="specialists__list-body">
+				<div class="specialists__body-options">
+					<div class="specialists__body-other">
+						{{ getSpecializationString(specialist.specialization) }}.
 					</div>
 					<div class="clinics__item-title label" @click="openspecialistProfile(specialist)">
-						{{ clinic.name }}
+						{{ specialist.name }}
 					</div>
 				</div>
-			</div>
-			<div class="specialist__body-clinics" v-else>
-				<div class="specialist__clinics-item">
-					<div class="clinics__item-other">Неизвестно.</div>
-					<div class="clinics__item-title label" @click="openspecialistProfile(specialist)">
-						Не указано.
+
+				<div class="specialist__body-clinics" v-if="specialist.clinics.length > 0">
+					<div class="specialist__clinics-item" v-for="clinic in specialist.clinics">
+						<div class="specialists__body-other">
+							{{ `г. ${clinic.city}, ул. ${clinic.street}, д. ${clinic.home}` }}.
+						</div>
+						<div class="clinics__item-title label" @click="openspecialistProfile(specialist)">
+							{{ clinic.name }}
+						</div>
 					</div>
 				</div>
+
+				<div class="specialist__body-clinics" v-else>
+					<div class="specialist__clinics-item">
+						<div class="specialists__body-other">Неизвестно.</div>
+						<div class="clinics__item-title label" @click="openspecialistProfile(specialist)">
+							Не указано.
+						</div>
+					</div>
+				</div>
+				<a
+					@click.prevent="openspecialistProfile(specialist)"
+					:href="`/specialists/${specialist.url}`"
+				>
+					Подробнее
+				</a>
 			</div>
-			<a
-				@click.prevent="openspecialistProfile(specialist)"
-				:href="`/specialists/${specialist.url}`"
-			>
-				Подробнее
-			</a>
 		</div>
-	</div>
+	</TransitionGroup>
 </template>
 
 <script>
@@ -101,17 +105,28 @@ export default {
 </script>
 
 <style scoped>
-.list-enter-active,
-.list-leave-active {
+/* Таблица: анимация */
+.specialists-move, /* применять переход к движущимся элементам */
+.specialists-enter-active,
+.specialists-leave-active {
 	transition: all 0.5s ease;
 }
-.list-enter-from,
-.list-leave-to {
+
+.specialists-enter-from,
+.specialists-leave-to {
 	opacity: 0;
 	transform: translateX(30px);
 }
 
-.specialist {
+.specialists__list {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+
+	animation: show-bottom-to-top-15 0.5s ease-in-out;
+}
+
+.specialists__list-item {
 	box-sizing: border-box;
 	display: flex;
 	justify-content: center;
@@ -127,11 +142,9 @@ export default {
 	padding: 0px 0px 20px 0px;
 
 	width: 100%;
-	transition: all 0.2s;
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
-.specialist__img {
+.specialists__list-img {
 	width: 90px;
 	border-radius: 300px;
 	border: var(--default-border);
@@ -139,7 +152,7 @@ export default {
 	object-fit: contain;
 }
 
-.specialist__body {
+.specialists__list-body {
 	flex: 1 0 0px;
 	display: grid;
 	width: 100%;
@@ -158,7 +171,7 @@ export default {
 	font-size: 1.125rem;
 }
 
-.specialist__body > a {
+.specialists__list-body > a {
 	cursor: pointer;
 	padding: 15px;
 	font-size: 1.125em;
@@ -173,12 +186,12 @@ export default {
 	transition: all 0.2s;
 }
 
-.specialist__body > a:hover {
+.specialists__list-body > a:hover {
 	background-color: var(--button-background-color-hover);
 	color: white;
 }
 
-.specialist__body-options {
+.specialists__body-options {
 	display: flex;
 	flex-direction: column;
 	gap: 7px;
@@ -198,7 +211,7 @@ export default {
 	color: var(--primary-color);
 }
 
-.clinics__item-other {
+.specialists__body-other {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
@@ -242,7 +255,7 @@ export default {
 }
 
 @media screen and (max-width: 1100px) {
-	.specialist__body {
+	.specialists__list-body {
 		grid-template-columns: 1fr 150px;
 	}
 
@@ -252,13 +265,13 @@ export default {
 }
 
 @media screen and (max-width: 600px) {
-	.specialist {
+	.specialists__list-item {
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
 	}
 
-	.specialist__img {
+	.specialists__list-img {
 		width: 200px;
 		border-radius: 300px;
 		border: var(--default-border);
@@ -268,11 +281,11 @@ export default {
 }
 
 @media screen and (max-width: 440px) {
-	.clinics__item-other {
+	.specialists__body-other {
 		display: none;
 	}
 
-	.specialist__img {
+	.specialists__list-img {
 		width: 100%;
 		border-radius: 300px;
 		border: var(--default-border);
@@ -282,7 +295,7 @@ export default {
 		object-fit: contain;
 	}
 
-	.specialist__body {
+	.specialists__list-body {
 		text-align: center;
 		grid-template-columns: 1fr;
 	}

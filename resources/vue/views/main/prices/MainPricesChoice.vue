@@ -233,7 +233,9 @@ export default {
 		flex-direction: column;
 	}
 
-	.prices__item > ul > li > button {
+	.prices__item > ul > li > a {
+		text-align: center;
+		box-sizing: border-box;
 		width: 100%;
 	}
 }

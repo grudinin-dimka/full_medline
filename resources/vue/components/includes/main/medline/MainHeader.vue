@@ -582,7 +582,7 @@ header.slide {
 
 	width: 30px;
 	height: 3px;
-	background-color: var(--button-default-color);
+	background-color: var(--primary-color);
 
 	transition: all 0.5s;
 }
@@ -799,7 +799,7 @@ header.slide {
 		justify-content: center;
 		top: 0px;
 
-		padding: 20px 0px;
+		padding: 10px 0px;
 
 		width: 100%;
 		margin: 0px;

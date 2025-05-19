@@ -57,7 +57,7 @@
 						</th>
 					</tr>
 				</thead>
-				<tbody>
+				<transition-group name="shedule" tag="tbody">
 					<tr
 						v-for="shedule in getFilteredShedules"
 						:key="shedule.id"
@@ -65,11 +65,18 @@
 					>
 						<td>
 							<div class="shedule__specialist">
-								<template v-if="['кт', 'мрт', 'рентген', 'маммограф'].includes(shedule.name.trim().toLowerCase())">
+								<template
+									v-if="
+										['кт', 'мрт', 'рентген', 'маммограф'].includes(
+											shedule.name.trim().toLowerCase()
+										)
+									"
+								>
 									<img
 										v-if="shedule.name.trim().toLowerCase() === 'кт'"
 										:src="`/storage/img/kt.webp`"
 										width="50"
+										height="50"
 										alt="КТ"
 									/>
 
@@ -77,6 +84,7 @@
 										v-if="shedule.name.trim().toLowerCase() === 'мрт'"
 										:src="`/storage/img/mrt.webp`"
 										width="50"
+										height="50"
 										alt="МРТ"
 									/>
 
@@ -84,6 +92,7 @@
 										v-if="shedule.name.trim().toLowerCase() === 'рентген'"
 										:src="`/storage/img/rentgen.webp`"
 										width="50"
+										height="50"
 										alt="рентген"
 									/>
 
@@ -91,6 +100,7 @@
 										v-if="shedule.name.trim().toLowerCase() === 'маммограф'"
 										:src="`/storage/img/mammograph.webp`"
 										width="50"
+										height="50"
 										alt="маммограф"
 									/>
 
@@ -106,6 +116,7 @@
 									<img
 										:src="`/storage/default/specialits-schedule.webp`"
 										width="50"
+										height="50"
 										alt="Врач"
 										v-if="!shedule.image"
 									/>
@@ -191,7 +202,7 @@
 					<tr class="empty" v-else>
 						<td colspan="10">Ничего нет.</td>
 					</tr>
-				</tbody>
+				</transition-group>
 			</table>
 		</template>
 
@@ -833,7 +844,20 @@ export default {
 	background-color: var(--primary-color);
 }
 
-/* Таблица */
+/* Таблица: анимация */
+.shedule-move, /* применять переход к движущимся элементам */
+.shedule-enter-active,
+.shedule-leave-active {
+	transition: all 0.5s ease;
+}
+
+.shedule-enter-from,
+.shedule-leave-to {
+	opacity: 0;
+	transform: translateX(30px);
+}
+
+/* Таблица: список врачей */
 .shedule__specialist {
 	display: flex;
 	gap: 10px;
@@ -866,6 +890,7 @@ export default {
 	color: var(--primary-color);
 }
 
+/* Таблица: таблица */
 table {
 	border-collapse: collapse;
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
@@ -915,6 +940,17 @@ th {
 	border-left: 0px;
 
 	height: 50px;
+}
+
+tr:hover > td {
+	border-top: 0px;
+	border-right: 0px;
+	border-bottom: 1px;
+	border-left: 0px;
+	border-style: solid;
+	border-color: var(--primary-color);
+
+	background-color: var(--item-background-color-active);
 }
 
 tr:nth-child(even) > td {
