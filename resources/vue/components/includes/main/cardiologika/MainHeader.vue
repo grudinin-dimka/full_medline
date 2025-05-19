@@ -31,7 +31,7 @@
 
 			<div class="header__item-list">
 				<a href="tel:+73525390009" target="_blank">+7 (3456) 26-26-24</a>
-				<a href="tel:+79961462624" target="_blank">+7 (9961) 46-26-24</a>
+				<a href="tel:+79961462624" target="_blank">+7 (996) 146-26-24</a>
 			</div>
 		</div>
 	</header>

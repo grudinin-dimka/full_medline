@@ -237,7 +237,11 @@
 
 							<BaseTableButton
 								:wide="true"
-								:look="this.table.body.find((item) => item.id == row.id).create ? 'disabled' : 'delete'"
+								:look="
+									this.table.body.find((item) => item.id == row.id).create
+										? 'disabled'
+										: 'delete'
+								"
 								v-if="
 									table.options.delete &&
 									!table.body.find((item) => item.id == row.id).delete
@@ -984,6 +988,14 @@ tr.delete > td {
 	cursor: pointer;
 
 	transition: all 0.2s;
+}
+
+@media screen and (width < 500px) {
+	table {
+		width: auto;
+		display: block;
+		overflow-x: scroll;
+	}
 }
 
 @keyframes appear-rotate {

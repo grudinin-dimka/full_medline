@@ -7,7 +7,7 @@
 		<div class="login">
 			<div class="logo">
 				<!-- NOTE: Логотип в логине -->
-				<img src="../assets/svg/medline/logo.svg" alt="Кардиологика" width="130"/>
+				<img src="../assets/svg/medline/logo.svg" alt="Медлайн" width="130"/>
 			</div>
 			<container-input>
 				<container-input-once :type="'edit'">

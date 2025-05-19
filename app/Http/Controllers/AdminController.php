@@ -1748,7 +1748,24 @@ class AdminController extends Controller
          ];
 
          $addressesAll = PriceAddress::all();
+
+         if (count($addressesAll) === 0) {
+            return response()->json([
+               "status" => false,
+               "message" => "Список адресов пуст.",
+               "data" => null,
+            ]);
+         };
+
          $categoriesAll = PriceCategory::all()->groupBy('addressId');
+
+         if (count($categoriesAll) === 0) {
+            return response()->json([
+               "status" => false,
+               "message" => "Список категорий пуст.",
+               "data" => null,
+            ]);
+         };
 
          $test = [];
 

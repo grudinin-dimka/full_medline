@@ -5,8 +5,8 @@
 		:wrapAround="true"
 		:transition="750"
 		:autoplay="5000"
-		:mouseDrag="false"
-		:touchDrag="false"
+		:mouseDrag="true"
+		:touchDrag="true"
 		:pauseAutoplayOnHover="true"
 	>
 		<slide v-for="slide in slides" :key="slide">
@@ -98,20 +98,12 @@ export default {
 </script>
 
 <style>
-.carousel__prev {
-	color: rgba(0, 171, 189, 0.5);
+:is(.carousel__prev, .carousel__next) {
+	color: var(--primary-color);
 }
 
-.carousel__prev:hover {
-	color: rgba(0, 171, 189, 1);
-}
-
-.carousel__next {
-	color: rgba(0, 171, 189, 0.5);
-}
-
-.carousel__next:hover {
-	color: rgba(0, 171, 189, 1);
+:is(.carousel__prev, .carousel__next):hover {
+	color: var(--primary-color-hover);
 }
 
 .carousel__slide {

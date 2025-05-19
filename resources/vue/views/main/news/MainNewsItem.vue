@@ -51,10 +51,9 @@ export default {
 
 .news__item-image {
 	width: 100%;
-	min-height: 300px;
-	max-height: 300px;
+	aspect-ratio: 1/1;
 	object-fit: cover;
-	border-radius: calc(var(--default-border-radius) / 2);
+	border-radius: calc(var(--default-border-radius) / 1.5);
 }
 
 .news__item-title {

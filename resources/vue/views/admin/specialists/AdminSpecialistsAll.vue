@@ -4,7 +4,7 @@
 		<template v-slot:addreas>specialists</template>
 	</info-bar>
 
-	<block-once :minHeight="100">
+	<block-once :minHeight="100" :hide="true">
 		<template #title>СПИСОК ВРАЧЕЙ</template>
 
 		<template #options>

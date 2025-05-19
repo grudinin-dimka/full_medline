@@ -100,7 +100,7 @@
 				>
 					<Icon
 						:name="'delete'"
-						:fill="'var(--icon-delete-fill)'"
+						:fill="'white'"
 						:width="'22px'"
 						:height="'22px'"
 					/>
