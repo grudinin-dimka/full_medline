@@ -999,12 +999,25 @@ class HomeController extends Controller
          ->get()
          ->groupBy('dayId');
 
+      $specialists = Specialist::all()->groupBy(function ($specialist) {
+         return $specialist->family . ' ' . $specialist->name . ' ' . $specialist->surname;
+      });
+
       // Создаем "карту" текущих дней для мгновенного поиска по дате
       $currentDaysMap = $currentDays->keyBy('date');
 
       // Основной цикл по расписаниям
       foreach ($schedules as $schedule) {
          $weeks = []; // Здесь будем хранить данные для каждой клиники
+
+         /* Получение специалистов */
+         $sheduleSpecialits = $specialists[$schedule->name] ?? null;
+         if($sheduleSpecialits) {
+            $schedule->image = Storage::url('specialists/' . $sheduleSpecialits[0]->filename);
+            $schedule->link = $this->makeUrl($sheduleSpecialits[0]->family . ' ' . $sheduleSpecialits[0]->name . ' ' . $sheduleSpecialits[0]->surname);
+         } else { 
+            $schedule->image = null;
+         }
          
          // Цикл по клиникам для текущего расписания
          foreach ($scheduleClinics as $clinic) {
@@ -1063,6 +1076,7 @@ class HomeController extends Controller
             "currentDays" => $currentDays,
             "shedules" => $schedules,
             "sheduleClinics" => $scheduleClinics,
+            "specialists" => $specialists,
          ],
       ]);
    }

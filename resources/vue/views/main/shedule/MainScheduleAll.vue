@@ -46,8 +46,7 @@
 			<table>
 				<thead>
 					<tr>
-						<th width="300px">Ф.И.О.</th>
-						<th>Специализация</th>
+						<th width="400px"></th>
 						<th width="110px" v-for="day in week">
 							<div>
 								{{ getDateDayNumberMonth(day.date) }}
@@ -64,12 +63,101 @@
 						:key="shedule.id"
 						v-if="getFilteredShedules.length > 0"
 					>
-						<td>{{ shedule.name }}</td>
-						<td>{{ shedule.specializations }}</td>
-						<!-- Столбики дней недели -->
+						<td>
+							<div class="shedule__specialist">
+								<template v-if="['кт', 'мрт', 'рентген', 'маммограф'].includes(shedule.name.trim().toLowerCase())">
+									<img
+										v-if="shedule.name.trim().toLowerCase() === 'кт'"
+										:src="`/storage/img/kt.webp`"
+										width="50"
+										alt="КТ"
+									/>
+
+									<img
+										v-if="shedule.name.trim().toLowerCase() === 'мрт'"
+										:src="`/storage/img/mrt.webp`"
+										width="50"
+										alt="МРТ"
+									/>
+
+									<img
+										v-if="shedule.name.trim().toLowerCase() === 'рентген'"
+										:src="`/storage/img/rentgen.webp`"
+										width="50"
+										alt="рентген"
+									/>
+
+									<img
+										v-if="shedule.name.trim().toLowerCase() === 'маммограф'"
+										:src="`/storage/img/mammograph.webp`"
+										width="50"
+										alt="маммограф"
+									/>
+
+									<div class="shedule__specialist-info">
+										<div class="shedule__specialist-specializations">Диагностика</div>
+										<div class="shedule__specialist-name">
+											{{ shedule.name }}
+										</div>
+									</div>
+								</template>
+
+								<template v-else>
+									<img
+										:src="`/storage/default/specialits-schedule.webp`"
+										width="50"
+										alt="Врач"
+										v-if="!shedule.image"
+									/>
+
+									<a
+										@click.prevent="
+											$router.push({
+												name: 'specialists-profile',
+												params: {
+													name: shedule.link,
+													catagory: null,
+												},
+											})
+										"
+										:href="`/specialists/${shedule.link}`"
+										v-else
+									>
+										<img :src="shedule.image" width="50" height="50" alt="Врач" />
+									</a>
+
+									<div class="shedule__specialist-info">
+										<div class="shedule__specialist-specializations">
+											{{ shedule.specializations }}
+										</div>
+										<div class="shedule__specialist-name">
+											<a
+												v-if="shedule.image"
+												@click.prevent="
+													$router.push({
+														name: 'specialists-profile',
+														params: {
+															name: shedule.link,
+															catagory: null,
+														},
+													})
+												"
+												:href="`/specialists/${shedule.link}`"
+											>
+												{{ shedule.name }}
+											</a>
+
+											<template v-else>
+												{{ shedule.name }}
+											</template>
+										</div>
+									</div>
+								</template>
+							</div>
+						</td>
+
 						<td v-for="day in week" :key="day.id">
 							<div class="days">
-								<!-- Вывод расписания на несколько -->
 								<div
 									class="days__item all"
 									v-for="clinic in getClinicsWithoutAll"
@@ -82,7 +170,7 @@
 										v-if="getClinicStatus(shedule.id, clinic.id)"
 										:style="getTimeStyle(clinic.id, time)"
 									>
-										{{ time !== "-" ? time : "" }}
+										{{ time }}
 										<div class="days__content-help" v-if="time !== '-'">
 											{{ clinic.name }}
 										</div>
@@ -94,7 +182,7 @@
 										v-for="time in getDayTime(shedule.id, day.date, activeClinic.id)"
 										:style="getTimeStyle(activeClinic.id, time)"
 									>
-										{{ time !== "-" ? time : "" }}
+										{{ time }}
 									</div>
 								</div>
 							</div>
@@ -232,6 +320,30 @@ export default {
 					secondary: {
 						hsl: [224, 100, 85],
 						rgb: [180, 200, 255],
+						alpha: 0.3,
+					},
+				},
+				{
+					primary: {
+						hsl: [267, 82, 58],
+						rgb: [140, 61, 236],
+						alpha: 1,
+					},
+					secondary: {
+						hsl: [267, 66, 84],
+						rgb: [213, 189, 242],
+						alpha: 0.3,
+					},
+				},
+				{
+					primary: {
+						hsl: [191, 82, 58],
+						rgb: [61, 204, 100],
+						alpha: 1,
+					},
+					secondary: {
+						hsl: [191, 80, 88],
+						rgb: [200, 240, 249],
 						alpha: 0.3,
 					},
 				},
@@ -430,13 +542,14 @@ export default {
 					return {
 						color: "black",
 						border: "1px solid var(--primary-color)",
-						backgroundColor: 'var(--item-background-color-active)',
+						backgroundColor: "var(--item-background-color-active)",
 					};
 				}
 
 				// Если выбрана другая клиника
 				return {
-					border: "1px solid var(--primary-color)",
+					border: "1px solid rgba(255, 255, 255, 0)",
+					backgroundColor: "var(--item-background-color-active)",
 				};
 			}
 
@@ -458,33 +571,43 @@ export default {
 			}
 
 			return {
-				border: `1px solid ${this.getColor(number, count, "primary")}`,
+				border: "1px solid rgba(255, 255, 255, 0)",
+				backgroundColor: this.getColor(number, count, "secondary"),
 			};
 		},
 
 		/* Получение класса у времени */
 		getTimeStyle(id, time) {
-			// Проверка на пустоту
-			if (!id || time == "-") {
+			let count = 0;
+			let number = id;
+
+			// Определение цвета в зависимости от id
+			while (number > this.colors.length) {
+				number -= this.colors.length;
+
+				count++;
+			}
+
+			if (!number || time == "-") {
 				return {
 					borderColor: "rgba(255, 255, 255, 0)",
-					backgroundColor: "rgba(255, 255, 255, 0)",
+					backgroundColor: "rgba(0, 0, 0, 0.05)",
 					height: "21px",
 					margin: "5px 0px",
 				};
 			}
 
-			let count = 0;
-			// Определение цвета в зависимости от id
-			while (id > this.colors.length) {
-				id -= this.colors.length;
-
-				count++;
+			if (this.activeClinic.id === id) {
+				return {
+					borderColor: this.getColor(number, count, "primary"),
+					backgroundColor: this.getColor(number, count, "secondary"),
+					margin: "5px 0px",
+				};
 			}
 
 			return {
-				borderColor: this.getColor(id, count, "primary"),
-				backgroundColor: this.getColor(id, count, "secondary"),
+				borderColor: this.getColor(number, count, "primary"),
+				backgroundColor: this.getColor(number, count, "secondary"),
 				margin: "5px 0px",
 			};
 		},
@@ -711,6 +834,38 @@ export default {
 }
 
 /* Таблица */
+.shedule__specialist {
+	display: flex;
+	gap: 10px;
+}
+
+.shedule__specialist img {
+	border-radius: 100px;
+	object-fit: contain;
+}
+
+.shedule__specialist-specializations {
+	font-size: 0.875rem;
+}
+
+.shedule__specialist-name {
+	font-size: 1.125rem;
+
+	transition: all 0.2s;
+}
+
+.shedule__specialist-name > a {
+	font-size: 1.125rem;
+	text-decoration: none;
+	color: black;
+
+	transition: all 0.2s;
+}
+
+.shedule__specialist-name > a:hover {
+	color: var(--primary-color);
+}
+
 table {
 	border-collapse: collapse;
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
@@ -725,9 +880,7 @@ th {
 	text-align: center;
 	min-width: 110px;
 	font-size: 1rem;
-	font-weight: 600;
-
-	color: var(--primary-color);
+	font-weight: normal;
 }
 
 td {
@@ -743,10 +896,10 @@ td {
 
 td,
 th {
-	border-top: 1px;
-	border-right: 1px;
+	border-top: 0px;
+	border-right: 0px;
 	border-bottom: 1px;
-	border-left: 1px;
+	border-left: 0px;
 	border-style: solid;
 	border-color: rgb(200, 200, 200);
 
@@ -755,12 +908,21 @@ th {
 	transition: all 0.2s;
 }
 
+th {
+	border-top: 0px;
+	border-right: 0px;
+	border-bottom: 0px;
+	border-left: 0px;
+
+	height: 50px;
+}
+
 tr:nth-child(even) > td {
-	background-color: var(--table-td-even-background-color);
+	/* background-color: var(--table-td-even-background-color); */
 }
 
 tr:nth-child(odd) > td {
-	background-color: var(--table-td-odd-background-color);
+	/* background-color: var(--table-td-odd-background-color); */
 }
 
 tr > td:nth-child(2) {
