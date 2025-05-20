@@ -1,5 +1,5 @@
 <template>
-	<TransitionGroup name="specialists" tag="div" class="specialists__list">
+	<div class="specialists__list">
 		<div class="specialists__list-item" v-for="specialist in specialists" :key="specialist.id">
 			<img class="specialists__list-img" :src="specialist.path" alt="Фото специалиста" />
 
@@ -40,7 +40,7 @@
 				</a>
 			</div>
 		</div>
-	</TransitionGroup>
+	</div>
 </template>
 
 <script>
@@ -105,25 +105,10 @@ export default {
 </script>
 
 <style scoped>
-/* Таблица: анимация */
-.specialists-move, /* применять переход к движущимся элементам */
-.specialists-enter-active,
-.specialists-leave-active {
-	transition: all 0.5s ease;
-}
-
-.specialists-enter-from,
-.specialists-leave-to {
-	opacity: 0;
-	transform: translateX(30px);
-}
-
 .specialists__list {
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
-
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 .specialists__list-item {
@@ -142,6 +127,8 @@ export default {
 	padding: 0px 0px 20px 0px;
 
 	width: 100%;
+	transition: all 0.2s;
+	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 .specialists__list-img {

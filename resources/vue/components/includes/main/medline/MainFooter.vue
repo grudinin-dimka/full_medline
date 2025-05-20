@@ -5,7 +5,12 @@
 			<!-- Блок с платёжными системами -->
 			<div class="pay">
 				<a href="/">
-					<img src="../../../../assets/svg/medline/logo-full.svg" width="250" height="150" alt="логотип" />
+					<img
+						src="../../../../assets/svg/medline/logo-full.svg"
+						width="250"
+						height="150"
+						alt="логотип"
+					/>
 				</a>
 				<p>Мы принимаем к оплате</p>
 				<div class="pay-cards">
@@ -206,14 +211,13 @@ section.up > div {
 }
 
 section.up .pay {
-	flex: 1 0 300px;
+	flex-grow: 1;
+
 	display: flex;
 	flex-direction: column;
 	text-transform: uppercase;
 	justify-content: center;
 	align-items: center;
-
-	padding: 30px;
 }
 
 section.up .pay p {
@@ -252,13 +256,12 @@ section.up .pay p {
 }
 
 section.up .buttons {
-	flex: 1 0 300px;
+	flex-grow: 1;
+
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	gap: 20px;
-
-	padding: 30px;
 }
 
 section.up .buttons a {
@@ -288,13 +291,12 @@ section.up .buttons a:hover {
 }
 
 section.up .more {
-	flex: 1 0 300px;
+	flex-grow: 1;
+
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-
-	padding: 30px;
 }
 
 section.up .more .button {
@@ -365,7 +367,7 @@ section.up .more .links > a:hover > svg {
 }
 
 section.bottom {
-	padding: 30px;
+	padding: 20px;
 	margin: 0px 30px 20px 30px;
 	border-radius: calc(var(--default-border-radius) / 2);
 

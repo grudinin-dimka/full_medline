@@ -154,8 +154,6 @@ export default {
 p {
 	margin: 0;
 	padding: 0;
-	font-size: 30px;
-	font-weight: 700;
 }
 
 .section-info {
@@ -165,11 +163,13 @@ p {
 
 .section-info-title {
 	color: var(--primary-color);
-	font-size: 55px;
+	font-size: 3.5rem;
+	font-weight: 700;
 }
 
 .section-info-sub-title {
-	font-size: 35px;
+	font-size: 2rem;
+	font-weight: 700;
 }
 
 .news__main {

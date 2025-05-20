@@ -203,7 +203,7 @@ nav::-webkit-scrollbar-thumb:hover {
 	border-radius: calc(var(--default-border-radius) / 1.5);
 
 	text-align: center;
-	font-size: 20px;
+	font-size: 1.25rem;
 	color: white;
 	text-decoration: none;
 
@@ -231,7 +231,7 @@ nav::-webkit-scrollbar-thumb:hover {
 	border-radius: calc(var(--default-border-radius) / 1.5);
 
 	text-align: center;
-	font-size: 20px;
+	font-size: 1.25rem;
 	color: white;
 	text-decoration: none;
 
@@ -296,7 +296,7 @@ nav::-webkit-scrollbar-thumb:hover {
 	border: 0px;
 
 	text-align: center;
-	font-size: 20px;
+	font-size: 1.25rem;
 	color: white;
 	text-decoration: none;
 	background-color: rgba(0, 0, 0, 0.15);

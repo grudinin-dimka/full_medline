@@ -41,13 +41,13 @@
 		</div>
 	</block>
 
-	<block-hide>
+	<Block>
 		<template v-if="loading.sections.schedule">
-			<table>
+			<table class="shedule__table">
 				<thead>
-					<tr>
-						<th width="400px"></th>
-						<th width="110px" v-for="day in week">
+					<tr class="shedule__table-tr">
+						<th class="shedule__table-th" width="400px"></th>
+						<th class="shedule__table-th" width="110px" v-for="day in week">
 							<div>
 								{{ getDateDayNumberMonth(day.date) }}
 							</div>
@@ -57,117 +57,169 @@
 						</th>
 					</tr>
 				</thead>
-				<transition-group name="shedule" tag="tbody">
+				<tbody>
 					<tr
+						class="shedule__table-tr"
 						v-for="shedule in getFilteredShedules"
 						:key="shedule.id"
 						v-if="getFilteredShedules.length > 0"
 					>
-						<td>
+						<td class="shedule__table-td">
 							<div class="shedule__specialist">
-								<template
-									v-if="
-										['кт', 'мрт', 'рентген', 'маммограф'].includes(
-											shedule.name.trim().toLowerCase()
-										)
-									"
-								>
-									<img
-										v-if="shedule.name.trim().toLowerCase() === 'кт'"
-										:src="`/storage/img/kt.webp`"
-										width="50"
-										height="50"
-										alt="КТ"
-									/>
-
-									<img
-										v-if="shedule.name.trim().toLowerCase() === 'мрт'"
-										:src="`/storage/img/mrt.webp`"
-										width="50"
-										height="50"
-										alt="МРТ"
-									/>
-
-									<img
-										v-if="shedule.name.trim().toLowerCase() === 'рентген'"
-										:src="`/storage/img/rentgen.webp`"
-										width="50"
-										height="50"
-										alt="рентген"
-									/>
-
-									<img
-										v-if="shedule.name.trim().toLowerCase() === 'маммограф'"
-										:src="`/storage/img/mammograph.webp`"
-										width="50"
-										height="50"
-										alt="маммограф"
-									/>
-
-									<div class="shedule__specialist-info">
-										<div class="shedule__specialist-specializations">Диагностика</div>
-										<div class="shedule__specialist-name">
-											{{ shedule.name }}
-										</div>
-									</div>
-								</template>
-
-								<template v-else>
-									<img
-										:src="`/storage/default/specialits-schedule.webp`"
-										width="50"
-										height="50"
-										alt="Врач"
-										v-if="!shedule.image"
-									/>
-
-									<a
-										@click.prevent="
-											$router.push({
-												name: 'specialists-profile',
-												params: {
-													name: shedule.link,
-													catagory: null,
-												},
-											})
+								<div class="shedule__specialist-head">
+									<template
+										v-if="
+											['кт', 'мрт', 'рентген', 'маммограф'].includes(
+												shedule.name.trim().toLowerCase()
+											)
 										"
-										:href="`/specialists/${shedule.link}`"
-										v-else
 									>
-										<img :src="shedule.image" width="50" height="50" alt="Врач" />
-									</a>
+										<img
+											v-if="shedule.name.trim().toLowerCase() === 'кт'"
+											:src="`/storage/img/kt.webp`"
+											width="50"
+											height="50"
+											alt="КТ"
+										/>
 
-									<div class="shedule__specialist-info">
-										<div class="shedule__specialist-specializations">
-											{{ shedule.specializations }}
-										</div>
-										<div class="shedule__specialist-name">
-											<a
-												v-if="shedule.image"
-												@click.prevent="
-													$router.push({
-														name: 'specialists-profile',
-														params: {
-															name: shedule.link,
-															catagory: null,
-														},
-													})
-												"
-												:href="`/specialists/${shedule.link}`"
-											>
-												{{ shedule.name }}
-											</a>
+										<img
+											v-if="shedule.name.trim().toLowerCase() === 'мрт'"
+											:src="`/storage/img/mrt.webp`"
+											width="50"
+											height="50"
+											alt="МРТ"
+										/>
 
-											<template v-else>
+										<img
+											v-if="shedule.name.trim().toLowerCase() === 'рентген'"
+											:src="`/storage/img/rentgen.webp`"
+											width="50"
+											height="50"
+											alt="рентген"
+										/>
+
+										<img
+											v-if="shedule.name.trim().toLowerCase() === 'маммограф'"
+											:src="`/storage/img/mammograph.webp`"
+											width="50"
+											height="50"
+											alt="маммограф"
+										/>
+
+										<div class="shedule__specialist-info">
+											<div class="shedule__specialist-specializations">Диагностика</div>
+											<div class="shedule__specialist-name">
 												{{ shedule.name }}
-											</template>
+											</div>
 										</div>
-									</div>
-								</template>
+									</template>
+
+									<template v-else>
+										<img
+											:src="`/storage/default/specialits-schedule.webp`"
+											width="50"
+											height="50"
+											alt="Врач"
+											v-if="!shedule.image"
+										/>
+
+										<a
+											@click.prevent="
+												$router.push({
+													name: 'specialists-profile',
+													params: {
+														name: shedule.link,
+														catagory: null,
+													},
+												})
+											"
+											:href="`/specialists/${shedule.link}`"
+											v-else
+										>
+											<img :src="shedule.image" width="50" height="50" alt="Врач" />
+										</a>
+
+										<div class="shedule__specialist-info">
+											<div class="shedule__specialist-specializations">
+												{{ shedule.specializations }}
+											</div>
+											<div class="shedule__specialist-name">
+												<a
+													v-if="shedule.image"
+													@click.prevent="
+														$router.push({
+															name: 'specialists-profile',
+															params: {
+																name: shedule.link,
+																catagory: null,
+															},
+														})
+													"
+													:href="`/specialists/${shedule.link}`"
+												>
+													{{ shedule.name }}
+												</a>
+
+												<template v-else>
+													{{ shedule.name }}
+												</template>
+											</div>
+										</div>
+									</template>
+								</div>
+
+								<table class="shedule__specialist-table">
+									<tbody>
+										<tr v-for="day in week" :key="day.id">
+											<td>
+												<div>
+													{{ getDateDayNumberMonth(day.date) }}
+												</div>
+											</td>
+											<td class="days">
+												<div
+													class="days__item all"
+													v-for="clinic in getClinicsWithoutAll"
+													:key="clinic.id"
+													v-if="activeClinic.name === 'Все'"
+												>
+													<div
+														class="days__item-content"
+														v-for="time in getDayTime(
+															shedule.id,
+															day.date,
+															clinic.id
+														)"
+														v-if="getClinicStatus(shedule.id, clinic.id)"
+														:style="getTimeStyle(clinic.id, time)"
+													>
+														{{ time }}
+														<div class="days__content-help" v-if="time !== '-'">
+															{{ clinic.name }}
+														</div>
+													</div>
+												</div>
+												<div class="days__item" v-else>
+													<div
+														class="days__item-content"
+														v-for="time in getDayTime(
+															shedule.id,
+															day.date,
+															activeClinic.id
+														)"
+														:style="getTimeStyle(activeClinic.id, time)"
+													>
+														{{ time }}
+													</div>
+												</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
 							</div>
 						</td>
 
-						<td v-for="day in week" :key="day.id">
+						<td class="shedule__table-td" v-for="day in week" :key="day.id">
 							<div class="days">
 								<div
 									class="days__item all"
@@ -199,10 +251,10 @@
 							</div>
 						</td>
 					</tr>
-					<tr class="empty" v-else>
-						<td colspan="10">Ничего нет.</td>
+					<tr class="shedule__table-tr empty" v-else>
+						<td class="shedule__table-td" colspan="10">Ничего нет.</td>
 					</tr>
-				</transition-group>
+				</tbody>
 			</table>
 		</template>
 
@@ -210,7 +262,7 @@
 			:isLoading="loading.loader.schedule"
 			@loaderChildAfterLeave="loaderChildAfterLeave"
 		/>
-	</block-hide>
+	</Block>
 </template>
 
 <script>
@@ -844,21 +896,14 @@ export default {
 	background-color: var(--primary-color);
 }
 
-/* Таблица: анимация */
-.shedule-move, /* применять переход к движущимся элементам */
-.shedule-enter-active,
-.shedule-leave-active {
-	transition: all 0.5s ease;
-}
-
-.shedule-enter-from,
-.shedule-leave-to {
-	opacity: 0;
-	transform: translateX(30px);
-}
-
 /* Таблица: список врачей */
 .shedule__specialist {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.shedule__specialist-head {
 	display: flex;
 	gap: 10px;
 }
@@ -891,7 +936,7 @@ export default {
 }
 
 /* Таблица: таблица */
-table {
+.shedule__table {
 	border-collapse: collapse;
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
 
@@ -900,7 +945,13 @@ table {
 	font-size: 16px;
 }
 
-th {
+.shedule__specialist-info {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.shedule__table-th {
 	white-space: pre-wrap;
 	text-align: center;
 	min-width: 110px;
@@ -908,19 +959,19 @@ th {
 	font-weight: normal;
 }
 
-td {
+.shedule__table-td {
 	text-align: left;
 	font-size: 1rem;
 }
 
-th,
-td {
+.shedule__table-th,
+.shedule__table-td {
 	padding: 5px 5px;
 	transition: all 0.2s;
 }
 
-td,
-th {
+.shedule__table-td,
+.shedule__table-th {
 	border-top: 0px;
 	border-right: 0px;
 	border-bottom: 1px;
@@ -933,7 +984,7 @@ th {
 	transition: all 0.2s;
 }
 
-th {
+.shedule__table-th {
 	border-top: 0px;
 	border-right: 0px;
 	border-bottom: 0px;
@@ -942,7 +993,7 @@ th {
 	height: 50px;
 }
 
-tr:hover > td {
+.shedule__table-tr:hover > .shedule__table-td {
 	border-top: 0px;
 	border-right: 0px;
 	border-bottom: 1px;
@@ -953,16 +1004,8 @@ tr:hover > td {
 	background-color: var(--item-background-color-active);
 }
 
-tr:nth-child(even) > td {
-	/* background-color: var(--table-td-even-background-color); */
-}
-
-tr:nth-child(odd) > td {
-	/* background-color: var(--table-td-odd-background-color); */
-}
-
-tr > td:nth-child(2) {
-	word-break: break-all;
+.shedule__table-tr {
+	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 .days {
@@ -992,11 +1035,9 @@ tr > td:nth-child(2) {
 	top: -45px;
 	right: 0px;
 
-	white-space: nowrap;
-	width: auto;
 	padding: 10px;
 	border-radius: 10px;
-
+	overflow-wrap: break-word;
 	opacity: 0;
 	visibility: hidden;
 
@@ -1014,10 +1055,16 @@ tr > td:nth-child(2) {
 	height: 21px;
 }
 
-tr.empty > td {
+.shedule__table-tr.empty > td {
 	height: 30px;
 	text-align: center;
 	color: black;
+}
+
+/* Таблица для телефона */
+.shedule__specialist-table {
+	display: none;
+	width: auto;
 }
 
 @keyframes show {
@@ -1039,13 +1086,119 @@ tr.empty > td {
 	.filter__blocks {
 		width: 100%;
 	}
+
+	.shedule__table {
+		width: auto;
+	}
+
+	.shedule__table-td:nth-child(9) {
+		display: none;
+	}
+
+	.shedule__table-th:nth-child(9) {
+		display: none;
+	}
 }
 
-@media screen and (max-width: 1400px) {
-	table {
-		width: auto;
-		display: block;
-		overflow-x: scroll;
+@media screen and (width <= 1330px) {
+	.shedule__table-td:nth-child(8) {
+		display: none;
+	}
+
+	.shedule__table-th:nth-child(8) {
+		display: none;
+	}
+}
+
+@media screen and (width <= 1230px) {
+	.shedule__table-td:nth-child(7) {
+		display: none;
+	}
+
+	.shedule__table-th:nth-child(7) {
+		display: none;
+	}
+}
+
+@media screen and (width <= 1130px) {
+	.shedule__table-td:nth-child(7) {
+		display: none;
+	}
+
+	.shedule__table-th:nth-child(7) {
+		display: none;
+	}
+}
+
+@media screen and (width <= 1030px) {
+	.shedule__table-td:nth-child(6) {
+		display: none;
+	}
+
+	.shedule__table-th:nth-child(6) {
+		display: none;
+	}
+}
+
+@media screen and (width <= 930px) {
+	.shedule__table-td:nth-child(5) {
+		display: none;
+	}
+
+	.shedule__table-th:nth-child(5) {
+		display: none;
+	}
+}
+
+@media screen and (width <= 830px) {
+	.shedule__table-td:nth-child(4) {
+		display: none;
+	}
+
+	.shedule__table-th:nth-child(4) {
+		display: none;
+	}
+}
+
+@media screen and (width <= 730px) {
+	.shedule__table-td:nth-child(3) {
+		display: none;
+	}
+
+	.shedule__table-th:nth-child(3) {
+		display: none;
+	}
+}
+
+@media screen and (width <= 630px) {
+	.shedule__table-td:nth-child(2) {
+		display: none;
+	}
+
+	.shedule__table-th:nth-child(2) {
+		display: none;
+	}
+
+	.shedule__specialist-table {
+		display: table;
+	}
+
+	.shedule__table > thead {
+		display: none;
+	}
+
+	.days > .days__item > .days__item-content {
+		white-space: normal; /* Важно переопределить возможный nowrap */
+		word-wrap: break-word; /* Перенос длинных слов */
+		overflow-wrap: break-word; /* Современный аналог word-wrap */
+		width: 100%; /* Фиксированная ширина или max-width обязательны */
+	}
+
+	.days > .days__item.all > .days__item-content > .days__content-help {
+		top: 30px;
+		z-index: 1;
+
+		background-color: rgba(0, 0, 0, 0.75);
 	}
 }
 
