@@ -8,7 +8,24 @@
 		<template #title>СПИСОК ВРАЧЕЙ</template>
 
 		<template #options>
-			<button-default @click.prevent="saveSpecialistChanges" :disabled="disabled.specialists.save" :look="'white'">
+			<button-default
+				@click.prevent="downloadSpecialistsXML"
+				:disabled="disabled.specialists.download"
+				:look="'white'"
+			>
+				<Icon
+					:name="'download'"
+					:fill="'var(--primary-color)'"
+					:width="'28px'"
+					:height="'28px'"
+				/>
+				Выгрузить
+			</button-default>
+			<button-default
+				@click.prevent="saveSpecialistChanges"
+				:disabled="disabled.specialists.save"
+				:look="'white'"
+			>
 				<Icon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
 			</button-default>
@@ -97,6 +114,7 @@ export default {
 			disabled: {
 				specialists: {
 					save: false,
+					download: false,
 				},
 			},
 
@@ -220,6 +238,46 @@ export default {
 				})
 				.finally(() => {
 					this.disabled.specialists.save = false;
+				});
+		},
+
+		downloadSpecialistsXML() {
+			this.disabled.specialists.download = true;
+
+			axios({
+				method: "post",
+				url: `${this.$store.getters.urlApi}` + `make-specialists-xml`,
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+			})
+				.then((response) => {
+					if (response.data.status) {
+						this.$store.commit("addDebugger", {
+							title: "Успешно!",
+							body: response.data.message,
+							type: "completed",
+						});
+
+						// // Перенаправляем пользователя на ссылку для скачивания архива
+						// window.location.href = `/api/download-specialists-xml`;
+					} else {
+						this.$store.commit("addDebugger", {
+							title: "Ошибка.",
+							body: response.data.message,
+							type: "error",
+						});
+					}
+				})
+				.catch((error) => {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка.",
+						body: error,
+						type: "error",
+					});
+				})
+				.finally(() => {
+					this.disabled.specialists.download = false;
 				});
 		},
 	},

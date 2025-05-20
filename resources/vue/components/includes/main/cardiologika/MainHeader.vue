@@ -192,7 +192,7 @@ header.slide {
 	height: 50px;
 	border-radius: 100px;
 
-	background-color: var(--primary-color-hover);	
+	background-color: var(--primary-color-hover);
 }
 
 .header-buttons {
@@ -393,7 +393,7 @@ header.slide {
 	width: 100%;
 	height: 100%;
 
-	background-image: url("../../../assets/img/trash.webp");
+	background-image: url("../../../../assets/img/trash.webp");
 	background-position: center center;
 	background-size: cover;
 	opacity: 0.7;
@@ -459,7 +459,7 @@ header.slide {
 		justify-content: center;
 		top: 0px;
 
-		padding: 20px 0px;
+		padding: 10px 0px;
 
 		width: 100%;
 		margin: 0px;

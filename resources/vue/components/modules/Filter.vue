@@ -17,7 +17,7 @@
 				<li
 					@click="$emit('selectAll')"
 					:class="{ active: filter.all }"
-					:style="{ color: 'var(--button-default-color)' }"
+					:style="{ color: 'var(--primary-color)' }"
 				>
 					<div>Все</div>
 					<div class="check" :class="{ active: filter.all }">
@@ -342,12 +342,12 @@ export default {
 }
 
 .filter > .filter-body > .container-buttons > button.create {
-	background-color: var(--button-default-color);
+	background-color: var(--button-background-color);
 	color: white;
 }
 
 .filter > .filter-body > .container-buttons > button.create:hover {
-	background-color: var(--button-default-color-hover);
+	background-color: var(--button-background-color-hover);
 	color: white;
 }
 
@@ -357,7 +357,7 @@ export default {
 }
 
 .filter > .filter-body > .container-buttons > button.create:hover {
-	background-color: var(--button-default-color-hover);
+	background-color: var(--button-background-color-hover);
 	color: white;
 }
 
@@ -444,7 +444,7 @@ export default {
 	opacity: 0;
 	visibility: hidden;
 
-	fill: var(--button-background-color);
+	fill: var(--primary-color);
 	transition: all 0.2s;
 }
 
@@ -468,7 +468,7 @@ export default {
 }
 
 .filter > .filter-body > ol > li.parent {
-	color: var(--button-default-color);
+	color: var(--primary-color);
 }
 
 @media screen and (width <= 1000px) {

@@ -65,6 +65,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 use Throwable;
 use ZipArchive;
+use XMLWriter;
 
 class AdminController extends Controller
 {
@@ -1229,6 +1230,91 @@ class AdminController extends Controller
          "message" => "Клиники сохранены.",
          "data" => $arrayID,
       ]);
+   }
+
+   /* Создание XML */
+   public function makeSpecialistsXML() {
+      $xw = new XMLWriter();
+      $xw->openMemory();
+      
+      // Начало документа
+      $xw->startDocument("1.0");
+   
+      // Запись элементов
+      $xw->startElement("yml_catalog");
+      
+      $xw->startAttribute("date");
+      $xw->text(date('Y-m-d H:i'));    
+      $xw->endAttribute();
+         $xw->startElement("shop");
+            // Название 
+            $xw->startElement("name");
+            $xw->text('Сэмпл.Врачи');
+            $xw->endElement();
+
+            // Компания 
+            $xw->startElement("company");
+            $xw->text('ООО Сэмпл.Врачи');
+            $xw->endElement();
+
+            // Ссылка на сайт 
+            $xw->startElement("url");
+            $xw->text('https://doctors.sample.s3.yandex.net');
+            $xw->endElement();
+
+            // Рабочая почта 
+            $xw->startElement("email");
+            $xw->text('support-doctors@doctors.sample.s3.yandex.net');
+            $xw->endElement();
+
+            // Картинка с логотипом 
+            $xw->startElement("picture");
+            $xw->text('https://avatars.mds.yandex.net/get-pdb/5679262/13d16a0c-27e9-4095-8f55-accdc2d7c8f0/s1200');
+            $xw->endElement();
+
+            // Описание 
+            $xw->startElement("description");
+            $xw->text('Каталог врачей');
+            $xw->endElement();
+
+            // Валюты 
+            $xw->startElement("currencies");
+               $xw->startElement("currency");
+               
+               $xw->startAttribute("id");
+               $xw->text("RUR");
+               $xw->endAttribute();               
+
+               $xw->startAttribute("rate");
+               $xw->text("1");
+               $xw->endAttribute();               
+
+               $xw->endElement();
+            $xw->endElement();
+         $xw->endElement();
+      $xw->endElement();
+
+      // Конец документа
+      $xw->endDocument();
+
+      // Проверка наличия директории
+      if (!Storage::exists('public/xml')) {
+         Storage::makeDirectory('public/xml');
+      };
+
+      if (!Storage::put('public/xml/doctors ' . date('d-m-Y H-i-s') . '.xml', $xw->outputMemory())) {
+         return response()->json([
+            "status" => false,
+            "message" => "Не удалось записать файл.",
+            "data" => null,
+         ]);
+      } else {
+         return response()->json([
+            "status" => true,
+            "message" => "XML-файл создан.",
+            "data" => null,
+         ]);
+      };
    }
 
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/

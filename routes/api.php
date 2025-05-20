@@ -97,6 +97,8 @@ Route::middleware(['auth:sanctum', 'admin-or-creator'])->group(function () {
 
    Route::post('/save-specializations-changes', [AdminController::class, 'saveSpecializationsChanges'])->middleware('auth:sanctum');
    Route::post('/save-clinics-changes', [AdminController::class, 'saveClinicsChanges'])->middleware('auth:sanctum');
+   
+   Route::post('/make-specialists-xml', [AdminController::class, 'makeSpecialistsXML']);
 
    // Расписание 
    Route::post('/save-shedules-all', [AdminController::class, 'saveShedulesAll']);
