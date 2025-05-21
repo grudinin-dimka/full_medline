@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Transliterator;
-
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -250,11 +248,9 @@ class HomeController extends Controller
       $specialists = Specialist::all();
 
       foreach ($specialists as $key => $value) {
-         $stringTransliterate = Transliterator::create('Any-Latin; Latin-ASCII')->transliterate($specialists[$key]->family . " " . $specialists[$key]->name . " " . $specialists[$key]->surname);
-         $stringUnderCase = strtolower($stringTransliterate);
-         $stringReplace = str_replace(" ", "-", $stringUnderCase);
-         
-         if ($request->url == $stringReplace) {
+         $stringTransliterate = $this->makeUrl($specialists[$key]->family . " " . $specialists[$key]->name . " " . $specialists[$key]->surname);
+
+         if ($request->url == $stringTransliterate) {
             if ($specialists[$key]->hide == true) {
                return response()->json([
                   "status" => false,
@@ -1079,15 +1075,6 @@ class HomeController extends Controller
             "specialists" => $specialists,
          ],
       ]);
-   }
-
-   /* Создание ссылки на специалиста */
-   private function makeUrl($url) {
-      $stringTransliterate = Transliterator::create('Any-Latin; Latin-ASCII')->transliterate($url);
-      $stringUnderCase = strtolower($stringTransliterate);
-      $stringReplace = str_replace(" ", "-", $stringUnderCase);
-   
-      return $stringReplace;
    }
 
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/

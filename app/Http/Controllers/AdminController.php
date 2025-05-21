@@ -1,6 +1,9 @@
 <?php
 namespace App\Http\Controllers;
 
+/* Контроллер */
+use App\Http\Controllers\HomeController;
+
 /* Подключения */
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -16,9 +19,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Rules\File;
 use Illuminate\Validation\Rule;
-
-
-use Exception;
 
 /* Модели */
 use App\Models\Rights;
@@ -43,29 +43,36 @@ use App\Models\Clinic;
 use App\Models\SpecialistClinic;
 use App\Models\Certificate;
 use App\Models\SpecialistCertificate;
-use App\Models\Education;
-use App\Models\News;
-use App\Models\SpecialistEducation;
 use App\Models\Work;
 use App\Models\SpecialistWork;
+use App\Models\Education;
+use App\Models\SpecialistEducation;
+
 use App\Models\Shedule;
 use App\Models\ShedulesClinic;
 use App\Models\ShedulesCurrentDay;
 use App\Models\ShedulesDay;
 use App\Models\ShedulesDaysTime;
+
 use App\Models\PriceFile;
 use App\Models\PriceAddress;
 use App\Models\PriceCategory;
 use App\Models\PriceValue;
-use App\Models\Video;
-use PhpOffice\PhpSpreadsheet\IOFactory;
 
+use App\Models\News;
+use App\Models\Video;
+
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
+use Exception;
 use Throwable;
 use ZipArchive;
 use XMLWriter;
+use Transliterator;
+
+use function PHPUnit\Framework\isEmpty;
 
 class AdminController extends Controller
 {
@@ -74,7 +81,7 @@ class AdminController extends Controller
    /* |___________________________________________________|*/
    /* Загрузка файла на сервер */ 
    public function uploadFile(Request $request) {
-		/* Проверка на наличие переменной image с файлом в запросе */  
+      /* Проверка на наличие переменной image с файлом в запросе */  
 		if($request->hasFile('file')) {
          $file = $request->file('file');
          
@@ -1233,7 +1240,30 @@ class AdminController extends Controller
    }
 
    /* Создание XML */
-   public function makeSpecialistsXML() {
+   public function makeSpecialistsXML(Request $request) {
+      $validator = Validator::make($request->all(), [
+         'name' => 'required',
+         'company' => 'required',
+         'url' => 'required',
+         'email' => 'required',
+         'description' => 'required',
+      ]);
+
+      if ($validator->fails()) {
+         return response()->json([
+            "status" => false,
+            "message" => "Некорректные данные.",
+            "data" => null,
+         ]);
+      };
+
+      // Получение данных из бд
+      $specialists = Specialist::all();
+      $specializations = Specialization::all();
+
+      $specializationNames = $specializations->pluck('name', 'id')->all();
+      $specializationsBySpecialists = SpecialistSpecialization::all()->groupBy("id_specialist");
+
       $xw = new XMLWriter();
       $xw->openMemory();
       
@@ -1247,34 +1277,34 @@ class AdminController extends Controller
       $xw->text(date('Y-m-d H:i'));    
       $xw->endAttribute();
          $xw->startElement("shop");
-            // Название 
+            // Название клиники
             $xw->startElement("name");
-            $xw->text('Сэмпл.Врачи');
+            $xw->text($request->name);
             $xw->endElement();
 
             // Компания 
             $xw->startElement("company");
-            $xw->text('ООО Сэмпл.Врачи');
+            $xw->text($request->company);
             $xw->endElement();
 
             // Ссылка на сайт 
             $xw->startElement("url");
-            $xw->text('https://doctors.sample.s3.yandex.net');
+            $xw->text($request->url);
             $xw->endElement();
 
             // Рабочая почта 
             $xw->startElement("email");
-            $xw->text('support-doctors@doctors.sample.s3.yandex.net');
+            $xw->text($request->email);
             $xw->endElement();
 
             // Картинка с логотипом 
             $xw->startElement("picture");
-            $xw->text('https://avatars.mds.yandex.net/get-pdb/5679262/13d16a0c-27e9-4095-8f55-accdc2d7c8f0/s1200');
+            $xw->text($request->name . '/storage/img/logo.webp');
             $xw->endElement();
 
             // Описание 
             $xw->startElement("description");
-            $xw->text('Каталог врачей');
+            $xw->text($request->description);
             $xw->endElement();
 
             // Валюты 
@@ -1282,7 +1312,7 @@ class AdminController extends Controller
                $xw->startElement("currency");
                
                $xw->startAttribute("id");
-               $xw->text("RUR");
+               $xw->text("RUB");
                $xw->endAttribute();               
 
                $xw->startAttribute("rate");
@@ -1291,6 +1321,194 @@ class AdminController extends Controller
 
                $xw->endElement();
             $xw->endElement();
+
+            // Категории 
+            $xw->startElement("categories");
+               $xw->startElement("category");
+               
+               $xw->startAttribute("id");
+               $xw->text("1");
+               $xw->endAttribute();               
+
+               $xw->text("Врач");
+
+               $xw->endElement();
+            $xw->endElement();
+
+            // Специализации
+            $xw->startElement("sets");
+               foreach ($specializations as $key => $value) {
+                  $stringTransliterate = Transliterator::create('Any-Latin; Latin-ASCII')->transliterate($value->name);
+                  $stringLowerCase = strtolower($stringTransliterate);
+                  
+                  $xw->startElement("set");                  
+                     $xw->startAttribute("id");
+                     $xw->text($stringLowerCase);
+                     $xw->endAttribute();         
+
+                     // Название
+                     $xw->startElement("name");
+                     $xw->text($value->name);
+                     $xw->endElement();
+   
+                     // Ссылка на раздел с врачами
+                     $xw->startElement("url");
+                     $xw->text($request->url . '/specialists');
+                     $xw->endElement();
+   
+                  $xw->endElement();
+               }
+            $xw->endElement();
+
+            // Офферы (специлисты)
+            $xw->startElement("offers");
+               foreach ($specialists as $key => $value) {
+                  $xw->startElement("offer");
+                     $xw->startAttribute("id");
+                     $xw->text('vrach' . $value->id);
+                     $xw->endAttribute();
+
+                        $xw->startElement("name");
+                        $xw->text($value->family . ' ' . $value->name . ' ' . $value->surname);
+                        $xw->endElement();                  
+
+                        $xw->startElement("url");
+                        $xw->text($request->url . '/' . $this->makeUrl($value->family . ' ' . $value->name . ' ' . $value->surname));
+                        $xw->endElement();                  
+
+                        // Цена на услугу
+                        $xw->startElement("price");
+                           $xw->startAttribute("from");
+                           $xw->text('true');
+                           $xw->endAttribute();         
+                        $xw->text(0);
+                        $xw->endElement();
+
+                        // Название услуги
+                        $xw->startElement("sales_notes");
+                        $xw->text('Первичный прием');
+                        $xw->endElement();   
+
+                        // Специальности через запятую
+                        $xw->startElement("set-ids");
+                           $stringSpecializations = '';
+                           $array = $specializationsBySpecialists[$value->id] ?? [];
+                           foreach ($array as $innerKey => $innerValue) {
+                              $stringSpecializations .= $this->formatStringTransliterate($specializationNames[$innerValue->id_specialization], 'lower') . ',';
+                           };
+                        $xw->text(rtrim($stringSpecializations, ','));
+                        $xw->endElement();
+
+                        // Фото специалиста
+                        $xw->startElement("picture");
+                        $xw->text($request->url . Storage::url('public/specialists/' . $value->filename));
+                        $xw->endElement();
+
+                        // Описание
+                        $xw->startElement("description");
+                        $xw->text($value->description);
+                        $xw->endElement();
+
+                        // id категории из списка категорий
+                        $xw->startElement("categoryId");
+                        $xw->text(1);
+                        $xw->endElement();
+
+                        // Фамилия
+                        $xw->startElement("param");
+                           $xw->startAttribute("name");
+                           $xw->text('Фамилия');
+                           $xw->endAttribute();                                 
+                        $xw->text($value->family);
+                        $xw->endElement();
+
+                        // Фамилия
+                        $xw->startElement("param");
+                           $xw->startAttribute("name");
+                           $xw->text('Имя');
+                           $xw->endAttribute();                                 
+                        $xw->text($value->name);
+                        $xw->endElement();
+
+                        // Отчество
+                        if ($value->surname) {
+                           $xw->startElement("param");
+                              $xw->startAttribute("name");
+                              $xw->text('Отчество');
+                              $xw->endAttribute();                                 
+                           $xw->text($value->surname);
+                           $xw->endElement();
+                        };
+
+                        // Годы опыта
+                        $xw->startElement("param");
+                           $xw->startAttribute("name");
+                           $xw->text('Годы опыта');
+                           $xw->endAttribute();                                 
+                        $xw->text(round(Carbon::parse($value->startWorkAge)->diffInYears(Carbon::parse(date('Y-m-d')))));
+                        $xw->endElement();
+
+                        // Город, в котором врач ведет прием.
+                        if (isEmpty($value->startWorkCity)) {
+                           return response()->json([
+                              "status" => false,
+                              "message" => "Город ведения приема у " . $value->family . " " . $value->name . " " . $value->surname . " не указан.",
+                              "data" => null,
+                           ]);
+                        };
+
+                        $xw->startElement("param");
+                           $xw->startAttribute("name");
+                           $xw->text('Город');
+                           $xw->endAttribute();                                 
+                        $xw->text($value->startWorkCity);
+                        $xw->endElement();
+
+                        // Прием взрослых (от 18 лет). Возможные значения: true или false (по умолчанию).
+                        $xw->startElement("param");
+                           $xw->startAttribute("name");
+                           $xw->text('Взрослый врач');
+                           $xw->endAttribute();                                 
+                        $xw->text($value->adultDoctor == 1 ? 'true' : 'false');
+                        $xw->endElement();
+
+                        // Прием детей (до 18 лет). Возможные значения: true или false (по умолчанию).
+                        $xw->startElement("param");
+                           $xw->startAttribute("name");
+                           $xw->text('Детский врач');
+                           $xw->endAttribute();                                 
+                        $xw->text((bool)$value->childrenDoctor == 1 ? 'true' : 'false');
+                        $xw->endElement();
+
+                        // // Город клиники приема и адрес
+                        // foreach ($clinicsBySpecialists[$value->id] ?? [] as $innerKey => $innerValue) {
+                        //    $xw->startElement("param");
+                        //       $xw->startAttribute("name");
+                        //       $xw->text('Город клиники');
+                        //       $xw->endAttribute();                                 
+                        //    $xw->text('г. ' . $clinicsById[$innerValue->id_clinic][0]->city);
+                        //    $xw->endElement();
+
+                        //    $xw->startElement("param");
+                        //       $xw->startAttribute("name");
+                        //       $xw->text('Адрес клиники');
+                        //       $xw->endAttribute();                                 
+                        //    $xw->text('ул. ' . $clinicsById[$innerValue->id_clinic][0]->street . ', д. ' . $clinicsById[$innerValue->id_clinic][0]->home);
+                        //    $xw->endElement();
+
+                        //    $xw->startElement("param");
+                        //       $xw->startAttribute("name");
+                        //       $xw->text('Название клиники');
+                        //       $xw->endAttribute();                                 
+                        //    $xw->text($clinicsById[$innerValue->id_clinic][0]->name);
+                        //    $xw->endElement();
+
+                        //    break;
+                        // };
+                  $xw->endElement();                  
+               }
+            $xw->endElement();
+
          $xw->endElement();
       $xw->endElement();
 
@@ -1302,7 +1520,7 @@ class AdminController extends Controller
          Storage::makeDirectory('public/xml');
       };
 
-      if (!Storage::put('public/xml/doctors ' . date('d-m-Y H-i-s') . '.xml', $xw->outputMemory())) {
+      if (!Storage::put('public/xml/doctors.xml', $xw->outputMemory())) {
          return response()->json([
             "status" => false,
             "message" => "Не удалось записать файл.",

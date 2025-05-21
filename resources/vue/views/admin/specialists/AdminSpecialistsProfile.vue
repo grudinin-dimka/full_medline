@@ -35,8 +35,8 @@
 							index +
 							1 +
 							paginationSpecializations.elements.range *
-							(paginationSpecializations.pages.current - 1)
-							+ ')'
+								(paginationSpecializations.pages.current - 1) +
+							")"
 						}}
 					</div>
 					<input type="checkbox" :value="specialization.id" v-model="cheked.specializations" />
@@ -89,8 +89,8 @@
 						{{
 							index +
 							1 +
-							paginationClinics.elements.range * (paginationClinics.pages.current - 1)
-							+ ')'
+							paginationClinics.elements.range * (paginationClinics.pages.current - 1) +
+							")"
 						}}
 					</div>
 					<input
@@ -716,7 +716,7 @@
 					<!-- Первая работа -->
 					<container-input-two :fieldset="true">
 						<template #legend>
-							<span>НАЧАЛО КАРЪЕРЫ</span>
+							<span>НАЧАЛО КАРЪЕРЫ И ГОРОД ПРИЕМА</span>
 						</template>
 						<template #title-one>
 							<span
@@ -738,6 +738,7 @@
 								{{ specialist.profile.errors.startWorkAge.message }}
 							</span>
 						</template>
+
 						<template #title-two>
 							<span>ГОРОД</span>
 							<span v-if="specialist.profile.data.startWorkCity.edited"> (ИЗМЕНЕНО)</span>
@@ -747,9 +748,15 @@
 								type="text"
 								placeholder="Введите название города"
 								autocomplete="off"
+								:class="{ error: specialist.profile.errors.startWorkCity.status }"
 								v-model="specialist.profile.data.startWorkCity.value"
 								@input="specialist.profile.data.startWorkCity.edited = true"
 							/>
+						</template>
+						<template #error-two>
+							<span class="error" v-if="specialist.profile.errors.startWorkCity.status">
+								{{ specialist.profile.errors.startWorkCity.message }}
+							</span>
 						</template>
 					</container-input-two>
 					<!-- Статус приёма -->
@@ -2090,6 +2097,10 @@ export default {
 						type: "text",
 					},
 					{
+						key: "startWorkCity",
+						type: "text",
+					},
+					{
 						key: "file",
 						type: "file",
 						value: this.$refs.fileUpload,
@@ -2199,6 +2210,10 @@ export default {
 					{
 						key: "childrenDoctor",
 						type: "boolean",
+					},
+					{
+						key: "startWorkCity",
+						type: "text",
 					},
 					{
 						key: "startWorkAge",
