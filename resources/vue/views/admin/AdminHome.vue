@@ -2,11 +2,15 @@
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                  МОДАЛЬНОЕ ОКНО                   |-->
 	<!--|___________________________________________________|-->
-	<modal ref="modal" @touchCloseModal="closeSlide" :modal="modal">
+	<Modal ref="modal" :settings="modal">
+		<template #title>
+			{{ modal.values.title }}
+		</template>
+
 		<template
-			#buttonHide
+			#buttons
 			v-if="
-				(modal.type == 'edit') &
+				(modal.values.look == 'default') &
 				!currentSlide.data.delete.value &
 				!currentSlide.data.create.value
 			"
@@ -32,13 +36,11 @@
 				@click="currentSlide.data.hide.value = true"
 			/>
 		</template>
-		<template #title>
-			{{ modal.title }}
-		</template>
+
 		<template
 			#title
 			v-if="
-				(modal.type == 'edit') &
+				(modal.values.look == 'default') &
 				!currentSlide.data.delete.value &
 				!currentSlide.data.create.value
 			"
@@ -65,10 +67,11 @@
 				@click="changeSlideOrder('up')"
 			/>
 		</template>
+
 		<template #body>
 			<div
 				class="modal-slide-img"
-				v-if="modal.type == 'edit'"
+				v-if="modal.values.look == 'default'"
 				:style="{
 					backgroundImage: `url(${currentSlide.data.path.value})`,
 				}"
@@ -76,7 +79,7 @@
 			></div>
 			<div
 				class="modal-slide-img"
-				v-if="modal.type == 'create'"
+				v-if="modal.values.look == 'create'"
 				:style="{
 					backgroundImage: `url(/storage/default/image-none-default.png)`,
 				}"
@@ -154,8 +157,9 @@
 				</container-input-once>
 			</container-input>
 		</template>
+
 		<template #footer>
-			<block-buttons v-if="modal.type == 'edit'">
+			<template v-if="modal.values.look == 'default'">
 				<button-remove
 					v-if="!currentSlide.data.create.value & !currentSlide.data.delete.value"
 					@click.prevent="markDeleteSlide"
@@ -175,15 +179,16 @@
 					<Icon :name="'restore'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Вернуть
 				</button-default>
-			</block-buttons>
-			<block-buttons v-if="modal.type == 'create'">
+			</template>
+
+			<template v-if="modal.values.look == 'create'">
 				<button-default @click.prevent="addSlide" :disabled="disabled.slider.create">
 					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-default>
-			</block-buttons>
+			</template>
 		</template>
-	</modal>
+	</Modal>
 
 	<info-bar>
 		<template #title>Главная</template>
@@ -215,7 +220,7 @@
 							create: slide.create,
 							delete: slide.delete,
 						}"
-						@click="openSlide(slide, 'edit')"
+						@click="openModalEdite(slide)"
 					>
 						<div class="head">
 							<div>id: {{ slide.create ? "?" : slide.id }}</div>
@@ -279,7 +284,7 @@
 		</template>
 
 		<template #buttons>
-			<ButtonDefault @click="openSlide(null, 'create')" :disabled="disabled.slider.add">
+			<ButtonDefault @click="openModalСreate" :disabled="disabled.slider.add">
 				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</ButtonDefault>
@@ -327,7 +332,7 @@ import ElementInputLabel from "../../components/ui/admin/elements/ElementInputLa
 import LoaderChild from "../../components/modules/LoaderChild.vue";
 import Empty from "../../components/modules/Empty.vue";
 
-import Modal from "../../components/includes/admin/AdminModal.vue";
+import Modal from "../../components/modules/modal/Modal.vue";
 import InfoBar from "../../components/ui/admin/InfoBar.vue";
 import Tiptap from "../../components/modules/Tiptap.vue";
 
@@ -360,13 +365,13 @@ export default {
 		Modal,
 		InfoBar,
 		Tiptap,
-		
+
 		Icon,
 
 		ContainerInput,
 		ContainerInputOnce,
 		ContainerTextareaOnce,
-		
+
 		BlockOnce,
 		BlockButtons,
 		ButtonDefault,
@@ -384,26 +389,14 @@ export default {
 				slider: false,
 				footer: false,
 			},
-			slides: [],
 
 			/* Модальное окно */
 			modal: {
-				title: "СЛАЙД",
-				status: false,
-				type: null,
-				style: {
-					create: false,
-					delete: false,
-				},
-				modules: {
-					title: true,
-					buttons: {
-						hide: true,
-						close: true,
-					},
-					images: false,
-					body: true,
-					footer: true,
+				thin: false,
+				clamped: false,
+				values: {
+					title: "",
+					look: "default",
 				},
 			},
 
@@ -482,6 +475,8 @@ export default {
 				},
 			},
 
+			/* Данные */
+			slides: [],
 			footer: "",
 		};
 	},
@@ -501,89 +496,36 @@ export default {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                 МОДАЛЬНОЕ ОКНО                    |*/
 		/* |___________________________________________________|*/
-		/* _____________________________________________________*/
-		/* Основные действия                                    */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		// Открытие модального окна
-		openModal(type) {
-			switch (type) {
-				case "create":
-					{
-						this.modal.status = true;
-						this.modal.type = "create";
-						this.currentSlide.status = true;
-					}
-					break;
-				case "edit":
-					{
-						this.modal.status = true;
-						this.modal.type = "edit";
-						this.currentSlide.status = true;
-					}
-					break;
-			}
-			document.body.classList.toggle("modal-open");
+		/* Открытие модального окна */
+		openModal(name, title, look) {
+			this[name].values.title = title;
+			this[name].values.look = look;
+
+			this.$refs[name].open();
 		},
 
-		// Закрытие модального окна
-		closeModal() {
-			document.body.classList.toggle("modal-open");
-			this.modal.status = false;
+		/* Открытие модального окна для добавления */
+		openModalEdite(value) {
+			this.$refs.fileUpload.value = "";
+
+			shared.clearObjectFull(this.currentSlide);
+			shared.setData(value, this.currentSlide);
+
+			this.openModal("modal", "СЛАЙД", "default");
 		},
 
-		// Закрытие модального окна с выбранным слайдом
-		closeSlide() {
-			this.closeModal();
+		/* Открытие модального окна для добавления */
+		openModalСreate(type) {
+			this.$refs.fileUpload.value = "";
 
-			shared.clearObjectSelective(this.currentSlide, "data", ["edited"]);
-			shared.clearObjectSelective(this.currentSlide, "errors", ["status", "message"]);
+			shared.clearObjectFull(this.currentSlide);
+
+			this.openModal("modal", "СЛАЙД", "create");
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                     СЛАЙДЕР                       |*/
 		/* |___________________________________________________|*/
-		/* _____________________________________________________*/
-		/* 1. Основные действия                                 */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		// Открытие слайда
-		openSlide(selectedSlide, type) {
-			try {
-				this.$refs.fileUpload.value = "";
-
-				switch (type) {
-					case "create":
-						{
-							for (let key in this.currentSlide.data) {
-								this.currentSlide.data[key].value = "";
-							}
-
-							this.currentSlide.data.delete.value = false;
-							// Открытие модального окна
-							this.openModal(type);
-						}
-						break;
-					case "edit":
-						{
-							for (let key in selectedSlide) {
-								this.currentSlide.data[key].value = selectedSlide[key];
-							}
-
-							// Открытие модального окна
-							this.openModal(type);
-						}
-						break;
-				}
-			} catch (error) {
-				this.$store.commit("addDebugger", {
-					title: "Ошибка",
-					body: error,
-					type: "error",
-				});
-			}
-		},
-		/* _____________________________________________________*/
-		/* 2. Изменение состояний                               */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		// Изменение порядка выбранного слайда
 		changeSlideOrder(type) {
 			try {
@@ -596,9 +538,7 @@ export default {
 				});
 			}
 		},
-		/* _____________________________________________________*/
-		/* 3. Сохранение, обновление, удаление                  */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+
 		// Создание нового слайда
 		addSlide() {
 			try {
@@ -655,7 +595,7 @@ export default {
 									delete: false,
 								});
 
-								this.closeSlide();
+								this.$refs.modal.close();
 
 								this.$store.commit("addDebugger", {
 									title: "Успешно!",
@@ -708,7 +648,7 @@ export default {
 				slide.delete = true;
 			}
 
-			this.closeSlide();
+			this.$refs.modal.close();
 		},
 
 		/* Обновление выбранного слайда */
@@ -742,7 +682,7 @@ export default {
 						}
 					}
 
-					this.closeSlide();
+					this.$refs.modal.close();
 					return;
 				}
 
@@ -789,7 +729,7 @@ export default {
 								slideCurrent.path = response.data.data;
 								slideCurrent.filename = files.basename(response.data.data);
 
-								this.closeSlide();
+								this.$refs.modal.close();
 							} catch (error) {
 								this.$store.commit("addDebugger", {
 									title: "Ошибка",
