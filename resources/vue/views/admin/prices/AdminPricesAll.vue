@@ -2,10 +2,11 @@
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                  МОДАЛЬНОЕ ОКНО                   |-->
 	<!--|___________________________________________________|-->
-	<admin-modal ref="modal" @touchCloseModal="closeModal('modal')" :modal="modal">
+	<Modal ref="modal" :settings="modal">
 		<template #title>
-			{{ modal.title }}
+			{{ modal.values.title }}
 		</template>
+
 		<template #body>
 			<container-input-once>
 				<template #title>
@@ -28,15 +29,14 @@
 				</template>
 			</container-input-once>
 		</template>
+
 		<template #footer>
-			<block-buttons>
-				<ButtonDefault @click="createPrice" :disabled="disabled.prices.create">
-					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
-					Добавить
-				</ButtonDefault>
-			</block-buttons>
+			<ButtonDefault @click="createPrice" :disabled="disabled.prices.create">
+				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				Добавить
+			</ButtonDefault>
 		</template>
-	</admin-modal>
+	</Modal>
 
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                    СПИСОК ЦЕН                     |-->
@@ -78,7 +78,7 @@
 			<BaseTable
 				v-if="loading.sections.prices"
 				:table="table"
-				@create="openModal('create', 'modal')"
+				@create="openModalСreate"
 				@edite="downloadFile"
 				@delete="removePriceFile"
 			/>
@@ -94,7 +94,7 @@
 
 <script>
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
-import AdminModal from "../../../components/includes/admin/AdminModal.vue";
+import Modal from "../../../components/modules/modal/Modal.vue";
 import Empty from "../../../components/modules/Empty.vue";
 import BaseTable from "../../../components/modules/table/BaseTable.vue";
 
@@ -121,7 +121,7 @@ import axios from "axios";
 export default {
 	components: {
 		LoaderChild,
-		AdminModal,
+		Modal,
 		Empty,
 		BaseTable,
 
@@ -147,27 +147,6 @@ export default {
 	},
 	data() {
 		return {
-			/* Модальное окно */
-			modal: {
-				title: "ЦЕНЫ",
-				status: false,
-				type: null,
-				style: {
-					create: false,
-					delete: false,
-				},
-				modules: {
-					title: true,
-					buttons: {
-						hide: false,
-						close: true,
-					},
-					images: false,
-					body: true,
-					footer: true,
-				},
-			},
-
 			/* Кнопки */
 			disabled: {
 				prices: {
@@ -184,6 +163,16 @@ export default {
 				},
 				sections: {
 					prices: false,
+				},
+			},
+
+			/* Модальное окно */
+			modal: {
+				thin: false,
+				clamped: false,
+				values: {
+					title: "",
+					look: "default",
 				},
 			},
 
@@ -247,47 +236,23 @@ export default {
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                 Модальное окно                    |*/
+		/* |                 МОДАЛЬНОЕ ОКНО                    |*/
 		/* |___________________________________________________|*/
-		/* _____________________________________________________*/
-		/* 1. Основные действия                                 */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		/* Открытие */
-		openModal(type = "edit", name = "modal") {
-			this.$refs.fileUpload.value = null;
+		/* Открытие модального окна */
+		openModal(name, title, look) {
+			this[name].values.title = title;
+			this[name].values.look = look;
 
-			switch (type) {
-				case "create":
-					{
-						this[name].type = "create";
-						this[name].status = true;
-					}
-					document.body.classList.add("modal-open");
-					break;
-				case "edit":
-					{
-						this[name].type = "edit";
-						this[name].status = true;
-					}
-					document.body.classList.add("modal-open");
-					break;
-				default:
-					{
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: "Низвестный тип открытия модального окна.",
-							type: "error",
-						});
-					}
-					break;
-			}
+			this.$refs[name].open();
 		},
-		/* Закрытие */
-		closeModal(name = "modal") {
-			this[name].status = false;
-			if (name == "modal") {
-				document.body.classList.remove("modal-open");
-			}
+
+		/* Открытие модального окна для добавления */
+		openModalСreate() {
+			this.$refs.fileUpload.value = "";
+
+			shared.clearObjectFull(this.currentPrice);
+
+			this.openModal("modal", "ФАЙЛ ЦЕН", "create");
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -371,7 +336,7 @@ export default {
 								create: true,
 							});
 
-							this.closeModal("modal");
+							this.$refs.modal.close();
 						} catch (error) {
 							this.$store.commit("addDebugger", {
 								title: "Ошибка.",
