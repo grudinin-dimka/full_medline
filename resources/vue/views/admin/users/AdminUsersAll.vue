@@ -1,12 +1,10 @@
 <template>
-	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
-	<!--|                  МОДАЛЬНОЕ ОКНО                   |-->
-	<!--|___________________________________________________|-->
-	<admin-modal ref="modal" @touchCloseModal="closeModal('modal')" :modal="modal">
+	<!-- Модальное окно: Пользователи -->
+	<Modal ref="modal" :settings="modal">
 		<template #title>
-			<span v-if="modal.type == 'create'">ПОЛЬЗОВАТЕЛЬ (СОЗДАНИЕ)</span>
-			<span v-if="modal.type == 'edit'">ПОЛЬЗОВАТЕЛЬ (РЕДАКТИРОВАНИЕ)</span>
+			{{ modal.values.title }}
 		</template>
+
 		<template #body>
 			<div class="img-fio">
 				<div class="img">
@@ -259,37 +257,33 @@
 				</template>
 			</container-input-two>
 		</template>
-		<template #footer>
-			<BlockButtons>
-				<ButtonDefault
-					@click="saveUser"
-					:disabled="disabled.users.save"
-					v-if="modal.type === 'edit'"
-				>
-					<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
-					Обновить
-				</ButtonDefault>
-				<ButtonDefault
-					@click="addUser"
-					:disabled="disabled.users.create"
-					v-if="modal.type === 'create'"
-				>
-					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
-					Добавить
-				</ButtonDefault>
-			</BlockButtons>
-		</template>
-	</admin-modal>
 
-	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
-	<!--|           МОДАЛЬНОЕ ОКНО (СМЕНА ПАРОЛЯ)           |-->
-	<!--|___________________________________________________|-->
-	<admin-sub-modal
-		ref="sub-modal-password"
-		@touchCloseModal="closeModal('subModalPassword')"
-		:modal="subModalPassword"
-	>
-		<template #title></template>
+		<template #footer>
+			<ButtonDefault
+				@click="saveUser"
+				:disabled="disabled.users.save"
+				v-if="modal.values.look == 'default'"
+			>
+				<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
+				Обновить
+			</ButtonDefault>
+			<ButtonDefault
+				@click="addUser"
+				:disabled="disabled.users.create"
+				v-if="modal.values.look == 'create'"
+			>
+				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				Добавить
+			</ButtonDefault>
+		</template>
+	</Modal>
+
+	<!-- Модальное окно: Пользователи -> Пароль -->
+	<Modal ref="modalPassword" :settings="modalPassword">
+		<template #title>
+			{{ modalPassword.values.title }}
+		</template>
+
 		<template #body>
 			<container-input>
 				<PasswordGenerator />
@@ -311,69 +305,27 @@
 				</container-input-once>
 			</container-input>
 		</template>
+
 		<template #footer>
-			<BlockButtons :wide="true">
-				<button-password-wide
-					:type="'default'"
-					@click="saveUserPassword"
-					:disabled="disabled.userPassword.save"
-				>
-					Сбросить
-				</button-password-wide>
-				<button-password-wide :type="'other'" @click="closeModal('subModalPassword')">
-					Закрыть
-				</button-password-wide>
-			</BlockButtons>
+			<button-password-wide
+				:type="'default'"
+				@click="saveUserPassword"
+				:disabled="disabled.userPassword.save"
+			>
+				Сбросить
+			</button-password-wide>
+			<button-password-wide :type="'other'" @click="$refs.modalPassword.close()">
+				Закрыть
+			</button-password-wide>
 		</template>
-	</admin-sub-modal>
-	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
-	<!--|      МОДАЛЬНОЕ ОКНО (УДАЛЕНИЕ ПОЛЬЗОВАТЕЛЯ)       |-->
-	<!--|___________________________________________________|-->
-	<admin-sub-modal
-		ref="sub-modal-delete"
-		@touchCloseModal="closeModal('subModalDelete')"
-		:modal="subModalDelete"
-	>
-		<template #title>УДАЛЕНИЕ</template>
-		<template #body>
-			<div class="sub-modal-text">
-				Вы действительно хотите <span class="delete">удалить</span> пользователя
-				<span class="delete">
-					{{
-						currentUser.data.family.value +
-						" " +
-						currentUser.data.name.value +
-						(currentUser.data.surname.value !== null
-							? " " + currentUser.data.surname.value
-							: "")
-					}} </span
-				>?
-			</div>
+	</Modal>
+
+	<!-- Модальное окно: Пользователи -> Блокировка -->
+	<Modal ref="modalBlock" :settings="modalBlock">
+		<template #title>
+			{{ modalBlock.values.title }}
 		</template>
-		<template #footer>
-			<BlockButtons :wide="true">
-				<button-remove-wide
-					:type="'default'"
-					@click="deleteUser"
-					:disabled="disabled.users.delete"
-				>
-					Да
-				</button-remove-wide>
-				<button-remove-wide :type="'other'" @click="closeModal('subModalDelete')">
-					Нет
-				</button-remove-wide>
-			</BlockButtons>
-		</template>
-	</admin-sub-modal>
-	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
-	<!--|     МОДАЛЬНОЕ ОКНО (БЛОКИРОВКА ПОЛЬЗОВАТЕЛЯ)      |-->
-	<!--|___________________________________________________|-->
-	<admin-sub-modal
-		ref="sub-modal-delete"
-		@touchCloseModal="closeModal('subModalBlock')"
-		:modal="subModalBlock"
-	>
-		<template #title>БЛОКИРОВКА</template>
+
 		<template #body>
 			<div class="sub-modal-text">
 				Вы действительно хотите
@@ -393,21 +345,56 @@
 				>?
 			</div>
 		</template>
+
 		<template #footer>
-			<BlockButtons :wide="true">
-				<ButtonDefaultWide
-					:type="'default'"
-					@click="saveUserBlock"
-					:disabled="disabled.userBlock.save"
-				>
-					Да
-				</ButtonDefaultWide>
-				<ButtonDefaultWide :type="'other'" @click="closeModal('subModalBlock')">
-					Нет
-				</ButtonDefaultWide>
-			</BlockButtons>
+			<ButtonDefaultWide
+				:type="'default'"
+				@click="saveUserBlock"
+				:disabled="disabled.userBlock.save"
+			>
+				Да
+			</ButtonDefaultWide>
+			<ButtonDefaultWide :type="'other'" @click="$refs.modalBlock.close()">
+				Нет
+			</ButtonDefaultWide>
 		</template>
-	</admin-sub-modal>
+	</Modal>
+
+	<!-- Модальное окно: Пользователи -> Удаление -->
+	<Modal ref="modalDelete" :settings="modalDelete">
+		<template #title>
+			{{ modalDelete.values.title }}
+		</template>
+
+		<template #body>
+			<div class="sub-modal-text">
+				Вы действительно хотите <span class="delete">удалить</span> пользователя
+				<span class="delete">
+					{{
+						currentUser.data.family.value +
+						" " +
+						currentUser.data.name.value +
+						(currentUser.data.surname.value !== null
+							? " " + currentUser.data.surname.value
+							: "")
+					}} </span
+				>?
+			</div>
+		</template>
+
+		<template #footer>
+			<button-remove-wide
+				:type="'default'"
+				@click="deleteUser"
+				:disabled="disabled.users.delete"
+			>
+				Да
+			</button-remove-wide>
+			<button-remove-wide :type="'other'" @click="$refs.modalDelete.close()">
+				Нет
+			</button-remove-wide>
+		</template>
+	</Modal>
 
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                   БЛОК ПРОФИЛЯ                    |-->
@@ -432,7 +419,7 @@
 						</div>
 					</div>
 					<div class="buttons">
-						<div class="icon edit" @click="editUser(user)">
+						<div class="icon edit" @click="openModalEdite(user)">
 							<Icon
 								:name="'edit'"
 								:fill="'var(--icon-edit-fill)'"
@@ -441,7 +428,7 @@
 							/>
 							<div class="label">Редактирование</div>
 						</div>
-						<div class="icon admin" @click="editUserPassword(user)">
+						<div class="icon admin" @click="openModalPassword(user)">
 							<Icon
 								:name="'password'"
 								:fill="'var(--icon-admin-fill)'"
@@ -453,7 +440,7 @@
 						<div
 							class="icon"
 							:class="{ default: user.statusId === 1, delete: user.statusId === 2 }"
-							@click="editUserBlock(user)"
+							@click="openModalBlock(user)"
 						>
 							<Icon
 								:name="'lock-open'"
@@ -464,17 +451,17 @@
 							/>
 							<Icon
 								:name="'lock-close'"
-								:fill="'var(--icon-fill)'"
+								:fill="'var(--delete-secondary-color)'"
 								:width="'24px'"
 								:height="'24px'"
 								v-if="user.statusId === 2"
 							/>
 							<div class="label">Блокировка</div>
 						</div>
-						<div class="icon delete" @click="editUserDelete(user)">
+						<div class="icon delete" @click="openModalDelete(user)">
 							<Icon
 								:name="'delete'"
-								:fill="'var(--icon-delete-fill)'"
+								:fill="'var(--delete-secondary-color)'"
 								:width="'24px'"
 								:height="'22px'"
 							/>
@@ -492,7 +479,7 @@
 		</template>
 
 		<template #buttons>
-			<ButtonDefault @click="createUser">
+			<ButtonDefault @click="openModalСreate">
 				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</ButtonDefault>
@@ -502,8 +489,7 @@
 
 <script>
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
-import AdminModal from "../../../components/includes/admin/AdminModal.vue";
-import AdminSubModal from "../../../components/includes/admin/AdminSubModal.vue";
+import Modal from "../../../components/modules/modal/Modal.vue";
 import PasswordGenerator from "../../../components/modules/PasswordGenerator.vue";
 
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
@@ -530,8 +516,7 @@ import shared from "../../../services/shared";
 export default {
 	components: {
 		LoaderChild,
-		AdminModal,
-		AdminSubModal,
+		Modal,
 		PasswordGenerator,
 		BlockOnce,
 
@@ -580,82 +565,38 @@ export default {
 
 			/* Модальное окно */
 			modal: {
-				title: "",
-				status: false,
-				type: null,
-				style: {
-					create: false,
-					delete: false,
-				},
-				modules: {
-					title: true,
-					buttons: {
-						hide: false,
-						close: true,
-					},
-					images: false,
-					body: true,
-					footer: true,
+				thin: false,
+				clamped: false,
+				values: {
+					title: "",
+					look: "default",
 				},
 			},
 
-			subModalPassword: {
-				title: "",
-				status: false,
-				type: null,
-				style: {
-					create: false,
-					delete: true,
-				},
-				modules: {
-					title: false,
-					buttons: {
-						hide: false,
-						close: true,
-					},
-					images: false,
-					body: true,
-					footer: true,
+			modalPassword: {
+				thin: true,
+				clamped: false,
+				values: {
+					title: "",
+					look: "default",
 				},
 			},
 
-			subModalDelete: {
-				title: "",
-				status: false,
-				type: "delete",
-				style: {
-					create: false,
-					delete: true,
-				},
-				modules: {
-					title: false,
-					buttons: {
-						hide: false,
-						close: true,
-					},
-					images: false,
-					body: true,
-					footer: true,
+			modalBlock: {
+				thin: true,
+				clamped: false,
+				values: {
+					title: "",
+					look: "default",
 				},
 			},
 
-			subModalBlock: {
-				title: "",
-				status: false,
-				type: null,
-				style: {
-					create: false,
-					delete: false,
-				},
-				modules: {
-					title: false,
-					buttons: {
-						hide: false,
-						close: true,
-					},
-					images: false,
-					body: true,
-					footer: true,
+			modalDelete: {
+				thin: true,
+				clamped: false,
+				values: {
+					title: "",
+					look: "default",
 				},
 			},
 
@@ -796,66 +737,60 @@ export default {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                 Модальное окно                    |*/
 		/* |___________________________________________________|*/
-		/* _____________________________________________________*/
-		/* 1. Основные действия                                 */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		/* Открытие */
-		openModal(type = "edit", name = "modal") {
+		/* Открытие модального окна */
+		openModal(name, title, look) {
+			this[name].values.title = title;
+			this[name].values.look = look;
+
+			this.$refs[name].open();
+		},
+
+		/* Открытие модального окна для добавления */
+		openModalEdite(value) {
 			this.$refs.fileUpload.value = "";
 
-			switch (type) {
-				case "create":
-					{
-						this[name].type = "create";
-						this[name].status = true;
-					}
-					document.body.classList.add("modal-open");
-					break;
-				case "edit":
-					{
-						this[name].type = "edit";
-						this[name].status = true;
-					}
-					document.body.classList.add("modal-open");
-					break;
-				default:
-					{
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: "Низвестный тип открытия модального окна.",
-							type: "error",
-						});
-					}
-					break;
-			}
+			shared.clearObjectFull(this.currentUser);
+			shared.setData(value, this.currentUser);
+
+			this.openModal("modal", "ПОЛЬЗОВАТЕЛЬ", "default");
 		},
-		/* Закрытие */
-		closeModal(name = "modal") {
-			this[name].status = false;
-			document.body.classList.remove("modal-open");
+
+		/* Открытие модального окна для добавления */
+		openModalСreate() {
+			this.$refs.fileUpload.value = "";
+
+			shared.clearObjectFull(this.currentUser);
+
+			this.openModal("modal", "ПОЛЬЗОВАТЕЛЬ", "create");
+		},
+
+		/* Открытие модального окна для смены пароля */
+		openModalPassword(value) {
+			shared.clearObjectFull(this.currentUser);
+			shared.setData(value, this.currentUser);
+
+			this.openModal("modalPassword", "", "default");
+		},
+
+		/* Открытие модального окна для блокировки */
+		openModalBlock(value) {
+			shared.clearObjectFull(this.currentUser);
+			shared.setData(value, this.currentUser);
+
+			this.openModal("modalBlock", "", "default");
+		},
+
+		/* Открытие модального окна для удаления */
+		openModalDelete(value) {
+			shared.clearObjectFull(this.currentUser);
+			shared.setData(value, this.currentUser);
+
+			this.openModal("modalDelete", "", "default");
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                  ПОЛЬЗОВАТЕЛИ                     |*/
 		/* |___________________________________________________|*/
-		/* _____________________________________________________*/
-		/* 1. Основные действия                                 */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		/* Создание пользователя */
-		createUser() {
-			shared.clearObjectFull(this.currentUser);
-
-			this.openModal("create", "modal");
-		},
-
-		/* Редактирование информации пользователя */
-		editUser(user) {
-			shared.clearObjectFull(this.currentUser);
-			shared.setData(user, this.currentUser);
-
-			this.openModal("edit", "modal");
-		},
-
 		/* Редактирование пароля пользователя */
 		editUserPassword(user) {
 			shared.clearObjectFull(this.currentUser);
@@ -906,7 +841,7 @@ export default {
 						});
 						currentUser.statusId = response.data.data;
 
-						this.closeModal("subModalBlock");
+						this.$refs.modalBlock.close();
 
 						this.$store.commit("addDebugger", {
 							title: "Успешно!",
@@ -962,8 +897,7 @@ export default {
 			})
 				.then((response) => {
 					if (response.data.status) {
-						this.disabled.userPassword.save = false;
-						this.closeModal("subModalPassword");
+						this.$refs.modalPassword.close();
 
 						this.$store.commit("addDebugger", {
 							title: "Успешно!",
@@ -1075,7 +1009,7 @@ export default {
 							currentUser.filename = files.basename(response.data.data.path);
 						}
 
-						this.closeModal("modal");
+						this.$refs.modal.close();
 
 						this.$store.commit("addDebugger", {
 							title: "Успешно!",
@@ -1185,7 +1119,7 @@ export default {
 							statusId: response.data.data.statusId,
 						});
 
-						this.closeModal("modal");
+						this.$refs.modal.close();
 
 						this.$store.commit("addDebugger", {
 							title: "Успешно!",
@@ -1233,7 +1167,7 @@ export default {
 							(user) => user.id !== this.currentUser.data.id.value
 						);
 
-						this.closeModal("subModalDelete");
+						this.$refs.modalBlock.close();
 
 						this.$store.commit("addDebugger", {
 							title: "Успешно!",
