@@ -29,7 +29,7 @@
 				<div class="icon delete" @click="$emit('touchDelete', item)">
 					<Icon
 						:name="'delete'"
-						:fill="'var(--icon-delete-fill)'"
+						:fill="'var(--delete-secondary-color)'"
 						:width="'20px'"
 						:height="'20px'"
 					/>

@@ -1,8 +1,6 @@
 <template>
-	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
-	<!--|                  МОДАЛЬНОЕ ОКНО                   |-->
-	<!--|___________________________________________________|-->
-	<admin-modal ref="modal" @touchCloseModal="closeModal" :modal="modal">
+	<!-- Модальное окно: Информационный блок -->
+	<Modal ref="modal" :settings="modal">
 		<template
 			#title
 			v-if="modal.type == 'edit' && !currentInfoBlock.data.delete.value && !modal.style.create"
@@ -44,7 +42,7 @@
 						}"
 					></div>
 					<div class="buttons" v-if="!currentInfoBlock.data.delete.value">
-						<div class="icon edit" @click="editImage('imageOne')">
+						<div class="icon edit" @click="openModalImageEdite('imageOne')">
 							<Icon
 								:name="'edit'"
 								:fill="'var(--icon-edit-fill)'"
@@ -55,7 +53,7 @@
 						<div class="icon delete" @click="removeInfoBlockImage('imageOne')">
 							<Icon
 								:name="'delete'"
-								:fill="'var(--icon-delete-fill)'"
+								:fill="'var(--delete-secondary-color)'"
 								:width="'24px'"
 								:height="'22px'"
 							/>
@@ -70,7 +68,7 @@
 						}"
 					></div>
 					<div class="buttons add" v-if="!currentInfoBlock.data.delete.value">
-						<div class="icon create" @click="createImage('imageOne')">
+						<div class="icon create" @click="openModalImageCreate('imageOne')">
 							<Icon
 								:name="'add'"
 								:fill="'var(--icon-create-fill)'"
@@ -88,7 +86,7 @@
 						}"
 					></div>
 					<div class="buttons" v-if="!currentInfoBlock.data.delete.value">
-						<div class="icon edit" @click="editImage('imageTwo')">
+						<div class="icon edit" @click="openModalImageEdite('imageTwo')">
 							<Icon
 								:name="'edit'"
 								:fill="'var(--icon-edit-fill)'"
@@ -99,7 +97,7 @@
 						<div class="icon delete" @click="removeInfoBlockImage('imageTwo')">
 							<Icon
 								:name="'delete'"
-								:fill="'var(--icon-delete-fill)'"
+								:fill="'var(--delete-secondary-color)'"
 								:width="'24px'"
 								:height="'22px'"
 							/>
@@ -114,7 +112,7 @@
 						}"
 					></div>
 					<div class="buttons add" v-if="!currentInfoBlock.data.delete.value">
-						<div class="icon create" @click="createImage('imageTwo')">
+						<div class="icon create" @click="openModalImageCreate('imageTwo')">
 							<Icon
 								:name="'add'"
 								:fill="'var(--icon-create-fill)'"
@@ -132,7 +130,7 @@
 						}"
 					></div>
 					<div class="buttons" v-if="!currentInfoBlock.data.delete.value">
-						<div class="icon edit" @click="editImage('imageThree')">
+						<div class="icon edit" @click="openModalImageEdite('imageThree')">
 							<Icon
 								:name="'edit'"
 								:fill="'var(--icon-edit-fill)'"
@@ -143,7 +141,7 @@
 						<div class="icon delete" @click="removeInfoBlockImage('imageThree')">
 							<Icon
 								:name="'delete'"
-								:fill="'var(--icon-delete-fill)'"
+								:fill="'var(--delete-secondary-color)'"
 								:width="'24px'"
 								:height="'22px'"
 							/>
@@ -158,7 +156,7 @@
 						}"
 					></div>
 					<div class="buttons add" v-if="!currentInfoBlock.data.delete.value">
-						<div class="icon create" @click="createImage('imageThree')">
+						<div class="icon create" @click="openModalImageCreate('imageThree')">
 							<Icon
 								:name="'add'"
 								:fill="'var(--icon-create-fill)'"
@@ -193,42 +191,41 @@
 		</template>
 
 		<template #footer>
-			<BlockButtons>
-				<ButtonDefault @click="addInfoBlock" v-if="modal.type == 'create'">
+			<template v-if="modal.values.look == 'create'">
+				<ButtonDefault @click="addInfoBlock">
 					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</ButtonDefault>
+			</template>
+
+			<template v-if="modal.values.look == 'default'">
 				<button-remove
 					@click="deleteInfoBlock"
-					v-if="
-						modal.type == 'edit' &&
-						!currentInfoBlock.data.delete.value &&
-						!currentInfoBlock.data.create.value
-					"
+					v-if="!currentInfoBlock.data.delete.value && !currentInfoBlock.data.create.value"
 				>
 					<Icon :name="'delete'" :fill="'white'" :width="'24px'" :height="'22px'" />
 					Удалить
 				</button-remove>
-				<ButtonDefault
-					@click="updateInfoBlock"
-					v-if="modal.type == 'edit' && !currentInfoBlock.data.delete.value"
-				>
+
+				<ButtonDefault @click="updateInfoBlock" v-if="!currentInfoBlock.data.delete.value">
 					<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</ButtonDefault>
+
 				<ButtonDefault @click="deleteInfoBlock" v-if="currentInfoBlock.data.delete.value">
 					<Icon :name="'restore'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Вернуть
 				</ButtonDefault>
-			</BlockButtons>
+			</template>
 		</template>
-	</admin-modal>
+	</Modal>
 
-	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
-	<!--|            МОДАЛЬНОЕ ОКНО (ДОЧЕРНЕЕ)              |-->
-	<!--|___________________________________________________|-->
-	<admin-sub-modal ref="sub-modal" @touchCloseModal="closeModal('subModal')" :modal="subModal">
-		<template #title>ЗАГРУЗКА ИЗОБРАЖЕНИЯ</template>
+	<!-- Модальное окно: Добавить картинку -->
+	<Modal ref="modalImage" :settings="modalImage">
+		<template #title>
+			{{ modalImage.values.title }}
+		</template>
+
 		<template #body>
 			<container-input-once>
 				<template #input>
@@ -247,27 +244,23 @@
 				</template>
 			</container-input-once>
 		</template>
+
 		<template #footer>
-			<block-buttons>
-				<button-default
-					v-if="subModal.type == 'edit'"
-					@click="updateImage"
-					:disabled="disabled.image.update"
-				>
-					<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
-					Обновить
-				</button-default>
-				<button-default
-					v-if="subModal.type == 'create'"
-					@click="updateImage"
-					:disabled="disabled.image.add"
-				>
+			<template v-if="modalImage.values.look == 'create'">
+				<button-default @click="updateImage" :disabled="disabled.image.add">
 					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-default>
-			</block-buttons>
+			</template>
+
+			<template v-if="modalImage.values.look == 'default'">
+				<button-default @click="updateImage" :disabled="disabled.image.update">
+					<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					Обновить
+				</button-default>
+			</template>
 		</template>
-	</admin-sub-modal>
+	</Modal>
 
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|               ИНФОРМАЦИОННЫЕ БЛОКИ                |-->
@@ -295,7 +288,7 @@
 			<template v-if="loading.sections.infoBlocks">
 				<AdminAboutUsList
 					:infoBlocks="infoBlocks"
-					@touchEditBlock="editInfoBlock"
+					@touchEditBlock="openModalEdite"
 					v-if="infoBlocks.length > 0"
 				/>
 
@@ -311,7 +304,7 @@
 		</template>
 
 		<template #buttons>
-			<button-default @click="openModal('create')">
+			<button-default @click="openModalСreate">
 				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</button-default>
@@ -320,8 +313,7 @@
 </template>
 
 <script>
-import AdminModal from "../../../components/includes/admin/AdminModal.vue";
-import AdminSubModal from "../../../components/includes/admin/AdminSubModal.vue";
+import Modal from "../../../components/modules/modal/Modal.vue";
 
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import Tiptap from "../../../components/modules/Tiptap.vue";
@@ -353,8 +345,8 @@ import validate from "../../../services/validate";
 
 export default {
 	components: {
-		AdminModal,
-		AdminSubModal,
+		Modal,
+
 		InfoBar,
 		Tiptap,
 		LoaderChild,
@@ -408,42 +400,20 @@ export default {
 
 			/* Модальное окно */
 			modal: {
-				title: "БЛОК",
-				status: false,
-				type: null,
-				style: {
-					create: false,
-					delete: false,
-				},
-				modules: {
-					title: true,
-					buttons: {
-						hide: true,
-						close: true,
-					},
-					images: false,
-					body: true,
-					footer: true,
+				thin: false,
+				clamped: false,
+				values: {
+					title: "",
+					look: "default",
 				},
 			},
 
-			subModal: {
-				title: "",
-				status: false,
-				type: null,
-				style: {
-					create: false,
-					delete: false,
-				},
-				modules: {
-					title: true,
-					buttons: {
-						hide: false,
-						close: true,
-					},
-					images: false,
-					body: true,
-					footer: true,
+			modalImage: {
+				thin: true,
+				clamped: false,
+				values: {
+					title: "",
+					look: "default",
 				},
 			},
 
@@ -563,72 +533,55 @@ export default {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                 Модальное окно                    |*/
 		/* |___________________________________________________|*/
-		/* _____________________________________________________*/
-		/* 1. Основные действия                                 */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		/* Открытие */
-		openModal(type = "edit", name = "modal") {
-			switch (type) {
-				case "create":
-					{
-						this[name].type = "create";
-						this[name].status = true;
+		/* Открытие модального окна */
+		openModal(name, title, look) {
+			this[name].values.title = title;
+			this[name].values.look = look;
 
-						if (name === "modal") {
-							shared.clearObjectSelective(this.currentInfoBlock, "data", [
-								"value",
-								"edited",
-							]);
-						}
-					}
-					document.body.classList.add("modal-open");
-					break;
-				case "edit":
-					{
-						this[name].type = "edit";
-						this[name].status = true;
-					}
-					document.body.classList.add("modal-open");
-					break;
-				default:
-					{
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: "Низвестный тип открытия модального окна.",
-							type: "error",
-						});
-					}
-					break;
-			}
+			this.$refs[name].open();
 		},
 
-		/* Закрытие */
-		closeModal(name = "modal") {
-			this[name].status = false;
-			if (name == "modal") {
-				document.body.classList.remove("modal-open");
-			}
+		/* Открытие модального окна для добавления */
+		openModalСreate() {
+			shared.clearObjectFull(this.currentInfoBlock);
+
+			this.openModal("modal", "БЛОК ИНФОРМАЦИИ", "create");
+		},
+
+		/* Открытие модального окна для редактирования */
+		openModalEdite(value) {
+			shared.clearObjectFull(this.currentInfoBlock);
+			shared.setData(value, this.currentInfoBlock);
+
+			this.openModal("modal", "БЛОК ИНФОРМАЦИИ", "default");
+		},
+
+		/* Открытие модального окна для загрузки */
+		openModalImageCreate(name) {
+			this.currentImage.data.file.value = name;
+			this.currentImage.data.file.edited = false;
+			this.currentImage.errors.file.status = false;
+
+			this.$refs.fileUpload.value = "";
+
+			this.openModal("modalImage", "ЗАГРУЗКА ИЗОБРАЖЕНИЯ", "default");
+		},
+
+		/* Открытие модального окна для загрузки */
+		openModalImageEdite(name) {
+			this.currentImage.data.file.value = name;
+			this.currentImage.data.file.edited = false;
+			this.currentImage.errors.file.status = false;
+
+			this.$refs.fileUpload.value = "";
+
+			this.openModal("modalImage", "ЗАГРУЗКА ИЗОБРАЖЕНИЯ", "default");
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |               SUB-МОДАЛЬНОЕ ОКНО                  |*/
+		/* |              ИНФОРМАЦИОННЫЕ БЛОКИ                 |*/
 		/* |___________________________________________________|*/
-		/* _____________________________________________________*/
-		/* 1. Основные действия                                 */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		/* Изменение картинки */
-		editImage(name) {
-			this.clearDataImage(name);
-
-			this.openModal("edit", "subModal");
-		},
-
-		/* Изменение картинки */
-		createImage(name) {
-			this.clearDataImage(name);
-
-			this.openModal("create", "subModal");
-		},
+		/* Обновление картинки */
 		updateImage() {
 			if (
 				validate.checkInputsAll(this.currentImage, [
@@ -648,9 +601,9 @@ export default {
 			formData.append("type", "abouts");
 			formData.append("formats", ["png", "jpg", "jpeg", "webp"]);
 
-			if (this.subModal.type == "create") {
+			if (this.modalImage.values.look == "create") {
 				this.disabled.image.add = true;
-			} else if (this.subModal.type == "edit") {
+			} else if (this.modalImage.values.look == "default") {
 				this.disabled.image.update = true;
 			}
 
@@ -687,7 +640,7 @@ export default {
 									break;
 							}
 
-							this.closeModal("subModal");
+							this.$refs.modalImage.close();
 						} catch (error) {
 							this.$store.commit("addDebugger", {
 								title: "Ошибка.",
@@ -711,39 +664,19 @@ export default {
 					});
 				})
 				.finally(() => {
-					if (this.subModal.type == "create") {
+					if (this.modalImage.values.look == "create") {
 						this.disabled.image.add = false;
-					} else if (this.subModal.type == "edit") {
+					}
+
+					if (this.modalImage.values.look == "default") {
 						this.disabled.image.update = false;
 					}
 				});
 		},
 
-		/* Очистка */
-		clearDataImage(name) {
-			this.currentImage.data.file.value = name;
-			this.currentImage.data.file.edited = false;
-			this.currentImage.errors.file.status = false;
-
-			this.$refs.fileUpload.value = "";
-		},
-
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |              ИНФОРМАЦИОННЫЕ БЛОКИ                 |*/
 		/* |___________________________________________________|*/
-		/* _____________________________________________________*/
-		/* 1. Основные действия                                 */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		/* Открытие */
-		editInfoBlock(block) {
-			this.modal.title = "БЛОК (РЕДАКТИРОВАНИЕ)";
-
-			shared.clearObjectFull(this.currentInfoBlock);
-			shared.setData(block, this.currentInfoBlock);
-
-			this.openModal("edit", "modal");
-		},
-
 		/* Удаление */
 		deleteInfoBlock() {
 			try {
@@ -753,7 +686,7 @@ export default {
 
 				block.delete = !block.delete;
 
-				this.closeModal("modal");
+				this.$refs.modal.close();
 			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
@@ -781,11 +714,11 @@ export default {
 					delete: false,
 				});
 
-				this.closeModal("modal");
+				this.$refs.modal.close();
 			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: response.data.message,
+					body: error,
 					type: "error",
 				});
 			}
@@ -793,13 +726,23 @@ export default {
 
 		/* Обновление */
 		updateInfoBlock() {
-			let block = this.infoBlocks.find((item) => item.id == this.currentInfoBlock.data.id.value);
+			try {
+				let block = this.infoBlocks.find(
+					(item) => item.id == this.currentInfoBlock.data.id.value
+				);
 
-			for (let key in this.currentInfoBlock.data) {
-				block[key] = this.currentInfoBlock.data[key].value;
+				for (let key in this.currentInfoBlock.data) {
+					block[key] = this.currentInfoBlock.data[key].value;
+				}
+
+				this.$refs.modal.close();
+			} catch (error) {
+				this.$store.commit("addDebugger", {
+					title: "Ошибка.",
+					body: error,
+					type: "error",
+				});
 			}
-
-			this.closeModal("modal");
 		},
 
 		/* Удаление */
