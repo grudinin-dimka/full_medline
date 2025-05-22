@@ -1,37 +1,36 @@
 <template>
-	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
-	<!--|                  МОДАЛЬНОЕ ОКНО                   |-->
-	<!--|___________________________________________________|-->
-	<admin-modal ref="modal" @touchCloseModal="closeModal('modal')" :modal="modal">
-		<template
-			#title
-			v-if="modal.type == 'edit' && !currentContact.data.delete.value && !modal.style.create"
-		>
-			<Icon
-				:name="'arrow'"
-				:fill="'var(--icon-multi-fill)'"
-				:hover="'var(--icon-nulti-fill-hover)'"
-				:width="'16px'"
-				:height="'16px'"
-				:rotate="-90"
-				:cursor="'pointer'"
-				@click="changeContactsOrder('down')"
-			/>
-			#{{ currentContact.data.order.value }}
-			<Icon
-				:name="'arrow'"
-				:fill="'var(--icon-multi-fill)'"
-				:hover="'var(--icon-nulti-fill-hover)'"
-				:width="'16px'"
-				:height="'16px'"
-				:rotate="90"
-				:cursor="'pointer'"
-				@click="changeContactsOrder('up')"
-			/>
+	<!-- Модальное окно: Контакты -->
+	<Modal ref="modal" :settings="modal">
+		<template #title>
+			<template v-if="modal.values.look == 'default' && !currentContact.data.delete.value">
+				<Icon
+					:name="'arrow'"
+					:fill="'var(--icon-multi-fill)'"
+					:hover="'var(--icon-nulti-fill-hover)'"
+					:width="'16px'"
+					:height="'16px'"
+					:rotate="-90"
+					:cursor="'pointer'"
+					@click="changeContactsOrder('down')"
+				/>
+				#{{ currentContact.data.order.value }}
+				<Icon
+					:name="'arrow'"
+					:fill="'var(--icon-multi-fill)'"
+					:hover="'var(--icon-nulti-fill-hover)'"
+					:width="'16px'"
+					:height="'16px'"
+					:rotate="90"
+					:cursor="'pointer'"
+					@click="changeContactsOrder('up')"
+				/>
+			</template>
+
+			<template v-else>
+				{{ modal.values.title }}
+			</template>
 		</template>
-		<template #title v-else>
-			{{ modal.title }}
-		</template>
+
 		<template #body>
 			<ContainerInput>
 				<container-textarea-once>
@@ -68,66 +67,76 @@
 						</select>
 					</template>
 				</ContainerInputOnce>
-				<admin-modal-list
+
+				<ModalList
 					:array="currentContact.data.phones.value"
-					@touchCreate="createContactPhone"
-					@touchEdit="editContactPhone"
+					@touchCreate="openModalPhoneCreate"
+					@touchEdit="openModalPhoneEdite"
 					@touchDelete="deleteContactPhone"
 				>
 					<template #title>
-						<Icon :name="'phone'" :fill="'var(--primary-color)'" :width="'20px'" :height="'16px'" />
+						<Icon
+							:name="'phone'"
+							:fill="'var(--primary-color)'"
+							:width="'20px'"
+							:height="'16px'"
+						/>
 						ТЕЛЕФОНЫ
 					</template>
-				</admin-modal-list>
-				<admin-modal-list
+				</ModalList>
+
+				<ModalList
 					:array="currentContact.data.mails.value"
-					@touchCreate="createContactMail"
-					@touchEdit="editContactMail"
+					@touchCreate="openModalMailCreate"
+					@touchEdit="openModalMailEdite"
 					@touchDelete="deleteContactMail"
 				>
 					<template #title>
-						<Icon :name="'mail'" :fill="'var(--primary-color)'" :width="'20px'" :height="'14px'" />
+						<Icon
+							:name="'mail'"
+							:fill="'var(--primary-color)'"
+							:width="'20px'"
+							:height="'14px'"
+						/>
 						ПОЧТА
 					</template>
-				</admin-modal-list>
+				</ModalList>
 			</ContainerInput>
 		</template>
 		<template #footer>
-			<BlockButtons>
-				<button-default v-if="modal.type == 'create'" @click="addContact">
+			<template v-if="modal.values.look == 'create'">
+				<button-default @click="addContact">
 					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-default>
-				<template v-if="modal.type == 'edit' && !currentContact.data.delete.value">
-					<button-remove v-if="!currentContact.data.create.value" @click="deleteContact">
-						<Icon :name="'delete'" :fill="'white'" :width="'24px'" :height="'22px'" />
-						Удалить
-					</button-remove>
-					<ButtonDefault @click="updateContact">
-						<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
-						Обновить
-					</ButtonDefault>
-				</template>
-				<ButtonDefault
-					v-if="modal.type == 'edit' && currentContact.data.delete.value"
-					@click="deleteContact"
-				>
+			</template>
+
+			<template v-if="modal.values.look == 'default' && !currentContact.data.delete.value">
+				<button-remove v-if="!currentContact.data.create.value" @click="deleteContact">
+					<Icon :name="'delete'" :fill="'white'" :width="'24px'" :height="'22px'" />
+					Удалить
+				</button-remove>
+				<ButtonDefault @click="updateContact">
+					<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					Обновить
+				</ButtonDefault>
+			</template>
+
+			<template v-if="modal.values.look == 'default' && currentContact.data.delete.value">
+				<ButtonDefault @click="deleteContact">
 					<Icon :name="'restore'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Вернуть
 				</ButtonDefault>
-			</BlockButtons>
+			</template>
 		</template>
-	</admin-modal>
+	</Modal>
 
-	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
-	<!--|             МОДАЛЬНОЕ ОКНО (ТЕЛЕФОН)              |-->
-	<!--|___________________________________________________|-->
-	<admin-sub-modal
-		ref="sub-modal-phone"
-		@touchCloseModal="closeModal('subModalPhone')"
-		:modal="subModalPhone"
-	>
-		<template #title>ТЕЛЕФОН</template>
+	<!-- Модальное окно: Контакты -> Телефон -->
+	<Modal ref="modalPhone" :settings="modalPhone">
+		<template #title>
+			{{ modalPhone.values.title }}
+		</template>
+
 		<template #body>
 			<container-input-once>
 				<template #input>
@@ -148,29 +157,25 @@
 				</template>
 			</container-input-once>
 		</template>
-		<template #footer>
-			<block-buttons>
-				<button-default v-if="subModalPhone.type == 'edit'" @click="updateContactPhone">
-					<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
-					Обновить
-				</button-default>
-				<button-default v-if="subModalPhone.type == 'create'" @click="addContactPhone">
-					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
-					Добавить
-				</button-default>
-			</block-buttons>
-		</template>
-	</admin-sub-modal>
 
-	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
-	<!--|             МОДАЛЬНОЕ ОКНО (ПОЧТА)                |-->
-	<!--|___________________________________________________|-->
-	<admin-sub-modal
-		ref="sub-modal-mail"
-		@touchCloseModal="closeModal('subModalMail')"
-		:modal="subModalMail"
-	>
-		<template #title>ПОЧТА</template>
+		<template #footer>
+			<button-default v-if="modalPhone.values.look == 'default'" @click="updateContactPhone">
+				<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
+				Обновить
+			</button-default>
+			<button-default v-if="modalPhone.values.look == 'create'" @click="addContactPhone">
+				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				Добавить
+			</button-default>
+		</template>
+	</Modal>
+
+	<!-- Модальное окно: Контакты -> Почта -->
+	<Modal ref="modalMail" :settings="modalMail">
+		<template #title>
+			{{ modalMail.values.title }}
+		</template>
+
 		<template #body>
 			<container-input-once>
 				<template #input>
@@ -192,18 +197,16 @@
 			</container-input-once>
 		</template>
 		<template #footer>
-			<block-buttons>
-				<button-default v-if="subModalMail.type == 'edit'" @click="updateContactMail">
-					<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
-					Обновить
-				</button-default>
-				<button-default v-if="subModalMail.type == 'create'" @click="addContactMail">
-					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
-					Добавить
-				</button-default>
-			</block-buttons>
+			<button-default v-if="modalMail.values.look == 'edit'" @click="updateContactMail">
+				<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
+				Обновить
+			</button-default>
+			<button-default v-if="modalMail.values.look == 'create'" @click="addContactMail">
+				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				Добавить
+			</button-default>
 		</template>
-	</admin-sub-modal>
+	</Modal>
 
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                     КОНТАКТЫ                      |-->
@@ -234,7 +237,7 @@
 					v-if="contacts.length > 0"
 					:contacts="contacts"
 					:clinics="clinics"
-					@touchEditContact="editContact"
+					@touchEditContact="openModalEdite"
 				/>
 
 				<Empty :minHeight="300" v-else />
@@ -249,7 +252,7 @@
 		</template>
 
 		<template #buttons>
-			<ButtonDefault @click="openModal('create')">
+			<ButtonDefault @click="openModalСreate">
 				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</ButtonDefault>
@@ -258,9 +261,8 @@
 </template>
 
 <script>
-import AdminModal from "../../../components/includes/admin/AdminModal.vue";
-import AdminSubModal from "../../../components/includes/admin/AdminSubModal.vue";
-import AdminModalList from "../../../components/includes/admin/AdminModalList.vue";
+import Modal from "../../../components/modules/modal/Modal.vue";
+import ModalList from "../../../components/modules/modal/ModalList.vue";
 
 import AdminContactsList from "./AdminContactsList.vue";
 
@@ -290,9 +292,9 @@ import sorted from "../../../services/sorted.js";
 
 export default {
 	components: {
-		AdminModal,
-		AdminSubModal,
-		AdminModalList,
+		Modal,
+		ModalList,
+
 		AdminContactsList,
 
 		InfoBar,
@@ -336,62 +338,29 @@ export default {
 
 			/* Модальное окно */
 			modal: {
-				title: "КОНТАКТ",
-				status: false,
-				type: null,
-				style: {
-					create: false,
-					delete: false,
-				},
-				modules: {
-					title: true,
-					buttons: {
-						hide: true,
-						close: true,
-					},
-					images: false,
-					body: true,
-					footer: true,
+				thin: false,
+				clamped: false,
+				values: {
+					title: "",
+					look: "default",
 				},
 			},
 
-			subModalPhone: {
-				title: "",
-				status: false,
-				type: null,
-				style: {
-					create: false,
-					delete: false,
-				},
-				modules: {
-					title: true,
-					buttons: {
-						hide: false,
-						close: true,
-					},
-					images: false,
-					body: true,
-					footer: true,
+			modalPhone: {
+				thin: true,
+				clamped: false,
+				values: {
+					title: "",
+					look: "default",
 				},
 			},
 
-			subModalMail: {
-				title: "",
-				status: false,
-				type: null,
-				style: {
-					create: false,
-					delete: false,
-				},
-				modules: {
-					title: true,
-					buttons: {
-						hide: false,
-						close: true,
-					},
-					images: false,
-					body: true,
-					footer: true,
+			modalMail: {
+				thin: true,
+				clamped: false,
+				values: {
+					title: "",
+					look: "default",
 				},
 			},
 
@@ -534,52 +503,55 @@ export default {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                 Модальное окно                    |*/
 		/* |___________________________________________________|*/
-		/* _____________________________________________________*/
-		/* 1. Основные действия                                 */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		/* Открытие */
-		openModal(type = "edit", name = "modal") {
-			if (name === "modal") {
-				shared.clearObjectSelective(this.currentContact, "errors", ["status", "message"]);
-				shared.clearObjectSelective(this.currentContact, "data", ["edited"]);
-			}
+		/* Открытие модального окна */
+		openModal(name, title, look) {
+			this[name].values.title = title;
+			this[name].values.look = look;
 
-			switch (type) {
-				case "create":
-					{
-						this[name].type = "create";
-						this[name].status = true;
-						if (name === "modal") {
-							shared.clearObjectSelective(this.currentContact, "data", ["edited", "value"]);
-						}
-					}
-					document.body.classList.add("modal-open");
-					break;
-				case "edit":
-					{
-						this[name].type = "edit";
-						this[name].status = true;
-					}
-					document.body.classList.add("modal-open");
-					break;
-				default:
-					{
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: "Низвестный тип открытия модального окна.",
-							type: "error",
-						});
-					}
-					break;
-			}
+			this.$refs[name].open();
 		},
 
-		/* Закрытие */
-		closeModal(name = "modal") {
-			this[name].status = false;
-			if (name == "modal") {
-				document.body.classList.remove("modal-open");
-			}
+		/* Открытие модального окна для добавления */
+		openModalСreate() {
+			shared.clearObjectFull(this.currentContact);
+
+			this.openModal("modal", "КОНТАКТ", "create");
+		},
+
+		/* Открытие модального окна для редактирования */
+		openModalEdite(value) {
+			shared.clearObjectFull(this.currentContact);
+			shared.setData(value, this.currentContact);
+
+			this.openModal("modal", "КОНТАКТ", "default");
+		},
+
+		/* Телефон */
+		openModalPhoneCreate() {
+			shared.clearObjectFull(this.currentPhone);
+
+			this.openModal("modalPhone", "ТЕЛЕФОН", "create");
+		},
+
+		openModalPhoneEdite(value) {
+			shared.clearObjectFull(this.currentPhone);
+			shared.setData(value, this.currentPhone);
+
+			this.openModal("modalPhone", "ТЕЛЕФОН", "default");
+		},
+
+		/* Почта */
+		openModalMailCreate() {
+			shared.clearObjectFull(this.currentMail);
+
+			this.openModal("modalPhone", "ПОЧТА", "create");
+		},
+
+		openModalMailEdite(value) {
+			shared.clearObjectFull(this.currentMail);
+			shared.setData(value, this.currentMail);
+
+			this.openModal("modalPhone", "ПОЧТА", "default");
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -609,7 +581,7 @@ export default {
 					delete: false,
 				});
 
-				this.closeModal("modal");
+				this.$refs.modal.close();
 			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
@@ -617,13 +589,6 @@ export default {
 					type: "error",
 				});
 			}
-		},
-
-		/* Изменение */
-		editContact(contact) {
-			shared.setData(contact, this.currentContact);
-
-			this.openModal("edit", "modal");
 		},
 
 		/* Обновление */
@@ -636,7 +601,7 @@ export default {
 				contact[key] = this.currentContact.data[key].value;
 			}
 
-			this.closeModal("modal");
+			this.$refs.modal.close();
 		},
 
 		/* Удаление */
@@ -648,7 +613,7 @@ export default {
 
 				contact.delete = !contact.delete;
 
-				this.closeModal("modal");
+				this.$refs.modal.close();
 			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
@@ -657,6 +622,7 @@ export default {
 				});
 			}
 		},
+
 		/* Сохранение */
 		saveContact() {
 			this.disabled.contacts.save = true;
@@ -726,28 +692,9 @@ export default {
 			}
 		},
 
-		/* Соритровка */
-		sortContacts(type) {
-			switch (type) {
-				case "id":
-					this.contacts.sort((a, b) => a.id - b.id);
-					break;
-				case "order":
-					this.contacts.sort((a, b) => a.order - b.order);
-					break;
-				default:
-					break;
-			}
-		},
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                     ТЕЛЕФОН                       |*/
 		/* |___________________________________________________|*/
-		/* Создание */
-		createContactPhone() {
-			shared.clearObjectFull(this.currentPhone);
-
-			this.openModal("create", "subModalPhone");
-		},
 		/* Добавление */
 		addContactPhone() {
 			// Поиск максимального id
@@ -767,7 +714,7 @@ export default {
 					name: this.currentPhone.data.name.value,
 				});
 
-				this.closeModal("subModalPhone");
+				this.$refs.modalPhone.close();
 			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
@@ -775,14 +722,6 @@ export default {
 					type: "error",
 				});
 			}
-		},
-
-		/* Изменение */
-		editContactPhone(phone) {
-			shared.clearObjectFull(this.currentPhone);
-			shared.setData(phone, this.currentPhone);
-
-			this.openModal("edit", "subModalPhone");
 		},
 
 		/* Обновление */
@@ -806,7 +745,7 @@ export default {
 					phone[key] = this.currentPhone.data[key].body;
 				}
 
-				this.closeModal("subModalPhone");
+				this.$refs.modalPhone.close();
 			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
@@ -815,6 +754,7 @@ export default {
 				});
 			}
 		},
+
 		/* Удаление */
 		deleteContactPhone(selectedPhone) {
 			try {
@@ -833,18 +773,10 @@ export default {
 				});
 			}
 		},
+
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                      ПОЧТА                        |*/
 		/* |___________________________________________________|*/
-		/* _____________________________________________________*/
-		/* 1. Основные действия                                 */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		/* Создание */
-		createContactMail() {
-			shared.clearObjectFull(this.currentMail);
-
-			this.openModal("create", "subModalMail");
-		},
 		/* Добавление */
 		addContactMail() {
 			// Поиск максимального id
@@ -864,7 +796,7 @@ export default {
 					name: this.currentMail.data.name.value,
 				});
 
-				this.closeModal("subModalMail");
+				this.$refs.modalMail.close();
 			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
@@ -872,14 +804,6 @@ export default {
 					type: "error",
 				});
 			}
-		},
-
-		/* Изменение */
-		editContactMail(mail) {
-			shared.clearObjectFull(this.currentMail);
-			shared.setData(mail, this.currentMail);
-
-			this.openModal("edit", "subModalMail");
 		},
 
 		/* Обновление */
@@ -903,7 +827,7 @@ export default {
 					mail[key] = this.currentMail.data[key].body;
 				}
 
-				this.closeModal("subModalMail");
+				this.$refs.modalMail.close();
 			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
