@@ -1,17 +1,10 @@
 <template>
-	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
-	<!--|                  МОДАЛЬНОЕ ОКНО                   |-->
-	<!--|___________________________________________________|-->
-	<!--____________________________________________________-->
-	<!--1. Специализации                                    -->
-	<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
-	<admin-modal @touchCloseModal="closeModal('modalSpecializations')" :modal="modalSpecializations">
+	<!-- Модальное окно: Специализации -->
+	<Modal ref="modalSpecializations" :settings="modalSpecializations">
 		<template #title>
-			<span class="create" v-if="modalSpecializations.type == 'create'">
-				СПЕЦИАЛИЗАЦИЯ (СОЗДАНИЕ)
-			</span>
-			<span v-if="modalSpecializations.type == 'edit'">СПЕЦИАЛИЗАЦИИ</span>
+			{{ modalSpecializations.values.title }}
 		</template>
+
 		<template #body>
 			<ContainerInputSearch
 				v-model="search.specializations"
@@ -51,23 +44,21 @@
 				@changePage="changePageSpecializations"
 			/>
 		</template>
+
 		<template #footer>
-			<block-buttons>
-				<button-default @click="updateSpecialization">
-					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
-					Добавить
-				</button-default>
-			</block-buttons>
+			<button-default @click="updateSpecialization">
+				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				Добавить
+			</button-default>
 		</template>
-	</admin-modal>
-	<!--____________________________________________________-->
-	<!--2. Клиники                                          -->
-	<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
-	<admin-modal @touchCloseModal="closeModal('modalClinics')" :modal="modalClinics">
+	</Modal>
+
+	<!-- Модальное окно: Клиники -->
+	<Modal ref="modalClinics" :settings="modalClinics">
 		<template #title>
-			<span class="create" v-if="modalClinics.type == 'create'"> СПЕЦИАЛИЗАЦИЯ (СОЗДАНИЕ) </span>
-			<span v-if="modalClinics.type == 'edit'">КЛИНИКИ</span>
+			{{ modalClinics.values.title }}
 		</template>
+
 		<template #body>
 			<ContainerInputSearch v-model="search.clinics" :placeholder="'Введите клинику'" />
 
@@ -113,22 +104,21 @@
 				@changePage="changePageClinics"
 			/>
 		</template>
+
 		<template #footer>
-			<block-buttons>
-				<button-default @click="updateClinics">
-					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
-					Добавить
-				</button-default>
-			</block-buttons>
+			<button-default @click="updateClinics">
+				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				Добавить
+			</button-default>
 		</template>
-	</admin-modal>
-	<!--____________________________________________________-->
-	<!--3. Сертификаты                                      -->
-	<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
-	<admin-modal @touchCloseModal="closeModal('modalCertificates')" :modal="modalCertificates">
+	</Modal>
+
+	<!-- Модальное окно: Сертификат -->
+	<Modal ref="modalCertificates" :settings="modalCertificates">
 		<template #title>
-			{{ modalCertificates.title }}
+			{{ modalCertificates.values.title }}
 		</template>
+
 		<template #body>
 			<container-input-once>
 				<template #title>
@@ -193,27 +183,30 @@
 				</template>
 			</container-input-once>
 		</template>
+
 		<template #footer>
-			<block-buttons>
-				<button-default @click="addCertificate" v-if="modalCertificates.type == 'create'">
+			<template v-if="modalCertificates.values.look == 'create'">
+				<button-default @click="addCertificate">
 					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-default>
-				<button-default @click="updateCertificate" v-if="modalCertificates.type == 'edit'">
+			</template>
+
+			<template v-if="modalCertificates.values.look == 'default'">
+				<button-default @click="updateCertificate">
 					<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</button-default>
-			</block-buttons>
+			</template>
 		</template>
-	</admin-modal>
+	</Modal>
 
-	<!--____________________________________________________-->
-	<!--4. Образования                                      -->
-	<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
-	<admin-modal @touchCloseModal="closeModal('modalEducations')" :modal="modalEducations">
+	<!-- Модальное окно: Образования -->
+	<Modal ref="modalEducations" :settings="modalEducations">
 		<template #title>
-			{{ modalEducations.title }}
+			{{ modalEducations.values.title }}
 		</template>
+
 		<template #body>
 			<container-input>
 				<!-- Название -->
@@ -241,13 +234,8 @@
 				<!-- Организация -->
 				<container-textarea-once>
 					<template #title>
-						<span :class="{ create: modalEducations.type == 'create' }">ОРГАНИЗАЦИЯ*</span>
-						<span
-							:class="{ create: modalEducations.type == 'create' }"
-							v-if="currentEducation.data.organization.edited"
-						>
-							(ИЗМЕНЕНО)
-						</span>
+						<span>ОРГАНИЗАЦИЯ*</span>
+						<span v-if="currentEducation.data.organization.edited"> (ИЗМЕНЕНО) </span>
 					</template>
 					<template #textarea>
 						<textarea
@@ -268,13 +256,8 @@
 				<!-- Дата получения образования -->
 				<container-input-once>
 					<template #title>
-						<span :class="{ create: modalEducations.type == 'create' }">ДАТА ПОЛУЧЕНИЯ*</span>
-						<span
-							:class="{ create: modalEducations.type == 'create' }"
-							v-if="currentEducation.data.date.edited"
-						>
-							(ИЗМЕНЕНО)</span
-						>
+						<span>ДАТА ПОЛУЧЕНИЯ*</span>
+						<span v-if="currentEducation.data.date.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #input>
 						<input
@@ -295,13 +278,8 @@
 				<!-- Выбор специализации -->
 				<container-input-once>
 					<template #title>
-						<span :class="{ create: modalEducations.type == 'create' }">СПЕЦИАЛИЗАЦИЯ*</span>
-						<span
-							:class="{ create: modalEducations.type == 'create' }"
-							v-if="currentEducation.data.speсialization.edited"
-						>
-							(ИЗМЕНЕНО)</span
-						>
+						<span>СПЕЦИАЛИЗАЦИЯ*</span>
+						<span v-if="currentEducation.data.speсialization.edited"> (ИЗМЕНЕНО)</span>
 					</template>
 					<template #input>
 						<input
@@ -328,27 +306,30 @@
 				</container-input-once>
 			</container-input>
 		</template>
+
 		<template #footer>
-			<block-buttons>
-				<button-default @click="addEducation" v-if="modalEducations.type == 'create'">
+			<template v-if="modalEducations.values.look == 'create'">
+				<button-default @click="addEducation">
 					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-default>
-				<button-default @click="updateEducation" v-if="modalEducations.type == 'edit'">
+			</template>
+
+			<template v-if="modalEducations.values.look == 'default'">
+				<button-default @click="updateEducation">
 					<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</button-default>
-			</block-buttons>
+			</template>
 		</template>
-	</admin-modal>
+	</Modal>
 
-	<!--____________________________________________________-->
-	<!--5. Прошлые работы                                   -->
-	<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
-	<admin-modal @touchCloseModal="closeModal('modalWorks')" :modal="modalWorks">
+	<!-- Модальное окно: Работы -->
+	<Modal ref="modalWorks" :settings="modalWorks">
 		<template #title>
-			{{ modalWorks.title }}
+			{{ modalWorks.values.title }}
 		</template>
+
 		<template #body>
 			<container-input>
 				<!-- Название -->
@@ -441,18 +422,21 @@
 			</container-input>
 		</template>
 		<template #footer>
-			<block-buttons>
-				<button-default @click="addWork" v-if="modalWorks.type == 'create'">
+			<template v-if="modalWorks.values.look == 'create'">
+				<button-default @click="addWork">
 					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-default>
-				<button-default @click="updateWork" v-if="modalWorks.type == 'edit'">
+			</template>
+
+			<template v-if="modalWorks.values.look == 'default'">
+				<button-default @click="updateWork">
 					<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</button-default>
-			</block-buttons>
+			</template>
 		</template>
-	</admin-modal>
+	</Modal>
 
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                   СПЕЦИАЛИСТ                      |-->
@@ -1012,23 +996,12 @@
 			</template>
 
 			<template #one-buttons>
-				<button-disabled v-if="this.specialist.profile.data.id.value == null">
-					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
-					Добавить
-				</button-disabled>
-
-				<button-default
-					@click="editSpecialization"
-					v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.value !== null"
-				>
+				<button-default @click="openModalSpecializationsEdite">
 					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-default>
-				<button-claim @click="editSpecialization" v-if="$route.params.id === 'new'">
-					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
-					Добавить
-				</button-claim>
 			</template>
+
 			<!--____________________________________________________-->
 			<!--3. Клиники                                          -->
 			<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
@@ -1079,15 +1052,7 @@
 			</template>
 
 			<template #two-buttons>
-				<button-disabled v-if="this.specialist.profile.data.id.value == null">
-					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
-					Добавить
-				</button-disabled>
-
-				<button-default
-					@click="editClinics"
-					v-if="$route.params.id !== 'new' && this.specialist.profile.data.id.value !== null"
-				>
+				<button-default @click="openModalClinicsEdite">
 					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-default>
@@ -1109,8 +1074,8 @@
 				<BaseTable
 					v-if="loading.sections.certificates"
 					:table="tableCertificates"
-					@create="editArrayValue('create', 'certificates', null)"
-					@edite="editArrayValue('edit', 'certificates', $event)"
+					@create="openModalCertificatesCreate"
+					@edite="openModalCertificatesEdite"
 					@delete="setFlagDelete"
 				/>
 
@@ -1135,8 +1100,8 @@
 				<BaseTable
 					v-if="loading.sections.educations"
 					:table="tableEducations"
-					@create="editArrayValue('create', 'educations', null)"
-					@edite="editArrayValue('edit', 'educations', $event)"
+					@create="openModalEducationsCreate"
+					@edite="openModalEducationsEdite"
 					@delete="setFlagDelete"
 				/>
 
@@ -1162,8 +1127,8 @@
 				<BaseTable
 					v-if="loading.sections.works"
 					:table="tableWorks"
-					@create="editArrayValue('create', 'works', null)"
-					@edite="editArrayValue('edit', 'works', $event)"
+					@create="openModalWorksCreate"
+					@edite="openModalWorksEdite"
 					@delete="setFlagDelete"
 				/>
 
@@ -1179,7 +1144,7 @@
 </template>
 
 <script>
-import AdminModal from "../../../components/includes/admin/AdminModal.vue";
+import Modal from "../../../components/modules/modal/Modal.vue";
 import BaseTable from "../../../components/modules/table/BaseTable.vue";
 import Tiptap from "../../../components/modules/Tiptap.vue";
 
@@ -1191,7 +1156,6 @@ import ElementInputLabel from "../../../components/ui/admin/elements/ElementInpu
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTwo from "../../../components/ui/admin/blocks/BlockTwo.vue";
 import BlockButtons from "../../../components/ui/admin/blocks/BlockButtons.vue";
-import SpanError from "../../../components/ui/admin/SpanError.vue";
 
 import TableButtonDefault from "../../../components/ui/admin/tables/TableButtonDefault.vue";
 import TableButtonRemove from "../../../components/ui/admin/tables/TableButtonRemove.vue";
@@ -1226,9 +1190,10 @@ import sorted from "../../../services/sorted";
 
 export default {
 	components: {
-		AdminModal,
+		Modal,
 		BaseTable,
 		Tiptap,
+
 		InfoBar,
 		Selector,
 		LoaderChild,
@@ -1237,8 +1202,6 @@ export default {
 		BlockOnce,
 		BlockTwo,
 		BlockButtons,
-
-		SpanError,
 
 		ContainerInput,
 		ContainerInputSearch,
@@ -1278,102 +1241,47 @@ export default {
 
 			/* Модальное окно */
 			modalSpecializations: {
-				title: "",
-				status: false,
-				type: null,
-				style: {
-					create: false,
-					delete: false,
-				},
-				modules: {
-					title: true,
-					buttons: {
-						hide: false,
-						close: true,
-					},
-					images: false,
-					body: true,
-					footer: true,
+				thin: false,
+				clamped: false,
+				values: {
+					title: "",
+					look: "default",
 				},
 			},
 
 			modalClinics: {
-				title: "",
-				status: false,
-				type: null,
-				style: {
-					create: false,
-					delete: false,
-				},
-				modules: {
-					title: true,
-					buttons: {
-						hide: false,
-						close: true,
-					},
-					images: false,
-					body: true,
-					footer: true,
+				thin: false,
+				clamped: false,
+				values: {
+					title: "",
+					look: "default",
 				},
 			},
 
 			modalCertificates: {
-				title: "СЕРТИФИКАТ",
-				status: false,
-				type: null,
-				style: {
-					create: false,
-					delete: false,
-				},
-				modules: {
-					title: true,
-					buttons: {
-						hide: false,
-						close: true,
-					},
-					images: false,
-					body: true,
-					footer: true,
+				thin: false,
+				clamped: false,
+				values: {
+					title: "",
+					look: "default",
 				},
 			},
 
 			modalEducations: {
-				title: "ОБУЧЕНИЕ",
-				status: false,
-				type: null,
-				style: {
-					create: false,
-					delete: false,
-				},
-				modules: {
-					title: true,
-					buttons: {
-						hide: false,
-						close: true,
-					},
-					images: false,
-					body: true,
-					footer: true,
+				thin: false,
+				clamped: false,
+				values: {
+					title: "",
+					look: "default",
 				},
 			},
 
 			modalWorks: {
-				title: "РАБОТА",
-				status: false,
-				type: null,
-				style: {
-					create: false,
-					delete: false,
-				},
-				modules: {
-					title: true,
-					buttons: {
-						hide: false,
-						close: true,
-					},
-					images: false,
-					body: true,
-					footer: true,
+				thin: false,
+				clamped: false,
+				values: {
+					title: "",
+					look: "default",
 				},
 			},
 
@@ -1947,62 +1855,88 @@ export default {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                 Модальное окно                    |*/
 		/* |___________________________________________________|*/
-		/* _____________________________________________________*/
-		/* 1. Основные действия                                 */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		/* Открытие */
-		openModal(type, modalName, currentName) {
-			if (modalName !== "modalSpecializations" && modalName !== "modalClinics") {
-				shared.clearObjectSelective(this[currentName], "errors", ["status", "message"]);
-				shared.clearObjectSelective(this[currentName], "data", ["edited"]);
-			}
+		/* Открытие модального окна */
+		newOpenModal(name, title, look) {
+			this[name].values.title = title;
+			this[name].values.look = look;
 
-			switch (type) {
-				case "create":
-					{
-						if (modalName !== "modalSpecializations" && modalName !== "modalClinics") {
-							shared.clearObjectSelective(this[currentName], "data", ["value", "edited"]);
-						}
-
-						this[modalName].type = "create";
-						this[modalName].status = true;
-					}
-					document.body.classList.add("modal-open");
-					break;
-				case "edit":
-					{
-						this[modalName].type = "edit";
-						this[modalName].status = true;
-					}
-					document.body.classList.add("modal-open");
-					break;
-				default:
-					{
-						let debbugStory = {
-							title: "Ошибка.",
-							body: "Низвестный тип открытия модального окна.",
-							type: "Error",
-						};
-						this.$store.commit("debuggerState", debbugStory);
-					}
-					break;
-			}
-		},
-		/* Закрытие */
-		closeModal(modalName) {
-			this[modalName].status = false;
-			document.body.classList.remove("modal-open");
+			this.$refs[name].open();
 		},
 
-		/*  */
-		getAge(age) {
-			let ageDiff = new Date().getFullYear() - new Date(age).getFullYear();
+		/* Специализации */
+		openModalSpecializationsEdite() {
+			// Обнуление выбранных специализаций
+			this.cheked.specializations = [];
 
-			if (ageDiff) {
-				return ageDiff;
-			} else {
-				return 0;
-			}
+			// Заполнение выбранных специализаций
+			this.specialist.connections.specializations.forEach((connSpecilization) =>
+				this.cheked.specializations.push(connSpecilization.id_specialization)
+			);
+
+			this.newOpenModal("modalSpecializations", "СПЕЦИАЛИЗАЦИИ", "default");
+		},
+
+		/* Клиники */
+		openModalClinicsEdite() {
+			// Проверка на статус добавления специалиста
+			if (this.specialist.profile.data.id.value === "new") return;
+
+			// Обнуление массива
+			this.cheked.clinics = [];
+
+			// Заполнение выбранных клиник из массива
+			this.specialist.connections.clinics.forEach((connClinic) => {
+				this.cheked.clinics.push(connClinic.id_clinic);
+
+				/* Заполнение статуса приёма в клиниках в массив */
+				this.sections.clinics.find((clinic) => {
+					return clinic.id == connClinic.id_clinic;
+				}).priem = connClinic.priem;
+			});
+
+			this.newOpenModal("modalClinics", "КЛИНИКИ", "default");
+		},
+
+		/* Сертификаты */
+		openModalCertificatesCreate() {
+			shared.clearObjectFull(this.currentCertificate);
+
+			this.newOpenModal("modalCertificates", "СЕРТИФИКАТ", "create");
+		},
+
+		openModalCertificatesEdite(value) {
+			shared.clearObjectFull(this.currentCertificate);
+			shared.setData(value, this.currentCertificate);
+
+			this.newOpenModal("modalCertificates", "СЕРТИФИКАТ", "default");
+		},
+
+		/* Образования */
+		openModalEducationsCreate() {
+			shared.clearObjectFull(this.currentEducation);
+
+			this.newOpenModal("modalEducations", "ОБРАЗОВАНИЕ", "create");
+		},
+
+		openModalEducationsEdite(value) {
+			shared.clearObjectFull(this.currentEducation);
+			shared.setData(value, this.currentEducation);
+
+			this.newOpenModal("modalEducations", "ОБРАЗОВАНИЕ", "default");
+		},
+
+		/* Работы */
+		openModalWorksCreate() {
+			shared.clearObjectFull(this.currentWork);
+
+			this.newOpenModal("modalWorks", "РАБОТА", "create");
+		},
+
+		openModalWorksEdite(value) {
+			shared.clearObjectFull(this.currentWork);
+			shared.setData(value, this.currentWork);
+
+			this.newOpenModal("modalWorks", "РАБОТА", "default");
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -2027,6 +1961,7 @@ export default {
 
 			this.paginationSpecializations.pages.current = pageNumber;
 		},
+
 		/* Изменение текущей страницы */
 		changePageClinics(pageNumber) {
 			// Проверка на превышение количества страниц
@@ -2337,21 +2272,9 @@ export default {
 				});
 		},
 
-		/* _____________________________________________________*/
-		/* 2. Специализации                                     */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		/* Открытие списка специализация */
-		editSpecialization() {
-			// Обнуление выбранных специализаций
-			this.cheked.specializations = [];
-
-			// Заполнение выбранных специализаций
-			this.specialist.connections.specializations.forEach((connSpecilization) =>
-				this.cheked.specializations.push(connSpecilization.id_specialization)
-			);
-
-			this.openModal("edit", "modalSpecializations", null);
-		},
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                  СПЕЦИАЛИЗАЦИИ                    |*/
+		/* |___________________________________________________|*/
 		/* Обновление специализаций */
 		updateSpecialization() {
 			try {
@@ -2388,38 +2311,8 @@ export default {
 						});
 					});
 				}
-				this.closeModal("modalSpecializations");
-			} catch (error) {
-				this.$store.commit("addDebugger", {
-					title: "Ошибка.",
-					body: error,
-					type: "error",
-				});
-			}
-		},
-		/* _____________________________________________________*/
-		/* 3. Клиники                                           */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		/* Открытие списка клиник */
-		editClinics() {
-			try {
-				// Проверка на статус добавления специалиста
-				if (this.specialist.profile.data.id.value === "new") return;
 
-				// Обнуление массива
-				this.cheked.clinics = [];
-
-				// Заполнение выбранных клиник из массива
-				this.specialist.connections.clinics.forEach((connClinic) => {
-					this.cheked.clinics.push(connClinic.id_clinic);
-
-					/* Заполнение статуса приёма в клиниках в массив */
-					this.sections.clinics.find((clinic) => {
-						return clinic.id == connClinic.id_clinic;
-					}).priem = connClinic.priem;
-				});
-
-				this.openModal("edit", "modalClinics", null);
+				this.$refs.modalSpecializations.close();
 			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
@@ -2429,6 +2322,9 @@ export default {
 			}
 		},
 
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                     КЛИНИКИ                       |*/
+		/* |___________________________________________________|*/
 		/* Обновление клиник */
 		updateClinics() {
 			try {
@@ -2469,7 +2365,7 @@ export default {
 					});
 				}
 
-				this.closeModal("modalClinics");
+				this.$refs.modalClinics.close();
 			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
@@ -2479,9 +2375,9 @@ export default {
 			}
 		},
 
-		/* _____________________________________________________*/
-		/* 4. Сертификаты                                       */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                   СЕРТИФИКАТЫ                     |*/
+		/* |___________________________________________________|*/
 		/* Добавление данных */
 		addCertificate() {
 			if (
@@ -2511,7 +2407,8 @@ export default {
 					create: true,
 					delete: false,
 				});
-				this.closeModal("modalCertificates");
+
+				this.$refs.modalCertificates.close();
 			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
@@ -2520,6 +2417,7 @@ export default {
 				});
 			}
 		},
+
 		/* Обновление данных */
 		updateCertificate() {
 			if (
@@ -2551,7 +2449,7 @@ export default {
 					сertificateToUpdate[key] = this.currentCertificate.data[key].value;
 				}
 
-				this.closeModal("modalCertificates");
+				this.$refs.modalCertificates.close();
 			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
@@ -2561,9 +2459,9 @@ export default {
 			}
 		},
 
-		/* _____________________________________________________*/
-		/* 5. Образования                                       */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                   ОБРАЗОВАНИЯ                     |*/
+		/* |___________________________________________________|*/
 		/* Добавление данных */
 		addEducation() {
 			if (
@@ -2599,7 +2497,7 @@ export default {
 					delete: false,
 				});
 
-				this.closeModal("modalEducations");
+				this.$refs.modalEducations.close();
 			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
@@ -2608,6 +2506,7 @@ export default {
 				});
 			}
 		},
+
 		/* Обновление данных */
 		updateEducation() {
 			if (
@@ -2643,7 +2542,7 @@ export default {
 					educationToUpdate[key] = this.currentEducation.data[key].value;
 				}
 
-				this.closeModal("modalEducations");
+				this.$refs.modalEducations.close();
 			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
@@ -2652,9 +2551,10 @@ export default {
 				});
 			}
 		},
-		/* _____________________________________________________*/
-		/* 6. Прошлые работы                                    */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                 ПРОШЛЫЕ РАБОТЫ                    |*/
+		/* |___________________________________________________|*/
 		/* Добавление */
 		addWork() {
 			if (
@@ -2690,7 +2590,7 @@ export default {
 					delete: false,
 				});
 
-				this.closeModal("modalWorks");
+				this.$refs.modalWorks.close();
 			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
@@ -2735,7 +2635,7 @@ export default {
 					workToUpdate[key] = this.currentWork.data[key].value;
 				}
 
-				this.closeModal("modalWorks");
+				this.$refs.modalWorks.close();
 			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
@@ -2745,9 +2645,20 @@ export default {
 			}
 		},
 
-		/* _____________________________________________________*/
-		/* Общие методы                                         */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                      ОБЩЕЕ                        |*/
+		/* |___________________________________________________|*/
+		/* Получение возраста */
+		getAge(age) {
+			let ageDiff = new Date().getFullYear() - new Date(age).getFullYear();
+
+			if (ageDiff) {
+				return ageDiff;
+			} else {
+				return 0;
+			}
+		},
+
 		/* Пометка на удаление */
 		setFlagDelete(value) {
 			value.delete = !value.delete;
@@ -2762,74 +2673,6 @@ export default {
 					}
 				}
 			);
-		},
-
-		/* Метод открытия модального окна для обновления значений */
-		editArrayValue(type, arrayName, value) {
-			switch (arrayName) {
-				case "certificates":
-					/* Создание */
-					if (type == "create") {
-						this.openModal(type, "modalCertificates", "currentCertificate");
-					}
-					/* Редактирование */
-					if (type == "edit") {
-						let filterCertificate = this.tableCertificates.body.find((item) => {
-							if (item.id == value.id) {
-								return item;
-							}
-						});
-
-						for (let key in this.currentCertificate.data) {
-							this.currentCertificate.data[key].value = filterCertificate[key];
-						}
-
-						this.openModal(type, "modalCertificates", "currentCertificate");
-					}
-					break;
-				case "educations":
-					/* Создание */
-					if (type == "create") {
-						this.openModal(type, "modalEducations", "currentEducation");
-					}
-					/* Редактирование */
-					if (type == "edit") {
-						let filterEducation = this.tableEducations.body.find((item) => {
-							if (item.id == value.id) {
-								return item;
-							}
-						});
-
-						for (let key in this.currentEducation.data) {
-							this.currentEducation.data[key].value = filterEducation[key];
-						}
-
-						this.openModal(type, "modalEducations", "currentEducation");
-					}
-					break;
-				case "works":
-					/* Создание */
-					if (type == "create") {
-						this.openModal(type, "modalWorks", "currentWork");
-					}
-
-					/* Редактирование */
-					if (type == "edit") {
-						let filterWorks = this.tableWorks.body.find((item) => {
-							if (item.id == value.id) {
-								return item;
-							}
-						});
-
-						for (let key in this.currentWork.data) {
-							this.currentWork.data[key].value = filterWorks[key];
-						}
-
-						this.openModal(type, "modalWorks", "currentWork");
-					}
-
-					break;
-			}
 		},
 	},
 	mounted() {

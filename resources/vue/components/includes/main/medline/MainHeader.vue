@@ -199,7 +199,6 @@
 </template>
 
 <script>
-import AdminModal from "../../admin/AdminModal.vue";
 import Modal from "../../../modules/modal/Modal.vue";
 import Captcha from "../../../modules/Captcha.vue";
 
@@ -216,14 +215,17 @@ import shared from "../../../../services/shared";
 
 export default {
 	components: {
-		AdminModal,
 		Modal,
+
 		Captcha,
+
 		ContainerInput,
 		ContainerInputOnce,
 		ContainerSelectOnce,
+
 		BlockButtons,
 		ButtonDefault,
+
 		axios,
 		validate,
 		shared,
