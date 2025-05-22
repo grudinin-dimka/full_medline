@@ -2,10 +2,11 @@
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                  МОДАЛЬНОЕ ОКНО                   |-->
 	<!--|___________________________________________________|-->
-	<admin-modal ref="modal" @touchCloseModal="closeModal" :modal="modal">
+	<Modal ref="modal" :settings="modal">
 		<template #title>
-			{{ modal.title }}
+			{{ modal.values.title }}
 		</template>
+
 		<template #body>
 			<container-input-once>
 				<template #input>
@@ -27,19 +28,23 @@
 				</template>
 			</container-input-once>
 		</template>
+
 		<template #footer>
-			<block-buttons>
-				<button-default @click="addSpecialization" v-if="modal.type == 'create'">
+			<template v-if="modal.values.look == 'create'">
+				<button-default @click="addSpecialization">
 					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-default>
-				<button-default @click="updateSpecialization" v-if="modal.type == 'edit'">
+			</template>
+
+			<template v-if="modal.values.look == 'default'">
+				<button-default @click="updateSpecialization">
 					<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</button-default>
-			</block-buttons>
+			</template>
 		</template>
-	</admin-modal>
+	</Modal>
 
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                   СПЕЦИАЛИЗАЦИИ                   |-->
@@ -67,8 +72,8 @@
 			<BaseTable
 				v-if="loading.sections.specializations"
 				:table="table"
-				@create="createSpecialization"
-				@edite="editSpecialization"
+				@create="openModalСreate"
+				@edite="openModalEdite"
 				@delete="removeSpecialization"
 			/>
 
@@ -82,7 +87,7 @@
 </template>
 
 <script>
-import AdminModal from "../../../components/includes/admin/AdminModal.vue";
+import Modal from "../../../components/modules/modal/Modal.vue";
 
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import BaseTable from "../../../components/modules/table/BaseTable.vue";
@@ -108,7 +113,8 @@ import validate from "../../../services/validate";
 
 export default {
 	components: {
-		AdminModal,
+		Modal,
+
 		InfoBar,
 		BaseTable,
 		LoaderChild,
@@ -148,22 +154,11 @@ export default {
 
 			/* Модальное окно */
 			modal: {
-				title: "СПЕЦИАЛИЗАЦИЯ",
-				status: false,
-				type: null,
-				style: {
-					create: false,
-					delete: false,
-				},
-				modules: {
-					title: true,
-					buttons: {
-						hide: false,
-						close: true,
-					},
-					images: false,
-					body: true,
-					footer: true,
+				thin: false,
+				clamped: false,
+				values: {
+					title: "",
+					look: "default",
 				},
 			},
 
@@ -235,69 +230,34 @@ export default {
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                 Модальное окно                    |*/
+		/* |                 МОДАЛЬНОЕ ОКНО                    |*/
 		/* |___________________________________________________|*/
-		/* _____________________________________________________*/
-		/* 1. Основные действия                                 */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		/* Открытие */
-		openModal(type) {
-			switch (type) {
-				case "create":
-					{
-						this.modal.type = "create";
-						this.modal.status = true;
+		/* Открытие модального окна */
+		openModal(name, title, look) {
+			this[name].values.title = title;
+			this[name].values.look = look;
 
-						shared.clearObjectFull(this.currentSpecialization);
-					}
-					document.body.classList.add("modal-open");
-					break;
-				case "edit":
-					{
-						this.modal.type = "edit";
-						this.modal.status = true;
-					}
-					document.body.classList.add("modal-open");
-					break;
-				default:
-					{
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: "Низвестный тип открытия модального окна.",
-							type: "error",
-						});
-					}
-					break;
-			}
+			this.$refs[name].open();
 		},
 
-		/* Закрытие */
-		closeModal() {
-			this.modal.status = false;
-			document.body.classList.remove("modal-open");
+		/* Открытие модального окна для добавления */
+		openModalСreate() {
+			shared.clearObjectFull(this.currentSpecialization);
+
+			this.openModal("modal", "СПЕЦИАЛИЗАЦИЯ", "create");
+		},
+
+		/* Открытие модального окна для добавления */
+		openModalEdite(value) {
+			shared.clearObjectFull(this.currentSpecialization);
+			shared.setData(value, this.currentSpecialization);
+
+			this.openModal("modal", "СПЕЦИАЛИЗАЦИЯ", "default");
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                 Специализации                     |*/
 		/* |___________________________________________________|*/
-		/* _____________________________________________________*/
-		/* Основные действия                                    */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-		/* Открытие специализации для редактирования */
-		editSpecialization(specialization) {
-			shared.clearObjectFull(this.currentSpecialization);
-			shared.setData(specialization, this.currentSpecialization);
-
-			this.openModal("edit");
-		},
-
-		/* Открытие специализации для создания */
-		createSpecialization() {
-			this.openModal("create");
-		},
-		/* _____________________________________________________*/
-		/* Сохранение, обновление и удаление                    */
-		/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 		/* Добавление специализации */
 		addSpecialization() {
 			if (
@@ -332,7 +292,7 @@ export default {
 					delete: false,
 				});
 
-				this.closeModal();
+				this.$refs.modal.close();
 			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
@@ -368,7 +328,7 @@ export default {
 
 				specializationToUpdate.name = this.currentSpecialization.data.name.value;
 
-				this.closeModal();
+				this.$refs.modal.close();
 			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
