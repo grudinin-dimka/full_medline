@@ -1260,9 +1260,13 @@ class AdminController extends Controller
       // Получение данных из бд
       $specialists = Specialist::all();
       $specializations = Specialization::all();
+      $clinics = Clinic::all();
 
       $specializationNames = $specializations->pluck('name', 'id')->all();
       $specializationsBySpecialists = SpecialistSpecialization::all()->groupBy("id_specialist");
+
+      $clinicsById = $clinics->groupBy("id")->all();
+      $clinicsBySpecialists = SpecialistClinic::all()->where("priem", true)->groupBy("id_specialist");
 
       $xw = new XMLWriter();
       $xw->openMemory();
@@ -1393,6 +1397,7 @@ class AdminController extends Controller
                         $xw->startElement("set-ids");
                            $stringSpecializations = '';
                            $array = $specializationsBySpecialists[$value->id] ?? [];
+
                            foreach ($array as $innerKey => $innerValue) {
                               $stringSpecializations .= $this->formatStringTransliterate($specializationNames[$innerValue->id_specialization], 'lower') . ',';
                            };
@@ -1449,7 +1454,7 @@ class AdminController extends Controller
                         $xw->endElement();
 
                         // Город, в котором врач ведет прием.
-                        if (isEmpty($value->startWorkCity)) {
+                        if ($value->startWorkCity == null or $value->startWorkCity == '') {
                            return response()->json([
                               "status" => false,
                               "message" => "Город ведения приема у " . $value->family . " " . $value->name . " " . $value->surname . " не указан.",
@@ -1480,31 +1485,41 @@ class AdminController extends Controller
                         $xw->text((bool)$value->childrenDoctor == 1 ? 'true' : 'false');
                         $xw->endElement();
 
-                        // // Город клиники приема и адрес
-                        // foreach ($clinicsBySpecialists[$value->id] ?? [] as $innerKey => $innerValue) {
-                        //    $xw->startElement("param");
-                        //       $xw->startAttribute("name");
-                        //       $xw->text('Город клиники');
-                        //       $xw->endAttribute();                                 
-                        //    $xw->text('г. ' . $clinicsById[$innerValue->id_clinic][0]->city);
-                        //    $xw->endElement();
+                        // Город клиники приема и адрес
+                        $innerClinics = $clinicsBySpecialists[$value->id] ?? [];
+                           
+                        if (count($innerClinics) == 0) {
+                           return response()->json([
+                              "status" => false,
+                              "message" => "Клиника ведения приема у " . $value->family . " " . $value->name . " " . $value->surname . " не указана.",
+                              "data" => null,
+                           ]);
+                        }
 
-                        //    $xw->startElement("param");
-                        //       $xw->startAttribute("name");
-                        //       $xw->text('Адрес клиники');
-                        //       $xw->endAttribute();                                 
-                        //    $xw->text('ул. ' . $clinicsById[$innerValue->id_clinic][0]->street . ', д. ' . $clinicsById[$innerValue->id_clinic][0]->home);
-                        //    $xw->endElement();
+                        foreach ($clinicsBySpecialists[$value->id] ?? [] as $innerKey => $innerValue) {
+                           $xw->startElement("param");
+                              $xw->startAttribute("name");
+                              $xw->text('Город клиники');
+                              $xw->endAttribute();                                 
+                           $xw->text('г. ' . $clinicsById[$innerValue->id_clinic][0]->city);
+                           $xw->endElement();
 
-                        //    $xw->startElement("param");
-                        //       $xw->startAttribute("name");
-                        //       $xw->text('Название клиники');
-                        //       $xw->endAttribute();                                 
-                        //    $xw->text($clinicsById[$innerValue->id_clinic][0]->name);
-                        //    $xw->endElement();
+                           $xw->startElement("param");
+                              $xw->startAttribute("name");
+                              $xw->text('Адрес клиники');
+                              $xw->endAttribute();                                 
+                           $xw->text('ул. ' . $clinicsById[$innerValue->id_clinic][0]->street . ', д. ' . $clinicsById[$innerValue->id_clinic][0]->home);
+                           $xw->endElement();
 
-                        //    break;
-                        // };
+                           $xw->startElement("param");
+                              $xw->startAttribute("name");
+                              $xw->text('Название клиники');
+                              $xw->endAttribute();                                 
+                           $xw->text($clinicsById[$innerValue->id_clinic][0]->name);
+                           $xw->endElement();
+
+                           break;
+                        };
                   $xw->endElement();                  
                }
             $xw->endElement();
