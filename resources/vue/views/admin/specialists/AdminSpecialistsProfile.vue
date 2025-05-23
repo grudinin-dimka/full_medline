@@ -6,10 +6,13 @@
 		</template>
 
 		<template #body>
-			<ContainerInputSearch
-				v-model="search.specializations"
-				:placeholder="'Введите специализацию'"
-			/>
+			<div class="input-search">
+				<ContainerInputSearch
+					class="input-search-sticky"
+					v-model="search.specializations"
+					:placeholder="'Введите специализацию'"
+				/>
+			</div>
 
 			<!-- Список специализаций -->
 			<div class="specializations-list">
@@ -57,11 +60,11 @@
 			</div>
 
 			<!-- Пагинация -->
-			<Pagination
+			<!-- <Pagination
 				:settings="paginationSpecializations"
 				:arrayLength="sections.specializations.length"
 				@changePage="changePageSpecializations"
-			/>
+			/> -->
 		</template>
 
 		<template #footer>
@@ -79,7 +82,13 @@
 		</template>
 
 		<template #body>
-			<ContainerInputSearch v-model="search.clinics" :placeholder="'Введите клинику'" />
+			<div class="input-search">
+				<ContainerInputSearch
+					class="input-search-sticky"
+					v-model="search.clinics"
+					:placeholder="'Введите клинику'"
+				/>
+			</div>
 
 			<!-- Список специализаций -->
 			<div class="clinics__list">
@@ -137,11 +146,11 @@
 			</div>
 
 			<!-- Пагинация -->
-			<Pagination
+			<!-- <Pagination
 				:settings="paginationClinics"
 				:arrayLength="sections.clinics.length"
 				@changePage="changePageClinics"
-			/>
+			/> -->
 		</template>
 
 		<template #footer>
@@ -1274,7 +1283,7 @@ export default {
 			/* Модальное окно */
 			modalSpecializations: {
 				thin: false,
-				clamped: false,
+				clamped: true,
 				values: {
 					title: "",
 					look: "default",
@@ -1283,7 +1292,7 @@ export default {
 
 			modalClinics: {
 				thin: false,
-				clamped: false,
+				clamped: true,
 				values: {
 					title: "",
 					look: "default",
@@ -1510,7 +1519,7 @@ export default {
 					current: 1,
 				},
 				elements: {
-					range: 10,
+					range: 40,
 				},
 			},
 
@@ -1520,7 +1529,7 @@ export default {
 					current: 1,
 				},
 				elements: {
-					range: 4,
+					range: 40,
 				},
 			},
 
@@ -1820,11 +1829,13 @@ export default {
 
 			return specializations;
 		},
+
 		getPagesSpecializationsTotal() {
 			return Math.ceil(
 				this.sections.specializations.length / this.paginationSpecializations.elements.range
 			);
 		},
+
 		getSortedSpecializations() {
 			let specializations = [...this.sections.specializations];
 
@@ -1834,11 +1845,13 @@ export default {
 
 			sorted.sortStringByKey("up", specializations, "name");
 
-			return specializations.splice(
-				(this.paginationSpecializations.pages.current - 1) *
-					this.paginationSpecializations.elements.range,
-				this.paginationSpecializations.elements.range
-			);
+			// return specializations.splice(
+			// 	(this.paginationSpecializations.pages.current - 1) *
+			// 		this.paginationSpecializations.elements.range,
+			// 	this.paginationSpecializations.elements.range
+			// );
+
+			return specializations;
 		},
 
 		/* Клиники */
@@ -1855,10 +1868,12 @@ export default {
 
 			sorted.sortStringByKey("up", clinics, "name");
 
-			return clinics.splice(
-				(this.paginationClinics.pages.current - 1) * this.paginationClinics.elements.range,
-				this.paginationClinics.elements.range
-			);
+			// return clinics.splice(
+			// 	(this.paginationClinics.pages.current - 1) * this.paginationClinics.elements.range,
+			// 	this.paginationClinics.elements.range
+			// );
+
+			return clinics;
 		},
 	},
 	methods: {
@@ -2881,6 +2896,18 @@ export default {
 </script>
 
 <style scoped>
+.input-search {
+	position: sticky;
+	z-index: 1;
+
+	top: 0px;
+	right: 0px;
+	padding-bottom: 20px;
+
+	background: #ffffff;
+	background: linear-gradient(0deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 30%);
+}
+
 /* Основной чекбокс */
 .list__checkbox-item {
 	cursor: pointer;
@@ -2977,7 +3004,7 @@ export default {
 	flex-direction: column;
 	gap: 10px;
 
-	margin-top: 10px;
+	margin-top: -10px;
 }
 
 .specializations-list {
