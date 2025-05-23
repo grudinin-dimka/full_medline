@@ -33,7 +33,7 @@
 <script>
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
-import Block from "../../../components/ui/main/blocks/Block.vue";
+import Block from "../../../components/ui/main/Block.vue";
 import TipTap from "../../../components/modules/Tiptap.vue";
 
 import Empty from "../../../components/modules/Empty.vue";

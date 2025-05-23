@@ -102,15 +102,10 @@ import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTitle from "../../../components/ui/admin/blocks/BlockTitle.vue";
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 
-import TableButtonDefault from "../../../components/ui/admin/tables/TableButtonDefault.vue";
-import TableButtonRemove from "../../../components/ui/admin/tables/TableButtonRemove.vue";
-import TableButtonDisabled from "../../../components/ui/admin/tables/TableButtonDisabled.vue";
-
 import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
-import BlockButtons from "../../../components/ui/admin/blocks/BlockButtons.vue";
 
 import Icon from "../../../components/modules/icon/Icon.vue";
 
@@ -130,12 +125,7 @@ export default {
 
 		InfoBar,
 
-		TableButtonDefault,
-		TableButtonRemove,
-		TableButtonDisabled,
-
 		ContainerInputOnce,
-		BlockButtons,
 		ButtonClaim,
 		ButtonDefault,
 

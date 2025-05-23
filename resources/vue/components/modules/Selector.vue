@@ -15,7 +15,11 @@
 						: placeholder
 				}}
 			</div>
-			<div class="clear" v-if="modelValue !== ''" @click="$emit('update:modelValue', '')">
+			<div
+				class="clear"
+				v-if="modelValue !== '' && cleared"
+				@click="$emit('update:modelValue', '')"
+			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					height="20px"
@@ -84,6 +88,10 @@ export default {
 		type: {
 			type: String,
 			default: "default",
+		},
+		cleared: {
+			type: Boolean,
+			default: true,
 		},
 		filter: {
 			type: Boolean,
@@ -219,9 +227,9 @@ export default {
 
 	border-radius: 10px;
 	padding: 0px 10px 0px 10px;
-	
+
 	height: 58px;
-	
+
 	caret-color: red;
 
 	font-size: 20px;

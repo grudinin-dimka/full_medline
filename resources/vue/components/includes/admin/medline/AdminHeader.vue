@@ -69,7 +69,7 @@ header img {
 
 	width: 30px;
 	height: 3px;
-	background-color: #00abbd;
+	background-color: var(--primary-color);
 
 	transition: all 0.5s;
 }

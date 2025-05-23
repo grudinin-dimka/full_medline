@@ -66,7 +66,6 @@ import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTitle from "../../../components/ui/admin/blocks/BlockTitle.vue";
-import BlockButtons from "../../../components/ui/admin/blocks/BlockButtons.vue";
 
 import BaseTable from "../../../components/modules/table/BaseTable.vue";
 
@@ -81,7 +80,6 @@ export default {
 		LoaderChild,
 		BlockOnce,
 		BlockTitle,
-		BlockButtons,
 
 		InfoBar,
 

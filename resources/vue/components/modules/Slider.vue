@@ -136,10 +136,4 @@ export default {
 
 	animation: show 0.5s ease-out;
 }
-
-@media screen and (width <= 500px) {
-	.carousel {
-		margin-top: 70px;
-	}
-}
 </style>

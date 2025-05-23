@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import Block from "../../../components/ui/main/blocks/Block.vue";
+import Block from "../../../components/ui/main/Block.vue";
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import Filters from "../../../components/ui/main/Filters.vue";
 import Selector from "../../../components/modules/Selector.vue";

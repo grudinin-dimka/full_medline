@@ -272,7 +272,6 @@ import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import Empty from "../../../components/modules/Empty.vue";
 
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
-import BlockButtons from "../../../components/ui/admin/blocks/BlockButtons.vue";
 
 import ContainerInput from "../../../components/ui/admin/containers/ContainerInput.vue";
 import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
@@ -302,7 +301,6 @@ export default {
 		Empty,
 
 		BlockOnce,
-		BlockButtons,
 
 		ContainerInput,
 		ContainerInputOnce,

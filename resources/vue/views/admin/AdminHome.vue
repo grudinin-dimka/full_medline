@@ -327,8 +327,6 @@
 </template>
 
 <script>
-import ElementInputLabel from "../../components/ui/admin/elements/ElementInputLabel.vue";
-
 import LoaderChild from "../../components/modules/LoaderChild.vue";
 import Empty from "../../components/modules/Empty.vue";
 
@@ -341,7 +339,6 @@ import ContainerInputOnce from "../../components/ui/admin/containers/input/Conta
 import ContainerTextareaOnce from "../../components/ui/admin/containers/textarea/ContainerTextareaOnce.vue";
 
 import BlockOnce from "../../components/ui/admin/blocks/BlockOnce.vue";
-import BlockButtons from "../../components/ui/admin/blocks/BlockButtons.vue";
 
 import ButtonDefault from "../../components/ui/admin/buttons/ButtonDefault.vue";
 import ButtonRemove from "../../components/ui/admin/buttons/ButtonRemove.vue";
@@ -357,26 +354,25 @@ import validate from "../../services/validate";
 
 export default {
 	components: {
-		axios,
-		ElementInputLabel,
 		LoaderChild,
 		Empty,
-
+		
 		Modal,
 		InfoBar,
 		Tiptap,
-
+		
 		Icon,
-
+		
 		ContainerInput,
 		ContainerInputOnce,
 		ContainerTextareaOnce,
-
+		
 		BlockOnce,
-		BlockButtons,
 		ButtonDefault,
 		ButtonRemove,
 		ButtonClaim,
+
+		axios,
 	},
 	data() {
 		return {

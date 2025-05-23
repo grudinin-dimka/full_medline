@@ -1,12 +1,16 @@
 <template>
-	<section ref="block">
+	<div class="block" :class="{ hide: hide }" ref="block">
 		<slot></slot>
-	</section>
+	</div>
 </template>
 
 <script>
 export default {
 	props: {
+		hide: {
+			type: Boolean,
+			default: false,
+		},
 		minHeight: {
 			type: Number,
 			default: null,
@@ -21,7 +25,7 @@ export default {
 </script>
 
 <style scoped>
-section {
+.block {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -30,5 +34,19 @@ section {
 	min-height: max(75dvh, 400px);
 
 	margin: 20px 30px;
+}
+
+.block.hide {
+	overflow: hidden;
+	box-sizing: border-box;
+	height: auto;
+
+	max-width: 100%;
+}
+
+@media screen and (width <= 1400px) {
+	.block.hide {
+		align-items: stretch;
+	}
 }
 </style>

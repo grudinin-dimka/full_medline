@@ -126,7 +126,7 @@
 
 <script>
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
-import Block from "../../../components/ui/main/blocks/Block.vue";
+import Block from "../../../components/ui/main/Block.vue";
 import Tiptap from "../../../components/modules/Tiptap.vue";
 
 import LoaderChild from "../../../components/modules/LoaderChild.vue";

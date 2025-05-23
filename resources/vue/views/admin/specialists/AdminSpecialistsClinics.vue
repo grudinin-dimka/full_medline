@@ -255,10 +255,7 @@ import BaseTable from "../../../components/modules/table/BaseTable.vue";
 
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 
-import ElementInputLabel from "../../../components/ui/admin/elements/ElementInputLabel.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
-import BlockTitle from "../../../components/ui/admin/blocks/BlockTitle.vue";
-import BlockButtons from "../../../components/ui/admin/blocks/BlockButtons.vue";
 
 import ContainerInput from "../../../components/ui/admin/containers/ContainerInput.vue";
 import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
@@ -280,13 +277,9 @@ export default {
 		Modal,
 		InfoBar,
 		BaseTable,
-
 		LoaderChild,
-		ElementInputLabel,
 
 		BlockOnce,
-		BlockTitle,
-		BlockButtons,
 
 		ContainerInput,
 		ContainerInputOnce,

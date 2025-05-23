@@ -54,7 +54,6 @@ import ContainerInput from "../../../ui/admin/containers/ContainerInput.vue";
 import ContainerInputOnce from "../../../ui/admin/containers/input/ContainerInputOnce.vue";
 import ContainerSelectOnce from "../../../ui/admin/containers/select/ContainerSelectOnce.vue";
 
-import BlockButtons from "../../../ui/admin/blocks/BlockButtons.vue";
 import ButtonDefault from "../../../ui/admin/buttons/ButtonDefault.vue";
 
 import axios from "axios";
@@ -64,11 +63,13 @@ import shared from "../../../../services/shared";
 export default {
 	components: {
 		Captcha,
+
 		ContainerInput,
 		ContainerInputOnce,
 		ContainerSelectOnce,
-		BlockButtons,
+
 		ButtonDefault,
+
 		axios,
 		validate,
 		shared,

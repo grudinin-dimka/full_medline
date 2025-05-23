@@ -501,7 +501,6 @@ import ContainerInputThree from "../../../components/ui/admin/containers/input/C
 
 import Icon from "../../../components/modules/icon/Icon.vue";
 
-import BlockButtons from "../../../components/ui/admin/blocks/BlockButtons.vue";
 import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 import ButtonRemoveWide from "../../../components/ui/admin/buttons/ButtonRemoveWide.vue";
@@ -527,7 +526,6 @@ export default {
 
 		Icon,
 
-		BlockButtons,
 		ButtonClaim,
 		ButtonDefault,
 		ButtonRemoveWide,

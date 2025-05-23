@@ -2,8 +2,9 @@
 	<block :minHeight="400">
 		<template v-if="loading.sections.slider">
 			<template v-if="slides.length > 0">
-				<Slider :slides="slides" />
+				<Slider class="slider__loader" :slides="slides" />
 			</template>
+
 			<Empty :minHeight="400" v-else />
 		</template>
 
@@ -45,7 +46,7 @@
 
 <script>
 import Slider from "../../components/modules/Slider.vue";
-import Block from "../../components/ui/main/blocks/Block.vue";
+import Block from "../../components/ui/main/Block.vue";
 import Empty from "../../components/modules/Empty.vue";
 import LoaderChild from "../../components/modules/LoaderChild.vue";
 

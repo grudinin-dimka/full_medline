@@ -185,10 +185,7 @@ import BaseTable from "../../../components/modules/table/BaseTable.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import Modal from "../../../components/modules/modal/Modal.vue";
 
-import ElementInputLabel from "../../../components/ui/admin/elements/ElementInputLabel.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
-import BlockButtons from "../../../components/ui/admin/blocks/BlockButtons.vue";
-import SpanError from "../../../components/ui/admin/SpanError.vue";
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
@@ -212,10 +209,7 @@ export default {
 		LoaderChild,
 		Modal,
 
-		ElementInputLabel,
 		BlockOnce,
-		BlockButtons,
-		SpanError,
 
 		ButtonDefault,
 		ButtonRemove,

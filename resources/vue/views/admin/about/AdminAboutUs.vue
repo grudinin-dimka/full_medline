@@ -320,7 +320,6 @@ import Tiptap from "../../../components/modules/Tiptap.vue";
 
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTwo from "../../../components/ui/admin/blocks/BlockTwo.vue";
-import BlockButtons from "../../../components/ui/admin/blocks/BlockButtons.vue";
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
@@ -353,7 +352,6 @@ export default {
 
 		BlockOnce,
 		BlockTwo,
-		BlockButtons,
 
 		ButtonDefault,
 		ButtonRemove,

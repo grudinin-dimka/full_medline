@@ -5,7 +5,7 @@
 		<router-link to="/schedule">Расписание</router-link>
 	</info-bar>
 
-	<block :minHeight="100" v-if="loading.sections.schedule">
+	<Block :minHeight="100" v-if="loading.sections.schedule">
 		<div class="filter__list">
 			<div
 				class="filter__list-item"
@@ -39,7 +39,7 @@
 				:list="getFormatSpecializations"
 			></Selector>
 		</div>
-	</block>
+	</Block>
 
 	<Block>
 		<template v-if="loading.sections.schedule">
@@ -270,8 +270,7 @@ import Selector from "../../../components/modules/Selector.vue";
 
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
-import Block from "../../../components/ui/main/blocks/Block.vue";
-import BlockHide from "../../../components/ui/main/blocks/BlockHide.vue";
+import Block from "../../../components/ui/main/Block.vue";
 
 import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
 import ContainerSelectOnce from "../../../components/ui/admin/containers/select/ContainerSelectOnce.vue";
@@ -286,10 +285,11 @@ export default {
 		InfoBar,
 		LoaderChild,
 		Block,
-		BlockHide,
+
 		ContainerInputOnce,
 		ContainerSelectOnce,
 		ContainerInputSearch,
+
 		axios,
 		sorted,
 	},

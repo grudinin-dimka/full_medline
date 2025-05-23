@@ -287,8 +287,9 @@ export default {
 	color: #000000;
 }
 
-.list__checkbox > .list__checkbox-item:has(.list__checkbox-input:checked) {
-}
+/* .list__checkbox > .list__checkbox-item:has(.list__checkbox-input:checked) {
+	color: var(--primary-color);
+} */
 
 .list__checkbox-input:checked + .list__checkbox-icon > .list__checkbox-icon--checked,
 .list__checkbox-input:not(:checked) + .list__checkbox-icon > .list__checkbox-icon--unchecked {

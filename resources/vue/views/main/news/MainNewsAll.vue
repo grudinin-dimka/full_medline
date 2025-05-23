@@ -35,7 +35,7 @@
 <script>
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
-import Block from "../../../components/ui/main/blocks/Block.vue";
+import Block from "../../../components/ui/main/Block.vue";
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 

@@ -130,8 +130,6 @@ import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 
-import BlockButtons from "../../../components/ui/admin/blocks/BlockButtons.vue";
-
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 
 export default {
@@ -140,7 +138,6 @@ export default {
 		LoaderChild,
 
 		BlockOnce,
-		BlockButtons,
 
 		ButtonDefault,
 	},

@@ -206,7 +206,6 @@ import ContainerInput from "../../../ui/admin/containers/ContainerInput.vue";
 import ContainerInputOnce from "../../../ui/admin/containers/input/ContainerInputOnce.vue";
 import ContainerSelectOnce from "../../../ui/admin/containers/select/ContainerSelectOnce.vue";
 
-import BlockButtons from "../../../ui/admin/blocks/BlockButtons.vue";
 import ButtonDefault from "../../../ui/admin/buttons/ButtonDefault.vue";
 
 import axios from "axios";
@@ -223,7 +222,6 @@ export default {
 		ContainerInputOnce,
 		ContainerSelectOnce,
 
-		BlockButtons,
 		ButtonDefault,
 
 		axios,

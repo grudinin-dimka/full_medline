@@ -88,15 +88,10 @@
 
 <script>
 import Modal from "../../../components/modules/modal/Modal.vue";
-
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import BaseTable from "../../../components/modules/table/BaseTable.vue";
-
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
-
-import ElementInputLabel from "../../../components/ui/admin/elements/ElementInputLabel.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
-import BlockButtons from "../../../components/ui/admin/blocks/BlockButtons.vue";
 
 import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
 
@@ -118,12 +113,9 @@ export default {
 		InfoBar,
 		BaseTable,
 		LoaderChild,
-
-		ElementInputLabel,
-		ContainerInputOnce,
-
 		BlockOnce,
-		BlockButtons,
+
+		ContainerInputOnce,
 
 		ButtonDefault,
 		ButtonClaim,

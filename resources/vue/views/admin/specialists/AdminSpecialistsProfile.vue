@@ -13,27 +13,46 @@
 
 			<!-- Список специализаций -->
 			<div class="specializations-list">
-				<label class="item">
-					<div></div>
-					<div></div>
-					<div>Название</div>
-				</label>
 				<label
-					class="item"
+					class="list__checkbox-item"
 					v-for="(specialization, index) in getSortedSpecializations"
+					:key="specialization.id"
 					:class="{ active: cheked.specializations.includes(specialization.id) }"
 				>
-					<div>
-						{{
-							index +
-							1 +
-							paginationSpecializations.elements.range *
-								(paginationSpecializations.pages.current - 1) +
-							")"
-						}}
+					<div class="list__checkbox-label">
+						<span>
+							{{
+								index +
+								1 +
+								paginationSpecializations.elements.range *
+									(paginationSpecializations.pages.current - 1) +
+								")"
+							}}
+						</span>
+
+						<span>{{ specialization.name }}</span>
 					</div>
-					<input type="checkbox" :value="specialization.id" v-model="cheked.specializations" />
-					<div>{{ specialization.name }}</div>
+
+					<input
+						class="list__checkbox-input"
+						type="checkbox"
+						:value="specialization.id"
+						v-model="cheked.specializations"
+					/>
+
+					<div class="list__checkbox-icon" aria-hidden="true">
+						<div class="list__checkbox-icon--checked">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								height="30px"
+								viewBox="0 -960 960 960"
+								width="30px"
+							>
+								<path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z" />
+							</svg>
+						</div>
+						<div class="list__checkbox-icon--unchecked"></div>
+					</div>
 				</label>
 			</div>
 
@@ -63,40 +82,60 @@
 			<ContainerInputSearch v-model="search.clinics" :placeholder="'Введите клинику'" />
 
 			<!-- Список специализаций -->
-			<div class="clinics-list">
-				<label class="item">
-					<div></div>
-					<div></div>
-					<div>Название</div>
-					<div>Статус приёма</div>
-				</label>
-				<label
-					class="item"
+			<div class="clinics__list">
+				<div
+					class="clinics__list-item"
 					v-for="(clinic, index) in getSortedClinics"
 					:key="clinic.id"
 					:class="{ active: cheked.clinics.includes(clinic.id) }"
 				>
-					<div>
-						{{
-							index +
-							1 +
-							paginationClinics.elements.range * (paginationClinics.pages.current - 1) +
-							")"
-						}}
-					</div>
-					<input
-						type="checkbox"
-						:id="`clin-${clinic.id}`"
-						:value="clinic.id"
-						v-model="cheked.clinics"
-					/>
-					<div>{{ clinic.name }}</div>
+					<label
+						class="list__checkbox-item"
+						:class="{ active: cheked.clinics.includes(clinic.id) }"
+					>
+						<div class="list__checkbox-label">
+							<span>
+								{{
+									index +
+									1 +
+									paginationClinics.elements.range *
+										(paginationClinics.pages.current - 1) +
+									")"
+								}}
+							</span>
+
+							<span>{{ clinic.name }}</span>
+						</div>
+
+						<input
+							class="list__checkbox-input"
+							type="checkbox"
+							:value="clinic.id"
+							v-model="cheked.clinics"
+						/>
+
+						<div class="list__checkbox-icon" aria-hidden="true">
+							<div class="list__checkbox-icon--checked">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									height="30px"
+									viewBox="0 -960 960 960"
+									width="30px"
+								>
+									<path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z" />
+								</svg>
+							</div>
+							<div class="list__checkbox-icon--unchecked"></div>
+						</div>
+					</label>
+
 					<select v-model="clinic.priem">
-						<option :value="0">Нет</option>
-						<option :value="1">Да</option>
+						<option value="0">Нет</option>
+						<option value="1">Да</option>
 					</select>
-				</label>
+				</div>
 			</div>
+
 			<!-- Пагинация -->
 			<Pagination
 				:settings="paginationClinics"
@@ -493,7 +532,7 @@
 			<div class="container-profile" v-show="loading.sections.profile">
 				<div class="profile-image" v-if="$route.params.id == 'new'">
 					<div
-						class="item"
+						class="clinics__list-head"
 						:style="{
 							backgroundImage: `url(/storage/default/image-none-default.png)`,
 						}"
@@ -501,7 +540,7 @@
 				</div>
 				<div class="profile-image" v-else>
 					<div
-						class="item"
+						class="clinics__list-head"
 						:style="{
 							backgroundImage: `url(${specialist.profile.data.path.value})`,
 						}"
@@ -965,10 +1004,13 @@
 					</div>
 					<!-- Если специализации выбраны -->
 					<template v-else>
-						<div class="item">
+						<div class="clinics__list-head">
 							<div>Название</div>
 						</div>
-						<div class="item" v-for="specialization in sortedConnectionsSpecializations">
+						<div
+							class="clinics__list-head"
+							v-for="specialization in sortedConnectionsSpecializations"
+						>
 							<div class="item-title">
 								{{
 									sections.specializations.filter(
@@ -1019,14 +1061,14 @@
 						<div class="item-title">Пока тут ничего нет...</div>
 					</div>
 					<template v-else>
-						<div class="item">
+						<div class="clinics__list-head">
 							<div>Название</div>
 							<div>Приём</div>
 							<div></div>
 						</div>
 						<!-- Если клиники выбраны -->
 						<div
-							class="item"
+							class="clinics__list-head"
 							v-for="clinic in specialist.connections.clinics"
 							:key="clinic.id"
 						>
@@ -1152,13 +1194,8 @@ import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import Selector from "../../../components/modules/Selector.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 
-import ElementInputLabel from "../../../components/ui/admin/elements/ElementInputLabel.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTwo from "../../../components/ui/admin/blocks/BlockTwo.vue";
-import BlockButtons from "../../../components/ui/admin/blocks/BlockButtons.vue";
-
-import TableButtonDefault from "../../../components/ui/admin/tables/TableButtonDefault.vue";
-import TableButtonRemove from "../../../components/ui/admin/tables/TableButtonRemove.vue";
 
 import ContainerInput from "../../../components/ui/admin/containers/ContainerInput.vue";
 import ContainerInputSearch from "../../../components/ui/admin/containers/input/ContainerInputSearch.vue";
@@ -1197,11 +1234,9 @@ export default {
 		InfoBar,
 		Selector,
 		LoaderChild,
-		ElementInputLabel,
 
 		BlockOnce,
 		BlockTwo,
-		BlockButtons,
 
 		ContainerInput,
 		ContainerInputSearch,
@@ -1212,9 +1247,6 @@ export default {
 		ContainerSelectOnce,
 		ContainerSelectThree,
 		ContainerTextareaOnce,
-
-		TableButtonDefault,
-		TableButtonRemove,
 
 		ButtonDefault,
 		ButtonDisabled,
@@ -1488,7 +1520,7 @@ export default {
 					current: 1,
 				},
 				elements: {
-					range: 10,
+					range: 4,
 				},
 			},
 
@@ -2849,53 +2881,114 @@ export default {
 </script>
 
 <style scoped>
-.children-doctor {
+/* Основной чекбокс */
+.list__checkbox-item {
+	cursor: pointer;
+
+	position: relative;
+
 	display: flex;
+	align-items: center;
+	justify-content: space-between;
 	gap: 10px;
+
+	border: var(--list-checkbox-border);
+	border-radius: var(--list-checkbox-border-radius);
+	padding: var(--list-checkbox-padding);
+
+	color: var(--list-checkbox-font-color);
+
+	font-size: 1.125rem;
+	background-color: var(--list-checkbox-background-color);
+
+	transition: all 0.2s ease;
 }
 
-.children-doctor > :is(input, select) {
-	box-sizing: border-box;
-	outline: none;
+.list__checkbox-item:hover {
+	border: var(--input-border-focus);
+	background-color: var(--item-background-color-active);
+}
 
-	padding: 10px;
-	border: 2px solid var(--input-border-color-inactive);
-	border-radius: calc(var(--default-border-radius) / 1.5);
+.list__checkbox-input {
+	appearance: none;
+	position: relative;
 
-	width: 100%;
-	height: 58px;
+	border-radius: 7.5px;
+	border: var(--default-border);
 
-	font-size: 20px;
-	caret-color: var(--input-border-color-active);
+	width: 30px;
+	height: 30px;
 
 	transition: all 0.2s;
 }
 
-.children-doctor > :is(input:focus, select:focus) {
-	border: 2px solid var(--input-border-color-active);
+.list__checkbox-input:hover {
+	border: var(--default-border-active);
+	background-color: var(--default-background-color);
 }
 
-.children-doctor > input::placeholder {
-	color: var(--input-placeholder-color);
+.list__checkbox-label {
+	display: flex;
+	gap: 10px;
 }
 
-.children-doctor > select {
-	flex: 3 0 100px;
+.list__checkbox-icon {
+	position: absolute;
+	top: 12px;
+	right: 10px;
+	display: flex;
+	width: 30px;
+	height: 30px;
+	padding: 3px;
+	justify-content: center;
+	align-items: center;
+	border: 1px solid transparent;
+	border-radius: 20px;
+	user-select: none;
 }
 
-.children-doctor > input {
-	flex: 1 0 50px;
+.list__checkbox-icon--checked,
+.list__checkbox-input:checked + .list__checkbox-icon > .list__checkbox-icon--unchecked {
+	display: none;
 }
 
-:is(.specializations-list, .clinics-list) {
+.list__checkbox-input:checked {
+	border: var(--default-border-active);
+	background-color: var(--default-background-color);
+}
+
+.list__checkbox-input:checked + .list__checkbox-icon,
+.radio-input:checked + .radio-new {
+	color: #000000;
+}
+
+.list__checkbox-input:checked + .list__checkbox-icon > .list__checkbox-icon--checked,
+.list__checkbox-input:not(:checked) + .list__checkbox-icon > .list__checkbox-icon--unchecked {
+	display: initial;
+	fill: var(--primary-color);
+}
+
+.list__checkbox-input:disabled {
+	background: gray;
+}
+
+:is(.specializations-list, .clinics__list) {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
 
+	margin-top: 10px;
+}
+
+.specializations-list {
 	min-height: 678px;
 }
 
-:is(.specializations-list, .clinics-list) > .item {
+.clinics__list {
+	min-height: 567px;
+}
+
+:is(.specializations-list, .clinics__list) > .clinics__list-head {
 	cursor: pointer;
 	justify-content: center;
 	align-items: center;
@@ -2911,64 +3004,82 @@ export default {
 	transition: all 0.2s;
 }
 
-.specializations-list > .item {
+.clinics__list-item {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	justify-content: space-between;
+
+	border: var(--input-border);
+	border-radius: calc(var(--default-border-radius) / 1.5);
+	padding: 15px;
+
+	transition: all 0.2s;
+}
+
+.clinics__list-item:hover {
+	border: var(--input-border-focus);
+	background-color: var(--item-background-color-active);
+}
+
+.clinics__list-item > .list__checkbox-item {
+	border: 0px;
+	padding: 5px 0px;
+
+	background-color: rgba(0, 0, 0, 0);
+}
+
+.clinics__list-item > .list__checkbox-item:hover {
+	border: 0px;
+	background-color: rgba(0, 0, 0, 0);
+}
+
+.clinics__list-item .list__checkbox-icon {
+	position: absolute;
+	top: 7px;
+	right: 0px;
+	display: flex;
+	width: 30px;
+	height: 30px;
+	padding: 3px;
+	justify-content: center;
+	align-items: center;
+	border: 1px solid transparent;
+	border-radius: 20px;
+	user-select: none;
+}
+
+.clinics__list-item select {
+	padding: 10px;
+	border: var(--input-border);
+	border-radius: var(--input-border-radius);
+
+	background-color: white;
+	font-size: 18px;
+	outline: none;
+}
+
+.specializations-list > .clinics__list-head {
 	grid-template-columns: 30px 30px 1fr;
 }
 
-.clinics-list > .item {
+.clinics__list > .clinics__list-head {
 	grid-template-columns: 30px 30px 1fr 1fr;
 }
 
-:is(.specializations-list, .clinics-list) > .item > select {
+:is(.specializations-list, .clinics__list) > .clinics__list-head > select {
 	border: 0px;
 	background-color: rgba(0, 0, 0, 0);
 	font-size: 18px;
 	outline: none;
 }
 
-.red {
-	color: red;
-}
-
-:is(.specializations-list, .clinics-list) > .item.active {
+:is(.specializations-list, .clinics__list) > .clinics__list-head.active {
 	border: var(--input-border-focus);
 	background-color: var(--item-background-color-active);
 }
 
-:is(.specializations-list, .clinics-list) > .item > input[type="checkbox"] {
-	cursor: pointer;
-
-	width: 17.5px;
-	height: 17.5px;
-}
-
-:is(.specializations-list, .clinics-list) > .item > input[type="checkbox"]:checked {
-	accent-color: var(--primary-color);
-}
-
-:is(.specializations-list, .clinics-list) > .item:first-of-type {
-	display: grid;
-	grid-template-columns: 40px 30px 1fr 1fr;
-	gap: 10px;
-
-	border: 0px;
-	padding: 0px 10px;
-	border-radius: calc(var(--default-border-radius) / 1.5);
-
-	font-size: 18px;
-	color: var(--input-border-color-active);
-}
-
-:is(.specializations-list, .clinics-list) > .item:not(:first-of-type):hover {
-	border: var(--input-border-focus);
-	background-color: var(--item-background-color-active);
-}
-
-:is(.specializations-list, .clinics-list) > .item > label {
-	cursor: pointer;
-	font-size: 18px;
-}
-
+/* Конейнер профиля */
 .container-profile {
 	display: flex;
 	flex-wrap: wrap;
@@ -2993,7 +3104,7 @@ export default {
 	min-height: 300px;
 }
 
-.profile-image > .item {
+.profile-image > .clinics__list-head {
 	width: 500px;
 	height: 100%;
 	background-size: contain;
@@ -3017,7 +3128,7 @@ export default {
 	animation: show-bottom-to-top-15 0.4s ease-in-out;
 }
 
-.profile-list > .item {
+.profile-list > .clinics__list-head {
 	display: grid;
 	align-items: center;
 	grid-template-columns: 1fr 1fr 30px;
@@ -3032,7 +3143,7 @@ export default {
 	transition: all 0.2s;
 }
 
-.profile-list > .item:first-of-type {
+.profile-list > .clinics__list-head:first-of-type {
 	display: grid;
 	align-items: center;
 	grid-template-columns: 1fr 1fr 30px;
@@ -3056,7 +3167,7 @@ export default {
 	color: #bcbcbc;
 }
 
-.profile-list > .item > .item-close {
+.profile-list > .clinics__list-head > .item-close {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -3080,7 +3191,7 @@ export default {
 		flex: 1 0 0px;
 	}
 
-	.profile-image > .item {
+	.profile-image > .clinics__list-head {
 		width: 100%;
 	}
 }
