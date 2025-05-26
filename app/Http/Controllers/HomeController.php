@@ -1016,141 +1016,115 @@ class HomeController extends Controller
    /* |                     О НАС                         |*/
    /* |___________________________________________________|*/
    public function getAboutsAll(Request $request) {
-      $about = About::all();
-      if(!$about) {
+      try {         
+         $about = About::all();
+   
+         foreach ($about as $key => $value) {
+            $value->pathOne = Storage::url('abouts/' . $value->imageOne);
+            $value->pathTwo = Storage::url('abouts/' . $value->imageTwo);
+            $value->pathThree = Storage::url('abouts/' . $value->imageThree);
+         };
+   
          return response()->json([
-            "status" => false,
-            "message" => "Не удалось получить данные.",
-            "data" => [],
-         ]);
-      }
-
-      foreach ($about as $key => $value) {
-         $value->pathOne = Storage::url('abouts/' . $value->imageOne);
-         $value->pathTwo = Storage::url('abouts/' . $value->imageTwo);
-         $value->pathThree = Storage::url('abouts/' . $value->imageThree);
+            "success" => true,
+            "debug" => false,
+            "message" => "Данные получены.",
+            "result" => $about,
+         ], 200);
+      } catch (Throwable $e) {
+         return response()->json([
+            "success" => false,
+            "debug" => true,
+            "message" => $e->getMessage(),
+            "result" => null,
+         ], 500);         
       };
-
-      return response()->json([
-         "status" => true,
-         "message" => "Успешно.",
-         "data" => $about,
-      ]);
    }
 
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                    КОНТАКТЫ                       |*/
    /* |___________________________________________________|*/
    public function getContactsAll(Request $request) {
-      $clinics = Clinic::all();
-      if(!$clinics) {
-         return response()->json([
-            "status" => false,
-            "message" => "Не удалось получить контакты.",
-            "data" => [],
-         ]);
-      };
+      try {
+         $clinics = Clinic::all();
+         $contacts = Contact::all();
+      
+         foreach ($contacts as $contactKey => $contactValue) {
+            $contactPhones = ContactPhone::where('contactId', $contactValue->id)->get();
+            $phones = [];
 
-      $contacts = Contact::all();
-      if(!$contacts) {
-         return response()->json([
-            "status" => false,
-            "message" => "Не удалось получить клиники.",
-            "data" => [],
-         ]);               
-      };
+            foreach ($contactPhones as $contactPhonesKey => $contactPhonesValue) {
+               $phones[] = Phone::where('id', $contactPhonesValue->phoneId)->first();
+            };
+            $contactValue->phones = $phones; 
+   
+            $contactMails = ContactMail::where('contactId', $contactValue->id)->get();
+            $mails = [];
 
-      foreach ($contacts as $contactKey => $contactValue) {
-         $contactPhones = ContactPhone::where('contactId', $contactValue->id)->get();
-         if(!$contactPhones) {
-            return response()->json([
-               "status" => false,
-               "message" => "Не удалось получить номера контакта.",
-               "data" => [],
-            ]);                  
-         }
-
-         $phones = [];
-         foreach ($contactPhones as $contactPhonesKey => $contactPhonesValue) {
-            $phones[] = Phone::where('id', $contactPhonesValue->phoneId)->first();
+            foreach ($contactMails as $contactMailsKey => $contactMailsValue) {
+               $mails[] = Mail::where('id', $contactMailsValue->mailId)->first();
+            };
+            $contactValue->mails = $mails; 
          };
-         $contactValue->phones = $phones; 
-
-         $contactMails = ContactMail::where('contactId', $contactValue->id)->get();
-         if(!$contactMails) {
-            return response()->json([
-               "status" => false,
-               "message" => "Не удалось получить почты контакта.",
-               "data" => [],
-            ]);                  
-         }
-
-         $mails = [];
-         foreach ($contactMails as $contactMailsKey => $contactMailsValue) {
-            $mails[] = Mail::where('id', $contactMailsValue->mailId)->first();
-         };
-         $contactValue->mails = $mails; 
-      };
-
-      return response()->json([
-         "status" => true,
-         "message" => "Успешно.",
-         "data" => (object) [
-            "contacts" => $contacts,
-            "clinics" => $clinics,
-         ],
-      ]);   
+   
+         return response()->json([
+            "success" => true,
+            "debug" => false,
+            "message" => "Данные получены.",
+            "result" => [
+               "contacts" => $contacts,
+               "clinics" => $clinics,
+            ],
+         ], 200);   
+      } catch (Throwable $e) {
+         return response()->json([
+            "success" => false,
+            "debug" => true,
+            "message" => $e->getMessage(),
+            "result" => null,
+         ], 500);
+      }
    }
 
    /* Получение контактов и клиник */
    public function getContactsClinicsAll(Request $request) {
-      $contacts = Contact::all();
-      if(!$contacts) {
+      try {
+         $contacts = Contact::all();
+         
+         foreach ($contacts as $contactKey => $contactValue) { 
+            $contactPhones = ContactPhone::where('contactId', $contactValue->id)->get();
+            $phones = [];
+
+            foreach ($contactPhones as $contactPhonesKey => $contactPhonesValue) {
+               $phones[] = Phone::where('id', $contactPhonesValue->phoneId)->first();
+            };
+            $contactValue->phones = $phones; 
+   
+            $contactMails = ContactMail::where('contactId', $contactValue->id)->get();   
+            $mails = [];
+
+            foreach ($contactMails as $contactMailsKey => $contactMailsValue) {
+               $mails[] = Mail::where('id', $contactMailsValue->mailId)->first();
+            };
+            $contactValue->mails = $mails;         
+            $contactValue->clinic = Clinic::where('id', $contactValue->clinicId)->first();
+         }
+   
          return response()->json([
-            "status" => false,
-            "message" => "Не удалось получить контакты.",
-            "data" => [],
-         ]);
-      };
-
-      foreach ($contacts as $contactKey => $contactValue) { 
-         $contactPhones = ContactPhone::where('contactId', $contactValue->id)->get();
-         if(!$contactPhones) {
-            return response()->json([
-               "status" => false,
-               "message" => "Не удалось получить номера контакта.",
-               "data" => [],
-            ]);                  
-         }
-
-         $phones = [];
-         foreach ($contactPhones as $contactPhonesKey => $contactPhonesValue) {
-            $phones[] = Phone::where('id', $contactPhonesValue->phoneId)->first();
-         };
-         $contactValue->phones = $phones; 
-
-         $contactMails = ContactMail::where('contactId', $contactValue->id)->get();
-         if(!$contactMails) {
-            return response()->json([
-               "status" => false,
-               "message" => "Не удалось получить почты контакта.",
-               "data" => [],
-            ]);                  
-         }
-
-         $mails = [];
-         foreach ($contactMails as $contactMailsKey => $contactMailsValue) {
-            $mails[] = Mail::where('id', $contactMailsValue->mailId)->first();
-         };
-         $contactValue->mails = $mails;         
-         $contactValue->clinic = Clinic::where('id', $contactValue->clinicId)->first();
+            "success" => true,
+            "debug" => false,
+            "message" => "Данные получены.",
+            "result" => $contacts,
+         ], 200);   
+      } catch (Throwable $e) {
+         return response()->json([
+            "success" => false,
+            "debug" => true,
+            "message" => $e->getMessage(),
+            "result" => null,
+         ], 500);
       }
 
-      return response()->json([
-         "status" => true,
-         "message" => "Успешно.",
-         "data" => $contacts,
-      ]);   
    }
 
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/

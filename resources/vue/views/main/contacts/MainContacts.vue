@@ -27,7 +27,7 @@ import Block from "../../../components/ui/main/Block.vue";
 import MainContactsList from "./MainContactsList.vue";
 import Empty from "../../../components/modules/Empty.vue";
 
-import axios from "axios";
+import api from "../../../services/api";
 import sorted from "../../../services/sorted.js";
 
 export default {
@@ -37,8 +37,6 @@ export default {
 		Block,
 		MainContactsList,
 		Empty,
-		axios,
-		sorted,
 	},
 	data() {
 		return {
@@ -65,23 +63,15 @@ export default {
 	mounted() {
 		this.loading.loader.contacts = false;
 
-		axios({
+		api({
 			method: "get",
-			url: `${this.$store.getters.urlApi}` + `get-contacts-clinics-all`,
+			url: this.$store.getters.urlApi + `get-contacts-clinics-all`,
 		})
 			.then((response) => {
-				if (response.data.status) {
-					this.contacts = response.data.data;
-					sorted.sortByOrder("up", this.contacts);
-				} else {
-					this.contacts = null;
+				if (!response) return;
 
-					this.$store.commit("addDebugger", {
-						title: "Ошибка.",
-						body: response.data.message,
-						type: "error",
-					});
-				}
+				this.contacts = response.data.result;
+				sorted.sortByOrder("up", this.contacts);
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {

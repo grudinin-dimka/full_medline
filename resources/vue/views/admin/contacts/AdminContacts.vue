@@ -284,7 +284,7 @@ import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 
 import Icon from "../../../components/modules/icon/Icon.vue";
 
-import axios from "axios";
+import api from "../../../services/api";
 import shared from "../../../services/shared.js";
 import validate from "../../../services/validate.js";
 import sorted from "../../../services/sorted.js";
@@ -312,8 +312,6 @@ export default {
 		ButtonClaim,
 
 		Icon,
-
-		axios,
 	},
 	data() {
 		return {
@@ -628,42 +626,21 @@ export default {
 			let formData = new FormData();
 			formData.append("contacts", JSON.stringify(this.contacts));
 
-			axios({
+			api({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `save-contacts-changes`,
+				url: this.$store.getters.urlApi + `save-contacts-changes`,
 				headers: {
 					ContentType: "multipart/form-data",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: formData,
 			})
 				.then((response) => {
-					if (response.data.status) {
-						try {
-							shared.updateId(this.contacts, response.data.data);
-							shared.clearDeletes(this.contacts);
-							shared.clearFlags(this.contacts);
-							shared.updateOrders(this.contacts);
+					if (!response) return;
 
-							this.$store.commit("addDebugger", {
-								title: "Успешно!",
-								body: response.data.message,
-								type: "completed",
-							});
-						} catch (error) {
-							this.$store.commit("addDebugger", {
-								title: "Ошибка.",
-								body: error,
-								type: "error",
-							});
-						}
-					} else {
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "error",
-						});
-					}
+					shared.updateId(this.contacts, response.data.result);
+					shared.clearDeletes(this.contacts);
+					shared.clearFlags(this.contacts);
+					shared.updateOrders(this.contacts);
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
@@ -846,28 +823,22 @@ export default {
 		},
 	},
 	mounted() {
-		axios({
+		api({
 			method: "get",
 			url: `${this.$store.getters.urlApi}` + `get-contacts-all`,
 		})
 			.then((response) => {
-				if (response.data.status) {
-					this.contacts = response.data.data.contacts;
+				if (!response) return;
 
-					this.contacts.forEach((contact) => {
-						contact.create = false;
-						contact.delete = false;
-					});
-					sorted.sortByOrder("up", this.contacts);
+				this.contacts = response.data.result.contacts;
 
-					this.clinics = response.data.data.clinics;
-				} else {
-					this.$store.commit("addDebugger", {
-						title: "Ошибка.",
-						body: response.data.message,
-						type: "error",
-					});
-				}
+				this.contacts.forEach((contact) => {
+					contact.create = false;
+					contact.delete = false;
+				});
+				sorted.sortByOrder("up", this.contacts);
+
+				this.clinics = response.data.result.clinics;
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {

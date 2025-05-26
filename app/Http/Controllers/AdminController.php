@@ -1598,23 +1598,82 @@ class AdminController extends Controller
       $contacts = json_decode($request->contacts);
       $arrayID = [];
 
-      foreach ($contacts as $key => $value) {
-         // Удаление
-         if ($value->delete === true) {
+      // Транзакция
+      DB::beginTransaction();
+
+      try {
+         foreach ($contacts as $key => $value) {
+            // Удаление
+            if ($value->delete === true) {
+               $contact = Contact::find($value->id);
+               $contact->delete();
+               continue;
+            };
+
+            // Добавление
+            if ($value->create === true){
+               $contactCreate = Contact::create([
+                  "name" => $value->name,
+                  "order" => $value->order,
+                  "clinicId" => $value->clinicId ? $value->clinicId : null,
+               ]);
+                  
+               // Телефоны
+               $phones = ContactPhone::where('contactId', $value->id)->get();
+               foreach ($phones as $phoneKey => $phoneValue) {
+                  $phone = Phone::find($phoneValue->phoneId);
+                  $phone->delete();
+               };
+
+               foreach ($value->phones as $key => $valuePhone) {
+                  $phoneCreate = Phone::create([
+                     "name" => $valuePhone->name,
+                  ]);
+
+                  ContactPhone::create([
+                     'contactId' => $contactCreate->id,
+                     'phoneId' => $phoneCreate->id,
+                  ]);
+               }
+
+               // Почты
+               $emails = ContactMail::where("contactId", $value->id)->get();
+               foreach ($emails as $emailKey => $emailValue) {
+                  $email = Mail::find($emailValue->mailId);
+                  $email->delete();
+               };
+
+               foreach ($value->mails as $key => $valueEmail) {
+                  $emailCreate = Mail::create([
+                     "name" => $valueEmail->name,
+                  ]);
+
+                  ContactMail::create([
+                     "contactId" => $contactCreate->id,
+                     "mailId" => $emailCreate->id,
+                  ]);
+               }
+               
+               /* Запись нового объекта в массив */
+               $arrayID[] = (object) [
+                  // Прошлый id
+                  "old" => $value->id, 
+                  // Новый id
+                  "new" => $contactCreate->id
+               ];
+               continue;
+            };
+
+            // Обновление
             $contact = Contact::find($value->id);
-            $contact->delete();
-            continue;
-         };
-         // Добавление
-         if ($value->create === true){
-            $contactCreate = Contact::create([
+            $contact->update([
                "name" => $value->name,
                "order" => $value->order,
-               "clinicId" => $value->clinicId ? $value->clinicId : null,
-            ]);
-               
+               "clinicId" => ($value->clinicId == "null" || $value->clinicId == null) ? null : $value->clinicId,
+            ]);   
+
             // Телефоны
-            $phones = ContactPhone::where('contactId', $value->id)->get();
+            $phones = ContactPhone::where("contactId", $value->id)->get();
             foreach ($phones as $phoneKey => $phoneValue) {
                $phone = Phone::find($phoneValue->phoneId);
                $phone->delete();
@@ -1624,15 +1683,15 @@ class AdminController extends Controller
                $phoneCreate = Phone::create([
                   "name" => $valuePhone->name,
                ]);
-   
+
                ContactPhone::create([
-                  'contactId' => $contactCreate->id,
-                  'phoneId' => $phoneCreate->id,
+                  "contactId" => $contact->id,
+                  "phoneId" => $phoneCreate->id,
                ]);
             }
 
             // Почты
-            $emails = ContactMail::where("contactId", $value->id)->get();
+            $emails = ContactMail::where('contactId', $value->id)->get();
             foreach ($emails as $emailKey => $emailValue) {
                $email = Mail::find($emailValue->mailId);
                $email->delete();
@@ -1642,84 +1701,45 @@ class AdminController extends Controller
                $emailCreate = Mail::create([
                   "name" => $valueEmail->name,
                ]);
-   
+
                ContactMail::create([
-                  "contactId" => $contactCreate->id,
-                  "mailId" => $emailCreate->id,
+                  'contactId' => $contact->id,
+                  'mailId' => $emailCreate->id,
                ]);
             }
-            
-            /* Запись нового объекта в массив */
-            $arrayID[] = (object) [
-               // Прошлый id
-               "old" => $value->id, 
-               // Новый id
-               "new" => $contactCreate->id
-            ];
-            continue;
          };
 
-         // Обновление
-         $contact = Contact::find($value->id);
-         $contact->update([
-            "name" => $value->name,
-            "order" => $value->order,
-            "clinicId" => ($value->clinicId == "null" || $value->clinicId == null) ? null : $value->clinicId,
-         ]);   
+         // Сортировка слайдов по порядку от наименьшего до наибольшого
+         $contactAll = Contact::all()->SortBy('order');
 
-         // Телефоны
-         $phones = ContactPhone::where("contactId", $value->id)->get();
-         foreach ($phones as $phoneKey => $phoneValue) {
-            $phone = Phone::find($phoneValue->phoneId);
-            $phone->delete();
+         // Обновление порядковых номеров
+         $count = 0;
+         foreach ($contactAll as $contactKey => $contactValue) {
+            $count++;
+            $contactValue->order = $count;
+            $contactValue->save();
          };
 
-         foreach ($value->phones as $key => $valuePhone) {
-            $phoneCreate = Phone::create([
-               "name" => $valuePhone->name,
-            ]);
+         // Фиксация транзакции
+         DB::commit();
 
-            ContactPhone::create([
-               "contactId" => $contact->id,
-               "phoneId" => $phoneCreate->id,
-            ]);
-         }
-
-         // Почты
-         $emails = ContactMail::where('contactId', $value->id)->get();
-         foreach ($emails as $emailKey => $emailValue) {
-            $email = Mail::find($emailValue->mailId);
-            $email->delete();
-         };
-
-         foreach ($value->mails as $key => $valueEmail) {
-            $emailCreate = Mail::create([
-               "name" => $valueEmail->name,
-            ]);
-
-            ContactMail::create([
-               'contactId' => $contact->id,
-               'mailId' => $emailCreate->id,
-            ]);
-         }
+         return response()->json([
+            "success" => true,
+            "debug" => true,
+            "message" => "Новости изменены.",
+            "result" => $arrayID,
+         ], 200);
+      } catch (Throwable $e) {
+         // Отмена транзакции
+         DB::rollBack();         
+         
+         return response()->json([
+            "success" => false,
+            "debug" => true,
+            "message" => $e->getMessage(),
+            "result" => null,
+         ], 500);
       };
-
-      // Сортировка слайдов по порядку от наименьшего до наибольшого
-      $contactAll = Contact::all()->SortBy('order');
-
-      // Обновление порядковых номеров
-      $count = 0;
-      foreach ($contactAll as $contactKey => $contactValue) {
-         $count++;
-         $contactValue->order = $count;
-         $contactValue->save();
-      };
-
-      return response()->json([
-         "status" => true,
-         "message" => "Данные обновлены.",
-         "data" => $arrayID,
-      ]);
    }
 
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -2728,80 +2748,98 @@ class AdminController extends Controller
          ]);
       };
 
-      $arrayID = [];
+      // Транзакция
+      DB::beginTransaction();
 
-      foreach ($request->videos as $key => $value) {
-         // Удаление
-         if ($value["delete"] === true) {
+      try {
+         $arrayID = [];
+
+         foreach ($request->videos as $key => $value) {
+            // Удаление
+            if ($value["delete"] === true) {
+               $video = Video::find($value["id"]);
+               $video->delete();
+               
+               continue;
+            };
+
+            // Добавление
+            if ($value["create"] === true){
+               $videoCreate = Video::create([
+                  "order" => $value["order"],
+                  "video" => $value["video"],
+                  "description" => $value["description"],
+               ]);
+
+               /* Запись нового объекта в массив */
+               $arrayID[] = (object) [
+                  // Прошлый id
+                  'old' => $value["id"], 
+                  // Новый id
+                  'new' => $videoCreate->id
+               ];
+               continue;
+            };
+
+            // Обновление
             $video = Video::find($value["id"]);
-            $video->delete();
-            
-            continue;
-         };
-
-         // Добавление
-         if ($value["create"] === true){
-            $videoCreate = Video::create([
+            $video->update([
                "order" => $value["order"],
                "video" => $value["video"],
                "description" => $value["description"],
-            ]);
-
-            /* Запись нового объекта в массив */
-            $arrayID[] = (object) [
-               // Прошлый id
-               'old' => $value["id"], 
-               // Новый id
-               'new' => $videoCreate->id
-            ];
-            continue;
+            ]);   
          };
 
-         // Обновление
-         $video = Video::find($value["id"]);
-         $video->update([
-            "order" => $value["order"],
-            "video" => $value["video"],
-            "description" => $value["description"],
-         ]);   
-      };
+         // Сортировка слайдов по порядку от наименьшего до наибольшого
+         $videosAll = Video::all()->SortBy('order');
 
-      // Сортировка слайдов по порядку от наименьшего до наибольшого
-      $videosAll = Video::all()->SortBy('order');
+         // Обновление порядковых номеров
+         $count = 0;
+         foreach ($videosAll as $videoKey => $videoValue) {
+            $count++;
+            $videoValue["order"] = $count;
+            $videoValue->save();
+         };
 
-      // Обновление порядковых номеров
-      $count = 0;
-      foreach ($videosAll as $videoKey => $videoValue) {
-         $count++;
-         $videoValue["order"] = $count;
-         $videoValue->save();
-      };
-
-      // Получение всех файлов
-      $filesVideos = Storage::files('public/video');
-      if($filesVideos) {
-         foreach ($filesVideos as $fileKey => $fileValue) {
-            $useFile = false;
-            /* Проверка на использование файла */
-            foreach ($videosAll as $aboutKey => $videoValue) {
-               /* Проверка значения названия файла на совпадение */
-               if ($videoValue->video == basename($fileValue)) {
-                  $useFile = true;
+         // Получение всех файлов
+         $filesVideos = Storage::files('public/video');
+         if($filesVideos) {
+            foreach ($filesVideos as $fileKey => $fileValue) {
+               $useFile = false;
+               /* Проверка на использование файла */
+               foreach ($videosAll as $aboutKey => $videoValue) {
+                  /* Проверка значения названия файла на совпадение */
+                  if ($videoValue->video == basename($fileValue)) {
+                     $useFile = true;
+                  };
+               };
+      
+               /* Удаление файла, если не используется */
+               if (!$useFile) {
+                  Storage::delete($fileValue);
                };
             };
-   
-            /* Удаление файла, если не используется */
-            if (!$useFile) {
-               Storage::delete($fileValue);
-            };
          };
-      };
 
-      return response()->json([
-         "success" => true,
-         "debug" => true,
-         "message" => "Данные обновлены.",
-         "result" => $arrayID,
-      ]);
+         // Фиксация транзакции
+         DB::commit();
+
+         return response()->json([
+            "success" => true,
+            "debug" => true,
+            "message" => "Данные обновлены.",
+            "result" => $arrayID,
+         ]);
+      } catch (Throwable $e) {
+         // Отмена транзакции
+         DB::rollBack();         
+         
+         return response()->json([
+            "success" => false,
+            "debug" => true,
+            "message" => $e->getMessage(),
+            "result" => null,
+         ], 500);
+      };
    }
 }
