@@ -268,7 +268,7 @@ import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 
 import Icon from "../../../components/modules/icon/Icon.vue";
 
-import axios from "axios";
+import api from "../../../services/api";
 import shared from "../../../services/shared";
 import validate from "../../../services/validate";
 
@@ -291,8 +291,6 @@ export default {
 		ButtonClaim,
 
 		Icon,
-
-		axios,
 	},
 	data() {
 		return {
@@ -626,43 +624,22 @@ export default {
 		saveClinicsChanges() {
 			this.disabled.clinics.save = true;
 
-			axios({
+			api({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `save-clinics-changes`,
+				url: this.$store.getters.urlApi + `save-clinics-changes`,
 				headers: {
 					Accept: "application/json",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: {
 					clinics: this.table.body,
 				},
 			})
 				.then((response) => {
-					if (response.data.status) {
-						try {
-							shared.updateId(this.table.body, response.data.data);
-							shared.clearDeletes(this.table.body);
-							shared.clearFlags(this.table.body);
+					if (!response) return;
 
-							this.$store.commit("addDebugger", {
-								title: "Успешно!",
-								body: response.data.message,
-								type: "completed",
-							});
-						} catch (error) {
-							this.$store.commit("addDebugger", {
-								title: "Ошибка.",
-								body: error,
-								type: "error",
-							});
-						}
-					} else {
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "error",
-						});
-					}
+					shared.updateId(this.table.body, response.data.result);
+					shared.clearDeletes(this.table.body);
+					shared.clearFlags(this.table.body);
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
@@ -677,27 +654,18 @@ export default {
 		},
 	},
 	mounted() {
-		axios({
+		api({
 			method: "get",
-			headers: {
-				Accept: "application/json",
-			},
-			url: `${this.$store.getters.urlApi}` + `get-clinics-all`,
+			url: this.$store.getters.urlApi + `get-clinics-all`,
 		})
 			.then((response) => {
-				if (response.data.status) {
-					this.table.body = response.data.data;
+				if (!response) return;
 
-					for (let key in this.table.body) {
-						this.table.body[key].create = false;
-						this.table.body[key].delete = false;
-					}
-				} else {
-					this.$store.commit("addDebugger", {
-						title: "Ошибка.",
-						body: response.data.message,
-						type: "error",
-					});
+				this.table.body = response.data.result;
+
+				for (let key in this.table.body) {
+					this.table.body[key].create = false;
+					this.table.body[key].delete = false;
 				}
 			})
 			.catch((error) => {

@@ -101,7 +101,7 @@ import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 
 import Icon from "../../../components/modules/icon/Icon.vue";
 
-import axios from "axios";
+import api from "../../../services/api";
 import shared from "../../../services/shared";
 import sorted from "../../../services/sorted";
 import validate from "../../../services/validate";
@@ -122,8 +122,6 @@ export default {
 		ButtonRemove,
 
 		Icon,
-
-		axios,
 	},
 	data() {
 		return {
@@ -333,35 +331,22 @@ export default {
 		saveSpecializationsChanges() {
 			this.disabled.specializations.save = true;
 
-			axios({
+			api({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `save-specializations-changes`,
+				url: this.$store.getters.urlApi + `save-specializations-changes`,
 				headers: {
 					Accept: "application/json",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: {
 					specializations: this.table.body,
 				},
 			})
 				.then((response) => {
-					if (response.data.status) {
-						shared.updateId(this.table.body, response.data.data);
-						shared.clearDeletes(this.table.body);
-						shared.clearFlags(this.table.body);
+					if (!response) return;
 
-						this.$store.commit("addDebugger", {
-							title: "Успешно!",
-							body: response.data.message,
-							type: "completed",
-						});
-					} else {
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "error",
-						});
-					}
+					shared.updateId(this.table.body, response.data.result);
+					shared.clearDeletes(this.table.body);
+					shared.clearFlags(this.table.body);
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
@@ -376,27 +361,18 @@ export default {
 		},
 	},
 	mounted() {
-		axios({
+		api({
 			method: "get",
-			headers: {
-				Accept: "application/json",
-			},
-			url: `${this.$store.getters.urlApi}` + `get-specializations-all`,
+			url: this.$store.getters.urlApi + `get-specializations-all`,
 		})
 			.then((response) => {
-				if (response.data.status) {
-					this.table.body = response.data.data;
+				if (!response) return;
 
-					for (let key in this.table.body) {
-						this.table.body[key].create = false;
-						this.table.body[key].delete = false;
-					}
-				} else {
-					this.$store.commit("addDebugger", {
-						title: "Ошибка.",
-						body: response.data.message,
-						type: "error",
-					});
+				this.table.body = response.data.result;
+
+				for (let key in this.table.body) {
+					this.table.body[key].create = false;
+					this.table.body[key].delete = false;
 				}
 			})
 			.catch((error) => {

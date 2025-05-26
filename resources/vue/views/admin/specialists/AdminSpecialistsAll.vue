@@ -196,7 +196,7 @@ import ContainerTextareaOnce from "../../../components/ui/admin/containers/texta
 
 import Icon from "../../../components/modules/icon/Icon.vue";
 
-import axios from "axios";
+import api from "../../../services/api";
 import validate from "../../../services/validate";
 import shared from "../../../services/shared";
 
@@ -418,33 +418,20 @@ export default {
 			this.disabled.specialists.save = true;
 
 			// Получение массива докторов с сервера
-			axios({
+			api({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `save-specialists-changes`,
+				url: this.$store.getters.urlApi + `save-specialists-changes`,
 				headers: {
 					Accept: "application/json",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: {
 					specialists: this.table.body,
 				},
 			})
 				.then((response) => {
-					if (response.data.status) {
-						shared.clearDeletes(this.table.body);
+					if (!response) return;
 
-						this.$store.commit("addDebugger", {
-							title: "Успешно!",
-							body: response.data.message,
-							type: "completed",
-						});
-					} else {
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "error",
-						});
-					}
+					shared.clearDeletes(this.table.body);
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
@@ -487,12 +474,11 @@ export default {
 
 			this.disabled.specialists.download = true;
 
-			axios({
+			api({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `make-specialists-xml`,
+				url: this.$store.getters.urlApi + `make-specialists-xml`,
 				headers: {
 					Accept: "application/json",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: {
 					name: this.modalForm.data.name.value,
@@ -503,21 +489,9 @@ export default {
 				},
 			})
 				.then((response) => {
-					if (response.data.status) {
-						this.$store.commit("addDebugger", {
-							title: "Успешно!",
-							body: response.data.message,
-							type: "completed",
-						});
+					if (!response) return;
 
-						this.$refs.modal.close();
-					} else {
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "error",
-						});
-					}
+					this.$refs.modal.close();
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
@@ -533,26 +507,17 @@ export default {
 	},
 	mounted() {
 		// Получение массива докторов с сервера
-		axios({
+		api({
 			method: "get",
-			headers: {
-				Accept: "application/json",
-			},
 			url: `${this.$store.getters.urlApi}` + `get-specialists-short`,
 		})
 			.then((response) => {
-				if (response.data.status) {
-					this.table.body = response.data.data;
+				if (!response) return;
 
-					for (let key in this.table.body) {
-						this.table.body[key].delete = false;
-					}
-				} else {
-					this.$store.commit("addDebugger", {
-						title: "Ошибка.",
-						body: response.data.message,
-						type: "error",
-					});
+				this.table.body = response.data.result;
+
+				for (let key in this.table.body) {
+					this.table.body[key].delete = false;
 				}
 			})
 			.catch((error) => {

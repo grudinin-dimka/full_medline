@@ -139,8 +139,8 @@
 					</label>
 
 					<select v-model="clinic.priem">
-						<option value="0">Нет</option>
-						<option value="1">Да</option>
+						<option :value="0">Нет</option>
+						<option :value="1">Да</option>
 					</select>
 				</div>
 			</div>
@@ -1226,13 +1226,13 @@ import Pagination from "../../../components/modules/Pagination.vue";
 import Icon from "../../../components/modules/icon/Icon.vue";
 import IconClose from "../../../components/icons/IconClose.vue";
 
-import axios from "axios";
-
-import { RouterView, RouterLink } from "vue-router";
+import api from "../../../services/api";
 import validate from "../../../services/validate";
 import files from "../../../services/files";
 import shared from "../../../services/shared";
 import sorted from "../../../services/sorted";
+
+import { RouterView, RouterLink } from "vue-router";
 
 export default {
 	components: {
@@ -1267,7 +1267,6 @@ export default {
 		Icon,
 		IconClose,
 
-		axios,
 		RouterView,
 		RouterLink,
 	},
@@ -2115,43 +2114,31 @@ export default {
 			this.disabled.profile.create = true;
 
 			// Сохранение данных
-			axios({
+			api({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `add-specialist`,
+				url: this.$store.getters.urlApi + `add-specialist`,
 				headers: {
 					Accept: "multipart/form-data",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: formData,
 			})
 				.then((response) => {
+					if (!response) return;
+
 					shared.clearObjectSelective(this.specialist.profile, "data", ["edited"]);
 					this.$refs.fileUpload.value = null;
 
-					if (response.data.status) {
-						this.disabled.profile.create = false;
+					//
+					this.disabled.profile.create = false;
 
-						this.specialist.profile.data.id.value = response.data.data.id;
+					this.specialist.profile.data.id.value = response.data.result.id;
 
-						this.specialist.profile.data.path.value = response.data.data.path;
-						this.specialist.profile.data.filename.value = files.basename(
-							response.data.data.path
-						);
+					this.specialist.profile.data.path.value = response.data.result.path;
+					this.specialist.profile.data.filename.value = files.basename(
+						response.data.result.path
+					);
 
-						this.$router.push(String(response.data.data.id));
-
-						this.$store.commit("addDebugger", {
-							title: "Успешно!",
-							body: response.data.message,
-							type: "completed",
-						});
-					} else {
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "error",
-						});
-					}
+					this.$router.push(String(response.data.result.id));
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
@@ -2258,54 +2245,41 @@ export default {
 			formData.append("works", JSON.stringify(this.tableWorks.body));
 
 			// Сохранение данных
-			axios({
+			api({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `save-specialist-modular`,
+				url: this.$store.getters.urlApi + `save-specialist-modular`,
 				headers: {
 					Accept: "multipart/form-data",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: formData,
 			})
 				.then((response) => {
-					if (response.data.status) {
+					if (!response) return;
+
+					shared.clearObjectSelective(this.specialist.profile, "data", ["edited"]);
+
+					// Замена изображения профиля
+					if (response.data.result.imagePath != null) {
 						shared.clearObjectSelective(this.specialist.profile, "data", ["edited"]);
+						this.$refs.fileUpload.value = "";
 
-						// Замена изображения профиля
-						if (response.data.data.imagePath != null) {
-							shared.clearObjectSelective(this.specialist.profile, "data", ["edited"]);
-							this.$refs.fileUpload.value = "";
-
-							this.specialist.profile.data.path.value = response.data.data.imagePath;
-							this.specialist.profile.data.filename.value = files.basename(
-								response.data.data.imagePath
-							);
-						}
-
-						shared.updateId(this.tableCertificates.body, response.data.data.certificates);
-						shared.clearDeletes(this.tableCertificates.body);
-						shared.clearFlags(this.tableCertificates.body);
-
-						shared.updateId(this.tableEducations.body, response.data.data.educations);
-						shared.clearDeletes(this.tableEducations.body);
-						shared.clearFlags(this.tableEducations.body);
-
-						shared.updateId(this.tableWorks.body, response.data.data.works);
-						shared.clearDeletes(this.tableWorks.body);
-						shared.clearFlags(this.tableWorks.body);
-
-						this.$store.commit("addDebugger", {
-							title: "Успешно!",
-							body: response.data.message,
-							type: "completed",
-						});
-					} else {
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "error",
-						});
+						this.specialist.profile.data.path.value = response.data.result.imagePath;
+						this.specialist.profile.data.filename.value = files.basename(
+							response.data.result.imagePath
+						);
 					}
+
+					shared.updateId(this.tableCertificates.body, response.data.result.certificates);
+					shared.clearDeletes(this.tableCertificates.body);
+					shared.clearFlags(this.tableCertificates.body);
+
+					shared.updateId(this.tableEducations.body, response.data.result.educations);
+					shared.clearDeletes(this.tableEducations.body);
+					shared.clearFlags(this.tableEducations.body);
+
+					shared.updateId(this.tableWorks.body, response.data.result.works);
+					shared.clearDeletes(this.tableWorks.body);
+					shared.clearFlags(this.tableWorks.body);
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
@@ -2724,94 +2698,85 @@ export default {
 	},
 	mounted() {
 		if (this.$route.params.id !== "new" && !Number.isNaN(Number(this.$route.params.id))) {
-			axios({
+			api({
 				method: "post",
 				headers: {
 					Accept: "application/json",
 				},
-				url: `${this.$store.getters.urlApi}` + `get-specialist-all`,
+				url: this.$store.getters.urlApi + `get-specialist-all`,
 				data: {
 					id: this.$route.params.id,
 				},
 			})
 				.then((response) => {
-					if (response.data.status) {
-						// Заполнение профиля
-						for (let key in response.data.data.specialist.profile) {
-							this.specialist.profile.data[key].value =
-								response.data.data.specialist.profile[key];
-						}
-						// Заполнение секций
-						for (let key in response.data.data.sections) {
-							this.sections[key] = response.data.data.sections[key];
-						}
+					if (!response) return;
 
-						// Заполнение соединений и таблиц
-						for (let key in response.data.data.specialist.connections) {
-							if (key === "certificates") {
-								this.tableCertificates.body =
-									response.data.data.specialist.connections[key];
-								continue;
-							}
-
-							if (key === "educations") {
-								this.tableEducations.body = response.data.data.specialist.connections[key];
-								continue;
-							}
-
-							if (key === "works") {
-								this.tableWorks.body = response.data.data.specialist.connections[key];
-								continue;
-							}
-
-							this.specialist.connections[key] =
-								response.data.data.specialist.connections[key];
-						}
-
-						// Добавление поля "Прием" в клиниках
-						this.sections.clinics.forEach((item) => {
-							item.priem = 0;
-
-							this.specialist.connections.clinics.forEach((itemOther) => {
-								if (itemOther.id_clinic == item.id) {
-									item.priem = itemOther.priem;
-								}
-							});
-						});
-
-						// Добавление полей delete, create
-						this.tableCertificates.body.forEach((item) => {
-							item.create = false;
-							item.delete = false;
-						});
-
-						this.tableEducations.body.forEach((item) => {
-							item.create = false;
-							item.delete = false;
-						});
-
-						this.tableWorks.body.forEach((item) => {
-							item.create = false;
-							item.delete = false;
-						});
-
-						// Сортировка специализаций и клиник по алфавиту
-						const collator = new Intl.Collator("ru");
-						this.sections.specializations.sort((a, b) => {
-							return collator.compare(a.name, b.name);
-						});
-						this.sections.clinics.sort((a, b) => {
-							return collator.compare(a.name, b.name);
-						});
-					} else {
-						this.specialist.profile.data.id.value = "none";
-
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "error",
-						});
+					// Заполнение профиля
+					for (let key in response.data.result.specialist.profile) {
+						this.specialist.profile.data[key].value =
+							response.data.result.specialist.profile[key];
 					}
+					// Заполнение секций
+					for (let key in response.data.result.sections) {
+						this.sections[key] = response.data.result.sections[key];
+					}
+
+					// Заполнение соединений и таблиц
+					for (let key in response.data.result.specialist.connections) {
+						if (key === "certificates") {
+							this.tableCertificates.body = response.data.result.specialist.connections[key];
+							continue;
+						}
+
+						if (key === "educations") {
+							this.tableEducations.body = response.data.result.specialist.connections[key];
+							continue;
+						}
+
+						if (key === "works") {
+							this.tableWorks.body = response.data.result.specialist.connections[key];
+							continue;
+						}
+
+						this.specialist.connections[key] =
+							response.data.result.specialist.connections[key];
+					}
+
+					// Добавление поля "Прием" в клиниках
+					this.sections.clinics.forEach((item) => {
+						item.priem = 0;
+
+						this.specialist.connections.clinics.forEach((itemOther) => {
+							if (itemOther.id_clinic == item.id) {
+								item.priem = itemOther.priem;
+							}
+						});
+					});
+
+					// Добавление полей delete, create
+					this.tableCertificates.body.forEach((item) => {
+						item.create = false;
+						item.delete = false;
+					});
+
+					this.tableEducations.body.forEach((item) => {
+						item.create = false;
+						item.delete = false;
+					});
+
+					this.tableWorks.body.forEach((item) => {
+						item.create = false;
+						item.delete = false;
+					});
+
+					// Сортировка специализаций и клиник по алфавиту
+					const collator = new Intl.Collator("ru");
+					this.sections.specializations.sort((a, b) => {
+						return collator.compare(a.name, b.name);
+					});
+					this.sections.clinics.sort((a, b) => {
+						return collator.compare(a.name, b.name);
+					});
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
@@ -2851,16 +2816,15 @@ export default {
 				this.specialist.connections[key] = [];
 			}
 
-			axios({
+			api({
 				method: "post",
-				headers: {
-					Accept: "application/json",
-				},
-				url: `${this.$store.getters.urlApi}` + `get-specialist-sections`,
+				url: this.$store.getters.urlApi + `get-specialist-sections`,
 			})
 				.then((response) => {
-					for (let key in response.data) {
-						this.sections[key] = response.data[key];
+					if (!response) return;
+
+					for (let key in response.data.result) {
+						this.sections[key] = response.data.result[key];
 					}
 
 					// Добавление поля "Прием" в клиниках
@@ -2875,7 +2839,11 @@ export default {
 					});
 				})
 				.catch((error) => {
-					console.log(error);
+					this.$store.commit("addDebugger", {
+						title: "Ошибка.",
+						body: error,
+						type: "error",
+					});
 				})
 				.finally(() => {
 					for (let key in this.loading.loader) {

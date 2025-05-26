@@ -201,10 +201,11 @@ class HomeController extends Controller
                };   
             } else {
                return response()->json([
-                  "status" => false,
+                  "success" => false,
+                  "debug" => true,
                   "message" => "Не удалось получить специализации.",
-                  "data" => null,
-               ]);    
+                  "result" => null,
+               ], 500);    
             };      
 
             $specialistsClinics = SpecialistClinic::where('id_specialist', $specialists[$key]->id)->get();
@@ -215,10 +216,11 @@ class HomeController extends Controller
                };   
             } else {
                return response()->json([
-                  "status" => false,
+                  "success" => false,
+                  "debug" => true,
                   "message" => "Не удалось получить клиники.",
-                  "data" => null,
-               ]);    
+                  "result" => null,
+               ], 500);    
             };   
 
             $specialists[$key]->url = $this->makeUrl($specialists[$key]->family . " " . $specialists[$key]->name . " " . $specialists[$key]->surname);
@@ -230,16 +232,18 @@ class HomeController extends Controller
          };
 
          return response()->json([
-            "status" => true,
+            "success" => true,
+            "debug" => false,
             "message" => "Специалисты найдены.",
-            "data" => $specialists,
-         ]);
+            "result" => $specialists,
+         ], 200);
       } else {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
             "message" => "Специалисты не найдены.",
-            "data" => null,
-         ]);
+            "result" => null,
+         ], 500);
       };
    }
 
@@ -248,14 +252,18 @@ class HomeController extends Controller
       // Валидация
       $validated = Validator::make($request->all(), [
          'url' => 'required',  
+      ], [
+         'url.required' => 'Поле url обязательно для заполнения.',
       ]);
 
       if ($validated->fails()) {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
+            "errors" => $validated->errors(),
             "message" => "Ошибка валидации входных данных.",
-            "data" => null,
-         ]);
+            "result" => null,
+         ], 422);
       };
 
       $specialists = Specialist::all();
@@ -266,10 +274,11 @@ class HomeController extends Controller
          if ($request->url == $stringTransliterate) {
             if ($specialists[$key]->hide == true) {
                return response()->json([
-                  "status" => false,
+                  "success" => false,
+                  "debug" => true,
                   "message" => "Специалист не найден.",
-                  "data" => null,
-               ]);
+                  "result" => null,
+               ], 500);
             };
 
             $specialists[$key]->path= Storage::url('specialists/' . $specialists[$key]->filename);
@@ -282,14 +291,15 @@ class HomeController extends Controller
                };   
             } else {
                return response()->json([
-                  "status" => false,
+                  "success" => false,
+                  "debug" => true,
                   "message" => "Не удалось получить специализации.",
-                  "data" => (object)[
+                  "result" => [
                      "profile" => null,
                      "specializations" => null,
                      "educations" => null,
                   ],
-               ]);    
+               ], 500);    
             };
 
             $specialistsEducations = SpecialistEducation::where('id_specialist', $specialists[$key]->id)->get();
@@ -300,14 +310,15 @@ class HomeController extends Controller
                };               
             } else {
                return response()->json([
-                  "status" => false,
-                  "message" => "Не удалось получить специализации.",
-                  "data" => (object)[
+                  "success" => false,
+                  "debug" => true,
+                  "message" => "Не удалось получить образования.",
+                  "result" => [
                      "profile" => null,
                      "specializations" => null,
                      "educations" => null,
                   ],
-               ]);    
+               ], 500);    
             }
 
             $specialistsCertificates = SpecialistCertificate::where('id_specialist', $specialists[$key]->id)->get();
@@ -318,34 +329,37 @@ class HomeController extends Controller
                };               
             } else {
                return response()->json([
-                  "status" => false,
-                  "message" => "Не удалось получить специализации.",
-                  "data" => (object)[
+                  "success" => false,
+                  "debug" => true,
+                  "message" => "Не удалось получить сертификаты.",
+                  "result" => [
                      "profile" => null,
                      "specializations" => null,
                      "educations" => null,
                   ],
-               ]);    
+               ], 500);    
             }
 
             return response()->json([
-               "status" => true,
+               "success" => true,
+               "debug" => false,
                "message" => "Данные получены.",
-               "data" => (object)[
+               "result" => [
                   "profile" => $specialists[$key],
                   "specializations" => $specializations,
                   "educations" => $educations,
                   "certificates" => $certificates,
                ],
-            ]);            
+            ], 200);            
          };
       };
 
       return response()->json([
-         "status" => false,
+         "success" => false,
+         "debug" => true,
          "message" => "Данного специалиста не существует.",
-         "data" => null,
-      ]);            
+         "result" => null,
+      ], 500);            
    }
 
    /* Вывод сокращенной информации о врачах */ 
@@ -370,10 +384,11 @@ class HomeController extends Controller
       };
 
       return response()->json([
-         "status" => true,
+         "success" => true,
+         "debug" => false,
          "message" => "Данные получены.",
-         "data" => $specialistsShort,
-      ]);
+         "result" => $specialistsShort,
+      ], 200);
    }
 
    /* Вывод полной информации о враче */
@@ -381,14 +396,18 @@ class HomeController extends Controller
       // Валидация
       $validated = Validator::make($request->all(), [
          'id' => 'required',
+      ], [
+         'required' => 'Поле :attribute обязательно для заполнения.',
       ]);
 
       if ($validated->fails()) {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
+            "errors" => $validated->errors(),
             "message" => "Ошибка валидации входных данных.",
-            "data" => null,
-         ]);
+            "result" => null,
+         ], 422);
       };
 
       $specialist = Specialist::find($request->id);
@@ -432,12 +451,13 @@ class HomeController extends Controller
          }
    
          return response()->json([
-            "status" => true,
+            "success" => true,
+            "debug" => false,
             "message" => "Специалист найден.",
-            "data" => (object) [               
-               "specialist" => (object) [
+            "result" => [               
+               "specialist" => [
                   "profile" => $specialist,
-                  "connections" => (object) [
+                  "connections" => [
                      "specializations" => SpecialistSpecialization::where('id_specialist', $request->id)->get(),
                      "clinics" => SpecialistClinic::where('id_specialist', $request->id)->get(),
                      "certificates" => $includeSpecialistCertificates,
@@ -445,32 +465,36 @@ class HomeController extends Controller
                      "works" => $includeSpecialistWorks,                  
                   ],
                ],
-               "sections" => (object) [
+               "sections" => [
                   "specializations" => Specialization::all(),
                   "clinics" => Clinic::all(),
                ],
             ],
-         ]);
+         ], 200);
       } else {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
             "message" => "Специалист не найден.",
-            "data" => null,
-         ]);
-
+            "result" => null,
+         ], 500);
       };
-
    }  
 
    /* Вывод полной информации о враче */
    public function getSpecialistSections(Request $request) {
       return response()->json([
-         "specializations" => Specialization::all(),
-         "certificates" => Certificate::all(),
-         "clinics" => Clinic::all(),
-         "educations" => Education::all(),
-         "works" => Work::all(),
-      ]);
+         "success" => true,
+         "debug" => false,
+         "message" => "Данные получены.",
+         "result" => [
+            "specializations" => Specialization::all(),
+            "certificates" => Certificate::all(),
+            "clinics" => Clinic::all(),
+            "educations" => Education::all(),
+            "works" => Work::all(),
+         ],
+      ], 200);
    }
 
    /* _____________________________________________________*/
@@ -482,17 +506,19 @@ class HomeController extends Controller
       
       if (!$specializations) {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
             "message" => "Не удалось получить данные.",
-            "data" => [],
-         ]);
+            "result" => null,
+         ], 500);
       };
 
       return response()->json([
-         "status" => true,
+         "success" => true,
+         "debug" => false,
          "message" => "Данные получены.",
-         "data" => $specializations,
-      ]);
+         "result" => $specializations,
+      ], 200);
    }
    
    /* _____________________________________________________*/
@@ -504,17 +530,19 @@ class HomeController extends Controller
 
       if (!$clinics) {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
             "message" => "Не удалось получить данные.",
-            "data" => [],
-         ]);
+            "result" => null,
+         ], 500);
       };
 
       return response()->json([
-         "status" => true,
+         "success" => true,
+         "debug" => false,
          "message" => "Данные получены.",
-         "data" => $clinics,
-      ]);
+         "result" => $clinics,
+      ], 200);
    }
    
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/

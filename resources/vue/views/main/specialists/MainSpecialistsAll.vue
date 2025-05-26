@@ -65,7 +65,8 @@ import SpecialistsList from "./MainSpecialistsAllList.vue";
 import Empty from "../../../components/modules/Empty.vue";
 
 import { RouterLink } from "vue-router";
-import axios from "axios";
+
+import api from "../../../services/api";
 import sorted from "../../../services/sorted";
 
 export default {
@@ -77,7 +78,7 @@ export default {
 		LoaderChild,
 		SpecialistsList,
 		RouterLink,
-		axios,
+
 		Empty,
 	},
 	data() {
@@ -176,20 +177,12 @@ export default {
 	},
 	mounted() {
 		// Получение массива докторов с сервера
-		axios({
+		api({
 			method: "get",
-			url: `${this.$store.getters.urlApi}` + `get-specialists`,
+			url: this.$store.getters.urlApi + `get-specialists`,
 		})
 			.then((response) => {
-				if (response.data.status) {
-					this.specialists = response.data.data;
-				} else {
-					this.$store.commit("addDebugger", {
-						title: "Ошибка.",
-						body: response.data.message,
-						type: "error",
-					});
-				}
+				this.specialists = response.data.result;
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {

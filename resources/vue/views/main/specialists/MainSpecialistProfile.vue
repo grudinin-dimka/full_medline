@@ -79,7 +79,9 @@
 							<article>
 								<div>
 									{{
-										`${formatDate(certificate.endEducation)} - ${certificate.name} (${certificate.organization}) `
+										`${formatDate(certificate.endEducation)} - ${certificate.name} (${
+											certificate.organization
+										}) `
 									}}.
 								</div>
 							</article>
@@ -91,7 +93,13 @@
 					<ul>
 						<li v-for="education in specialist.educations">
 							<article>
-								<div>{{ `${formatDate(education.date)} - ${education.name} (${education.organization}).` }}</div>
+								<div>
+									{{
+										`${formatDate(education.date)} - ${education.name} (${
+											education.organization
+										}).`
+									}}
+								</div>
 							</article>
 						</li>
 					</ul>
@@ -114,7 +122,6 @@
 
 				<Tiptap :editable="false" :limit="10_000" v-model="specialist.profile.description" />
 			</div>
-
 		</div>
 
 		<loader-child
@@ -134,7 +141,7 @@ import LoadText from "../../../components/ui/main/LoadText.vue";
 
 import Icon from "../../../components/modules/icon/Icon.vue";
 
-import axios from "axios";
+import api from "../../../services/api";
 import sorted from "../../../services/sorted";
 
 export default {
@@ -147,8 +154,6 @@ export default {
 		LoadText,
 
 		Icon,
-
-		axios,
 	},
 	data() {
 		return {
@@ -164,7 +169,7 @@ export default {
 				profile: {},
 				specializations: [],
 				certificates: [],
-				education: [],
+				educations: [],
 			},
 		};
 	},
@@ -219,28 +224,20 @@ export default {
 	},
 	mounted() {
 		// Получение массива слайдов с сервера
-		axios({
+		api({
 			method: "post",
-			url: `${this.$store.getters.urlApi}` + `get-specialist-profile`,
+			url: this.$store.getters.urlApi + "get-specialist-profile",
 			data: {
 				url: this.$route.params.name,
 			},
 		})
 			.then((response) => {
-				if (response.data.status) {
-					this.specialist.profile = response.data.data.profile;
-					this.specialist.specializations = response.data.data.specializations;
-					this.specialist.educations = response.data.data.educations;
-					this.specialist.certificates = response.data.data.certificates;
-				} else {
-					this.specialist.profile = null;
+				if (!response) return;
 
-					this.$store.commit("addDebugger", {
-						title: "Ошибка.",
-						body: response.data.message,
-						type: "error",
-					});
-				}
+				this.specialist.profile = response.data.result.profile;
+				this.specialist.specializations = response.data.result.specializations;
+				this.specialist.educations = response.data.result.educations;
+				this.specialist.certificates = response.data.result.certificates;
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {
