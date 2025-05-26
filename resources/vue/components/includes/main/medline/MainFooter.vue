@@ -111,6 +111,7 @@ import IconMasterCard from "../../../icons/IconMasterCard.vue";
 import IconMir from "../../../icons/IconMir.vue";
 
 import axios from "axios";
+import api from "../../../../services/api";
 
 export default {
 	components: {
@@ -121,8 +122,6 @@ export default {
 		IconVisa,
 		IconMasterCard,
 		IconMir,
-
-		axios,
 	},
 	data() {
 		return {
@@ -158,20 +157,14 @@ export default {
 		},
 	},
 	mounted() {
-		axios({
+		api({
 			method: "get",
-			url: `${this.$store.getters.urlApi}` + `get-footer`,
+			url: this.$store.getters.urlApi + "get-footer",
 		})
 			.then((response) => {
-				if (response.data.status) {
-					this.footer = response.data.data;
-				} else {
-					this.$store.commit("addDebugger", {
-						title: "Ошибка.",
-						body: response.data.message,
-						type: "error",
-					});
-				}
+				if (!response) return;
+
+				this.footer = response.data.result;
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {

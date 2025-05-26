@@ -133,7 +133,12 @@ class HomeController extends Controller
          $slides[$key]->path = Storage::url('slides/' . $value->filename);
       };
 
-      return $slides;
+      return response()->json([
+         "success" => true,
+         "debug" => false,
+         "message" => "Слайды получены.",
+         "result" => $slides,
+      ], 200);
    } 
 
    /* Получение данных о всех слайдах, которые не скрыты */
@@ -142,7 +147,13 @@ class HomeController extends Controller
       foreach ($slides as $key => $value) {
          $slides[$key]->path = Storage::url('slides/' . $value->filename);
       };
-      return $slides;
+
+      return response()->json([
+         "success" => true,
+         "debug" => false,
+         "message" => "Слайды получены.",
+         "result" => $slides,
+      ], 200);
    }
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                     ФУТЕР                         |*/
@@ -156,17 +167,19 @@ class HomeController extends Controller
 
       if (!$footer) {
          return response()->json([
-            "status" => false,
+            "success" => true,
+            "debug" => true,
             "message" => "Футер не найден.",
-            "data" => null,
-         ]);
+            "result" => null,
+         ], 500);
       }
 
       return response()->json([
-         "status" => true,
+         "success" => true,
+         "debug" => false,
          "message" => "Футер найден.",
-         "data" => $footer->description,
-      ]);
+         "result" => $footer->description,
+      ], 200);
    } 
    
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/

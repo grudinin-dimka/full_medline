@@ -346,7 +346,7 @@ import ButtonClaim from "../../components/ui/admin/buttons/ButtonClaim.vue";
 
 import Icon from "../../components/modules/icon/Icon.vue";
 
-import axios from "axios";
+import api from "../../services/api";
 import shared from "../../services/shared";
 import files from "../../services/files";
 import sorted from "../../services/sorted";
@@ -356,23 +356,21 @@ export default {
 	components: {
 		LoaderChild,
 		Empty,
-		
+
 		Modal,
 		InfoBar,
 		Tiptap,
-		
+
 		Icon,
-		
+
 		ContainerInput,
 		ContainerInputOnce,
 		ContainerTextareaOnce,
-		
+
 		BlockOnce,
 		ButtonDefault,
 		ButtonRemove,
 		ButtonClaim,
-
-		axios,
 	},
 	data() {
 		return {
@@ -538,99 +536,68 @@ export default {
 
 		// Создание нового слайда
 		addSlide() {
-			try {
-				if (
-					validate.checkInputsAll(this.currentSlide, [
-						{
-							key: "file",
-							type: "file",
-							value: this.$refs.fileUpload,
-							formats: ["png", "webp"],
-						},
-						{
-							key: "name",
-							type: "text",
-						},
-						{
-							key: "link",
-							type: "text",
-						},
-					])
-				)
-					return;
-
-				/* Загрузка файла */
-				this.currentSlide.file = this.$refs.fileUpload.files[0];
-				let formData = new FormData();
-				formData.append("file", this.currentSlide.file);
-				formData.append("type", "slides");
-				formData.append("formats", ["png", "webp"]);
-
-				this.disabled.slider.create = true;
-
-				axios({
-					method: "post",
-					url: `${this.$store.getters.urlApi}` + `upload-file`,
-					headers: {
-						"Content-Type": "multipart/form-data",
-						Authorization: `Bearer ${localStorage.getItem("token")}`,
+			if (
+				validate.checkInputsAll(this.currentSlide, [
+					{
+						key: "file",
+						type: "file",
+						value: this.$refs.fileUpload,
+						formats: ["png", "webp"],
 					},
-					data: formData,
-				})
-					.then((response) => {
-						if (response.data.status) {
-							try {
-								this.slides.push({
-									id: shared.getMaxId(this.slides) + 1,
-									order: shared.getMaxOrder(this.slides) + 1,
-									name: this.$refs.inputName.value,
-									link: this.$refs.inputLink.value,
-									path: response.data.data,
-									filename: files.basename(response.data.data),
-									hide: false,
-									create: true,
-									delete: false,
-								});
+					{
+						key: "name",
+						type: "text",
+					},
+					{
+						key: "link",
+						type: "text",
+					},
+				])
+			)
+				return;
 
-								this.$refs.modal.close();
+			/* Загрузка файла */
+			this.currentSlide.file = this.$refs.fileUpload.files[0];
+			let formData = new FormData();
+			formData.append("file", this.currentSlide.file);
+			formData.append("type", "slides");
+			formData.append("formats", ["png", "webp"]);
 
-								this.$store.commit("addDebugger", {
-									title: "Успешно!",
-									body: "Новый слайд добавлен.",
-									type: "completed",
-								});
-							} catch (error) {
-								this.$store.commit("addDebugger", {
-									title: "Ошибка",
-									body: error,
-									type: "error",
-								});
-							}
-						} else {
-							this.$store.commit("addDebugger", {
-								title: "Ошибка",
-								body: response.data.message,
-								type: "error",
-							});
-						}
-					})
-					.catch((error) => {
-						this.$store.commit("addDebugger", {
-							title: "Ошибка",
-							body: error,
-							type: "error",
-						});
-					})
-					.finally(() => {
-						this.disabled.slider.create = false;
+			this.disabled.slider.create = true;
+
+			api({
+				method: "post",
+				url: this.$store.getters.urlApi + "upload-file",
+				headers: {
+					"Content-Type": "multipart/form-data",
+				},
+				data: formData,
+			})
+				.then((response) => {
+					this.slides.push({
+						id: shared.getMaxId(this.slides) + 1,
+						order: shared.getMaxOrder(this.slides) + 1,
+						name: this.$refs.inputName.value,
+						link: this.$refs.inputLink.value,
+						path: response.data.result,
+						filename: files.basename(response.data.result),
+						hide: false,
+						create: true,
+						delete: false,
 					});
-			} catch (error) {
-				this.$store.commit("addDebugger", {
-					title: "Ошибка",
-					body: error,
-					type: "error",
+
+					this.$refs.modal.close();
+				})
+				.catch((error) => {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка",
+						body: error,
+						type: "error",
+					});
+				})
+				.finally(() => {
+					this.disabled.slider.create = false;
 				});
-			}
 		},
 
 		/* Пометка на удаление выбранного слайда */
@@ -650,47 +617,14 @@ export default {
 
 		/* Обновление выбранного слайда */
 		updateSlide() {
-			try {
-				let slideCurrent = this.slides.find(
-					(slide) => slide.order === this.currentSlide.data.order.value
-				);
+			let slideCurrent = this.slides.find(
+				(slide) => slide.order === this.currentSlide.data.order.value
+			);
 
-				// Проверка на файл
-				if (!this.$refs.fileUpload.files[0]) {
-					if (
-						validate.checkInputsAll(this.currentSlide, [
-							{
-								key: "name",
-								type: "text",
-							},
-							{
-								key: "link",
-								type: "text",
-							},
-						])
-					)
-						return;
-
-					for (let key in slideCurrent) {
-						if (key == "name" || key == "link") {
-							slideCurrent[key] = this.currentSlide.data[key].value;
-						} else if (key == "hide") {
-							slideCurrent[key] = this.currentSlide.data[key].value;
-						}
-					}
-
-					this.$refs.modal.close();
-					return;
-				}
-
+			// Проверка на файл
+			if (!this.$refs.fileUpload.files[0]) {
 				if (
 					validate.checkInputsAll(this.currentSlide, [
-						{
-							key: "file",
-							type: "file",
-							value: this.$refs.fileUpload,
-							formats: ["png", "webp"],
-						},
 						{
 							key: "name",
 							type: "text",
@@ -703,62 +637,72 @@ export default {
 				)
 					return;
 
-				this.disabled.slider.update = true;
+				for (let key in slideCurrent) {
+					if (key == "name" || key == "link") {
+						slideCurrent[key] = this.currentSlide.data[key].value;
+					} else if (key == "hide") {
+						slideCurrent[key] = this.currentSlide.data[key].value;
+					}
+				}
 
-				let formData = new FormData();
-				formData.append("file", this.$refs.fileUpload.files[0]);
-				formData.append("type", "slides");
-				formData.append("formats", ["png", "jpg", "jpeg", "webp"]);
-
-				axios({
-					method: "post",
-					url: `${this.$store.getters.urlApi}` + `upload-file`,
-					headers: {
-						"Content-Type": "multipart/form-data",
-						Authorization: `Bearer ${localStorage.getItem("token")}`,
-					},
-					data: formData,
-				})
-					.then((response) => {
-						if (response.data.status) {
-							try {
-								this.currentSlide.data.path.value = response.data.data;
-								slideCurrent.path = response.data.data;
-								slideCurrent.filename = files.basename(response.data.data);
-
-								this.$refs.modal.close();
-							} catch (error) {
-								this.$store.commit("addDebugger", {
-									title: "Ошибка",
-									body: error,
-									type: "error",
-								});
-							}
-						} else {
-							this.$store.commit("addDebugger", {
-								title: "Ошибка",
-								body: response.data.message,
-								type: "error",
-							});
-						}
-					})
-					.catch((error) => {
-						this.$store.commit("addDebugger", {
-							title: "Ошибка",
-							body: error,
-							type: "error",
-						});
-					})
-					.finally(() => {
-						this.disabled.slider.update = false;
-					});
-			} catch (error) {
-				this.$store.commit("addDebugger", {
-					title: "Ошибка",
-					body: error,
-					type: "error",
-				});
+				this.$refs.modal.close();
+				return;
 			}
+
+			if (
+				validate.checkInputsAll(this.currentSlide, [
+					{
+						key: "file",
+						type: "file",
+						value: this.$refs.fileUpload,
+						formats: ["png", "webp"],
+					},
+					{
+						key: "name",
+						type: "text",
+					},
+					{
+						key: "link",
+						type: "text",
+					},
+				])
+			)
+				return;
+
+			this.disabled.slider.update = true;
+
+			let formData = new FormData();
+			formData.append("file", this.$refs.fileUpload.files[0]);
+			formData.append("type", "slides");
+			formData.append("formats", ["png", "jpg", "jpeg", "webp"]);
+
+			api({
+				method: "post",
+				url: this.$store.getters.urlApi + "upload-file",
+				headers: {
+					"Content-Type": "multipart/form-data",
+				},
+				data: formData,
+			})
+				.then((response) => {
+					if (!response) return;
+
+					this.currentSlide.data.path.value = response.data.result;
+					slideCurrent.path = response.data.result;
+					slideCurrent.filename = files.basename(response.data.result);
+
+					this.$refs.modal.close();
+				})
+				.catch((error) => {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка",
+						body: error,
+						type: "error",
+					});
+				})
+				.finally(() => {
+					this.disabled.slider.update = false;
+				});
 		},
 
 		/* Сохранение изменений в базе данных */
@@ -776,36 +720,24 @@ export default {
 					delete dataSlides[i].path;
 				}
 			}
-			axios({
+
+			api({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `save-slides-changes`,
+				url: this.$store.getters.urlApi + `save-slides-changes`,
 				headers: {
 					Accept: "application/json",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: {
 					slides: dataSlides,
 				},
 			})
 				.then((response) => {
-					if (response.data.status) {
-						shared.updateId(this.slides, response.data.data);
-						shared.clearDeletes(this.slides);
-						shared.clearFlags(this.slides);
-						shared.updateOrders(this.slides);
+					if (!response) return;
 
-						this.$store.commit("addDebugger", {
-							title: "Успешно!",
-							body: response.data.message,
-							type: "completed",
-						});
-					} else {
-						this.$store.commit("addDebugger", {
-							title: "Ошибка",
-							body: response.data.message,
-							type: "error",
-						});
-					}
+					shared.updateId(this.slides, response.data.result);
+					shared.clearDeletes(this.slides);
+					shared.clearFlags(this.slides);
+					shared.updateOrders(this.slides);
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
@@ -827,58 +759,37 @@ export default {
 			this.disabled.footer.save = true;
 
 			// Сохранение данных в базу данных
-			axios({
+			api({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `save-footer`,
+				url: this.$store.getters.urlApi + `save-footer`,
 				headers: {
 					Accept: "application/json",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: {
 					description: this.footer,
 				},
-			})
-				.then((response) => {
-					if (response.data.status) {
-						this.$store.commit("addDebugger", {
-							title: "Успешно!",
-							body: response.data.message,
-							type: "completed",
-						});
-					} else {
-						this.$store.commit("addDebugger", {
-							title: "Ошибка",
-							body: response.data.message,
-							type: "error",
-						});
-					}
-				})
-				.catch((error) => {
-					this.$store.commit("addDebugger", {
-						title: "Ошибка",
-						body: error,
-						type: "error",
-					});
-				})
-				.finally(() => {
-					this.disabled.footer.save = false;
-				});
+			}).finally(() => {
+				this.disabled.footer.save = false;
+			});
 		},
 	},
 	mounted() {
 		// Получение массива слайдов с сервера
-		axios({
+		api({
 			method: "get",
-			url: `${this.$store.getters.urlApi}` + `get-slides-all`,
+			url: this.$store.getters.urlApi + "get-slides-all",
 		})
 			.then((response) => {
-				this.slides = response.data;
+				if (!response) return;
+
+				this.slides = response.data.result;
 
 				// Добавление полей "delete" и "create" в каждую строку массива
 				for (let key in this.slides) {
 					this.slides[key].delete = false;
 					this.slides[key].create = false;
 				}
+
 				sorted.sortByOrder("up", this.slides);
 			})
 			.catch((error) => {
@@ -893,20 +804,14 @@ export default {
 			});
 
 		// Получение массива данных о футере с сервера
-		axios({
+		api({
 			method: "get",
-			url: `${this.$store.getters.urlApi}` + `get-footer`,
+			url: this.$store.getters.urlApi + `get-footer`,
 		})
 			.then((response) => {
-				if (response.data.status) {
-					this.footer = response.data.data;
-				} else {
-					this.$store.commit("addDebugger", {
-						title: "Ошибка",
-						body: response.data.message,
-						type: "error",
-					});
-				}
+				if (!response) return;
+
+				this.footer = response.data.result;
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {

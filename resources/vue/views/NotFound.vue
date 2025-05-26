@@ -1,4 +1,7 @@
 <template>
+	<MainHeader />
+	<MainNav />
+	
 	<div class="not-found">
 		<div class="not-found-container">
 			<div class="not-found-container-status">
@@ -13,20 +16,29 @@
 <script>
 import ButtonDefault from "../components/ui/admin/buttons/ButtonDefault.vue";
 
+// NOTE : Not Found
+import MainNav from "../components/includes/main/medline/MainNav.vue";
+import MainHeader from "../components/includes/main/medline/MainHeader.vue";
+
 export default {
 	components: {
 		ButtonDefault,
+		MainNav,
+		MainHeader,
 	},
 };
 </script>
 
 <style scoped>
 .not-found {
+	position: fixed;
+	top: 50dvh;
+	left: 50dvw;
+	transform: translate(-50%, -50%);
+
 	display: flex;
 	justify-content: center;
 	align-items: center;
-
-	min-height: 100dvh;
 }
 
 .not-found-container {

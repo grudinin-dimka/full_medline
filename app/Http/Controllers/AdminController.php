@@ -121,10 +121,12 @@ class AdminController extends Controller
          $validator = Validator::make($request->all(), $rules);
 
          if ($validator->fails()) return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
+            "errors" => $validator->errors(),
             "message" => "Файл не прошёл проверку.",
-            "data" => null,
-         ]);
+            "result" => null,
+         ], 422);
 
          // Получение оригинального названия
          $originalName = $file->getClientOriginalName();
@@ -146,23 +148,26 @@ class AdminController extends Controller
 
          if ($path) {
             return response()->json([
-               "status" => true,
+               "success" => true,
+               "debug" => false,
                "message" => "Файл загружен.",
-               "data" => Storage::url($path),
-            ]);
+               "result" => Storage::url($path),
+            ], 200);
          } else {
             return response()->json([
-               "status" => false,
+               "success" => false,
+               "debug" => true,
                "message" => "Файл не удалось загрузить.",
-               "data" => null,
-            ]);
+               "result" => null,
+            ], 500);
          };
       } else {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
             "message" => "Отсутствует файл.",
-            "data" => null,
-         ]);
+            "result" => null,
+         ], 422);
       };      
    } 
    
@@ -187,6 +192,22 @@ class AdminController extends Controller
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
    /* Сохранение содержимого всех слайдов */
    public function saveSlidesChanges(Request $request) {
+      $validator = Validator::make($request->all(), [
+         'slides' => 'nullable|array',
+      ], [
+         'array' => 'Поле :attribute должно быть массивом.',
+      ]);
+
+      if ($validator->fails()) {
+         return response()->json([
+            "success" => false,
+            "debug" => true,
+            "errors" => $validator->errors(),
+            "message" => "Некорректные данные.",
+            "result" => null,
+         ], 422);
+      };
+
       $arrayID = [];
 
       foreach ($request->slides as $key => $value) {
@@ -264,11 +285,13 @@ class AdminController extends Controller
       };
 
       return response()->json([
-         "status" => true,
+         "success" => true,
+         "debug" => true,
          "message" => "Данные обновлены.",
-         "data" => $arrayID
-      ]);
+         "result" => $arrayID
+      ], 200);
    } 
+
    /* _____________________________________________________*/
    /* 2. Футер                                             */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
@@ -277,14 +300,19 @@ class AdminController extends Controller
       // Валидация
       $validator = Validator::make($request->all(), [
          'description' => 'required|string',
+      ], [
+         'required' => 'Поле :attribute обязательно для заполнения.',
+         'string' => 'Поле :attribute должно быть строкой.',
       ]);
 
       if ($validator->fails()) {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
+            "errors" => $validator->errors(),
             "message" => "Некорректные данные.",
-            "data" => null,
-         ]);
+            "result" => null,
+         ], 422);
       };
       
       try {
@@ -295,17 +323,19 @@ class AdminController extends Controller
          ]);
       } catch (Throwable $th) {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
             "message" => "Футер не найден.",
-            "data" => null
-         ]);
+            "result" => null
+         ], 500);
       };
       
       return response()->json([
-         "status" => true,
+         "success" => true,
+         "debug" => true,
          "message" => "Данные обновлены.",
          "data" => null         
-      ]);
+      ], 200);
    }
 
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/

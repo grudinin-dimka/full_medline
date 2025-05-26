@@ -52,7 +52,7 @@ import LoaderChild from "../../components/modules/LoaderChild.vue";
 
 import MainNewsItem from "./news/MainNewsItem.vue";
 
-import axios from "axios";
+import api from "../../services/api.js";
 import sorted from "../../services/sorted.js";
 
 export default {
@@ -96,9 +96,9 @@ export default {
 		},
 	},
 	mounted() {
-		axios({
+		api({
 			method: "post",
-			url: `${this.$store.getters.urlApi}` + `get-news-short`,
+			url: this.$store.getters.urlApi + "get-news-short",
 			headers: {
 				Accept: "application/json",
 			},
@@ -107,15 +107,9 @@ export default {
 			},
 		})
 			.then((response) => {
-				if (response.data.status) {
-					this.news = response.data.data.news;
-				} else {
-					this.$store.commit("addDebugger", {
-						title: "Ошибка.",
-						body: response.data.message,
-						type: "error",
-					});
-				}
+				if (!response) return;
+
+				this.news = response.data.result.news;
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {
@@ -129,12 +123,14 @@ export default {
 			});
 
 		// Получение массива слайдов с сервера
-		axios({
+		api({
 			method: "get",
-			url: `${this.$store.getters.urlApi}` + `get-slides-not-hide`,
+			url: this.$store.getters.urlApi + "get-slides-not-hide",
 		})
 			.then((response) => {
-				this.slides = response.data;
+				if (!response) return;
+
+				this.slides = response.data.result;
 				sorted.sortByOrder("up", this.slides);
 			})
 			.catch((error) => {
