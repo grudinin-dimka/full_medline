@@ -276,7 +276,7 @@ import ContainerInputOnce from "../../../components/ui/admin/containers/input/Co
 import ContainerSelectOnce from "../../../components/ui/admin/containers/select/ContainerSelectOnce.vue";
 import ContainerInputSearch from "../../../components/ui/admin/containers/input/ContainerInputSearch.vue";
 
-import axios from "axios";
+import api from "../../../services/api";
 import sorted from "../../../services/sorted.js";
 
 export default {
@@ -289,9 +289,6 @@ export default {
 		ContainerInputOnce,
 		ContainerSelectOnce,
 		ContainerInputSearch,
-
-		axios,
-		sorted,
 	},
 	data() {
 		return {
@@ -699,27 +696,21 @@ export default {
 		},
 	},
 	mounted() {
-		axios({
+		api({
 			method: "get",
 			url: `${this.$store.getters.urlApi}` + `get-shedules-all`,
 		})
 			.then((response) => {
-				if (response.data.status) {
-					this.clinics = response.data.data.sheduleClinics;
-					this.week = response.data.data.currentDays;
+				if (!response) return;
 
-					this.clinics.forEach((clinic) => {
-						clinic.status = false;
-					});
+				this.clinics = response.data.result.sheduleClinics;
+				this.week = response.data.result.currentDays;
 
-					this.shedules = response.data.data.shedules;
-				} else {
-					this.$store.commit("addDebugger", {
-						title: "Ошибка.",
-						body: response.data.message,
-						type: "error",
-					});
-				}
+				this.clinics.forEach((clinic) => {
+					clinic.status = false;
+				});
+
+				this.shedules = response.data.result.shedules;
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {

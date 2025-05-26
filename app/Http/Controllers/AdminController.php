@@ -1705,7 +1705,7 @@ class AdminController extends Controller
    /* |                   РАСПИСАНИЕ                      |*/
    /* |___________________________________________________|*/
    /* Сохранение расписания */
-   public function saveShedulesAll() {
+   public function saveShedulesAll($isManual = null) {
       // Получение всех файлов
       $files = Storage::disk('private')->files('schedules');
 
@@ -1729,6 +1729,15 @@ class AdminController extends Controller
             $currentFileDate = Carbon::createFromFormat('Y-m-d H-i', $CurrentFileName);
             $lastFileDate = Carbon::createFromFormat('Y-m-d H-i', $dateLastFileName);
          } catch (Exception $e) {
+            if ($isManual) {
+               return response()->json([
+                  "success" => false,
+                  "debug" => true,
+                  "message" => $e->getMessage(),
+                  "result" => null
+               ], 500);
+            }
+
             Log::error($e->getMessage());
             continue;
          }
@@ -1746,24 +1755,56 @@ class AdminController extends Controller
          
          $clinics = $fileContent?->clinics;
          if (!$clinics) {
+            if ($isManual) {
+               return response()->json([
+                  "success" => false,
+                  "debug" => true,
+                  "message" => 'Отсутствуют клиники.',
+                  "result" => null
+               ], 500);
+            }
+
             Log::error('Отсутствуют клиники.');
-            return response()->json(['error' => 'Отсутствуют клиники.']);      
          }
 
          $week = $fileContent?->week;
          if (!$week) {
+            if ($isManual) {
+               return response()->json([
+                  "success" => false,
+                  "debug" => true,
+                  "message" => 'Отсутствуют дни.',
+                  "result" => null
+               ], 500);
+            }
+
             Log::error('Отсутствуют дни.');
-            return response()->json(['error' => 'Отсутствуют дни.']);      
          }
 
          $shedules = $fileContent?->shedules;
          if (!$shedules) {
+            if ($isManual) {
+               return response()->json([
+                  "success" => false,
+                  "debug" => true,
+                  "message" => 'Отсутствует расписание.',
+                  "result" => null
+               ], 500);
+            }
+
             Log::error('Отсутствует расписание.');
-            return response()->json(['error' => 'Отсутствуют расписание.']);      
          }
       } else {
+         if ($isManual) {
+            return response()->json([
+               "success" => false,
+               "debug" => true,
+               "message" => 'Отсутствует файл.',
+               "result" => null
+            ], 500);
+         }
+
          Log::error('Отсутствует файл.');
-         return response()->json(['error' => 'Отсутствует файл.']);
       };
       
       // Сбрасываю ограничения внешнего ключа, чтобы очистить таблицы
@@ -1827,10 +1868,25 @@ class AdminController extends Controller
             };
          };
 
-         return response()->json(['success' => true]);   
+         if ($isManual) {
+            return response()->json([
+               "success" => true,
+               "debug" => true,
+               "message" => 'Данные обновлены.',
+               "result" => null
+            ], 200);
+         }
       } catch (Throwable $e) {
+         if ($isManual) {
+            return response()->json([
+               "success" => false,
+               "debug" => true,
+               "message" => $e,
+               "result" => null
+            ], 500);
+         }
+
          Log::error($e);
-         return response()->json(['error' => $e]);
       }   
    }
    

@@ -101,7 +101,7 @@ Route::middleware(['auth:sanctum', 'admin-or-creator'])->group(function () {
    Route::post('/make-specialists-xml', [AdminController::class, 'makeSpecialistsXML']);
 
    // Расписание 
-   Route::post('/save-shedules-all', [AdminController::class, 'saveShedulesAll']);
+   Route::post('/save-shedules-all/{type}', [AdminController::class, 'saveShedulesAll']);
 
    // Цены 
    Route::get('/get-prices-files-all', [AdminController::class, 'getPricesFilesAll']);

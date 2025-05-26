@@ -792,7 +792,7 @@ class HomeController extends Controller
             "errors" => $validated->errors(),
             "message" => "Некорректные данные.",
             "result" => null,
-         ]);
+         ], 422);
       };
 
       $group = $request->group;
@@ -889,9 +889,129 @@ class HomeController extends Controller
             "array" => $array ?? [],
             "title" => $title
          ],
-      ]);
+      ], 200);
    }
    
+   /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+   /* |                   РАСПИСАНИЕ                      |*/
+   /* |___________________________________________________|*/
+   /* Получение расписания */
+   public function getShedulesAll(Request $request) {
+      try {
+
+         // Загрузка ВСЕХ основных данных сразу 
+         $schedules = Shedule::all(); 
+         $scheduleClinics = ShedulesClinic::all();
+         $currentDays = ShedulesCurrentDay::all();
+   
+         // Подготовка ID для массовой загрузки связанных данных
+         $scheduleIds = $schedules->pluck('id');
+         $clinicIds = $scheduleClinics->pluck('id'); 
+   
+         // Загрузка ВСЕХ дней расписаний за ОДИН запрос
+         $scheduleDays = ShedulesDay::whereIn('sheduleId', $scheduleIds)
+            ->whereIn('clinicId', $clinicIds)
+            ->get()
+            ->groupBy(['sheduleId', 'clinicId']);
+   
+   
+         // Загрузка ВСЕХ времен для дней за ОДИН запрос
+         $dayIds = $scheduleDays->flatten()->pluck('id'); // Получаем все ID дней
+         $scheduleTimes = ShedulesDaysTime::whereIn('dayId', $dayIds)
+            ->get()
+            ->groupBy('dayId');
+   
+         $specialists = Specialist::all()->groupBy(function ($specialist) {
+            return $specialist->family . ' ' . $specialist->name . ' ' . $specialist->surname;
+         });
+   
+         // Создаем "карту" текущих дней для мгновенного поиска по дате
+         $currentDaysMap = $currentDays->keyBy('date');
+   
+         // Основной цикл по расписаниям
+         foreach ($schedules as $schedule) {
+            $weeks = []; // Здесь будем хранить данные для каждой клиники
+   
+            /* Получение специалистов */
+            $sheduleSpecialits = $specialists[$schedule->name] ?? null;
+            if($sheduleSpecialits) {
+               $schedule->image = Storage::url('specialists/' . $sheduleSpecialits[0]->filename);
+               $schedule->link = $this->makeUrl($sheduleSpecialits[0]->family . ' ' . $sheduleSpecialits[0]->name . ' ' . $sheduleSpecialits[0]->surname);
+            } else { 
+               $schedule->image = null;
+            }
+            
+            // Цикл по клиникам для текущего расписания
+            foreach ($scheduleClinics as $clinic) {
+               // Получаем дни для данной пары (расписание + клиника)
+               // Используем группировку, чтобы избежать дополнительных запросов
+               $daysForClinic = $scheduleDays
+                     ->get($schedule->id, collect()) // Ищем по ID расписания
+                     ->get($clinic->id, collect());  // Затем по ID клиники
+   
+               // Если есть дни для этой клиники
+               if ($daysForClinic->isNotEmpty()) {
+                     // Формируем контент для всех текущих дней
+                     $content = $currentDays->map(function ($day) use ($daysForClinic, $scheduleTimes) {
+                        // Ищем день с такой же датой
+                        $matchingDay = $daysForClinic->firstWhere('date', $day->date);
+                        
+                        // Формируем объект дня
+                        return [
+                           "id" => $day->id,
+                           "date" => $day->date,
+                           "time" => $matchingDay 
+                                 ? $scheduleTimes->get($matchingDay->id, collect())->pluck('name')->all()
+                                 : [], // Если нет совпадения - пустой массив
+                        ];
+                     })->all();
+   
+                     $weeks[] = (object) [
+                        "clinicId" => $clinic->id,
+                        "status" => true,
+                        "content" => $content,
+                     ];
+               } else {
+                     // Если нет дней для этой клиники
+                     $weeks[] = (object) [
+                        "clinicId" => $clinic->id,
+                        "status" => false,
+                        "content" => $currentDays->map(function ($day) {
+                           return [
+                                 "id" => $day->id,
+                                 "date" => $day->date,
+                                 "time" => [],
+                           ];
+                        })->all(),
+                     ];
+               }
+            }
+   
+            // Сохраняем сформированные данные в объект расписания
+            $schedule->weeks = $weeks;
+         }
+   
+         return response()->json([
+            "success" => true,
+            "debug" => false,
+            "message" => "Данные получены.",
+            "result" => [
+               "currentDays" => $currentDays,
+               "shedules" => $schedules,
+               "sheduleClinics" => $scheduleClinics,
+               "specialists" => $specialists,
+            ],
+         ], 200);
+      } catch (Throwable $e) {
+         return response()->json([
+            "success" => false,
+            "debug" => false,
+            "message" => "Произошла ошибка.",
+            "result" => null,
+         ], 500);
+      };
+   }
+
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                     О НАС                         |*/
    /* |___________________________________________________|*/
@@ -981,6 +1101,7 @@ class HomeController extends Controller
          ],
       ]);   
    }
+
    /* Получение контактов и клиник */
    public function getContactsClinicsAll(Request $request) {
       $contacts = Contact::all();
@@ -1030,114 +1151,6 @@ class HomeController extends Controller
          "message" => "Успешно.",
          "data" => $contacts,
       ]);   
-   }
-   /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-   /* |                   РАСПИСАНИЕ                      |*/
-   /* |___________________________________________________|*/
-   /* Получение расписания */
-   public function getShedulesAll(Request $request) {
-      // Загрузка ВСЕХ основных данных сразу 
-      $schedules = Shedule::all(); 
-      $scheduleClinics = ShedulesClinic::all();
-      $currentDays = ShedulesCurrentDay::all();
-
-      // Подготовка ID для массовой загрузки связанных данных
-      $scheduleIds = $schedules->pluck('id');
-      $clinicIds = $scheduleClinics->pluck('id'); 
-
-      // Загрузка ВСЕХ дней расписаний за ОДИН запрос
-      $scheduleDays = ShedulesDay::whereIn('sheduleId', $scheduleIds)
-         ->whereIn('clinicId', $clinicIds)
-         ->get()
-         ->groupBy(['sheduleId', 'clinicId']);
-
-
-      // Загрузка ВСЕХ времен для дней за ОДИН запрос
-      $dayIds = $scheduleDays->flatten()->pluck('id'); // Получаем все ID дней
-      $scheduleTimes = ShedulesDaysTime::whereIn('dayId', $dayIds)
-         ->get()
-         ->groupBy('dayId');
-
-      $specialists = Specialist::all()->groupBy(function ($specialist) {
-         return $specialist->family . ' ' . $specialist->name . ' ' . $specialist->surname;
-      });
-
-      // Создаем "карту" текущих дней для мгновенного поиска по дате
-      $currentDaysMap = $currentDays->keyBy('date');
-
-      // Основной цикл по расписаниям
-      foreach ($schedules as $schedule) {
-         $weeks = []; // Здесь будем хранить данные для каждой клиники
-
-         /* Получение специалистов */
-         $sheduleSpecialits = $specialists[$schedule->name] ?? null;
-         if($sheduleSpecialits) {
-            $schedule->image = Storage::url('specialists/' . $sheduleSpecialits[0]->filename);
-            $schedule->link = $this->makeUrl($sheduleSpecialits[0]->family . ' ' . $sheduleSpecialits[0]->name . ' ' . $sheduleSpecialits[0]->surname);
-         } else { 
-            $schedule->image = null;
-         }
-         
-         // Цикл по клиникам для текущего расписания
-         foreach ($scheduleClinics as $clinic) {
-            // Получаем дни для данной пары (расписание + клиника)
-            // Используем группировку, чтобы избежать дополнительных запросов
-            $daysForClinic = $scheduleDays
-                  ->get($schedule->id, collect()) // Ищем по ID расписания
-                  ->get($clinic->id, collect());  // Затем по ID клиники
-
-            // Если есть дни для этой клиники
-            if ($daysForClinic->isNotEmpty()) {
-                  // Формируем контент для всех текущих дней
-                  $content = $currentDays->map(function ($day) use ($daysForClinic, $scheduleTimes) {
-                     // Ищем день с такой же датой
-                     $matchingDay = $daysForClinic->firstWhere('date', $day->date);
-                     
-                     // Формируем объект дня
-                     return [
-                        "id" => $day->id,
-                        "date" => $day->date,
-                        "time" => $matchingDay 
-                              ? $scheduleTimes->get($matchingDay->id, collect())->pluck('name')->all()
-                              : [], // Если нет совпадения - пустой массив
-                     ];
-                  })->all();
-
-                  $weeks[] = (object) [
-                     "clinicId" => $clinic->id,
-                     "status" => true,
-                     "content" => $content,
-                  ];
-            } else {
-                  // Если нет дней для этой клиники
-                  $weeks[] = (object) [
-                     "clinicId" => $clinic->id,
-                     "status" => false,
-                     "content" => $currentDays->map(function ($day) {
-                        return [
-                              "id" => $day->id,
-                              "date" => $day->date,
-                              "time" => [],
-                        ];
-                     })->all(),
-                  ];
-            }
-         }
-
-         // Сохраняем сформированные данные в объект расписания
-         $schedule->weeks = $weeks;
-      }
-
-      return response()->json([
-         "status" => true,
-         "message" => "Успешно!",
-         "data" => (object) [
-            "currentDays" => $currentDays,
-            "shedules" => $schedules,
-            "sheduleClinics" => $scheduleClinics,
-            "specialists" => $specialists,
-         ],
-      ]);
    }
 
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/

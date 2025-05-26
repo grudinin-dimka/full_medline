@@ -73,7 +73,7 @@ import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vu
 
 import Icon from "../../../components/modules/icon/Icon.vue";
 
-import axios from "axios";
+import api from "../../../services/api";
 
 export default {
 	components: {
@@ -199,57 +199,25 @@ export default {
 		updateSheduleFromServe() {
 			this.disabled.schedule.save = true;
 
-			axios({
+			api({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `save-shedules-all`,
-				headers: {
-					Accept: "application/json",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-				data: {
-					type: "manual",
-				},
-			})
-				.then((response) => {
-					this.$store.commit("addDebugger", {
-						title: "Успешно!",
-						body: "Расписание обновлено.",
-						type: "completed",
-					});
-				})
-				.catch((error) => {
-					this.$store.commit("addDebugger", {
-						title: "Ошибка.",
-						body: error,
-						type: "error",
-					});
-				})
-				.finally(() => {
-					this.disabled.schedule.save = false;
-				});
+				url: this.$store.getters.urlApi + `save-shedules-all/manual`,
+			}).finally(() => {
+				this.disabled.schedule.save = false;
+			});
 		},
 	},
 	mounted() {
-		axios({
+		api({
 			method: "get",
-			headers: {
-				Accept: "application/json",
-				Authorization: `Bearer ${localStorage.getItem("token")}`,
-			},
-			url: `${this.$store.getters.urlApi}` + `get-shedules-all`,
+			url: this.$store.getters.urlApi + `get-shedules-all`,
 		})
 			.then((response) => {
-				if (response.data.status) {
-					this.tableDays.body = response.data.data.currentDays;
-					this.tableCLinics.body = response.data.data.sheduleClinics;
-					this.tableSchedules.body = response.data.data.shedules;
-				} else {
-					this.$store.commit("addDebugger", {
-						title: "Ошибка.",
-						body: response.data.message,
-						type: "error",
-					});
-				}
+				if (!response) return;
+
+				this.tableDays.body = response.data.result.currentDays;
+				this.tableCLinics.body = response.data.result.sheduleClinics;
+				this.tableSchedules.body = response.data.result.shedules;
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {
