@@ -38,7 +38,7 @@ import TipTap from "../../../components/modules/Tiptap.vue";
 
 import Empty from "../../../components/modules/Empty.vue";
 
-import axios from "axios";
+import api from "../../../services/api";
 import files from "../../../services/files";
 
 export default {
@@ -85,20 +85,14 @@ export default {
 		},
 	},
 	mounted() {
-		axios({
+		api({
 			method: "get",
 			url: `${this.$store.getters.urlApi}` + `get-videos-all`,
 		})
 			.then((response) => {
-				if (response.data.status) {
-					this.videos = response.data.data;
-				} else {
-					this.$store.commit("addDebugger", {
-						title: "Ошибка.",
-						body: response.data.message,
-						type: "error",
-					});
-				}
+				if (!response) return;
+
+				this.videos = response.data.result;
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {

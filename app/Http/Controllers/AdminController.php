@@ -2714,13 +2714,17 @@ class AdminController extends Controller
    public function saveVideoChanges(Request $request) {
       $validator = Validator::make($request->all(), [
          'videos' => 'nullable|array',
+      ], [
+         'array' => 'Поле :attribute должно быть массивом.',
       ]);
 
       if ($validator->fails()) {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
+            "errors" => $validator->errors(),
             "message" => "Некорректные данные.",
-            "data" => null,
+            "result" => null,
          ]);
       };
 
@@ -2794,9 +2798,10 @@ class AdminController extends Controller
       };
 
       return response()->json([
-         "status" => true,
+         "success" => true,
+         "debug" => true,
          "message" => "Данные обновлены.",
-         "data" => $arrayID,
+         "result" => $arrayID,
       ]);
    }
 }

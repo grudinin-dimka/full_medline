@@ -98,12 +98,7 @@
 					@click="deleteItem"
 					v-if="!currentVideo.data.delete.value && !currentVideo.data.create.value"
 				>
-					<Icon
-						:name="'delete'"
-						:fill="'white'"
-						:width="'22px'"
-						:height="'22px'"
-					/>
+					<Icon :name="'delete'" :fill="'white'" :width="'22px'" :height="'22px'" />
 					Удалить
 				</button-remove>
 
@@ -239,10 +234,10 @@ import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue"
 
 import Icon from "../../../components/modules/icon/Icon.vue";
 
+import api from "../../../services/api";
 import shared from "../../../services/shared";
 import validate from "../../../services/validate";
 import files from "../../../services/files";
-import axios from "axios";
 
 export default {
 	components: {
@@ -536,31 +531,24 @@ export default {
 
 			this.disabled.video.upload = true;
 
-			axios({
+			api({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `upload-file`,
+				url: this.$store.getters.urlApi + `upload-file`,
 				headers: {
 					"Content-Type": "multipart/form-data",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: formData,
 			})
 				.then((response) => {
-					if (response.data.status) {
-						this.currentVideo.data.video.value = files.basename(response.data.data);
-						this.currentVideo.data.path.value = response.data.data;
+					if (!response) return;
 
-						// Перезагружаем видео
-						this.reloadVideo();
+					this.currentVideo.data.video.value = files.basename(response.data.result);
+					this.currentVideo.data.path.value = response.data.result;
 
-						this.$refs.modalVideoUpload.close();
-					} else {
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "error",
-						});
-					}
+					// Перезагружаем видео
+					this.reloadVideo();
+
+					this.$refs.modalVideoUpload.close();
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
@@ -578,36 +566,23 @@ export default {
 		saveVideosChanges() {
 			this.disabled.video.save = true;
 
-			axios({
+			api({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `save-videos-changes`,
+				url: this.$store.getters.urlApi + `save-videos-changes`,
 				headers: {
 					Accept: "application/json",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: {
 					videos: this.videos,
 				},
 			})
 				.then((response) => {
-					if (response.data.status) {
-						shared.updateId(this.videos, response.data.data);
-						shared.clearDeletes(this.videos);
-						shared.clearFlags(this.videos);
-						shared.updateOrders(this.videos);
+					if (!response) return;
 
-						this.$store.commit("addDebugger", {
-							title: "Успешно!",
-							body: response.data.message,
-							type: "completed",
-						});
-					} else {
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "error",
-						});
-					}
+					shared.updateId(this.videos, response.data.result);
+					shared.clearDeletes(this.videos);
+					shared.clearFlags(this.videos);
+					shared.updateOrders(this.videos);
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
@@ -639,24 +614,18 @@ export default {
 		},
 	},
 	mounted() {
-		axios({
+		api({
 			method: "get",
-			url: `${this.$store.getters.urlApi}` + `get-videos-all`,
+			url: this.$store.getters.urlApi + `get-videos-all`,
 		})
 			.then((response) => {
-				if (response.data.status) {
-					this.videos = response.data.data;
+				if (!response) return;
 
-					for (let i = 0; i < this.videos.length; i++) {
-						this.videos[i].create = false;
-						this.videos[i].delete = false;
-					}
-				} else {
-					this.$store.commit("addDebugger", {
-						title: "Ошибка.",
-						body: response.data.message,
-						type: "error",
-					});
+				this.videos = response.data.result;
+
+				for (let i = 0; i < this.videos.length; i++) {
+					this.videos[i].create = false;
+					this.videos[i].delete = false;
 				}
 			})
 			.catch((error) => {

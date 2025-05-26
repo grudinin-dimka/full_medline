@@ -1420,17 +1420,19 @@ class HomeController extends Controller
          };
       } catch (Throwable $th) {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
             "message" => "Не удалось получить данные.",
-            "data" => [],
-         ]);            
+            "result" => null,
+         ], 500);            
       }
 
       return response()->json([
-         "status" => true,
-         "message" => "Данные успешно получены.",
-         "data" => $videos,
-      ]);
+         "success" => true,
+         "debug" => false,
+         "message" => "Не удалось получить данные.",
+         "result" => $videos,
+      ], 200);
    }
 
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
