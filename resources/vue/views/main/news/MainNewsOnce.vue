@@ -26,10 +26,10 @@ import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import Block from "../../../components/ui/main/Block.vue";
 
-import TipTap from "../../../components/modules/TipTap.vue";
+import TipTap from "../../../components/modules/Tiptap.vue";
 import Empty from "../../../components/modules/Empty.vue";
 
-import axios from "axios";
+import api from "../../../services/api";
 
 export default {
 	components: {
@@ -71,9 +71,9 @@ export default {
 		},
 	},
 	mounted() {
-		axios({
+		api({
 			method: "post",
-			url: `${this.$store.getters.urlApi}` + `get-news-once-without`,
+			url: this.$store.getters.urlApi + `get-news-once-without`,
 			headers: {
 				Accept: "application/json",
 			},
@@ -83,17 +83,11 @@ export default {
 			},
 		})
 			.then((response) => {
-				if (response.data.status) {
-					this.title = response.data.data.title;
-					this.description = response.data.data.description;
-					this.path = response.data.data.path;
-				} else {
-					this.$store.commit("addDebugger", {
-						title: "Ошибка.",
-						body: response.data.message,
-						type: "error",
-					});
-				}
+				if (!response) return;
+
+				this.title = response.data.result.title;
+				this.description = response.data.result.description;
+				this.path = response.data.result.path;
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {

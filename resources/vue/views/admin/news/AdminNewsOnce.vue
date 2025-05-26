@@ -201,7 +201,7 @@ import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vu
 
 import Icon from "../../../components/modules/icon/Icon.vue";
 
-import axios from "axios";
+import api from "../../../services/api";
 import validate from "../../../services/validate";
 
 export default {
@@ -379,45 +379,32 @@ export default {
 
 			this.disabled.news.add = true;
 
-			axios({
+			api({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `add-news`,
+				url: this.$store.getters.urlApi + `add-news`,
 				headers: {
 					ContentType: "multipart/form-data",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: formData,
 			})
 				.then((response) => {
-					if (response.data.status) {
-						this.currentNews.data.id.value = response.data.data.id;
-						this.currentNews.data.image.value = response.data.data.image;
-						this.currentNews.data.path.value = response.data.data.path;
-						this.currentNews.data.title.value = response.data.data.title;
-						this.currentNews.data.description.value = response.data.data.description;
+					if (!response) return;
 
-						this.hasFile = false;
+					this.currentNews.data.id.value = response.data.result.id;
+					this.currentNews.data.image.value = response.data.result.image;
+					this.currentNews.data.path.value = response.data.result.path;
+					this.currentNews.data.title.value = response.data.result.title;
+					this.currentNews.data.description.value = response.data.result.description;
 
-						this.$router.push({
-							name: "enews-once",
-							params: {
-								date: response.data.data.url_date,
-								time: response.data.data.url_time,
-							},
-						});
+					this.hasFile = false;
 
-						this.$store.commit("addDebugger", {
-							title: "Успешно!",
-							body: response.data.message,
-							type: "completed",
-						});
-					} else {
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "error",
-						});
-					}
+					this.$router.push({
+						name: "enews-once",
+						params: {
+							date: response.data.result.url_date,
+							time: response.data.result.url_time,
+						},
+					});
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
@@ -476,37 +463,24 @@ export default {
 
 			this.disabled.news.save = true;
 
-			axios({
+			api({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `save-news-changes-once`,
+				url: this.$store.getters.urlApi + `save-news-changes-once`,
 				headers: {
 					ContentType: "multipart/form-data",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: formData,
 			})
 				.then((response) => {
-					if (response.data.status) {
-						for (let key in response.data.data) {
-							this.currentNews.data[key].value = response.data.data[key];
-						}
+					if (!response) return;
 
-						this.hasFile = false;
-						this.$refs.image.value = "";
-						this.$refs.imageText.innerHTML = "";
-
-						this.$store.commit("addDebugger", {
-							title: "Успешно!",
-							body: response.data.message,
-							type: "completed",
-						});
-					} else {
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "error",
-						});
+					for (let key in response.data.result) {
+						this.currentNews.data[key].value = response.data.result[key];
 					}
+
+					this.hasFile = false;
+					this.$refs.image.value = "";
+					this.$refs.imageText.innerHTML = "";
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
@@ -523,33 +497,20 @@ export default {
 		publishNews() {
 			this.disabled.news.publish = true;
 
-			axios({
+			api({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `publish-news-once`,
+				url: this.$store.getters.urlApi + `publish-news-once`,
 				headers: {
 					ContentType: "multipart/form-data",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: {
 					id: this.currentNews.data.id.value,
 				},
 			})
 				.then((response) => {
-					if (response.data.status) {
-						this.currentNews.data.hide.value = response.data.data;
+					if (!response) return;
 
-						this.$store.commit("addDebugger", {
-							title: "Успешно!",
-							body: response.data.message,
-							type: "completed",
-						});
-					} else {
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "error",
-						});
-					}
+					this.currentNews.data.hide.value = response.data.result;
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
@@ -567,12 +528,11 @@ export default {
 		if (this.$route.params.date === "new" || this.$route.params.time === "new") {
 			this.loading.loader.news = false;
 		} else {
-			axios({
+			api({
 				method: "post",
 				url: `${this.$store.getters.urlApi}` + `get-news-once`,
 				headers: {
 					Accept: "application/json",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: {
 					date: this.$route.params.date,
@@ -580,19 +540,13 @@ export default {
 				},
 			})
 				.then((response) => {
-					if (response.data.status) {
-						for (let key in response.data.data) {
-							this.currentNews.data[key].value = response.data.data[key];
-						}
+					if (!response) return;
 
-						this.loading.loader.news = false;
-					} else {
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "error",
-						});
+					for (let key in response.data.result) {
+						this.currentNews.data[key].value = response.data.result[key];
 					}
+
+					this.loading.loader.news = false;
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {

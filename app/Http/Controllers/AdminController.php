@@ -2409,18 +2409,26 @@ class AdminController extends Controller
             File::image()
                ->types(['png', 'webp', 'jpg', 'jpeg'])
                ->max(5 * 1024)
-               ->dimensions(Rule::dimensions()->maxWidth(3000)->maxHeight(3000)),
+               ->dimensions(Rule::dimensions()->maxWidth(2000)->maxHeight(2000)),
          ],
          'title' => 'required|string',
          'description' => 'required|string',
+      ], [
+         'required' => 'Поле :attribute обязательно для заполнения.',
+         'string' => 'Поле :attribute должно быть строкой.',
+         'image.types' => 'Допустимые типы файлов: png, webp, jpg, jpeg.',
+         'image.max' => 'Максимальный размер 5MB.',
+         'image.dimensions' => 'Максимальное разрешение 2000x2000px.',
       ]);
 
       if ($validator->fails()) {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
+            "errors" => $validator->errors(),
             "message" => "Некорректные данные.",
-            "data" => null,
-         ]);
+            "result" => null,
+         ], 422);
       };
 
       $path = request()->file('image')->store(
@@ -2429,10 +2437,11 @@ class AdminController extends Controller
 
       if (!$path) {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
             "message" => "Не удалось сохранить изображение.",
-            "data" => null,
-         ]);
+            "result" => null,
+         ], 500);
       };
 
       try {
@@ -2443,16 +2452,18 @@ class AdminController extends Controller
          ]);
       } catch (Throwable $th) {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
             "message" => "Не удалось добавить новость.",
-            "data" => null,
-         ]);
+            "result" => null,
+         ], 500);
       }
 
       return response()->json([
-         "status" => true,
+         "success" => true,
+         "debug" => true,
          "message" => "Новость добавлена.",
-         "data" => [
+         "result" => [
             "id" => $news->id,
             "path" => Storage::url($path),
             "image" => basename($path),
@@ -2461,7 +2472,7 @@ class AdminController extends Controller
             "url_date" => Carbon::parse($news->created_at)->format('d.m.Y'),
             "url_time" => Carbon::parse($news->created_at)->format('H:i:s'),
          ],
-      ]);
+      ], 200);
    }
 
    /* Изменение новости */
@@ -2473,20 +2484,26 @@ class AdminController extends Controller
          ],
          'title' => 'required|string',
          'description' => 'required|string',
+      ], [
+         'required' => 'Поле :attribute обязательно для заполнения.',
+         'string' => 'Поле :attribute должно быть строкой.',
+         'exists' => 'Такой новости не существует (:attribute).',
       ]);
 
       if ($validator->fails()) {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
+            "errors" => $validator->errors(),
             "message" => "Некорректные данные.",
-            "data" => null,
-         ]);
+            "result" => null,
+         ], 422);
       };
 
       $path = null;
       
       if ($request->hasFile('image')) {
-         $validated = validator($request->all(), [
+         $validatorImage = Validator::make($request->all(), [
             'image' => [
                'required',
                File::image()
@@ -2494,14 +2511,21 @@ class AdminController extends Controller
                   ->max(5 * 1024)
                   ->dimensions(Rule::dimensions()->maxWidth(2000)->maxHeight(2000)),
             ],
+         ], [
+            'image.required' => 'Файл не загружен.',
+            'image.types' => 'Допустимые типы файлов: png, webp, jpg, jpeg.',
+            'image.max' => 'Максимальный размер 5MB.',
+            'image.dimensions' => 'Максимальное разрешение 2000x2000px.',
          ]);
 
-         if ($validated->fails()) {
+         if ($validatorImage->fails()) {
             return response()->json([
-               "status" => false,
-               "message" => "Допустимые типы файлов: png, webp, jpg, jpeg.\nМаксимальный размер 5MB.\nМаксимальное разрешение 2000x2000px.",
-               "data" => null,
-            ]);
+               "success" => false,
+               "debug" => true,
+               "errors" => $validatorImage->errors(),
+               "message" => "Некорректные данные.",
+               "result" => null,
+            ], 422);
          };
 
          $path = request()->file('image')->store(
@@ -2510,10 +2534,12 @@ class AdminController extends Controller
 
          if (!$path) {
             return response()->json([
-               "status" => false,
+               "success" => false,
+               "debug" => true,
+               "errors" => $validator->errors(),
                "message" => "Не удалось сохранить изображение.",
-               "data" => null,
-            ]);
+               "result" => null,
+            ], 500);
          };
       };
 
@@ -2527,23 +2553,25 @@ class AdminController extends Controller
          ]);  
       } catch (Throwable $th) {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
             "message" => "Не удалось изменить новость.",
-            "data" => null,
-         ]);
+            "result" => null,
+         ], 500);
       };
 
       return response()->json([
-         "status" => true,
+         "success" => true,
+         "debug" => true,
          "message" => "Новость изменена.",
-         "data" => [
+         "result" => [
             "id" => $news->id,
             "path" => $path ? Storage::url($path) : Storage::url('news/' . $news->image),
             "image" => $path ? basename($path) : $news->image,
             "title" => $request->title,
             "description" => $request->description,
          ],
-      ]);
+      ], 200);
    }
 
    /* Публикация новости */
@@ -2553,14 +2581,19 @@ class AdminController extends Controller
             'required',
             Rule::exists('news', 'id'),
          ],
+      ], [
+         'required' => 'Поле :attribute обязательно для заполнения.',
+         'exists' => 'Такой новости не существует (:attribute).',
       ]);
 
       if ($validator->fails()) {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
+            "errors" => $validator->errors(),
             "message" => "Некорректные данные.",
-            "data" => null,
-         ]);
+            "result" => null,
+         ], 422);
       };
 
       $news = News::find($request->id);
@@ -2572,31 +2605,38 @@ class AdminController extends Controller
          ]);  
       } catch (Throwable $th) {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
             "message" => "Не удалось опубликовать новость.",
-            "data" => null,
-         ]);
+            "result" => null,
+         ], 500);
       };
 
       return response()->json([
-         "status" => true,
+         "success" => true,
+         "debug" => true,
          "message" => $message,
-         "data" => $news->hide,
-      ]);
+         "result" => $news->hide,
+      ], 200);
    }
 
    /* Изменение новости */
    public function saveNewsChangesAll(Request $request) {
       $validator = Validator::make($request->all(), [
          'news' => 'nullable|array',
+      ], [
+         'required' => 'Поле :attribute обязательно для заполнения.',
+         'array' => 'Поле :attribute должно быть массивом.',
       ]);
 
       if ($validator->fails()) {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
+            "errors" => $validator->errors(),
             "message" => "Некорректные данные.",
-            "data" => null,
-         ]);
+            "result" => null,
+         ], 422);
       };
 
       // Транзакция
@@ -2649,19 +2689,21 @@ class AdminController extends Controller
          DB::commit();
 
          return response()->json([
-            "status" => true,
+            "success" => true,
+            "debug" => true,
             "message" => "Новости изменены.",
-            "data" => null,
-         ]);
+            "result" => null,
+         ], 200);
       } catch (Throwable $e) {
          // Отмена транзакции
          DB::rollBack();         
          
          return response()->json([
             "success" => false,
+            "debug" => true,
             "message" => $e->getMessage(),
-            "data" => null,
-         ]);
+            "result" => null,
+         ], 500);
       };
    }
 

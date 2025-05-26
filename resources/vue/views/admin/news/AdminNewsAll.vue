@@ -63,7 +63,7 @@ import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vu
 import Icon from "../../../components/modules/icon/Icon.vue";
 
 import shared from "../../../services/shared";
-import axios from "axios";
+import api from "../../../services/api";
 
 export default {
 	components: {
@@ -239,34 +239,21 @@ export default {
 		saveNewsAll() {
 			this.disabled.news.save = true;
 
-			axios({
+			api({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `save-news-changes-all`,
+				url: this.$store.getters.urlApi + `save-news-changes-all`,
 				headers: {
 					Accept: "application/json",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: {
 					news: this.table.body,
 				},
 			})
 				.then((response) => {
-					if (response.data.status) {
-						shared.clearDeletes(this.table.body);
-						shared.clearFlags(this.table.body);
+					if (!response) return;
 
-						this.$store.commit("addDebugger", {
-							title: "Успешно!",
-							body: response.data.message,
-							type: "completed",
-						});
-					} else {
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "error",
-						});
-					}
+					shared.clearDeletes(this.table.body);
+					shared.clearFlags(this.table.body);
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
@@ -281,29 +268,23 @@ export default {
 		},
 	},
 	mounted() {
-		axios({
+		api({
 			method: "get",
-			url: `${this.$store.getters.urlApi}` + `get-news-all`,
+			url: this.$store.getters.urlApi + `get-news-all`,
 		})
 			.then((response) => {
-				if (response.data.status) {
-					this.table.body = response.data.data;
+				if (!response) return;
 
-					for (let i = 0; i < this.table.body.length; i++) {
-						const tempDiv = document.createElement("div");
-						tempDiv.innerHTML = this.table.body[i].title;
-						const plainText = tempDiv.textContent || tempDiv.innerText;
+				this.table.body = response.data.result;
 
-						this.table.body[i].title = plainText;
-						this.table.body[i].create = false;
-						this.table.body[i].delete = false;
-					}
-				} else {
-					this.$store.commit("addDebugger", {
-						title: "Ошибка.",
-						body: response.data.message,
-						type: "error",
-					});
+				for (let i = 0; i < this.table.body.length; i++) {
+					const tempDiv = document.createElement("div");
+					tempDiv.innerHTML = this.table.body[i].title;
+					const plainText = tempDiv.textContent || tempDiv.innerText;
+
+					this.table.body[i].title = plainText;
+					this.table.body[i].create = false;
+					this.table.body[i].delete = false;
 				}
 			})
 			.catch((error) => {

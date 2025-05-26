@@ -1169,31 +1169,38 @@ class HomeController extends Controller
          };
       } catch (Throwable $th) {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
             "message" => "Не удалось получить данные.",
-            "data" => [],
-         ]);            
+            "result" => null,
+         ], 500);            
       }
 
       return response()->json([
-         "status" => true,
-         "message" => "Данные успешно получены.",
-         "data" => $news,
-      ]);
+         "success" => true,
+         "debug" => false,
+         "message" => "Данные получены.",
+         "result" => $news,
+      ], 200);
    }
    
    /* Получение всех новостей */
    public function getNewsShort(Request $request) {
       $validator = Validator::make($request->all(), [
          'limit' => 'required|integer',
+      ], [
+         'required' => 'Поле :attribute обязательно для заполнения.',
+         'integer' => 'Поле :attribute должно быть числом.',
       ]);
 
       if ($validator->fails()) {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
+            "errors" => $validator->errors(),
             "message" => "Некорректные данные.",
-            "data" => [],
-         ]);
+            "result" => null,
+         ], 422);
       };
 
       try {
@@ -1207,20 +1214,22 @@ class HomeController extends Controller
          };
       } catch (Throwable $th) {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
             "message" => "Не удалось получить данные.",
-            "data" => [],
-         ]);            
+            "result" => null,
+         ], 500);            
       }
 
       return response()->json([
-         "status" => true,
-         "message" => "Данные успешно получены.",
-         "data" => [
+         "success" => true,
+         "debug" => false,
+         "message" => "Данные получены.",
+         "result" => [
             "news" => $news,
             "count" => News::all()->where('hide', 1)->count(),
          ],
-      ]);
+      ], 200);
    }
 
    /* Получение одной новости */
@@ -1228,38 +1237,46 @@ class HomeController extends Controller
       $validator = Validator::make($request->all(), [
          'date' => 'required|date_format:d.m.Y',
          'time' => 'required|date_format:H:i:s',
+      ], [
+         'required' => 'Поле :attribute обязательно для заполнения.',
+         'date_format' => 'Некорректный формат поля :attribute.',
       ]);
 
       if ($validator->fails()) {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
+            "errors" => $validator->errors(),
             "message" => "Некорректные данные.",
-            "data" => null,
-         ]);
+            "result" => null,
+         ], 422);
       };
 
       try {
          $news = News::whereDate('created_at', Carbon::parse($request->date))->whereTime('created_at', '=', $request->time)->first();         
       } catch (Throwable $th) {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
             "message" => "Не удалось получить данные.",
-            "data" => null,
-         ]);
+            "result" => null,
+         ], 500);
       };
 
       if (!$news) {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
             "message" => "Такой новости нет.",
-            "data" => null,
-         ]);
+            "result" => null,
+         ], 500);
       };
 
       return response()->json([
-         "status" => true,
-         "message" => "Новости получены.",
-         "data" => [
+         "success" => true,
+         "debug" => false,
+         "message" => "Данные получены.",
+         "result" => [
             "id" => $news->id,
             "path" => Storage::url('news/' . $news->image),
             "image" => $news->image,
@@ -1267,7 +1284,7 @@ class HomeController extends Controller
             "description" => $news->description,
             "hide" => $news->hide,
          ],
-      ]);
+      ], 200);
    }
 
    /* Получение одной новости */
@@ -1275,14 +1292,19 @@ class HomeController extends Controller
       $validator = Validator::make($request->all(), [
          'date' => 'required|date_format:d.m.Y',
          'time' => 'required|date_format:H:i:s',
+      ], [
+         'required' => 'Поле :attribute обязательно для заполнения.',
+         'date_format' => 'Некорректный формат поля :attribute.',
       ]);
 
       if ($validator->fails()) {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
+            "errors" => $validator->errors(),
             "message" => "Некорректные данные.",
-            "data" => null,
-         ]);
+            "result" => null,
+         ], 422);
       };
 
       try { 
@@ -1290,32 +1312,36 @@ class HomeController extends Controller
          
          if (!$news->hide) {
             return response()->json([
-               "status" => false,
+               "success" => false,
+               "debug" => true,
                "message" => "Такой новости нет.",
-               "data" => null,
-            ]);
+               "result" => null,
+            ], 500);
          }
       
       } catch (Throwable $th) {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
             "message" => "Не удалось получить данные.",
-            "data" => null,
-         ]);
+            "result" => null,
+         ], 500);
       };
       
       if (!$news) {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
             "message" => "Такой новости нет.",
-            "data" => null,
-         ]);
+            "result" => null,
+         ], 500);
       };
 
       return response()->json([
-         "status" => true,
+         "success" => true,
+         "debug" => false,
          "message" => "Новости получены.",
-         "data" => [
+         "result" => [
             "id" => $news->id,
             "path" => Storage::url('news/' . $news->image),
             "image" => $news->image,
@@ -1323,7 +1349,7 @@ class HomeController extends Controller
             "description" => $news->description,
             "hide" => $news->hide,
          ],
-      ]);
+      ], 200);
    }
 
    /* Получение одной новости */
@@ -1332,14 +1358,20 @@ class HomeController extends Controller
          'date' => 'required|date_format:d.m.Y',
          'time' => 'required|date_format:H:i:s',
          'limit' => 'required|integer',
+      ], [
+         'required' => 'Поле :attribute обязательно для заполнения.',
+         'date_format' => 'Некорректный формат поля :attribute.',
+         'integer' => 'Поле :attribute должно быть числом.',
       ]);
 
       if ($validator->fails()) {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
+            "errors" => $validator->errors(),
             "message" => "Некорректные данные.",
-            "data" => null,
-         ]);
+            "result" => null,
+         ], 422);
       };
 
       $date = Carbon::parse($request->date . ' ' . $request->time);
@@ -1357,16 +1389,18 @@ class HomeController extends Controller
          };
       } catch (Throwable $th) {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
             "message" => "Не удалось получить данные.",
-            "data" => null,
-         ]);
+            "result" => null,
+         ], 500);
       };
 
       return response()->json([
-         "status" => true,
+         "success" => true,
+         "debug" => false,
          "message" => "Новости получены.",
-         "data" => [
+         "result" => [
             "news" => $newsSorted,
             "count" => News::all()->where('hide', 1)->count(),
          ],

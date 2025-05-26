@@ -42,7 +42,7 @@ import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vu
 import Empty from "../../../components/modules/Empty.vue";
 import MainNewsItem from "./MainNewsItem.vue";
 
-import axios from "axios";
+import api from "../../../services/api";
 
 export default {
 	components: {
@@ -101,9 +101,9 @@ export default {
 		loadMoreNews() {
 			this.disabled.news.more = true;
 
-			axios({
+			api({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `get-news-more`,
+				url: this.$store.getters.urlApi + `get-news-more`,
 				headers: {
 					Accept: "application/json",
 				},
@@ -114,16 +114,10 @@ export default {
 				},
 			})
 				.then((response) => {
-					if (response.data.status) {
-						this.news.push(...response.data.data.news);
-						this.count = response.data.data.count;
-					} else {
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "error",
-						});
-					}
+					if (!response) return;
+
+					this.news.push(...response.data.result.news);
+					this.count = response.data.result.count;
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
@@ -138,9 +132,9 @@ export default {
 		},
 	},
 	mounted() {
-		axios({
+		api({
 			method: "post",
-			url: `${this.$store.getters.urlApi}` + `get-news-short`,
+			url: this.$store.getters.urlApi + `get-news-short`,
 			headers: {
 				Accept: "application/json",
 			},
@@ -149,16 +143,10 @@ export default {
 			},
 		})
 			.then((response) => {
-				if (response.data.status) {
-					this.news = response.data.data.news;
-					this.count = response.data.data.count;
-				} else {
-					this.$store.commit("addDebugger", {
-						title: "Ошибка.",
-						body: response.data.message,
-						type: "error",
-					});
-				}
+				if (!response) return;
+
+				this.news = response.data.result.news;
+				this.count = response.data.result.count;
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {
