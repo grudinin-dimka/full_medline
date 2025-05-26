@@ -3,7 +3,7 @@
 	<Modal ref="modal" :settings="modal">
 		<template
 			#title
-			v-if="modal.type == 'edit' && !currentInfoBlock.data.delete.value && !modal.style.create"
+			v-if="modal.values.look == 'default' && !currentInfoBlock.data.delete.value"
 		>
 			<Icon
 				:name="'arrow'"
@@ -29,7 +29,7 @@
 		</template>
 
 		<template #title v-else>
-			{{ modal.title }}
+			{{ modal.values.title }}
 		</template>
 
 		<template #body>
@@ -336,7 +336,7 @@ import ContainerInput from "../../../components/ui/admin/containers/ContainerInp
 import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
 import ContainerTextareaOnce from "../../../components/ui/admin/containers/textarea/ContainerTextareaOnce.vue";
 
-import axios from "axios";
+import api from "../../../services/api";
 import shared from "../../../services/shared";
 import files from "../../../services/files";
 import sorted from "../../../services/sorted";
@@ -364,8 +364,6 @@ export default {
 		ContainerInput,
 		ContainerInputOnce,
 		ContainerTextareaOnce,
-
-		axios,
 	},
 	data() {
 		return {
@@ -605,59 +603,44 @@ export default {
 				this.disabled.image.update = true;
 			}
 
-			axios({
+			api({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `upload-file`,
+				url: this.$store.getters.urlApi + `upload-file`,
 				headers: {
 					"Content-Type": "multipart/form-data",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: formData,
 			})
 				.then((response) => {
-					if (response.data.status) {
-						try {
-							switch (this.currentImage.data.file.value) {
-								case "imageOne":
-									this.currentInfoBlock.data.pathOne.value = response.data.data;
-									this.currentInfoBlock.data.imageOne.value = files.basename(
-										response.data.data
-									);
-									break;
-								case "imageTwo":
-									this.currentInfoBlock.data.pathTwo.value = response.data.data;
-									this.currentInfoBlock.data.imageTwo.value = files.basename(
-										response.data.data
-									);
-									break;
-								case "imageThree":
-									this.currentInfoBlock.data.pathThree.value = response.data.data;
-									this.currentInfoBlock.data.imageThree.value = files.basename(
-										response.data.data
-									);
-									break;
-							}
+					if (!response) return;
 
-							this.$refs.modalImage.close();
-						} catch (error) {
-							this.$store.commit("addDebugger", {
-								title: "Ошибка.",
-								body: error,
-								type: "error",
-							});
-						}
-					} else {
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "error",
-						});
+					switch (this.currentImage.data.file.value) {
+						case "imageOne":
+							this.currentInfoBlock.data.pathOne.value = response.data.result;
+							this.currentInfoBlock.data.imageOne.value = files.basename(
+								response.data.result
+							);
+							break;
+						case "imageTwo":
+							this.currentInfoBlock.data.pathTwo.value = response.data.result;
+							this.currentInfoBlock.data.imageTwo.value = files.basename(
+								response.data.result
+							);
+							break;
+						case "imageThree":
+							this.currentInfoBlock.data.pathThree.value = response.data.result;
+							this.currentInfoBlock.data.imageThree.value = files.basename(
+								response.data.result
+							);
+							break;
 					}
+
+					this.$refs.modalImage.close();
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
 						title: "Ошибка.",
-						body: response.data.message,
+						body: error,
 						type: "error",
 					});
 				})
@@ -768,42 +751,21 @@ export default {
 			let formData = new FormData();
 			formData.append("abouts", JSON.stringify(this.infoBlocks));
 
-			axios({
+			api({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `save-abouts-changes`,
+				url: this.$store.getters.urlApi + `save-abouts-changes`,
 				headers: {
 					ContentType: "multipart/form-data",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: formData,
 			})
 				.then((response) => {
-					if (response.data.status) {
-						try {
-							shared.updateId(this.infoBlocks, response.data.data);
-							shared.clearDeletes(this.infoBlocks);
-							shared.clearFlags(this.infoBlocks);
-							shared.updateOrders(this.infoBlocks);
+					if (!response) return;
 
-							this.$store.commit("addDebugger", {
-								title: "Успешно!",
-								body: response.data.message,
-								type: "completed",
-							});
-						} catch (error) {
-							this.$store.commit("addDebugger", {
-								title: "Ошибка.",
-								body: response.data.message,
-								type: "error",
-							});
-						}
-					} else {
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "error",
-						});
-					}
+					shared.updateId(this.infoBlocks, response.data.result);
+					shared.clearDeletes(this.infoBlocks);
+					shared.clearFlags(this.infoBlocks);
+					shared.updateOrders(this.infoBlocks);
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
@@ -818,33 +780,28 @@ export default {
 		},
 	},
 	mounted() {
-		axios({
+		api({
 			method: "get",
-			headers: {
-				Accept: "application/json",
-			},
-			url: `${this.$store.getters.urlApi}` + `get-abouts-all`,
+			url: this.$store.getters.urlApi + `get-abouts-all`,
 		})
 			.then((response) => {
-				if (response.data.status) {
-					this.infoBlocks = response.data.data;
+				if (!response) return;
 
-					this.infoBlocks.forEach((item) => {
-						item.create = false;
-						item.delete = false;
-					});
+				this.infoBlocks = response.data.result;
 
-					sorted.sortByOrder("up", this.infoBlocks);
-				} else {
-					this.$store.commit("addDebugger", {
-						title: "Ошибка.",
-						body: response.data.message,
-						type: "error",
-					});
-				}
+				this.infoBlocks.forEach((item) => {
+					item.create = false;
+					item.delete = false;
+				});
+
+				sorted.sortByOrder("up", this.infoBlocks);
 			})
 			.catch((error) => {
-				console.log(error);
+				this.$store.commit("addDebugger", {
+					title: "Ошибка.",
+					body: error,
+					type: "error",
+				});
 			})
 			.finally(() => {
 				this.loading.loader.infoBlocks = false;

@@ -26,7 +26,7 @@ import MainAboutList from "./MainAboutList.vue";
 
 import Empty from "../../../components/modules/Empty.vue";
 
-import axios from "axios";
+import api from "../../../services/api";
 
 export default {
 	components: {
@@ -35,7 +35,6 @@ export default {
 		Block,
 		MainAboutList,
 		Empty,
-		axios,
 	},
 	methods: {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -62,24 +61,18 @@ export default {
 	mounted() {
 		this.loading.loader.about = false;
 
-		axios({
+		api({
 			method: "get",
-			url: `${this.$store.getters.urlApi}` + `get-abouts-all`,
+			url: this.$store.getters.urlApi + `get-abouts-all`,
 		})
 			.then((response) => {
-				if (response.data.status) {
-					this.abouts = response.data.data;
+				if (!response) return;
 
-					this.abouts.sort((a, b) => {
-						return a.order - b.order;
-					});
-				} else {
-					this.$store.commit("addDebugger", {
-						title: "Ошибка.",
-						body: response.data.message,
-						type: "error",
-					});
-				}
+				this.abouts = response.data.result;
+
+				this.abouts.sort((a, b) => {
+					return a.order - b.order;
+				});
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {

@@ -1504,89 +1504,105 @@ class AdminController extends Controller
       $abouts = json_decode($request->abouts);
       $arrayID = [];
 
-      foreach ($abouts as $key => $value) {
-         // Удаление
-         if ($value->delete === true) {
-            $about = About::find($value->id);
-            $about->delete();
-            continue;
-         };
+      DB::beginTransaction();
 
-         // Добавление
-         if ($value->create === true){
-            $aboutCreate = About::create([
+      try {
+         foreach ($abouts as $key => $value) {
+            // Удаление
+            if ($value->delete === true) {
+               $about = About::find($value->id);
+               $about->delete();
+               continue;
+            };
+
+            // Добавление
+            if ($value->create === true){
+               $aboutCreate = About::create([
+                  "order" => $value->order,
+                  "title" => $value->title,
+                  "description" => $value->description,
+                  "imageOne" => $value->imageOne,
+                  "imageTwo" => $value->imageTwo,
+                  "imageThree" => $value->imageThree,
+               ]);
+
+               /* Запись нового объекта в массив */
+               $arrayID[] = (object) [
+                  // Прошлый id
+                  'old' => $value->id, 
+                  // Новый id
+                  'new' => $aboutCreate->id
+               ];
+               continue;
+            };
+
+            // Обновление
+            $about = About::find($value->id);
+            $about->update([
                "order" => $value->order,
                "title" => $value->title,
                "description" => $value->description,
                "imageOne" => $value->imageOne,
                "imageTwo" => $value->imageTwo,
                "imageThree" => $value->imageThree,
-            ]);
-
-            /* Запись нового объекта в массив */
-            $arrayID[] = (object) [
-               // Прошлый id
-               'old' => $value->id, 
-               // Новый id
-               'new' => $aboutCreate->id
-            ];
-            continue;
+            ]);   
          };
 
-         // Обновление
-         $about = About::find($value->id);
-         $about->update([
-            "order" => $value->order,
-            "title" => $value->title,
-            "description" => $value->description,
-            "imageOne" => $value->imageOne,
-            "imageTwo" => $value->imageTwo,
-            "imageThree" => $value->imageThree,
-         ]);   
-      };
+         // Сортировка слайдов по порядку от наименьшего до наибольшого
+         $aboutsAll = About::all()->SortBy('order');
 
-      // Сортировка слайдов по порядку от наименьшего до наибольшого
-      $aboutsAll = About::all()->SortBy('order');
+         // Обновление порядковых номеров
+         $count = 0;
+         foreach ($aboutsAll as $aboutKey => $aboutValue) {
+            $count++;
+            $aboutValue->order = $count;
+            $aboutValue->save();
+         };
 
-      // Обновление порядковых номеров
-      $count = 0;
-      foreach ($aboutsAll as $aboutKey => $aboutValue) {
-         $count++;
-         $aboutValue->order = $count;
-         $aboutValue->save();
-      };
-
-      // Получение всех файлов
-      $filesAbouts = Storage::files('public/abouts');
-      if($filesAbouts) {
-         foreach ($filesAbouts as $fileKey => $fileValue) {
-            $useFile = false;
-            /* Проверка на использование файла */
-            foreach ($aboutsAll as $aboutKey => $aboutValue) {
-               /* Обрезание значения $fileValue до названия файла */
-               $str = str_replace('public/abouts/', '', $fileValue);
-               /* Проверка значения названия файла на совпадение */
-               if (
-                  $aboutValue->imageOne == $str || 
-                  $aboutValue->imageTwo == $str || 
-                  $aboutValue->imageThree == $str
-               ) {
-                  $useFile = true;
+         // Получение всех файлов
+         $filesAbouts = Storage::files('public/abouts');
+         if($filesAbouts) {
+            foreach ($filesAbouts as $fileKey => $fileValue) {
+               $useFile = false;
+               /* Проверка на использование файла */
+               foreach ($aboutsAll as $aboutKey => $aboutValue) {
+                  /* Обрезание значения $fileValue до названия файла */
+                  $str = str_replace('public/abouts/', '', $fileValue);
+                  /* Проверка значения названия файла на совпадение */
+                  if (
+                     $aboutValue->imageOne == $str || 
+                     $aboutValue->imageTwo == $str || 
+                     $aboutValue->imageThree == $str
+                  ) {
+                     $useFile = true;
+                  };
+               };
+      
+               /* Удаление файла, если не используется */
+               if (!$useFile) {
+                  Storage::delete($fileValue);
                };
             };
-   
-            /* Удаление файла, если не используется */
-            if (!$useFile) {
-               Storage::delete($fileValue);
-            };
          };
-      };
 
-      return response()->json([
-         "status" => true,
-         "message" => "Данные обновлены.",
-         "data" => $arrayID,
-      ]);
+         DB::commit();
+
+         return response()->json([
+            "success" => true,
+            "debug" => true,
+            "message" => "Данные обновлены.",
+            "result" => $arrayID,
+         ]);
+      } catch (Throwable $e) {
+         DB::rollBack();
+
+         return response()->json([
+            "success" => false,
+            "debug" => true,
+            "message" => $e->getMessage(),
+            "result" => null,
+         ], 500);
+      };
    }
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                    КОНТАКТЫ                       |*/
