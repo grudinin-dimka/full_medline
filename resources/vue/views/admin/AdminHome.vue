@@ -574,6 +574,8 @@ export default {
 				data: formData,
 			})
 				.then((response) => {
+					if (!response) return;
+
 					this.slides.push({
 						id: shared.getMaxId(this.slides) + 1,
 						order: shared.getMaxOrder(this.slides) + 1,

@@ -95,30 +95,51 @@ class AdminController extends Controller
          $rules = [
             'type' => 'required',
             'formats' => 'required',
-            'file' => ['required'], // общие правила
+         ];
+
+         // Сообщения
+         $messages = [
+            'type.required' => 'Тип не указан.',
+            'formats.required' => 'Форматы не указаны.',
          ];
 
          // Добавление правил в зависимости от типа
          if ($isImage) {
-            $rules['file'][] = File::image()
-               ->types($request->formats)
-               ->dimensions(Rule::dimensions()->maxWidth(2000)->maxHeight(2000));
+            $rules['file'] = [
+               'required', // общие правила
+               File::image()
+                  ->types($request->formats)
+                  ->dimensions(Rule::dimensions()->maxWidth(1500)->maxHeight(1500)),
+               'max:' . (5 * 1024),
+            ];
 
-            // Допустимый размер
-            $rules['file'][] = 'max:' . (5 * 1024);
+            $messages['file.required'] = 'Файл не указан.';
+            $messages['file.types'] = 'Файл не соответствует форматам.';
+            $messages['file.dimensions'] = 'Файл превышает допустимое разрешение 1500х1500.';
+            $messages['file.max'] = 'Файл превышает допустимый размер 5 мб.';
          } else if ($isVideo) {
-            $rules['file'][] = 'mimetypes:video/mp4,video/quicktime,video/webm';
+            $rules['file'] = [
+               'required', // общие правила
+               'mimetypes:video/mp4,video/quicktime,video/webm',
+               'max:' . (100 * 1024),
+            ];
 
-            // Допустимый размер
-            $rules['file'][] = 'max:' . (100 * 1024);
+            $messages['file.required'] = 'Файл не указан.';
+            $messages['file.mimetypes'] = 'Файл не соответствует форматам.';
+            $messages['file.max'] = 'Файл превышает допустимый размер 100 мб.';
          } else {
-            $rules['file'][] = File::types($request->formats);
+            $rules['file'] = [
+               'required', // общие правила
+               File::types($request->formats),
+               'max:' . (2 * 1024),
+            ];
 
-            // Допустимый размер
-            $rules['file'][] = 'max:' . (2 * 1024);
+            $messages['file.required'] = 'Файл не указан.';
+            $messages['file.types'] = 'Файл не соответствует форматам.';
+            $messages['file.max'] = 'Файл превышает допустимый размер 2 мб.';
          };
 
-         $validator = Validator::make($request->all(), $rules);
+         $validator = Validator::make($request->all(), $rules, $messages);
 
          if ($validator->fails()) return response()->json([
             "success" => false,
@@ -2363,7 +2384,7 @@ class AdminController extends Controller
          
          return response()->json([
             "success" => true,
-            "debug" => false,
+            "debug" => true,
             "message" => 'Файл успешно создан.',
             "result" => $files,
          ], 200);
