@@ -109,9 +109,9 @@ import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 
 import Icon from "../../../components/modules/icon/Icon.vue";
 
+import api from "../../../services/api";
 import validate from "../../../services/validate";
 import shared from "../../../services/shared";
-import axios from "axios";
 
 export default {
 	components: {
@@ -130,10 +130,6 @@ export default {
 		ButtonDefault,
 
 		Icon,
-
-		validate,
-		shared,
-		axios,
 	},
 	data() {
 		return {
@@ -305,42 +301,27 @@ export default {
 
 			this.disabled.prices.create = true;
 
-			axios({
+			api({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `upload-file`,
+				url: this.$store.getters.urlApi + `upload-file`,
 				headers: {
 					"Content-Type": "multipart/form-data",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: formData,
 			})
 				.then((response) => {
-					if (response.data.status) {
-						try {
-							this.table.body.push({
-								id: shared.getMaxId(this.table.body) + 1,
-								filename: response.data.data.replace("/storage/prices/", ""),
-								path: response.data.data,
-								date: "Не определено",
-								delete: false,
-								create: true,
-							});
+					if (!response) return;
 
-							this.$refs.modal.close();
-						} catch (error) {
-							this.$store.commit("addDebugger", {
-								title: "Ошибка.",
-								body: error,
-								type: "error",
-							});
-						}
-					} else {
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "error",
-						});
-					}
+					this.table.body.push({
+						id: shared.getMaxId(this.table.body) + 1,
+						filename: response.data.result.replace("/storage/prices/", ""),
+						path: response.data.result,
+						date: "Не определено",
+						delete: false,
+						create: true,
+					});
+
+					this.$refs.modal.close();
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
@@ -361,49 +342,21 @@ export default {
 
 			this.disabled.prices.save = true;
 
-			axios({
+			api({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `save-prices-changes`,
+				url: this.$store.getters.urlApi + `save-prices-changes`,
 				headers: {
 					ContentType: "multipart/form-data",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: formData,
 			})
 				.then((response) => {
-					if (response.data.status) {
-						try {
-							shared.updateId(this.table.body, response.data.data);
-							shared.clearDeletes(this.table.body);
-							shared.clearFlags(this.table.body);
-							shared.updateOrders(this.table.body);
+					if (!response) return;
 
-							this.$store.commit("addDebugger", {
-								title: "Успешно!",
-								body: response.data.message,
-								type: "completed",
-							});
-						} catch (error) {
-							this.$store.commit("addDebugger", {
-								title: "Ошибка.",
-								body: error,
-								type: "error",
-							});
-						}
-					} else {
-						if (response.data.data) {
-							shared.updateId(this.table.body, response.data.data);
-							shared.clearDeletes(this.table.body);
-							shared.clearFlags(this.table.body);
-							shared.updateOrders(this.table.body);
-						}
-
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "error",
-						});
-					}
+					shared.updateId(this.table.body, response.data.result);
+					shared.clearDeletes(this.table.body);
+					shared.clearFlags(this.table.body);
+					shared.updateOrders(this.table.body);
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
@@ -421,30 +374,15 @@ export default {
 		downloadPricesFiles() {
 			this.disabled.prices.download = true;
 
-			axios({
+			api({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `make-prices-files`,
-				headers: {
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
+				url: this.$store.getters.urlApi + `make-prices-files`,
 			})
 				.then((response) => {
-					if (response.data.status) {
-						this.$store.commit("addDebugger", {
-							title: "Успешно!",
-							body: response.data.message,
-							type: "completed",
-						});
+					if (!response) return;
 
-						// Перенаправляем пользователя на ссылку для скачивания архива
-						window.location.href = `/api/download-prices-archive`;
-					} else {
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "error",
-						});
-					}
+					// Перенаправляем пользователя на ссылку для скачивания архива
+					window.location.href = `/api/download-prices-archive`;
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
@@ -459,29 +397,19 @@ export default {
 		},
 	},
 	mounted() {
-		axios({
+		api({
 			method: "get",
-			headers: {
-				Accept: "application/json",
-				Authorization: `Bearer ${localStorage.getItem("token")}`,
-			},
-			url: `${this.$store.getters.urlApi}` + `get-prices-files-all`,
+			url: this.$store.getters.urlApi + `get-prices-files-all`,
 		})
 			.then((response) => {
-				if (response.data.status) {
-					this.table.body = response.data.data;
+				if (!response) return;
 
-					this.table.body.forEach((item) => {
-						item.create = false;
-						item.delete = false;
-					});
-				} else {
-					this.$store.commit("addDebugger", {
-						title: "Ошибка.",
-						body: response.data.message,
-						type: "error",
-					});
-				}
+				this.table.body = response.data.result;
+
+				this.table.body.forEach((item) => {
+					item.create = false;
+					item.delete = false;
+				});
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {

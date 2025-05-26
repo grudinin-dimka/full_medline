@@ -73,7 +73,7 @@ import LoadText from "../../../components/ui/main/LoadText.vue";
 
 import ContainerInputSearch from "../../../components/ui/admin/containers/input/ContainerInputSearch.vue";
 
-import axios from "axios";
+import api from "../../../services/api";
 
 export default {
 	components: {
@@ -149,9 +149,9 @@ export default {
 	},
 	created() {
 		// Получение массива докторов с сервера
-		axios({
+		api({
 			method: "post",
-			url: `${this.$store.getters.urlApi}` + `get-prices-group`,
+			url: this.$store.getters.urlApi + `get-prices-group`,
 			headers: {
 				Accept: "application/json",
 			},
@@ -160,16 +160,10 @@ export default {
 			},
 		})
 			.then((response) => {
-				if (response.data.status) {
-					this.title = response.data.result.title;
-					this.group = response.data.result.array;
-				} else {
-					this.$store.commit("addDebugger", {
-						title: "Ошибка.",
-						body: response.data.message,
-						type: "error",
-					});
-				}
+				if (!response) return;
+
+				this.title = response.data.result.title;
+				this.group = response.data.result.array;
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {

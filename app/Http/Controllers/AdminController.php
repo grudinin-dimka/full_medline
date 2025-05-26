@@ -1846,9 +1846,10 @@ class AdminController extends Controller
       
       if ($pricesFiles->isEmpty()) {
          return response()->json([
-            "status" => true,
+            "success" => true,
+            "debug" => true,
             "message" => "Цен нет.",
-            "data" => [],
+            "result" => null,
          ]);
       } else {
          foreach ($pricesFiles as $pricesFilesKey => $pricesFilesValue) {
@@ -1857,18 +1858,18 @@ class AdminController extends Controller
          };
 
          return response()->json([
-            "status" => true,
-            "message" => "Цены успешно получены.",
-            "data" => $pricesFiles,
+            "success" => true,
+            "debug" => false,
+            "message" => "Данные получены.",
+            "result" => $pricesFiles,
          ]);   
       };
    }
+
    /* Сохранение изменений */
    public function savePricesChanges(Request $request) {   
       $generateCategories = [];
-      
       $pricesFiles = json_decode($request->pricesFiles);
-      
       $arrayID = [];
 
       foreach ($pricesFiles as $key => $value) {
@@ -1934,16 +1935,12 @@ class AdminController extends Controller
             // Получение массивов
             $dataFromFile = $this->getDataFromFile(Storage::path($filesPricesValue));
 
-            if (!$dataFromFile->status) {
-               return response()->json([
-                  "status" => false,
-                  "message" => $dataFromFile->message,
-                  "data" => $arrayID,
-               ]);
+            if (!$dataFromFile['object']->success) {
+               return response()->json($dataFromFile['object'], $dataFromFile['status']);
             }; 
 
             // Перебор полученных массивов            
-            foreach ($dataFromFile->data as $dataFromFileKey => $dataFromFileValue) { 
+            foreach ($dataFromFile['object']->result as $dataFromFileKey => $dataFromFileValue) { 
                $index = 0;
                $currentAddress = null;
                $categorys = [];
@@ -1955,10 +1952,11 @@ class AdminController extends Controller
                      // Проверка на пустой адресс
                      if (empty($dataValue[0])) {
                         return response()->json([
-                           "status" => false,
+                           "success" => false,
+                           "debug" => true,
                            "message" => "Название адреса в файле " . basename(Storage::path($filesPricesValue)) . " не может быть пустым.",
-                           "data" => $arrayID,
-                        ]) ;
+                           "result" => $arrayID,
+                        ], 422);
                      };
                      
                      $currentAddress = PriceAddress::create([
@@ -1970,10 +1968,11 @@ class AdminController extends Controller
                   if (($index + 1) >= 16) {
                      if (count($dataValue) < 2) { 
                         return response()->json([
-                           "status" => false,
+                           "success" => false,
+                           "debug" => true,
                            "message" => "Недостаточно данных (строка " . ($index + 1) . ") в файле " . basename(Storage::path($filesPricesValue)) . ".",
-                           "data" => $arrayID,
-                        ]);
+                           "result" => $arrayID,
+                        ], 422);
                      };
 
                      $levelClear = trim($dataValue[0], " ");                        
@@ -1981,20 +1980,22 @@ class AdminController extends Controller
                      // Проверка на категорию
                      if (str_contains($levelClear, '#')) {
                         if (empty($dataValue[1])) {
-                              return response()->json([
-                              "status" => false,
+                           return response()->json([
+                              "success" => false,
+                              "debug" => true,
                               "message" => "Название категории (строка " . ($index + 1) . ") в файле " . basename(Storage::path($filesPricesValue)) . " не может быть пустым.",
-                              "data" => $arrayID,
-                           ]);
+                              "result" => $arrayID,
+                           ], 422);
                         };
 
                         // Проверка на пустую общую категорию
                         if (strlen($levelClear) > 1 && $currentCategory === null) {
                            return response()->json([
-                              "status" => false,
+                              "success" => false,
+                              "debug" => true,
                               "message" => "Нельзя создать подкатегорию без общей категории (строка " . ($index + 1) . ") в файле " . basename(Storage::path($filesPricesValue)) . ".",
-                              "data" => $arrayID,
-                           ]);                                 
+                              "result" => $arrayID,
+                           ], 422);
                         };
                         
                         // Создание новой категории
@@ -2014,18 +2015,20 @@ class AdminController extends Controller
                      if (is_numeric($levelClear)) {
                         if (count($dataValue) < 3) {
                            return response()->json([
-                              "status" => false,
+                              "success" => false,
+                              "debug" => true,
                               "message" => "Недостаточно данных (строка " . ($index + 1) . ") в файле " . basename(Storage::path($filesPricesValue)) . ".",
-                              "data" => $arrayID,
-                           ]);
+                              "result" => $arrayID,
+                           ], 422);
                         };
 
                         if (!is_numeric($dataValue[2])) {
                            return response()->json([
-                              "status" => false,
+                              "success" => false,
+                              "debug" => true,
                               "message" => "Цена (строка " . ($index + 1) . ") в файле " . basename(Storage::path($filesPricesValue)) . " должна быть числом.",
-                              "data" => $arrayID,
-                           ]);
+                              "result" => $arrayID,
+                           ], 422);
                         };
 
                         $createPriceValue = PriceValue::create([
@@ -2036,10 +2039,11 @@ class AdminController extends Controller
 
                         if (!$createPriceValue) {
                            return response()->json([
-                              "status" => false,
+                              "success" => false,
+                              "debug" => true,
                               "message" => "Не удалось создать цену (строка " . ($index + 1) . ") в файле " . basename(Storage::path($filesPricesValue)) . ".",
-                              "data" => $arrayID,
-                           ]);
+                              "result" => $arrayID,
+                           ], 422);
                         };
                      };
                   };
@@ -2051,10 +2055,11 @@ class AdminController extends Controller
       };
 
       return response()->json([
-         "status" => true,
+         "success" => true,
+         "debug" => true,
          "message" => "Цены успешно сохранены.",
-         "data" => count($arrayID) > 0 ? $arrayID : null,
-      ]);            
+         "result" => count($arrayID) > 0 ? $arrayID : null,
+      ], 200);            
    }
 
    /* Считывание данных с файла .ods, .xls, .xlsx */
@@ -2062,10 +2067,14 @@ class AdminController extends Controller
       try {
          // Существует ли файл
          if (!file_exists($path)) {
-            return (object) [
-               "status" => false,
-               "message" => "Файл '" . basename($path) . "' не существует.",
-               "data" => null,
+            return [
+               "object" => (object) [
+                  "success" => false,
+                  "debug" => true,
+                  "message" => "Файл '" . basename($path) . "' не существует.",
+                  "result" => null,
+               ],
+               "status" => 500,
             ];
          }
 
@@ -2078,10 +2087,14 @@ class AdminController extends Controller
          
          foreach ($sheetsAll as $sheet) {         
             if ($this->isExcelEmpty($sheet)) {
-               return (object) [
-                  "status" => false,
-                  "message" => "Раздел '" . $sheet->getTitle() . "' в файле '" . basename($path) . "' пустой.",
-                  "data" => null,
+               return [
+                  "object" => (object) [
+                     "success" => false,
+                     "debug" => true,
+                     "message" => "Раздел '" . $sheet->getTitle() . "' в файле '" . basename($path) . "' пустой.",
+                     "result" => null,
+                  ],
+                  "status" => 500,
                ];
             };
 
@@ -2112,16 +2125,24 @@ class AdminController extends Controller
             $sheetsAlldata[] = $sheetData;
          };
 
-         return (object) [
-            "status" => true,
-            "message" => "Данные с файла считаны.",
-            "data" => $sheetsAlldata,
+         return [
+            "object" => (object) [
+               "success" => true,
+               "debug" => false,
+               "message" => "Данные с файла считаны.",
+               "result" => $sheetsAlldata,
+            ],
+            "status" => 200,
          ];
       } catch (Exception $e) {
-         return (object) [
-            "status" => false,
-            "message" => "Не удалось считать данные.",
-            "data" => null,
+         return [
+            "object" => (object) [
+               "success" => false,
+               "debug" => true,
+               "message" => "Не удалось считать данные.",
+               "result" => null,
+            ],
+            "status" => 500,
          ];
       };
    }
@@ -2221,20 +2242,22 @@ class AdminController extends Controller
 
          if (count($addressesAll) === 0) {
             return response()->json([
-               "status" => false,
+               "success" => false,
+               "debug" => true,
                "message" => "Список адресов пуст.",
-               "data" => null,
-            ]);
+               "result" => null,
+            ], 500);
          };
 
          $categoriesAll = PriceCategory::all()->groupBy('addressId');
 
          if (count($categoriesAll) === 0) {
             return response()->json([
-               "status" => false,
+               "success" => false,
+               "debug" => true,
                "message" => "Список категорий пуст.",
-               "data" => null,
-            ]);
+               "result" => null,
+            ], 500);
          };
 
          $test = [];
@@ -2283,16 +2306,18 @@ class AdminController extends Controller
          }
          
          return response()->json([
-            "status" => true,
+            "success" => true,
+            "debug" => false,
             "message" => 'Файл успешно создан.',
-            "data" => $files,
-         ]);
+            "result" => $files,
+         ], 200);
       } catch (Throwable $e) {
          return response()->json([
             "success" => false,
+            "debug" => true,
             "message" => "Не удалось создать файл.",
-            "data" => null,
-         ]);
+            "result" => null,
+         ], 500);
       };
    }
 

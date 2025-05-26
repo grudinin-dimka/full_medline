@@ -544,32 +544,6 @@ class HomeController extends Controller
          "result" => $clinics,
       ], 200);
    }
-   
-   /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-   /* |                     О НАС                         |*/
-   /* |___________________________________________________|*/
-   public function getAboutsAll(Request $request) {
-      $about = About::all();
-      if(!$about) {
-         return response()->json([
-            "status" => false,
-            "message" => "Не удалось получить данные.",
-            "data" => [],
-         ]);
-      }
-
-      foreach ($about as $key => $value) {
-         $value->pathOne = Storage::url('abouts/' . $value->imageOne);
-         $value->pathTwo = Storage::url('abouts/' . $value->imageTwo);
-         $value->pathThree = Storage::url('abouts/' . $value->imageThree);
-      };
-
-      return response()->json([
-         "status" => true,
-         "message" => "Успешно.",
-         "data" => $about,
-      ]);
-   }
 
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                      ЦЕНЫ                         |*/
@@ -603,10 +577,11 @@ class HomeController extends Controller
       };
 
       return response()->json([
-         "status" => true,
+         "success" => true,
+         "debug" => false,
          "message" => "Адреса успешно получены.",
-         "data" => $formatPriceAddresses,
-      ]);
+         "result" => $formatPriceAddresses,
+      ], 200);
    }   
 
    /* Вывод шаблона цен */
@@ -616,14 +591,20 @@ class HomeController extends Controller
          'city' => 'required',
          'street' => 'required',
          'house' => 'required',
+      ], [
+         'city.required' => 'Отсутствует город.',
+         'street.required' => 'Отсутствует улица.',
+         'house.required' => 'Отсутствует номер дома.',
       ]);
 
       if ($validated->fails()) {
          return response()->json([
-            "status" => false,
-            "message" => "Ошибка валидации входных данных.",
-            "data" => null,
-         ]);
+            "success" => false,
+            "debug" => true,
+            "errors" => $validated->errors(),
+            "message" => "Некорректные данные.",
+            "result" => null,
+         ], 422);
       };
 
       $priceAddresses = PriceAddress::all();
@@ -667,10 +648,11 @@ class HomeController extends Controller
          $categories = PriceCategory::where('addressId', $currentAddress->id)->get();
          if (!$categories) {
             return response()->json([
-               "status" => false,
+               "success" => false,
+               "debug" => true,
                "message" => "Категории не найдены.",
-               "data" => null,
-            ]);
+               "result" => null,
+            ], 500);
          };
    
          // Форматируем категории
@@ -689,49 +671,56 @@ class HomeController extends Controller
          
          if (!$currentAddress) {
             return response()->json([
-               "status" => false,
+               "success" => false,
+               "debug" => true,
                "message" => "Адрес не найден.",
-               "data" => null,
-            ]);
+               "result" => null,
+            ], 500);
          };
       } catch (Throwable $th) {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
             "message" => "Не получилось получить данные.",
-            "data" => null,
-         ]);
+            "result" => null,
+         ], 500);
       }
 
       return response()->json([
-         "status" => true,
+         "success" => true,
+         "debug" => false,
          "message" => "Адрес успешно получен.",
-         "data" => (object) [
+         "result" => (object) [
             "address" => $currentAddress,
             "categories" => $categoriesFormat,
             "categoriesList" => $categories,
             "prices" => $prices
          ],
-      ]);
+      ], 200);
    }
 
    /* Вывод всех данных из таблиц с ценами */
    public function getPricesAll(Request $request) {
       $priceAddresses = PriceAddress::all();
+      
       if (!$priceAddresses) {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
             "message" => "Не удалось получить адреса.",
-            "data" => null,
-         ]);
+            "result" => null,
+         ], 500);
       };
       
       $priceCategories = PriceCategory::all();
+      
       if (!$priceCategories) {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
             "message" => "Не удалось получить категории.",
-            "data" => null,
-         ]);
+            "result" => null,
+         ], 500);
       }
 
       // Форматируем категории
@@ -745,22 +734,24 @@ class HomeController extends Controller
       $priceValues = PriceValue::all();
       if (!$priceValues) {
          return response()->json([
-            "status" => false,
+            "success" => false,
+            "debug" => true,
             "message" => "Не удалось получить услуги и цены.",
-            "data" => null,
-         ]);
+            "result" => null,
+         ], 500);
       }
 
       return response()->json([
-         "status" => true,
-         "message" => "Успешно.",
-         "data" => (object) [
+         "success" => true,
+         "debug" => true,
+         "message" => "Данные успешно получены.",
+         "result" => [
             "adresses" => $priceAddresses,
             "categories" => $priceCategoriesFormat,
             "categoriesList" => $priceCategories,
             "prices" => $priceValues,
          ],
-      ]);
+      ], 200);
    }
 
    /* Форматирование категорий */
@@ -790,13 +781,17 @@ class HomeController extends Controller
       // Валидация
       $validated = Validator::make($request->all(), [
          'group' => 'required',
+      ], [
+         'required' => 'Поле :attribute обязательно для заполнения.',
       ]);
 
       if ($validated->fails()) {
          return response()->json([
-            "status" => false,
-            "message" => "Ошибка валидации входных данных.",
-            "data" => null,
+            "success" => false,
+            "debug" => true,
+            "errors" => $validated->errors(),
+            "message" => "Некорректные данные.",
+            "result" => null,
          ]);
       };
 
@@ -887,12 +882,39 @@ class HomeController extends Controller
       }   
 
       return response()->json([
-         "status" => true,
-         "message" => "Успешно.",
+         "success" => true,
+         "debug" => false,
+         "message" => "Данные получены.",
          "result" => [
             "array" => $array ?? [],
             "title" => $title
          ],
+      ]);
+   }
+   
+   /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+   /* |                     О НАС                         |*/
+   /* |___________________________________________________|*/
+   public function getAboutsAll(Request $request) {
+      $about = About::all();
+      if(!$about) {
+         return response()->json([
+            "status" => false,
+            "message" => "Не удалось получить данные.",
+            "data" => [],
+         ]);
+      }
+
+      foreach ($about as $key => $value) {
+         $value->pathOne = Storage::url('abouts/' . $value->imageOne);
+         $value->pathTwo = Storage::url('abouts/' . $value->imageTwo);
+         $value->pathThree = Storage::url('abouts/' . $value->imageThree);
+      };
+
+      return response()->json([
+         "status" => true,
+         "message" => "Успешно.",
+         "data" => $about,
       ]);
    }
 

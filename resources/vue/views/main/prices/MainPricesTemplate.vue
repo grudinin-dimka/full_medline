@@ -205,7 +205,7 @@ import Empty from "../../../components/modules/Empty.vue";
 import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
 import ContainerInputSearch from "../../../components/ui/admin/containers/input/ContainerInputSearch.vue";
 
-import axios from "axios";
+import api from "../../../services/api";
 import sorted from "../../../services/sorted.js";
 
 export default {
@@ -219,9 +219,6 @@ export default {
 
 		ContainerInputOnce,
 		ContainerInputSearch,
-
-		axios,
-		sorted,
 	},
 	data() {
 		return {
@@ -446,9 +443,12 @@ export default {
 		},
 	},
 	mounted() {
-		axios({
+		api({
 			method: "post",
 			url: `${this.$store.getters.urlApi}` + `get-prices-template`,
+			headers: {
+				Accept: "application/json",
+			},
 			data: {
 				city: this.$route.params.city,
 				street: this.$route.params.street,
@@ -456,18 +456,12 @@ export default {
 			},
 		})
 			.then((response) => {
-				if (response.data.status) {
-					this.filters.address = response.data.data.address;
-					this.categories = response.data.data.categories;
-					this.categoriesList = response.data.data.categoriesList;
-					this.prices = response.data.data.prices;
-				} else {
-					this.$store.commit("addDebugger", {
-						title: "Ошибка.",
-						body: response.data.message,
-						type: "error",
-					});
-				}
+				if (!response) return;
+
+				this.filters.address = response.data.result.address;
+				this.categories = response.data.result.categories;
+				this.categoriesList = response.data.result.categoriesList;
+				this.prices = response.data.result.prices;
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {

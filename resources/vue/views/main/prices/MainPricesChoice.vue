@@ -40,9 +40,9 @@ import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import Empty from "../../../components/modules/Empty.vue";
 
+import api from "../../../services/api";
 import shared from "../../../services/shared";
 import sorted from "../../../services/sorted";
-import axios from "axios";
 
 export default {
 	components: {
@@ -50,9 +50,6 @@ export default {
 		Block,
 		LoaderChild,
 		Empty,
-
-		shared,
-		axios,
 	},
 	computed: {
 		getCities() {
@@ -123,20 +120,14 @@ export default {
 		},
 	},
 	mounted() {
-		axios({
+		api({
 			method: "get",
-			url: `${this.$store.getters.urlApi}` + `get-prices-choice`,
+			url: this.$store.getters.urlApi + `get-prices-choice`,
 		})
 			.then((response) => {
-				if (response.data.status) {
-					this.addresses = response.data.data;
-				} else {
-					this.$store.commit("addDebugger", {
-						title: "Ошибка.",
-						body: response.data.message,
-						type: "error",
-					});
-				}
+				if (!response) return;
+
+				this.addresses = response.data.result;
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {
