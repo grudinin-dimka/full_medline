@@ -293,13 +293,13 @@
 						<input
 							type="text"
 							placeholder="Введите пароль"
-							:class="{ error: userPassword.errors.password.status }"
-							v-model="userPassword.data.password.value"
+							:class="{ error: currentPassword.errors.password.status }"
+							v-model="currentPassword.data.password.value"
 						/>
 					</template>
 					<template #error>
-						<span class="error" v-if="userPassword.errors.password.status">
-							{{ userPassword.errors.password.message }}
+						<span class="error" v-if="currentPassword.errors.password.status">
+							{{ currentPassword.errors.password.message }}
 						</span>
 					</template>
 				</container-input-once>
@@ -507,7 +507,7 @@ import ButtonRemoveWide from "../../../components/ui/admin/buttons/ButtonRemoveW
 import ButtonDefaultWide from "../../../components/ui/admin/buttons/ButtonDefaultWide.vue";
 import ButtonPasswordWide from "../../../components/ui/admin/buttons/ButtonPasswordWide.vue";
 
-import axios from "axios";
+import api from "../../../services/api";
 import validate from "../../../services/validate";
 import files from "../../../services/files";
 import shared from "../../../services/shared";
@@ -531,8 +531,6 @@ export default {
 		ButtonRemoveWide,
 		ButtonDefaultWide,
 		ButtonPasswordWide,
-
-		axios,
 	},
 	data() {
 		return {
@@ -702,7 +700,7 @@ export default {
 				},
 			},
 
-			userPassword: {
+			currentPassword: {
 				errors: {
 					password: {
 						message: "",
@@ -765,6 +763,7 @@ export default {
 		/* Открытие модального окна для смены пароля */
 		openModalPassword(value) {
 			shared.clearObjectFull(this.currentUser);
+			shared.clearObjectFull(this.currentPassword);
 			shared.setData(value, this.currentUser);
 
 			this.openModal("modalPassword", "", "default");
@@ -789,70 +788,32 @@ export default {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                  ПОЛЬЗОВАТЕЛИ                     |*/
 		/* |___________________________________________________|*/
-		/* Редактирование пароля пользователя */
-		editUserPassword(user) {
-			shared.clearObjectFull(this.currentUser);
-			shared.clearObjectFull(this.userPassword);
-			shared.setData(user, this.currentUser);
-
-			this.openModal("edit", "subModalPassword");
-		},
-
-		/* Редактирование блокировки пользователя */
-		editUserBlock(user) {
-			shared.clearObjectFull(this.currentUser);
-			shared.setData(user, this.currentUser);
-
-			this.openModal("edit", "subModalBlock");
-		},
-
-		/* Редактирование удаления пользователя */
-		editUserDelete(user) {
-			shared.clearObjectFull(this.currentUser);
-			shared.setData(user, this.currentUser);
-
-			this.openModal("edit", "subModalDelete");
-		},
-
 		/* Сохранение блокировки пользователя */
 		saveUserBlock() {
-			let formData = new FormData();
-			formData.append("userId", JSON.stringify(this.currentUser.data.id.value));
-
 			this.disabled.userBlock.save = true;
 
-			axios({
+			api({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `set-user-status`,
+				url: this.$store.getters.urlApi + `set-user-status`,
 				headers: {
-					Accept: "multipart/form-data",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
+					Accept: "application/json",
 				},
-				data: formData,
+				data: {
+					id: this.currentUser.data.id.value,
+				},
 			})
 				.then((response) => {
-					if (response.data.status) {
-						let currentUser = this.users.find((user) => {
-							if (user.id === this.currentUser.data.id.value) {
-								return user;
-							}
-						});
-						currentUser.statusId = response.data.data;
+					if (!response) return;
 
-						this.$refs.modalBlock.close();
+					let currentUser = this.users.find((user) => {
+						if (user.id === this.currentUser.data.id.value) {
+							return user;
+						}
+					});
+					
+					currentUser.statusId = response.data.result;
 
-						this.$store.commit("addDebugger", {
-							title: "Успешно!",
-							body: response.data.message,
-							type: "completed",
-						});
-					} else {
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "error",
-						});
-					}
+					this.$refs.modalBlock.close();
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
@@ -869,7 +830,7 @@ export default {
 		/* Сохранение пароля пользователя */
 		saveUserPassword() {
 			if (
-				validate.checkInputsAll(this.userPassword, [
+				validate.checkInputsAll(this.currentPassword, [
 					{
 						key: "password",
 						type: "text",
@@ -878,37 +839,23 @@ export default {
 			)
 				return;
 
-			let formData = new FormData();
-			formData.append("password", JSON.stringify(this.userPassword.data.password.value));
-			formData.append("userId", JSON.stringify(this.currentUser.data.id.value));
-
 			this.disabled.userPassword.save = true;
 
-			axios({
+			api({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `set-user-password`,
+				url: this.$store.getters.urlApi + `set-user-password`,
 				headers: {
-					Accept: "multipart/form-data",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
+					Accept: "application/json",
 				},
-				data: formData,
+				data: {
+					id: this.currentUser.data.id.value,
+					password: this.currentPassword.data.password.value,
+				},
 			})
 				.then((response) => {
-					if (response.data.status) {
-						this.$refs.modalPassword.close();
+					if (!response) return;
 
-						this.$store.commit("addDebugger", {
-							title: "Успешно!",
-							body: response.data.message,
-							type: "completed",
-						});
-					} else {
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "error",
-						});
-					}
+					this.$refs.modalPassword.close();
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
@@ -972,55 +919,49 @@ export default {
 
 			if (errors) return;
 
-			let user = {};
-			for (let key in this.currentUser.data) {
-				user[key] = this.currentUser.data[key].value;
-			}
-			formData.append("user", JSON.stringify(user));
+			formData.append("user", JSON.stringify({
+				id: this.currentUser.data.id.value,
+				family: this.currentUser.data.family.value,
+				name: this.currentUser.data.name.value,
+				surname: this.currentUser.data.surname.value,
+				dateOfBirth: this.currentUser.data.dateOfBirth.value,
+				email: this.currentUser.data.email.value,
+				nickname: this.currentUser.data.nickname.value,
+				password: this.currentUser.data.password.value,
+				rightsId: this.currentUser.data.rightsId.value,
+				statusId: this.currentUser.data.statusId.value,
+			}));
 
 			this.disabled.users.save = true;
 
-			axios({
+			api({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `save-user`,
+				url: this.$store.getters.urlApi + `save-user`,
 				headers: {
 					Accept: "multipart/form-data",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: formData,
 			})
 				.then((response) => {
-					if (response.data.status) {
-						let currentUser = this.users.find((user) => {
-							if (user.id === this.currentUser.data.id.value) {
-								return user;
-							}
-						});
+					if (!response) return;
 
-						for (let key in currentUser) {
-							if (key === "created_at" || key === "updated_at") continue;
-							currentUser[key] = this.currentUser.data[key].value;
+					let currentUser = this.users.find((user) => {
+						if (user.id === this.currentUser.data.id.value) {
+							return user;
 						}
+					});
 
-						if (response.data.data.path) {
-							currentUser.path = response.data.data.path;
-							currentUser.filename = files.basename(response.data.data.path);
-						}
-
-						this.$refs.modal.close();
-
-						this.$store.commit("addDebugger", {
-							title: "Успешно!",
-							body: response.data.message,
-							type: "completed",
-						});
-					} else {
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "error",
-						});
+					for (let key in currentUser) {
+						if (key === "created_at" || key === "updated_at") continue;
+						currentUser[key] = this.currentUser.data[key].value;
 					}
+
+					if (response.data.result.path) {
+						currentUser.path = response.data.result.path;
+						currentUser.filename = files.basename(response.data.result.path);
+					}
+
+					this.$refs.modal.close();
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
@@ -1092,45 +1033,32 @@ export default {
 
 			this.disabled.users.create = true;
 
-			axios({
+			api({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `create-user`,
+				url: this.$store.getters.urlApi + `create-user`,
 				headers: {
 					Accept: "multipart/form-data",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: formData,
 			})
 				.then((response) => {
-					if (response.data.status) {
-						this.users.push({
-							id: response.data.data.id,
-							family: response.data.data.family,
-							name: response.data.data.name,
-							surname: response.data.data.surname,
-							dateOfBirth: response.data.data.dateOfBirth,
-							email: response.data.data.email,
-							nickname: response.data.data.nickname,
-							path: response.data.data.path,
-							filename: response.data.data.filename,
-							rightsId: response.data.data.rightsId,
-							statusId: response.data.data.statusId,
-						});
+					if (!response) return;
 
-						this.$refs.modal.close();
+					this.users.push({
+						id: response.data.result.id,
+						family: response.data.result.family,
+						name: response.data.result.name,
+						surname: response.data.result.surname,
+						dateOfBirth: response.data.result.dateOfBirth,
+						email: response.data.result.email,
+						nickname: response.data.result.nickname,
+						path: response.data.result.path,
+						filename: response.data.result.filename,
+						rightsId: response.data.result.rightsId,
+						statusId: response.data.result.statusId,
+					});
 
-						this.$store.commit("addDebugger", {
-							title: "Успешно!",
-							body: response.data.message,
-							type: "completed",
-						});
-					} else {
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "error",
-						});
-					}
+					this.$refs.modal.close();
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
@@ -1148,37 +1076,22 @@ export default {
 		deleteUser() {
 			this.disabled.users.delete = true;
 
-			axios({
+			api({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `delete-user`,
+				url: this.$store.getters.urlApi + `delete-user`,
 				headers: {
 					Accept: "multipart/form-data",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: {
 					id: this.currentUser.data.id.value,
 				},
 			})
 				.then((response) => {
-					if (response.data.status) {
-						this.users = this.users.filter(
-							(user) => user.id !== this.currentUser.data.id.value
-						);
+					if (!response) return;
 
-						this.$refs.modalBlock.close();
+					this.users = this.users.filter((user) => user.id !== this.currentUser.data.id.value);
 
-						this.$store.commit("addDebugger", {
-							title: "Успешно!",
-							body: response.data.message,
-							type: "completed",
-						});
-					} else {
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "error",
-						});
-					}
+					this.$refs.modalDelete.close();
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
@@ -1193,31 +1106,16 @@ export default {
 		},
 	},
 	mounted() {
-		axios({
+		api({
 			method: "get",
-			headers: {
-				Accept: "application/json",
-				Authorization: `Bearer ${localStorage.getItem("token")}`,
-			},
-			url: `${this.$store.getters.urlApi}` + `get-users-all`,
+			url: this.$store.getters.urlApi + `get-users-all`,
 		})
 			.then((response) => {
-				if (response.data.status) {
-					this.users = response.data.data.users;
-					this.rights = response.data.data.rights;
-					this.statuses = response.data.data.statuses;
-				} else {
-					if (response.data.message === "Недостаточно прав.") {
-						this.$router.push("/404");
-						return;
-					}
+				if (!response) return;
 
-					this.$store.commit("addDebugger", {
-						title: "Ошибка.",
-						body: response.data.message,
-						type: "error",
-					});
-				}
+				this.users = response.data.result.users;
+				this.rights = response.data.result.rights;
+				this.statuses = response.data.result.statuses;
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {

@@ -107,7 +107,7 @@ import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vu
 
 import Icon from "../../../components/modules/icon/Icon.vue";
 
-import axios from "axios";
+import api from "../../../services/api";
 import validate from "../../../services/validate";
 
 export default {
@@ -280,12 +280,11 @@ export default {
 			this.loading.sections.week = false;
 			this.loading.loader.week = true;
 
-			axios({
+			api({
 				method: "post",
-				url: `${this.$store.getters.urlApi}get-tracking-statistics-range`,
+				url: this.$store.getters.urlApi + "get-tracking-statistics-range",
 				headers: {
 					Accept: "application/json",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: {
 					start: start.toISOString().split("T")[0],
@@ -293,78 +292,70 @@ export default {
 				},
 			})
 				.then((response) => {
-					if (response.data.status) {
-						// Полностью сбрасываем данные графика
-						this.apexchart.series = [];
+					if (!response) return;
 
-						// Собираем все уникальные даты
-						const allDates = new Set();
-						const seriesData = {};
+					// Полностью сбрасываем данные графика
+					this.apexchart.series = [];
 
-						// Сначала собираем все даты и данные
-						for (let requestType in response.data.data) {
-							seriesData[requestType] = [];
+					// Собираем все уникальные даты
+					const allDates = new Set();
+					const seriesData = {};
 
-							for (let key in response.data.data[requestType]) {
-								allDates.add(key);
-							}
+					// Сначала собираем все даты и данные
+					for (let requestType in response.data.result) {
+						seriesData[requestType] = [];
+
+						for (let key in response.data.result[requestType]) {
+							allDates.add(key);
 						}
+					}
 
-						// Определение количество дней для вывода по группам
-						if (allDates.size / 7 > 4) {
-							this.apexchart.options.xaxis.tickAmount = 7;
-						} else if (allDates.size / 30 > 3) {
-							this.apexchart.options.xaxis.tickAmount = 14;
-						} else if (allDates.size / 30 > 6) {
-							this.apexchart.options.xaxis.tickAmount = 31;
-						} else {
-							delete this.apexchart.options.xaxis.tickAmount;
-						}
+					// Определение количество дней для вывода по группам
+					if (allDates.size / 7 > 4) {
+						this.apexchart.options.xaxis.tickAmount = 7;
+					} else if (allDates.size / 30 > 3) {
+						this.apexchart.options.xaxis.tickAmount = 14;
+					} else if (allDates.size / 30 > 6) {
+						this.apexchart.options.xaxis.tickAmount = 31;
+					} else {
+						delete this.apexchart.options.xaxis.tickAmount;
+					}
 
-						// Сортируем даты
-						const sortedDates = Array.from(allDates).sort(
-							(a, b) => new Date(a) - new Date(b)
-						);
+					// Сортируем даты
+					const sortedDates = Array.from(allDates).sort((a, b) => new Date(a) - new Date(b));
 
-						// Форматируем даты для отображения
-						this.apexchart.options.xaxis.categories = sortedDates.map((dateStr) => {
-							return new Date(dateStr).toLocaleDateString("ru", {
-								day: "numeric",
-								month: "short",
-							});
+					// Форматируем даты для отображения
+					this.apexchart.options.xaxis.categories = sortedDates.map((dateStr) => {
+						return new Date(dateStr).toLocaleDateString("ru", {
+							day: "numeric",
+							month: "short",
+						});
+					});
+
+					// Заполняем данные для каждой серии
+					for (let requestType in response.data.result) {
+						const counts = sortedDates.map((dateStr) => {
+							const dataForDate = response.data.result[requestType][dateStr];
+							return Array.isArray(dataForDate) ? dataForDate.length : 0;
 						});
 
-						// Заполняем данные для каждой серии
-						for (let requestType in response.data.data) {
-							const counts = sortedDates.map((dateStr) => {
-								const dataForDate = response.data.data[requestType][dateStr];
-								return Array.isArray(dataForDate) ? dataForDate.length : 0;
-							});
-
-							this.apexchart.series.push({
-								name: requestType,
-								data: counts,
-							});
-						}
-
-						// Форсируем обновление опций
-						this.apexchart = {
-							...this.apexchart,
-							options: {
-								...this.apexchart.options,
-								xaxis: {
-									...this.apexchart.options.xaxis,
-									categories: [...this.apexchart.options.xaxis.categories],
-								},
-							},
-						};
-					} else {
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "error",
+						this.apexchart.series.push({
+							name: requestType,
+							data: counts,
 						});
 					}
+
+					// Форсируем обновление опций
+					this.apexchart = {
+						...this.apexchart,
+						options: {
+							...this.apexchart.options,
+							xaxis: {
+								...this.apexchart.options.xaxis,
+								categories: [...this.apexchart.options.xaxis.categories],
+							},
+						},
+					};
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
@@ -393,12 +384,11 @@ export default {
 		previousDay.setDate(currentDay.getDate() - 7);
 		this.currentDate.data.dateStart.value = previousDay.toISOString().slice(0, 10);
 
-		axios({
+		api({
 			method: "post",
-			url: `${this.$store.getters.urlApi}` + `get-tracking-statistics-range`,
+			url: this.$store.getters.urlApi + `get-tracking-statistics-range`,
 			headers: {
 				Accept: "application/json",
-				Authorization: `Bearer ${localStorage.getItem("token")}`,
 			},
 			data: {
 				start: previousDay.toISOString().split("T")[0],
@@ -406,48 +396,42 @@ export default {
 			},
 		})
 			.then((response) => {
-				if (response.data.status) {
-					// Полностью сбрасываем данные графика
-					this.apexchart.series = [];
+				if (!response) return;
 
-					// Собираем все уникальные даты
-					const allDates = new Set();
+				// Полностью сбрасываем данные графика
+				this.apexchart.series = [];
 
-					// Сначала собираем все даты и данные
-					for (let requestType in response.data.data) {
-						for (let key in response.data.data[requestType]) {
-							allDates.add(key);
-						}
+				// Собираем все уникальные даты
+				const allDates = new Set();
+
+				// Сначала собираем все даты и данные
+				for (let requestType in response.data.result) {
+					for (let key in response.data.result[requestType]) {
+						allDates.add(key);
 					}
+				}
 
-					// Сортируем даты
-					const sortedDates = Array.from(allDates).sort((a, b) => new Date(a) - new Date(b));
+				// Сортируем даты
+				const sortedDates = Array.from(allDates).sort((a, b) => new Date(a) - new Date(b));
 
-					// Форматируем даты для отображения
-					this.apexchart.options.xaxis.categories = sortedDates.map((dateStr) => {
-						return new Date(dateStr).toLocaleDateString("ru", {
-							day: "numeric",
-							month: "short",
-						});
+				// Форматируем даты для отображения
+				this.apexchart.options.xaxis.categories = sortedDates.map((dateStr) => {
+					return new Date(dateStr).toLocaleDateString("ru", {
+						day: "numeric",
+						month: "short",
+					});
+				});
+
+				// Заполняем данные для каждой серии
+				for (let requestType in response.data.result) {
+					const counts = sortedDates.map((dateStr) => {
+						const dataForDate = response.data.result[requestType][dateStr];
+						return Array.isArray(dataForDate) ? dataForDate.length : 0;
 					});
 
-					// Заполняем данные для каждой серии
-					for (let requestType in response.data.data) {
-						const counts = sortedDates.map((dateStr) => {
-							const dataForDate = response.data.data[requestType][dateStr];
-							return Array.isArray(dataForDate) ? dataForDate.length : 0;
-						});
-
-						this.apexchart.series.push({
-							name: requestType,
-							data: counts,
-						});
-					}
-				} else {
-					this.$store.commit("addDebugger", {
-						title: "Ошибка.",
-						body: response.data.message,
-						type: "error",
+					this.apexchart.series.push({
+						name: requestType,
+						data: counts,
 					});
 				}
 			})
@@ -462,12 +446,11 @@ export default {
 				this.loading.loader.week = false;
 			});
 
-		axios({
+		api({
 			method: "post",
-			url: `${this.$store.getters.urlApi}` + `get-tracking-statistics-range`,
+			url: this.$store.getters.urlApi + `get-tracking-statistics-range`,
 			headers: {
 				Accept: "application/json",
-				Authorization: `Bearer ${localStorage.getItem("token")}`,
 			},
 			data: {
 				start: previousDay.toISOString().split("T")[0],
@@ -476,30 +459,24 @@ export default {
 			},
 		})
 			.then((response) => {
-				if (response.data.status) {
-					let counts = [];
+				if (!response) return;
 
-					for (let key in response.data.data) {
-						counts.push({
-							x: new Date(key).toLocaleDateString("ru", {
-								day: "numeric",
-								month: "short",
-							}),
-							y: response.data.data[key].length,
-						});
-					}
+				let counts = [];
 
-					this.attendance.series.push({
-						name: "",
-						data: counts,
-					});
-				} else {
-					this.$store.commit("addDebugger", {
-						title: "Ошибка.",
-						body: response.data.message,
-						type: "error",
+				for (let key in response.data.result) {
+					counts.push({
+						x: new Date(key).toLocaleDateString("ru", {
+							day: "numeric",
+							month: "short",
+						}),
+						y: response.data.result[key].length,
 					});
 				}
+
+				this.attendance.series.push({
+					name: "",
+					data: counts,
+				});
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {
@@ -512,12 +489,11 @@ export default {
 				this.loading.loader.attendance = false;
 			});
 
-		axios({
+		api({
 			method: "post",
-			url: `${this.$store.getters.urlApi}` + `get-tracking-statistics-range`,
+			url: this.$store.getters.urlApi + `get-tracking-statistics-range`,
 			headers: {
 				Accept: "application/json",
-				Authorization: `Bearer ${localStorage.getItem("token")}`,
 			},
 			data: {
 				start: previousDay.toISOString().split("T")[0],
@@ -526,30 +502,24 @@ export default {
 			},
 		})
 			.then((response) => {
-				if (response.data.status) {
-					let counts = [];
+				if (!response) return;
 
-					for (let key in response.data.data) {
-						counts.push({
-							x: new Date(key).toLocaleDateString("ru", {
-								day: "numeric",
-								month: "short",
-							}),
-							y: response.data.data[key].length,
-						});
-					}
+				let counts = [];
 
-					this.recordPriem.series.push({
-						name: "",
-						data: counts,
-					});
-				} else {
-					this.$store.commit("addDebugger", {
-						title: "Ошибка.",
-						body: response.data.message,
-						type: "error",
+				for (let key in response.data.result) {
+					counts.push({
+						x: new Date(key).toLocaleDateString("ru", {
+							day: "numeric",
+							month: "short",
+						}),
+						y: response.data.result[key].length,
 					});
 				}
+
+				this.recordPriem.series.push({
+					name: "",
+					data: counts,
+				});
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {

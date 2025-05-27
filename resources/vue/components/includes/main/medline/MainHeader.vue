@@ -208,7 +208,7 @@ import ContainerSelectOnce from "../../../ui/admin/containers/select/ContainerSe
 
 import ButtonDefault from "../../../ui/admin/buttons/ButtonDefault.vue";
 
-import axios from "axios";
+import api from "../../../../services/api";
 import validate from "../../../../services/validate";
 import shared from "../../../../services/shared";
 
@@ -223,10 +223,6 @@ export default {
 		ContainerSelectOnce,
 
 		ButtonDefault,
-
-		axios,
-		validate,
-		shared,
 	},
 	data() {
 		return {
@@ -409,30 +405,18 @@ export default {
 				})
 			);
 
-			axios({
+			api({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `request-telegram-bot`,
+				url: this.$store.getters.urlApi + `request-telegram-bot`,
 				headers: {
 					ContentType: "multipart/form-data",
 				},
 				data: formData,
 			})
 				.then((response) => {
-					if (response.data.status) {
-						this.$store.commit("addDebugger", {
-							title: "Успешно!",
-							body: response.data.message,
-							type: "completed",
-						});
+					if (!response) return;
 
-						this.$refs.modal.close();
-					} else {
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "error",
-						});
-					}
+					this.$refs.modal.close();
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
@@ -531,7 +515,7 @@ header.slide {
 	height: 50px;
 	border-radius: 100px;
 
-	background-color: var(--primary-color-hover);	
+	background-color: var(--primary-color-hover);
 }
 
 .header-buttons {

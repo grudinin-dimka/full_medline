@@ -97,24 +97,27 @@ class HomeController extends Controller
             curl_close($ch);   
    
             return response()->json([
-               "status" => true,
+               "success" => true,
+               "debug" => true,
                "message" => "Заявка отправлена.",
-               "data" => null,
+               "result" => null,
             ]);
          } else {
             curl_close($ch);   
             
             return response()->json([
-               "status" => false,
+               "success" => false,
+               "debug" => true,
                "message" => "Сервис отправки не работает.",
-               "data" => null,
+               "result" => null,
             ]);
          };
       } catch (Throwable $e) {
          return response()->json([
-            "status" => false,
-            "message" => "При отправке что-то пошло не так.",
-            "data" => null,
+            "success" => false,
+            "debug" => true,
+            "message" => "Произошла ошибка.",
+            "result" => null,
          ]);
       }
    }

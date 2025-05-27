@@ -25,7 +25,7 @@ import LoaderChild from "../../../components/modules/LoaderChild.vue";
 
 import BaseTable from "../../../components/modules/table/BaseTable.vue";
 
-import axios from "axios";
+import api from "../../../services/api";
 
 export default {
 	components: {
@@ -120,24 +120,17 @@ export default {
 		},
 	},
 	mounted() {
-		axios({
+		api({
 			method: "post",
-			url: `${this.$store.getters.urlApi}` + `get-tracking-statistics-list`,
+			url: this.$store.getters.urlApi + `get-tracking-statistics-list`,
 			headers: {
 				Accept: "application/json",
-				Authorization: `Bearer ${localStorage.getItem("token")}`,
 			},
 		})
 			.then((response) => {
-				if (response.data.status) {
-					this.table.body = response.data.data;
-				} else {
-					this.$store.commit("addDebugger", {
-						title: "Ошибка.",
-						body: response.data.message,
-						type: "error",
-					});
-				}
+				if (!response) return;
+
+				this.table.body = response.data.result;
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {
