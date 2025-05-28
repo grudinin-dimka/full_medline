@@ -29,6 +29,7 @@ use App\Models\Slide;
 use App\Models\Footer;
 
 use App\Models\About;
+use App\Models\InfoFile;
 
 use App\Models\Contact;
 use App\Models\Phone;
@@ -156,6 +157,13 @@ class AdminController extends Controller
             case 'prices':
                $path = $request->file('file')->storeAs(
                   'public/prices',
+                  $originalName, 
+                  'local'
+               );
+               break;
+            case 'files':
+               $path = $request->file('file')->storeAs(
+                  'public/files',
                   $originalName, 
                   'local'
                );
@@ -1614,6 +1622,84 @@ class AdminController extends Controller
          ], 500);
       };
    }
+
+   /* Сохранение данных файлов */
+   public function saveInfoFilesChanges(Request $request) {
+      $infoFiles = json_decode($request->infoFiles);
+      $arrayID = [];
+
+      DB::beginTransaction();
+
+      try {
+         foreach ($infoFiles as $key => $value) {
+            // Удаление
+            if ($value->delete === true){
+               $priceFile = InfoFile::find($value->id);
+               $priceFile->delete();
+               continue;                  
+            }         
+
+            // Создание
+            if ($value->create === true) {
+               $infoFileCreate = InfoFile::create([
+                  "filename" => $value->filename,
+               ]);
+
+               $arrayID[] = (object) [
+                  // Прошлый id
+                  'old' => $value->id, 
+                  // Новый id
+                  'new' => $infoFileCreate->id
+               ];            
+               continue;
+            };       
+         };
+
+         $infoFiles = InfoFile::all();
+
+         // Получение всех файлов
+         $filesPrices = Storage::files('public/files');
+
+         if($filesPrices) {
+            foreach ($filesPrices as $fileKey => $fileValue) {
+               $useFile = false;
+               // Проверка на использование файла
+               foreach ($infoFiles as $infoFilesKey => $infoFilesValue) {
+                  // Обрезание значения $fileValue до названия файла
+                  $str = str_replace('public/files/', '', $fileValue);
+
+                  // Проверка значения названия файла на совпадение
+                  if ($infoFilesValue->filename == $str) {
+                     $useFile = true;
+                  };
+               };
+      
+               if (!$useFile) {
+                  Storage::delete($fileValue);
+               };
+            };
+         };      
+
+         DB::commit();
+
+         return response()->json([
+            "success" => true,
+            "debug" => true,
+            "message" => "Данные обновлены.",
+            "result" => $arrayID,
+         ]);
+      } catch (Throwable $e) {
+         DB::rollBack();
+
+         return response()->json([
+            "success" => false,
+            "debug" => true,
+            "message" => $e->getMessage(),
+            "result" => null,
+         ], 500);
+      };
+   }
+
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                    КОНТАКТЫ                       |*/
    /* |___________________________________________________|*/

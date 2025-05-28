@@ -112,6 +112,7 @@ import Icon from "../../../components/modules/icon/Icon.vue";
 import api from "../../../services/api";
 import validate from "../../../services/validate";
 import shared from "../../../services/shared";
+import files from "../../../services/files";
 
 export default {
 	components: {
@@ -314,7 +315,7 @@ export default {
 
 					this.table.body.push({
 						id: shared.getMaxId(this.table.body) + 1,
-						filename: response.data.result.replace("/storage/prices/", ""),
+						filename: files.basename(response.data.result),
 						path: response.data.result,
 						date: "Не определено",
 						delete: false,

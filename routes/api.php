@@ -27,6 +27,7 @@ Route::get('/get-footer', [HomeController::class, 'getFooter']);
 
 /* О нас */
 Route::get('/get-abouts-all', [HomeController::class, 'getAboutsAll']);
+Route::get('/get-info-files-all', [HomeController::class, 'getInfoFilesAll']);
 
 /* Специалисты */
 Route::get('/get-specialists', [HomeController::class, 'getSpecialists']);
@@ -90,6 +91,7 @@ Route::middleware(['auth:sanctum', 'admin-or-creator'])->group(function () {
 
    // О нас
    Route::post('/save-abouts-changes', [AdminController::class, 'saveAboutsChanges'])->middleware('auth:sanctum');
+   Route::post('/save-info-files-changes', [AdminController::class, 'saveInfoFilesChanges'])->middleware('auth:sanctum');
 
    // Контакты
    Route::post('/save-contacts-changes', [AdminController::class, 'saveContactsChanges'])->middleware('auth:sanctum');

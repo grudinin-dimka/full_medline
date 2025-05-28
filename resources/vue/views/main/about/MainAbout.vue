@@ -5,17 +5,22 @@
 		<router-link to="/about">О нас</router-link>
 	</info-bar>
 
-	<block>
+	<block :minHeight="300">
 		<template v-if="loading.sections.about">
 			<MainAboutList :abouts="abouts" v-if="abouts.length > 0" />
 			<Empty v-else />
+		</template>
 
+		<loader-child
+			:isLoading="loading.loader.about"
+			@loaderChildAfterLeave="loaderChildAfterLeave"
+		/>
+	</block>
+
+	<block :minHeight="0">
+		<template v-if="loading.sections.infoFiles">
 			<div class="files">
-				<a
-					class="files__item"
-					:href="'/storage/other/Уведомление о передачи отчета СОУТ во ФГИС.pdf'"
-					target="_blank"
-				>
+				<a v-for="file in infoFiles" class="files__item" :href="file.path" target="_blank">
 					<div class="files__item-content">
 						<div class="files__content-icon">
 							<Icon
@@ -26,7 +31,7 @@
 								:cursor="'pointer'"
 							/>
 						</div>
-						<div class="files__content-name">Уведомление о передачи отчета СОУТ во ФГИС</div>
+						<div class="files__content-name">{{ getFilename(file.path) }}</div>
 					</div>
 					<div class="files__item-other">
 						<button class="files__other-button">Смотреть</button>
@@ -52,6 +57,7 @@ import Empty from "../../../components/modules/Empty.vue";
 
 import api from "../../../services/api";
 import Icon from "../../../components/modules/icon/Icon.vue";
+import files from "../../../services/files";
 
 export default {
 	components: {
@@ -69,7 +75,15 @@ export default {
 		/* |___________________________________________________|*/
 		/* После скрытия элементы */
 		loaderChildAfterLeave() {
-			this.loading.sections.about = true;
+			for (let key in this.loading.loader) {
+				if (!this.loading.loader[key]) {
+					this.loading.sections[key] = true;
+				}
+			}
+		},
+
+		getFilename(value) {
+			return files.basename(value);
 		},
 	},
 	data() {
@@ -77,12 +91,16 @@ export default {
 			loading: {
 				loader: {
 					about: true,
+					infoFiles: true,
 				},
 				sections: {
 					about: false,
+					infoFiles: false,
 				},
 			},
+
 			abouts: [],
+			infoFiles: [],
 		};
 	},
 	mounted() {
@@ -111,6 +129,26 @@ export default {
 			.finally(() => {
 				this.loading.loader.specialists = false;
 			});
+
+		api({
+			method: "get",
+			url: this.$store.getters.urlApi + `get-info-files-all`,
+		})
+			.then((response) => {
+				if (!response) return;
+
+				this.infoFiles = response.data.result;
+			})
+			.catch((error) => {
+				this.$store.commit("addDebugger", {
+					title: "Ошибка.",
+					body: error,
+					type: "error",
+				});
+			})
+			.finally(() => {
+				this.loading.loader.infoFiles = false;
+			});
 	},
 };
 </script>
@@ -122,6 +160,8 @@ export default {
 	gap: 20px;
 
 	width: 1350px;
+
+	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 .files__item {
@@ -166,5 +206,23 @@ export default {
 
 .files__other-button:hover {
 	background-color: var(--primary-color-hover);
+}
+
+@media screen and (width <= 1425px) {
+	.files {
+		width: 100%;
+	}
+}
+
+@media screen and (width <= 850px) {
+	.files__item {
+		flex-direction: column;
+		justify-content: stretch;
+		align-items: stretch;
+	}
+
+	.files__other-button {
+		width: 100%;
+	}
 }
 </style>

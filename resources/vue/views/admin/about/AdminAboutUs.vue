@@ -1,10 +1,7 @@
 <template>
 	<!-- Модальное окно: Информационный блок -->
 	<Modal ref="modal" :settings="modal">
-		<template
-			#title
-			v-if="modal.values.look == 'default' && !currentInfoBlock.data.delete.value"
-		>
+		<template #title v-if="modal.values.look == 'default' && !currentInfoBlock.data.delete.value">
 			<Icon
 				:name="'arrow'"
 				:fill="'var(--icon-multi-fill)'"
@@ -232,7 +229,7 @@
 					<input
 						type="file"
 						autocomplete="off"
-						ref="fileUpload"
+						ref="imageUpload"
 						:class="{ error: currentImage.errors.file.status }"
 						@input="currentImage.data.file.edited = true"
 					/>
@@ -262,9 +259,43 @@
 		</template>
 	</Modal>
 
+	<!-- Модальное окно: Добавить картинку -->
+	<Modal ref="modalFiles" :settings="modalFiles">
+		<template #title>
+			{{ modalFiles.values.title }}
+		</template>
+
+		<template #body>
+			<container-input-once>
+				<template #input>
+					<input
+						type="file"
+						autocomplete="off"
+						ref="fileUpload"
+						:class="{ error: currentFile.errors.file.status }"
+						@input="currentFile.data.file.edited = true"
+					/>
+				</template>
+				<template #error>
+					<span class="error" v-if="currentFile.errors.file.status">
+						{{ currentFile.errors.file.message }}
+					</span>
+				</template>
+			</container-input-once>
+		</template>
+
+		<template #footer>
+			<button-default @click="uploadFile" :disabled="disabled.files.upload">
+				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				Загрузить
+			</button-default>
+		</template>
+	</Modal>
+
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|               ИНФОРМАЦИОННЫЕ БЛОКИ                |-->
 	<!--|___________________________________________________|-->
+	<!-- О нас -->
 	<info-bar>
 		<template v-slot:title>О нас</template>
 		<template v-slot:addreas>about</template>
@@ -310,13 +341,45 @@
 			</button-default>
 		</template>
 	</block-once>
+
+	<!-- Файлы -->
+	<block-once :minHeight="100">
+		<template #title>ФАЙЛЫ</template>
+
+		<template #options>
+			<button-default
+				@click.prevent="saveInfoFiles"
+				:disabled="disabled.files.save"
+				:look="'white'"
+			>
+				<Icon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
+				Сохранить
+			</button-default>
+		</template>
+
+		<template #body>
+			<BaseTable
+				v-if="loading.sections.infoFiles"
+				:table="table"
+				@create="openFilesCreate"
+				@edite="downloadFile"
+				@delete="markToDelete"
+			/>
+
+			<LoaderChild
+				:isLoading="loading.loader.infoFiles"
+				:minHeight="300"
+				@loaderChildAfterLeave="loaderChildAfterLeave"
+			></LoaderChild>
+		</template>
+	</block-once>
 </template>
 
 <script>
 import Modal from "../../../components/modules/modal/Modal.vue";
-
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import Tiptap from "../../../components/modules/Tiptap.vue";
+import BaseTable from "../../../components/modules/table/BaseTable.vue";
 
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTwo from "../../../components/ui/admin/blocks/BlockTwo.vue";
@@ -345,10 +408,10 @@ import validate from "../../../services/validate";
 export default {
 	components: {
 		Modal,
-
 		InfoBar,
 		Tiptap,
 		LoaderChild,
+		BaseTable,
 
 		BlockOnce,
 		BlockTwo,
@@ -380,6 +443,10 @@ export default {
 					update: false,
 					add: false,
 				},
+				files: {
+					save: false,
+					upload: false,
+				},
 			},
 
 			/* Загрузчик */
@@ -387,10 +454,12 @@ export default {
 				loader: {
 					title: true,
 					infoBlocks: true,
+					infoFiles: true,
 				},
 				sections: {
 					title: false,
 					infoBlocks: false,
+					infoFiles: false,
 				},
 			},
 
@@ -405,6 +474,15 @@ export default {
 			},
 
 			modalImage: {
+				thin: true,
+				clamped: false,
+				values: {
+					title: "",
+					look: "default",
+				},
+			},
+
+			modalFiles: {
 				thin: true,
 				clamped: false,
 				values: {
@@ -512,6 +590,52 @@ export default {
 				},
 			},
 
+			currentFile: {
+				errors: {
+					file: {
+						message: "",
+						status: false,
+					},
+				},
+				data: {
+					file: {
+						value: "",
+						edited: false,
+					},
+				},
+			},
+
+			/* Таблица */
+			table: {
+				// Настройки
+				options: {
+					create: true,
+					delete: true,
+					update: true,
+					report: false,
+				},
+
+				// Колонки
+				head: [
+					{ name: "id", text: "ID", columnType: "id" },
+					{
+						name: "filename",
+						text: "Файл",
+						columnType: "default",
+						columnSize: "auto",
+					},
+					{
+						name: "date",
+						text: "Дата загрузки",
+						columnType: "default",
+						columnSize: "300px",
+					},
+				],
+
+				// Элементы
+				body: [],
+			},
+
 			/* Список */
 			infoBlocks: [],
 		};
@@ -522,8 +646,11 @@ export default {
 		/* |___________________________________________________|*/
 		/* После скрытия загрузчика */
 		loaderChildAfterLeave() {
-			this.loading.sections.title = true;
-			this.loading.sections.infoBlocks = true;
+			for (let key in this.loading.loader) {
+				if (!this.loading.loader[key]) {
+					this.loading.sections[key] = true;
+				}
+			}
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -558,7 +685,7 @@ export default {
 			this.currentImage.data.file.edited = false;
 			this.currentImage.errors.file.status = false;
 
-			this.$refs.fileUpload.value = "";
+			this.$refs.imageUpload.value = "";
 
 			this.openModal("modalImage", "ЗАГРУЗКА ИЗОБРАЖЕНИЯ", "default");
 		},
@@ -569,9 +696,19 @@ export default {
 			this.currentImage.data.file.edited = false;
 			this.currentImage.errors.file.status = false;
 
-			this.$refs.fileUpload.value = "";
+			this.$refs.imageUpload.value = "";
 
 			this.openModal("modalImage", "ЗАГРУЗКА ИЗОБРАЖЕНИЯ", "default");
+		},
+
+		/* Открытие модального окна для загрузки */
+		openFilesCreate() {
+			this.openModal("modalFiles", "ФАЙЛ", "create");
+		},
+
+		/* Открытие модального окна для загрузки */
+		openFilesEdite(name) {
+			this.openModal("modalFiles", "ФАЙЛ", "default");
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -584,7 +721,7 @@ export default {
 					{
 						key: "file",
 						type: "file",
-						value: this.$refs.fileUpload,
+						value: this.$refs.imageUpload,
 						formats: ["jpg", "jpeg", "png", "webp"],
 					},
 				])
@@ -593,7 +730,7 @@ export default {
 
 			/* Загрузка файла */
 			let formData = new FormData();
-			formData.append("file", this.$refs.fileUpload.files[0]);
+			formData.append("file", this.$refs.imageUpload.files[0]);
 			formData.append("type", "abouts");
 			formData.append("formats", ["png", "jpg", "jpeg", "webp"]);
 
@@ -655,9 +792,6 @@ export default {
 				});
 		},
 
-		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |              ИНФОРМАЦИОННЫЕ БЛОКИ                 |*/
-		/* |___________________________________________________|*/
 		/* Удаление */
 		deleteInfoBlock() {
 			try {
@@ -778,6 +912,132 @@ export default {
 					this.disabled.about.save = false;
 				});
 		},
+
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                     ФАЙЛЫ                         |*/
+		/* |___________________________________________________|*/
+		/* Загрузка картинки */
+		uploadFile() {
+			if (
+				validate.checkInputsAll(this.currentFile, [
+					{
+						key: "file",
+						type: "file",
+						value: this.$refs.fileUpload,
+						formats: [
+							"pdf",
+							"doc",
+							"docx",
+							"xlsx",
+							"xls",
+							"ods",
+							"jpg",
+							"jpeg",
+							"png",
+							"webp",
+						],
+					},
+				])
+			)
+				return;
+
+			this.disabled.files.upload = true;
+
+			/* Загрузка файла */
+			let formData = new FormData();
+			formData.append("file", this.$refs.fileUpload.files[0]);
+			formData.append("type", "files");
+			formData.append("formats", [
+				"pdf",
+				"doc",
+				"docx",
+				"xlsx",
+				"xls",
+				"ods",
+				"jpg",
+				"jpeg",
+				"png",
+				"webp",
+			]);
+
+			api({
+				method: "post",
+				url: this.$store.getters.urlApi + `upload-file`,
+				headers: {
+					"Content-Type": "multipart/form-data",
+				},
+				data: formData,
+			})
+				.then((response) => {
+					if (!response) return;
+
+					this.table.body.push({
+						id: shared.getMaxId(this.table.body) + 1,
+						filename: files.basename(response.data.result),
+						path: response.data.result,
+						date: "Не определено",
+						delete: false,
+						create: true,
+					});
+
+					this.$refs.modalFiles.close();
+				})
+				.catch((error) => {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка.",
+						body: error,
+						type: "error",
+					});
+				})
+				.finally(() => {
+					this.disabled.files.upload = false;
+				});
+		},
+
+		/* Сохранение изменений */
+		saveInfoFiles() {
+			let formData = new FormData();
+			formData.append("infoFiles", JSON.stringify(this.table.body));
+
+			this.disabled.files.save = true;
+
+			api({
+				method: "post",
+				url: this.$store.getters.urlApi + `save-info-files-changes`,
+				headers: {
+					ContentType: "multipart/form-data",
+				},
+				data: formData,
+			})
+				.then((response) => {
+					if (!response) return;
+
+					shared.updateId(this.table.body, response.data.result);
+					shared.clearDeletes(this.table.body);
+					shared.clearFlags(this.table.body);
+					shared.updateOrders(this.table.body);
+				})
+				.catch((error) => {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка.",
+						body: error,
+						type: "error",
+					});
+				})
+				.finally(() => {
+					this.disabled.files.save = false;
+				});
+		},
+
+		downloadFile(value) {
+			// Перенаправляем пользователя на ссылку для скачивания файла
+			window.location.href = value.path;
+		},
+
+		/* Пометка на удаление */
+		markToDelete(value) {
+			value.delete = !value.delete;
+		},
 	},
 	mounted() {
 		api({
@@ -805,6 +1065,31 @@ export default {
 			})
 			.finally(() => {
 				this.loading.loader.infoBlocks = false;
+			});
+
+		api({
+			method: "get",
+			url: this.$store.getters.urlApi + `get-info-files-all`,
+		})
+			.then((response) => {
+				if (!response) return;
+
+				this.table.body = response.data.result;
+
+				this.table.body.forEach((item) => {
+					item.create = false;
+					item.delete = false;
+				});
+			})
+			.catch((error) => {
+				this.$store.commit("addDebugger", {
+					title: "Ошибка.",
+					body: error,
+					type: "error",
+				});
+			})
+			.finally(() => {
+				this.loading.loader.infoFiles = false;
 			});
 	},
 };

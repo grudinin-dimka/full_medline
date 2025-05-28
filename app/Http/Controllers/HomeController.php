@@ -38,7 +38,7 @@ use App\Models\Phone;
 use App\Models\ContactPhone;
 use App\Models\Mail;
 use App\Models\ContactMail;
-
+use App\Models\InfoFile;
 use App\Models\Shedule;
 use App\Models\ShedulesDay;
 use App\Models\ShedulesDaysTime;
@@ -1138,6 +1138,31 @@ class HomeController extends Controller
             "result" => null,
          ], 500);         
       };
+   }
+
+   public function  getInfoFilesAll(Request $request) {
+      try {
+         $infoFiles = InfoFile::all();
+      
+         foreach ($infoFiles as $infoFilesKey => $infoFilesValue) {
+            $infoFiles[$infoFilesKey]->path = Storage::url('files/' . $infoFilesValue->filename);
+            $infoFiles[$infoFilesKey]->date = Carbon::parse($infoFilesValue->created_at)->format('d.m.Y, H:i:s');
+         };
+
+         return response()->json([
+            "success" => true,
+            "debug" => false,
+            "message" => "Данные получены.",
+            "result" => $infoFiles,
+         ]);         
+      } catch (Throwable $e) {
+         return response()->json([
+            "success" => false,
+            "debug" => true,
+            "message" => $e->getMessage(),
+            "result" => null,
+         ]);
+      }
    }
 
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
