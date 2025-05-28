@@ -84,7 +84,7 @@ import ContainerInput from "../../../components/ui/admin/containers/ContainerInp
 import ContainerInputTwo from "../../../components/ui/admin/containers/input/ContainerInputTwo.vue";
 import ContainerInputThree from "../../../components/ui/admin/containers/input/ContainerInputThree.vue";
 
-import axios from "axios";
+import api from "../../../services/api";
 
 export default {
 	components: {
@@ -94,8 +94,6 @@ export default {
 		ContainerInput,
 		ContainerInputTwo,
 		ContainerInputThree,
-
-		axios,
 	},
 	data() {
 		return {
@@ -135,26 +133,23 @@ export default {
 		},
 	},
 	mounted() {
-		axios({
+		api({
 			method: "get",
-			headers: {
-				Accept: "application/json",
-				Authorization: `Bearer ${localStorage.getItem("token")}`,
-			},
-			url: `${this.$store.getters.urlApi}` + `get-profile-info`,
+			url: this.$store.getters.urlApi + `get-profile-info`,
 		})
 			.then((response) => {
+				if (!response) return;
+
 				for (let key in this.profile) {
-					this.profile[key] = response.data.data[key];
+					this.profile[key] = response.data.result[key];
 				}
 			})
 			.catch((error) => {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "Произошла ошибка при загрузке профиля.",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					body: error,
+					type: "error",
+				});
 			})
 			.finally(() => {
 				this.loading.loader.profile = false;

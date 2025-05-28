@@ -253,16 +253,19 @@ export default {
 
 			currentCategories = currentCategories.filter((category) => {
 				let bool = false;
+
 				let currentPrices = this.prices.filter((price) => {
 					if (price.categoryId == category.id) {
 						return price;
 					}
 				});
+
 				currentPrices.forEach((price) => {
 					if (price.name.toLowerCase().includes(this.filters.name.toLowerCase())) {
 						bool = true;
 					}
 				});
+				
 				return bool;
 			});
 
@@ -294,6 +297,7 @@ export default {
 
 			return currentCategories;
 		},
+
 		/* Вывод выбранных категорий */
 		getCategorySelected() {
 			let selected = this.filters.category.selected;
@@ -301,6 +305,7 @@ export default {
 
 			return selected;
 		},
+		
 		getActiveFilters() {
 			return this.filters.category.selected.length;
 		},

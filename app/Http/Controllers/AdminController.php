@@ -194,16 +194,26 @@ class AdminController extends Controller
    
    /* Получение данных о профиле пользователя */
    public function getProfileInfo(Request $request) {
-      $user = $request->user();
-      $user->status = Status::find($user->statusId)->name;
-      $user->rights = Rights::find($user->rightsId)->name;
-      $user->path = Storage::url('users/' . $user->filename);
-
-      return response()->json([
-         "status" => true,
-         "message" => "Данные успешно получены.",
-         "data" => $user,
-      ]);
+      try {         
+         $user = $request->user();
+         $user->status = Status::find($user->statusId)->name;
+         $user->rights = Rights::find($user->rightsId)->name;
+         $user->path = Storage::url('users/' . $user->filename);
+      
+         return response()->json([
+            "success" => true,
+            "debug" => false,
+            "message" => "Данные получены.",
+            "result" => $user,
+         ], 200);
+      } catch (Throwable $th) {
+         return response()->json([
+            "success" => false,
+            "debug" => true,
+            "message" => $th->getMessage(),
+            "result" => null,
+         ], 500);         
+      }
    }
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                    ГЛАВНАЯ                        |*/

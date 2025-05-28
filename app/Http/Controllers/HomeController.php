@@ -649,15 +649,7 @@ class HomeController extends Controller
          };
    
          $categories = PriceCategory::where('addressId', $currentAddress->id)->get();
-         if (!$categories) {
-            return response()->json([
-               "success" => false,
-               "debug" => true,
-               "message" => "Категории не найдены.",
-               "result" => null,
-            ], 500);
-         };
-   
+
          // Форматируем категории
          $categoriesFormat = [];
          foreach($categories as $categoriesKey => $categoriesValue) {
@@ -671,15 +663,18 @@ class HomeController extends Controller
    
          // Получаем цены, привязанные к этим категориям
          $prices = PriceValue::whereIn('categoryId', $categoryIds)->get();
-         
-         if (!$currentAddress) {
-            return response()->json([
-               "success" => false,
-               "debug" => true,
-               "message" => "Адрес не найден.",
-               "result" => null,
-            ], 500);
-         };
+       
+         return response()->json([
+            "success" => true,
+            "debug" => false,
+            "message" => "Адрес успешно получен.",
+            "result" => (object) [
+               "address" => $currentAddress,
+               "categories" => $categoriesFormat,
+               "categoriesList" => $categories,
+               "prices" => $prices
+            ],
+         ], 200);
       } catch (Throwable $th) {
          return response()->json([
             "success" => false,
@@ -688,73 +683,6 @@ class HomeController extends Controller
             "result" => null,
          ], 500);
       }
-
-      return response()->json([
-         "success" => true,
-         "debug" => false,
-         "message" => "Адрес успешно получен.",
-         "result" => (object) [
-            "address" => $currentAddress,
-            "categories" => $categoriesFormat,
-            "categoriesList" => $categories,
-            "prices" => $prices
-         ],
-      ], 200);
-   }
-
-   /* Вывод всех данных из таблиц с ценами */
-   public function getPricesAll(Request $request) {
-      $priceAddresses = PriceAddress::all();
-      
-      if (!$priceAddresses) {
-         return response()->json([
-            "success" => false,
-            "debug" => true,
-            "message" => "Не удалось получить адреса.",
-            "result" => null,
-         ], 500);
-      };
-      
-      $priceCategories = PriceCategory::all();
-      
-      if (!$priceCategories) {
-         return response()->json([
-            "success" => false,
-            "debug" => true,
-            "message" => "Не удалось получить категории.",
-            "result" => null,
-         ], 500);
-      }
-
-      // Форматируем категории
-      $priceCategoriesFormat = [];
-      foreach($priceCategories as $priceCategoriesKey => $priceCategoriesValue) {
-         if ($priceCategoriesValue->categoryId != null) continue;
-         
-         $priceCategoriesFormat[] = $this->getCategoryArray($priceCategoriesValue);
-      }
-
-      $priceValues = PriceValue::all();
-      if (!$priceValues) {
-         return response()->json([
-            "success" => false,
-            "debug" => true,
-            "message" => "Не удалось получить услуги и цены.",
-            "result" => null,
-         ], 500);
-      }
-
-      return response()->json([
-         "success" => true,
-         "debug" => true,
-         "message" => "Данные успешно получены.",
-         "result" => [
-            "adresses" => $priceAddresses,
-            "categories" => $priceCategoriesFormat,
-            "categoriesList" => $priceCategories,
-            "prices" => $priceValues,
-         ],
-      ], 200);
    }
 
    /* Форматирование категорий */
@@ -777,6 +705,58 @@ class HomeController extends Controller
       }
       
       return $categoryFormat;
+   }
+
+   /* Вывод шаблона цен */
+   public function getPricesManual(Request $request) {      
+      try {
+         // Текущий адрес
+         if (isset($request->address)) {
+            $currentAddress = PriceAddress::where('name', $request->address)->first();            
+         } else {
+            $currentAddress = PriceAddress::all()->first();
+         }
+
+         // Категории
+         if (isset($request->category)) {
+            $categories = PriceCategory::where('addressId', $currentAddress->id)
+               ->where('name', $request->category)
+               ->get();
+         } else {            
+            $categories = PriceCategory::where('addressId', $currentAddress->id)->get();
+         };
+               
+         // Получаем ID категорий
+         $categoryIds = $categories->pluck('id');
+   
+         // Получаем цены, привязанные к этим категориям
+         if (isset($request->price)) {
+            $prices = PriceValue::whereIn('categoryId', $categoryIds)->where('name', 'like', '%' . $request->price. '%')->get();
+         } else {            
+            $prices = PriceValue::whereIn('categoryId', $categoryIds)->get();
+         };
+
+         $pricesCategories = $prices->pluck('categoryId');
+         $categories = PriceCategory::whereIn('id', $pricesCategories)->get();
+
+         return response()->json([
+            "success" => true,
+            "debug" => false,
+            "message" => "Адрес успешно получен.",
+            "result" => (object) [
+               "address" => $currentAddress,
+               "categories" => $categories,
+               "prices" => $prices
+            ],
+         ], 200);
+      } catch (Throwable $th) {
+         return response()->json([
+            "success" => false,
+            "debug" => true,
+            "message" => "Не получилось получить данные.",
+            "result" => null,
+         ], 500);
+      }
    }
 
    /* Получение групп цен */
@@ -893,6 +873,62 @@ class HomeController extends Controller
             "title" => $title
          ],
       ], 200);
+   }
+
+   /* Получение списка адресов */
+   public function getPricesAddressesList(Request $request) {
+      try {
+         $addresses = PriceAddress::all();
+         
+         return response()->json([
+            "success" => true,
+            "debug" => false,
+            "message" => "Данные получены.",
+            "result" => $addresses,
+         ], 200);
+      } catch (Throwable $e) {
+         return response()->json([
+            "success" => false,
+            "debug" => true,
+            "message" => "Произошла ошибка.",
+            "result" => null,
+         ], 500);         
+      };
+   }
+   
+   public function getPricesCategoriesList(Request $request) {
+      try {
+         $prices = PriceValue::all();
+         $pricesCategorys = $prices->pluck('categoryId');
+
+         $categories = PriceCategory::all()->whereIn('id', $pricesCategorys);
+         
+         $uniqueCategories = [];
+
+         foreach ($categories as $categoryKey => $categoryValue) {
+            foreach ($uniqueCategories as $uniqueCategoriesKey => $uniqueCategoriesValue) {
+               if ($uniqueCategoriesValue->name == $categoryValue->name) {
+                  continue 2;
+               };
+            };
+
+            $uniqueCategories[] = $categoryValue;
+         };
+
+         return response()->json([
+            "success" => true,
+            "debug" => false,
+            "message" => "Данные получены.",
+            "result" => $uniqueCategories,
+         ], 200);
+      } catch (Throwable $e) {
+         return response()->json([
+            "success" => false,
+            "debug" => true,
+            "message" => "Произошла ошибка.",
+            "result" => null,
+         ], 500);         
+      };
    }
    
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/

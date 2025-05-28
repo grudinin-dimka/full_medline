@@ -80,6 +80,8 @@ export default {
 	display: flex;
 	flex-direction: column;
 	gap: 5px;
+
+	width: 100%;
 }
 
 .input_search > .icon {

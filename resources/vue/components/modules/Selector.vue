@@ -190,6 +190,8 @@ export default {
 	flex-grow: 1;
 
 	height: 58px;
+	overflow: hidden;
+	white-space: nowrap;
 }
 
 .control > :is(.clear, .arrow) {

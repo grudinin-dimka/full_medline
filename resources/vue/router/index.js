@@ -48,13 +48,18 @@ const router = createRouter({
 					path: "prices",
 					name: "prices",
 					meta: { title: "Цены" },
-					redirect: { name: "prices-choice" },
+					redirect: { name: "prices-all" },
 					component: () => import("../views/main/prices/MainPrices.vue"),
 					children: [
 						{
 							path: "",
-							name: "prices-choice",
-							component: () => import("../views/main/prices/MainPricesChoice.vue"),
+							name: "prices-all",
+							component: () => import("../views/main/prices/MainPricesAll.vue"),
+						},
+						{
+							path: "clinics",
+							name: "prices-clinics",
+							component: () => import("../views/main/prices/MainPricesClinics.vue"),
 						},
 						{
 							path: ":group",
