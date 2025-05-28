@@ -9,9 +9,15 @@
 		<div class="filters">
 			<div class="filters__item">
 				<ContainerInputSearch v-model="filters.name" :placeholder="'Введите услугу'" />
-				
+
 				<button class="filters__item-button" @click="getPrices">
-					<Icon :name="'search'" :width="'24px'" :height="'24px'" :fill="'white'" :cursor="'pointer'"/>
+					<Icon
+						:name="'search'"
+						:width="'24px'"
+						:height="'24px'"
+						:fill="'white'"
+						:cursor="'pointer'"
+					/>
 					Поиск
 				</button>
 			</div>
@@ -115,7 +121,7 @@ export default {
 		LoadText,
 		Filter,
 		Empty,
-		
+
 		ContainerInputOnce,
 		ContainerInputSearch,
 		Selector,
@@ -252,7 +258,7 @@ export default {
 			})
 				.then((response) => {
 					if (!response) return;
-``
+					``;
 					this.filters.address = response.data.result.address.id;
 
 					this.categoriesList = response.data.result.categories;
@@ -274,45 +280,14 @@ export default {
 	},
 	mounted() {
 		api({
-			method: "get",
-			url: this.$store.getters.urlApi + `get-prices-addresses-list`,
-		})
-			.then((response) => {
-				if (!response) return;
-
-				this.addresses = response.data.result;
-			})
-			.catch((error) => {
-				this.$store.commit("addDebugger", {
-					title: "Ошибка.",
-					body: error,
-					type: "error",
-				});
-			});
-
-		api({
-			method: "get",
-			url: this.$store.getters.urlApi + `get-prices-categories-list`,
-		})
-			.then((response) => {
-				if (!response) return;
-
-				this.categories = response.data.result;
-			})
-			.catch((error) => {
-				this.$store.commit("addDebugger", {
-					title: "Ошибка.",
-					body: error,
-					type: "error",
-				});
-			});
-
-		api({
 			method: "post",
-			url: `${this.$store.getters.urlApi}` + `get-prices-manual`,
+			url: `${this.$store.getters.urlApi}` + `get-prices-complecte`,
 		})
 			.then((response) => {
 				if (!response) return;
+
+				this.addresses = response.data.result.addresses;
+				this.categories = response.data.result.categories;
 
 				this.filters.address = response.data.result.address.id;
 
@@ -366,6 +341,11 @@ export default {
 
 	min-height: 58px;
 	font-size: 1.125rem;
+	transition: all 0.2s ease;
+}
+
+.filters__item-button:hover {
+	background-color: var(--primary-color-hover);
 }
 
 /* Цены */

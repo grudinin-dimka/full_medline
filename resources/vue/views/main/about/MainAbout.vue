@@ -9,6 +9,30 @@
 		<template v-if="loading.sections.about">
 			<MainAboutList :abouts="abouts" v-if="abouts.length > 0" />
 			<Empty v-else />
+
+			<div class="files">
+				<a
+					class="files__item"
+					:href="'/storage/other/Уведомление о передачи отчета СОУТ во ФГИС.pdf'"
+					target="_blank"
+				>
+					<div class="files__item-content">
+						<div class="files__content-icon">
+							<Icon
+								:name="'pdf'"
+								:width="'30px'"
+								:height="'30px'"
+								:fill="'var(--primary-color)'"
+								:cursor="'pointer'"
+							/>
+						</div>
+						<div class="files__content-name">Уведомление о передачи отчета СОУТ во ФГИС</div>
+					</div>
+					<div class="files__item-other">
+						<button class="files__other-button">Смотреть</button>
+					</div>
+				</a>
+			</div>
 		</template>
 
 		<loader-child
@@ -27,6 +51,7 @@ import MainAboutList from "./MainAboutList.vue";
 import Empty from "../../../components/modules/Empty.vue";
 
 import api from "../../../services/api";
+import Icon from "../../../components/modules/icon/Icon.vue";
 
 export default {
 	components: {
@@ -35,6 +60,8 @@ export default {
 		Block,
 		MainAboutList,
 		Empty,
+
+		Icon,
 	},
 	methods: {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -88,4 +115,56 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.files {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+
+	width: 1350px;
+}
+
+.files__item {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 10px;
+
+	border: var(--default-border);
+	border-radius: calc(var(--default-border-radius) / 1.5);
+	padding: 10px;
+
+	font-size: 1.125rem;
+	text-decoration: none;
+	color: black;
+}
+
+.files__item-content {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+}
+
+.files__other-button {
+	cursor: pointer;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+
+	border: 0px;
+	border-radius: var(--input-border-radius);
+	padding: 10px 20px;
+
+	background-color: var(--primary-color);
+	color: white;
+
+	font-size: 1.125rem;
+}
+
+.files__other-button:hover {
+	background-color: var(--primary-color-hover);
+}
+</style>

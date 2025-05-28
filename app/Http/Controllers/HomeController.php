@@ -707,6 +707,65 @@ class HomeController extends Controller
       return $categoryFormat;
    }
 
+      /* Вывод шаблона цен */
+   public function getPricesComplecte(Request $request) {      
+      try {
+         // Адресса
+         $addresses = PriceAddress::all();
+         
+         // Категории
+         $prices = PriceValue::all();
+         $pricesCategorys = $prices->pluck('categoryId');
+
+         $categories = PriceCategory::all()->whereIn('id', $pricesCategorys);
+         
+         $uniqueCategories = [];
+
+         foreach ($categories as $categoryKey => $categoryValue) {
+            foreach ($uniqueCategories as $uniqueCategoriesKey => $uniqueCategoriesValue) {
+               if ($uniqueCategoriesValue->name == $categoryValue->name) {
+                  continue 2;
+               };
+            };
+
+            $uniqueCategories[] = $categoryValue;
+         };
+         
+         // Текущий адрес
+         $currentAddress = PriceAddress::all()->first();
+         $categories = PriceCategory::where('addressId', $currentAddress->id)->get();
+
+         // Получаем ID категорий
+         $categoryIds = $categories->pluck('id');
+
+         $prices = PriceValue::whereIn('categoryId', $categoryIds)->get();
+
+         $pricesCategories = $prices->pluck('categoryId');
+         $categories = PriceCategory::whereIn('id', $pricesCategories)->get();
+         
+         return response()->json([
+            "success" => true,
+            "debug" => false,
+            "message" => "Адрес успешно получен.",
+            "result" => [
+               "addresses" => $addresses,
+               "categories" => $uniqueCategories,
+
+               "address" => $currentAddress,
+               "categories" => $categories,
+               "prices" => $prices
+            ],
+         ], 200);
+      } catch (Throwable $th) {
+         return response()->json([
+            "success" => false,
+            "debug" => true,
+            "message" => "Не получилось получить данные.",
+            "result" => null,
+         ], 500);
+      }
+   }
+
    /* Вывод шаблона цен */
    public function getPricesManual(Request $request) {      
       try {
@@ -743,7 +802,7 @@ class HomeController extends Controller
             "success" => true,
             "debug" => false,
             "message" => "Адрес успешно получен.",
-            "result" => (object) [
+            "result" => [
                "address" => $currentAddress,
                "categories" => $categories,
                "prices" => $prices
@@ -757,6 +816,63 @@ class HomeController extends Controller
             "result" => null,
          ], 500);
       }
+   }
+
+   /* Получение списка адресов */
+   public function getPricesAddressesList(Request $request) {
+      try {
+         $addresses = PriceAddress::all();
+         
+         return response()->json([
+            "success" => true,
+            "debug" => false,
+            "message" => "Данные получены.",
+            "result" => $addresses,
+         ], 200);
+      } catch (Throwable $e) {
+         return response()->json([
+            "success" => false,
+            "debug" => true,
+            "message" => "Произошла ошибка.",
+            "result" => null,
+         ], 500);         
+      };
+   }
+   
+   /* Получение списка категорий */
+   public function getPricesCategoriesList(Request $request) {
+      try {
+         $prices = PriceValue::all();
+         $pricesCategorys = $prices->pluck('categoryId');
+
+         $categories = PriceCategory::all()->whereIn('id', $pricesCategorys);
+         
+         $uniqueCategories = [];
+
+         foreach ($categories as $categoryKey => $categoryValue) {
+            foreach ($uniqueCategories as $uniqueCategoriesKey => $uniqueCategoriesValue) {
+               if ($uniqueCategoriesValue->name == $categoryValue->name) {
+                  continue 2;
+               };
+            };
+
+            $uniqueCategories[] = $categoryValue;
+         };
+
+         return response()->json([
+            "success" => true,
+            "debug" => false,
+            "message" => "Данные получены.",
+            "result" => $uniqueCategories,
+         ], 200);
+      } catch (Throwable $e) {
+         return response()->json([
+            "success" => false,
+            "debug" => true,
+            "message" => "Произошла ошибка.",
+            "result" => null,
+         ], 500);         
+      };
    }
 
    /* Получение групп цен */
@@ -875,62 +991,6 @@ class HomeController extends Controller
       ], 200);
    }
 
-   /* Получение списка адресов */
-   public function getPricesAddressesList(Request $request) {
-      try {
-         $addresses = PriceAddress::all();
-         
-         return response()->json([
-            "success" => true,
-            "debug" => false,
-            "message" => "Данные получены.",
-            "result" => $addresses,
-         ], 200);
-      } catch (Throwable $e) {
-         return response()->json([
-            "success" => false,
-            "debug" => true,
-            "message" => "Произошла ошибка.",
-            "result" => null,
-         ], 500);         
-      };
-   }
-   
-   public function getPricesCategoriesList(Request $request) {
-      try {
-         $prices = PriceValue::all();
-         $pricesCategorys = $prices->pluck('categoryId');
-
-         $categories = PriceCategory::all()->whereIn('id', $pricesCategorys);
-         
-         $uniqueCategories = [];
-
-         foreach ($categories as $categoryKey => $categoryValue) {
-            foreach ($uniqueCategories as $uniqueCategoriesKey => $uniqueCategoriesValue) {
-               if ($uniqueCategoriesValue->name == $categoryValue->name) {
-                  continue 2;
-               };
-            };
-
-            $uniqueCategories[] = $categoryValue;
-         };
-
-         return response()->json([
-            "success" => true,
-            "debug" => false,
-            "message" => "Данные получены.",
-            "result" => $uniqueCategories,
-         ], 200);
-      } catch (Throwable $e) {
-         return response()->json([
-            "success" => false,
-            "debug" => true,
-            "message" => "Произошла ошибка.",
-            "result" => null,
-         ], 500);         
-      };
-   }
-   
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                   РАСПИСАНИЕ                      |*/
    /* |___________________________________________________|*/

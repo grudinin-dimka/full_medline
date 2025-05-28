@@ -45,6 +45,7 @@ Route::get('/get-prices-choice', [HomeController::class, 'getPricesChoice']);
 Route::post('/get-prices-group', [HomeController::class, 'getPricesGruop']);
 Route::post('/get-prices-template', [HomeController::class, 'getPricesTemplate']);
 Route::post('/get-prices-manual', [HomeController::class, 'getPricesManual']);
+Route::post('/get-prices-complecte', [HomeController::class, 'getPricesComplecte']);
 
 Route::get('/get-prices-addresses-list', [HomeController::class, 'getPricesAddressesList']);
 Route::get('/get-prices-categories-list', [HomeController::class, 'getPricesCategoriesList']);
