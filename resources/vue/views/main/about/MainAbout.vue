@@ -12,12 +12,13 @@
 		</template>
 
 		<loader-child
+			:minHeight="300"
 			:isLoading="loading.loader.about"
 			@loaderChildAfterLeave="loaderChildAfterLeave"
 		/>
 	</block>
 
-	<block :minHeight="0">
+	<block :minHeight="300">
 		<template v-if="loading.sections.infoFiles">
 			<div class="files">
 				<a v-for="file in infoFiles" class="files__item" :href="file.path" target="_blank">
@@ -41,7 +42,8 @@
 		</template>
 
 		<loader-child
-			:isLoading="loading.loader.about"
+			:minHeight="300"
+			:isLoading="loading.loader.infoFiles"
 			@loaderChildAfterLeave="loaderChildAfterLeave"
 		/>
 	</block>
@@ -104,8 +106,6 @@ export default {
 		};
 	},
 	mounted() {
-		this.loading.loader.about = false;
-
 		api({
 			method: "get",
 			url: this.$store.getters.urlApi + `get-abouts-all`,
@@ -127,7 +127,7 @@ export default {
 				});
 			})
 			.finally(() => {
-				this.loading.loader.specialists = false;
+				this.loading.loader.about = false;
 			});
 
 		api({

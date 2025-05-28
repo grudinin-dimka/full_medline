@@ -703,12 +703,10 @@ export default {
 
 		/* Открытие модального окна для загрузки */
 		openFilesCreate() {
-			this.openModal("modalFiles", "ФАЙЛ", "create");
-		},
+			shared.clearObjectFull(this.currentFile);
+			this.$refs.fileUpload.value = "";
 
-		/* Открытие модального окна для загрузки */
-		openFilesEdite(name) {
-			this.openModal("modalFiles", "ФАЙЛ", "default");
+			this.openModal("modalFiles", "ФАЙЛ", "create");
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/

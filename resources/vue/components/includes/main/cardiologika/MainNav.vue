@@ -28,9 +28,18 @@
 							class="element"
 							:class="{ active: isActive('/prices') }"
 							href="/prices"
-							@click.prevent="$router.push({ name: `prices-choice` })"
+							@click.prevent="$router.push({ name: `prices-all` })"
 						>
 							Список
+						</a>
+
+						<a
+							class="element"
+							:class="{ active: isActive('/clinics') }"
+							href="/prices"
+							@click.prevent="$router.push({ name: `prices-clinics` })"
+						>
+							Клиники
 						</a>
 
 						<a
