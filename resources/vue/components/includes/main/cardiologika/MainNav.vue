@@ -10,51 +10,14 @@
 				Специалисты
 			</a>
 
-			<div class="dropdown">
-				<div class="dropdown-title element">
-					Цены
-					<Icon
-						class="item-arrow"
-						:name="'arrow'"
-						:fill="'white'"
-						:width="'20px'"
-						:height="'20px'"
-						:rotate="180"
-					/>
-				</div>
-				<div class="dropdown-body">
-					<div class="dropdown-body__list">
-						<a
-							class="element"
-							:class="{ active: isActive('/prices') }"
-							href="/prices"
-							@click.prevent="$router.push({ name: `prices-all` })"
-						>
-							Список
-						</a>
-
-						<a
-							class="element"
-							:class="{ active: isActive('/clinics') }"
-							href="/prices"
-							@click.prevent="$router.push({ name: `prices-clinics` })"
-						>
-							Клиники
-						</a>
-
-						<a
-							class="element"
-							:class="{ active: isActive('/prices/travels') }"
-							href="/prices/travels"
-							@click.prevent="
-								$router.push({ name: `prices-group`, params: { group: 'travels' } })
-							"
-						>
-							Путевки
-						</a>
-					</div>
-				</div>
-			</div>
+			<a
+				class="element"
+				:class="{ active: isActive('/prices') }"
+				href="/prices"
+				@click.prevent="$router.push({ name: `prices-all` })"
+			>
+				Цены
+			</a>
 
 			<a
 				class="element"
