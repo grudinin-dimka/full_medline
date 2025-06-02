@@ -287,7 +287,7 @@ export default {
 				if (!response) return;
 
 				this.addresses = response.data.result.addresses;
-				this.categories = response.data.result.categories;
+				this.categories = response.data.result.uniqueCategories;
 
 				this.filters.address = response.data.result.address.id;
 

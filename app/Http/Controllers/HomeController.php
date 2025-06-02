@@ -749,7 +749,7 @@ class HomeController extends Controller
             "message" => "Адрес успешно получен.",
             "result" => [
                "addresses" => $addresses,
-               "categories" => $uniqueCategories,
+               "uniqueCategories" => $uniqueCategories,
 
                "address" => $currentAddress,
                "categories" => $categories,
