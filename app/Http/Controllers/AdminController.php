@@ -2169,7 +2169,7 @@ class AdminController extends Controller
                      };
                      
                      $currentAddress = PriceAddress::create([
-                        "name" => $dataValue[0],
+                        "name" => trim($dataValue[0], " "),
                      ]);
                   }
                   
@@ -2209,7 +2209,7 @@ class AdminController extends Controller
                         
                         // Создание новой категории
                         $currentCategory = PriceCategory::create([
-                           "name" => $dataValue[1],
+                           "name" => trim($dataValue[1], " "),
                            "addressId" => $currentAddress->id,
                            "categoryId" => $this->getMainCategory($categorys, trim($levelClear)),
                         ]);
@@ -2241,7 +2241,7 @@ class AdminController extends Controller
                         };
 
                         $createPriceValue = PriceValue::create([
-                           "name" => $dataValue[1],
+                           "name" => trim($dataValue[1], " "),
                            "price" => $dataValue[2],
                            "categoryId" => $currentCategory->id,
                         ]);
