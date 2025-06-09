@@ -197,10 +197,11 @@
 			</container-input-once>
 		</template>
 		<template #footer>
-			<button-default v-if="modalMail.values.look == 'edit'" @click="updateContactMail">
+			<button-default v-if="modalMail.values.look == 'default'" @click="updateContactMail">
 				<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 				Обновить
 			</button-default>
+			
 			<button-default v-if="modalMail.values.look == 'create'" @click="addContactMail">
 				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
@@ -540,14 +541,14 @@ export default {
 		openModalMailCreate() {
 			shared.clearObjectFull(this.currentMail);
 
-			this.openModal("modalPhone", "ПОЧТА", "create");
+			this.openModal("modalMail", "ПОЧТА", "create");
 		},
 
 		openModalMailEdite(value) {
 			shared.clearObjectFull(this.currentMail);
 			shared.setData(value, this.currentMail);
 
-			this.openModal("modalPhone", "ПОЧТА", "default");
+			this.openModal("modalMail", "ПОЧТА", "default");
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -798,9 +799,7 @@ export default {
 					return item.id == this.currentMail.data.id.value;
 				});
 
-				for (let key in this.currentMail.data) {
-					mail[key] = this.currentMail.data[key].body;
-				}
+				mail.name = this.currentMail.data.name.value;
 
 				this.$refs.modalMail.close();
 			} catch (error) {
@@ -811,6 +810,7 @@ export default {
 				});
 			}
 		},
+
 		/* Удаление */
 		deleteContactMail(selectedMail) {
 			this.currentContact.data.mails.value = this.currentContact.data.mails.value.filter(
