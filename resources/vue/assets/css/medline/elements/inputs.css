@@ -4,7 +4,8 @@
 	--input-gap: 5px;
 
 	--input-label-color: var(--primary-color);
-	--input-color: black;
+	--input-color: rgb(0, 0, 0);
+	--input-background-color: var(--secondary-background-color-hover);
 
 	--input-padding: 30px 15px;
 	--input-caret-color: var(--primary-color);
@@ -12,16 +13,44 @@
 	--input-border: var(--default-border);
 	--input-border-radius: calc(var(--default-border-radius) / 1.5);
 	--input-border-focus: var(--default-border-width) var(--default-border-style)
-		var(--primary-color);
+		var(--default-border-color-hover);
 
-	--input-placeholder-color: rgba(0, 0, 0, 0.5);
+	--input-placeholder-color: rgba(0, 0, 0, 0.3);
 
 	/* textarea */
 	--textarea-padding: 15px;
 
+	/* select */
+	--select-top: calc(anchor(bottom) + 5px);
+	--select-border: var(--input-border);
+	--select-border-radius: calc(var(--default-border-radius) / 1.5);
+	--select-padding: var(--default-padding);
+	--select-color: var(--default-font-color);
+	--select-background-color: var(--secondary-background-color-hover);
+	--select-background-color-hover: rgba(0, 0, 0, 0.05);
+
+	--option-font-color: black;
+	--option-border: var(--default-border);
+	--option-background-color: rgba(255, 255, 255, 1);
+	---option-padding: 10px;
+	--option-color-focus: var(--primary-color);
+	--option-color-disabled: rgba(0, 0, 0, 0.5);
+
+	/* Блок ошибок */
+	--error-border: 50px;
+	--error-border-radius: 50px;
+
+	--error-padding: 5px 10px;
+
+	--error-color: rgb(255, 255, 255);
+	--error-background-color: var(--delete-background-color);
+
+	/* иконки */
+	--input-search-icon-color: var(--default-font-color);
+	--input-file-icon-color: var(--default-font-color);
+
 	/* error */
 	--input-error-border: var(--default-border-width) var(--default-border-style) #ff9b9b;
-
 	--input-error-background-color: #fff4f4;
 	--input-error-background-color-file: #ff9b9b;
 	--input-error-caret-color: red;
@@ -48,4 +77,15 @@
 		var(--delete-border-color);
 	--input-delete-border-focus: var(--default-border-width) var(--default-border-style)
 		var(--delete-border-color-hover);
+}
+
+@keyframes show-translate-x {
+	0% {
+		opacity: 0;
+		transform: translateX(10px);
+	}
+	100% {
+		opacity: 1;
+		transform: translateX(0);
+	}
 }

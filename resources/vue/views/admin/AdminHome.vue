@@ -85,77 +85,43 @@
 				}"
 				ref="modalImg"
 			></div>
-			<container-input>
-				<!-- Название -->
-				<container-input-once>
-					<template #title>
-						<span>ИЗОБРАЖЕНИЕ (820х958)*</span>
-						<span v-if="currentSlide.data.file.edited"> (ИЗМЕНЕНО) </span>
-					</template>
-					<template #input>
-						<input
-							type="file"
-							class="slide-file"
-							placeholder="Загрузите изображение"
-							ref="fileUpload"
-							:class="{ error: currentSlide.errors.file.status }"
-							:disabled="currentSlide.data.delete.value"
-							@input="currentSlide.data.file.edited = true"
-						/>
-					</template>
-					<template #error>
-						<span class="error" v-if="currentSlide.errors.file.status">
-							{{ currentSlide.errors.file.message }}
-						</span>
-					</template>
-				</container-input-once>
-				<!-- Название -->
-				<container-input-once>
-					<template #title>
-						<span>НАЗВАНИЕ*</span>
-						<span v-if="currentSlide.data.name.edited"> (ИЗМЕНЕНО) </span>
-					</template>
-					<template #input>
-						<input
-							type="text"
-							v-model="currentSlide.data.name.value"
-							ref="inputName"
-							@input="currentSlide.data.name.edited = true"
-							:class="{ error: currentSlide.errors.name.status }"
-							placeholder="Введите название"
-							:disabled="currentSlide.data.delete.value"
-						/>
-					</template>
-					<template #error>
-						<span class="error" v-if="currentSlide.errors.name.status">
-							{{ currentSlide.errors.name.message }}
-						</span>
-					</template>
-				</container-input-once>
-				<!-- Ссылка -->
-				<container-input-once>
-					<template #title>
-						<span>ССЫЛКА*</span>
-						<span v-if="currentSlide.data.link.value">(ИЗМЕНЕНО)</span>
-					</template>
-					<template #input>
-						<input
-							type="text"
-							v-model="currentSlide.data.link.value"
-							ref="inputLink"
-							@input="currentSlide.data.link.edited = true"
-							:class="{ error: currentSlide.errors.link.status }"
-							placeholder="Введите ссылку"
-							:disabled="currentSlide.data.delete.value"
-						/>
-					</template>
-					<template #error>
-						<span class="error" v-if="currentSlide.errors.link.status">
-							{{ currentSlide.errors.link.message }}
-						</span>
-					</template>
-				</container-input-once>
-			</container-input>
+
+			<VueInput
+				v-model="currentSlide.data.file.value"
+				ref="fileImage"
+				:type="'file'"
+				:placeholder="'Загрузите картинку'"
+				:error="currentSlide.errors.file.status"
+			>
+				<template #label> ИЗОБРАЖЕНИЕ (820х958) </template>
+				<template #error>
+					{{ currentSlide.errors.file.message }}
+				</template>
+			</VueInput>
+
+			<VueInput
+				v-model="currentSlide.data.name.value"
+				:type="'text'"
+				:placeholder="'Введите название'"
+				:error="currentSlide.errors.name.status"
+			>
+				<template #label> НАЗВАНИЕ </template>
+				<template #error>
+					{{ currentSlide.errors.name.message }}
+				</template>
+			</VueInput>
+
+			<VueInput
+				v-model="currentSlide.data.link.value"
+				:type="'text'"
+				:placeholder="'Введите название'"
+				:error="currentSlide.errors.link.status"
+			>
+				<template #label> ССЫЛКА </template>
+				<template #error>
+					{{ currentSlide.errors.link.message }}
+				</template>
+			</VueInput>
 		</template>
 
 		<template #footer>
@@ -306,7 +272,7 @@
 
 		<template #body>
 			<div class="footer-container" v-show="loading.footer">
-				<Tiptap
+				<VueTiptap
 					v-model="footer"
 					:editable="true"
 					:limit="10_000"
@@ -332,11 +298,9 @@ import Empty from "../../components/modules/Empty.vue";
 
 import Modal from "../../components/modules/modal/Modal.vue";
 import InfoBar from "../../components/ui/admin/InfoBar.vue";
-import Tiptap from "../../components/modules/Tiptap.vue";
+import VueTiptap from "../../components/modules/VueTiptap.vue";
 
-import ContainerInput from "../../components/ui/admin/containers/ContainerInput.vue";
-import ContainerInputOnce from "../../components/ui/admin/containers/input/ContainerInputOnce.vue";
-import ContainerTextareaOnce from "../../components/ui/admin/containers/textarea/ContainerTextareaOnce.vue";
+import VueInput from "../../components/modules/VueInput.vue";
 
 import BlockOnce from "../../components/ui/admin/blocks/BlockOnce.vue";
 
@@ -359,13 +323,10 @@ export default {
 
 		Modal,
 		InfoBar,
-		Tiptap,
+		VueTiptap,
+		VueInput,
 
 		Icon,
-
-		ContainerInput,
-		ContainerInputOnce,
-		ContainerTextareaOnce,
 
 		BlockOnce,
 		ButtonDefault,
@@ -501,7 +462,7 @@ export default {
 
 		/* Открытие модального окна для добавления */
 		openModalEdite(value) {
-			this.$refs.fileUpload.value = "";
+			this.$refs.fileImage.clear();
 
 			shared.clearObjectFull(this.currentSlide);
 			shared.setData(value, this.currentSlide);
@@ -511,7 +472,7 @@ export default {
 
 		/* Открытие модального окна для добавления */
 		openModalСreate(type) {
-			this.$refs.fileUpload.value = "";
+			this.$refs.fileImage.clear();
 
 			shared.clearObjectFull(this.currentSlide);
 
@@ -541,7 +502,7 @@ export default {
 					{
 						key: "file",
 						type: "file",
-						value: this.$refs.fileUpload,
+						value: this.$refs.fileImage.files(),
 						formats: ["png", "webp"],
 					},
 					{
@@ -557,9 +518,8 @@ export default {
 				return;
 
 			/* Загрузка файла */
-			this.currentSlide.file = this.$refs.fileUpload.files[0];
 			let formData = new FormData();
-			formData.append("file", this.currentSlide.file);
+			formData.append("file", this.$refs.fileImage.files());
 			formData.append("type", "slides");
 			formData.append("formats", ["png", "webp"]);
 
@@ -619,46 +579,10 @@ export default {
 
 		/* Обновление выбранного слайда */
 		updateSlide() {
-			let slideCurrent = this.slides.find(
-				(slide) => slide.order === this.currentSlide.data.order.value
-			);
-
-			// Проверка на файл
-			if (!this.$refs.fileUpload.files[0]) {
-				if (
-					validate.checkInputsAll(this.currentSlide, [
-						{
-							key: "name",
-							type: "text",
-						},
-						{
-							key: "link",
-							type: "text",
-						},
-					])
-				)
-					return;
-
-				for (let key in slideCurrent) {
-					if (key == "name" || key == "link") {
-						slideCurrent[key] = this.currentSlide.data[key].value;
-					} else if (key == "hide") {
-						slideCurrent[key] = this.currentSlide.data[key].value;
-					}
-				}
-
-				this.$refs.modal.close();
-				return;
-			}
+			let errors = 0;
 
 			if (
 				validate.checkInputsAll(this.currentSlide, [
-					{
-						key: "file",
-						type: "file",
-						value: this.$refs.fileUpload,
-						formats: ["png", "webp"],
-					},
 					{
 						key: "name",
 						type: "text",
@@ -669,12 +593,28 @@ export default {
 					},
 				])
 			)
-				return;
+				errors++;
+
+			if (this.$refs.fileImage.files().length > 0) {
+				if (
+					validate.checkInputsAll(this.currentSlide, [
+						{
+							key: "file",
+							type: "file",
+							value: this.$refs.fileImage.files(),
+							formats: ["png", "webp"],
+						},
+					])
+				)
+					errors++;
+			}
+
+			if (errors > 0) return;
 
 			this.disabled.slider.update = true;
 
 			let formData = new FormData();
-			formData.append("file", this.$refs.fileUpload.files[0]);
+			formData.append("file", this.$refs.fileImage.files()[0]);
 			formData.append("type", "slides");
 			formData.append("formats", ["png", "jpg", "jpeg", "webp"]);
 
@@ -688,6 +628,10 @@ export default {
 			})
 				.then((response) => {
 					if (!response) return;
+
+					let slideCurrent = this.slides.find(
+						(slide) => slide.order === this.currentSlide.data.order.value
+					);
 
 					this.currentSlide.data.path.value = response.data.result;
 					slideCurrent.path = response.data.result;

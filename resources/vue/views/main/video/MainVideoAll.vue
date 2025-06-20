@@ -15,7 +15,7 @@
 						</video>
 					</div>
 					<div class="video__item-description">
-						<TipTap :editable="false" :limit="10_000" v-model="video.description" />
+						<VueTiptap :editable="false" :limit="10_000" v-model="video.description" />
 					</div>
 				</div>
 			</div>
@@ -34,7 +34,7 @@
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import Block from "../../../components/ui/main/Block.vue";
-import TipTap from "../../../components/modules/Tiptap.vue";
+import VueTiptap from "../../../components/modules/VueTiptap.vue";
 
 import Empty from "../../../components/modules/Empty.vue";
 
@@ -46,7 +46,7 @@ export default {
 		InfoBar,
 		LoaderChild,
 		Block,
-		TipTap,
+		VueTiptap,
 
 		Empty,
 	},

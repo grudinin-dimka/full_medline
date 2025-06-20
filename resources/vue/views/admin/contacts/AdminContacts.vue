@@ -32,76 +32,63 @@
 		</template>
 
 		<template #body>
-			<ContainerInput>
-				<container-textarea-once>
-					<template #title>
-						<span>ЗАГОЛОВОК</span>
-						<span v-if="currentContact.data.name.edited"> (ИЗМЕНЕНО) </span>
-					</template>
-					<template #textarea>
-						<textarea
-							rows="4"
-							placeholder="Введите заголовок"
-							autocomplete="off"
-							:class="{ error: currentContact.errors.name.status }"
-							v-model="currentContact.data.name.value"
-							@input="currentContact.data.name.edited = true"
-						></textarea>
-					</template>
-					<template #error>
-						<span class="error" v-if="currentContact.errors.name.status">
-							{{ currentContact.errors.name.message }}
-						</span>
-					</template>
-				</container-textarea-once>
-				<ContainerInputOnce>
-					<template #title>
-						<span>КЛИНИКА</span>
-					</template>
-					<template #input>
-						<select v-model="currentContact.data.clinicId.value">
-							<option value="" selected disabled>Ничего не выбрано</option>
-							<option v-for="clinic in clinics" :key="clinic.id" :value="clinic.id">
-								{{ clinic.name }}
-							</option>
-						</select>
-					</template>
-				</ContainerInputOnce>
+			<VueInput
+				v-model="currentContact.data.name.value"
+				:type="'textarea'"
+				:placeholder="'Введите заголовок'"
+				:error="currentContact.errors.name.status"
+			>
+				<template #label> ЗАГОЛОВОК </template>
+				<template #error>
+					{{ currentContact.errors.name.message }}
+				</template>
+			</VueInput>
 
-				<ModalList
-					:array="currentContact.data.phones.value"
-					@touchCreate="openModalPhoneCreate"
-					@touchEdit="openModalPhoneEdite"
-					@touchDelete="deleteContactPhone"
-				>
-					<template #title>
-						<Icon
-							:name="'phone'"
-							:fill="'var(--primary-color)'"
-							:width="'20px'"
-							:height="'16px'"
-						/>
-						ТЕЛЕФОНЫ
-					</template>
-				</ModalList>
+			<VueInput
+				v-model="currentContact.data.clinicId.value"
+				:options="filteredClinics"
+				:type="'select'"
+				:error="currentContact.errors.clinicId.status"
+			>
+				<template #label> КЛИНИКА </template>
+				<template #error>
+					{{ currentContact.errors.clinicId.message }}
+				</template>
+			</VueInput>
 
-				<ModalList
-					:array="currentContact.data.mails.value"
-					@touchCreate="openModalMailCreate"
-					@touchEdit="openModalMailEdite"
-					@touchDelete="deleteContactMail"
-				>
-					<template #title>
-						<Icon
-							:name="'mail'"
-							:fill="'var(--primary-color)'"
-							:width="'20px'"
-							:height="'14px'"
-						/>
-						ПОЧТА
-					</template>
-				</ModalList>
-			</ContainerInput>
+			<ModalList
+				:array="currentContact.data.phones.value"
+				@touchCreate="openModalPhoneCreate"
+				@touchEdit="openModalPhoneEdite"
+				@touchDelete="deleteContactPhone"
+			>
+				<template #title>
+					<Icon
+						:name="'phone'"
+						:fill="'var(--primary-color)'"
+						:width="'20px'"
+						:height="'16px'"
+					/>
+					ТЕЛЕФОНЫ
+				</template>
+			</ModalList>
+
+			<ModalList
+				:array="currentContact.data.mails.value"
+				@touchCreate="openModalMailCreate"
+				@touchEdit="openModalMailEdite"
+				@touchDelete="deleteContactMail"
+			>
+				<template #title>
+					<Icon
+						:name="'mail'"
+						:fill="'var(--primary-color)'"
+						:width="'20px'"
+						:height="'14px'"
+					/>
+					ПОЧТА
+				</template>
+			</ModalList>
 		</template>
 		<template #footer>
 			<template v-if="modal.values.look == 'create'">
@@ -138,24 +125,17 @@
 		</template>
 
 		<template #body>
-			<container-input-once>
-				<template #input>
-					<input
-						type="tel"
-						placeholder="+7(___)-___-__-__"
-						v-mask="'+7(###)-###-##-##'"
-						autocomplete="off"
-						:class="{ error: currentPhone.errors.name.status }"
-						v-model="currentPhone.data.name.value"
-						@input="currentPhone.data.name.edited = true"
-					/>
-				</template>
+			<VueInput
+				v-model="currentPhone.data.name.value"
+				:type="'phone'"
+				:placeholder="'+7(___)-___-__-__'"
+				:error="currentPhone.errors.name.status"
+			>
+				<template #label> НОМЕР ТЕЛЕФОНА </template>
 				<template #error>
-					<span class="error" v-if="currentPhone.errors.name.status">
-						{{ currentPhone.errors.name.message }}
-					</span>
+					{{ currentPhone.errors.name.message }}
 				</template>
-			</container-input-once>
+			</VueInput>
 		</template>
 
 		<template #footer>
@@ -177,31 +157,24 @@
 		</template>
 
 		<template #body>
-			<container-input-once>
-				<template #input>
-					<input
-						type="mail"
-						placeholder="Введите почту"
-						autocomplete="off"
-						required
-						:class="{ error: currentMail.errors.name.status }"
-						v-model="currentMail.data.name.value"
-						@input="currentMail.data.name.edited = true"
-					/>
-				</template>
+			<VueInput
+				v-model="currentMail.data.name.value"
+				:type="'email'"
+				:placeholder="'test@mail.ru'"
+				:error="currentMail.errors.name.status"
+			>
+				<template #label> ПОЧТОВЫЙ АДРЕС </template>
 				<template #error>
-					<span class="error" v-if="currentMail.errors.name.status">
-						{{ currentMail.errors.name.message }}
-					</span>
+					{{ currentMail.errors.name.message }}
 				</template>
-			</container-input-once>
+			</VueInput>
 		</template>
 		<template #footer>
 			<button-default v-if="modalMail.values.look == 'default'" @click="updateContactMail">
 				<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 				Обновить
 			</button-default>
-			
+
 			<button-default v-if="modalMail.values.look == 'create'" @click="addContactMail">
 				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
@@ -264,6 +237,7 @@
 <script>
 import Modal from "../../../components/modules/modal/Modal.vue";
 import ModalList from "../../../components/modules/modal/ModalList.vue";
+import VueInput from "../../../components/modules/VueInput.vue";
 
 import AdminContactsList from "./AdminContactsList.vue";
 
@@ -273,11 +247,6 @@ import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import Empty from "../../../components/modules/Empty.vue";
 
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
-
-import ContainerInput from "../../../components/ui/admin/containers/ContainerInput.vue";
-import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
-import ContainerSelectOnce from "../../../components/ui/admin/containers/select/ContainerSelectOnce.vue";
-import ContainerTextareaOnce from "../../../components/ui/admin/containers/textarea/ContainerTextareaOnce.vue";
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
@@ -294,6 +263,7 @@ export default {
 	components: {
 		Modal,
 		ModalList,
+		VueInput,
 
 		AdminContactsList,
 
@@ -302,11 +272,6 @@ export default {
 		Empty,
 
 		BlockOnce,
-
-		ContainerInput,
-		ContainerInputOnce,
-		ContainerSelectOnce,
-		ContainerTextareaOnce,
 
 		ButtonDefault,
 		ButtonRemove,
@@ -489,6 +454,27 @@ export default {
 			],
 		};
 	},
+	computed: {
+		filteredClinics() {
+			let array = this.clinics.map((value, index) => {
+				return {
+					default: false,
+					value: value.id,
+					label: value.name,
+				};
+			});
+
+			array.push({
+				default: true,
+				value: "",
+				label: "Выберите клинику",
+			});
+
+			sorted.sortStringByKey("down", array, "default");
+
+			return array;
+		},
+	},
 	methods: {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                   Загрузчик                       |*/
@@ -590,6 +576,16 @@ export default {
 
 		/* Обновление */
 		updateContact() {
+			if (
+				validate.checkInputsAll(this.currentContact, [
+					{
+						key: "name",
+						type: "text",
+					},
+				])
+			)
+				return;
+
 			let contact = this.contacts.find(
 				(contact) => contact.id === this.currentContact.data.id.value
 			);

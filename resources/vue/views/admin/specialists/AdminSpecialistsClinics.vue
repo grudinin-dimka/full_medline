@@ -248,10 +248,10 @@
 </template>
 
 <script>
-import Modal from "../../../components/modules/modal/Modal.vue";
-
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
+import Modal from "../../../components/modules/modal/Modal.vue";
 import BaseTable from "../../../components/modules/table/BaseTable.vue";
+import VueInput from "../../../components/modules/VueInput.vue";
 
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 
@@ -278,6 +278,7 @@ export default {
 		InfoBar,
 		BaseTable,
 		LoaderChild,
+		VueInput,
 
 		BlockOnce,
 

@@ -148,7 +148,7 @@
 						</template>
 					</div>
 
-					<Tiptap
+					<VueTiptap
 						ref="tiptapTitle"
 						v-model="currentNews.data.title.value"
 						:editable="true"
@@ -160,10 +160,10 @@
 						<template #error>
 							{{ currentNews.errors.title.message }}
 						</template>
-					</Tiptap>
+					</VueTiptap>
 				</div>
 				<div class="news__once-body">
-					<Tiptap
+					<VueTiptap
 						ref="tiptapDescription"
 						v-model="currentNews.data.description.value"
 						:editable="true"
@@ -176,7 +176,7 @@
 						<template #error>
 							{{ currentNews.errors.description.message }}
 						</template>
-					</Tiptap>
+					</VueTiptap>
 				</div>
 			</div>
 
@@ -195,7 +195,7 @@ import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 
 import BaseTable from "../../../components/modules/table/BaseTable.vue";
-import Tiptap from "../../../components/modules/Tiptap.vue";
+import VueTiptap from "../../../components/modules/VueTiptap.vue";
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 
@@ -211,7 +211,7 @@ export default {
 		InfoBar,
 
 		BaseTable,
-		Tiptap,
+		VueTiptap,
 
 		ButtonDefault,
 
@@ -355,7 +355,7 @@ export default {
 					{
 						key: "image",
 						type: "file",
-						value: this.$refs.image,
+						value: this.$refs.image.files,
 						formats: ["jpg", "jpeg", "png", "webp"],
 					},
 					{
@@ -445,7 +445,7 @@ export default {
 						{
 							key: "image",
 							type: "file",
-							value: this.$refs.image,
+							value: this.$refs.image.files,
 							formats: ["jpg", "jpeg", "png", "webp"],
 						},
 					])

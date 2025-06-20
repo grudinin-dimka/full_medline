@@ -1,36 +1,4 @@
 <template>
-	<Modal ref="modalImage" :settings="modalImage">
-		<template #title>Добавить картинку</template>
-		<template #body>
-			<container-input-once>
-				<template #title>
-					<span>НОВЫЙ ФАЙЛ*</span>
-					<span v-if="currentImage.data.file.edited"> (ИЗМЕНЕНО) </span>
-				</template>
-				<template #input>
-					<input
-						type="file"
-						autocomplete="off"
-						ref="fileUpload"
-						:class="{ error: currentImage.errors.file.status }"
-						@input="currentImage.data.file.edited = true"
-					/>
-				</template>
-				<template #error>
-					<span class="error" v-if="currentImage.errors.file.status">
-						{{ currentImage.errors.file.message }}
-					</span>
-				</template>
-			</container-input-once>
-		</template>
-		<template #footer>
-			<ButtonDefault :disabled="disabled.tiptap.image" @click="uploadImage">
-				<Icon :name="'add'" :fill="'white'" :width="'28px'" :height="'28px'" />
-				Добавить
-			</ButtonDefault>
-		</template>
-	</Modal>
-
 	<bubble-menu :editor="editor" :tippy-options="{ duration: 100 }" v-if="false">
 		<div class="bubble__menu">
 			<button
@@ -473,17 +441,16 @@
 			:class="{ 'disabled': !editable, 'error': error }"
 			:style="{ '--min-height': `${minHeight}px` }"
 		>
-			<editor-content :editor="editor" />
-		</div>
+			<div class="tiptap__error" v-if="error">
+				<slot name="error"></slot>
+			</div>
 
-		<div class="tiptap__error" v-if="error">
-			<slot name="error"></slot>
+			<editor-content :editor="editor" />
 		</div>
 	</div>
 </template>
 
 <script>
-import Modal from "./modal/Modal.vue";
 import { BubbleMenu, Editor, EditorContent } from "@tiptap/vue-3";
 
 import Blockquote from "@tiptap/extension-blockquote";
@@ -499,25 +466,13 @@ import Placeholder from "@tiptap/extension-placeholder";
 
 import StarterKit from "@tiptap/starter-kit";
 
-import ContainerInputOnce from "../ui/admin/containers/input/ContainerInputOnce.vue";
-import ButtonDefault from "../ui/admin/buttons/ButtonDefault.vue";
-
-import Icon from "./icon/Icon.vue";
-
 import validate from "../../services/validate";
 import axios from "axios";
 
 export default {
 	components: {
-		Modal,
-
 		BubbleMenu,
 		EditorContent,
-
-		ContainerInputOnce,
-		ButtonDefault,
-
-		Icon,
 	},
 	props: {
 		modelValue: {
@@ -878,22 +833,28 @@ export default {
 	width: 40px;
 	height: 40px;
 
-	background-color: white;
+	background-color: var(--secondary-background-color-hover);
 
 	transition: all 0.2s;
 }
 
 .tiptap__buttons-item button.is-active {
 	border: var(--input-border-focus);
-	background-color: var(--item-background-color-active);
+}
+
+.tiptap__buttons-item button svg {
+	fill: var(--default-font-color);
 }
 
 /* Редактор */
 .tiptap__editor {
-	border: 1px solid rgba(0, 0, 0, 0.25);
-	border-radius: 10px;
+	position: relative;
+	border: var(--input-border);
+	border-radius: var(--input-border-radius);
 	padding: 10px;
 	outline: 0px solid rgba(0, 0, 0, 0.2);
+
+	background-color: var(--secondary-background-color-hover);
 
 	transition: all 0.2s;
 }
@@ -902,13 +863,8 @@ export default {
 	border: 0px solid rgba(0, 0, 0, 0.25);
 	border-radius: 0px;
 	padding: 0px;
-}
 
-.tiptap__editor.error {
-	border: var(--input-error-border);
-	background-color: var(--input-error-background-color);
-
-	caret-color: var(--input-error-caret-color);
+	background-color: rgba(0, 0, 0, 0);
 }
 
 .tiptap {
@@ -923,11 +879,11 @@ export default {
 }
 
 .tiptap p {
-	margin: 20px 0px;
+	margin: 10px 0px;
 	font-size: 1.125rem;
 }
 
-.tiptap p:first-child {
+.tiptap p:is(:first-child, :last-child) {
 	margin: 0px 0px;
 }
 
@@ -970,6 +926,15 @@ export default {
 	width: 100%;
 	object-fit: contain;
 	height: 500px;
+}
+
+.tiptap ul {
+	margin-left: 20px;
+}
+
+.tiptap li {
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
 
 .tiptap img.ProseMirror-selectednode {
@@ -1031,6 +996,14 @@ export default {
 	color: var(--purple);
 }
 
+.character-count svg circle:first-child {
+	fill: var(--secondary-background-color-hover) !important;
+}
+
+.character-count svg circle:last-child {
+	fill: var(--secondary-background-color) !important;
+}
+
 .character-count.--warning,
 .character-count.--warning svg {
 	color: var(--red);
@@ -1038,8 +1011,19 @@ export default {
 
 /* error */
 .tiptap__error {
-	margin-top: 5px;
+	position: absolute;
+   user-select: none;
+   position: absolute;
+   right: 10px;
+   top: -15px;
 
-	color: var(--input-error-color);
+   border: var(--error-border);
+   border-radius: var(--error-border-radius);
+   padding: var(--error-padding);
+
+   background-color: var(--error-background-color);
+   color: var(--error-color);
+
+   animation: show-translate-x 0.2s ease;
 }
 </style>

@@ -56,7 +56,7 @@ import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 
 import BaseTable from "../../../components/modules/table/BaseTable.vue";
-import Tiptap from "../../../components/modules/Tiptap.vue";
+import Tiptap from "../../../components/modules/VueTiptap.vue";
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 

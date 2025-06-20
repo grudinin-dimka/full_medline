@@ -60,10 +60,10 @@
 					></div>
 				</div>
 				<div class="title" :class="{ none: !block.title }">
-					<Tiptap v-model="block.title" :editable="false" :limit="500" :minHeight="0" />
+					<VueTiptap v-model="block.title" :editable="false" :limit="500" :minHeight="0" />
 				</div>
 				<div class="description" :class="{ none: !block.description }">
-					<Tiptap
+					<VueTiptap
 						v-model="block.description"
 						:editable="false"
 						:limit="10_000"
@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import Tiptap from "../../../components/modules/Tiptap.vue";
+import VueTiptap from "../../../components/modules/VueTiptap.vue";
 
 export default {
 	props: {
@@ -87,7 +87,7 @@ export default {
 		},
 	},
 	components: {
-		Tiptap,
+		VueTiptap,
 	},
 	data() {
 		return {};

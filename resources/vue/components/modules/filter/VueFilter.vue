@@ -50,15 +50,16 @@
 </template>
 
 <script>
-import FIlterList from "./FIlterList.vue";
+import VueFIlterList from "./VueFIlterList.vue";
 
-import sorted from "../../services/sorted";
+import sorted from "../../../services/sorted";
 import { nextTick } from "vue";
-import shared from "../../services/shared";
+import shared from "../../../services/shared";
 
 export default {
 	components: {
-		FIlterList,
+		VueFIlterList,
+		
 		sorted,
 	},
 	props: {
@@ -158,7 +159,7 @@ export default {
 			for (let i = 0; i < array.length; i++) {
 				if (array[i].name.toLowerCase().includes(name.toLowerCase())) {
 					filterArray.push(array[i]);
-					
+
 					continue;
 				}
 

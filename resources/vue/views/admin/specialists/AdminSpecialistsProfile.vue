@@ -879,7 +879,7 @@
 					</container-input-two-sub>
 				</container-input>
 
-				<Tiptap
+				<VueTiptap
 					ref="tiptapDescription"
 					v-model="specialist.profile.data.description.value"
 					:editable="true"
@@ -1197,7 +1197,7 @@
 <script>
 import Modal from "../../../components/modules/modal/Modal.vue";
 import BaseTable from "../../../components/modules/table/BaseTable.vue";
-import Tiptap from "../../../components/modules/Tiptap.vue";
+import VueTiptap from "../../../components/modules/VueTiptap.vue";
 
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import Selector from "../../../components/modules/Selector.vue";
@@ -1238,7 +1238,7 @@ export default {
 	components: {
 		Modal,
 		BaseTable,
-		Tiptap,
+		VueTiptap,
 
 		InfoBar,
 		Selector,

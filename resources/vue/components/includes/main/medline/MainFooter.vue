@@ -104,7 +104,7 @@
 <script>
 import LoaderChild from "../../../modules/LoaderChild.vue";
 import Empty from "../../../modules/Empty.vue";
-import Tiptap from "../../../modules/Tiptap.vue";
+import Tiptap from "../../../modules/VueTiptap.vue";
 
 import IconVisa from "../../../icons/IconVisa.vue";
 import IconMasterCard from "../../../icons/IconMasterCard.vue";

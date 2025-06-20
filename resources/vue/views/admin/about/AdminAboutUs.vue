@@ -164,27 +164,26 @@
 					</div>
 				</div>
 			</div>
-			<ContainerInput>
-				<Tiptap
-					ref="tiptapTitle"
-					v-model="currentInfoBlock.data.title.value"
-					:editable="true"
-					:limit="500"
-					:minHeight="100"
-					:options="['format', 'align']"
-					:placeholder="'Заголовок'"
-				/>
 
-				<Tiptap
-					ref="tiptapDescription"
-					v-model="currentInfoBlock.data.description.value"
-					:editable="true"
-					:limit="10_000"
-					:minHeight="200"
-					:options="['format', 'align', 'list', 'link']"
-					:placeholder="'Заголовок'"
-				/>
-			</ContainerInput>
+			<VueTiptap
+				ref="tiptapTitle"
+				v-model="currentInfoBlock.data.title.value"
+				:editable="true"
+				:limit="500"
+				:minHeight="100"
+				:options="['format', 'align']"
+				:placeholder="'Заголовок'"
+			/>
+
+			<VueTiptap
+				ref="tiptapDescription"
+				v-model="currentInfoBlock.data.description.value"
+				:editable="true"
+				:limit="10_000"
+				:minHeight="200"
+				:options="['format', 'align', 'list', 'link']"
+				:placeholder="'Заголовок'"
+			/>
 		</template>
 
 		<template #footer>
@@ -224,22 +223,18 @@
 		</template>
 
 		<template #body>
-			<container-input-once>
-				<template #input>
-					<input
-						type="file"
-						autocomplete="off"
-						ref="imageUpload"
-						:class="{ error: currentImage.errors.file.status }"
-						@input="currentImage.data.file.edited = true"
-					/>
-				</template>
+			<VueInput
+				v-model="currentImage.data.file.value"
+				ref="fileImage"
+				:type="'file'"
+				:placeholder="'Загрузите изображение'"
+				:error="currentImage.errors.file.status"
+			>
+				<template #label> ИЗОБРАЖЕНИЕ </template>
 				<template #error>
-					<span class="error" v-if="currentImage.errors.file.status">
-						{{ currentImage.errors.file.message }}
-					</span>
+					{{ currentImage.errors.file.message }}
 				</template>
-			</container-input-once>
+			</VueInput>
 		</template>
 
 		<template #footer>
@@ -259,29 +254,25 @@
 		</template>
 	</Modal>
 
-	<!-- Модальное окно: Добавить картинку -->
+	<!-- Модальное окно: Добавить файл -->
 	<Modal ref="modalFiles" :settings="modalFiles">
 		<template #title>
 			{{ modalFiles.values.title }}
 		</template>
 
 		<template #body>
-			<container-input-once>
-				<template #input>
-					<input
-						type="file"
-						autocomplete="off"
-						ref="fileUpload"
-						:class="{ error: currentFile.errors.file.status }"
-						@input="currentFile.data.file.edited = true"
-					/>
-				</template>
+			<VueInput
+				v-model="currentFile.data.file.value"
+				ref="fileFile"
+				:type="'file'"
+				:placeholder="'Загрузите изображение'"
+				:error="currentFile.errors.file.status"
+			>
+				<template #label> ФАЙЛ </template>
 				<template #error>
-					<span class="error" v-if="currentFile.errors.file.status">
-						{{ currentFile.errors.file.message }}
-					</span>
+					{{ currentFile.errors.file.message }}
 				</template>
-			</container-input-once>
+			</VueInput>
 		</template>
 
 		<template #footer>
@@ -378,7 +369,8 @@
 <script>
 import Modal from "../../../components/modules/modal/Modal.vue";
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
-import Tiptap from "../../../components/modules/Tiptap.vue";
+import VueTiptap from "../../../components/modules/VueTiptap.vue";
+import VueInput from "../../../components/modules/VueInput.vue";
 import BaseTable from "../../../components/modules/table/BaseTable.vue";
 
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
@@ -395,10 +387,6 @@ import Empty from "../../../components/modules/Empty.vue";
 
 import AdminAboutUsList from "./AdminAboutUsList.vue";
 
-import ContainerInput from "../../../components/ui/admin/containers/ContainerInput.vue";
-import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
-import ContainerTextareaOnce from "../../../components/ui/admin/containers/textarea/ContainerTextareaOnce.vue";
-
 import api from "../../../services/api";
 import shared from "../../../services/shared";
 import files from "../../../services/files";
@@ -409,9 +397,10 @@ export default {
 	components: {
 		Modal,
 		InfoBar,
-		Tiptap,
+		VueTiptap,
 		LoaderChild,
 		BaseTable,
+		VueInput,
 
 		BlockOnce,
 		BlockTwo,
@@ -424,9 +413,6 @@ export default {
 
 		Empty,
 		AdminAboutUsList,
-		ContainerInput,
-		ContainerInputOnce,
-		ContainerTextareaOnce,
 	},
 	data() {
 		return {
@@ -681,22 +667,20 @@ export default {
 
 		/* Открытие модального окна для загрузки */
 		openModalImageCreate(name) {
+			shared.clearObjectFull(this.currentImage);
 			this.currentImage.data.file.value = name;
-			this.currentImage.data.file.edited = false;
-			this.currentImage.errors.file.status = false;
 
-			this.$refs.imageUpload.value = "";
+			this.$refs.fileImage.clear();
 
 			this.openModal("modalImage", "ЗАГРУЗКА ИЗОБРАЖЕНИЯ", "default");
 		},
 
 		/* Открытие модального окна для загрузки */
 		openModalImageEdite(name) {
+			shared.clearObjectFull(this.currentImage);
 			this.currentImage.data.file.value = name;
-			this.currentImage.data.file.edited = false;
-			this.currentImage.errors.file.status = false;
 
-			this.$refs.imageUpload.value = "";
+			this.$refs.fileImage.clear();
 
 			this.openModal("modalImage", "ЗАГРУЗКА ИЗОБРАЖЕНИЯ", "default");
 		},
@@ -704,7 +688,8 @@ export default {
 		/* Открытие модального окна для загрузки */
 		openFilesCreate() {
 			shared.clearObjectFull(this.currentFile);
-			this.$refs.fileUpload.value = "";
+
+			this.$refs.fileFile.clear();
 
 			this.openModal("modalFiles", "ФАЙЛ", "create");
 		},
@@ -719,7 +704,7 @@ export default {
 					{
 						key: "file",
 						type: "file",
-						value: this.$refs.imageUpload,
+						value: this.$refs.fileImage.files(),
 						formats: ["jpg", "jpeg", "png", "webp"],
 					},
 				])
@@ -728,7 +713,7 @@ export default {
 
 			/* Загрузка файла */
 			let formData = new FormData();
-			formData.append("file", this.$refs.imageUpload.files[0]);
+			formData.append("file", this.$refs.fileImage.files()[0]);
 			formData.append("type", "abouts");
 			formData.append("formats", ["png", "jpg", "jpeg", "webp"]);
 
@@ -921,7 +906,7 @@ export default {
 					{
 						key: "file",
 						type: "file",
-						value: this.$refs.fileUpload,
+						value: this.$refs.fileFile.files(),
 						formats: [
 							"pdf",
 							"doc",
@@ -943,7 +928,7 @@ export default {
 
 			/* Загрузка файла */
 			let formData = new FormData();
-			formData.append("file", this.$refs.fileUpload.files[0]);
+			formData.append("file", this.$refs.fileFile.files()[0]);
 			formData.append("type", "files");
 			formData.append("formats", [
 				"pdf",

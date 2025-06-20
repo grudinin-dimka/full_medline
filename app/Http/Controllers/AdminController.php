@@ -1,7 +1,9 @@
 <?php
+
 namespace App\Http\Controllers;
 
 /* Контроллер */
+
 use App\Http\Controllers\HomeController;
 
 /* Подключения */
@@ -13,7 +15,7 @@ use Carbon\Carbon;
 /* Помощники */
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
-Use Illuminate\Http\UploadedFile;
+use Illuminate\Http\UploadedFile;
 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -80,12 +82,13 @@ class AdminController extends Controller
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                     ОБЩИЕ                         |*/
    /* |___________________________________________________|*/
-   /* Загрузка файла на сервер */ 
-   public function uploadFile(Request $request) {
-      /* Проверка на наличие переменной image с файлом в запросе */  
-		if($request->hasFile('file')) {
+   /* Загрузка файла на сервер */
+   public function uploadFile(Request $request)
+   {
+      /* Проверка на наличие переменной image с файлом в запросе */
+      if ($request->hasFile('file')) {
          $file = $request->file('file');
-         
+
          // Проверка на картинку
          $isImage = str_starts_with($file->getMimeType(), 'image/');
 
@@ -157,21 +160,21 @@ class AdminController extends Controller
             case 'prices':
                $path = $request->file('file')->storeAs(
                   'public/prices',
-                  $originalName, 
+                  $originalName,
                   'local'
                );
                break;
             case 'files':
                $path = $request->file('file')->storeAs(
                   'public/files',
-                  $originalName, 
+                  $originalName,
                   'local'
                );
                break;
             default:
                $path = $request->file('file')->store(
                   'public/' . $request->type
-               );               
+               );
                break;
          }
 
@@ -197,17 +200,18 @@ class AdminController extends Controller
             "message" => "Отсутствует файл.",
             "result" => null,
          ], 422);
-      };      
-   } 
-   
+      };
+   }
+
    /* Получение данных о профиле пользователя */
-   public function getProfileInfo(Request $request) {
-      try {         
+   public function getProfileInfo(Request $request)
+   {
+      try {
          $user = $request->user();
          $user->status = Status::find($user->statusId)->name;
          $user->rights = Rights::find($user->rightsId)->name;
          $user->path = Storage::url('users/' . $user->filename);
-      
+
          return response()->json([
             "success" => true,
             "debug" => false,
@@ -220,7 +224,7 @@ class AdminController extends Controller
             "debug" => true,
             "message" => $th->getMessage(),
             "result" => null,
-         ], 500);         
+         ], 500);
       }
    }
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -230,7 +234,8 @@ class AdminController extends Controller
    /* 1. Слайдер                                           */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
    /* Сохранение содержимого всех слайдов */
-   public function saveSlidesChanges(Request $request) {
+   public function saveSlidesChanges(Request $request)
+   {
       $validator = Validator::make($request->all(), [
          'slides' => 'nullable|array',
       ], [
@@ -258,7 +263,7 @@ class AdminController extends Controller
          };
 
          // Добавление
-         if ($value['create'] === true){
+         if ($value['create'] === true) {
             $slideCreate = Slide::create([
                'name' => $value['name'],
                'link' => $value['link'],
@@ -270,7 +275,7 @@ class AdminController extends Controller
             /* Запись нового объекта в массив */
             $arrayID[] = (object) [
                // Прошлый id
-               'old' => $value['id'], 
+               'old' => $value['id'],
                // Новый id
                'new' => $slideCreate->id
             ];
@@ -285,7 +290,7 @@ class AdminController extends Controller
             'filename' => $value['filename'],
             'hide' => $value['hide'],
             'order' => $value['order'],
-         ]);  
+         ]);
       };
 
       // Сортировка слайдов по порядку от наименьшего до наибольшого
@@ -301,7 +306,7 @@ class AdminController extends Controller
 
       // Получение всех файлов
       $filesSlides = Storage::files('public/slides');
-      if($filesSlides) {
+      if ($filesSlides) {
          foreach ($filesSlides as $fileKey => $fileValue) {
             $useFile = false;
 
@@ -315,7 +320,7 @@ class AdminController extends Controller
                   $useFile = true;
                };
             };
-   
+
             /* Удаление файла, если не используется */
             if (!$useFile) {
                Storage::delete($fileValue);
@@ -329,13 +334,14 @@ class AdminController extends Controller
          "message" => "Данные обновлены.",
          "result" => $arrayID
       ], 200);
-   } 
+   }
 
    /* _____________________________________________________*/
    /* 2. Футер                                             */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-   /* Сохранение футера */ 
-   public function saveFooter(Request $request) {
+   /* Сохранение футера */
+   public function saveFooter(Request $request)
+   {
       // Валидация
       $validator = Validator::make($request->all(), [
          'description' => 'required|string',
@@ -353,7 +359,7 @@ class AdminController extends Controller
             "result" => null,
          ], 422);
       };
-      
+
       try {
          $footer = Footer::find(1);
 
@@ -368,12 +374,12 @@ class AdminController extends Controller
             "result" => null
          ], 500);
       };
-      
+
       return response()->json([
          "success" => true,
          "debug" => true,
          "message" => "Данные обновлены.",
-         "data" => null         
+         "data" => null
       ], 200);
    }
 
@@ -384,39 +390,40 @@ class AdminController extends Controller
    /* 1. Врачи                                             */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
    /* Модульное сохранение */
-   public function saveSpecialistModular(Request $request) {
+   public function saveSpecialistModular(Request $request)
+   {
       // Сохранение профиля
-      $saveProfile = $this->saveSpecialistProfile($request);            
+      $saveProfile = $this->saveSpecialistProfile($request);
       if (!$saveProfile['object']->success) {
          return response()->json($saveProfile['object'], $saveProfile['status']);
       };
 
       // Сохранение специализаций
-      $saveSpecializations = $this->saveSpecialistSpecializations($request);            
+      $saveSpecializations = $this->saveSpecialistSpecializations($request);
       if (!$saveSpecializations['object']->success) {
          return response()->json($saveSpecializations['object'], $saveSpecializations['status']);
       };
-      
+
       // Сохранение клиник
-      $saveClinic = $this->saveSpecialistClinics($request);            
+      $saveClinic = $this->saveSpecialistClinics($request);
       if (!$saveClinic['object']->success) {
          return response()->json($saveClinic['object'], $saveClinic['status']);
       };
-      
+
       // Сохранение сертификатов
-      $saveClinic = $this->saveSpecialistCertificates($request);            
+      $saveClinic = $this->saveSpecialistCertificates($request);
       if (!$saveClinic['object']->success) {
          return response()->json($saveClinic['object'], $saveClinic['status']);
       };
-      
+
       // Сохранение образований
-      $saveEducation = $this->saveSpecialistEducations($request);            
+      $saveEducation = $this->saveSpecialistEducations($request);
       if (!$saveEducation['object']->success) {
          return response()->json($saveEducation['object'], $saveEducation['status']);
       };
-      
+
       // Сохранение работ
-      $saveWork = $this->saveSpecialistWorks($request);            
+      $saveWork = $this->saveSpecialistWorks($request);
       if (!$saveWork['object']->success) {
          return response()->json($saveWork['object'], $saveWork['status']);
       };
@@ -429,17 +436,18 @@ class AdminController extends Controller
             "imagePath" => $saveProfile['object']->result,
             "certificates" => $saveClinic['object']->result,
             "educations" => $saveEducation['object']->result,
-            "works" => $saveWork['object']->result,     
+            "works" => $saveWork['object']->result,
          ],
-      ]);  
+      ]);
    }
 
-   /* Модуль: Сохранение профиля */ 
-   public function saveSpecialistProfile(Request $request) {
+   /* Модуль: Сохранение профиля */
+   public function saveSpecialistProfile(Request $request)
+   {
       $profile = json_decode($request->profile);
-      
+
       $path = null;
-      if($request->hasFile('image')) {
+      if ($request->hasFile('image')) {
          $validated = validator($request->all(), [
             'image' => [
                'required',
@@ -469,10 +477,10 @@ class AdminController extends Controller
          $path = $request->file('image')->store(
             'public/specialists'
          );
-         
+
          if (!$path) {
             return [
-               "object" => (object) [                  
+               "object" => (object) [
                   "success" => false,
                   "debug" => true,
                   "message" => "Не удалось сохранить изображение.",
@@ -481,7 +489,7 @@ class AdminController extends Controller
                "status" => 500,
             ];
          }
-      };      
+      };
 
       $specialist = Specialist::find($profile->id->value);
       if ($specialist) {
@@ -511,7 +519,7 @@ class AdminController extends Controller
                "result" => $path ? Storage::url($path) : null,
             ],
             "status" => 200,
-         ];   
+         ];
       } else {
          return [
             "object" => (object) [
@@ -521,48 +529,49 @@ class AdminController extends Controller
                "result" => null,
             ],
             "status" => 500,
-         ];   
+         ];
       };
    }
 
-   /* Модуль: Сохранение специализации */ 
-   public function saveSpecialistSpecializations(Request $request) {
+   /* Модуль: Сохранение специализации */
+   public function saveSpecialistSpecializations(Request $request)
+   {
       $specializations = json_decode($request->specializations);
       $id = json_decode($request->id);
-      
+
       $specialist = Specialist::find($id);
-      if($specialist) {         
+      if ($specialist) {
          // Поиск или добавление 
          foreach ($specializations as $key => $value) {
             SpecialistSpecialization::firstOrCreate([
                'id_specialist' => $value->id_specialist,
-               'id_specialization' => $value->id_specialization, 
+               'id_specialization' => $value->id_specialization,
             ]);
          };
 
          // Поиск в массиве
          $specialistSpecializations = SpecialistSpecialization::where('id_specialist', $id)->get();
-         
-         if($specialistSpecializations) {
+
+         if ($specialistSpecializations) {
             // Удаление ненужных записей
             foreach ($specialistSpecializations as $key => $value) {
                // Поиск в массиве
                $status = false;
                foreach ($specializations as $key => $valueReqArr) {
                   if (
-                     $value->id_specialist === $valueReqArr->id_specialist 
-                        && 
+                     $value->id_specialist === $valueReqArr->id_specialist
+                     &&
                      $value->id_specialization === $valueReqArr->id_specialization
                   ) {
                      $status = true;
                   };
                }
-   
+
                if (!$status) {
                   $value->delete();
                };
             };
-            
+
             return [
                "object" => (object) [
                   "success" => true,
@@ -597,18 +606,19 @@ class AdminController extends Controller
    }
 
    /* Модуль: Сохранение клиник */
-   public function saveSpecialistClinics(Request $request) {
+   public function saveSpecialistClinics(Request $request)
+   {
       $clinics = json_decode($request->clinics);
       $id = json_decode($request->id);
-      
+
       $specialist = Specialist::find($id);
-      
-      if($specialist) {         
+
+      if ($specialist) {
          // Поиск или добавление 
          foreach ($clinics as $key => $value) {
             SpecialistClinic::firstOrCreate([
                'id_specialist' => $value->id_specialist,
-               'id_clinic' => $value->id_clinic, 
+               'id_clinic' => $value->id_clinic,
                "priem" => $value->priem,
             ]);
          };
@@ -618,13 +628,13 @@ class AdminController extends Controller
          foreach ($specialistClinics as $specialistClinicskey => $specialistClinicsValue) {
             // Поиск в массиве
             $status = false;
-            
+
             foreach ($clinics as $key => $valueReqArr) {
                if (
-                  $specialistClinicsValue->id_specialist === $valueReqArr->id_specialist 
-                     && 
+                  $specialistClinicsValue->id_specialist === $valueReqArr->id_specialist
+                  &&
                   $specialistClinicsValue->id_clinic === $valueReqArr->id_clinic
-                     &&
+                  &&
                   $specialistClinicsValue->priem === $valueReqArr->priem
                ) {
                   $status = true;
@@ -635,7 +645,7 @@ class AdminController extends Controller
                $specialistClinicsValue->delete();
             };
          };
-         
+
          return [
             "object" => (object) [
                "success" => true,
@@ -659,20 +669,21 @@ class AdminController extends Controller
    }
 
    /* Модуль: Сохранение сертификатов */
-   public function saveSpecialistCertificates(Request $request) {
+   public function saveSpecialistCertificates(Request $request)
+   {
       $certificates = json_decode($request->certificates);
       $id = json_decode($request->id);
-      
+
       $specialist = Specialist::find($id);
-      if($specialist) {         
+      if ($specialist) {
          $arrayID = [];
          foreach ($certificates as $key => $value) {
             // Удаление
-            if ($value->delete === true){
+            if ($value->delete === true) {
                $certificate = Certificate::find($value->id);
                $certificate->delete();
                continue;
-            }         
+            }
 
             // Создание
             if ($value->create === true) {
@@ -682,21 +693,21 @@ class AdminController extends Controller
                   "endEducation" => $value->endEducation,
                ]);
 
-               if($certificateCreate) {
+               if ($certificateCreate) {
                   SpecialistCertificate::create([
                      'id_specialist' => $id,
                      'id_certificate' => $certificateCreate->id,
-                  ]);   
+                  ]);
                }
-   
+
                $arrayID[] = (object) [
                   // Прошлый id
-                  'old' => $value->id, 
+                  'old' => $value->id,
                   // Новый id
                   'new' => $certificateCreate->id
-               ];            
+               ];
                continue;
-            };  
+            };
 
             // Обновление
             $certificate = Certificate::find($value->id);
@@ -704,9 +715,9 @@ class AdminController extends Controller
                "name" => $value->name,
                "organization" => $value->organization,
                "endEducation" => $value->endEducation,
-            ]);           
+            ]);
 
-            if(!$certificateUpdate) {
+            if (!$certificateUpdate) {
                return [
                   "object" => (object) [
                      "success" => false,
@@ -727,7 +738,7 @@ class AdminController extends Controller
                "result" => $arrayID,
             ],
             "status" => 200,
-         ];         
+         ];
       } else {
          return [
             "object" => (object) [
@@ -737,26 +748,27 @@ class AdminController extends Controller
                "result" => null,
             ],
             "status" => 500,
-         ];         
+         ];
       }
    }
 
    /* Модуль: Сохранение образований */
-   public function saveSpecialistEducations(Request $request) {
+   public function saveSpecialistEducations(Request $request)
+   {
       $educations = json_decode($request->educations);
       $id = json_decode($request->id);
-      
+
       $specialist = Specialist::find($id);
-      if($specialist) {         
+      if ($specialist) {
          $arrayID = [];
 
          foreach ($educations as $key => $value) {
             // Удаление
-            if ($value->delete === true){
+            if ($value->delete === true) {
                $education = Education::find($value->id);
                $education->delete();
                continue;
-            }         
+            }
 
             // Создание
             if ($value->create === true) {
@@ -767,21 +779,21 @@ class AdminController extends Controller
                   "speсialization" => $value->speсialization,
                ]);
 
-               if($educationCreate) {
+               if ($educationCreate) {
                   SpecialistEducation::create([
                      'id_specialist' => $request->id,
                      'id_education' => $educationCreate->id,
-                  ]);   
+                  ]);
                }
-   
+
                $arrayID[] = (object) [
                   // Прошлый id
-                  'old' => $value->id, 
+                  'old' => $value->id,
                   // Новый id
                   'new' => $educationCreate->id
-               ];            
+               ];
                continue;
-            };       
+            };
 
             // Обновление
             $education = Education::find($value->id);
@@ -790,9 +802,9 @@ class AdminController extends Controller
                "organization" => $value->organization,
                "date" => $value->date,
                "speсialization" => $value->speсialization,
-            ]);      
-            
-            if(!$educationUpdate) {
+            ]);
+
+            if (!$educationUpdate) {
                return [
                   "object" => (object) [
                      "success" => false,
@@ -801,7 +813,7 @@ class AdminController extends Controller
                      "result" => null,
                   ],
                   "status" => 500,
-               ];      
+               ];
             }
          }
 
@@ -823,26 +835,27 @@ class AdminController extends Controller
                "result" => null,
             ],
             "status" => 500,
-         ];      
-      }     
+         ];
+      }
    }
-   
+
    /* Модуль: Сохранение прошлых работ */
-   public function saveSpecialistWorks(Request $request) {
+   public function saveSpecialistWorks(Request $request)
+   {
       $works = json_decode($request->works);
       $id = json_decode($request->id);
 
       $specialist = Specialist::find($id);
-      if($specialist) {         
+      if ($specialist) {
          $arrayID = [];
 
          foreach ($works as $key => $value) {
             // Удаление
-            if ($value->delete === true){
+            if ($value->delete === true) {
                $work = Work::find($value->id);
                $work->delete();
                continue;
-            }         
+            }
 
             // Создание
             if ($value->create === true) {
@@ -853,21 +866,21 @@ class AdminController extends Controller
                   "endWork" => $value->endWork,
                ]);
 
-               if($workCreate) {
+               if ($workCreate) {
                   SpecialistWork::create([
                      'id_specialist' => $request->id,
                      'id_work' => $workCreate->id,
-                  ]);   
+                  ]);
                }
-   
+
                $arrayID[] = (object) [
                   // Прошлый id
-                  'old' => $value->id, 
+                  'old' => $value->id,
                   // Новый id
                   'new' => $workCreate->id
-               ];            
+               ];
                continue;
-            };       
+            };
 
             // Обновление
             $work = Work::find($value->id);
@@ -876,9 +889,9 @@ class AdminController extends Controller
                "organization" => $value->organization,
                "startWork" => $value->startWork,
                "endWork" => $value->endWork,
-            ]);           
-         
-            if(!$workUpdate) {
+            ]);
+
+            if (!$workUpdate) {
                return [
                   "object" => (object) [
                      "success" => false,
@@ -887,7 +900,7 @@ class AdminController extends Controller
                      "result" => null,
                   ],
                   "status" => 500,
-               ];      
+               ];
             }
          }
 
@@ -899,7 +912,7 @@ class AdminController extends Controller
                "result" => $arrayID,
             ],
             "status" => 200,
-         ];      
+         ];
       } else {
          return [
             "object" => (object) [
@@ -909,12 +922,13 @@ class AdminController extends Controller
                "result" => null,
             ],
             "status" => 500,
-         ];      
+         ];
       };
    }
-   
-   /* Сохранение таблицы со специалистами */ 
-   public function saveSpecialistsChanges(Request $request) {
+
+   /* Сохранение таблицы со специалистами */
+   public function saveSpecialistsChanges(Request $request)
+   {
       // Валидация
       $validator = Validator::make($request->all(), [
          'specialists' => 'nullable|array',
@@ -942,16 +956,16 @@ class AdminController extends Controller
 
          $specialist = Specialist::find($value['id']);
          $specialist->update([
-               'hide' => $value['hide'],
+            'hide' => $value['hide'],
          ]);
-      };      
+      };
 
       $specialists = Specialist::all();
-      
+
       // Получение всех файлов
       $filesSpecialists = Storage::files('public/specialists');
-      
-      if($filesSpecialists) {
+
+      if ($filesSpecialists) {
          foreach ($filesSpecialists as $fileKey => $fileValue) {
             $useFile = false;
             /* Проверка на использование файла */
@@ -963,7 +977,7 @@ class AdminController extends Controller
                   $useFile = true;
                };
             };
-   
+
             /* Удаление файла, если не используется */
             if (!$useFile) {
                Storage::delete($fileValue);
@@ -979,8 +993,9 @@ class AdminController extends Controller
       ], 200);
    }
 
-   /* Добавление нового специалиста */ 
-   public function addSpecialist(Request $request) {
+   /* Добавление нового специалиста */
+   public function addSpecialist(Request $request)
+   {
       // Валидация
       $validator = Validator::make($request->all(), [
          'image' => [
@@ -989,7 +1004,7 @@ class AdminController extends Controller
                ->types(['png', 'webp'])
                ->max(5 * 1024)
                ->dimensions(Rule::dimensions()->maxWidth(1500)->maxHeight(1500)),
-            ],
+         ],
       ], [
          'image.required' => 'Файл не загружен.',
          'image.image' => 'Допустимые типы файлов: png, webp.',
@@ -1020,7 +1035,7 @@ class AdminController extends Controller
             "result" => null,
          ], 500);
       };
-      
+
       $profile = json_decode($request->profile);
 
       try {
@@ -1039,14 +1054,14 @@ class AdminController extends Controller
             "childrenDoctor" => $profile->childrenDoctor->value,
             "childrenDoctorAge" => $profile->childrenDoctor->value ? $profile->childrenDoctorAge->value : 0,
             "filename" => str_replace("public/specialists/", "", $path),
-         ]);   
+         ]);
       } catch (Throwable $e) {
          return response()->json([
             "success" => false,
             "debug" => true,
             "message" => "Не удалось создать специалиста.",
             "result" => null,
-         ], 500);   
+         ], 500);
       };
 
       return response()->json([
@@ -1057,11 +1072,12 @@ class AdminController extends Controller
             "id" => $specialist->id,
             "path" => Storage::url($path),
          ],
-      ], 200);   
+      ], 200);
    }
 
    /* Сохранение изменений специализаций */
-   public function saveSpecializationsChanges(Request $request) {
+   public function saveSpecializationsChanges(Request $request)
+   {
       // Валидация
       $validator = Validator::make($request->all(), [
          'specializations' => 'nullable|array',
@@ -1080,14 +1096,14 @@ class AdminController extends Controller
       };
 
       $arrayID = [];
-      
+
       foreach ($request->specializations as $key => $value) {
          // Удаление
-         if ($value["delete"] === true){
+         if ($value["delete"] === true) {
             $specialization = Specialization::find($value['id']);
             $specialization->delete();
             continue;
-         };       
+         };
 
          // Создание
          if ($value['create'] === true) {
@@ -1098,20 +1114,20 @@ class AdminController extends Controller
             /* Запись нового объекта в массив */
             $arrayID[] = (object) [
                // Прошлый id
-               'old' => $value['id'], 
+               'old' => $value['id'],
                // Новый id
                'new' => $specializationCreate->id
-            ];            
+            ];
             continue;
-         };       
+         };
 
          // Обновление
          $specialization = Specialization::find($value['id']);
          $specializationUpdate = $specialization->update([
             'name' => $value['name'],
-         ]);     
+         ]);
       }
-      
+
       return response()->json([
          "success" => true,
          "debug" => true,
@@ -1121,7 +1137,8 @@ class AdminController extends Controller
    }
 
    /* Сохранение изменений клиник */
-   public function saveClinicsChanges(Request $request) {
+   public function saveClinicsChanges(Request $request)
+   {
       // Валидация
       $validator = Validator::make($request->all(), [
          'clinics' => 'nullable|array',
@@ -1144,11 +1161,11 @@ class AdminController extends Controller
       // Поиск или добавление
       foreach ($request->clinics as $key => $value) {
          // Удаление
-         if ($value["delete"] === true){
+         if ($value["delete"] === true) {
             $clinic = Clinic::find($value['id']);
             $clinic->delete();
             continue;
-         }         
+         }
 
          // Создание
          if ($value["create"] === true) {
@@ -1165,12 +1182,12 @@ class AdminController extends Controller
             /* Запись нового объекта в массив */
             $arrayID[] = (object) [
                // Прошлый id
-               'old' => $value['id'], 
+               'old' => $value['id'],
                // Новый id
                'new' => $clinicToCreate->id
-            ];            
+            ];
             continue;
-         };       
+         };
 
          // Обновление
          $clinic = Clinic::find($value['id']);
@@ -1182,7 +1199,7 @@ class AdminController extends Controller
             "index" => $value['index'],
             "geoWidth" => $value['geoWidth'],
             "geoLongitude" => $value['geoLongitude'],
-         ]);     
+         ]);
       }
 
       return response()->json([
@@ -1195,7 +1212,8 @@ class AdminController extends Controller
    }
 
    /* Создание XML */
-   public function makeSpecialistsXML(Request $request) {
+   public function makeSpecialistsXML(Request $request)
+   {
       $validator = Validator::make($request->all(), [
          'name' => 'required',
          'company' => 'required',
@@ -1229,262 +1247,262 @@ class AdminController extends Controller
 
       $xw = new XMLWriter();
       $xw->openMemory();
-      
+
       // Начало документа
       $xw->startDocument("1.0");
-   
+
       // Запись элементов
       $xw->startElement("yml_catalog");
-      
+
       $xw->startAttribute("date");
-      $xw->text(date('Y-m-d H:i'));    
+      $xw->text(date('Y-m-d H:i'));
       $xw->endAttribute();
-         $xw->startElement("shop");
-            // Название клиники
-            $xw->startElement("name");
-            $xw->text($request->name);
-            $xw->endElement();
+      $xw->startElement("shop");
+      // Название клиники
+      $xw->startElement("name");
+      $xw->text($request->name);
+      $xw->endElement();
 
-            // Компания 
-            $xw->startElement("company");
-            $xw->text($request->company);
-            $xw->endElement();
+      // Компания 
+      $xw->startElement("company");
+      $xw->text($request->company);
+      $xw->endElement();
 
-            // Ссылка на сайт 
-            $xw->startElement("url");
-            $xw->text($request->url);
-            $xw->endElement();
+      // Ссылка на сайт 
+      $xw->startElement("url");
+      $xw->text($request->url);
+      $xw->endElement();
 
-            // Рабочая почта 
-            $xw->startElement("email");
-            $xw->text($request->email);
-            $xw->endElement();
+      // Рабочая почта 
+      $xw->startElement("email");
+      $xw->text($request->email);
+      $xw->endElement();
 
-            // Картинка с логотипом 
-            $xw->startElement("picture");
-            $xw->text($request->name . '/storage/img/logo.webp');
-            $xw->endElement();
+      // Картинка с логотипом 
+      $xw->startElement("picture");
+      $xw->text($request->name . '/storage/img/logo.webp');
+      $xw->endElement();
 
-            // Описание 
-            $xw->startElement("description");
-            $xw->text($request->description);
-            $xw->endElement();
+      // Описание 
+      $xw->startElement("description");
+      $xw->text($request->description);
+      $xw->endElement();
 
-            // Валюты 
-            $xw->startElement("currencies");
-               $xw->startElement("currency");
-               
-               $xw->startAttribute("id");
-               $xw->text("RUB");
-               $xw->endAttribute();               
+      // Валюты 
+      $xw->startElement("currencies");
+      $xw->startElement("currency");
 
-               $xw->startAttribute("rate");
-               $xw->text("1");
-               $xw->endAttribute();               
+      $xw->startAttribute("id");
+      $xw->text("RUB");
+      $xw->endAttribute();
 
-               $xw->endElement();
-            $xw->endElement();
+      $xw->startAttribute("rate");
+      $xw->text("1");
+      $xw->endAttribute();
 
-            // Категории 
-            $xw->startElement("categories");
-               $xw->startElement("category");
-               
-               $xw->startAttribute("id");
-               $xw->text("1");
-               $xw->endAttribute();               
+      $xw->endElement();
+      $xw->endElement();
 
-               $xw->text("Врач");
+      // Категории 
+      $xw->startElement("categories");
+      $xw->startElement("category");
 
-               $xw->endElement();
-            $xw->endElement();
+      $xw->startAttribute("id");
+      $xw->text("1");
+      $xw->endAttribute();
 
-            // Специализации
-            $xw->startElement("sets");
-               foreach ($specializations as $key => $value) {
-                  $stringTransliterate = Transliterator::create('Any-Latin; Latin-ASCII')->transliterate($value->name);
-                  $stringLowerCase = strtolower($stringTransliterate);
-                  
-                  $xw->startElement("set");                  
-                     $xw->startAttribute("id");
-                     $xw->text($stringLowerCase);
-                     $xw->endAttribute();         
+      $xw->text("Врач");
 
-                     // Название
-                     $xw->startElement("name");
-                     $xw->text($value->name);
-                     $xw->endElement();
-   
-                     // Ссылка на раздел с врачами
-                     $xw->startElement("url");
-                     $xw->text($request->url . '/specialists');
-                     $xw->endElement();
-   
-                  $xw->endElement();
-               }
-            $xw->endElement();
+      $xw->endElement();
+      $xw->endElement();
 
-            // Офферы (специлисты)
-            $xw->startElement("offers");
-               foreach ($specialists as $key => $value) {
-                  $xw->startElement("offer");
-                     $xw->startAttribute("id");
-                     $xw->text('vrach' . $value->id);
-                     $xw->endAttribute();
+      // Специализации
+      $xw->startElement("sets");
+      foreach ($specializations as $key => $value) {
+         $stringTransliterate = Transliterator::create('Any-Latin; Latin-ASCII')->transliterate($value->name);
+         $stringLowerCase = strtolower($stringTransliterate);
 
-                        $xw->startElement("name");
-                        $xw->text($value->family . ' ' . $value->name . ' ' . $value->surname);
-                        $xw->endElement();                  
+         $xw->startElement("set");
+         $xw->startAttribute("id");
+         $xw->text($stringLowerCase);
+         $xw->endAttribute();
 
-                        $xw->startElement("url");
-                        $xw->text($request->url . '/' . $this->makeUrl($value->family . ' ' . $value->name . ' ' . $value->surname));
-                        $xw->endElement();                  
+         // Название
+         $xw->startElement("name");
+         $xw->text($value->name);
+         $xw->endElement();
 
-                        // Цена на услугу
-                        $xw->startElement("price");
-                           $xw->startAttribute("from");
-                           $xw->text('true');
-                           $xw->endAttribute();         
-                        $xw->text(0);
-                        $xw->endElement();
-
-                        // Название услуги
-                        $xw->startElement("sales_notes");
-                        $xw->text('Первичный прием');
-                        $xw->endElement();   
-
-                        // Специальности через запятую
-                        $xw->startElement("set-ids");
-                           $stringSpecializations = '';
-                           $array = $specializationsBySpecialists[$value->id] ?? [];
-
-                           foreach ($array as $innerKey => $innerValue) {
-                              $stringSpecializations .= $this->formatStringTransliterate($specializationNames[$innerValue->id_specialization], 'lower') . ',';
-                           };
-                        $xw->text(rtrim($stringSpecializations, ','));
-                        $xw->endElement();
-
-                        // Фото специалиста
-                        $xw->startElement("picture");
-                        $xw->text($request->url . Storage::url('public/specialists/' . $value->filename));
-                        $xw->endElement();
-
-                        // Описание
-                        $xw->startElement("description");
-                        $xw->text($value->description);
-                        $xw->endElement();
-
-                        // id категории из списка категорий
-                        $xw->startElement("categoryId");
-                        $xw->text(1);
-                        $xw->endElement();
-
-                        // Фамилия
-                        $xw->startElement("param");
-                           $xw->startAttribute("name");
-                           $xw->text('Фамилия');
-                           $xw->endAttribute();                                 
-                        $xw->text($value->family);
-                        $xw->endElement();
-
-                        // Фамилия
-                        $xw->startElement("param");
-                           $xw->startAttribute("name");
-                           $xw->text('Имя');
-                           $xw->endAttribute();                                 
-                        $xw->text($value->name);
-                        $xw->endElement();
-
-                        // Отчество
-                        if ($value->surname) {
-                           $xw->startElement("param");
-                              $xw->startAttribute("name");
-                              $xw->text('Отчество');
-                              $xw->endAttribute();                                 
-                           $xw->text($value->surname);
-                           $xw->endElement();
-                        };
-
-                        // Годы опыта
-                        $xw->startElement("param");
-                           $xw->startAttribute("name");
-                           $xw->text('Годы опыта');
-                           $xw->endAttribute();                                 
-                        $xw->text(round(Carbon::parse($value->startWorkAge)->diffInYears(Carbon::parse(date('Y-m-d')))));
-                        $xw->endElement();
-
-                        // Город, в котором врач ведет прием.
-                        if ($value->startWorkCity == null or $value->startWorkCity == '') {
-                           return response()->json([
-                              "status" => false,
-                              "message" => "Город ведения приема у " . $value->family . " " . $value->name . " " . $value->surname . " не указан.",
-                              "data" => null,
-                           ]);
-                        };
-
-                        $xw->startElement("param");
-                           $xw->startAttribute("name");
-                           $xw->text('Город');
-                           $xw->endAttribute();                                 
-                        $xw->text($value->startWorkCity);
-                        $xw->endElement();
-
-                        // Прием взрослых (от 18 лет). Возможные значения: true или false (по умолчанию).
-                        $xw->startElement("param");
-                           $xw->startAttribute("name");
-                           $xw->text('Взрослый врач');
-                           $xw->endAttribute();                                 
-                        $xw->text($value->adultDoctor == 1 ? 'true' : 'false');
-                        $xw->endElement();
-
-                        // Прием детей (до 18 лет). Возможные значения: true или false (по умолчанию).
-                        $xw->startElement("param");
-                           $xw->startAttribute("name");
-                           $xw->text('Детский врач');
-                           $xw->endAttribute();                                 
-                        $xw->text((bool)$value->childrenDoctor == 1 ? 'true' : 'false');
-                        $xw->endElement();
-
-                        // Город клиники приема и адрес
-                        $innerClinics = $clinicsBySpecialists[$value->id] ?? [];
-                           
-                        if (count($innerClinics) == 0) {
-                           return response()->json([
-                              "success" => false,
-                              "debug" => true,
-                              "message" => "Клиника ведения приема у " . $value->family . " " . $value->name . " " . $value->surname . " не указана.",
-                              "result" => null,
-                           ]);
-                        }
-
-                        foreach ($clinicsBySpecialists[$value->id] ?? [] as $innerKey => $innerValue) {
-                           $xw->startElement("param");
-                              $xw->startAttribute("name");
-                              $xw->text('Город клиники');
-                              $xw->endAttribute();                                 
-                           $xw->text('г. ' . $clinicsById[$innerValue->id_clinic][0]->city);
-                           $xw->endElement();
-
-                           $xw->startElement("param");
-                              $xw->startAttribute("name");
-                              $xw->text('Адрес клиники');
-                              $xw->endAttribute();                                 
-                           $xw->text('ул. ' . $clinicsById[$innerValue->id_clinic][0]->street . ', д. ' . $clinicsById[$innerValue->id_clinic][0]->home);
-                           $xw->endElement();
-
-                           $xw->startElement("param");
-                              $xw->startAttribute("name");
-                              $xw->text('Название клиники');
-                              $xw->endAttribute();                                 
-                           $xw->text($clinicsById[$innerValue->id_clinic][0]->name);
-                           $xw->endElement();
-
-                           break;
-                        };
-                  $xw->endElement();                  
-               }
-            $xw->endElement();
+         // Ссылка на раздел с врачами
+         $xw->startElement("url");
+         $xw->text($request->url . '/specialists');
+         $xw->endElement();
 
          $xw->endElement();
+      }
+      $xw->endElement();
+
+      // Офферы (специлисты)
+      $xw->startElement("offers");
+      foreach ($specialists as $key => $value) {
+         $xw->startElement("offer");
+         $xw->startAttribute("id");
+         $xw->text('vrach' . $value->id);
+         $xw->endAttribute();
+
+         $xw->startElement("name");
+         $xw->text($value->family . ' ' . $value->name . ' ' . $value->surname);
+         $xw->endElement();
+
+         $xw->startElement("url");
+         $xw->text($request->url . '/' . $this->makeUrl($value->family . ' ' . $value->name . ' ' . $value->surname));
+         $xw->endElement();
+
+         // Цена на услугу
+         $xw->startElement("price");
+         $xw->startAttribute("from");
+         $xw->text('true');
+         $xw->endAttribute();
+         $xw->text(0);
+         $xw->endElement();
+
+         // Название услуги
+         $xw->startElement("sales_notes");
+         $xw->text('Первичный прием');
+         $xw->endElement();
+
+         // Специальности через запятую
+         $xw->startElement("set-ids");
+         $stringSpecializations = '';
+         $array = $specializationsBySpecialists[$value->id] ?? [];
+
+         foreach ($array as $innerKey => $innerValue) {
+            $stringSpecializations .= $this->formatStringTransliterate($specializationNames[$innerValue->id_specialization], 'lower') . ',';
+         };
+         $xw->text(rtrim($stringSpecializations, ','));
+         $xw->endElement();
+
+         // Фото специалиста
+         $xw->startElement("picture");
+         $xw->text($request->url . Storage::url('public/specialists/' . $value->filename));
+         $xw->endElement();
+
+         // Описание
+         $xw->startElement("description");
+         $xw->text($value->description);
+         $xw->endElement();
+
+         // id категории из списка категорий
+         $xw->startElement("categoryId");
+         $xw->text(1);
+         $xw->endElement();
+
+         // Фамилия
+         $xw->startElement("param");
+         $xw->startAttribute("name");
+         $xw->text('Фамилия');
+         $xw->endAttribute();
+         $xw->text($value->family);
+         $xw->endElement();
+
+         // Фамилия
+         $xw->startElement("param");
+         $xw->startAttribute("name");
+         $xw->text('Имя');
+         $xw->endAttribute();
+         $xw->text($value->name);
+         $xw->endElement();
+
+         // Отчество
+         if ($value->surname) {
+            $xw->startElement("param");
+            $xw->startAttribute("name");
+            $xw->text('Отчество');
+            $xw->endAttribute();
+            $xw->text($value->surname);
+            $xw->endElement();
+         };
+
+         // Годы опыта
+         $xw->startElement("param");
+         $xw->startAttribute("name");
+         $xw->text('Годы опыта');
+         $xw->endAttribute();
+         $xw->text(round(Carbon::parse($value->startWorkAge)->diffInYears(Carbon::parse(date('Y-m-d')))));
+         $xw->endElement();
+
+         // Город, в котором врач ведет прием.
+         if ($value->startWorkCity == null or $value->startWorkCity == '') {
+            return response()->json([
+               "status" => false,
+               "message" => "Город ведения приема у " . $value->family . " " . $value->name . " " . $value->surname . " не указан.",
+               "data" => null,
+            ]);
+         };
+
+         $xw->startElement("param");
+         $xw->startAttribute("name");
+         $xw->text('Город');
+         $xw->endAttribute();
+         $xw->text($value->startWorkCity);
+         $xw->endElement();
+
+         // Прием взрослых (от 18 лет). Возможные значения: true или false (по умолчанию).
+         $xw->startElement("param");
+         $xw->startAttribute("name");
+         $xw->text('Взрослый врач');
+         $xw->endAttribute();
+         $xw->text($value->adultDoctor == 1 ? 'true' : 'false');
+         $xw->endElement();
+
+         // Прием детей (до 18 лет). Возможные значения: true или false (по умолчанию).
+         $xw->startElement("param");
+         $xw->startAttribute("name");
+         $xw->text('Детский врач');
+         $xw->endAttribute();
+         $xw->text((bool)$value->childrenDoctor == 1 ? 'true' : 'false');
+         $xw->endElement();
+
+         // Город клиники приема и адрес
+         $innerClinics = $clinicsBySpecialists[$value->id] ?? [];
+
+         if (count($innerClinics) == 0) {
+            return response()->json([
+               "success" => false,
+               "debug" => true,
+               "message" => "Клиника ведения приема у " . $value->family . " " . $value->name . " " . $value->surname . " не указана.",
+               "result" => null,
+            ]);
+         }
+
+         foreach ($clinicsBySpecialists[$value->id] ?? [] as $innerKey => $innerValue) {
+            $xw->startElement("param");
+            $xw->startAttribute("name");
+            $xw->text('Город клиники');
+            $xw->endAttribute();
+            $xw->text('г. ' . $clinicsById[$innerValue->id_clinic][0]->city);
+            $xw->endElement();
+
+            $xw->startElement("param");
+            $xw->startAttribute("name");
+            $xw->text('Адрес клиники');
+            $xw->endAttribute();
+            $xw->text('ул. ' . $clinicsById[$innerValue->id_clinic][0]->street . ', д. ' . $clinicsById[$innerValue->id_clinic][0]->home);
+            $xw->endElement();
+
+            $xw->startElement("param");
+            $xw->startAttribute("name");
+            $xw->text('Название клиники');
+            $xw->endAttribute();
+            $xw->text($clinicsById[$innerValue->id_clinic][0]->name);
+            $xw->endElement();
+
+            break;
+         };
+         $xw->endElement();
+      }
+      $xw->endElement();
+
+      $xw->endElement();
       $xw->endElement();
 
       // Конец документа
@@ -1518,7 +1536,8 @@ class AdminController extends Controller
    /* _____________________________________________________*/
    /* 1. Информационные блоки                              */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-   public function saveAboutsChanges(Request $request) {
+   public function saveAboutsChanges(Request $request)
+   {
       $abouts = json_decode($request->abouts);
       $arrayID = [];
 
@@ -1534,7 +1553,7 @@ class AdminController extends Controller
             };
 
             // Добавление
-            if ($value->create === true){
+            if ($value->create === true) {
                $aboutCreate = About::create([
                   "order" => $value->order,
                   "title" => $value->title,
@@ -1547,7 +1566,7 @@ class AdminController extends Controller
                /* Запись нового объекта в массив */
                $arrayID[] = (object) [
                   // Прошлый id
-                  'old' => $value->id, 
+                  'old' => $value->id,
                   // Новый id
                   'new' => $aboutCreate->id
                ];
@@ -1563,7 +1582,7 @@ class AdminController extends Controller
                "imageOne" => $value->imageOne,
                "imageTwo" => $value->imageTwo,
                "imageThree" => $value->imageThree,
-            ]);   
+            ]);
          };
 
          // Сортировка слайдов по порядку от наименьшего до наибольшого
@@ -1579,7 +1598,7 @@ class AdminController extends Controller
 
          // Получение всех файлов
          $filesAbouts = Storage::files('public/abouts');
-         if($filesAbouts) {
+         if ($filesAbouts) {
             foreach ($filesAbouts as $fileKey => $fileValue) {
                $useFile = false;
                /* Проверка на использование файла */
@@ -1588,14 +1607,14 @@ class AdminController extends Controller
                   $str = str_replace('public/abouts/', '', $fileValue);
                   /* Проверка значения названия файла на совпадение */
                   if (
-                     $aboutValue->imageOne == $str || 
-                     $aboutValue->imageTwo == $str || 
+                     $aboutValue->imageOne == $str ||
+                     $aboutValue->imageTwo == $str ||
                      $aboutValue->imageThree == $str
                   ) {
                      $useFile = true;
                   };
                };
-      
+
                /* Удаление файла, если не используется */
                if (!$useFile) {
                   Storage::delete($fileValue);
@@ -1624,7 +1643,8 @@ class AdminController extends Controller
    }
 
    /* Сохранение данных файлов */
-   public function saveInfoFilesChanges(Request $request) {
+   public function saveInfoFilesChanges(Request $request)
+   {
       $infoFiles = json_decode($request->infoFiles);
       $arrayID = [];
 
@@ -1633,11 +1653,11 @@ class AdminController extends Controller
       try {
          foreach ($infoFiles as $key => $value) {
             // Удаление
-            if ($value->delete === true){
+            if ($value->delete === true) {
                $priceFile = InfoFile::find($value->id);
                $priceFile->delete();
-               continue;                  
-            }         
+               continue;
+            }
 
             // Создание
             if ($value->create === true) {
@@ -1647,12 +1667,12 @@ class AdminController extends Controller
 
                $arrayID[] = (object) [
                   // Прошлый id
-                  'old' => $value->id, 
+                  'old' => $value->id,
                   // Новый id
                   'new' => $infoFileCreate->id
-               ];            
+               ];
                continue;
-            };       
+            };
          };
 
          $infoFiles = InfoFile::all();
@@ -1660,7 +1680,7 @@ class AdminController extends Controller
          // Получение всех файлов
          $filesPrices = Storage::files('public/files');
 
-         if($filesPrices) {
+         if ($filesPrices) {
             foreach ($filesPrices as $fileKey => $fileValue) {
                $useFile = false;
                // Проверка на использование файла
@@ -1673,12 +1693,12 @@ class AdminController extends Controller
                      $useFile = true;
                   };
                };
-      
+
                if (!$useFile) {
                   Storage::delete($fileValue);
                };
             };
-         };      
+         };
 
          DB::commit();
 
@@ -1706,7 +1726,8 @@ class AdminController extends Controller
    /* _____________________________________________________*/
    /* 1. Информационные блоки                              */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-   public function saveContactsChanges(Request $request) {
+   public function saveContactsChanges(Request $request)
+   {
       $contacts = json_decode($request->contacts);
       $arrayID = [];
 
@@ -1723,13 +1744,13 @@ class AdminController extends Controller
             };
 
             // Добавление
-            if ($value->create === true){
+            if ($value->create === true) {
                $contactCreate = Contact::create([
                   "name" => $value->name,
                   "order" => $value->order,
                   "clinicId" => $value->clinicId ? $value->clinicId : null,
                ]);
-                  
+
                // Телефоны
                $phones = ContactPhone::where('contactId', $value->id)->get();
                foreach ($phones as $phoneKey => $phoneValue) {
@@ -1765,11 +1786,11 @@ class AdminController extends Controller
                      "mailId" => $emailCreate->id,
                   ]);
                }
-               
+
                /* Запись нового объекта в массив */
                $arrayID[] = (object) [
                   // Прошлый id
-                  "old" => $value->id, 
+                  "old" => $value->id,
                   // Новый id
                   "new" => $contactCreate->id
                ];
@@ -1782,7 +1803,7 @@ class AdminController extends Controller
                "name" => $value->name,
                "order" => $value->order,
                "clinicId" => ($value->clinicId == "null" || $value->clinicId == null) ? null : $value->clinicId,
-            ]);   
+            ]);
 
             // Телефоны
             $phones = ContactPhone::where("contactId", $value->id)->get();
@@ -1843,8 +1864,8 @@ class AdminController extends Controller
          ], 200);
       } catch (Throwable $e) {
          // Отмена транзакции
-         DB::rollBack();         
-         
+         DB::rollBack();
+
          return response()->json([
             "success" => false,
             "debug" => true,
@@ -1858,27 +1879,28 @@ class AdminController extends Controller
    /* |                   РАСПИСАНИЕ                      |*/
    /* |___________________________________________________|*/
    /* Сохранение расписания */
-   public function saveShedulesAll($isManual = null) {
+   public function saveShedulesAll($isManual = null)
+   {
       // Получение всех файлов
       $files = Storage::disk('private')->files('schedules');
 
       // Сортировка массива файлов
-      $jsonFiles = array_filter($files, function($file) {
+      $jsonFiles = array_filter($files, function ($file) {
          return pathinfo($file, PATHINFO_EXTENSION) === 'json';
       });
-      
+
       // Поиск самого актуального файла
       $lastFile = null;
       foreach ($jsonFiles as $key => $value) {
          if ($lastFile === null) {
             $lastFile = $value;
             continue;
-         }; 
+         };
 
          $CurrentFileName = pathinfo($value, PATHINFO_FILENAME);
          $dateLastFileName = pathinfo($lastFile, PATHINFO_FILENAME);
-         
-         try {            
+
+         try {
             $currentFileDate = Carbon::createFromFormat('Y-m-d H-i', $CurrentFileName);
             $lastFileDate = Carbon::createFromFormat('Y-m-d H-i', $dateLastFileName);
          } catch (Exception $e) {
@@ -1905,7 +1927,7 @@ class AdminController extends Controller
       if ($lastFile) {
          $file = Storage::disk('private')->get($lastFile);
          $fileContent = json_decode($file);
-         
+
          $clinics = $fileContent?->clinics;
          if (!$clinics) {
             if ($isManual) {
@@ -1959,7 +1981,7 @@ class AdminController extends Controller
 
          Log::error('Отсутствует файл.');
       };
-      
+
       // Сбрасываю ограничения внешнего ключа, чтобы очистить таблицы
       DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 
@@ -1979,28 +2001,28 @@ class AdminController extends Controller
             $clinic = ShedulesClinic::create([
                "name" => $clinicsValue->name,
             ]);
-   
+
             $clinicId['' . $clinicsValue->id . ''] = $clinic->id;
          };
-   
+
          $currentDays = [];
          foreach ($week as $weekKey => $weekValue) {
             $day = ShedulesCurrentDay::create([
                "date" => $weekValue->date,
             ]);
-   
+
             $currentDays[] = (object) [
                "id" => $day->id,
                "date" => $weekValue->date,
             ];
          };
-   
+
          foreach ($shedules as $shedulesKey => $shedulesValue) {
             $shedule = Shedule::create([
-               "name" => $shedulesValue->name,
-               "specializations" => $shedulesValue->specializations,
+               "name" => preg_replace("/\s+/u", " ", trim($shedulesValue->name, ' ')),
+               "specializations" => preg_replace("/\s+/u", " ", trim($shedulesValue->specializations, ' ')),
             ]);
-   
+
             foreach ($shedulesValue->weeks as $sheduleWeekKey => $sheduleWeekValue) {
                if ($sheduleWeekValue->status === true) {
                   foreach ($sheduleWeekValue->content as $sheduleWeekContentKey => $sheduleWeekContentValue) {
@@ -2009,7 +2031,7 @@ class AdminController extends Controller
                         "sheduleId" => $shedule->id,
                         "clinicId" => $clinicId[$sheduleWeekValue->clinicId],
                      ]);
-   
+
                      foreach ($sheduleWeekContentValue->time as $ContentValueTimeKey => $ContentValueTimeValue) {
                         $time = ShedulesDaysTime::create([
                            "name" => $ContentValueTimeValue,
@@ -2040,9 +2062,9 @@ class AdminController extends Controller
          }
 
          Log::error($e);
-      }   
+      }
    }
-   
+
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                      ЦЕНЫ                         |*/
    /* |___________________________________________________|*/
@@ -2050,44 +2072,38 @@ class AdminController extends Controller
    /* 1. Файлы с ценами                                    */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
    /* Получение всех файлов с ценами */
-   public function getPricesFilesAll(Request $request) {
+   public function getPricesFilesAll(Request $request)
+   {
       $pricesFiles = PriceFile::all();
-      
-      if ($pricesFiles->isEmpty()) {
-         return response()->json([
-            "success" => true,
-            "debug" => true,
-            "message" => "Цен нет.",
-            "result" => null,
-         ]);
-      } else {
-         foreach ($pricesFiles as $pricesFilesKey => $pricesFilesValue) {
-            $pricesFiles[$pricesFilesKey]->path = Storage::url('prices/' . $pricesFilesValue->filename);
-            $pricesFiles[$pricesFilesKey]->date = Carbon::parse($pricesFilesValue->created_at)->format('d.m.Y, H:i:s');
-         };
 
-         return response()->json([
-            "success" => true,
-            "debug" => false,
-            "message" => "Данные получены.",
-            "result" => $pricesFiles,
-         ]);   
+
+      foreach ($pricesFiles as $pricesFilesKey => $pricesFilesValue) {
+         $pricesFiles[$pricesFilesKey]->path = Storage::url('prices/' . $pricesFilesValue->filename);
+         $pricesFiles[$pricesFilesKey]->date = Carbon::parse($pricesFilesValue->created_at)->format('d.m.Y, H:i:s');
       };
+
+      return response()->json([
+         "success" => true,
+         "debug" => false,
+         "message" => "Данные получены.",
+         "result" => $pricesFiles,
+      ]);
    }
 
    /* Сохранение изменений */
-   public function savePricesChanges(Request $request) {   
+   public function savePricesChanges(Request $request)
+   {
       $generateCategories = [];
       $pricesFiles = json_decode($request->pricesFiles);
       $arrayID = [];
 
       foreach ($pricesFiles as $key => $value) {
          // Удаление
-         if ($value->delete === true){
+         if ($value->delete === true) {
             $priceFile = PriceFile::find($value->id);
             $priceFile->delete();
-            continue;                  
-         }         
+            continue;
+         }
 
          // Создание
          if ($value->create === true) {
@@ -2097,18 +2113,18 @@ class AdminController extends Controller
 
             $arrayID[] = (object) [
                // Прошлый id
-               'old' => $value->id, 
+               'old' => $value->id,
                // Новый id
                'new' => $priceFileCreate->id
-            ];            
+            ];
             continue;
-         };       
+         };
       };
 
       $priceFiles = PriceFile::all();
       // Получение всех файлов
       $filesPrices = Storage::files('public/prices');
-      if($filesPrices) {
+      if ($filesPrices) {
          foreach ($filesPrices as $fileKey => $fileValue) {
             $useFile = false;
             // Проверка на использование файла
@@ -2120,7 +2136,7 @@ class AdminController extends Controller
                   $useFile = true;
                };
             };
-   
+
             if (!$useFile) {
                Storage::delete($fileValue);
             };
@@ -2136,7 +2152,7 @@ class AdminController extends Controller
          PriceValue::truncate();
          PriceCategory::truncate();
          PriceAddress::truncate();
-         
+
          DB::statement('SET FOREIGN_KEY_CHECKS = 1');
 
          // Считывание данных с файлов в дериктории
@@ -2146,15 +2162,15 @@ class AdminController extends Controller
 
             if (!$dataFromFile['object']->success) {
                return response()->json($dataFromFile['object'], $dataFromFile['status']);
-            }; 
+            };
 
             // Перебор полученных массивов            
-            foreach ($dataFromFile['object']->result as $dataFromFileKey => $dataFromFileValue) { 
+            foreach ($dataFromFile['object']->result as $dataFromFileKey => $dataFromFileValue) {
                $index = 0;
                $currentAddress = null;
                $categorys = [];
                $currentCategory = null;
-               
+
                foreach ($dataFromFileValue as $dataKey => $dataValue) {
                   // Заполнение адреса 
                   if (($index + 1) === 12) {
@@ -2167,15 +2183,15 @@ class AdminController extends Controller
                            "result" => $arrayID,
                         ], 422);
                      };
-                     
+
                      $currentAddress = PriceAddress::create([
                         "name" => trim($dataValue[0], " "),
                      ]);
                   }
-                  
+
                   // Заполнение данных из таблицы 
                   if (($index + 1) >= 16) {
-                     if (count($dataValue) < 2) { 
+                     if (count($dataValue) < 2) {
                         return response()->json([
                            "success" => false,
                            "debug" => true,
@@ -2184,7 +2200,7 @@ class AdminController extends Controller
                         ], 422);
                      };
 
-                     $levelClear = trim($dataValue[0], " ");                        
+                     $levelClear = trim($dataValue[0], " ");
 
                      // Проверка на категорию
                      if (str_contains($levelClear, '#')) {
@@ -2206,7 +2222,7 @@ class AdminController extends Controller
                               "result" => $arrayID,
                            ], 422);
                         };
-                        
+
                         // Создание новой категории
                         $currentCategory = PriceCategory::create([
                            "name" => trim($dataValue[1], " "),
@@ -2218,9 +2234,9 @@ class AdminController extends Controller
                         $categorys[] = (object) [
                            "id" => $currentCategory->id,
                            "level" => $levelClear,
-                        ];                                            
+                        ];
                      };
-                     
+
                      if (is_numeric($levelClear)) {
                         if (count($dataValue) < 3) {
                            return response()->json([
@@ -2260,7 +2276,7 @@ class AdminController extends Controller
                   $index++;
                };
             };
-         };   
+         };
       };
 
       return response()->json([
@@ -2268,11 +2284,12 @@ class AdminController extends Controller
          "debug" => true,
          "message" => "Цены успешно сохранены.",
          "result" => count($arrayID) > 0 ? $arrayID : null,
-      ], 200);            
+      ], 200);
    }
 
    /* Считывание данных с файла .ods, .xls, .xlsx */
-   protected function getDataFromFile($path) {
+   protected function getDataFromFile($path)
+   {
       try {
          // Существует ли файл
          if (!file_exists($path)) {
@@ -2288,13 +2305,13 @@ class AdminController extends Controller
          }
 
          // Загрузка файла
-         $spreadsheet = IOFactory::load($path);         
+         $spreadsheet = IOFactory::load($path);
          // Получение всех листов файла
          $sheetsAll = $spreadsheet->getAllSheets();
          // Данные всех листов
          $sheetsAlldata = [];
-         
-         foreach ($sheetsAll as $sheet) {         
+
+         foreach ($sheetsAll as $sheet) {
             if ($this->isExcelEmpty($sheet)) {
                return [
                   "object" => (object) [
@@ -2315,14 +2332,14 @@ class AdminController extends Controller
 
             // Получение всех данных при помощи итератора
             $rowIterator = $sheet->getRowIterator();
-            
+
             foreach ($sheet->getRowIterator() as $row) {
                // Получение итератора ячейки 
                $cellIterator = $row->getCellIterator();
-      
+
                // Установите это значение в TRUE, если хотите пропускать пустые ячейки
-               $cellIterator->setIterateOnlyExistingCells(TRUE); 
-               
+               $cellIterator->setIterateOnlyExistingCells(TRUE);
+
                $rowData = [];
                foreach ($cellIterator as $cell) {
                   $rowData[] = $cell->getValue();
@@ -2330,7 +2347,7 @@ class AdminController extends Controller
 
                $sheetData[] = $rowData;
             }
-            
+
             $sheetsAlldata[] = $sheetData;
          };
 
@@ -2357,24 +2374,26 @@ class AdminController extends Controller
    }
 
    /* Проверка на пустой лист */
-   function isExcelEmpty($sheet) {
+   function isExcelEmpty($sheet)
+   {
       $highestRow = $sheet->getHighestRow();
       $highestColumn = $sheet->getHighestColumn();
 
       for ($row = 1; $row <= $highestRow; $row++) {
          for ($col = 'A'; $col <= $highestColumn; $col++) {
-               $cellValue = $sheet->getCell($col . $row)->getValue();
-               if (!empty(trim($cellValue))) {
-                  return false;
-               }
+            $cellValue = $sheet->getCell($col . $row)->getValue();
+            if (!empty(trim($cellValue))) {
+               return false;
+            }
          }
       }
 
-      return true; 
+      return true;
    }
 
    /* Поиск общей категории */
-   function getMainCategory($categories, $categorylevel) {
+   function getMainCategory($categories, $categorylevel)
+   {
       $lentghCurrentCategory = strlen($categorylevel);
       if ($lentghCurrentCategory === 1) {
          return null;
@@ -2383,9 +2402,9 @@ class AdminController extends Controller
       // Поиск общей категории
       for ($i = count($categories) - 1; $i >= 0; $i--) {
          $lentghCategory = strlen(trim($categories[$i]->level, " "));
-         
+
          if ($lentghCategory < $lentghCurrentCategory) {
-            return $categories[$i]->id;         
+            return $categories[$i]->id;
             continue;
          };
       };
@@ -2394,10 +2413,11 @@ class AdminController extends Controller
    }
 
    /* Получение файла и удаление */
-   public function downloadPricesArchive() {
+   public function downloadPricesArchive()
+   {
       // Получаем список файлов без полных путей
       $files = Storage::disk('public')->files('reports');
-      
+
       if (empty($files)) {
          return response()->json(['message' => 'No files to download'], 404);
       }
@@ -2423,8 +2443,9 @@ class AdminController extends Controller
       return response()->download($zipPath)->deleteFileAfterSend(true);
    }
 
-   /* Создание файлов с ценами */   
-   public function makePricesFiles(Request $request) {
+   /* Создание файлов с ценами */
+   public function makePricesFiles(Request $request)
+   {
       try {
          // Проверка наличия директории
          if (!Storage::exists('public/reports')) {
@@ -2491,10 +2512,10 @@ class AdminController extends Controller
 
             // Получение всех цен
             $prices = PriceValue::all()->whereIn(
-               'categoryId', 
+               'categoryId',
                $categories->keys()->toArray()
             );
-            
+
             // Заполнение данных
             $count = 2;
             foreach ($prices as $priceKey => $priceValue) {
@@ -2513,7 +2534,7 @@ class AdminController extends Controller
             $filePath = storage_path('app/public/reports/' . $fileName);
             $writer->save($filePath);
          }
-         
+
          return response()->json([
             "success" => true,
             "debug" => true,
@@ -2534,7 +2555,8 @@ class AdminController extends Controller
    /* |                    НОВОСТИ                        |*/
    /* |___________________________________________________|*/
    /* Добавление новости */
-   public function addNews(Request $request) {
+   public function addNews(Request $request)
+   {
       $validator = Validator::make($request->all(), [
          'image' => [
             'required',
@@ -2608,7 +2630,8 @@ class AdminController extends Controller
    }
 
    /* Изменение новости */
-   public function saveNewsChangesOnce(Request $request) {
+   public function saveNewsChangesOnce(Request $request)
+   {
       $validator = Validator::make($request->all(), [
          'id' => [
             'required',
@@ -2633,7 +2656,7 @@ class AdminController extends Controller
       };
 
       $path = null;
-      
+
       if ($request->hasFile('image')) {
          $validatorImage = Validator::make($request->all(), [
             'image' => [
@@ -2682,7 +2705,7 @@ class AdminController extends Controller
             "image" => $path ? basename($path) : $news->image,
             "title" => $request->title,
             "description" => $request->description,
-         ]);  
+         ]);
       } catch (Throwable $th) {
          return response()->json([
             "success" => false,
@@ -2707,7 +2730,8 @@ class AdminController extends Controller
    }
 
    /* Публикация новости */
-   public function publishNewsOnce(Request $request) {
+   public function publishNewsOnce(Request $request)
+   {
       $validator = Validator::make($request->all(), [
          'id' => [
             'required',
@@ -2734,7 +2758,7 @@ class AdminController extends Controller
       try {
          $newsUpdate = $news->update([
             "hide" => !$news->hide,
-         ]);  
+         ]);
       } catch (Throwable $th) {
          return response()->json([
             "success" => false,
@@ -2753,7 +2777,8 @@ class AdminController extends Controller
    }
 
    /* Изменение новости */
-   public function saveNewsChangesAll(Request $request) {
+   public function saveNewsChangesAll(Request $request)
+   {
       $validator = Validator::make($request->all(), [
          'news' => 'nullable|array',
       ], [
@@ -2779,10 +2804,10 @@ class AdminController extends Controller
          foreach ($request->news as $key => $value) {
             $news = News::find($value['id']);
 
-            if ($value["delete"] === true){
+            if ($value["delete"] === true) {
                $news->delete();
                continue;
-            };         
+            };
 
             $news->update([
                "hide" => $value['hide'],
@@ -2793,10 +2818,10 @@ class AdminController extends Controller
 
          // Получение всех файлов
          $filesNews = Storage::files('public/news');
-         if($filesNews) {
+         if ($filesNews) {
             foreach ($filesNews as $fileKey => $fileValue) {
                $useFile = false;
-               
+
                /* Проверка на использование файла */
                foreach ($news as $key => $value) {
                   if ($value['image'] === basename($fileValue)) {
@@ -2809,7 +2834,7 @@ class AdminController extends Controller
                      break;
                   }
                };
-               
+
                /* Удаление файла, если не используется */
                if (!$useFile) {
                   Storage::delete($fileValue);
@@ -2828,8 +2853,8 @@ class AdminController extends Controller
          ], 200);
       } catch (Throwable $e) {
          // Отмена транзакции
-         DB::rollBack();         
-         
+         DB::rollBack();
+
          return response()->json([
             "success" => false,
             "debug" => true,
@@ -2843,7 +2868,8 @@ class AdminController extends Controller
    /* |                     ВИДЕО                         |*/
    /* |___________________________________________________|*/
    /* Добавление */
-   public function saveVideoChanges(Request $request) {
+   public function saveVideoChanges(Request $request)
+   {
       $validator = Validator::make($request->all(), [
          'videos' => 'nullable|array',
       ], [
@@ -2871,12 +2897,12 @@ class AdminController extends Controller
             if ($value["delete"] === true) {
                $video = Video::find($value["id"]);
                $video->delete();
-               
+
                continue;
             };
 
             // Добавление
-            if ($value["create"] === true){
+            if ($value["create"] === true) {
                $videoCreate = Video::create([
                   "order" => $value["order"],
                   "video" => $value["video"],
@@ -2886,7 +2912,7 @@ class AdminController extends Controller
                /* Запись нового объекта в массив */
                $arrayID[] = (object) [
                   // Прошлый id
-                  'old' => $value["id"], 
+                  'old' => $value["id"],
                   // Новый id
                   'new' => $videoCreate->id
                ];
@@ -2899,7 +2925,7 @@ class AdminController extends Controller
                "order" => $value["order"],
                "video" => $value["video"],
                "description" => $value["description"],
-            ]);   
+            ]);
          };
 
          // Сортировка слайдов по порядку от наименьшего до наибольшого
@@ -2915,7 +2941,7 @@ class AdminController extends Controller
 
          // Получение всех файлов
          $filesVideos = Storage::files('public/video');
-         if($filesVideos) {
+         if ($filesVideos) {
             foreach ($filesVideos as $fileKey => $fileValue) {
                $useFile = false;
                /* Проверка на использование файла */
@@ -2925,7 +2951,7 @@ class AdminController extends Controller
                      $useFile = true;
                   };
                };
-      
+
                /* Удаление файла, если не используется */
                if (!$useFile) {
                   Storage::delete($fileValue);
@@ -2944,8 +2970,8 @@ class AdminController extends Controller
          ]);
       } catch (Throwable $e) {
          // Отмена транзакции
-         DB::rollBack();         
-         
+         DB::rollBack();
+
          return response()->json([
             "success" => false,
             "debug" => true,

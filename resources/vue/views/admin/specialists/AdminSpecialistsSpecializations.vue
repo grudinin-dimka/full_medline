@@ -8,25 +8,17 @@
 		</template>
 
 		<template #body>
-			<container-input-once>
-				<template #input>
-					<input
-						type="text"
-						ref="inputName"
-						placeholder="Название специализации"
-						v-model="currentSpecialization.data.name.value"
-						:class="{
-							error: currentSpecialization.errors.name.status,
-						}"
-						@input="currentSpecialization.data.name.edited = true"
-					/>
-				</template>
+			<VueInput
+				v-model="currentSpecialization.data.name.value"
+				:type="'text'"
+				:placeholder="'Введите название'"
+				:error="currentSpecialization.errors.name.status"
+			>
+				<template #label> НАЗВАНИЕ </template>
 				<template #error>
-					<span class="error" v-if="currentSpecialization.errors.name.status">
-						{{ this.currentSpecialization.errors.name.message }}
-					</span>
+					{{ currentSpecialization.errors.name.message }}
 				</template>
-			</container-input-once>
+			</VueInput>
 		</template>
 
 		<template #footer>
@@ -92,6 +84,7 @@ import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import BaseTable from "../../../components/modules/table/BaseTable.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
+import VueInput from "../../../components/modules/VueInput.vue";
 
 import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
 
@@ -109,7 +102,7 @@ import validate from "../../../services/validate";
 export default {
 	components: {
 		Modal,
-
+		VueInput,
 		InfoBar,
 		BaseTable,
 		LoaderChild,

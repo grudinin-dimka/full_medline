@@ -6,97 +6,53 @@
 		</template>
 
 		<template #body>
-			<container-input>
-				<container-input-once type="edit">
-					<template #title>
-						<span>Ф.И.О.*</span>
-						<span v-if="modalForm.data.name.edited"> (ИЗМЕНЕНО)</span>
-					</template>
-					<template #input>
-						<input
-							type="text"
-							placeholder="Введите Ф.И.О."
-							v-model="modalForm.data.name.value"
-							:class="{ error: modalForm.errors.name.status }"
-							@input="modalForm.data.name.edited = true"
-						/>
-					</template>
-					<template #error>
-						<span class="error" v-if="modalForm.errors.name.status">
-							{{ modalForm.errors.name.message }}
-						</span>
-					</template>
-				</container-input-once>
+			<VueInput
+				v-model="modalForm.data.name.value"
+				:type="'text'"
+				:placeholder="'Введите Ф.И.О.'"
+				:error="modalForm.errors.name.status"
+			>
+				<template #label> Ф.И.О. </template>
+				<template #error>
+					{{ modalForm.errors.name.message }}
+				</template>
+			</VueInput>
 
-				<container-input-once type="edit">
-					<template #title>
-						<span>НОМЕР ТЕЛЕФОНА*</span>
-						<span v-if="modalForm.data.phone.edited"> (ИЗМЕНЕНО)</span>
-					</template>
-					<template #input>
-						<input
-							type="tel"
-							v-mask="'+7(###)-###-##-##'"
-							placeholder="+7(___)___-__-__"
-							v-model="modalForm.data.phone.value"
-							:class="{ error: modalForm.errors.phone.status }"
-							@input="modalForm.data.phone.edited = true"
-						/>
-					</template>
-					<template #error>
-						<span class="error" v-if="modalForm.errors.phone.status">
-							{{ modalForm.errors.phone.message }}
-						</span>
-					</template>
-				</container-input-once>
+			<VueInput
+				v-model="modalForm.data.phone.value"
+				:type="'phone'"
+				:placeholder="'+7 (___) ___-__-__'"
+				:error="modalForm.errors.phone.status"
+			>
+				<template #label> НОМЕР ТЕЛЕФОНА </template>
+				<template #error>
+					{{ modalForm.errors.phone.message }}
+				</template>
+			</VueInput>
 
-				<container-input-once type="edit">
-					<template #title>
-						<span>ДАТА РОЖДЕНИЯ</span>
-						<span v-if="modalForm.data.date.edited"> (ИЗМЕНЕНО)</span>
-					</template>
-					<template #input>
-						<input
-							type="date"
-							placeholder="Введите дату"
-							v-model="modalForm.data.date.value"
-							@input="modalForm.data.date.edited = true"
-						/>
-					</template>
-					<template #error></template>
-				</container-input-once>
+			<VueInput
+				v-model="modalForm.data.date.value"
+				:type="'date'"
+				:placeholder="'Введите дату'"
+				:error="modalForm.errors.date.status"
+			>
+				<template #label> ДАТА РОЖДЕНИЯ </template>
+				<template #error>
+					{{ modalForm.errors.date.message }}
+				</template>
+			</VueInput>
 
-				<container-input-once type="edit">
-					<template #title>
-						<span>СПЕЦИАЛИЗАЦИЯ ВРАЧА</span>
-						<span v-if="modalForm.data.specialization.edited"> (ИЗМЕНЕНО)</span>
-					</template>
-					<template #input>
-						<input
-							type="text"
-							placeholder="Введите специализацию"
-							v-model="modalForm.data.specialization.value"
-							:class="{ error: modalForm.errors.specialization.status }"
-							@input="modalForm.data.specialization.edited = true"
-						/>
-					</template>
-					<template #error></template>
-				</container-input-once>
-			</container-input>
-
-			<div class="checkbox" :class="{ error: modalForm.errors.checkbox.status }">
-				<div class="captcha__content">
-					<input
-						type="checkbox"
-						id="checkboxApprove"
-						v-model="modalForm.data.checkbox.value"
-					/>
-					<label for="checkboxApprove">
-						Согласие на обработку указанных персональных данных в соответствии с
-						законодательством Российской Федерации.
-					</label>
-				</div>
-			</div>
+			<VueInput
+				v-model="modalForm.data.description.value"
+				:type="'textarea'"
+				:placeholder="'Введите описание'"
+				:error="modalForm.errors.description.status"
+			>
+				<template #label> ОПИСАНИЕ </template>
+				<template #error>
+					{{ modalForm.errors.description.message }}
+				</template>
+			</VueInput>
 
 			<div class="captcha">
 				<div class="captcha__content">
@@ -121,16 +77,30 @@
 						</svg>
 					</div>
 				</div>
-				<div class="captcha__input">
-					<input
-						placeholder="Введите текст"
-						autocomplete="off"
-						v-model="modalForm.data.captcha.value"
-						:class="{ error: modalForm.errors.captcha.status }"
-					/>
-					<div class="input-error">{{ modalForm.errors.captcha.message }}</div>
-				</div>
+
+				<VueInput
+					v-model="modalForm.data.captcha.value"
+					:type="'text'"
+					:placeholder="'Введите текст'"
+					:error="modalForm.errors.captcha.status"
+				>
+					<template #label> КОД С КАРТИНКИ </template>
+					<template #error>
+						{{ modalForm.errors.captcha.message }}
+					</template>
+				</VueInput>
 			</div>
+
+			<VueInput
+				v-model="modalForm.data.checkbox.value"
+				:type="'checkbox'"
+				:error="modalForm.errors.checkbox.status"
+			>
+				<template #label
+					>Согласие на обработку указанных персональных данных в соответствии с
+					законодательством Российской Федерации.</template
+				>
+			</VueInput>
 		</template>
 
 		<template #footer>
@@ -206,6 +176,8 @@ import ContainerInput from "../../../ui/admin/containers/ContainerInput.vue";
 import ContainerInputOnce from "../../../ui/admin/containers/input/ContainerInputOnce.vue";
 import ContainerSelectOnce from "../../../ui/admin/containers/select/ContainerSelectOnce.vue";
 
+import VueInput from "../../../modules/VueInput.vue";
+
 import ButtonDefault from "../../../ui/admin/buttons/ButtonDefault.vue";
 
 import api from "../../../../services/api";
@@ -221,6 +193,8 @@ export default {
 		ContainerInput,
 		ContainerInputOnce,
 		ContainerSelectOnce,
+
+		VueInput,
 
 		ButtonDefault,
 	},
@@ -253,7 +227,7 @@ export default {
 						status: false,
 						message: "",
 					},
-					specialization: {
+					description: {
 						status: false,
 						message: "",
 					},
@@ -279,7 +253,7 @@ export default {
 						value: null,
 						edited: false,
 					},
-					specialization: {
+					description: {
 						value: null,
 						edited: false,
 					},
@@ -394,24 +368,19 @@ export default {
 
 			let formData = new FormData();
 
-			formData.append(
-				"formData",
-				JSON.stringify({
-					title: this.modal.values.title,
-					name: this.modalForm.data.name.value,
-					phone: this.modalForm.data.phone.value,
-					date: this.modalForm.data.date.value,
-					specialization: this.modalForm.data.specialization.value,
-				})
-			);
-
 			api({
 				method: "post",
 				url: this.$store.getters.urlApi + `request-telegram-bot`,
 				headers: {
 					ContentType: "multipart/form-data",
 				},
-				data: formData,
+				data: {
+					title: this.modal.values.title,
+					name: this.modalForm.data.name.value,
+					phone: this.modalForm.data.phone.value,
+					date: this.modalForm.data.date.value,
+					specialization: this.modalForm.data.description.value,
+				},
 			})
 				.then((response) => {
 					if (!response) return;
@@ -624,52 +593,14 @@ header.slide {
 .captcha {
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
 	align-items: center;
 	gap: 10px;
-}
 
-.captcha__input > input {
-	user-select: none;
-	box-sizing: border-box;
-	outline: none;
-	text-align: center;
-
-	padding: 10px;
-	border: var(--input-border);
-	border-radius: var(--input-border-radius);
-
-	width: 300px;
-	height: 58px;
-
-	font-size: 20px;
-	caret-color: var(--input-caret-color);
-	background-color: white;
-
-	transition: all 0.2s;
-}
-
-.captcha__input > input.error {
-	background-color: var(--input-error-background-color);
-	border: var(--input-error-border);
-
-	caret-color: var(--input-error-color);
-}
-
-.captcha__input > input:focus {
-	border: var(--input-border-focus);
-}
-
-.captcha__input > input.error:focus {
-	border: var(--input-error-border);
-}
-
-.captcha__input > .input-error {
-	margin-top: 5px;
-	color: var(--input-error-color);
+	width: 100%;
 }
 
 .captcha__content {
+	width: 100%;
 	position: relative;
 }
 
@@ -686,7 +617,6 @@ header.slide {
 	border-radius: var(--input-border-radius);
 	color: rgb(0, 0, 0);
 
-	width: 300px;
 	height: 58px;
 
 	font-family: "Henny Penny";
@@ -718,7 +648,7 @@ header.slide {
 
 	background-image: url("../../../../assets/img/trash.webp");
 	background-position: center center;
-	background-size: cover;
+	background-size: contain;
 	opacity: 0.7;
 }
 
@@ -787,13 +717,6 @@ header.slide {
 		width: 100%;
 		margin: 0px;
 		background-color: white;
-	}
-
-	.captcha > .captcha__content,
-	.captcha > .captcha__input,
-	.captcha > .captcha__input > input,
-	.captcha > .captcha__content > .captcha__content-text {
-		width: 100%;
 	}
 }
 </style>

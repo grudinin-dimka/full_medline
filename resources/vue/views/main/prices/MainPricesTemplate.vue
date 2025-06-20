@@ -19,7 +19,7 @@
 
 				<!-- Фильтры -->
 				<div class="filter_blocks-item">
-					<Filter
+					<VueFilter
 						:filter="filters.category"
 						:list="categories"
 						@changeFilterStatus="changeFilterStatus"
@@ -45,7 +45,7 @@
 								({{ filters.category.selected.length }})
 							</span>
 						</template>
-					</Filter>
+					</VueFilter>
 				</div>
 
 				<!-- Субъекты фильтров -->
@@ -199,7 +199,7 @@ import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import Block from "../../../components/ui/main/Block.vue";
 import LoadText from "../../../components/ui/main/LoadText.vue";
-import Filter from "../../../components/modules/Filter.vue";
+import VueFilter from "../../../components/modules/filter/VueFilter.vue";
 import Empty from "../../../components/modules/Empty.vue";
 
 import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
@@ -214,7 +214,7 @@ export default {
 		LoaderChild,
 		Block,
 		LoadText,
-		Filter,
+		VueFilter,
 		Empty,
 
 		ContainerInputOnce,
@@ -265,7 +265,7 @@ export default {
 						bool = true;
 					}
 				});
-				
+
 				return bool;
 			});
 
@@ -305,7 +305,7 @@ export default {
 
 			return selected;
 		},
-		
+
 		getActiveFilters() {
 			return this.filters.category.selected.length;
 		},

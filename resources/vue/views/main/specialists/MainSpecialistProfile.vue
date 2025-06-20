@@ -120,7 +120,7 @@
 					</ul>
 				</div>
 
-				<Tiptap :editable="false" :limit="10_000" v-model="specialist.profile.description" />
+				<VueTiptap :editable="false" :limit="10_000" v-model="specialist.profile.description" />
 			</div>
 		</div>
 
@@ -134,7 +134,7 @@
 <script>
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import Block from "../../../components/ui/main/Block.vue";
-import Tiptap from "../../../components/modules/Tiptap.vue";
+import VueTiptap from "../../../components/modules/VueTiptap.vue";
 
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import LoadText from "../../../components/ui/main/LoadText.vue";
@@ -148,7 +148,7 @@ export default {
 	components: {
 		InfoBar,
 		Block,
-		Tiptap,
+		VueTiptap,
 
 		LoaderChild,
 		LoadText,

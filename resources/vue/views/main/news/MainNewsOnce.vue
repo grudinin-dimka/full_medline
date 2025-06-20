@@ -7,10 +7,10 @@
 
 	<block :minHeight="500">
 		<template v-if="loading.sections.news">
-			<div class="news__once">				
+			<div class="news__once">
 				<img :src="path ?? '/storage/default/image-none-default.png'" alt="Картинка" />
-				<TipTap :editable="false" :limit="10_000" v-model="title" />
-				<TipTap :editable="false" :limit="10_000" v-model="description" />
+				<VueTiptap :editable="false" :limit="10_000" v-model="title" />
+				<VueTiptap :editable="false" :limit="10_000" v-model="description" />
 			</div>
 		</template>
 
@@ -26,7 +26,7 @@ import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import Block from "../../../components/ui/main/Block.vue";
 
-import TipTap from "../../../components/modules/Tiptap.vue";
+import VueTiptap from "../../../components/modules/VueTiptap.vue";
 import Empty from "../../../components/modules/Empty.vue";
 
 import api from "../../../services/api";
@@ -38,7 +38,7 @@ export default {
 
 		Block,
 
-		TipTap,
+		VueTiptap,
 		Empty,
 	},
 	data() {

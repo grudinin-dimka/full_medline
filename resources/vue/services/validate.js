@@ -187,11 +187,11 @@ export default {
 		if (this.isEmpty(value) || this.isEmpty(reference)) {
 			return {
 				status: true,
-				message: "Есть пустой параметр.",
+				message: "Пустое поле.",
 			};
 		}
 
-		if (typeof value !==  typeof reference) {
+		if (typeof value !== typeof reference) {
 			return {
 				status: true,
 				message: "Разные типы данных.",
@@ -292,9 +292,9 @@ export default {
 	},
 
 	/* Проверка введенного файла */
-	checkInputFile(file, formats = []) {
+	checkInputFile(files, formats = []) {
 		// Проверка на загрузку файла пользователем
-		if (!file.files[0]) {
+		if (!files[0]) {
 			return {
 				status: true,
 				message: "Пустое поле.",
@@ -303,7 +303,7 @@ export default {
 
 		let inFormat = false;
 		for (let value of formats) {
-			if (file.files[0].type == types.get(value)) {
+			if (files[0].type == types.get(value)) {
 				inFormat = true;
 				break;
 			}
@@ -312,7 +312,7 @@ export default {
 		if (!inFormat) {
 			return {
 				status: true,
-				message: `Разрешённые типы файлов: ${formats.join(", ")}.`,
+				message: `Запрещенный формат.`,
 			};
 		}
 
@@ -321,6 +321,7 @@ export default {
 			message: "Ошибок нет.",
 		};
 	},
+
 	/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 	/* |                ТОЧЕЧНЫЕ ПРОВЕРКИ                  |*/
 	/* |___________________________________________________|*/

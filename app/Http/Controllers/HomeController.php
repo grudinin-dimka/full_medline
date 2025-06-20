@@ -63,26 +63,43 @@ class HomeController extends Controller
    /* 1. Отправка данных                                   */
    /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
    public function requestTelegramBot(Request $request) {
-      // Получение данных
-      $formData = $request->formData;
-      $json = json_decode($formData, true);
+      $validator = Validator::make($request->all(), [
+         'title' => 'required',
+         'name' => 'required',
+         'phone' => 'required',
+         'date' => 'nullable',
+         'description' => 'nullable',
+      ], [
+         'name' => 'ФИО обязательно для заполнения.',
+         'phone' => 'Номер телефона обязателен для заполнения.',
+      ]);
 
+      if ($validator->fails()) {
+         return response()->json([
+            "success" => false,
+            "debug" => true,
+            "error" => $validator->errors(),
+            "message" => "Не все поля заполнены.",
+            "result" => null,
+         ], 422); 
+      };
+      
       try {
          // Добавление заголовков
          $request->merge([
             'type' => 'form_request_telegram_bot',
-            'meta' => 'Заявка - ' . $json['title'],
+            'meta' => 'Заявка - ' . $request->title,
          ]);
    
          $this->createTrack($request);
    
          // Отправка сообщения
          $str =
-            "Заявка: ". $json['title'] . "\n" . 
-            "ФИО : " . $json['name'] . "\n" . 
-            "Телефон : " . $json['phone'] . "\n" . 
-            "Дата рождения : " . $json['date'] . "\n" . 
-            "Специализация : " . $json['specialization'];
+            "Заявка: ". $request->title . "\n" . 
+            "ФИО : " . $request->name . "\n" . 
+            "Телефон : " . $request->phone . "\n" . 
+            "Дата рождения : " . $request->date ?? "Отсутствует." . "\n" . 
+            "Описание : " . $request->description ?? "Отсутствует.";
       
          $ch = curl_init("https://api.telegram.org/bot" . "6465405714:AAHJTFfNkmKgSwtOgQHV1HxAZovcalaAbNU" . "/sendMessage?" . http_build_query(   
             [
@@ -99,9 +116,9 @@ class HomeController extends Controller
             return response()->json([
                "success" => true,
                "debug" => true,
-               "message" => "Заявка отправлена.",
+               "message" => "Заявка отправлена, ожидайте звонка оператора.",
                "result" => null,
-            ]);
+            ], 200);
          } else {
             curl_close($ch);   
             
@@ -110,7 +127,7 @@ class HomeController extends Controller
                "debug" => true,
                "message" => "Сервис отправки не работает.",
                "result" => null,
-            ]);
+            ], 500);
          };
       } catch (Throwable $e) {
          return response()->json([
@@ -118,7 +135,7 @@ class HomeController extends Controller
             "debug" => true,
             "message" => "Произошла ошибка.",
             "result" => null,
-         ]);
+         ], 50);
       }
    }
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/

@@ -8,26 +8,18 @@
 		</template>
 
 		<template #body>
-			<container-input-once>
-				<template #title>
-					<span>ФАЙЛ*</span>
-					<span v-if="false"> (ИЗМЕНЕНО) </span>
-				</template>
-				<template #input>
-					<input
-						type="file"
-						ref="fileUpload"
-						:class="{
-							error: currentPrice.errors.file.status,
-						}"
-					/>
-				</template>
+			<VueInput
+				v-model="currentPrice.data.file.value"
+				ref="fileImage"
+				:type="'file'"
+				:placeholder="'Загрузите табличный файл'"
+				:error="currentPrice.errors.file.status"
+			>
+				<template #label> ФАЙЛ </template>
 				<template #error>
-					<span class="error" v-if="currentPrice.errors.file.status">
-						{{ currentPrice.errors.file.message }}
-					</span>
+					{{ currentPrice.errors.file.message }}
 				</template>
-			</container-input-once>
+			</VueInput>
 		</template>
 
 		<template #footer>
@@ -97,12 +89,11 @@ import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import Modal from "../../../components/modules/modal/Modal.vue";
 import Empty from "../../../components/modules/Empty.vue";
 import BaseTable from "../../../components/modules/table/BaseTable.vue";
+import VueInput from "../../../components/modules/VueInput.vue";
 
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTitle from "../../../components/ui/admin/blocks/BlockTitle.vue";
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
-
-import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
@@ -120,13 +111,13 @@ export default {
 		Modal,
 		Empty,
 		BaseTable,
+		VueInput,
 
 		BlockOnce,
 		BlockTitle,
 
 		InfoBar,
 
-		ContainerInputOnce,
 		ButtonClaim,
 		ButtonDefault,
 
@@ -235,7 +226,7 @@ export default {
 
 		/* Открытие модального окна для добавления */
 		openModalСreate() {
-			this.$refs.fileUpload.value = "";
+			this.$refs.fileImage.clear();
 
 			shared.clearObjectFull(this.currentPrice);
 
@@ -287,7 +278,7 @@ export default {
 					{
 						key: "file",
 						type: "file",
-						value: this.$refs.fileUpload,
+						value: this.$refs.fileImage.files(),
 						formats: ["ods", "xls", "xlsx"],
 					},
 				])
@@ -296,7 +287,7 @@ export default {
 
 			/* Загрузка файла */
 			let formData = new FormData();
-			formData.append("file", this.$refs.fileUpload.files[0]);
+			formData.append("file", this.$refs.fileImage.files()[0]);
 			formData.append("type", "prices");
 			formData.append("formats", ["ods", "xls", "xlsx"]);
 

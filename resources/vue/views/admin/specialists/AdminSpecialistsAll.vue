@@ -6,112 +6,65 @@
 		</template>
 
 		<template #body>
-			<container-input>
-				<container-input-once type="edit">
-					<template #title>
-						<span>НАЗВАНИЕ КЛИНИКИ*</span>
-						<span v-if="modalForm.data.name.edited"> (ИЗМЕНЕНО)</span>
-					</template>
-					<template #input>
-						<input
-							type="text"
-							placeholder="Введите компанию"
-							v-model="modalForm.data.name.value"
-							:class="{ error: modalForm.errors.name.status }"
-							@input="modalForm.data.name.edited = true"
-						/>
-					</template>
-					<template #error>
-						<span class="error" v-if="modalForm.errors.name.status">
-							{{ modalForm.errors.name.message }}
-						</span>
-					</template>
-				</container-input-once>
+			<VueInput
+				v-model="modalForm.data.name.value"
+				:type="'text'"
+				:placeholder="'Введите название'"
+				:error="modalForm.errors.name.status"
+			>
+				<template #label> КЛИНИКА </template>
+				<template #error>
+					{{ modalForm.errors.name.message }}
+				</template>
+			</VueInput>
 
-				<container-input-once type="edit">
-					<template #title>
-						<span>КОМПАНИЯ*</span>
-						<span v-if="modalForm.data.company.edited"> (ИЗМЕНЕНО)</span>
-					</template>
-					<template #input>
-						<input
-							type="text"
-							placeholder="Введите компанию"
-							v-model="modalForm.data.company.value"
-							:class="{ error: modalForm.errors.company.status }"
-							@input="modalForm.data.company.edited = true"
-						/>
-					</template>
-					<template #error>
-						<span class="error" v-if="modalForm.errors.company.status">
-							{{ modalForm.errors.company.message }}
-						</span>
-					</template>
-				</container-input-once>
+			<VueInput
+				v-model="modalForm.data.company.value"
+				:type="'text'"
+				:placeholder="'Введите название'"
+				:error="modalForm.errors.company.status"
+			>
+				<template #label> КОМПАНИЯ </template>
+				<template #error>
+					{{ modalForm.errors.company.message }}
+				</template>
+			</VueInput>
 
-				<container-input-once type="edit">
-					<template #title>
-						<span>ССЫЛКА НА САЙТ*</span>
-						<span v-if="modalForm.data.url.edited"> (ИЗМЕНЕНО)</span>
-					</template>
-					<template #input>
-						<input
-							type="text"
-							placeholder="Введите ссылку"
-							v-model="modalForm.data.url.value"
-							:class="{ error: modalForm.errors.url.status }"
-							@input="modalForm.data.url.edited = true"
-						/>
-					</template>
-					<template #error>
-						<span class="error" v-if="modalForm.errors.url.status">
-							{{ modalForm.errors.url.message }}
-						</span>
-					</template>
-				</container-input-once>
+			<VueInput
+				v-model="modalForm.data.url.value"
+				:type="'text'"
+				:placeholder="'Введите ссылку'"
+				:error="modalForm.errors.url.status"
+			>
+				<template #label> ССЫЛКА НА САЙТ </template>
+				<template #error>
+					{{ modalForm.errors.url.message }}
+				</template>
+			</VueInput>
 
-				<container-input-once type="edit">
-					<template #title>
-						<span>ПОЧТА КОМПАНИИ*</span>
-						<span v-if="modalForm.data.email.edited"> (ИЗМЕНЕНО)</span>
-					</template>
-					<template #input>
-						<input
-							type="text"
-							placeholder="Введите почту"
-							v-model="modalForm.data.email.value"
-							:class="{ error: modalForm.errors.email.status }"
-							@input="modalForm.data.email.edited = true"
-						/>
-					</template>
-					<template #error>
-						<span class="error" v-if="modalForm.errors.email.status">
-							{{ modalForm.errors.email.message }}
-						</span>
-					</template>
-				</container-input-once>
+			<VueInput
+				v-model="modalForm.data.email.value"
+				:type="'text'"
+				:placeholder="'Введите почту'"
+				:error="modalForm.errors.email.status"
+			>
+				<template #label> ПОЧТА КОМПАНИИ </template>
+				<template #error>
+					{{ modalForm.errors.email.message }}
+				</template>
+			</VueInput>
 
-				<container-textarea-once type="edit">
-					<template #title>
-						<span>ОПИСАНИЕ*</span>
-						<span v-if="modalForm.data.description.edited"> (ИЗМЕНЕНО)</span>
-					</template>
-					<template #textarea>
-						<textarea
-							placeholder="Введите почту"
-							rows="5"
-							v-model="modalForm.data.description.value"
-							:class="{ error: modalForm.errors.description.status }"
-							@input="modalForm.data.description.edited = true"
-						></textarea>
-					</template>
-					<template #error>
-						<span class="error" v-if="modalForm.errors.description.status">
-							{{ modalForm.errors.description.message }}
-						</span>
-					</template>
-				</container-textarea-once>
-			</container-input>
+			<VueInput
+				v-model="modalForm.data.description.value"
+				:type="'textarea'"
+				:placeholder="'Введите название'"
+				:error="modalForm.errors.description.status"
+			>
+				<template #label> ПОЧТА КОМПАНИИ </template>
+				<template #error>
+					{{ modalForm.errors.description.message }}
+				</template>
+			</VueInput>
 		</template>
 
 		<template #footer>
@@ -184,15 +137,12 @@ import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import BaseTable from "../../../components/modules/table/BaseTable.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import Modal from "../../../components/modules/modal/Modal.vue";
+import VueInput from "../../../components/modules/VueInput.vue";
 
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
-
-import ContainerInput from "../../../components/ui/admin/containers/ContainerInput.vue";
-import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
-import ContainerTextareaOnce from "../../../components/ui/admin/containers/textarea/ContainerTextareaOnce.vue";
 
 import Icon from "../../../components/modules/icon/Icon.vue";
 
@@ -208,15 +158,12 @@ export default {
 		BaseTable,
 		LoaderChild,
 		Modal,
+		VueInput,
 
 		BlockOnce,
 
 		ButtonDefault,
 		ButtonRemove,
-
-		ContainerInput,
-		ContainerInputOnce,
-		ContainerTextareaOnce,
 
 		Icon,
 

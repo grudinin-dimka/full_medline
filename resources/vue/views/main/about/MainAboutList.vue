@@ -2,7 +2,7 @@
 	<div class="about">
 		<div class="item" v-for="about in abouts" :key="about.id">
 			<div class="title" v-if="about.title">
-				<Tiptap v-model="about.title" :editable="false" :limit="500" :minHeight="0" />
+				<VueTiptap v-model="about.title" :editable="false" :limit="500" :minHeight="0" />
 			</div>
 			<div class="images">
 				<div
@@ -28,14 +28,14 @@
 				></div>
 			</div>
 			<div class="description" v-if="about.description">
-				<Tiptap v-model="about.description" :editable="false" :limit="10_000" :minHeight="0" />
+				<VueTiptap v-model="about.description" :editable="false" :limit="10_000" :minHeight="0" />
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
-import Tiptap from "../../../components/modules/Tiptap.vue";
+import VueTiptap from "../../../components/modules/VueTiptap.vue";
 
 export default {
 	props: {
@@ -46,7 +46,7 @@ export default {
 		},
 	},
 	components: {
-		Tiptap,
+		VueTiptap,
 	},
 };
 </script>

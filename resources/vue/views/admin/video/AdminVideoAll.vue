@@ -71,7 +71,7 @@
 				</div>
 			</div>
 
-			<TipTap
+			<VueTiptap
 				ref="tiptapDescription"
 				v-model="currentVideo.data.description.value"
 				:editable="true"
@@ -84,7 +84,7 @@
 				<template #error>
 					{{ currentVideo.errors.description.message }}
 				</template>
-			</TipTap>
+			</VueTiptap>
 		</template>
 
 		<template #footer>
@@ -119,21 +119,18 @@
 	<Modal ref="modalVideoUpload" :settings="modalVideoUpload">
 		<template #title>{{ modalVideoUpload.values.title }}</template>
 		<template #body>
-			<container-input-once>
-				<template #input>
-					<input
-						type="file"
-						autocomplete="off"
-						ref="fileUpload"
-						:class="{ error: currentVideo.errors.file.status }"
-					/>
-				</template>
+			<VueInput
+				v-model="currentVideo.data.file.value"
+				ref="fileVideo"
+				:type="'file'"
+				:placeholder="'Загрузите видео файл'"
+				:error="currentVideo.errors.file.status"
+			>
+				<template #label> ВИДЕО ФАЙЛ </template>
 				<template #error>
-					<span class="error" v-if="currentVideo.errors.file.status">
-						{{ currentVideo.errors.file.message }}
-					</span>
+					{{ currentVideo.errors.file.message }}
 				</template>
-			</container-input-once>
+			</VueInput>
 		</template>
 		<template #footer>
 			<button-default
@@ -192,7 +189,7 @@
 								</video>
 							</div>
 							<div class="evideo__item-description">
-								<TipTap :editable="false" :limit="10_000" v-model="video.description" />
+								<VueTiptap :editable="false" :limit="10_000" v-model="video.description" />
 							</div>
 						</div>
 					</template>
@@ -225,9 +222,8 @@ import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import Empty from "../../../components/modules/Empty.vue";
 
-import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
-import BaseTable from "../../../components/modules/table/BaseTable.vue";
-import TipTap from "../../../components/modules/Tiptap.vue";
+import VueInput from "../../../components/modules/VueInput.vue";
+import VueTiptap from "../../../components/modules/VueTiptap.vue";
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
@@ -247,9 +243,8 @@ export default {
 		InfoBar,
 		Empty,
 
-		ContainerInputOnce,
-		BaseTable,
-		TipTap,
+		VueTiptap,
+		VueInput,
 
 		ButtonDefault,
 		ButtonRemove,
@@ -388,7 +383,7 @@ export default {
 
 		/* Загрузка видео */
 		openVideoUpload() {
-			this.$refs.fileUpload.value = "";
+			this.$refs.fileVideo.clear();
 
 			this.openModal("modalVideoUpload", "Загрузка видео", "default");
 		},
@@ -402,7 +397,7 @@ export default {
 					{
 						key: "file",
 						type: "file",
-						value: this.$refs.fileUpload,
+						value: this.$refs.fileVideo.files(),
 						formats: ["webm", "mp4", "mov"],
 					},
 					{
@@ -438,13 +433,13 @@ export default {
 		updateVideo() {
 			let errors = 0;
 
-			if (this.$refs.fileUpload.files[0]) {
+			if (this.$refs.fileVideo.files().length > 0) {
 				if (
 					validate.checkInputsAll(this.currentVideo, [
 						{
 							key: "file",
 							type: "file",
-							value: this.$refs.fileUpload,
+							value: this.$refs.fileVideo.files(),
 							formats: ["webm", "mp4", "mov"],
 						},
 					])
@@ -516,7 +511,7 @@ export default {
 					{
 						key: "file",
 						type: "file",
-						value: this.$refs.fileUpload,
+						value: this.$refs.fileVideo.files(),
 						formats: ["webm", "mp4", "mov"],
 					},
 				])
@@ -525,7 +520,7 @@ export default {
 
 			/* Загрузка файла */
 			let formData = new FormData();
-			formData.append("file", this.$refs.fileUpload.files[0]);
+			formData.append("file", this.$refs.fileVideo.files()[0]);
 			formData.append("type", "video");
 			formData.append("formats", ["wemb", "mp4", "mov"]);
 
