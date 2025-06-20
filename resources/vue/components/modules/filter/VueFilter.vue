@@ -33,7 +33,7 @@
 				</li>
 
 				<template v-if="getFilteredList.length > 0">
-					<FIlterList
+					<VueFIlterList
 						v-for="child in getFilteredList"
 						:node="child"
 						:key="child.id"
