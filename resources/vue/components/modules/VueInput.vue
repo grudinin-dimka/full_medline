@@ -4,7 +4,7 @@
 		<input
 			class="checkbox-input"
 			type="checkbox"
-			:value="modelValue"
+			v-model="selectedCheckbox"
 			@change="$emit('update:modelValue', $event.target.checked)"
 		/>
 
@@ -160,7 +160,7 @@
 		<template v-else-if="type == 'select'">
 			<select v-model="selectedOption" @change="onSelectChange($event.target.value)">
 				<template v-for="item in options">
-					<option v-if="item?.default" :value="item.value" disabled>
+					<option v-if="item?.default" :value="item.value" :disabled="item?.disabled ?? false">
 						{{ item.label }}
 					</option>
 
@@ -229,15 +229,32 @@ export default {
 			hasFile: false,
 
 			selectedOption: "",
+			selectedCheckbox: false,
 		};
 	},
 	watch: {
 		modelValue: {
 			handler(newValue, oldValue) {
-				if (newValue === "") {
-					this.selectedOption = "";
+				if (!newValue) {
+					switch (this.type) {
+						case "select":							
+							this.selectedOption = "";
+							break;
+						case "checkbox":
+							this.selectedCheckbox = false;
+						default:
+							break;
+					}
 				} else {
-					this.selectedOption = newValue;
+					switch (this.type) {
+						case "select":							
+							this.selectedOption = newValue;
+							break;
+						case "checkbox":
+							this.selectedCheckbox = newValue;
+						default:
+							break;
+					}
 				}
 			},
 			immediate: true, // Вызывается при инициализации компонента
@@ -283,12 +300,14 @@ export default {
 		},
 	},
 	created() {
-		// Устанавливаем начальное значение, если оно задано
-		let initialOption = this.options.find((opt) => opt.value === this.modelValue);
-		if (initialOption) {
-			this.selectedOption = this.modelValue;
-		} else {
-			this.selectedOption = ""; // Или другое значение по умолчанию
+		if (this.type === "select") {
+			let initialOption = this.options.find((opt) => opt.value === this.modelValue);
+			
+			if (initialOption) {
+				this.selectedOption = this.modelValue;
+			} else {
+				this.selectedOption = ""; 
+			}
 		}
 	},
 };
@@ -608,14 +627,6 @@ option::checkmark {
 	width: 100%;
 }
 
-.checkbox.error .checkbox-input {
-	border: var(--input-error-border);
-}
-
-.checkbox.error .checkbox-label {
-	color: var(--input-error-color);
-}
-
 .checkbox-input {
 	appearance: none;
 	position: relative;
@@ -674,5 +685,21 @@ option::checkmark {
 
 .checkbox-input:disabled {
 	background: gray;
+}
+
+.checkbox.error .checkbox-input {
+	border: var(--input-error-border);
+}
+
+.checkbox.error .checkbox-label {
+	color: var(--input-error-color);
+}
+
+.checkbox.error .checkbox-input {
+	border: var(--input-error-border);
+}
+
+.checkbox.error .checkbox-new .checkbox-new_checked {
+	fill: var(--input-error-color);
 }
 </style>

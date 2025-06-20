@@ -2084,7 +2084,7 @@ export default {
 					{
 						key: "file",
 						type: "file",
-						value: this.$refs.fileUpload,
+						value: this.$refs.fileUpload.files,
 						formats: ["png", "webp"],
 					},
 				])
@@ -2212,7 +2212,7 @@ export default {
 						{
 							key: "file",
 							type: "file",
-							value: this.$refs.fileUpload,
+							value: this.$refs.fileUpload.files,
 							formats: ["png", "webp"],
 						},
 					])

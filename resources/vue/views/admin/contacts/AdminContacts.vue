@@ -459,6 +459,7 @@ export default {
 			let array = this.clinics.map((value, index) => {
 				return {
 					default: false,
+					disabled: false,
 					value: value.id,
 					label: value.name,
 				};
@@ -466,8 +467,9 @@ export default {
 
 			array.push({
 				default: true,
+				disabled: false,
 				value: "",
-				label: "Выберите клинику",
+				label: "Отсутствует",
 			});
 
 			sorted.sortStringByKey("down", array, "default");

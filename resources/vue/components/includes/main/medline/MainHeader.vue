@@ -31,6 +31,18 @@
 			</VueInput>
 
 			<VueInput
+				v-model="modalForm.data.email.value"
+				:type="'email'"
+				:placeholder="'test@mail.ru'"
+				:error="modalForm.errors.email.status"
+			>
+				<template #label> ПОЧТА </template>
+				<template #error>
+					{{ modalForm.errors.email.message }}
+				</template>
+			</VueInput>
+
+			<VueInput
 				v-model="modalForm.data.date.value"
 				:type="'date'"
 				:placeholder="'Введите дату'"
@@ -223,6 +235,10 @@ export default {
 						status: false,
 						message: "",
 					},
+					email: {
+						status: false,
+						message: "",
+					},
 					date: {
 						status: false,
 						message: "",
@@ -246,6 +262,10 @@ export default {
 						edited: false,
 					},
 					phone: {
+						value: null,
+						edited: false,
+					},
+					email: {
 						value: null,
 						edited: false,
 					},
@@ -378,6 +398,7 @@ export default {
 					title: this.modal.values.title,
 					name: this.modalForm.data.name.value,
 					phone: this.modalForm.data.phone.value,
+					email: this.modalForm.data.email.value,
 					date: this.modalForm.data.date.value,
 					specialization: this.modalForm.data.description.value,
 				},

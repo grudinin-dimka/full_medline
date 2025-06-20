@@ -98,6 +98,7 @@ class HomeController extends Controller
             "Заявка: ". $request->title . "\n" . 
             "ФИО : " . $request->name . "\n" . 
             "Телефон : " . $request->phone . "\n" . 
+            "Почта : " . $request->email ?? "Отсутствует." . "\n" . 
             "Дата рождения : " . $request->date ?? "Отсутствует." . "\n" . 
             "Описание : " . $request->description ?? "Отсутствует.";
       
