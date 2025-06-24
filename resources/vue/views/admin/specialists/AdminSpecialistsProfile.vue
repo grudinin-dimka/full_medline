@@ -6,13 +6,11 @@
 		</template>
 
 		<template #body>
-			<div class="input-search">
-				<ContainerInputSearch
-					class="input-search-sticky"
-					v-model="search.specializations"
-					:placeholder="'Введите специализацию'"
-				/>
-			</div>
+			<VueInput
+				:placeholder="'Введите фамилию'"
+				:type="'search'"
+				v-model="search.specializations"
+			/>
 
 			<!-- Список специализаций -->
 			<div class="specializations-list">
@@ -82,13 +80,7 @@
 		</template>
 
 		<template #body>
-			<div class="input-search">
-				<ContainerInputSearch
-					class="input-search-sticky"
-					v-model="search.clinics"
-					:placeholder="'Введите клинику'"
-				/>
-			</div>
+			<VueInput v-model="search.clinics" :type="'search'" :placeholder="'Введите клинику'" />
 
 			<!-- Список специализаций -->
 			<div class="clinics__list">
@@ -168,68 +160,41 @@
 		</template>
 
 		<template #body>
-			<container-input-once>
-				<template #title>
-					<span>НАЗВАНИЕ*</span>
-					<span v-if="currentCertificate.data.name.edited"> (ИЗМЕНЕНО) </span>
-				</template>
-				<template #input>
-					<input
-						type="text"
-						placeholder="Название должности"
-						:class="{ error: currentCertificate.errors.name.status }"
-						v-model="currentCertificate.data.name.value"
-						@input="currentCertificate.data.name.edited = true"
-					/>
-				</template>
+			<VueInput
+				v-model="currentCertificate.data.name.value"
+				:placeholder="'Введите должность'"
+				:type="'text'"
+				:error="currentCertificate.errors.name.status"
+			>
+				<template #label> НАЗВАНИЕ </template>
 				<template #error>
-					<span class="error" v-if="currentCertificate.errors.name.message">
-						{{ currentCertificate.errors.name.message }}
-					</span>
+					{{ currentCertificate.errors.name.message }}
 				</template>
-			</container-input-once>
-			<!-- Организация -->
-			<container-input-once>
-				<template #title>
-					<span>ОРГАНИЗАЦИЯ*</span>
-					<span v-if="currentCertificate.data.organization.edited"> (ИЗМЕНЕНО) </span>
-				</template>
-				<template #input>
-					<input
-						type="text"
-						placeholder="Название организации"
-						:class="{ error: currentCertificate.errors.organization.status }"
-						v-model="currentCertificate.data.organization.value"
-						@input="currentCertificate.data.organization.edited = true"
-					/>
-				</template>
+			</VueInput>
+
+			<VueInput
+				v-model="currentCertificate.data.organization.value"
+				:placeholder="'Введите организацию'"
+				:type="'text'"
+				:error="currentCertificate.errors.organization.status"
+			>
+				<template #label> ОРГАНИЗАЦИЯ </template>
 				<template #error>
-					<span class="error" v-if="currentCertificate.errors.organization.message">
-						{{ currentCertificate.errors.organization.message }}
-					</span>
+					{{ currentCertificate.errors.organization.message }}
 				</template>
-			</container-input-once>
-			<!-- Дата окончания обучения -->
-			<container-input-once>
-				<template #title>
-					<span>ОКОНЧАНИЕ ОБУЧЕНИЯ*</span>
-					<span v-if="currentCertificate.data.endEducation.edited"> (ИЗМЕНЕНО) </span>
-				</template>
-				<template #input>
-					<input
-						type="date"
-						placeholder="Введите дату"
-						:class="{ error: currentCertificate.errors.endEducation.status }"
-						v-model="currentCertificate.data.endEducation.value"
-						@input="currentCertificate.data.endEducation.edited = true"
-					/>
-				</template>
+			</VueInput>
+
+			<VueInput
+				v-model="currentCertificate.data.endEducation.value"
+				:placeholder="'Введите дату'"
+				:type="'text'"
+				:error="currentCertificate.errors.endEducation.status"
+			>
+				<template #label> ОКОНЧАНИЕ ОБУЧЕНИЯ </template>
 				<template #error>
-					<span class="error" v-if="currentCertificate.errors.endEducation.message">
-						{{ currentCertificate.errors.endEducation.message }}
-					</span>
+					{{ currentCertificate.errors.endEducation.message }}
 				</template>
-			</container-input-once>
+			</VueInput>
 		</template>
 
 		<template #footer>
@@ -256,103 +221,52 @@
 		</template>
 
 		<template #body>
-			<container-input>
-				<!-- Название -->
-				<container-input-once>
-					<template #title>
-						<span>НАЗВАНИЕ*</span>
-						<span v-if="currentEducation.data.name.edited"> (ИЗМЕНЕНО) </span>
-					</template>
-					<template #input>
-						<input
-							type="text"
-							placeholder="Введите название"
-							autocomplete="off"
-							:class="{ error: currentEducation.errors.name.status }"
-							v-model="currentEducation.data.name.value"
-							@input="currentEducation.data.name.edited = true"
-						/>
-					</template>
-					<template #error>
-						<span class="error" v-if="currentEducation.errors.name.status">
-							{{ currentEducation.errors.name.message }}
-						</span>
-					</template>
-				</container-input-once>
-				<!-- Организация -->
-				<container-textarea-once>
-					<template #title>
-						<span>ОРГАНИЗАЦИЯ*</span>
-						<span v-if="currentEducation.data.organization.edited"> (ИЗМЕНЕНО) </span>
-					</template>
-					<template #textarea>
-						<textarea
-							rows="4"
-							placeholder="Введите организацию"
-							autocomplete="off"
-							:class="{ error: currentEducation.errors.organization.status }"
-							v-model="currentEducation.data.organization.value"
-							@input="currentEducation.data.organization.edited = true"
-						></textarea>
-					</template>
-					<template #error>
-						<span class="error" v-if="currentEducation.errors.organization.status">
-							{{ currentEducation.errors.organization.message }}
-						</span>
-					</template>
-				</container-textarea-once>
-				<!-- Дата получения образования -->
-				<container-input-once>
-					<template #title>
-						<span>ДАТА ПОЛУЧЕНИЯ*</span>
-						<span v-if="currentEducation.data.date.edited"> (ИЗМЕНЕНО)</span>
-					</template>
-					<template #input>
-						<input
-							type="date"
-							placeholder="Введите организацию"
-							autocomplete="off"
-							:class="{ error: currentEducation.errors.date.status }"
-							v-model="currentEducation.data.date.value"
-							@input="currentEducation.data.date.edited = true"
-						/>
-					</template>
-					<template #error>
-						<span class="error" v-if="currentEducation.errors.date.status">
-							{{ currentEducation.errors.date.message }}
-						</span>
-					</template>
-				</container-input-once>
-				<!-- Выбор специализации -->
-				<container-input-once>
-					<template #title>
-						<span>СПЕЦИАЛИЗАЦИЯ*</span>
-						<span v-if="currentEducation.data.speсialization.edited"> (ИЗМЕНЕНО)</span>
-					</template>
-					<template #input>
-						<input
-							type="text"
-							placeholder="Введите специализацию"
-							autocomplete="off"
-							list="eduacation-specializations"
-							:class="{ error: currentEducation.errors.speсialization.status }"
-							v-model="currentEducation.data.speсialization.value"
-							@input="currentEducation.data.speсialization.edited = true"
-						/>
-						<datalist id="eduacation-specializations">
-							<option value="Лечебное дело"></option>
-							<option value="Педиатрия"></option>
-							<option value="Сестринское дело"></option>
-							<option value="Фармация"></option>
-						</datalist>
-					</template>
-					<template #error>
-						<span class="error" v-if="currentEducation.errors.speсialization.status">
-							{{ currentEducation.errors.speсialization.message }}
-						</span>
-					</template>
-				</container-input-once>
-			</container-input>
+			<VueInput
+				v-model="currentEducation.data.name.value"
+				:placeholder="'Введите название'"
+				:type="'text'"
+				:error="currentEducation.errors.name.status"
+			>
+				<template #label> НАЗВАНИЕ </template>
+				<template #error>
+					{{ currentEducation.errors.name.message }}
+				</template>
+			</VueInput>
+
+			<VueInput
+				v-model="currentEducation.data.organization.value"
+				:placeholder="'Введите организацию'"
+				:type="'textarea'"
+				:error="currentEducation.errors.organization.status"
+			>
+				<template #label> ОРГАНИЗАЦИЯ </template>
+				<template #error>
+					{{ currentEducation.errors.organization.message }}
+				</template>
+			</VueInput>
+
+			<VueInput
+				v-model="currentEducation.data.date.value"
+				:type="'date'"
+				:error="currentEducation.errors.date.status"
+			>
+				<template #label> ДАТА ПОЛУЧЕНИЯ </template>
+				<template #error>
+					{{ currentEducation.errors.date.message }}
+				</template>
+			</VueInput>
+
+			<VueInput
+				v-model="currentEducation.data.speсialization.value"
+				:type="'text'"
+				:placeholder="'Введите специализацию'"
+				:error="currentEducation.errors.speсialization.status"
+			>
+				<template #label> СПЕЦИАЛИЗАЦИЯ </template>
+				<template #error>
+					{{ currentEducation.errors.speсialization.message }}
+				</template>
+			</VueInput>
 		</template>
 
 		<template #footer>
@@ -379,95 +293,56 @@
 		</template>
 
 		<template #body>
-			<container-input>
-				<!-- Название -->
-				<container-input-once>
-					<template #title>
-						<span>НАЗВАНИЕ*</span>
-						<span v-if="currentWork.data.name.edited"> (ИЗМЕНЕНО) </span>
-					</template>
-					<template #input>
-						<input
-							type="text"
-							placeholder="Название работы"
-							v-model="currentWork.data.name.value"
-							:class="{ error: currentWork.errors.name.status }"
-							@input="currentWork.data.name.edited = true"
-						/>
-					</template>
-					<template #error>
-						<span class="error" v-if="currentWork.errors.name.status">
-							{{ currentWork.errors.name.message }}
-						</span>
-					</template>
-				</container-input-once>
-				<!-- Организация -->
-				<container-textarea-once>
-					<template #title>
-						<span>ОРГАНИЗАЦИЯ*</span>
-						<span v-if="currentWork.data.organization.edited"> (ИЗМЕНЕНО) </span>
-					</template>
-					<template #textarea>
-						<textarea
-							rows="4"
-							placeholder="Название организации"
-							v-model="currentWork.data.organization.value"
-							:class="{ error: currentWork.errors.organization.status }"
-							@input="currentWork.data.organization.edited = true"
-						></textarea>
-					</template>
-					<template #error>
-						<span class="error" v-if="currentWork.errors.organization.status">
-							{{ currentWork.errors.organization.message }}
-						</span>
-					</template>
-				</container-textarea-once>
-				<!-- Начало и конец -->
-				<container-input-two :fieldset="true">
-					<template #legend>
-						<span>НАЧАЛО И ОКОНЧАНИЕ РАБОТЫ</span>
-					</template>
-					<!-- Начало работы -->
-					<template #title-one>
-						<span>ДАТА НАЧАЛА*</span>
-						<span v-if="currentWork.data.startWork.edited"> (ИЗМЕНЕНО)</span>
-					</template>
-					<template #input-one>
-						<input
-							type="date"
-							autocomplete="off"
-							v-model="currentWork.data.startWork.value"
-							:class="{ error: currentWork.errors.startWork.status }"
-							@input="currentWork.data.startWork.edited = true"
-						/>
-					</template>
-					<template #error-one>
-						<span class="error" v-if="currentWork.errors.startWork.status">
+			<VueInput
+				v-model="currentWork.data.name.value"
+				:type="'text'"
+				:placeholder="'Введите название'"
+				:error="currentWork.errors.name.status"
+			>
+				<template #label> НАЗВАНИЕ </template>
+				<template #error>
+					{{ currentWork.errors.name.message }}
+				</template>
+			</VueInput>
+
+			<VueInput
+				v-model="currentWork.data.organization.value"
+				:type="'textarea'"
+				:placeholder="'Введите организацию'"
+				:error="currentWork.errors.organization.status"
+			>
+				<template #label> ОРГАНИЗАЦИЯ </template>
+				<template #error>
+					{{ currentWork.errors.organization.message }}
+				</template>
+			</VueInput>
+
+			<VueInputContainer :direction="'row'" :count="2" :gap="'10px'">
+				<template #legend> НАЧАЛО И ОКОНЧАНИЕ РАБОТЫ </template>
+				<template #inputs>
+					<VueInput
+						v-model="currentWork.data.startWork.value"
+						:type="'date'"
+						:error="currentWork.errors.startWork.status"
+					>
+						<template #label> ДАТА НАЧАЛА </template>
+						<template #error>
 							{{ currentWork.errors.startWork.message }}
-						</span>
-					</template>
-					<!-- Конец работы -->
-					<template #title-two>
-						<span>ДАТА ОКОНЧАНИЯ*</span>
-						<span v-if="currentWork.data.endWork.edited"> (ИЗМЕНЕНО)</span>
-					</template>
-					<template #input-two>
-						<input
-							type="date"
-							placeholder="Введите улицу"
-							autocomplete="off"
-							v-model="currentWork.data.endWork.value"
-							:class="{ error: currentWork.errors.endWork.status }"
-							@input="currentWork.data.endWork.edited = true"
-						/>
-					</template>
-					<template #error-two>
-						<span class="error" v-if="currentWork.errors.endWork.status">
+						</template>
+					</VueInput>
+
+					<VueInput
+						v-model="currentWork.data.endWork.value"
+						:type="'date'"
+						:error="currentWork.errors.endWork.status"
+					>
+						<template #label> ДАТА ОКОНЧАНИЯ </template>
+						<template #error>
 							{{ currentWork.errors.endWork.message }}
-						</span>
-					</template>
-				</container-input-two>
-			</container-input>
+						</template>
+					</VueInput>
+				</template>
+			</VueInputContainer>
 		</template>
 		<template #footer>
 			<template v-if="modalWorks.values.look == 'create'">
@@ -556,328 +431,270 @@
 					></div>
 				</div>
 				<div class="profile-info">
-					<container-input-two :fieldset="true">
-						<template #legend>
-							<span>АВАТАР И ССЫЛКА</span>
-						</template>
-						<template #title-one>
-							<span
-								>ФОТО ВРАЧА (700x700)<span v-if="$route.params.id == 'new'">*</span></span
+					<!-- Аватар и ссылка -->
+					<VueInputContainer :direction="'column'" :gap="'10px'">
+						<template #legend> АВАТАР И ССЫЛКА </template>
+						<template #inputs>
+							<VueInput
+								:placeholder="'Введите ФИО'"
+								:type="'file'"
+								v-model="specialist.profile.data.file.value"
+								:error="specialist.profile.errors.file.status"
+								ref="fileImage"
 							>
-							<span v-if="specialist.profile.data.filename.edited"> (ИЗМЕНЕНО)</span>
-						</template>
-						<template #input-one>
-							<input
-								class="profile-file"
-								type="file"
-								autocomplete="off"
-								ref="fileUpload"
-								:class="{ error: specialist.profile.errors.file.status }"
-							/>
-						</template>
-						<template #error-one>
-							<span class="error" v-if="specialist.profile.errors.file.status">
-								{{ specialist.profile.errors.file.message }}
-							</span>
-						</template>
-						<template #title-two>
-							<span>ССЫЛКА НА ПРОДОКТОРОВ*</span>
-							<span v-if="specialist.profile.data.link.edited"> (ИЗМЕНЕНО)</span>
-						</template>
-						<template #input-two>
-							<input
-								type="text"
-								placeholder="Введите ссылку"
-								autocomplete="off"
-								v-model="specialist.profile.data.link.value"
-								:class="{ error: specialist.profile.errors.link.status }"
-								@input="specialist.profile.data.link.edited = true"
-							/>
-						</template>
-						<template #error-two>
-							<span class="error" v-if="true">
-								{{ specialist.profile.errors.link.message }}
-							</span>
-						</template>
-					</container-input-two>
+								<template #label> ФОТО ВРАЧА (700x700) </template>
+								<template #error>
+									{{ specialist.profile.errors.file.message }}
+								</template>
+							</VueInput>
 
-					<container-input-three :fieldset="true">
-						<template #legend>
-							<span>Ф.И.О.</span>
+							<VueInput
+								:placeholder="'Введите ссылку'"
+								:type="'text'"
+								v-model="specialist.profile.data.link.value"
+								:error="specialist.profile.errors.link.status"
+							>
+								<template #label> ССЫЛКА НА ПРОДОКТОРОВ </template>
+								<template #error>
+									{{ specialist.profile.errors.link.message }}
+								</template>
+							</VueInput>
 						</template>
-						<template #title-one>
-							<span>ФАМИЛИЯ*</span>
-							<span v-if="specialist.profile.data.family.edited"> (ИЗМЕНЕНО)</span>
-						</template>
-						<template #input-one>
-							<input
-								type="text"
-								placeholder="Введите фамилию"
-								autocomplete="off"
+					</VueInputContainer>
+
+					<!-- ФИО -->
+					<VueInputContainer :direction="'column'" :gap="'10px'">
+						<template #legend> ФИО </template>
+						<template #inputs>
+							<VueInput
+								:placeholder="'Введите фамилию'"
+								:type="'text'"
 								v-model="specialist.profile.data.family.value"
-								:class="{ error: specialist.profile.errors.family.status }"
-								@input="specialist.profile.data.family.edited = true"
-							/>
-						</template>
-						<template #error-one>
-							<span class="error" v-if="specialist.profile.errors.family.status">
-								{{ specialist.profile.errors.family.message }}
-							</span>
-						</template>
-						<template #title-two>
-							<span>ИМЯ*</span>
-							<span v-if="specialist.profile.data.name.edited"> (ИЗМЕНЕНО)</span>
-						</template>
-						<template #input-two>
-							<input
-								type="text"
-								placeholder="Введите имя"
-								autocomplete="off"
+								:error="specialist.profile.errors.family.status"
+							>
+								<template #label> ФАМИЛИЯ </template>
+								<template #error>
+									{{ specialist.profile.errors.family.message }}
+								</template>
+							</VueInput>
+
+							<VueInput
+								:placeholder="'Введите имя'"
+								:type="'text'"
 								v-model="specialist.profile.data.name.value"
-								:class="{ error: specialist.profile.errors.name.status }"
-								@input="specialist.profile.data.name.edited = true"
-							/>
-						</template>
-						<template #error-two>
-							<span class="error" v-if="specialist.profile.errors.name.status">
-								{{ specialist.profile.errors.name.message }}
-							</span>
-						</template>
-						<template #title-three>
-							<span>ОТЧЕСТВО</span>
-							<span v-if="specialist.profile.data.surname.edited"> (ИЗМЕНЕНО)</span>
-						</template>
-						<template #input-three>
-							<input
-								type="text"
-								placeholder="Введите отчество"
-								autocomplete="off"
+								:error="specialist.profile.errors.name.status"
+							>
+								<template #label> ИМЯ </template>
+								<template #error>
+									{{ specialist.profile.errors.name.message }}
+								</template>
+							</VueInput>
+
+							<VueInput
+								:placeholder="'Введите имя'"
+								:type="'text'"
 								v-model="specialist.profile.data.surname.value"
-								:class="{ error: specialist.profile.errors.surname.status }"
-								@input="specialist.profile.data.surname.edited = true"
-							/>
+								:error="specialist.profile.errors.surname.status"
+							>
+								<template #label> ОТЧЕСТВО </template>
+								<template #error>
+									{{ specialist.profile.errors.surname.message }}
+								</template>
+							</VueInput>
 						</template>
-						<template #error-three>
-							<span class="error" v-if="specialist.profile.errors.surname.status">
-								{{ specialist.profile.errors.surname.message }}
-							</span>
-						</template>
-					</container-input-three>
+					</VueInputContainer>
 				</div>
 			</div>
 			<div class="container-profile-other" v-show="loading.sections.profile">
-				<container-input>
-					<container-select-three :fieldset="true">
-						<template #legend>
-							<span>НАУЧНОЕ ОБРАЗОВАНИЕ</span>
-						</template>
-						<template #title-one>
-							<span>КАТЕГОРИЯ*</span>
-							<span v-if="specialist.profile.data.category.edited"> (ИЗМЕНЕНО)</span>
-						</template>
-						<template #select-one>
-							<Selector
-								v-model="specialist.profile.data.category.value"
-								:placeholder="'Выберите категорию'"
-								:type="specialist.profile.errors.category.status ? 'error' : 'default'"
-								:filter="false"
-								:list="[
-									{
-										value: 'Нет категории',
-										label: 'Нет категории',
-									},
-									{
-										value: 'Первая',
-										label: 'Первая',
-									},
-									{
-										value: 'Вторая',
-										label: 'Вторая',
-									},
-									{
-										value: 'Высшая',
-										label: 'Высшая',
-									},
-								]"
-							></Selector>
-						</template>
-						<template #error-one>
-							<span class="error" v-if="specialist.profile.errors.category.status">
+				<!-- Звания -->
+				<VueInputContainer :direction="'row'" :count="3" :gap="'10px'">
+					<template #legend> ЗВАНИЯ </template>
+					<template #inputs>
+						<VueInput
+							v-model="specialist.profile.data.category.value"
+							:type="'select'"
+							:options="[
+								{
+									default: true,
+									disabled: true,
+									value: '',
+									label: 'Выберите категорию',
+								},
+								{
+									default: false,
+									disabled: false,
+									value: 'Нет категории',
+									label: 'Нет категории',
+								},
+								{
+									default: false,
+									disabled: false,
+									value: 'Первая',
+									label: 'Первая',
+								},
+								{
+									default: false,
+									disabled: false,
+									value: 'Вторая',
+									label: 'Вторая',
+								},
+								{
+									default: false,
+									disabled: false,
+									value: 'Высшая',
+									label: 'Высшая',
+								},
+							]"
+							:placeholder="'Введите научное образование'"
+							:error="specialist.profile.errors.category.status"
+						>
+							<template #label> НАУЧНОЕ ОБРАЗОВАНИЕ </template>
+							<template #error>
 								{{ specialist.profile.errors.category.message }}
-							</span>
-						</template>
-						<template #title-two>
-							<span>СТЕПЕНЬ</span>
-							<span v-if="specialist.profile.data.degree.edited"> (ИЗМЕНЕНО)</span>
-						</template>
-						<template #select-two>
-							<input
-								type="text"
-								placeholder="Введите степень"
-								autocomplete="off"
-								list="specialist-dedgree"
-								v-model="specialist.profile.data.degree.value"
-								@input="specialist.profile.data.degree.edited = true"
-							/>
-							<datalist id="specialist-dedgree">
-								<option value="Отсутствует">Отсутствует</option>
-								<option value="Кандидат медицинских наук">Кандидат медицинских наук</option>
-								<option value="Доктор медицинских наук">Доктор медицинских наук</option>
-							</datalist>
-						</template>
-						<template #title-three>
-							<span>ЗВАНИЕ</span>
-							<span v-if="specialist.profile.data.rank.edited"> (ИЗМЕНЕНО)</span>
-						</template>
-						<template #select-three>
-							<input
-								type="text"
-								placeholder="Введите звание"
-								autocomplete="off"
-								list="specialist-rank"
-								v-model="specialist.profile.data.rank.value"
-								@input="specialist.profile.data.rank.edited = true"
-							/>
-							<datalist id="specialist-rank">
-								<option value="Отсутствует">Отсутствует</option>
-								<option value="Доцент">Доцент</option>
-								<option value="Профессор">Профессор</option>
-							</datalist>
-						</template>
-					</container-select-three>
-					<!-- Первая работа -->
-					<container-input-two :fieldset="true">
-						<template #legend>
-							<span>НАЧАЛО КАРЪЕРЫ И ГОРОД ПРИЕМА</span>
-						</template>
-						<template #title-one>
-							<span
-								>ДАТА* ({{ getAge(specialist.profile.data.startWorkAge.value) }} лет)</span
-							>
-							<span v-if="specialist.profile.data.startWorkAge.edited"> (ИЗМЕНЕНО)</span>
-						</template>
-						<template #input-one>
-							<input
-								type="date"
-								autocomplete="off"
-								v-model="specialist.profile.data.startWorkAge.value"
-								:class="{ error: specialist.profile.errors.startWorkAge.status }"
-								@input="specialist.profile.data.startWorkAge.edited = true"
-							/>
-						</template>
-						<template #error-one>
-							<span class="error" v-if="specialist.profile.errors.startWorkAge.status">
-								{{ specialist.profile.errors.startWorkAge.message }}
-							</span>
-						</template>
+							</template>
+						</VueInput>
 
-						<template #title-two>
-							<span>ГОРОД</span>
-							<span v-if="specialist.profile.data.startWorkCity.edited"> (ИЗМЕНЕНО)</span>
-						</template>
-						<template #input-two>
-							<input
-								type="text"
-								placeholder="Введите название города"
-								autocomplete="off"
-								:class="{ error: specialist.profile.errors.startWorkCity.status }"
-								v-model="specialist.profile.data.startWorkCity.value"
-								@input="specialist.profile.data.startWorkCity.edited = true"
-							/>
-						</template>
-						<template #error-two>
-							<span class="error" v-if="specialist.profile.errors.startWorkCity.status">
+						<VueInput
+							:placeholder="'Введите степень'"
+							:type="'text'"
+							v-model="specialist.profile.data.degree.value"
+							:error="specialist.profile.errors.degree.status"
+						>
+							<template #label> СТЕПЕНЬ </template>
+							<template #error>
+								{{ specialist.profile.errors.degree.message }}
+							</template>
+						</VueInput>
+
+						<VueInput
+							:placeholder="'Введите звание'"
+							:type="'text'"
+							v-model="specialist.profile.data.rank.value"
+							:error="specialist.profile.errors.rank.status"
+						>
+							<template #label> ЗВАНИЕ </template>
+							<template #error>
+								{{ specialist.profile.errors.rank.message }}
+							</template>
+						</VueInput>
+					</template>
+				</VueInputContainer>
+
+				<!-- Начало карьеры -->
+				<VueInputContainer :direction="'row'" :count="2" :gap="'10px'">
+					<template #legend> НАЧАЛО КАРЪЕРЫ </template>
+					<template #inputs>
+						<VueInput
+							:placeholder="'Введите дату'"
+							:type="'date'"
+							v-model="specialist.profile.data.startWorkAge.value"
+							:error="specialist.profile.errors.startWorkAge.status"
+						>
+							<template #label>
+								ДАТА НАЧАЛА ({{ getAge(specialist.profile.data.startWorkAge.value) }}
+								лет)
+							</template>
+							<template #error>
+								{{ specialist.profile.errors.startWorkAge.message }}
+							</template>
+						</VueInput>
+
+						<VueInput
+							:placeholder="'Введите город'"
+							:type="'text'"
+							v-model="specialist.profile.data.startWorkCity.value"
+							:error="specialist.profile.errors.startWorkCity.status"
+						>
+							<template #label> ГОРОД НАЧАЛА </template>
+							<template #error>
 								{{ specialist.profile.errors.startWorkCity.message }}
-							</span>
-						</template>
-					</container-input-two>
-					<!-- Статус приёма -->
-					<container-input-two-sub
-						:fieldset="true"
-						:subOne="false"
-						:subTwo="specialist.profile.data.childrenDoctor.value ? true : false"
-					>
-						<template #legend>
-							<span>ПРИЁМ ВРАЧА</span>
-						</template>
-						<template #title-one>
-							<span>У ВЗРОСЛЫХ*</span>
-							<span v-if="specialist.profile.data.adultDoctor.edited"> (ИЗМЕНЕНО)</span>
-						</template>
-						<template #input-one>
-							<Selector
-								v-model="specialist.profile.data.adultDoctor.value"
-								:placeholder="'Выберите статус'"
-								:type="specialist.profile.errors.adultDoctor.status ? 'error' : 'default'"
-								:filter="false"
-								:list="[
-									{
-										value: 0,
-										label: 'Нет',
-									},
-									{
-										value: 1,
-										label: 'Да',
-									},
-								]"
-							></Selector>
-						</template>
-						<template #error-one>
-							<span class="error" v-if="specialist.profile.errors.adultDoctor.status">
+							</template>
+						</VueInput>
+					</template>
+				</VueInputContainer>
+
+				<!-- Статус приёма -->
+				<VueInputContainer :direction="'column'" :gap="'10px'">
+					<template #legend> ПРИЕМ ВРАЧА </template>
+					<template #inputs>
+						<VueInput
+							v-model="specialist.profile.data.adultDoctor.value"
+							:type="'select'"
+							:options="[
+								{
+									default: true,
+									disabled: true,
+									value: '',
+									label: 'Выберите статус',
+								},
+								{
+									default: false,
+									disabled: false,
+									value: 0,
+									label: 'Нет',
+								},
+								{
+									default: false,
+									disabled: false,
+									value: 1,
+									label: 'Да',
+								},
+							]"
+							:error="specialist.profile.errors.adultDoctor.status"
+						>
+							<template #label> СТАТУС ПРИЕМА У ВЗРОСЛЫХ </template>
+							<template #error>
 								{{ specialist.profile.errors.adultDoctor.message }}
-							</span>
-						</template>
-						<template #title-two>
-							<span>У ДЕТЕЙ*</span>
-							<span v-if="specialist.profile.data.childrenDoctor.edited"> (ИЗМЕНЕНО)</span>
-						</template>
-						<template #input-two>
-							<Selector
-								v-model="specialist.profile.data.childrenDoctor.value"
-								:placeholder="'Выберите статус'"
-								:type="
-									specialist.profile.errors.childrenDoctor.status ? 'error' : 'default'
-								"
-								:filter="false"
-								:list="[
-									{
-										value: 0,
-										label: 'Нет',
-									},
-									{
-										value: 1,
-										label: 'Да',
-									},
-								]"
-							></Selector>
-						</template>
-						<template #error-two>
-							<span class="error" v-if="specialist.profile.errors.childrenDoctor.status">
+							</template>
+						</VueInput>
+
+						<VueInput
+							v-model="specialist.profile.data.childrenDoctor.value"
+							:type="'select'"
+							:options="[
+								{
+									default: true,
+									disabled: true,
+									value: '',
+									label: 'Выберите статус',
+								},
+								{
+									default: false,
+									disabled: false,
+									value: 0,
+									label: 'Нет',
+								},
+								{
+									default: false,
+									disabled: false,
+									value: 1,
+									label: 'Да',
+								},
+							]"
+							:error="specialist.profile.errors.childrenDoctor.status"
+						>
+							<template #label> СТАТУС ПРИЕМА У ДЕТЕЙ </template>
+							<template #error>
 								{{ specialist.profile.errors.childrenDoctor.message }}
-							</span>
-						</template>
-						<template #title-sub-two>
-							<span>ВОЗРАСТ* (+{{ specialist.profile.data.childrenDoctorAge.value }})</span>
-							<span v-if="specialist.profile.data.childrenDoctorAge.edited">
-								(ИЗМЕНЕНО)</span
-							>
-						</template>
-						<template #input-sub-two>
-							<input
-								type="number"
-								placeholder="Годы"
-								v-model="specialist.profile.data.childrenDoctorAge.value"
-								:class="{ error: specialist.profile.errors.childrenDoctorAge.status }"
-								@input="specialist.profile.data.childrenDoctorAge.edited = true"
-							/>
-						</template>
-						<template #error-sub-two>
-							<span class="error" v-if="specialist.profile.errors.childrenDoctorAge.status">
+							</template>
+						</VueInput>
+
+						<VueInput
+							v-if="specialist.profile.data.childrenDoctor.value === 1"
+							v-model="specialist.profile.data.childrenDoctorAge.value"
+							:type="'number'"
+							:min="0"
+							:max="18"
+							:placeholder="'Введите возраст'"
+							:error="specialist.profile.errors.childrenDoctorAge.status"
+						>
+							<template #label> ДЕТСКИЙ ВОЗРАСТ (от 0 до 18 лет) </template>
+							<template #error>
 								{{ specialist.profile.errors.childrenDoctorAge.message }}
-							</span>
-						</template>
-					</container-input-two-sub>
-				</container-input>
+							</template>
+						</VueInput>
+					</template>
+				</VueInputContainer>
 
 				<VueTiptap
 					ref="tiptapDescription"
@@ -1200,21 +1017,14 @@ import BaseTable from "../../../components/modules/table/BaseTable.vue";
 import VueTiptap from "../../../components/modules/VueTiptap.vue";
 
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
-import Selector from "../../../components/modules/Selector.vue";
+import VueSelector from "../../../components/modules/VueSelector.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTwo from "../../../components/ui/admin/blocks/BlockTwo.vue";
 
-import ContainerInput from "../../../components/ui/admin/containers/ContainerInput.vue";
-import ContainerInputSearch from "../../../components/ui/admin/containers/input/ContainerInputSearch.vue";
-import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
-import ContainerInputTwo from "../../../components/ui/admin/containers/input/ContainerInputTwo.vue";
-import ContainerInputTwoSub from "../../../components/ui/admin/containers/input/ContainerInputTwoSub.vue";
-import ContainerInputThree from "../../../components/ui/admin/containers/input/ContainerInputThree.vue";
-import ContainerSelectOnce from "../../../components/ui/admin/containers/select/ContainerSelectOnce.vue";
-import ContainerSelectThree from "../../../components/ui/admin/containers/select/ContainerSelectThree.vue";
-import ContainerTextareaOnce from "../../../components/ui/admin/containers/textarea/ContainerTextareaOnce.vue";
+import VueInput from "../../../components/modules/VueInput.vue";
+import VueInputContainer from "../../../components/modules/VueInputContainer.vue";
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 import ButtonDisabled from "../../../components/ui/admin/buttons/ButtonDisabled.vue";
@@ -1241,21 +1051,14 @@ export default {
 		VueTiptap,
 
 		InfoBar,
-		Selector,
+		VueSelector,
 		LoaderChild,
 
 		BlockOnce,
 		BlockTwo,
 
-		ContainerInput,
-		ContainerInputSearch,
-		ContainerInputOnce,
-		ContainerInputTwo,
-		ContainerInputTwoSub,
-		ContainerInputThree,
-		ContainerSelectOnce,
-		ContainerSelectThree,
-		ContainerTextareaOnce,
+		VueInput,
+		VueInputContainer,
 
 		ButtonDefault,
 		ButtonDisabled,
@@ -1601,6 +1404,10 @@ export default {
 							message: "",
 							status: false,
 						},
+						file: {
+							message: "",
+							status: false,
+						},
 						filename: {
 							message: "",
 							status: false,
@@ -1669,6 +1476,10 @@ export default {
 						},
 						hide: {
 							value: false,
+							edited: false,
+						},
+						file: {
+							value: "",
 							edited: false,
 						},
 						filename: {
@@ -2084,7 +1895,7 @@ export default {
 					{
 						key: "file",
 						type: "file",
-						value: this.$refs.fileUpload.files,
+						value: this.$refs.fileImage.files(),
 						formats: ["png", "webp"],
 					},
 				])
@@ -2104,10 +1915,18 @@ export default {
 					errors++;
 			}
 
-			if (errors) return;
+			if (errors) {
+				this.$store.commit("addDebugger", {
+					title: "Ошибка.",
+					body: "Заполните все обязательные поля.",
+					type: "error",
+				});
+
+				return;
+			}
 
 			let formData = new FormData();
-			formData.append("image", this.$refs.fileUpload.files[0]);
+			formData.append("image", this.$refs.fileImage.files()[0]);
 			formData.append("formats", ["png", "webp"]);
 			formData.append("profile", JSON.stringify(this.specialist.profile.data));
 
@@ -2126,7 +1945,7 @@ export default {
 					if (!response) return;
 
 					shared.clearObjectSelective(this.specialist.profile, "data", ["edited"]);
-					this.$refs.fileUpload.value = null;
+					this.$refs.fileImage.clear();
 
 					//
 					this.disabled.profile.create = false;
@@ -2154,6 +1973,8 @@ export default {
 
 		/* Сохранение всех данных */
 		saveSpecialistAll() {
+			let errors = 0;
+
 			if (
 				validate.checkInputsAll(this.specialist.profile, [
 					{
@@ -2190,7 +2011,7 @@ export default {
 					},
 				])
 			)
-				return;
+				errors++;
 
 			/* Если есть приём у детей */
 			if (this.specialist.profile.data.childrenDoctor.value) {
@@ -2202,22 +2023,32 @@ export default {
 						},
 					])
 				)
-					return;
+					errors++;
 			}
 
 			/* Если загружен файл */
-			if (this.$refs.fileUpload.files[0]) {
+			if (this.$refs.fileImage.files().length > 0) {
 				if (
 					validate.checkInputsAll(this.specialist.profile, [
 						{
 							key: "file",
 							type: "file",
-							value: this.$refs.fileUpload.files,
+							value: this.$refs.fileImage.files(),
 							formats: ["png", "webp"],
 						},
 					])
 				)
-					return;
+					errors++;
+			}
+
+			if (errors) {
+				this.$store.commit("addDebugger", {
+					title: "Ошибка.",
+					body: "Заполните все обязательные поля.",
+					type: "error",
+				});
+
+				return;
 			}
 
 			this.disabled.profile.save = true;
@@ -2226,7 +2057,7 @@ export default {
 			formData.append("type", "all");
 
 			// Данные блока профиля
-			formData.append("image", this.$refs.fileUpload.files[0]);
+			formData.append("image", this.$refs.fileImage.files()[0]);
 			formData.append("formats", ["png", "webp"]);
 			formData.append("profile", JSON.stringify(this.specialist.profile.data));
 
@@ -2261,7 +2092,7 @@ export default {
 					// Замена изображения профиля
 					if (response.data.result.imagePath != null) {
 						shared.clearObjectSelective(this.specialist.profile, "data", ["edited"]);
-						this.$refs.fileUpload.value = "";
+						this.$refs.fileImage.clear();
 
 						this.specialist.profile.data.path.value = response.data.result.imagePath;
 						this.specialist.profile.data.filename.value = files.basename(
@@ -2971,8 +2802,6 @@ export default {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
-
-	margin-top: -10px;
 }
 
 .specializations-list {
@@ -3086,7 +2915,7 @@ export default {
 .container-profile-other {
 	display: flex;
 	flex-direction: column;
-	gap: 20px;
+	gap: 10px;
 
 	animation: show-bottom-to-top-15 0.4s ease-in-out;
 }

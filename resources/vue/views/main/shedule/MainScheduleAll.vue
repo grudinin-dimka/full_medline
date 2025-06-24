@@ -266,7 +266,7 @@
 </template>
 
 <script>
-import Selector from "../../../components/modules/Selector.vue";
+import Selector from "../../../components/modules/VueSelector.vue";
 
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";

@@ -106,7 +106,7 @@ import Empty from "../../../components/modules/Empty.vue";
 
 import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
 import ContainerInputSearch from "../../../components/ui/admin/containers/input/ContainerInputSearch.vue";
-import Selector from "../../../components/modules/Selector.vue";
+import Selector from "../../../components/modules/VueSelector.vue";
 
 import Icon from "../../../components/modules/icon/Icon.vue";
 

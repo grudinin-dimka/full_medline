@@ -4,7 +4,7 @@
 		<input
 			class="checkbox-input"
 			type="checkbox"
-			v-model="selectedCheckbox"
+			v-model="currentCheckbox"
 			@change="$emit('update:modelValue', $event.target.checked)"
 		/>
 
@@ -32,7 +32,19 @@
 			<slot name="label"></slot>
 		</div>
 
-		<template v-if="type == 'phone'">
+		<template v-if="type == 'number'">
+			<input
+				v-model="currentNumber"
+				type="number"
+				:min="min"
+				:max="max"
+				:placeholder="placeholder"
+				:autocomplete="autocomplete"
+				@input.prevent="guardInput('number', $event.target.value.trim())"
+			/>
+		</template>
+
+		<template v-else-if="type == 'phone'">
 			<input
 				type="tel"
 				placeholder="+7(___)-___-__-__"
@@ -158,13 +170,9 @@
 		</template>
 
 		<template v-else-if="type == 'select'">
-			<select v-model="selectedOption" @change="onSelectChange($event.target.value)">
+			<select v-model="currentOption">
 				<template v-for="item in options">
-					<option v-if="item?.default" :value="item.value" :disabled="item?.disabled ?? false">
-						{{ item.label }}
-					</option>
-
-					<option v-else :value="item.value">
+					<option :value="item.value" :disabled="item?.disabled ?? false">
 						{{ item.label }}
 					</option>
 				</template>
@@ -204,6 +212,14 @@ export default {
 			type: String,
 			default: "text",
 		},
+		min: {
+			type: Number,
+			default: null,
+		},
+		max: {
+			type: Number,
+			default: null,
+		},
 		placeholder: {
 			type: String,
 			default: "Введите значение",
@@ -228,36 +244,24 @@ export default {
 			fileName: "",
 			hasFile: false,
 
-			selectedOption: "",
-			selectedCheckbox: false,
+			currentNumber: this.modelValue,
+			currentOption: this.modelValue, // инициализируем значением modelValue
+			currentCheckbox: false,
 		};
 	},
 	watch: {
-		modelValue: {
-			handler(newValue, oldValue) {
-				if (!newValue) {
-					switch (this.type) {
-						case "select":							
-							this.selectedOption = "";
-							break;
-						case "checkbox":
-							this.selectedCheckbox = false;
-						default:
-							break;
-					}
-				} else {
-					switch (this.type) {
-						case "select":							
-							this.selectedOption = newValue;
-							break;
-						case "checkbox":
-							this.selectedCheckbox = newValue;
-						default:
-							break;
-					}
-				}
-			},
-			immediate: true, // Вызывается при инициализации компонента
+		modelValue(newValue) {
+			if (this.type == "select") {
+				this.currentOption = newValue;
+			}
+		},
+
+		currentOption(newValue) {
+			this.$emit("update:modelValue", newValue);
+		},
+
+		currentNumber(newValue) {
+			this.$emit("update:modelValue", newValue);
 		},
 	},
 	selectedValues: {
@@ -274,7 +278,7 @@ export default {
 		},
 
 		onSelectChange(value) {
-			this.selectedOption = value;
+			this.currentOption = value;
 			this.$emit("update:modelValue", value); // Обновляем родительское значение
 		},
 
@@ -298,17 +302,25 @@ export default {
 				this.fileName = event.target.files[0].name;
 			}
 		},
-	},
-	created() {
-		if (this.type === "select") {
-			let initialOption = this.options.find((opt) => opt.value === this.modelValue);
-			
-			if (initialOption) {
-				this.selectedOption = this.modelValue;
-			} else {
-				this.selectedOption = ""; 
+
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                     ПРОФИЛЬ                       |*/
+		/* |___________________________________________________|*/
+		guardInput(type, value) {
+			if (type == "number") {
+				this.currentNumber = this.guardInputNumber(value);
 			}
-		}
+		},
+
+		guardInputNumber(value) {
+			if (value > this.max) {
+				return this.max;
+			} else if (value < this.min) {
+				return this.min;
+			}
+
+			return value;
+		},
 	},
 };
 </script>
@@ -341,7 +353,7 @@ export default {
 .input__icon-search {
 	cursor: pointer;
 	position: absolute;
-	top: 8px;
+	top: 22px;
 	right: 18px;
 
 	fill: var(--input-search-icon-color);
@@ -497,7 +509,7 @@ export default {
 
 	font-size: 1.25rem;
 	white-space: nowrap;
-	overflow: hidden;;
+	overflow: hidden;
 
 	color: var(--input-color);
 	background-color: var(--input-background-color);
