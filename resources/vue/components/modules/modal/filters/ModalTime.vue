@@ -2,25 +2,23 @@
 	<Modal ref="modal" :settings="modal">
 		<template #title>Диапазон</template>
 		<template #body>
-			<ContainerInput>
-				<ContainerInputOnce
-					v-model.trim="currentModal.data.start.value"
-					:type="'datetime-local'"
-					:error="currentModal.errors.start.status"
-				>
-					<template #label> От </template>
-					<template #error> {{ currentModal.errors.start.message }} </template>
-				</ContainerInputOnce>
+			<VueInput
+				v-model="currentModal.data.start.value"
+				:type="'datetime-local'"
+				:error="currentModal.errors.start.status"
+			>
+				<template #label> От </template>
+				<template #error> {{ currentModal.errors.start.message }} </template>
+			</VueInput>
 
-				<ContainerInputOnce
-					v-model.trim="currentModal.data.end.value"
-					:type="'datetime-local'"
-					:error="currentModal.errors.end.status"
-				>
-					<template #label> До </template>
-					<template #error> {{ currentModal.errors.end.message }} </template>
-				</ContainerInputOnce>
-			</ContainerInput>
+			<VueInput
+				v-model="currentModal.data.end.value"
+				:type="'datetime-local'"
+				:error="currentModal.errors.end.status"
+			>
+				<template #label> До </template>
+				<template #error> {{ currentModal.errors.end.message }} </template>
+			</VueInput>
 		</template>
 		<template #footer>
 			<ButtonDefault @click="submit">Применить</ButtonDefault>
@@ -31,8 +29,7 @@
 <script>
 import Modal from "../Modal.vue";
 
-import ContainerInput from "../../input/ContainerInput.vue";
-import ContainerInputOnce from "../../input/ContainerInputOnce.vue";
+import VueInput from "../../VueInput.vue";
 
 import ButtonDefault from "../../../ui/admin/buttons/ButtonDefault.vue";
 
@@ -40,9 +37,7 @@ export default {
 	emits: ["changed"],
 	components: {
 		Modal,
-
-		ContainerInput,
-		ContainerInputOnce,
+		VueInput,
 
 		ButtonDefault,
 	},
@@ -99,12 +94,12 @@ export default {
 		submit() {
 			this.field.from = this.currentModal.data.start.value;
 			this.field.to = this.currentModal.data.end.value;
-			
+
 			// Заполнение поля, чтобы сортировка работала
 			this.field.filter = "on";
 
 			this.$emit("changed", this.field);
-			
+
 			this.$refs.modal.close();
 		},
 	},

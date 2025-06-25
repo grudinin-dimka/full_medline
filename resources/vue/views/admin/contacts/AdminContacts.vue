@@ -237,7 +237,7 @@
 <script>
 import Modal from "../../../components/modules/modal/Modal.vue";
 import ModalList from "../../../components/modules/modal/ModalList.vue";
-import VueInput from "../../../components/modules/VueInput.vue";
+import VueInput from "../../../components/modules/input/VueInput.vue";
 
 import AdminContactsList from "./AdminContactsList.vue";
 

@@ -222,7 +222,7 @@ import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import Empty from "../../../components/modules/Empty.vue";
 
-import VueInput from "../../../components/modules/VueInput.vue";
+import VueInput from "../../../components/modules/input/VueInput.vue";
 import VueTiptap from "../../../components/modules/VueTiptap.vue";
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";

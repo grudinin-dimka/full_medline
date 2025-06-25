@@ -300,7 +300,7 @@ import Modal from "../../components/modules/modal/Modal.vue";
 import InfoBar from "../../components/ui/admin/InfoBar.vue";
 import VueTiptap from "../../components/modules/VueTiptap.vue";
 
-import VueInput from "../../components/modules/VueInput.vue";
+import VueInput from "../../components/modules/input/VueInput.vue";
 
 import BlockOnce from "../../components/ui/admin/blocks/BlockOnce.vue";
 

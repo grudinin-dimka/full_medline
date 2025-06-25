@@ -47,7 +47,7 @@
 <script>
 import Debugger from "../components/modules/Debugger.vue";
 import Loader from "../components/modules/loader.vue";
-import VueInput from "../components/modules/VueInput.vue";
+import VueInput from "../components/modules/input/VueInput.vue";
 
 import axios from "axios";
 

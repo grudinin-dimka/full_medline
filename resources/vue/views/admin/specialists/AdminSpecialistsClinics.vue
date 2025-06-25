@@ -186,8 +186,8 @@
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import Modal from "../../../components/modules/modal/Modal.vue";
 import BaseTable from "../../../components/modules/table/BaseTable.vue";
-import VueInput from "../../../components/modules/VueInput.vue";
-import VueInputContainer from "../../../components/modules/VueInputContainer.vue";
+import VueInput from "../../../components/modules/input/VueInput.vue";
+import VueInputContainer from "../../../components/modules/input/VueInputContainer.vue";
 
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 

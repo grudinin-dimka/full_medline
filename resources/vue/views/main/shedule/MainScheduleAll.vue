@@ -270,7 +270,7 @@
 
 <script>
 import VueSelector from "../../../components/modules/VueSelector.vue";
-import VueInput from "../../../components/modules/VueInput.vue";
+import VueInput from "../../../components/modules/input/VueInput.vue";
 
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";

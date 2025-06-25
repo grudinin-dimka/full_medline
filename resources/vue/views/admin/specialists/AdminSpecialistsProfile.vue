@@ -1023,8 +1023,8 @@ import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTwo from "../../../components/ui/admin/blocks/BlockTwo.vue";
 
-import VueInput from "../../../components/modules/VueInput.vue";
-import VueInputContainer from "../../../components/modules/VueInputContainer.vue";
+import VueInput from "../../../components/modules/input/VueInput.vue";
+import VueInputContainer from "../../../components/modules/input/VueInputContainer.vue";
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 import ButtonDisabled from "../../../components/ui/admin/buttons/ButtonDisabled.vue";

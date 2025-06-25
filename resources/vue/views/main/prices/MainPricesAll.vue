@@ -105,7 +105,7 @@ import Filter from "../../../components/modules/filter/VueFilter.vue";
 import Empty from "../../../components/modules/Empty.vue";
 
 import VueSelector from "../../../components/modules/VueSelector.vue";
-import VueInput from "../../../components/modules/VueInput.vue";
+import VueInput from "../../../components/modules/input/VueInput.vue";
 
 import Icon from "../../../components/modules/icon/Icon.vue";
 

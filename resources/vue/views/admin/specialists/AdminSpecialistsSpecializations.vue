@@ -84,7 +84,7 @@ import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import BaseTable from "../../../components/modules/table/BaseTable.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
-import VueInput from "../../../components/modules/VueInput.vue";
+import VueInput from "../../../components/modules/input/VueInput.vue";
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";

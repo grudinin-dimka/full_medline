@@ -89,7 +89,7 @@ import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import Modal from "../../../components/modules/modal/Modal.vue";
 import Empty from "../../../components/modules/Empty.vue";
 import BaseTable from "../../../components/modules/table/BaseTable.vue";
-import VueInput from "../../../components/modules/VueInput.vue";
+import VueInput from "../../../components/modules/input/VueInput.vue";
 
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTitle from "../../../components/ui/admin/blocks/BlockTitle.vue";

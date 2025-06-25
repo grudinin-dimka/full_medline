@@ -184,7 +184,7 @@
 import Modal from "../../../modules/modal/Modal.vue";
 import Captcha from "../../../modules/Captcha.vue";
 
-import VueInput from "../../../modules/VueInput.vue";
+import VueInput from "../../../modules/input/VueInput.vue";
 
 import ButtonDefault from "../../../ui/admin/buttons/ButtonDefault.vue";
 

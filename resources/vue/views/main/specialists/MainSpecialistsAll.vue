@@ -44,7 +44,7 @@ import InfoBar from "../../../components/ui/main/InfoBar.vue";
 
 import Filters from "../../../components/ui/main/Filters.vue";
 import Selector from "../../../components/modules/VueSelector.vue";
-import VueInput from "../../../components/modules/VueInput.vue";
+import VueInput from "../../../components/modules/input/VueInput.vue";
 
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import SpecialistsList from "./MainSpecialistsAllList.vue";

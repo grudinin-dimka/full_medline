@@ -201,7 +201,7 @@ import Block from "../../../components/ui/main/Block.vue";
 import LoadText from "../../../components/ui/main/LoadText.vue";
 
 import VueFilter from "../../../components/modules/filter/VueFilter.vue";
-import VueInput from "../../../components/modules/VueInput.vue";
+import VueInput from "../../../components/modules/input/VueInput.vue";
 
 import Empty from "../../../components/modules/Empty.vue";
 

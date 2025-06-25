@@ -71,7 +71,7 @@ import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import Empty from "../../../components/modules/Empty.vue";
 import LoadText from "../../../components/ui/main/LoadText.vue";
 
-import VueInput from "../../../components/modules/VueInput.vue";
+import VueInput from "../../../components/modules/input/VueInput.vue";
 
 import api from "../../../services/api";
 

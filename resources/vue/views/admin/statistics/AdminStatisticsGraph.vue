@@ -97,9 +97,8 @@
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTwo from "../../../components/ui/admin/blocks/BlockTwo.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
-import VueInput from "../../../components/modules/VueInput.vue";
+import VueInput from "../../../components/modules/input/VueInput.vue";
 
-import ContainerInputOnce from "../../../components/modules/input/ContainerInputOnce.vue";
 import BaseTable from "../../../components/modules/table/BaseTable.vue";
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
@@ -120,7 +119,6 @@ export default {
 
 		Icon,
 
-		ContainerInputOnce,
 		BaseTable,
 	},
 	data() {

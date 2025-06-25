@@ -266,13 +266,19 @@ export default {
 
 			currentNumber: this.modelValue,
 			currentOption: this.modelValue, // инициализируем значением modelValue
-			currentCheckbox: false,
+			currentCheckbox: this.modelValue,
 		};
 	},
 	watch: {
 		modelValue(newValue) {
-			if (this.type == "select") {
-				this.currentOption = newValue;
+			switch (this.type) {
+				case "select":
+					this.currentOption = newValue;
+					break;
+
+				case "checkbox":
+					this.currentCheckbox = newValue;
+					break;
 			}
 		},
 

@@ -394,8 +394,8 @@ import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import Modal from "../../../components/modules/modal/Modal.vue";
 import PasswordGenerator from "../../../components/modules/PasswordGenerator.vue";
 
-import VueInput from "../../../components/modules/VueInput.vue";
-import VueInputContainer from "../../../components/modules/VueInputContainer.vue";
+import VueInput from "../../../components/modules/input/VueInput.vue";
+import VueInputContainer from "../../../components/modules/input/VueInputContainer.vue";
 
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 
