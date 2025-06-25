@@ -8,189 +8,124 @@
 		</template>
 
 		<template #body>
-			<container-input>
-				<!-- Название и другое -->
-				<container-input-two :fieldset="true">
-					<template #legend>
-						<span>НАЗВАНИЕ И ДРУГОЕ</span>
-					</template>
-					<!-- НАЗВАНИЕ -->
-					<template #title-one>
-						НАЗВАНИЕ*<span v-if="currentClinic.data.name.edited">(ИЗМЕНЕНО)</span>
-					</template>
-					<template #input-one>
-						<input
-							type="text"
-							placeholder="Введите название"
-							autocomplete="off"
-							:class="{ error: currentClinic.errors.name.status }"
-							v-model="currentClinic.data.name.value"
-							@input="currentClinic.data.name.edited = true"
-						/>
-					</template>
-					<template #error-one>
-						<span class="error" v-if="currentClinic.errors.name.status">
+			<VueInputContainer :direction="'row'" :count="2" :gap="'10px'">
+				<template #legend> НАЗВАНИЕ И ДРУГОЕ </template>
+				<template #inputs>
+					<VueInput
+						v-model="currentClinic.data.name.value"
+						:type="'text'"
+						:placeholder="'Введите название'"
+						:error="currentClinic.errors.name.status"
+					>
+						<template #label> НАЗВАНИЕ </template>
+						<template #error>
 							{{ currentClinic.errors.name.message }}
-						</span>
-					</template>
-					<!-- ДРУГОЕ -->
-					<template #title-two>
-						ДРУГОЕ <span v-if="currentClinic.data.other.edited">(ИЗМЕНЕНО)</span>
-					</template>
-					<template #input-two>
-						<input
-							type="text"
-							placeholder="Введите другое"
-							autocomplete="off"
-							v-model="currentClinic.data.other.value"
-							@input="currentClinic.data.other.edited = true"
-						/>
-					</template>
-					<template #error-two>
-						<span class="error" v-if="currentClinic.errors.other.status">
+						</template>
+					</VueInput>
+
+					<VueInput
+						v-model="currentClinic.data.other.value"
+						:type="'text'"
+						:placeholder="'Введите другое'"
+						:error="currentClinic.errors.other.status"
+					>
+						<template #label> ДРУГОЕ </template>
+						<template #error>
 							{{ currentClinic.errors.other.message }}
-						</span>
-					</template>
-				</container-input-two>
+						</template>
+					</VueInput>
+				</template>
+			</VueInputContainer>
 
-				<!-- Город и улица -->
-				<container-input-two :fieldset="true">
-					<template #legend>
-						<span>ГОРОД И УЛИЦА</span>
-					</template>
-					<!-- Город -->
-					<template #title-one>
-						ГОРОД* <span v-if="currentClinic.data.city.edited">(ИЗМЕНЕНО)</span>
-					</template>
-					<template #input-one>
-						<input
-							type="text"
-							placeholder="Введите город"
-							autocomplete="off"
-							:class="{ error: currentClinic.errors.city.status }"
-							v-model="currentClinic.data.city.value"
-							@input="currentClinic.data.city.edited = true"
-						/>
-					</template>
-					<template #error-one>
-						<span class="error" v-if="currentClinic.errors.city.status">
+			<VueInputContainer :direction="'row'" :count="2" :gap="'10px'">
+				<template #legend> ГОРОД И УЛИЦА </template>
+				<template #inputs>
+					<VueInput
+						v-model="currentClinic.data.city.value"
+						:type="'text'"
+						:placeholder="'Введите город'"
+						:error="currentClinic.errors.city.status"
+					>
+						<template #label> ГОРОД </template>
+						<template #error>
 							{{ currentClinic.errors.city.message }}
-						</span>
-					</template>
-					<!-- УЛИЦА -->
-					<template #title-two>
-						УЛИЦА* <span v-if="currentClinic.data.street.edited">(ИЗМЕНЕНО)</span>
-					</template>
-					<template #input-two>
-						<input
-							type="text"
-							placeholder="Введите улицу"
-							autocomplete="off"
-							:class="{ error: currentClinic.errors.street.status }"
-							v-model="currentClinic.data.street.value"
-							@input="currentClinic.data.street.edited = true"
-						/>
-					</template>
-					<template #error-two>
-						<span class="error" v-if="currentClinic.errors.street.status">
+						</template>
+					</VueInput>
+
+					<VueInput
+						v-model="currentClinic.data.street.value"
+						:type="'text'"
+						:placeholder="'Введите улицу'"
+						:error="currentClinic.errors.street.status"
+					>
+						<template #label> УЛИЦА </template>
+						<template #error>
 							{{ currentClinic.errors.street.message }}
-						</span>
-					</template>
-				</container-input-two>
+						</template>
+					</VueInput>
+				</template>
+			</VueInputContainer>
 
-				<!-- Дом и индекс -->
-				<container-input-two :fieldset="true">
-					<template #legend>
-						<span>ДОМ И ИНДЕКС</span>
-					</template>
-					<!-- ДОМ -->
-					<template #title-one>
-						ДОМ* <span v-if="currentClinic.data.home.edited">(ИЗМЕНЕНО)</span>
-					</template>
-					<template #input-one>
-						<input
-							type="text"
-							placeholder="Введите дом"
-							autocomplete="off"
-							:class="{ error: currentClinic.errors.home.status }"
-							v-model="currentClinic.data.home.value"
-							@input="currentClinic.data.home.edited = true"
-						/>
-					</template>
-					<template #error-one>
-						<span class="error" v-if="currentClinic.errors.home.status">
+			<VueInputContainer :direction="'row'" :count="2" :gap="'10px'">
+				<template #legend> ДОМ И ИНДЕКС </template>
+				<template #inputs>
+					<VueInput
+						v-model="currentClinic.data.home.value"
+						:type="'text'"
+						:placeholder="'Введите дом'"
+						:error="currentClinic.errors.home.status"
+					>
+						<template #label> ДОМ </template>
+						<template #error>
 							{{ currentClinic.errors.home.message }}
-						</span>
-					</template>
-					<!-- ИНДЕКС -->
-					<template #title-two>
-						ИНДЕКС* <span v-if="currentClinic.data.index.edited">(ИЗМЕНЕНО)</span>
-					</template>
-					<template #input-two>
-						<input
-							type="tel"
-							v-mask="'######'"
-							placeholder="______"
-							autocomplete="off"
-							:class="{ error: currentClinic.errors.index.status }"
-							v-model="currentClinic.data.index.value"
-							@input="currentClinic.data.index.edited = true"
-						/>
-					</template>
-					<template #error-two>
-						<span class="error" v-if="currentClinic.errors.index.status">
-							{{ currentClinic.errors.index.message }}
-						</span>
-					</template>
-				</container-input-two>
+						</template>
+					</VueInput>
 
-				<!-- Географические координаты -->
-				<container-input-two :fieldset="true">
-					<template #legend>
-						<span>ГЕОГРАФИЧЕСКИЕ КООРДИНАТЫ</span>
-					</template>
-					<!-- Ширина -->
-					<template #title-one>
-						ШИРИНА* <span v-if="currentClinic.data.geoWidth.edited">(ИЗМЕНЕНО)</span>
-					</template>
-					<template #input-one>
-						<input
-							type="tel"
-							autocomplete="off"
-							placeholder="00.000000"
-							v-mask="'##.######'"
-							:class="{ error: currentClinic.errors.geoWidth.status }"
-							v-model="currentClinic.data.geoWidth.value"
-							@input="currentClinic.data.geoWidth.edited = true"
-						/>
-					</template>
-					<template #error-one>
-						<span class="error" v-if="currentClinic.errors.geoWidth.status">
+					<VueInput
+						v-model="currentClinic.data.index.value"
+						:type="'mask'"
+						:mask="'######'"
+						:placeholder="'______'"
+						:error="currentClinic.errors.index.status"
+					>
+						<template #label> ИНДЕКС </template>
+						<template #error>
+							{{ currentClinic.errors.index.message }}
+						</template>
+					</VueInput>
+				</template>
+			</VueInputContainer>
+
+			<VueInputContainer :direction="'row'" :count="2" :gap="'10px'">
+				<template #legend> ГЕОГРАФИЧЕСКИЕ КООРДИНАТЫ </template>
+				<template #inputs>
+					<VueInput
+						v-model="currentClinic.data.geoWidth.value"
+						:type="'mask'"
+						:mask="'##.######'"
+						:placeholder="'00.000000'"
+						:error="currentClinic.errors.geoWidth.status"
+					>
+						<template #label> ШИРИНА </template>
+						<template #error>
 							{{ currentClinic.errors.geoWidth.message }}
-						</span>
-					</template>
-					<!-- Долгота -->
-					<template #title-two>
-						ДОЛГОТА* <span v-if="currentClinic.data.geoLongitude.edited">(ИЗМЕНЕНО)</span>
-					</template>
-					<template #input-two>
-						<input
-							type="tel"
-							autocomplete="off"
-							placeholder="00.000000"
-							v-mask="'##.######'"
-							:class="{ error: currentClinic.errors.geoLongitude.status }"
-							v-model="currentClinic.data.geoLongitude.value"
-							@input="currentClinic.data.geoLongitude.edited = true"
-						/>
-					</template>
-					<template #error-two>
-						<span class="error" v-if="currentClinic.errors.geoLongitude.status">
+						</template>
+					</VueInput>
+
+					<VueInput
+						v-model="currentClinic.data.geoLongitude.value"
+						:type="'mask'"
+						:mask="'##.######'"
+						:placeholder="'00.000000'"
+						:error="currentClinic.errors.geoLongitude.status"
+					>
+						<template #label> ДОЛГОТА </template>
+						<template #error>
 							{{ currentClinic.errors.geoLongitude.message }}
-						</span>
-					</template>
-				</container-input-two>
-			</container-input>
+						</template>
+					</VueInput>
+				</template>
+			</VueInputContainer>
 		</template>
 
 		<template #footer>
@@ -252,15 +187,11 @@ import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import Modal from "../../../components/modules/modal/Modal.vue";
 import BaseTable from "../../../components/modules/table/BaseTable.vue";
 import VueInput from "../../../components/modules/VueInput.vue";
+import VueInputContainer from "../../../components/modules/VueInputContainer.vue";
 
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
-
-import ContainerInput from "../../../components/ui/admin/containers/ContainerInput.vue";
-import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
-import ContainerInputTwo from "../../../components/ui/admin/containers/input/ContainerInputTwo.vue";
-import ContainerInputThree from "../../../components/ui/admin/containers/input/ContainerInputThree.vue";
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
@@ -279,13 +210,9 @@ export default {
 		BaseTable,
 		LoaderChild,
 		VueInput,
+		VueInputContainer,
 
 		BlockOnce,
-
-		ContainerInput,
-		ContainerInputOnce,
-		ContainerInputTwo,
-		ContainerInputThree,
 
 		ButtonDefault,
 		ButtonRemove,

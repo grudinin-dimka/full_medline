@@ -16,7 +16,7 @@
 		<template v-if="loading.sections.group">
 			<div class="price__group" v-if="group.length > 0">
 				<div class="price__group__search">
-					<ContainerInputSearch v-model="search" :placeholder="'Введите услугу'" />
+					<VueInput v-model="search" :type="'search'" :placeholder="'Введите услугу'" />
 				</div>
 
 				<div class="price__group__list">
@@ -71,7 +71,7 @@ import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import Empty from "../../../components/modules/Empty.vue";
 import LoadText from "../../../components/ui/main/LoadText.vue";
 
-import ContainerInputSearch from "../../../components/ui/admin/containers/input/ContainerInputSearch.vue";
+import VueInput from "../../../components/modules/VueInput.vue";
 
 import api from "../../../services/api";
 
@@ -83,7 +83,7 @@ export default {
 		Empty,
 		LoadText,
 
-		ContainerInputSearch,
+		VueInput,
 	},
 	data() {
 		return {

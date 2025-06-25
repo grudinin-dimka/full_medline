@@ -7,47 +7,33 @@
 		<div class="login">
 			<div class="logo">
 				<!-- NOTE: Логотип в логине -->
-				<img src="../assets/svg/medline/logo.svg" alt="логотип" width="130"/>
+				<img src="../assets/svg/medline/logo.svg" alt="логотип" width="130" />
 			</div>
 			<container-input>
-				<container-input-once :type="'edit'">
-					<template #title>
-						<span>ЛОГИН</span>
-					</template>
-					<template #input>
-						<input
-							type="text"
-							placeholder="Введите логин"
-							v-model="currentLogin.data.name.body"
-							:class="{ error: currentLogin.errors.name.status }"
-							@blur="checkModalInput('currentLogin', 'name', 'text')"
-						/>
-					</template>
+				<VueInput
+					:placeholder="'Введите логин'"
+					:type="'text'"
+					v-model="currentLogin.data.name.body"
+					:error="currentLogin.errors.name.status"
+				>
+					<template #label> ЛОГИН </template>
 					<template #error>
-						<span class="error" v-if="currentLogin.errors.name.status">
-							{{ currentLogin.errors.name.body }}
-						</span>
+						{{ currentLogin.errors.name.message }}
 					</template>
-				</container-input-once>
-				<container-input-once :type="'edit'">
-					<template #title>
-						<span>ПАРОЛЬ</span>
-					</template>
-					<template #input>
-						<input
-							type="password"
-							placeholder="Введите пароль"
-							v-model="currentLogin.data.password.body"
-							:class="{ error: currentLogin.errors.password.status }"
-							@blur="checkModalInput('currentLogin', 'password', 'text')"
-						/>
-					</template>
+				</VueInput>
+
+				<VueInput
+					:placeholder="'Введите пароль'"
+					:type="'password'"
+					v-model="currentLogin.data.password.body"
+					:error="currentLogin.errors.password.status"
+				>
+					<template #label> ПАРОЛЬ </template>
 					<template #error>
-						<span class="error" v-if="currentLogin.errors.password.status">
-							{{ currentLogin.errors.password.body }}
-						</span>
+						{{ currentLogin.errors.password.message }}
 					</template>
-				</container-input-once>
+				</VueInput>
+				
 				<div class="buttons">
 					<ButtonDefault @click="loginUser" :disabled="disabled.login.update">
 						Войти
@@ -61,11 +47,10 @@
 <script>
 import Debugger from "../components/modules/Debugger.vue";
 import Loader from "../components/modules/loader.vue";
+import VueInput from "../components/modules/VueInput.vue";
 
 import axios from "axios";
 
-import ContainerInput from "../components/ui/admin/containers/ContainerInput.vue";
-import ContainerInputOnce from "../components/ui/admin/containers/input/ContainerInputOnce.vue";
 import ButtonDefault from "../components/ui/admin/buttons/ButtonDefault.vue";
 
 import validate from "../services/validate";
@@ -74,12 +59,10 @@ export default {
 	components: {
 		Debugger,
 		Loader,
+		VueInput,
 
 		ButtonDefault,
 
-		ContainerInput,
-		ContainerInputOnce,
-		
 		axios,
 		validate,
 	},

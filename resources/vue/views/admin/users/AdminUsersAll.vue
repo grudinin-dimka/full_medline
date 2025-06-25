@@ -17,245 +17,154 @@
 						:style="{ backgroundImage: `url(/storage/default/avatar.png)` }"
 					></div>
 				</div>
-				<!-- Фамилия, имя, отчество -->
-				<container-input-three :fieldset="true">
-					<template #legend> Ф.И.О. </template>
-					<!-- Первая -->
-					<template #title-one>
-						<span>ФАМИЛИЯ*</span>
-						<span v-if="currentUser.data.family.edited"> (ИЗМЕНЕНО)</span>
-					</template>
-					<template #input-one>
-						<input
-							type="text"
-							placeholder="Введите фамилию"
-							autocomplete="off"
-							:class="{ error: currentUser.errors.family.status }"
+
+				<VueInputContainer :direction="'column'" :gap="'10px'">
+					<template #legend> ФИО </template>
+					<template #inputs>
+						<VueInput
 							v-model="currentUser.data.family.value"
-							@input="currentUser.data.family.edited = true"
-						/>
-					</template>
-					<template #error-one>
-						<span class="error" v-if="currentUser.errors.family.status">
-							{{ currentUser.errors.family.message }}
-						</span>
-					</template>
-					<!-- Вторник -->
-					<template #title-two>
-						<span>ИМЯ*</span>
-						<span v-if="currentUser.data.name.edited"> (ИЗМЕНЕНО)</span>
-					</template>
-					<template #input-two>
-						<input
-							type="text"
-							placeholder="Введите имя"
-							autocomplete="off"
-							:class="{ error: currentUser.errors.name.status }"
+							:type="'text'"
+							:placeholder="'Введите фамилию'"
+							:error="currentUser.errors.family.status"
+						>
+							<template #label> ФАМИЛИЯ </template>
+							<template #error>
+								{{ currentUser.errors.family.message }}
+							</template>
+						</VueInput>
+
+						<VueInput
 							v-model="currentUser.data.name.value"
-							@input="currentUser.data.name.edited = true"
-						/>
-					</template>
-					<template #error-two>
-						<span class="error" v-if="currentUser.errors.name.status">
-							{{ currentUser.errors.name.message }}
-						</span>
-					</template>
-					<!-- Среда -->
-					<template #title-three>
-						<span>ОТЧЕСТВО</span>
-						<span v-if="currentUser.data.surname.edited"> (ИЗМЕНЕНО)</span>
-					</template>
-					<template #input-three>
-						<input
-							type="text"
-							placeholder="Введите отчество"
-							autocomplete="off"
+							:type="'text'"
+							:placeholder="'Введите имя'"
+							:error="currentUser.errors.name.status"
+						>
+							<template #label> ИМЯ </template>
+							<template #error>
+								{{ currentUser.errors.name.message }}
+							</template>
+						</VueInput>
+
+						<VueInput
 							v-model="currentUser.data.surname.value"
-							@input="currentUser.data.surname.edited = true"
-						/>
+							:type="'text'"
+							:placeholder="'Введите отчество'"
+							:error="currentUser.errors.surname.status"
+						>
+							<template #label> ОТЧЕСТВО </template>
+							<template #error>
+								{{ currentUser.errors.surname.message }}
+							</template>
+						</VueInput>
 					</template>
-					<template #error-three>
-						<span class="error" v-if="currentUser.errors.surname.status">
-							{{ currentUser.errors.surname.status }}
-						</span>
-					</template>
-				</container-input-three>
+				</VueInputContainer>
 			</div>
 
-			<!-- Пароль и генератор пароля -->
-			<container-input-two :fieldset="true">
-				<template #legend>
-					<span>ПАРОЛЬ И ГЕНЕРАТОР</span>
-				</template>
-				<!-- Первый -->
-				<template #title-one>
-					ПАРОЛЬ <span v-if="currentUser.data.password.edited">(ИЗМЕНЕНО)</span>
-				</template>
-				<template #input-one>
-					<input
-						type="text"
-						placeholder="Введите пароль"
-						autocomplete="off"
-						:class="{ error: currentUser.errors.password.status }"
+			<VueInputContainer :direction="'column'" :gap="'10px'">
+				<template #legend> ПАРОЛЬ И ГЕНЕРАТОР </template>
+				<template #inputs>
+					<VueInput
 						v-model="currentUser.data.password.value"
-						@input="currentUser.data.password.edited = true"
-					/>
-				</template>
-				<template #error-one>
-					<span class="error" v-if="currentUser.errors.password.status">
-						{{ currentUser.errors.password.message }}
-					</span>
-				</template>
-				<!-- Второй -->
-				<template #title-two>ГЕНЕРАТОР</template>
-				<template #input-two>
+						:type="'text'"
+						:placeholder="'Введите пароль'"
+						:error="currentUser.errors.password.status"
+					>
+						<template #label> ПАРОЛЬ </template>
+						<template #error>
+							{{ currentUser.errors.password.message }}
+						</template>
+					</VueInput>
+
 					<PasswordGenerator />
 				</template>
-				<template #error-two>
-					<span class="error" v-if="false"> Ошибка </span>
-				</template>
-			</container-input-two>
+			</VueInputContainer>
 
-			<!-- Аватар и дата рождения -->
-			<container-input-two :fieldset="true">
-				<template #legend>
-					<span>АВАТАР И ДАТА РОЖДЕНИЯ</span>
-				</template>
-				<!-- Первый -->
-				<template #title-one> АВАТАР <span v-if="false">(ИЗМЕНЕНО)</span> </template>
-				<template #input-one>
-					<input
-						type="file"
-						autocomplete="off"
-						ref="fileUpload"
-						:class="{ error: currentUser.errors.file.status }"
-					/>
-				</template>
-				<template #error-one>
-					<span class="error" v-if="currentUser.errors.file.status">
-						{{ currentUser.errors.file.message }}
-					</span>
-				</template>
-				<!-- Второй -->
-				<template #title-two>
-					ДАТА РОЖДЕНИЯ* <span v-if="currentUser.data.dateOfBirth.edited">(ИЗМЕНЕНО)</span>
-				</template>
-				<template #input-two>
-					<input
-						type="date"
-						placeholder="Введите дату"
-						autocomplete="off"
-						:class="{ error: currentUser.errors.dateOfBirth.status }"
+			<VueInputContainer :direction="'row'" :count="2" :gap="'10px'">
+				<template #legend> АВАТАР И ДАТА РОЖДЕНИЯ </template>
+				<template #inputs>
+					<VueInput
+						:placeholder="'Загрузите файл'"
+						:type="'file'"
+						v-model="currentUser.data.file.value"
+						:error="currentUser.errors.file.status"
+						ref="fileImage"
+					>
+						<template #label> ИЗОБРАЖЕНИЕ </template>
+						<template #error>
+							{{ currentUser.errors.file.message }}
+						</template>
+					</VueInput>
+
+					<VueInput
 						v-model="currentUser.data.dateOfBirth.value"
-						@input="currentUser.data.dateOfBirth.edited = true"
-					/>
+						:type="'date'"
+						:error="currentUser.errors.dateOfBirth.status"
+					>
+						<template #label> ДАТА </template>
+						<template #error>
+							{{ currentUser.errors.dateOfBirth.message }}
+						</template>
+					</VueInput>
 				</template>
-				<template #error-two>
-					<span class="error" v-if="currentUser.errors.dateOfBirth.status">
-						{{ currentUser.errors.dateOfBirth.message }}
-					</span>
-				</template>
-			</container-input-two>
+			</VueInputContainer>
 
-			<!-- Почта и псевдоним -->
-			<container-input-two :fieldset="true">
-				<template #legend>
-					<span>ПОЧТА И ПСЕВДОНИМ</span>
-				</template>
-				<!-- Первый -->
-				<template #title-one>
-					ПОЧТА* <span v-if="currentUser.data.email.edited">(ИЗМЕНЕНО)</span>
-				</template>
-				<template #input-one>
-					<input
-						type="text"
-						placeholder="Введите почту"
-						autocomplete="off"
-						:class="{ error: currentUser.errors.email.status }"
+			<VueInputContainer :direction="'row'" :count="2" :gap="'10px'">
+				<template #legend> ПОЧТА И ПСЕВДОНИМ </template>
+				<template #inputs>
+					<VueInput
+						:placeholder="'test@mail.ru'"
+						:type="'mail'"
 						v-model="currentUser.data.email.value"
-						@input="currentUser.data.email.edited = true"
-					/>
-				</template>
-				<template #error-one>
-					<span class="error" v-if="currentUser.errors.email.status">
-						{{ currentUser.errors.email.message }}
-					</span>
-				</template>
-				<!-- Второй -->
-				<template #title-two>
-					ПСЕВДОНИМ* <span v-if="currentUser.data.nickname.edited">(ИЗМЕНЕНО)</span>
-				</template>
-				<template #input-two>
-					<input
-						type="text"
-						placeholder="Введите псевдоним"
-						autocomplete="off"
-						:class="{ error: currentUser.errors.nickname.status }"
+						:error="currentUser.errors.email.status"
+					>
+						<template #label> ПОЧТА </template>
+						<template #error>
+							{{ currentUser.errors.email.message }}
+						</template>
+					</VueInput>
+
+					<VueInput
+						:placeholder="'Введите псевдоним'"
+						:type="'text'"
 						v-model="currentUser.data.nickname.value"
-						@input="currentUser.data.nickname.edited = true"
-					/>
+						:error="currentUser.errors.nickname.status"
+					>
+						<template #label> ПСЕВДОНИМ </template>
+						<template #error>
+							{{ currentUser.errors.nickname.message }}
+						</template>
+					</VueInput>
 				</template>
-				<template #error-two>
-					<span class="error" v-if="currentUser.errors.nickname.status">
-						{{ currentUser.errors.nickname.message }}
-					</span>
-				</template>
-			</container-input-two>
+			</VueInputContainer>
 
-			<!-- Статус и права -->
-			<container-input-two :fieldset="true">
-				<template #legend>
-					<span>СТАТУС И ПРАВА</span>
-				</template>
-				<!-- Первый -->
-				<template #title-one> СТАТУС <span v-if="false">(ИЗМЕНЕНО)</span> </template>
-				<template #input-one>
-					<select
+			<VueInputContainer :direction="'row'" :count="2" :gap="'10px'">
+				<template #legend> ПОЧТА И ПСЕВДОНИМ </template>
+				<template #inputs>
+					<VueInput
 						v-model="currentUser.data.statusId.value"
-						:class="{ error: currentUser.errors.statusId.status }"
+						:options="filteredStatuses"
+						:type="'select'"
+						:error="currentUser.errors.statusId.status"
 					>
-						<template
-							v-if="
-								currentUser.data.statusId.value === '' ||
-								currentUser.data.statusId.value === null
-							"
-						>
-							<option :value="''" disabled>Выберите статус</option>
+						<template #label> СТАТУС </template>
+						<template #error>
+							{{ currentUser.errors.statusId.message }}
 						</template>
+					</VueInput>
 
-						<option :value="status.id" v-for="status in statuses">{{ status.name }}</option>
-					</select>
-				</template>
-				<template #error-one>
-					<span class="error" v-if="currentUser.errors.statusId.status">
-						{{ currentUser.errors.statusId.message }}
-					</span>
-				</template>
-				<!-- Второй -->
-				<template #title-two> ПРАВА <span v-if="false">(ИЗМЕНЕНО)</span> </template>
-				<template #input-two>
-					<select
+					<VueInput
 						v-model="currentUser.data.rightsId.value"
-						:class="{ error: currentUser.errors.rightsId.status }"
+						:options="filteredRights"
+						:type="'select'"
+						:error="currentUser.errors.rightsId.status"
 					>
-						<template
-							v-if="
-								currentUser.data.rightsId.value === '' ||
-								currentUser.data.rightsId.value === null
-							"
-						>
-							<option :value="''" disabled>Выберите права</option>
+						<template #label> ПРАВА </template>
+						<template #error>
+							{{ currentUser.errors.rightsId.message }}
 						</template>
-
-						<option :value="right.id" v-for="right in rights">{{ right.name }}</option>
-					</select>
+					</VueInput>
 				</template>
-				<template #error-two>
-					<span class="error" v-if="currentUser.errors.rightsId.status">
-						{{ currentUser.errors.rightsId.message }}
-					</span>
-				</template>
-			</container-input-two>
+			</VueInputContainer>
 		</template>
 
 		<template #footer>
@@ -285,25 +194,18 @@
 		</template>
 
 		<template #body>
-			<container-input>
-				<PasswordGenerator />
-				<container-input-once :type="'password'">
-					<template #title></template>
-					<template #input>
-						<input
-							type="text"
-							placeholder="Введите пароль"
-							:class="{ error: currentPassword.errors.password.status }"
-							v-model="currentPassword.data.password.value"
-						/>
-					</template>
-					<template #error>
-						<span class="error" v-if="currentPassword.errors.password.status">
-							{{ currentPassword.errors.password.message }}
-						</span>
-					</template>
-				</container-input-once>
-			</container-input>
+			<VueInput
+				v-model="currentPassword.data.password.value"
+				:type="'text'"
+				:placeholder="'Введите пароль'"
+				:error="currentPassword.errors.password.status"
+			>
+				<template #error>
+					{{ currentPassword.errors.password.message }}
+				</template>
+			</VueInput>
+
+			<PasswordGenerator />
 		</template>
 
 		<template #footer>
@@ -492,12 +394,10 @@ import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import Modal from "../../../components/modules/modal/Modal.vue";
 import PasswordGenerator from "../../../components/modules/PasswordGenerator.vue";
 
-import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
+import VueInput from "../../../components/modules/VueInput.vue";
+import VueInputContainer from "../../../components/modules/VueInputContainer.vue";
 
-import ContainerInput from "../../../components/ui/admin/containers/ContainerInput.vue";
-import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
-import ContainerInputTwo from "../../../components/ui/admin/containers/input/ContainerInputTwo.vue";
-import ContainerInputThree from "../../../components/ui/admin/containers/input/ContainerInputThree.vue";
+import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 
 import Icon from "../../../components/modules/icon/Icon.vue";
 
@@ -519,10 +419,8 @@ export default {
 		PasswordGenerator,
 		BlockOnce,
 
-		ContainerInput,
-		ContainerInputOnce,
-		ContainerInputTwo,
-		ContainerInputThree,
+		VueInput,
+		VueInputContainer,
 
 		Icon,
 
@@ -635,15 +533,15 @@ export default {
 						message: "",
 						status: false,
 					},
+					file: {
+						message: "",
+						status: false,
+					},
 					filename: {
 						message: "",
 						status: false,
 					},
 					path: {
-						message: "",
-						status: false,
-					},
-					file: {
 						message: "",
 						status: false,
 					},
@@ -689,6 +587,10 @@ export default {
 						value: "",
 						edited: false,
 					},
+					file: {
+						value: "",
+						edited: false,
+					},
 					filename: {
 						value: "",
 						edited: false,
@@ -721,6 +623,51 @@ export default {
 			statuses: [],
 		};
 	},
+	computed: {
+		filteredStatuses() {
+			let array = shared.getRecursiveCopy(this.statuses);
+
+			array = array.map((status) => {
+				return {
+					default: false,
+					disabled: false,
+					value: status.id,
+					label: status.name,
+				};
+			});
+
+			array.unshift({
+				default: true,
+				disabled: true,
+				value: "",
+				label: "Выберите статус",
+			});
+
+			return array;
+		},
+
+		filteredRights() {
+			let array = shared.getRecursiveCopy(this.rights);
+
+			array = array.map((right) => {
+				return {
+					default: false,
+					disabled: false,
+					value: right.id,
+					label: right.name,
+				};
+			});
+
+			array.unshift({
+				default: true,
+				disabled: true,
+				value: "",
+				label: "Выберите права",
+			});
+
+			return array;
+		},
+	},
 	methods: {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                   Загрузчик                       |*/
@@ -743,7 +690,7 @@ export default {
 
 		/* Открытие модального окна для добавления */
 		openModalEdite(value) {
-			this.$refs.fileUpload.value = "";
+			this.$refs.fileImage.clear();
 
 			shared.clearObjectFull(this.currentUser);
 			shared.setData(value, this.currentUser);
@@ -753,7 +700,7 @@ export default {
 
 		/* Открытие модального окна для добавления */
 		openModalСreate() {
-			this.$refs.fileUpload.value = "";
+			this.$refs.fileImage.clear();
 
 			shared.clearObjectFull(this.currentUser);
 
@@ -810,7 +757,7 @@ export default {
 							return user;
 						}
 					});
-					
+
 					currentUser.statusId = response.data.result;
 
 					this.$refs.modalBlock.close();
@@ -875,20 +822,20 @@ export default {
 
 			let formData = new FormData();
 
-			if (this.$refs.fileUpload.files[0]) {
+			if (this.$refs.fileImage.files().length > 0) {
 				if (
 					validate.checkInputsAll(this.currentUser, [
 						{
 							key: "file",
 							type: "file",
-							value: this.$refs.fileUpload,
+							value: this.$refs.fileImage.files(),
 							formats: ["jpg", "jpeg", "png", "webp"],
 						},
 					])
 				)
 					errors++;
 
-				formData.append("image", this.$refs.fileUpload.files[0]);
+				formData.append("image", this.$refs.fileImage.files()[0]);
 			}
 
 			if (
@@ -919,18 +866,21 @@ export default {
 
 			if (errors) return;
 
-			formData.append("user", JSON.stringify({
-				id: this.currentUser.data.id.value,
-				family: this.currentUser.data.family.value,
-				name: this.currentUser.data.name.value,
-				surname: this.currentUser.data.surname.value,
-				dateOfBirth: this.currentUser.data.dateOfBirth.value,
-				email: this.currentUser.data.email.value,
-				nickname: this.currentUser.data.nickname.value,
-				password: this.currentUser.data.password.value,
-				rightsId: this.currentUser.data.rightsId.value,
-				statusId: this.currentUser.data.statusId.value,
-			}));
+			formData.append(
+				"user",
+				JSON.stringify({
+					id: this.currentUser.data.id.value,
+					family: this.currentUser.data.family.value,
+					name: this.currentUser.data.name.value,
+					surname: this.currentUser.data.surname.value,
+					dateOfBirth: this.currentUser.data.dateOfBirth.value,
+					email: this.currentUser.data.email.value,
+					nickname: this.currentUser.data.nickname.value,
+					password: this.currentUser.data.password.value,
+					rightsId: this.currentUser.data.rightsId.value,
+					statusId: this.currentUser.data.statusId.value,
+				})
+			);
 
 			this.disabled.users.save = true;
 
@@ -1014,7 +964,7 @@ export default {
 					{
 						key: "file",
 						type: "file",
-						value: this.$refs.fileUpload,
+						value: this.$refs.fileImage.files(),
 						formats: ["jpg", "jpeg", "png", "webp"],
 					},
 				])
@@ -1022,7 +972,7 @@ export default {
 				return;
 
 			let formData = new FormData();
-			formData.append("image", this.$refs.fileUpload.files[0]);
+			formData.append("image", this.$refs.fileImage.files()[0]);
 
 			let user = {};
 			for (let key in this.currentUser.data) {

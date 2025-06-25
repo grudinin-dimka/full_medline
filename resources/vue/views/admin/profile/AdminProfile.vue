@@ -80,20 +80,12 @@ import LoaderChild from "../../../components/modules/LoaderChild.vue";
 
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 
-import ContainerInput from "../../../components/ui/admin/containers/ContainerInput.vue";
-import ContainerInputTwo from "../../../components/ui/admin/containers/input/ContainerInputTwo.vue";
-import ContainerInputThree from "../../../components/ui/admin/containers/input/ContainerInputThree.vue";
-
 import api from "../../../services/api";
 
 export default {
 	components: {
 		LoaderChild,
 		BlockOnce,
-
-		ContainerInput,
-		ContainerInputTwo,
-		ContainerInputThree,
 	},
 	data() {
 		return {

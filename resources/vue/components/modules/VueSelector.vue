@@ -173,7 +173,7 @@ export default {
 	border-radius: 10px;
 	padding: 0px 10px 0px 10px;
 
-	height: 58px;
+	height: 62px;
 
 	caret-color: var(--input-border-color-active);
 	background-color: white;
@@ -189,7 +189,7 @@ export default {
 	align-items: center;
 	flex-grow: 1;
 
-	height: 58px;
+	height: 62px;
 	overflow: hidden;
 	white-space: nowrap;
 }

@@ -30,14 +30,17 @@
 			</div>
 		</div>
 		<div class="filter__blocks">
-			<ContainerInputSearch v-model="filters.fio.data.body" :placeholder="'Имя специалиста'">
-				<template #label>Поиск</template>
-			</ContainerInputSearch>
-			<Selector
+			<VueInput
+				v-model="filters.fio.data.body"
+				:type="'search'"
+				:placeholder="'Введите имя специалиста'"
+			/>
+
+			<VueSelector
 				v-model="filters.specialization.data.body"
 				:placeholder="'Выберите специализацию'"
 				:list="getFormatSpecializations"
-			></Selector>
+			/>
 		</div>
 	</Block>
 
@@ -266,29 +269,24 @@
 </template>
 
 <script>
-import Selector from "../../../components/modules/VueSelector.vue";
+import VueSelector from "../../../components/modules/VueSelector.vue";
+import VueInput from "../../../components/modules/VueInput.vue";
 
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import Block from "../../../components/ui/main/Block.vue";
-
-import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
-import ContainerSelectOnce from "../../../components/ui/admin/containers/select/ContainerSelectOnce.vue";
-import ContainerInputSearch from "../../../components/ui/admin/containers/input/ContainerInputSearch.vue";
 
 import api from "../../../services/api";
 import sorted from "../../../services/sorted.js";
 
 export default {
 	components: {
-		Selector,
+		VueSelector,
+		VueInput,
+
 		InfoBar,
 		LoaderChild,
 		Block,
-
-		ContainerInputOnce,
-		ContainerSelectOnce,
-		ContainerInputSearch,
 	},
 	data() {
 		return {

@@ -41,19 +41,17 @@ export default {
 		/* Копирование пароля */
 		copyRandomPassword(captcha) {
 			if (navigator.clipboard.writeText(captcha)) {
-				let debbugStory = {
-					title: "Успешно!",
+				this.$store.commit("addDebugger", {
+					title: "Пароль скопирован.",
 					body: "Пароль скопирован в буфер обмена.",
-					type: "Completed",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					type: "completed",
+				});
 			} else {
-				let debbugStory = {
+				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
-					body: "Не удалось скопировать пароль...",
-					type: "Error",
-				};
-				this.$store.commit("debuggerState", debbugStory);
+					body: "Пароль не скопирован.",
+					type: "error",
+				});
 			}
 		},
 		/* Установка нового пароля */

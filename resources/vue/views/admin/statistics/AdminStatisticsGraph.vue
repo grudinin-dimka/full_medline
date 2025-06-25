@@ -43,23 +43,21 @@
 		<template #title> ОБЩИЕ ДАННЫЕ </template>
 		<template #body>
 			<div class="apexchart__buttons">
-				<ContainerInputOnce
-					v-model.trim="currentDate.data.dateStart.value"
+				<VueInput
+					v-model="currentDate.data.dateStart.value"
 					:type="'date'"
 					:error="currentDate.errors.dateStart.status"
-					@input="currentDate.data.dateStart.edited = true"
 				>
 					<template #error> {{ currentDate.errors.dateStart.message }} </template>
-				</ContainerInputOnce>
+				</VueInput>
 
-				<ContainerInputOnce
+				<VueInput
 					v-model.trim="currentDate.data.dateEnd.value"
 					:type="'date'"
 					:error="currentDate.errors.dateEnd.status"
-					@input="currentDate.data.dateEnd.edited = true"
 				>
 					<template #error> {{ currentDate.errors.dateEnd.message }} </template>
-				</ContainerInputOnce>
+				</VueInput>
 
 				<button-default
 					@click.prevent="getStatsValues"
@@ -99,6 +97,7 @@
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTwo from "../../../components/ui/admin/blocks/BlockTwo.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
+import VueInput from "../../../components/modules/VueInput.vue";
 
 import ContainerInputOnce from "../../../components/modules/input/ContainerInputOnce.vue";
 import BaseTable from "../../../components/modules/table/BaseTable.vue";
@@ -115,6 +114,7 @@ export default {
 		BlockOnce,
 		BlockTwo,
 		LoaderChild,
+		VueInput,
 
 		ButtonDefault,
 

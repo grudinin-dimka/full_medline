@@ -8,29 +8,13 @@
 	<block :minHeight="500">
 		<template v-if="loading.sections.specialists">
 			<div class="filter-blocks">
-				<div class="container-input">
-					<input type="text" placeholder="Введите ФИО" v-model="filters.name" />
-					<button class="clear" @click="filters.name = ''" v-if="filters.name">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							height="20px"
-							viewBox="0 -960 960 960"
-							width="20px"
-							fill="black"
-						>
-							<path
-								d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
-							/>
-						</svg>
-					</button>
-				</div>
-				<div class="container-select">
-					<Selector
-						v-model="filters.specialization"
-						:placeholder="'Выберите специализацию'"
-						:list="calcSpecializations"
-					/>
-				</div>
+				<VueInput v-model="filters.name" :type="'search'" :placeholder="'Введите ФИО'" />
+
+				<Selector
+					v-model="filters.specialization"
+					:placeholder="'Выберите специализацию'"
+					:list="calcSpecializations"
+				/>
 			</div>
 
 			<div class="animation-list" v-if="getFilteredSpecialists.length > 0">
@@ -57,8 +41,10 @@
 <script>
 import Block from "../../../components/ui/main/Block.vue";
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
+
 import Filters from "../../../components/ui/main/Filters.vue";
 import Selector from "../../../components/modules/VueSelector.vue";
+import VueInput from "../../../components/modules/VueInput.vue";
 
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import SpecialistsList from "./MainSpecialistsAllList.vue";
@@ -73,8 +59,11 @@ export default {
 	components: {
 		Block,
 		InfoBar,
+
 		Filters,
 		Selector,
+		VueInput,
+
 		LoaderChild,
 		SpecialistsList,
 		RouterLink,

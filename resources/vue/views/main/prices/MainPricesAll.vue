@@ -8,7 +8,7 @@
 	<Block>
 		<div class="filters">
 			<div class="filters__item">
-				<ContainerInputSearch v-model="filters.name" :placeholder="'Введите услугу'" />
+				<VueInput v-model="filters.name" :type="'search'" :placeholder="'Введите услугу'" />
 
 				<button class="filters__item-button" @click="getPrices">
 					<Icon
@@ -23,14 +23,14 @@
 			</div>
 
 			<div class="filters__item">
-				<Selector
+				<VueSelector
 					v-model="filters.address"
 					:placeholder="'Выберите адрес'"
 					:cleared="false"
 					:list="getAdressesList"
 				/>
 
-				<Selector
+				<VueSelector
 					v-model="filters.category"
 					:placeholder="'Выберите категорию'"
 					:cleared="true"
@@ -104,9 +104,8 @@ import LoadText from "../../../components/ui/main/LoadText.vue";
 import Filter from "../../../components/modules/filter/VueFilter.vue";
 import Empty from "../../../components/modules/Empty.vue";
 
-import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
-import ContainerInputSearch from "../../../components/ui/admin/containers/input/ContainerInputSearch.vue";
-import Selector from "../../../components/modules/VueSelector.vue";
+import VueSelector from "../../../components/modules/VueSelector.vue";
+import VueInput from "../../../components/modules/VueInput.vue";
 
 import Icon from "../../../components/modules/icon/Icon.vue";
 
@@ -122,9 +121,8 @@ export default {
 		Filter,
 		Empty,
 
-		ContainerInputOnce,
-		ContainerInputSearch,
-		Selector,
+		VueSelector,
+		VueInput,
 
 		Icon,
 	},

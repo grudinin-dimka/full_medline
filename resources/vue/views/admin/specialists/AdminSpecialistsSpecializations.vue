@@ -86,8 +86,6 @@ import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import VueInput from "../../../components/modules/VueInput.vue";
 
-import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
-
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
 import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
@@ -107,8 +105,6 @@ export default {
 		BaseTable,
 		LoaderChild,
 		BlockOnce,
-
-		ContainerInputOnce,
 
 		ButtonDefault,
 		ButtonClaim,

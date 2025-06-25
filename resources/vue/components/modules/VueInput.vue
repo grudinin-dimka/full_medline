@@ -44,17 +44,6 @@
 			/>
 		</template>
 
-		<template v-else-if="type == 'phone'">
-			<input
-				type="tel"
-				placeholder="+7(___)-___-__-__"
-				v-mask="'+7(###)-###-##-##'"
-				:value="modelValue"
-				autocomplete="off"
-				@input="$emit('update:modelValue', $event.target.value.trim())"
-			/>
-		</template>
-
 		<template v-else-if="type == 'password'">
 			<input
 				:type="hide ? 'password' : 'text'"
@@ -89,6 +78,28 @@
 					/>
 				</svg>
 			</div>
+		</template>
+
+		<template v-else-if="type == 'phone'">
+			<input
+				type="tel"
+				placeholder="+7(___)-___-__-__"
+				v-mask="'+7(###)-###-##-##'"
+				:value="modelValue"
+				autocomplete="off"
+				@input="$emit('update:modelValue', $event.target.value.trim())"
+			/>
+		</template>
+
+		<template v-else-if="type == 'mask'">
+			<input
+				type="tel"
+				:placeholder="placeholder"
+				v-mask="mask"
+				:value="modelValue"
+				autocomplete="off"
+				@input="$emit('update:modelValue', $event.target.value.trim())"
+			/>
 		</template>
 
 		<template v-else-if="type == 'search'">
@@ -212,6 +223,8 @@ export default {
 			type: String,
 			default: "text",
 		},
+
+		/* Минимальное и максимальное значения */
 		min: {
 			type: Number,
 			default: null,
@@ -220,6 +233,13 @@ export default {
 			type: Number,
 			default: null,
 		},
+
+		/* Маска поля ввода */
+		mask: {
+			type: String,
+			default: "",
+		},
+
 		placeholder: {
 			type: String,
 			default: "Введите значение",

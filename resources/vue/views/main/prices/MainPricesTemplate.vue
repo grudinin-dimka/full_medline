@@ -15,7 +15,7 @@
 	<Block>
 		<template v-if="loading.sections.prices">
 			<div class="filter_blocks">
-				<ContainerInputSearch v-model="filters.name" :placeholder="'Введите услугу'" />
+				<VueInput v-model="filters.name" :type="'search'" :placeholder="'Введите услугу'" />
 
 				<!-- Фильтры -->
 				<div class="filter_blocks-item">
@@ -199,11 +199,11 @@ import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import Block from "../../../components/ui/main/Block.vue";
 import LoadText from "../../../components/ui/main/LoadText.vue";
-import VueFilter from "../../../components/modules/filter/VueFilter.vue";
-import Empty from "../../../components/modules/Empty.vue";
 
-import ContainerInputOnce from "../../../components/ui/admin/containers/input/ContainerInputOnce.vue";
-import ContainerInputSearch from "../../../components/ui/admin/containers/input/ContainerInputSearch.vue";
+import VueFilter from "../../../components/modules/filter/VueFilter.vue";
+import VueInput from "../../../components/modules/VueInput.vue";
+
+import Empty from "../../../components/modules/Empty.vue";
 
 import api from "../../../services/api";
 import sorted from "../../../services/sorted.js";
@@ -214,11 +214,11 @@ export default {
 		LoaderChild,
 		Block,
 		LoadText,
-		VueFilter,
-		Empty,
 
-		ContainerInputOnce,
-		ContainerInputSearch,
+		VueFilter,
+		VueInput,
+
+		Empty,
 	},
 	data() {
 		return {

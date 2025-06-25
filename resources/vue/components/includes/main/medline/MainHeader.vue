@@ -184,10 +184,6 @@
 import Modal from "../../../modules/modal/Modal.vue";
 import Captcha from "../../../modules/Captcha.vue";
 
-import ContainerInput from "../../../ui/admin/containers/ContainerInput.vue";
-import ContainerInputOnce from "../../../ui/admin/containers/input/ContainerInputOnce.vue";
-import ContainerSelectOnce from "../../../ui/admin/containers/select/ContainerSelectOnce.vue";
-
 import VueInput from "../../../modules/VueInput.vue";
 
 import ButtonDefault from "../../../ui/admin/buttons/ButtonDefault.vue";
@@ -199,13 +195,7 @@ import shared from "../../../../services/shared";
 export default {
 	components: {
 		Modal,
-
 		Captcha,
-
-		ContainerInput,
-		ContainerInputOnce,
-		ContainerSelectOnce,
-
 		VueInput,
 
 		ButtonDefault,

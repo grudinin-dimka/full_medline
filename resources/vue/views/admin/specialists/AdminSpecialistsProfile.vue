@@ -436,7 +436,7 @@
 						<template #legend> АВАТАР И ССЫЛКА </template>
 						<template #inputs>
 							<VueInput
-								:placeholder="'Введите ФИО'"
+								:placeholder="'Загрузите файл'"
 								:type="'file'"
 								v-model="specialist.profile.data.file.value"
 								:error="specialist.profile.errors.file.status"
