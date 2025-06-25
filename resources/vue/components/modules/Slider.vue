@@ -10,22 +10,25 @@
 		:pauseAutoplayOnHover="true"
 	>
 		<slide v-for="slide in slides" :key="slide">
-			<a :href="slide.link">
-				<div
+			<a :href="slide.link" class="slider__link" :class="{ skeleton: !slide.path }">
+				<img
+					v-if="slide.path"
+					:src="slide.path"
+					alt="Слайд"
+					class="slider__img"
 					:style="{
-						backgroundImage: `url(${slide.path})`,
 						height: '375px',
 						width: '300px',
 						backgroundSize: 'contain',
 						backgroundPosition: 'center center',
 						backgroundRepeat: 'no-repeat',
 					}"
-				></div>
+				/>
 			</a>
 		</slide>
 
 		<template #addons>
-			<navigation />
+			<!-- <navigation /> -->
 			<!-- <pagination /> -->
 		</template>
 	</carousel>
@@ -110,8 +113,12 @@ export default {
 	transition: all 0.5s;
 }
 
-.carousel__slide:hover {
-	transform: scale(1.05);
+.carousel__slide:hover .slider__link {
+	background-image: linear-gradient(120deg, #ececec 50%, #fafafa 60%, #fafafa 61%, #ececec 70%);
+	background-size: 200%;
+	background-position: 100% 0;
+
+	animation: waves 2s linear;
 }
 
 .carousel__pagination-button::after {
@@ -133,6 +140,28 @@ export default {
 
 .carousel {
 	width: 100%;
+
+	animation: show 0.5s ease-out;
+}
+
+/* Изображение */
+.slider__link {
+	height: 375px;
+	width: 300px;
+
+	border-radius: var(--default-border-radius);
+
+	background-color: rgb(236, 236, 236);
+
+	transition: all 0.2s ease-out;
+}
+
+.slider__img {
+	height: 100%;
+	width: 100%;
+	border-radius: var(--default-border-radius);
+
+	object-fit: cover;
 
 	animation: show 0.5s ease-out;
 }

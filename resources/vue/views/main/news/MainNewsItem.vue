@@ -1,12 +1,7 @@
 <template>
-	<div
-		class="news__item"
-		@click="
-			$router.push({ name: 'news-once', params: { date: item.url_date, time: item.url_time } })
-		"
-	>
+	<div class="news__item" :class="{ skeleton: !item.path }" @click="openNews(item)">
 		<div class="news__item-date">{{ item.date }}</div>
-		<img class="news__item-image" :src="`${item.path}`" />
+		<img class="news__item-image" :src="`${item.path}`" v-if="item.path" />
 		<div class="news__item-title" v-html="item.title"></div>
 	</div>
 </template>
@@ -17,6 +12,18 @@ export default {
 		item: {
 			type: Object,
 			required: true,
+		},
+	},
+	methods: {
+		openNews(item) {
+			if (!item.path) {
+				return;
+			}
+
+			this.$router.push({
+				name: "news-once",
+				params: { date: item.url_date, time: item.url_time },
+			});
 		},
 	},
 };
@@ -30,18 +37,25 @@ export default {
 	gap: 10px;
 
 	padding: 20px;
-	border: var(--input-border);
 	border-radius: var(--default-border-radius);
 	height: auto;
 	min-height: 400px;
 
+	border-radius: var(--default-border-radius);
+
+	background-color: rgb(236, 236, 236);
+
+	transition: all 0.2s ease-out;
+
 	transition: all 0.2s;
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 .news__item:hover {
-	border: var(--input-border-focus);
-	background-color: var(--item-background-color-active);
+	background-image: linear-gradient(120deg, #ececec 50%, #fafafa 60%, #fafafa 61%, #ececec 70%);
+	background-size: 200%;
+	background-position: 100% 0;
+
+	animation: waves 2s linear;
 }
 
 .news__item-date {
@@ -54,6 +68,8 @@ export default {
 	aspect-ratio: 1/1;
 	object-fit: cover;
 	border-radius: calc(var(--default-border-radius) / 1.5);
+
+	animation: show 0.5s ease-in-out;
 }
 
 .news__item-title {
@@ -62,7 +78,7 @@ export default {
 
 .news__item-title > :is(h1, h2, h3, h4, h5, h6) {
 	font-size: 1.25rem;
-   font-weight: normal;
+	font-weight: normal;
 }
 
 :is(.news__item-title, .news__item-content) > * {

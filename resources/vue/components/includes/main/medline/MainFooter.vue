@@ -77,25 +77,17 @@
 		</section>
 
 		<!-- Нижняя секция -->
-		<template v-if="loading.sections.footer">
-			<section class="bottom" v-if="footer !== ''">
-				<Tiptap
-					v-model="footer"
-					:editable="false"
-					:limit="10_000"
-					:minHeight="50"
-					:options="['format', 'align', 'list', 'link']"
-					:placeholder="'Введите текст футера'"
-				/>
-			</section>
-
-			<Empty :minHeight="250" v-else />
-		</template>
-		<LoaderChild
-			:isLoading="loading.loader.footer"
-			:minHeight="250"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
-		/>
+		<section class="bottom" :class="{ skeleton: loading.loader.footer }">
+			<Tiptap
+				v-if="!loading.loader.footer"
+				v-model="footer"
+				:editable="false"
+				:limit="10_000"
+				:minHeight="50"
+				:options="['format', 'align', 'list', 'link']"
+				:placeholder="'Введите текст футера'"
+			/>
+		</section>
 
 		<article>Имеются противопоказания Необходима консультация специалиста</article>
 	</footer>
@@ -145,6 +137,7 @@ export default {
 		loaderChildAfterLeave() {
 			this.loading.sections.footer = true;
 		},
+
 		goToContacts() {
 			this.$router.push({ name: "contacts" });
 
@@ -163,7 +156,6 @@ export default {
 		})
 			.then((response) => {
 				if (!response) return;
-
 				this.footer = response.data.result;
 			})
 			.catch((error) => {
@@ -360,15 +352,14 @@ section.up .more .links > a:hover > svg {
 }
 
 section.bottom {
+	min-height: 200px;
 	padding: 20px;
 	margin: 0px 30px 20px 30px;
 	border-radius: calc(var(--default-border-radius) / 2);
 
 	font-size: 20px;
 
-	background-color: rgb(240, 240, 240);
-
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
+	background-color: rgb(236, 236, 236);
 }
 
 footer article {

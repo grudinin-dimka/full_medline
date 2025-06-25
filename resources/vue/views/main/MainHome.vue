@@ -1,19 +1,7 @@
 <template>
 	<block :minHeight="400">
-		<template v-if="loading.sections.slider">
-			<template v-if="slides.length > 0">
-				<Slider class="slider__loader" :slides="slides" />
-			</template>
-
-			<Empty :minHeight="400" v-else />
-		</template>
-
-		<loader-child
-			class="slider__loader"
-			:isLoading="loading.loader.slider"
-			:minHeight="375"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
-		/>
+		<Slider v-if="slides.length > 0" class="slider__loader" :slides="slides" />
+		<Empty :minHeight="400" v-else />
 
 		<div class="section-info">
 			<!-- NOTE: Название клиники -->
@@ -23,7 +11,7 @@
 	</block>
 
 	<block :minHeight="450">
-		<div class="news__main" v-if="loading.sections.news">
+		<div class="news__main">
 			<div class="news__main-head">
 				<div class="news__head-title">Новости</div>
 				<button class="news__head-button" @click="$router.push({ name: 'news-all' })">
@@ -35,12 +23,6 @@
 			</div>
 			<Empty :minHeight="300" v-else />
 		</div>
-
-		<loader-child
-			:isLoading="loading.loader.news"
-			:minHeight="403"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
-		/>
 	</block>
 </template>
 
@@ -78,8 +60,58 @@ export default {
 			},
 
 			/* Данные */
-			slides: [],
-			news: [],
+			slides: [
+				{
+					id: 1,
+					name: null,
+					link: null,
+					path: null,
+					hide: 0,
+					order: 1,
+				},
+				{
+					id: 2,
+					name: null,
+					link: null,
+					path: null,
+					hide: 0,
+					order: 2,
+				},
+				{
+					id: 3,
+					name: null,
+					link: null,
+					path: null,
+					hide: 0,
+					order: 3,
+				},
+			],
+			news: [
+				{
+					id: 1,
+					name: null,
+					link: null,
+					path: null,
+					hide: 0,
+					order: 1,
+				},
+				{
+					id: 2,
+					name: null,
+					link: null,
+					path: null,
+					hide: 0,
+					order: 2,
+				},
+				{
+					id: 3,
+					name: null,
+					link: null,
+					path: null,
+					hide: 0,
+					order: 3,
+				},
+			],
 		};
 	},
 	methods: {
@@ -109,7 +141,11 @@ export default {
 			.then((response) => {
 				if (!response) return;
 
-				this.news = response.data.result.news;
+				sorted.sortByOrder("up", response.data.result.news);
+
+				for (let i = 0; i < response.data.result.news.length; i++) {
+					this.news[i] = response.data.result.news[i];
+				}
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {
@@ -130,8 +166,11 @@ export default {
 			.then((response) => {
 				if (!response) return;
 
-				this.slides = response.data.result;
-				sorted.sortByOrder("up", this.slides);
+				sorted.sortByOrder("up", response.data.result);
+
+				for (let i = 0; i < response.data.result.length; i++) {
+					this.slides[i] = response.data.result[i];
+				}
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {
