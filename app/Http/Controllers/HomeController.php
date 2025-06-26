@@ -65,14 +65,15 @@ class HomeController extends Controller
    public function requestTelegramBot(Request $request)
    {
       $validator = Validator::make($request->all(), [
-         'title' => 'required',
+         'type' => 'required',
          'name' => 'required',
          'phone' => 'required',
-         'date' => 'nullable',
          'description' => 'nullable',
       ], [
+         'type' => 'Тип обязателен для заполнения.',
          'name' => 'ФИО обязательно для заполнения.',
          'phone' => 'Номер телефона обязателен для заполнения.',
+         'description' => 'Описание обязательно для заполнения.',
       ]);
 
       if ($validator->fails()) {
@@ -89,18 +90,16 @@ class HomeController extends Controller
          // Добавление заголовков
          $request->merge([
             'type' => 'form_request_telegram_bot',
-            'meta' => 'Заявка - ' . $request->title,
+            'meta' => 'Заявка - ' . $request->type,
          ]);
 
          $this->createTrack($request);
 
          // Отправка сообщения
          $str =
-            "Заявка: " . $request->title . "\n" .
+            "Заявка: " . $request->type . "\n" .
             "ФИО : " . $request->name . "\n" .
             "Телефон : " . $request->phone . "\n" .
-            "Почта : " . $request->email . "\n" .
-            "Дата рождения : " . $request->date . "\n" .
             "Описание : " . $request->description . "\n";
 
          $ch = curl_init("https://api.telegram.org/bot" . "6465405714:AAHJTFfNkmKgSwtOgQHV1HxAZovcalaAbNU" . "/sendMessage?" . http_build_query(

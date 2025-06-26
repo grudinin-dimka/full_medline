@@ -132,10 +132,6 @@
 			<button @click.prevent="$emit('openModal', 'ЗАПИСАТЬСЯ НА ПРИЕМ')">
 				ЗАПИСАТЬСЯ НА ПРИЕМ
 			</button>
-
-			<button @click.prevent="$emit('openModal', 'ЗАПИСАТЬСЯ К ВРАЧУ')">
-				ЗАПИСАТЬСЯ К ВРАЧУ
-			</button>
 		</div>
 	</nav>
 </template>

@@ -1,14 +1,19 @@
 <template>
 	<div class="specialists__list">
 		<div class="specialists__list-item" v-for="specialist in specialists" :key="specialist.id">
-			<div class="specialists__img" :class="{ skeleton: !specialist.path }">
+			<a
+				class="specialists__img"
+				:href="`/specialists/${specialist.url}`"
+				:class="{ skeleton: !specialist.path }"
+				@click.prevent="openspecialistProfile(specialist)"
+			>
 				<img
 					v-if="specialist.path"
 					class="specialists__list-img"
 					:src="specialist.path"
 					alt="Фото специалиста"
 				/>
-			</div>
+			</a>
 
 			<div class="specialists__list-body">
 				<div class="specialists__body-options" :class="{ skeleton: !specialist.name }">
@@ -131,7 +136,7 @@ export default {
 
 			this.$router.push({
 				name: "specialists-profile",
-				params: { name: specialist.url, catagory: null },
+				params: { name: specialist.url, category: null },
 			});
 		},
 	},
@@ -152,12 +157,6 @@ export default {
 	align-items: center;
 	gap: 20px;
 
-	border-top: 0px;
-	border-right: 0px;
-	border-bottom: 1px;
-	border-left: 0px;
-	border-style: var(--default-border-style);
-	border-color: var(--default-border-color);
 	padding: 0px 0px 20px 0px;
 
 	width: 100%;
@@ -165,11 +164,21 @@ export default {
 }
 
 .specialists__img {
+	display: block;
+
 	width: 90px;
 	height: 90px;
 	border-radius: 300px;
 
 	background-color: var(--skeleton-background-color);
+}
+
+.specialists__list-item:hover .specialists__img {
+	background-image: linear-gradient(120deg, #ececec 50%, #fafafa 60%, #fafafa 61%, #ececec 70%);
+	background-size: 200%;
+	background-position: 100% 0;
+
+	animation: waves 2s linear infinite;
 }
 
 .specialists__list-img {
@@ -314,10 +323,14 @@ export default {
 		align-items: center;
 	}
 
+	.specialists__img {
+		width: 200px;
+		height: 200px;
+	}
+
 	.specialists__list-img {
 		width: 200px;
 		border-radius: 300px;
-		border: var(--default-border);
 		height: 200px;
 		object-fit: contain;
 	}
@@ -328,13 +341,15 @@ export default {
 		display: none;
 	}
 
+	.specialists__img {
+		width: auto;
+		height: auto;
+	}
+
 	.specialists__list-img {
 		width: 100%;
-		border-radius: 300px;
-		border: var(--default-border);
 		height: auto;
 		aspect-ratio: 1/1;
-		max-width: 300px;
 		object-fit: contain;
 	}
 

@@ -32,18 +32,6 @@
 							{{ modalForm.errors.phone.message }}
 						</template>
 					</VueInput>
-
-					<VueInput
-						v-model="modalForm.data.date.value"
-						:type="'date'"
-						:placeholder="'Введите дату'"
-						:error="modalForm.errors.date.status"
-					>
-						<template #label> ДАТА РОЖДЕНИЯ </template>
-						<template #error>
-							{{ modalForm.errors.date.message }}
-						</template>
-					</VueInput>
 				</template>
 			</VueInputContainer>
 
@@ -260,15 +248,7 @@ export default {
 						status: false,
 						message: "",
 					},
-					family: {
-						status: false,
-						message: "",
-					},
 					name: {
-						status: false,
-						message: "",
-					},
-					surname: {
 						status: false,
 						message: "",
 					},
@@ -277,10 +257,6 @@ export default {
 						message: "",
 					},
 					email: {
-						status: false,
-						message: "",
-					},
-					date: {
 						status: false,
 						message: "",
 					},
@@ -302,15 +278,7 @@ export default {
 						value: "",
 						edited: false,
 					},
-					family: {
-						value: "",
-						edited: false,
-					},
 					name: {
-						value: "",
-						edited: false,
-					},
-					surname: {
 						value: "",
 						edited: false,
 					},
@@ -319,10 +287,6 @@ export default {
 						edited: false,
 					},
 					email: {
-						value: "",
-						edited: false,
-					},
-					date: {
 						value: "",
 						edited: false,
 					},
@@ -422,10 +386,6 @@ export default {
 						type: "text",
 					},
 					{
-						key: "date",
-						type: "text",
-					},
-					{
 						key: "phone",
 						type: "phone",
 					},
@@ -468,12 +428,10 @@ export default {
 					ContentType: "multipart/form-data",
 				},
 				data: {
-					title: this.modalForm.data.type.value,
+					type: this.modalForm.data.type.value,
 					name: this.modalForm.data.name.value,
 					phone: this.modalForm.data.phone.value,
-					email: this.modalForm.data.email.value,
-					date: this.modalForm.data.date.value,
-					specialization: this.modalForm.data.description.value,
+					description: this.modalForm.data.description.value,
 				},
 			})
 				.then((response) => {
@@ -766,7 +724,7 @@ header.slide {
 	fill: rgb(0, 0, 0);
 }
 
-@media screen and (max-width: 1650px) {
+@media screen and (max-width: 1400px) {
 	.header-buttons {
 		display: none;
 	}
