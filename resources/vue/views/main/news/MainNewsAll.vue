@@ -189,6 +189,7 @@ export default {
 .news__all {
 	display: flex;
 	flex-direction: column;
+	justify-content: justify;
 	gap: 30px;
 
 	width: 1350px;
@@ -197,6 +198,7 @@ export default {
 .news__all-body {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
+	justify-content: justify;
 	gap: 30px;
 
 	width: 100%;
@@ -223,7 +225,7 @@ export default {
 
 @media screen and (max-width: 1450px) {
 	.news__all {
-		width: auto;
+		width: 100%;
 	}
 }
 

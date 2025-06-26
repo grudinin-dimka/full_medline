@@ -11,12 +11,7 @@
 	>
 		<slide v-for="slide in slides" :key="slide">
 			<a :href="slide.link" class="slider__link" :class="{ skeleton: !slide.path }">
-				<img
-					v-if="slide.path"
-					:src="slide.path"
-					alt="Слайд"
-					class="slider__img"
-				/>
+				<img v-if="slide.path" :src="slide.path" alt="Слайд" class="slider__img" />
 			</a>
 		</slide>
 
@@ -144,7 +139,7 @@ export default {
 
 	border-radius: var(--default-border-radius);
 
-	background-color: rgb(236, 236, 236);
+	background-color: var(--skeleton-background-color);
 
 	transition: all 0.2s ease-out;
 }
@@ -157,5 +152,11 @@ export default {
 	object-fit: cover;
 
 	animation: show 0.5s ease-out;
+}
+
+@media screen and (width <= 600px) {
+	.slider__link {
+		width: auto;
+	}
 }
 </style>

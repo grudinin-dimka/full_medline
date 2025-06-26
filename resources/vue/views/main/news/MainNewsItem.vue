@@ -39,11 +39,11 @@ export default {
 	padding: 20px;
 	border-radius: var(--default-border-radius);
 	height: auto;
-	min-height: 460px;
+	min-height: 450px;
 
 	border-radius: var(--default-border-radius);
 
-	background-color: rgb(236, 236, 236);
+	background-color: var(--skeleton-background-color);
 
 	transition: all 0.2s ease-out;
 }

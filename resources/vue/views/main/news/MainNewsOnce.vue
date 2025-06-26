@@ -6,18 +6,17 @@
 	</info-bar>
 
 	<block :minHeight="500">
-		<template v-if="loading.sections.news">
-			<div class="news__once">
-				<img :src="path ?? '/storage/default/image-none-default.png'" alt="Картинка" />
+		<div class="news__once">
+			<div class="news__once-image" :class="{ skeleton: !path }">
+				<img v-if="path" :src="path" alt="Картинка" />
+			</div>
+			<div class="news__once-title" :class="{ skeleton: !title }">
 				<VueTiptap :editable="false" :limit="10_000" v-model="title" />
+			</div>
+			<div class="news__once-description" :class="{ skeleton: !description }">
 				<VueTiptap :editable="false" :limit="10_000" v-model="description" />
 			</div>
-		</template>
-
-		<loader-child
-			:isLoading="loading.loader.news"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
-		/>
+		</div>
 	</block>
 </template>
 
@@ -110,25 +109,51 @@ export default {
 	gap: 20px;
 
 	width: 1350px;
-
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
-.news__once > img {
-	width: 100%;
-	object-fit: contain;
+.news__once-image {
+	border-radius: var(--default-border-radius);
 	height: 600px;
+
+	background-color: var(--skeleton-background-color);
+	padding: var(--default-padding);
+}
+
+.news__once-image > img {
+	width: 100%;
+	height: 100%;
+
+	border-radius: calc(var(--default-border-radius) / 1.5);
+	object-fit: contain;
+
+	animation: show 0.5s ease-in-out;
+}
+
+.news__once-title {
+	border-radius: var(--default-border-radius);
+
+	min-height: 40px;
+}
+
+.news__once-description {
+	border-radius: var(--default-border-radius);
+
+	min-height: 100px;
 }
 
 @media (max-width: 1000px) {
 	.news__once > img {
 		height: auto;
 	}
+
+	.news__once-image {
+		height: auto;
+	}
 }
 
 @media (max-width: 1450px) {
 	.news__once {
-		width: 100%;
+		width: auto;
 	}
 }
 </style>

@@ -168,13 +168,13 @@ export default {
 	width: 90px;
 	height: 90px;
 	border-radius: 300px;
-	border: var(--default-border);
+
+	background-color: var(--skeleton-background-color);
 }
 
 .specialists__list-img {
 	width: 90px;
 	border-radius: 300px;
-	border: var(--default-border);
 	height: 90px;
 	object-fit: contain;
 

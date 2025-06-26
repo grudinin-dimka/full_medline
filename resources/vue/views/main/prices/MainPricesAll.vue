@@ -321,6 +321,8 @@ export default {
 	flex-direction: column;
 	gap: 10px;
 
+	margin: 0 auto;
+
 	width: 1350px;
 	animation: show 0.5s ease-out;
 }

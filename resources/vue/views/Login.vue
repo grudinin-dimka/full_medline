@@ -4,43 +4,42 @@
 	<Loader :isLoading="loader.loading" />
 
 	<div class="container-login" v-if="loader.other">
-		<div class="login">
+		<form @submit.prevent class="login">
 			<div class="logo">
 				<!-- NOTE: Логотип в логине -->
 				<img src="../assets/svg/medline/logo.svg" alt="логотип" width="130" />
 			</div>
-			<container-input>
-				<VueInput
-					:placeholder="'Введите логин'"
-					:type="'text'"
-					v-model="currentLogin.data.name.body"
-					:error="currentLogin.errors.name.status"
-				>
-					<template #label> ЛОГИН </template>
-					<template #error>
-						{{ currentLogin.errors.name.message }}
-					</template>
-				</VueInput>
 
-				<VueInput
-					:placeholder="'Введите пароль'"
-					:type="'password'"
-					v-model="currentLogin.data.password.body"
-					:error="currentLogin.errors.password.status"
-				>
-					<template #label> ПАРОЛЬ </template>
-					<template #error>
-						{{ currentLogin.errors.password.message }}
-					</template>
-				</VueInput>
-				
-				<div class="buttons">
-					<ButtonDefault @click="loginUser" :disabled="disabled.login.update">
-						Войти
-					</ButtonDefault>
-				</div>
-			</container-input>
-		</div>
+			<VueInput
+				:placeholder="'Введите логин'"
+				:type="'text'"
+				v-model="currentLogin.data.name.body"
+				:error="currentLogin.errors.name.status"
+			>
+				<template #label> ЛОГИН </template>
+				<template #error>
+					{{ currentLogin.errors.name.message }}
+				</template>
+			</VueInput>
+
+			<VueInput
+				:placeholder="'Введите пароль'"
+				:type="'password'"
+				v-model="currentLogin.data.password.body"
+				:error="currentLogin.errors.password.status"
+			>
+				<template #label> ПАРОЛЬ </template>
+				<template #error>
+					{{ currentLogin.errors.password.message }}
+				</template>
+			</VueInput>
+
+			<div class="buttons">
+				<ButtonDefault @click="loginUser" :disabled="disabled.login.update">
+					Войти
+				</ButtonDefault>
+			</div>
+		</form>
 	</div>
 </template>
 
@@ -277,6 +276,12 @@ export default {
 	box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
 }
 
+form {
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--default-gap) / 2);
+}
+
 .logo {
 	display: flex;
 	justify-content: center;
@@ -298,7 +303,7 @@ export default {
 	display: flex;
 	justify-content: flex-end;
 
-	margin-top: 30px;
+	margin-top: 20px;
 }
 
 @media screen and (max-width: 620px) {

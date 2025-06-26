@@ -87,7 +87,7 @@
 
 /* Скелетная загрузка */
 .skeleton {
-	background-image: linear-gradient(120deg, #ececec 50%, #fafafa 60%, #fafafa 61%, #ececec 70%);
+	background-image: linear-gradient(120deg, var(--skeleton-background-color) 50%, var(--skeleton-line-color) 60%, var(--skeleton-line-color) 61%, var(--skeleton-background-color) 70%);
 	background-size: 200%;
 	background-position: 100% 0;
 

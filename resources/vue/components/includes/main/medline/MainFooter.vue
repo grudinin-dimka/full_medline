@@ -359,7 +359,7 @@ section.bottom {
 
 	font-size: 20px;
 
-	background-color: rgb(236, 236, 236);
+	background-color: var(--skeleton-background-color);
 }
 
 footer article {

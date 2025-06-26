@@ -269,19 +269,21 @@ export default {
 	width: 1350px;
 
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
+
 }
 
 .container-specialist-profile > .img {
 	align-self: self-start;
 	justify-self: end;
-
+	
 	width: 350px;
 	height: 350px;
 	border-radius: 100%;
-	border: var(--input-border);
 	background-size: contain;
 	background-position: center center;
 	background-repeat: no-repeat;
+	
+	background-color: var(--skeleton-background-color);
 }
 
 .specialist-profile {

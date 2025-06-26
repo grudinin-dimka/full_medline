@@ -24,4 +24,7 @@
 
 	--item-background-color: rgb(235, 235, 235);
 	--item-background-color-active: #fff4f8;
+
+	--skeleton-background-color: rgb(235, 235, 235);
+	--skeleton-line-color: #fafafa;
 }

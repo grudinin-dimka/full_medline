@@ -5,7 +5,7 @@
 		<router-link to="/schedule">Расписание</router-link>
 	</info-bar>
 
-	<Block :minHeight="100" v-if="loading.sections.schedule">
+	<Block :minHeight="100">
 		<div class="filter__list">
 			<div
 				class="filter__list-item"
@@ -21,6 +21,7 @@
 			</div>
 			<div
 				class="filter__list-item"
+				:class="{ skeleton: !clinic.name }"
 				:style="getClinicStyle(clinic.id)"
 				v-for="clinic in clinics"
 				:key="clinic.id"
@@ -328,7 +329,29 @@ export default {
 					},
 				},
 			},
-			clinics: [],
+
+			clinics: [
+				{
+					id: 1,
+					name: null,
+				},
+				{
+					id: 2,
+					name: null,
+				},
+				{
+					id: 3,
+					name: null,
+				},
+				{
+					id: 4,
+					name: null,
+				},
+				{
+					id: 5,
+					name: null,
+				},
+			],
 			week: [],
 			shedules: [],
 
@@ -701,13 +724,17 @@ export default {
 			.then((response) => {
 				if (!response) return;
 
-				this.clinics = response.data.result.sheduleClinics;
-				this.week = response.data.result.currentDays;
+				for (let i = 0; i < response.data.result.sheduleClinics.length; i++) {
+					this.clinics[i] = response.data.result.sheduleClinics[i];
+				}
 
+				this.clinics.splice(response.data.result.sheduleClinics.length, this.clinics.length);
+				
 				this.clinics.forEach((clinic) => {
 					clinic.status = false;
 				});
 
+				this.week = response.data.result.currentDays;
 				this.shedules = response.data.result.shedules;
 			})
 			.catch((error) => {
@@ -750,6 +777,8 @@ export default {
 
 	width: 1350px;
 
+	margin: 0 auto;
+
 	animation: show 0.5s ease-out;
 }
 
@@ -764,6 +793,11 @@ export default {
 	font-size: 18px;
 
 	transition: all 0.15s;
+}
+
+.filter__list-item:not(:first-of-type) {
+	min-width: 150px;
+	min-height: 22px;
 }
 
 /* Блоки фильтров */
