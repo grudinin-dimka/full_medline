@@ -6,102 +6,142 @@
 		</template>
 
 		<template #body>
-			<VueInput
-				v-model="modalForm.data.name.value"
-				:type="'text'"
-				:placeholder="'Введите Ф.И.О.'"
-				:error="modalForm.errors.name.status"
-			>
-				<template #label> Ф.И.О. </template>
-				<template #error>
-					{{ modalForm.errors.name.message }}
+			<VueInputContainer :direction="'column'" :gap="'10px'">
+				<template #legend> КОНТАКТНЫЕ ДАННЫЕ </template>
+				<template #inputs>
+					<VueInput
+						v-model="modalForm.data.name.value"
+						:type="'text'"
+						:placeholder="'Введите имя'"
+						:error="modalForm.errors.name.status"
+					>
+						<template #label> ИМЯ </template>
+						<template #error>
+							{{ modalForm.errors.name.message }}
+						</template>
+					</VueInput>
+
+					<VueInput
+						v-model="modalForm.data.phone.value"
+						:type="'phone'"
+						:placeholder="'+7 (___) ___-__-__'"
+						:error="modalForm.errors.phone.status"
+					>
+						<template #label> НОМЕР ТЕЛЕФОНА </template>
+						<template #error>
+							{{ modalForm.errors.phone.message }}
+						</template>
+					</VueInput>
+
+					<VueInput
+						v-model="modalForm.data.date.value"
+						:type="'date'"
+						:placeholder="'Введите дату'"
+						:error="modalForm.errors.date.status"
+					>
+						<template #label> ДАТА РОЖДЕНИЯ </template>
+						<template #error>
+							{{ modalForm.errors.date.message }}
+						</template>
+					</VueInput>
 				</template>
-			</VueInput>
+			</VueInputContainer>
 
-			<VueInput
-				v-model="modalForm.data.phone.value"
-				:type="'phone'"
-				:placeholder="'+7 (___) ___-__-__'"
-				:error="modalForm.errors.phone.status"
-			>
-				<template #label> НОМЕР ТЕЛЕФОНА </template>
-				<template #error>
-					{{ modalForm.errors.phone.message }}
+			<VueInputContainer :direction="'column'" :gap="'10px'">
+				<template #legend> ДРУГАЯ ИНФОРМАЦИЯ </template>
+				<template #inputs>
+					<VueInput
+						v-model="modalForm.data.description.value"
+						:type="'textarea'"
+						:placeholder="'Введите описание'"
+						:error="modalForm.errors.description.status"
+					>
+						<template #label> ОПИСАНИЕ </template>
+						<template #error>
+							{{ modalForm.errors.description.message }}
+						</template>
+					</VueInput>
+
+					<VueInput
+						v-model="modalForm.data.type.value"
+						:type="'select'"
+						:options="[
+							{
+								default: true,
+								disabled: true,
+								value: '',
+								label: 'Выберите категорию',
+							},
+							{
+								default: false,
+								disabled: false,
+								value: 'Запись к врачу',
+								label: 'Запись к врачу',
+							},
+							{
+								default: false,
+								disabled: false,
+								value: 'Вызов врач на дом',
+								label: 'Вызов врач на дом',
+							},
+							{
+								default: false,
+								disabled: false,
+								value: 'Другое',
+								label: 'Другое',
+							},
+						]"
+						:error="modalForm.errors.type.status"
+					>
+						<template #label> ТИП ЗАЯВКИ </template>
+						<template #error>
+							{{ modalForm.errors.type.message }}
+						</template>
+					</VueInput>
 				</template>
-			</VueInput>
+			</VueInputContainer>
 
-			<VueInput
-				v-model="modalForm.data.email.value"
-				:type="'email'"
-				:placeholder="'test@mail.ru'"
-				:error="modalForm.errors.email.status"
-			>
-				<template #label> ПОЧТА </template>
-				<template #error>
-					{{ modalForm.errors.email.message }}
-				</template>
-			</VueInput>
+			<VueInputContainer :direction="'column'" :gap="'10px'">
+				<template #legend> ПРОВЕРОЧНЫЙ КОД </template>
+				<template #inputs>
+					<div class="captcha">
+						<div class="captcha__content">
+							<div class="captcha__content-text">
+								<span v-for="letter in getCaptchaSplited" :style="getLetterStyle()">
+									{{ letter }}
+								</span>
 
-			<VueInput
-				v-model="modalForm.data.date.value"
-				:type="'date'"
-				:placeholder="'Введите дату'"
-				:error="modalForm.errors.date.status"
-			>
-				<template #label> ДАТА РОЖДЕНИЯ </template>
-				<template #error>
-					{{ modalForm.errors.date.message }}
-				</template>
-			</VueInput>
+								<div class="content__text-line" ref="line"></div>
+								<div class="content__text-trash"></div>
+							</div>
+							<div class="captcha__content-update" @click="reloadCaptcha">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									height="26px"
+									viewBox="0 -960 960 960"
+									width="26px"
+								>
+									<path
+										d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-110h80v280H520v-80h168q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q77 0 139-44t87-116h84q-28 106-114 173t-196 67Z"
+									/>
+								</svg>
+							</div>
+						</div>
 
-			<VueInput
-				v-model="modalForm.data.description.value"
-				:type="'textarea'"
-				:placeholder="'Введите описание'"
-				:error="modalForm.errors.description.status"
-			>
-				<template #label> ОПИСАНИЕ </template>
-				<template #error>
-					{{ modalForm.errors.description.message }}
-				</template>
-			</VueInput>
-
-			<div class="captcha">
-				<div class="captcha__content">
-					<div class="captcha__content-text">
-						<span v-for="letter in getCaptchaSplited" :style="getLetterStyle()">
-							{{ letter }}
-						</span>
-
-						<div class="content__text-line" ref="line"></div>
-						<div class="content__text-trash"></div>
-					</div>
-					<div class="captcha__content-update" @click="reloadCaptcha">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							height="26px"
-							viewBox="0 -960 960 960"
-							width="26px"
+						<VueInput
+							v-model="modalForm.data.captcha.value"
+							:type="'text'"
+							:placeholder="'Введите текст'"
+							:error="modalForm.errors.captcha.status"
 						>
-							<path
-								d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-110h80v280H520v-80h168q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q77 0 139-44t87-116h84q-28 106-114 173t-196 67Z"
-							/>
-						</svg>
+							<template #label> КОД С КАРТИНКИ </template>
+							<template #error>
+								{{ modalForm.errors.captcha.message }}
+							</template>
+						</VueInput>
 					</div>
-				</div>
-
-				<VueInput
-					v-model="modalForm.data.captcha.value"
-					:type="'text'"
-					:placeholder="'Введите текст'"
-					:error="modalForm.errors.captcha.status"
-				>
-					<template #label> КОД С КАРТИНКИ </template>
-					<template #error>
-						{{ modalForm.errors.captcha.message }}
-					</template>
-				</VueInput>
-			</div>
+				</template>
+			</VueInputContainer>
 
 			<VueInput
 				v-model="modalForm.data.checkbox.value"
@@ -159,12 +199,8 @@
 			</div>
 		</div>
 		<div class="header-buttons">
-			<ButtonDefault :look="'white'" @click="openModalEdite('ЗАПИСЬ НА ПРИЕМ')">
+			<ButtonDefault @click="openModalEdite('ЗАПИСЬ НА ПРИЕМ')">
 				Записаться на прием
-			</ButtonDefault>
-
-			<ButtonDefault :look="'white'" @click="openModalEdite('ВЫЗОВ ВРАЧА НА ДОМ')">
-				Вызов врача на дом
 			</ButtonDefault>
 		</div>
 	</header>
@@ -185,6 +221,7 @@ import Modal from "../../../modules/modal/Modal.vue";
 import Captcha from "../../../modules/Captcha.vue";
 
 import VueInput from "../../../modules/input/VueInput.vue";
+import VueInputContainer from "../../../modules/input/VueInputContainer.vue";
 
 import ButtonDefault from "../../../ui/admin/buttons/ButtonDefault.vue";
 
@@ -196,7 +233,9 @@ export default {
 	components: {
 		Modal,
 		Captcha,
+
 		VueInput,
+		VueInputContainer,
 
 		ButtonDefault,
 	},
@@ -217,7 +256,19 @@ export default {
 			/* Форма */
 			modalForm: {
 				errors: {
+					type: {
+						status: false,
+						message: "",
+					},
+					family: {
+						status: false,
+						message: "",
+					},
 					name: {
+						status: false,
+						message: "",
+					},
+					surname: {
 						status: false,
 						message: "",
 					},
@@ -247,24 +298,36 @@ export default {
 					},
 				},
 				data: {
+					type: {
+						value: "",
+						edited: false,
+					},
+					family: {
+						value: "",
+						edited: false,
+					},
 					name: {
-						value: null,
+						value: "",
+						edited: false,
+					},
+					surname: {
+						value: "",
 						edited: false,
 					},
 					phone: {
-						value: null,
+						value: "",
 						edited: false,
 					},
 					email: {
-						value: null,
+						value: "",
 						edited: false,
 					},
 					date: {
-						value: null,
+						value: "",
 						edited: false,
 					},
 					description: {
-						value: null,
+						value: "",
 						edited: false,
 					},
 					checkbox: {
@@ -272,7 +335,7 @@ export default {
 						edited: false,
 					},
 					captcha: {
-						value: null,
+						value: "",
 						edited: false,
 					},
 				},
@@ -321,11 +384,11 @@ export default {
 		},
 
 		/* Открытие модального окна для добавления */
-		openModalEdite(type) {
+		openModalEdite() {
 			shared.clearObjectFull(this.modalForm);
 			this.reloadCaptcha();
 
-			this.openModal("modal", type, "default");
+			this.openModal("modal", "ЗАЯВКА", "default");
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -350,6 +413,8 @@ export default {
 		/* |___________________________________________________|*/
 		/* Отправка запроса */
 		sendRequest() {
+			let errors = false;
+
 			if (
 				validate.checkInputsAll(this.modalForm, [
 					{
@@ -357,8 +422,16 @@ export default {
 						type: "text",
 					},
 					{
+						key: "date",
+						type: "text",
+					},
+					{
 						key: "phone",
 						type: "phone",
+					},
+					{
+						key: "type",
+						type: "text",
 					},
 					{
 						key: "checkbox",
@@ -372,7 +445,17 @@ export default {
 					},
 				])
 			)
+				errors++;
+
+			if (errors) {
+				this.$store.commit("addDebugger", {
+					title: "Ошибка.",
+					body: "Заполните важные поля.",
+					type: "error",
+				});
+
 				return;
+			}
 
 			this.disabled.modalForm.request = true;
 
@@ -385,7 +468,7 @@ export default {
 					ContentType: "multipart/form-data",
 				},
 				data: {
-					title: this.modal.values.title,
+					title: this.modalForm.data.type.value,
 					name: this.modalForm.data.name.value,
 					phone: this.modalForm.data.phone.value,
 					email: this.modalForm.data.email.value,

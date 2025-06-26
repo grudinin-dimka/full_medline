@@ -1,5 +1,10 @@
 <template>
-	<fieldset ref="fieldset">
+	<fieldset
+		:style="{
+			'--fieldset-grid-template-columns': `repeat(${count}, 1fr)`,
+			'--fieldset-grid-gap': gap,
+		}"
+	>
 		<legend>
 			<slot name="legend"></slot>
 		</legend>
@@ -21,19 +26,8 @@ export default {
 		},
 		count: {
 			type: Number,
-			default: 2,
+			default: 1,
 		},
-	},
-	mounted() {
-		if (this.direction === "row") {
-			this.$refs.fieldset.style.gridTemplateColumns = `repeat(${this.count}, 1fr)`;
-			this.$refs.fieldset.style.gap = this.gap;
-		}
-
-      if (this.direction === "column") {
-			this.$refs.fieldset.style.gridTemplateColumns = `1fr`;
-			this.$refs.fieldset.style.gap = this.gap;
-		}
 	},
 };
 </script>
@@ -41,8 +35,8 @@ export default {
 <style scoped>
 fieldset {
 	display: grid;
-	grid-template-columns: repeat(2, 1fr);
-	gap: 10px;
+	grid-template-columns: var(--fieldset-grid-template-columns);
+	gap: var(--fieldset-grid-gap);
 
 	border: var(--default-border);
 	border-radius: 15px;
@@ -55,10 +49,16 @@ fieldset {
 
 fieldset > legend {
 	font-size: 1.25rem;
-   color: black;
+	color: black;
 }
 
 fieldset:focus-within {
 	border: var(--input-border-focus);
+}
+
+@media screen and (width <= 1000px) {
+	fieldset {
+		grid-template-columns: repeat(1, 1fr);
+	}
 }
 </style>

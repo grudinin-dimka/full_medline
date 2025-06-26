@@ -41,10 +41,6 @@ body.modal-open > #app > header > .user {
 	margin-right: 17px;
 }
 
-body.modal-open > #app > .debugger {
-	margin-right: 17px;
-}
-
 /* Скролбар блока со стандартным стилем*/
 /* Define the scrollbar style */
 body::-webkit-scrollbar,
