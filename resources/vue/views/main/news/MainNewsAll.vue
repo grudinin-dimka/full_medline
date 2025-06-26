@@ -5,31 +5,24 @@
 		<router-link to="/news">Новости</router-link>
 	</info-bar>
 
-	<block>
-		<template v-if="loading.sections.news">
-			<div class="news__all" v-if="news.length > 0">
-				<div class="news__all-body">
-					<MainNewsItem v-for="item in news" :key="item.id" :item="item" />
-				</div>
-
-				<ButtonDefault
-					v-if="isLoadMoreNews"
-					:look="'white'"
-					:disabled="disabled.news.more"
-					@click.prevent="loadMoreNews"
-				>
-					Загрузить ещё
-				</ButtonDefault>
+	<Block>
+		<div class="news__all" v-if="news.length > 0">
+			<div class="news__all-body">
+				<MainNewsItem v-for="item in news" :key="item.id" :item="item" />
 			</div>
 
-			<Empty :minHeight="300" v-else />
-		</template>
+			<ButtonDefault
+				v-if="isLoadMoreNews"
+				:look="'white'"
+				:disabled="disabled.news.more"
+				@click.prevent="loadMoreNews"
+			>
+				Загрузить ещё
+			</ButtonDefault>
+		</div>
 
-		<loader-child
-			:isLoading="loading.loader.news"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
-		/>
-	</block>
+		<Empty :minHeight="300" v-else />
+	</Block>
 </template>
 
 <script>
@@ -73,7 +66,32 @@ export default {
 			},
 
 			count: 0,
-			news: [],
+			news: [
+				{
+					id: 1,
+					name: null,
+					link: null,
+					path: null,
+					hide: 0,
+					order: 1,
+				},
+				{
+					id: 2,
+					name: null,
+					link: null,
+					path: null,
+					hide: 0,
+					order: 2,
+				},
+				{
+					id: 3,
+					name: null,
+					link: null,
+					path: null,
+					hide: 0,
+					order: 3,
+				},
+			],
 		};
 	},
 	computed: {
@@ -145,8 +163,13 @@ export default {
 			.then((response) => {
 				if (!response) return;
 
-				this.news = response.data.result.news;
 				this.count = response.data.result.count;
+
+				for (let i = 0; i < response.data.result.news.length; i++) {
+					this.news[i] = response.data.result.news[i];
+				}
+
+				this.news.splice(response.data.result.news.length, this.news.length);
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {
@@ -169,8 +192,6 @@ export default {
 	gap: 30px;
 
 	width: 1350px;
-
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 .news__all-body {

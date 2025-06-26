@@ -16,13 +16,6 @@
 					:src="slide.path"
 					alt="Слайд"
 					class="slider__img"
-					:style="{
-						height: '375px',
-						width: '300px',
-						backgroundSize: 'contain',
-						backgroundPosition: 'center center',
-						backgroundRepeat: 'no-repeat',
-					}"
 				/>
 			</a>
 		</slide>
@@ -118,7 +111,7 @@ export default {
 	background-size: 200%;
 	background-position: 100% 0;
 
-	animation: waves 2s linear;
+	animation: waves 2s linear infinite;
 }
 
 .carousel__pagination-button::after {

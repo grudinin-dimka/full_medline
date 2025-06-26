@@ -39,15 +39,13 @@ export default {
 	padding: 20px;
 	border-radius: var(--default-border-radius);
 	height: auto;
-	min-height: 400px;
+	min-height: 460px;
 
 	border-radius: var(--default-border-radius);
 
 	background-color: rgb(236, 236, 236);
 
 	transition: all 0.2s ease-out;
-
-	transition: all 0.2s;
 }
 
 .news__item:hover {
@@ -55,7 +53,7 @@ export default {
 	background-size: 200%;
 	background-position: 100% 0;
 
-	animation: waves 2s linear;
+	animation: waves 2s linear infinite;
 }
 
 .news__item-date {

@@ -6,35 +6,28 @@
 	</info-bar>
 
 	<block :minHeight="500">
-		<template v-if="loading.sections.specialists">
-			<div class="filter-blocks">
-				<VueInput v-model="filters.name" :type="'search'" :placeholder="'Введите ФИО'" />
+		<div class="filter-blocks">
+			<VueInput v-model="filters.name" :type="'search'" :placeholder="'Введите ФИО'" />
 
-				<Selector
-					v-model="filters.specialization"
-					:placeholder="'Выберите специализацию'"
-					:list="calcSpecializations"
-				/>
+			<Selector
+				v-model="filters.specialization"
+				:placeholder="'Выберите специализацию'"
+				:list="calcSpecializations"
+			/>
+		</div>
+
+		<div class="animation-list" v-if="getFilteredSpecialists.length > 0">
+			<div class="list-header">
+				<div></div>
+				<div>Врач</div>
+				<div>Клиника</div>
+				<div></div>
 			</div>
 
-			<div class="animation-list" v-if="getFilteredSpecialists.length > 0">
-				<div class="list-header">
-					<div></div>
-					<div>Врач</div>
-					<div>Клиника</div>
-					<div></div>
-				</div>
+			<specialists-list :specialists="getFilteredSpecialists" />
+		</div>
 
-				<specialists-list :specialists="getFilteredSpecialists" />
-			</div>
-
-			<Empty v-else />
-		</template>
-
-		<loader-child
-			:isLoading="loading.loader.specialists"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
-		/>
+		<Empty v-else />
 	</block>
 </template>
 
@@ -72,7 +65,92 @@ export default {
 	},
 	data() {
 		return {
-			specialists: [],
+			specialists: [
+				{
+					id: 1,
+					name: null,
+					adultDoctor: null,
+					category: null,
+					clinics: null,
+					link: null,
+					path: null,
+					rank: null,
+					specialization: null,
+					url: null,
+				},
+				{
+					id: 2,
+					name: null,
+					adultDoctor: null,
+					category: null,
+					clinics: null,
+					link: null,
+					path: null,
+					rank: null,
+					specialization: null,
+					url: null,
+				},
+				{
+					id: 3,
+					name: null,
+					adultDoctor: null,
+					category: null,
+					clinics: null,
+					link: null,
+					path: null,
+					rank: null,
+					specialization: null,
+					url: null,
+				},
+				{
+					id: 4,
+					name: null,
+					adultDoctor: null,
+					category: null,
+					clinics: null,
+					link: null,
+					path: null,
+					rank: null,
+					specialization: null,
+					url: null,
+				},
+				{
+					id: 5,
+					name: null,
+					adultDoctor: null,
+					category: null,
+					clinics: null,
+					link: null,
+					path: null,
+					rank: null,
+					specialization: null,
+					url: null,
+				},
+				{
+					id: 6,
+					name: null,
+					adultDoctor: null,
+					category: null,
+					clinics: null,
+					link: null,
+					path: null,
+					rank: null,
+					specialization: null,
+					url: null,
+				},
+				{
+					id: 7,
+					name: null,
+					adultDoctor: null,
+					category: null,
+					clinics: null,
+					link: null,
+					path: null,
+					rank: null,
+					specialization: null,
+					url: null,
+				},
+			],
 			loading: {
 				loader: {
 					specialists: true,
@@ -91,34 +169,36 @@ export default {
 		getFilteredSpecialists() {
 			let filteredSpecialists = [...this.specialists];
 
-			if (this.filters.specialization !== "") {
-				filteredSpecialists = filteredSpecialists.filter((specialist) => {
-					if (Array.isArray(specialist.specialization)) {
-						for (let i = 0; i < specialist.specialization.length; i++) {
-							if (specialist.specialization[i].name == this.filters.specialization) {
-								return true;
+			if (!this.loading.loader.specialists) {
+				if (this.filters.specialization !== "") {
+					filteredSpecialists = filteredSpecialists.filter((specialist) => {
+						if (Array.isArray(specialist.specialization)) {
+							for (let i = 0; i < specialist.specialization.length; i++) {
+								if (specialist.specialization[i].name == this.filters.specialization) {
+									return true;
+								}
 							}
 						}
-					}
 
-					if (
-						specialist.specialization !== "" &&
-						typeof specialist.specialization == "object"
-					) {
-						return specialist.specialization.name == this.filters.specialization;
-					}
-				});
+						if (
+							specialist.specialization !== "" &&
+							typeof specialist.specialization == "object"
+						) {
+							return specialist.specialization.name == this.filters.specialization;
+						}
+					});
+				}
+
+				if (this.filters.name !== "") {
+					filteredSpecialists = filteredSpecialists.filter((item) => {
+						if (item.name.toLowerCase().includes(this.filters.name.toLowerCase())) {
+							return item;
+						}
+					});
+				}
+
+				sorted.sortByName("up", filteredSpecialists);
 			}
-
-			if (this.filters.name !== "") {
-				filteredSpecialists = filteredSpecialists.filter((item) => {
-					if (item.name.toLowerCase().includes(this.filters.name.toLowerCase())) {
-						return item;
-					}
-				});
-			}
-
-			sorted.sortByName("up", filteredSpecialists);
 
 			return filteredSpecialists;
 		},
@@ -165,13 +245,16 @@ export default {
 		},
 	},
 	mounted() {
-		// Получение массива докторов с сервера
 		api({
 			method: "get",
 			url: this.$store.getters.urlApi + `get-specialists`,
 		})
 			.then((response) => {
-				this.specialists = response.data.result;
+				for (let i = 0; i < response.data.result.length; i++) {
+					this.specialists[i] = response.data.result[i];
+				}
+
+				this.specialists.splice(response.data.result.length, this.specialists.length);
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {

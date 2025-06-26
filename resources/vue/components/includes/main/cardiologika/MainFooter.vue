@@ -76,25 +76,17 @@
 		</section>
 
 		<!-- Нижняя секция -->
-		<template v-if="loading.sections.footer">
-			<section class="bottom" v-if="footer !== ''">
-				<Tiptap
-					v-model="footer"
-					:editable="false"
-					:limit="10_000"
-					:minHeight="50"
-					:options="['format', 'align', 'list', 'link']"
-					:placeholder="'Введите текст футера'"
-				/>
-			</section>
-
-			<Empty :minHeight="250" v-else />
-		</template>
-		<LoaderChild
-			:isLoading="loading.loader.footer"
-			:minHeight="250"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
-		/>
+		<section class="bottom" :class="{ skeleton: loading.loader.footer }">
+			<VueTiptap
+				v-if="!loading.loader.footer"
+				v-model="footer"
+				:editable="false"
+				:limit="10_000"
+				:minHeight="50"
+				:options="['format', 'align', 'list', 'link']"
+				:placeholder="'Введите текст футера'"
+			/>
+		</section>
 
 		<article>Имеются противопоказания Необходима консультация специалиста</article>
 	</footer>
@@ -103,7 +95,7 @@
 <script>
 import LoaderChild from "../../../modules/LoaderChild.vue";
 import Empty from "../../../modules/Empty.vue";
-import Tiptap from "../../../modules/Tiptap.vue";
+import VueTiptap from "../../../modules/VueTiptap.vue";
 
 import IconVisa from "../../../icons/IconVisa.vue";
 import IconMasterCard from "../../../icons/IconMasterCard.vue";
@@ -115,7 +107,7 @@ export default {
 	components: {
 		LoaderChild,
 		Empty,
-		Tiptap,
+		VueTiptap,
 
 		IconVisa,
 		IconMasterCard,
@@ -161,7 +153,6 @@ export default {
 		})
 			.then((response) => {
 				if (!response) return;
-
 				this.footer = response.data.result;
 			})
 			.catch((error) => {

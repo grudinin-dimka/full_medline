@@ -29,7 +29,7 @@
 <script>
 import Modal from "../Modal.vue";
 
-import VueInput from "../../VueInput.vue";
+import VueInput from "../../input/VueInput.vue";
 
 import ButtonDefault from "../../../ui/admin/buttons/ButtonDefault.vue";
 

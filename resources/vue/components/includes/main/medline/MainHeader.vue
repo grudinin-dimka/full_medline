@@ -207,7 +207,7 @@ export default {
 			/* Модальное окно */
 			modal: {
 				thin: false,
-				clamped: false,
+				clamped: true,
 				values: {
 					title: "",
 					look: "default",

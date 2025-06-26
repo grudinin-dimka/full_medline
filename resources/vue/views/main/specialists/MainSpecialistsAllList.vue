@@ -1,19 +1,29 @@
 <template>
 	<div class="specialists__list">
 		<div class="specialists__list-item" v-for="specialist in specialists" :key="specialist.id">
-			<img class="specialists__list-img" :src="specialist.path" alt="Фото специалиста" />
+			<div class="specialists__img" :class="{ skeleton: !specialist.path }">
+				<img
+					v-if="specialist.path"
+					class="specialists__list-img"
+					:src="specialist.path"
+					alt="Фото специалиста"
+				/>
+			</div>
 
 			<div class="specialists__list-body">
-				<div class="specialists__body-options">
+				<div class="specialists__body-options" :class="{ skeleton: !specialist.name }">
 					<div class="specialists__body-other">
-						{{ getSpecializationString(specialist.specialization) }}.
+						{{ getSpecializationString(specialist.specialization) }}
 					</div>
 					<div class="clinics__item-title label" @click="openspecialistProfile(specialist)">
-						{{ specialist.name }}
+						{{ specialist.name ?? "" }}
 					</div>
 				</div>
 
-				<div class="specialist__body-clinics" v-if="specialist.clinics.length > 0">
+				<div
+					class="specialist__body-clinics"
+					v-if="specialist.clinics && specialist.clinics.length > 0"
+				>
 					<div class="specialist__clinics-item" v-for="clinic in specialist.clinics">
 						<div class="specialists__body-other">
 							{{ `г. ${clinic.city}, ул. ${clinic.street}, д. ${clinic.home}` }}.
@@ -25,11 +35,21 @@
 				</div>
 
 				<div class="specialist__body-clinics" v-else>
-					<div class="specialist__clinics-item">
-						<div class="specialists__body-other">Неизвестно.</div>
-						<div class="clinics__item-title label" @click="openspecialistProfile(specialist)">
-							Не указано.
-						</div>
+					<div class="specialist__clinics-item" :class="{ skeleton: !specialist.name }">
+						<template v-if="!specialist.name">
+							<div class="specialists__body-other"></div>
+							<div class="clinics__item-title label"></div>
+						</template>
+
+						<template v-else>
+							<div class="specialists__body-other">Неизвестно.</div>
+							<div
+								class="clinics__item-title label"
+								@click="openspecialistProfile(specialist)"
+							>
+								Не указано.
+							</div>
+						</template>
 					</div>
 				</div>
 				<a
@@ -57,6 +77,10 @@ export default {
 	},
 	methods: {
 		getSpecializationString(specialization) {
+			if (!specialization) {
+				return "";
+			}
+
 			let specializationString = "";
 
 			sorted.sortStringByKey("up", specialization, "name");
@@ -69,7 +93,12 @@ export default {
 				? specializationString.slice(0, -2)
 				: "Нет информации";
 		},
+
 		getWorkAges(date) {
+			if (!date) {
+				return "Менее года.";
+			}
+
 			let startDate = new Date(date);
 			let currentDate = new Date();
 			let result = currentDate.getFullYear() - startDate.getFullYear();
@@ -88,7 +117,12 @@ export default {
 					break;
 			}
 		},
+
 		openspecialistProfile(specialist) {
+			if (!specialist.url) {
+				return;
+			}
+
 			window.scrollTo({
 				top: 0,
 				left: 0,
@@ -128,7 +162,13 @@ export default {
 
 	width: 100%;
 	transition: all 0.2s;
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
+}
+
+.specialists__img {
+	width: 90px;
+	height: 90px;
+	border-radius: 300px;
+	border: var(--default-border);
 }
 
 .specialists__list-img {
@@ -137,6 +177,8 @@ export default {
 	border: var(--default-border);
 	height: 90px;
 	object-fit: contain;
+
+	animation: show 0.5s ease-out;
 }
 
 .specialists__list-body {
@@ -152,6 +194,15 @@ export default {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
+}
+
+.specialist__clinics-item {
+	font-size: 1.125rem;
+
+	border-radius: 10px;
+	padding: 5px;
+
+	min-height: 50px;
 }
 
 .specialist__body-clinics > .specialist__clinics-item.empty {
@@ -182,6 +233,11 @@ export default {
 	display: flex;
 	flex-direction: column;
 	gap: 7px;
+
+	border-radius: 10px;
+	padding: 5px;
+
+	min-height: 50px;
 }
 
 .clinics__item-title {

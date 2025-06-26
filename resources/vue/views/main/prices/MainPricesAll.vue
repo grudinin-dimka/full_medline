@@ -7,7 +7,7 @@
 
 	<Block>
 		<div class="filters">
-			<div class="filters__item">
+			<form @submit.prevent class="filters__item">
 				<VueInput v-model="filters.name" :type="'search'" :placeholder="'Введите услугу'" />
 
 				<button class="filters__item-button" @click="getPrices">
@@ -20,7 +20,7 @@
 					/>
 					Поиск
 				</button>
-			</div>
+			</form>
 
 			<div class="filters__item">
 				<VueSelector
@@ -164,6 +164,13 @@ export default {
 		"filters.category": {
 			handler(newValue, oldValue) {
 				this.getPrices();
+			},
+		},
+		"filters.name": {
+			handler(newValue, oldValue) {
+				if (newValue === "" && oldValue !== "") {
+					this.getPrices();
+				}
 			},
 		},
 	},

@@ -519,7 +519,7 @@ export default {
 
 			/* Загрузка файла */
 			let formData = new FormData();
-			formData.append("file", this.$refs.fileImage.files());
+			formData.append("file", this.$refs.fileImage.files()[0]);
 			formData.append("type", "slides");
 			formData.append("formats", ["png", "webp"]);
 
@@ -539,8 +539,8 @@ export default {
 					this.slides.push({
 						id: shared.getMaxId(this.slides) + 1,
 						order: shared.getMaxOrder(this.slides) + 1,
-						name: this.$refs.inputName.value,
-						link: this.$refs.inputLink.value,
+						name: this.currentSlide.data.name.value,
+						link: this.currentSlide.data.link.value,
 						path: response.data.result,
 						filename: files.basename(response.data.result),
 						hide: false,
@@ -611,44 +611,58 @@ export default {
 
 			if (errors > 0) return;
 
-			this.disabled.slider.update = true;
+			if (this.$refs.fileImage.files().length > 0) {
+				this.disabled.slider.update = true;
 
-			let formData = new FormData();
-			formData.append("file", this.$refs.fileImage.files()[0]);
-			formData.append("type", "slides");
-			formData.append("formats", ["png", "jpg", "jpeg", "webp"]);
+				let formData = new FormData();
+				formData.append("file", this.$refs.fileImage.files()[0]);
+				formData.append("type", "slides");
+				formData.append("formats", ["png", "webp"]);
 
-			api({
-				method: "post",
-				url: this.$store.getters.urlApi + "upload-file",
-				headers: {
-					"Content-Type": "multipart/form-data",
-				},
-				data: formData,
-			})
-				.then((response) => {
-					if (!response) return;
-
-					let slideCurrent = this.slides.find(
-						(slide) => slide.order === this.currentSlide.data.order.value
-					);
-
-					this.currentSlide.data.path.value = response.data.result;
-					slideCurrent.path = response.data.result;
-					slideCurrent.filename = files.basename(response.data.result);
-
-					this.$refs.modal.close();
+				api({
+					method: "post",
+					url: this.$store.getters.urlApi + "upload-file",
+					headers: {
+						"Content-Type": "multipart/form-data",
+					},
+					data: formData,
 				})
-				.catch((error) => {
-					this.$store.commit("addDebugger", {
-						title: "Ошибка",
-						body: error,
-						type: "error",
+					.then((response) => {
+						if (!response) return;
+
+						let slideCurrent = this.slides.find(
+							(slide) => slide.order === this.currentSlide.data.order.value
+						);
+
+						this.currentSlide.data.path.value = response.data.result;
+						slideCurrent.path = response.data.result;
+						slideCurrent.filename = files.basename(response.data.result);
+
+						slideCurrent.name = this.currentSlide.data.name.value;
+						slideCurrent.link = this.currentSlide.data.link.value;
+
+						this.$refs.modal.close();
+					})
+					.catch((error) => {
+						this.$store.commit("addDebugger", {
+							title: "Ошибка",
+							body: error,
+							type: "error",
+						});
+					})
+					.finally(() => {
+						this.disabled.slider.update = false;
 					});
-				})
-				.finally(() => {
-					this.disabled.slider.update = false;
-				});
+			} else {
+				let slideCurrent = this.slides.find(
+					(slide) => slide.order === this.currentSlide.data.order.value
+				);
+
+				slideCurrent.name = this.currentSlide.data.name.value;
+				slideCurrent.link = this.currentSlide.data.link.value;
+
+				this.$refs.modal.close();
+			}
 		},
 
 		/* Сохранение изменений в базе данных */

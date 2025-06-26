@@ -146,6 +146,8 @@ export default {
 				for (let i = 0; i < response.data.result.news.length; i++) {
 					this.news[i] = response.data.result.news[i];
 				}
+
+				this.news.splice(response.data.result.news.length, this.news.length);
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {
@@ -171,6 +173,8 @@ export default {
 				for (let i = 0; i < response.data.result.length; i++) {
 					this.slides[i] = response.data.result[i];
 				}
+
+				this.slides.splice(response.data.result.length, this.slides.length);
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {
