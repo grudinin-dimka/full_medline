@@ -168,7 +168,7 @@ export default {
 	justify-content: space-between;
 	align-items: center;
 	gap: 10px;
-
+	
 	border: 1px solid rgba(0, 0, 0, 0.25);
 	border-radius: 10px;
 	padding: 0px 10px 0px 10px;
@@ -192,6 +192,9 @@ export default {
 	height: 62px;
 	overflow: hidden;
 	white-space: nowrap;
+
+	width: 100%;
+	overflow: hidden;
 }
 
 .control > :is(.clear, .arrow) {

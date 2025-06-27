@@ -193,6 +193,7 @@ export default {
 .specialists__list-body {
 	flex: 1 0 0px;
 	display: grid;
+	flex-wrap: wrap;
 	width: 100%;
 	grid-template-columns: 1fr 1fr 150px;
 	gap: 20px;
@@ -324,33 +325,21 @@ export default {
 	}
 
 	.specialists__img {
-		width: 200px;
-		height: 200px;
-	}
-
-	.specialists__list-img {
-		width: 200px;
-		border-radius: 300px;
-		height: 200px;
-		object-fit: contain;
-	}
-}
-
-@media screen and (max-width: 440px) {
-	.specialists__body-other {
-		display: none;
-	}
-
-	.specialists__img {
-		width: auto;
-		height: auto;
+		width: 300px;
+		height: 300px;
 	}
 
 	.specialists__list-img {
 		width: 100%;
-		height: auto;
-		aspect-ratio: 1/1;
+		border-radius: 300px;
+		height: 100%;
 		object-fit: contain;
+	}
+}
+
+@media screen and (max-width: 500px) {
+	.specialists__body-other {
+		display: none;
 	}
 
 	.specialists__list-body {

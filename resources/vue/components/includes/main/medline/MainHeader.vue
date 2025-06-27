@@ -51,7 +51,7 @@
 					</VueInput>
 
 					<VueInput
-						v-model="modalForm.data.type.value"
+						v-model="modalForm.data.title.value"
 						:type="'select'"
 						:options="[
 							{
@@ -79,11 +79,11 @@
 								label: 'Другое',
 							},
 						]"
-						:error="modalForm.errors.type.status"
+						:error="modalForm.errors.title.status"
 					>
 						<template #label> ТИП ЗАЯВКИ </template>
 						<template #error>
-							{{ modalForm.errors.type.message }}
+							{{ modalForm.errors.title.message }}
 						</template>
 					</VueInput>
 				</template>
@@ -144,9 +144,10 @@
 		</template>
 
 		<template #footer>
-			<ButtonDefault @click="sendRequest" :disabled="disabled.modalForm.request">
-				Отправить
-			</ButtonDefault>
+			<VueButton @click="sendRequest" :disabled="disabled.modalForm.request">
+				<Icon :name="'phone'" :fill="'white'" :width="'22px'" :height="'22px'" />
+				Отправить заявку
+			</VueButton>
 		</template>
 	</Modal>
 
@@ -187,9 +188,10 @@
 			</div>
 		</div>
 		<div class="header-buttons">
-			<ButtonDefault @click="openModalEdite('ЗАПИСЬ НА ПРИЕМ')">
+			<VueButton @click="openModalEdite('ЗАПИСЬ НА ПРИЕМ')">
+				<Icon :name="'phone'" :fill="'white'" :width="'22px'" :height="'22px'" />
 				Записаться на прием
-			</ButtonDefault>
+			</VueButton>
 		</div>
 	</header>
 	<!-- Кнопка "бургер" -->
@@ -211,6 +213,8 @@ import Captcha from "../../../modules/Captcha.vue";
 import VueInput from "../../../modules/input/VueInput.vue";
 import VueInputContainer from "../../../modules/input/VueInputContainer.vue";
 
+import VueButton from "../../../ui/VueButton.vue";
+import Icon from "../../../modules/icon/Icon.vue";
 import ButtonDefault from "../../../ui/admin/buttons/ButtonDefault.vue";
 
 import api from "../../../../services/api";
@@ -225,6 +229,8 @@ export default {
 		VueInput,
 		VueInputContainer,
 
+		VueButton,
+		Icon,
 		ButtonDefault,
 	},
 	data() {
@@ -244,7 +250,7 @@ export default {
 			/* Форма */
 			modalForm: {
 				errors: {
-					type: {
+					title: {
 						status: false,
 						message: "",
 					},
@@ -274,7 +280,7 @@ export default {
 					},
 				},
 				data: {
-					type: {
+					title: {
 						value: "",
 						edited: false,
 					},
@@ -390,7 +396,7 @@ export default {
 						type: "phone",
 					},
 					{
-						key: "type",
+						key: "title",
 						type: "text",
 					},
 					{
@@ -428,7 +434,7 @@ export default {
 					ContentType: "multipart/form-data",
 				},
 				data: {
-					type: this.modalForm.data.type.value,
+					title: this.modalForm.data.title.value,
 					name: this.modalForm.data.name.value,
 					phone: this.modalForm.data.phone.value,
 					description: this.modalForm.data.description.value,
@@ -725,7 +731,7 @@ header.slide {
 }
 
 @media screen and (max-width: 1400px) {
-	.header-buttons {
+	.header__logo-name {
 		display: none;
 	}
 }
@@ -738,7 +744,7 @@ header.slide {
 
 @media screen and (max-width: 900px) {
 	header {
-		padding: 10px 50px 10px 50px;
+		padding: 10px 30px 10px 30px;
 		justify-content: space-between;
 	}
 
@@ -747,8 +753,14 @@ header.slide {
 	}
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 850px) {
 	.header__item:nth-child(4) {
+		display: none;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.header-buttons {
 		display: none;
 	}
 }

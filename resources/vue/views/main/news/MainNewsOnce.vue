@@ -113,6 +113,7 @@ export default {
 
 .news__once-image {
 	border-radius: var(--default-border-radius);
+	min-height: 600px;
 	height: 600px;
 
 	background-color: var(--skeleton-background-color);
@@ -148,12 +149,13 @@ export default {
 
 	.news__once-image {
 		height: auto;
+		min-height: 250px;
 	}
 }
 
 @media (max-width: 1450px) {
 	.news__once {
-		width: auto;
+		width: 100%;
 	}
 }
 </style>

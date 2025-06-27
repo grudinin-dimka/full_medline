@@ -65,12 +65,12 @@ class HomeController extends Controller
    public function requestTelegramBot(Request $request)
    {
       $validator = Validator::make($request->all(), [
-         'type' => 'required',
+         'title' => 'required',
          'name' => 'required',
          'phone' => 'required',
          'description' => 'nullable',
       ], [
-         'type' => 'Тип обязателен для заполнения.',
+         'title' => 'Тип обязателен для заполнения.',
          'name' => 'ФИО обязательно для заполнения.',
          'phone' => 'Номер телефона обязателен для заполнения.',
          'description' => 'Описание обязательно для заполнения.',
@@ -90,14 +90,14 @@ class HomeController extends Controller
          // Добавление заголовков
          $request->merge([
             'type' => 'form_request_telegram_bot',
-            'meta' => 'Заявка - ' . $request->type,
+            'meta' => 'Заявка - ' . $request->title,
          ]);
 
          $this->createTrack($request);
 
          // Отправка сообщения
          $str =
-            "Заявка: " . $request->type . "\n" .
+            "Заявка: " . $request->title . "\n" .
             "ФИО : " . $request->name . "\n" .
             "Телефон : " . $request->phone . "\n" .
             "Описание : " . $request->description . "\n";
