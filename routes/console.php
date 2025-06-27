@@ -5,9 +5,9 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
 use Illuminate\Support\Facades\DB;
 
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\SheduleController;
 
 // Обновление расписания каждй день
 Schedule::call(function () {
-    (new AdminController)->saveShedulesAll();
+    (new SheduleController)->saveShedulesAll();
 })->everyMinute()->timezone(env('APP_TIMEZONE', 'Asia/Yekaterinburg'));

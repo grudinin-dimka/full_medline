@@ -422,6 +422,12 @@ export default {
 	height: auto;
 }
 
+@media screen and (max-width: 600px) {
+	.input :is(input, textarea) {
+		width: 100%;
+	}
+}
+
 /* Убрать стандартный крестик */
 .input input[type="search"]::-webkit-search-cancel-button {
 	display: none;

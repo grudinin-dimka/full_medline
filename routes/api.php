@@ -7,9 +7,16 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CreatorController;
 
+use App\Http\Controllers\SlidesController;
+use App\Http\Controllers\FooterController;
+use App\Http\Controllers\SpecialistController;
+use App\Http\Controllers\PricesController;
+use App\Http\Controllers\SheduleController;
+
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 /* |                   БОТ ТЕЛЕГРАММ                   |*/
 /* |___________________________________________________|*/
+
 Route::post('/request-telegram-bot', [HomeController::class, 'requestTelegramBot']);
 
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -20,43 +27,13 @@ Route::post('/login', [LoginController::class, 'login']);
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 /* |              ПОЛУЧЕНИЕ ДАННЫХ ИЗ БД               |*/
 /* |___________________________________________________|*/
-/* Главная */
-Route::get('/get-slides-all', [HomeController::class, 'getSlidesAll']);
-Route::get('/get-slides-not-hide', [HomeController::class, 'getSlidesNotHide']);
-Route::get('/get-footer', [HomeController::class, 'getFooter']);
-
 /* О нас */
 Route::get('/get-abouts-all', [HomeController::class, 'getAboutsAll']);
 Route::get('/get-info-files-all', [HomeController::class, 'getInfoFilesAll']);
 
-/* Специалисты */
-Route::get('/get-specialists', [HomeController::class, 'getSpecialists']);
-Route::post('/get-specialist-profile', [HomeController::class, 'getSpecialistProfile']);
-Route::post('/get-specialist-all', [HomeController::class, 'getSpecialistAll']);
-Route::post('/get-specialist-sections', [HomeController::class, 'getSpecialistSections']);
-Route::get('/get-specialists-short', [HomeController::class, 'getSpecialistsShort']);
-
-Route::get('/get-specializations-all', [HomeController::class, 'getSpecializationsAll']);
-Route::get('/get-clinics-all', [HomeController::class, 'getClinicsAll']);
-
-/* Цены */
-Route::get('/download-prices-archive', [AdminController::class, 'downloadPricesArchive']);
-
-Route::get('/get-prices-choice', [HomeController::class, 'getPricesChoice']);
-Route::post('/get-prices-group', [HomeController::class, 'getPricesGruop']);
-Route::post('/get-prices-template', [HomeController::class, 'getPricesTemplate']);
-Route::post('/get-prices-manual', [HomeController::class, 'getPricesManual']);
-Route::post('/get-prices-complecte', [HomeController::class, 'getPricesComplecte']);
-
-Route::get('/get-prices-addresses-list', [HomeController::class, 'getPricesAddressesList']);
-Route::get('/get-prices-categories-list', [HomeController::class, 'getPricesCategoriesList']);
-
 /* Контакты */
 Route::get('/get-contacts-all', [HomeController::class, 'getContactsAll']);
 Route::get('/get-contacts-clinics-all', [HomeController::class, 'getContactsClinicsAll']);
-
-/* Расписание */
-Route::get('/get-shedules-all', [HomeController::class, 'getShedulesAll']);
 
 /* Новости */
 Route::get('/get-news-all', [HomeController::class, 'getNewsAll']);
@@ -78,36 +55,19 @@ Route::middleware('auth:sanctum')->group(function () {
    Route::post('/check-user', [LoginController::class, 'checkUser']);
    Route::post('/logout', [LoginController::class, 'logout']);
    Route::post('/upload-file', [AdminController::class, 'uploadFile']);
-   Route::get('/get-profile-info', [AdminController::class, 'getProfileInfo']);   
+   Route::get('/get-profile-info', [AdminController::class, 'getProfileInfo']);
 });
 
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 /* |                  АДМИНИСТРАТОР                    |*/
 /* |___________________________________________________|*/
 Route::middleware(['auth:sanctum', 'admin-or-creator'])->group(function () {
-   // Главная
-   Route::post('/save-slides-changes', [AdminController::class, 'saveSlidesChanges']);
-   Route::post('/save-footer', [AdminController::class, 'saveFooter']);
-
    // О нас
    Route::post('/save-abouts-changes', [AdminController::class, 'saveAboutsChanges'])->middleware('auth:sanctum');
    Route::post('/save-info-files-changes', [AdminController::class, 'saveInfoFilesChanges'])->middleware('auth:sanctum');
 
    // Контакты
    Route::post('/save-contacts-changes', [AdminController::class, 'saveContactsChanges'])->middleware('auth:sanctum');
-
-   // Специалисты
-   Route::post('/save-specialists-changes', [AdminController::class, 'saveSpecialistsChanges'])->middleware('auth:sanctum');
-   Route::post('/save-specialist-modular', [AdminController::class, 'saveSpecialistModular'])->middleware('auth:sanctum');
-   Route::post('/add-specialist', [AdminController::class, 'addSpecialist'])->middleware('auth:sanctum');
-
-   Route::post('/save-specializations-changes', [AdminController::class, 'saveSpecializationsChanges'])->middleware('auth:sanctum');
-   Route::post('/save-clinics-changes', [AdminController::class, 'saveClinicsChanges'])->middleware('auth:sanctum');
-   
-   Route::post('/make-specialists-xml', [AdminController::class, 'makeSpecialistsXML']);
-
-   // Расписание 
-   Route::post('/save-shedules-all/{type}', [AdminController::class, 'saveShedulesAll']);
 
    // Цены 
    Route::get('/get-prices-files-all', [AdminController::class, 'getPricesFilesAll']);
@@ -139,10 +99,54 @@ Route::middleware(['auth:sanctum', 'creator'])->group(function () {
    Route::post('/delete-user', [CreatorController::class, 'deleteUser'])->middleware('auth:sanctum');
    Route::post('/set-user-password', [CreatorController::class, 'setUserPassword'])->middleware('auth:sanctum');
    Route::post('/set-user-status', [CreatorController::class, 'setUserStatus'])->middleware('auth:sanctum');
-   
+
    // Статистика
    Route::post('/get-tracking-statistics-list', [CreatorController::class, 'getTrackingStatisticsList']);
    Route::post('/get-tracking-statistics-range', [CreatorController::class, 'getTrackingStatisticsRange']);
 });
 
+/* Слайдер */
+Route::get('/get-slides-all', [SlidesController::class, 'getSlidesAll']);
+Route::get('/get-slides-not-hide', [SlidesController::class, 'getSlidesNotHide']);
 
+Route::post('/save-slides-changes', [SlidesController::class, 'saveSlidesChanges'])->middleware(['auth:sanctum', 'admin-or-creator']);
+
+/* Футер */
+Route::get('/get-footer', [FooterController::class, 'getFooter']);
+
+Route::post('/save-footer', [FooterController::class, 'saveFooter'])->middleware(['auth:sanctum', 'admin-or-creator']);
+
+/* Специалисты */
+Route::get('/get-specialists', [SpecialistController::class, 'getSpecialists']);
+Route::post('/get-specialist-profile', [SpecialistController::class, 'getSpecialistProfile']);
+Route::post('/get-specialist-all', [SpecialistController::class, 'getSpecialistAll']);
+Route::post('/get-specialist-sections', [SpecialistController::class, 'getSpecialistSections']);
+Route::get('/get-specialists-short', [SpecialistController::class, 'getSpecialistsShort']);
+Route::get('/get-specializations-all', [SpecialistController::class, 'getSpecializationsAll']);
+Route::get('/get-clinics-all', [SpecialistController::class, 'getClinicsAll']);
+
+Route::post('/save-specialists-changes', [SpecialistController::class, 'saveSpecialistsChanges'])->middleware(['auth:sanctum', 'admin-or-creator']);
+Route::post('/save-specialist-modular', [SpecialistController::class, 'saveSpecialistModular'])->middleware(['auth:sanctum', 'admin-or-creator']);
+Route::post('/add-specialist', [SpecialistController::class, 'addSpecialist'])->middleware(['auth:sanctum', 'admin-or-creator']);
+Route::post('/save-specializations-changes', [SpecialistController::class, 'saveSpecializationsChanges'])->middleware(['auth:sanctum', 'admin-or-creator']);
+Route::post('/save-clinics-changes', [SpecialistController::class, 'saveClinicsChanges'])->middleware(['auth:sanctum', 'admin-or-creator']);
+Route::post('/make-specialists-xml', [SpecialistController::class, 'makeSpecialistsXML'])->middleware(['auth:sanctum', 'admin-or-creator']);
+
+/* Цены */
+Route::get('/get-prices-choice', [PricesController::class, 'getPricesChoice']);
+Route::post('/get-prices-group', [PricesController::class, 'getPricesGruop']);
+Route::post('/get-prices-template', [PricesController::class, 'getPricesTemplate']);
+Route::post('/get-prices-manual', [PricesController::class, 'getPricesManual']);
+Route::post('/get-prices-complecte', [PricesController::class, 'getPricesComplecte']);
+Route::get('/get-prices-addresses-list', [PricesController::class, 'getPricesAddressesList']);
+Route::get('/get-prices-categories-list', [PricesController::class, 'getPricesCategoriesList']);
+
+Route::get('/get-prices-files-all', [PricesController::class, 'getPricesFilesAll'])->middleware(['auth:sanctum', 'admin-or-creator']);
+Route::post('/save-prices-changes', [PricesController::class, 'savePricesChanges'])->middleware(['auth:sanctum', 'admin-or-creator']);
+Route::post('/make-prices-files', [PricesController::class, 'makePricesFiles'])->middleware(['auth:sanctum', 'admin-or-creator']);
+Route::get('/download-prices-archive', [PricesController::class, 'downloadPricesArchive']);
+
+/* Расписание */
+Route::get('/get-shedules-all', [SheduleController::class, 'getShedulesAll']);
+
+Route::post('/save-shedules-all/{type}', [SheduleController::class, 'saveShedulesAll']);
