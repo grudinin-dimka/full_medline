@@ -14,11 +14,14 @@ use App\Http\Controllers\PricesController;
 use App\Http\Controllers\SheduleController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\VideoController;
 
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-/* |                   БОТ ТЕЛЕГРАММ                   |*/
+/* |                      ДРУГОЕ                       |*/
 /* |___________________________________________________|*/
 Route::post('/request-telegram-bot', [HomeController::class, 'requestTelegramBot']);
+Route::post('/create-track', [HomeController::class, 'createTrack']);
 
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 /* |                   АВТОРИЗАЦИЯ                     |*/
@@ -26,63 +29,31 @@ Route::post('/request-telegram-bot', [HomeController::class, 'requestTelegramBot
 Route::post('/login', [LoginController::class, 'login']);
 
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-/* |              ПОЛУЧЕНИЕ ДАННЫХ ИЗ БД               |*/
-/* |___________________________________________________|*/
-/* Контакты */
-Route::get('/get-contacts-all', [HomeController::class, 'getContactsAll']);
-Route::get('/get-contacts-clinics-all', [HomeController::class, 'getContactsClinicsAll']);
-
-/* Видео */
-Route::get('/get-videos-all', [HomeController::class, 'getVideosAll']);
-
-/* Запись нового события */
-Route::post('/create-track', [HomeController::class, 'createTrack']);
-
-/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 /* |                   ПОЛЬЗОВАТЕЛЬ                    |*/
 /* |___________________________________________________|*/
-Route::middleware('auth:sanctum')->group(function () {
-   // Общие
-   Route::post('/check-user', [LoginController::class, 'checkUser']);
-   Route::post('/logout', [LoginController::class, 'logout']);
-   Route::post('/upload-file', [AdminController::class, 'uploadFile']);
-   Route::get('/get-profile-info', [AdminController::class, 'getProfileInfo']);
-});
-
-/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-/* |                  АДМИНИСТРАТОР                    |*/
-/* |___________________________________________________|*/
-Route::middleware(['auth:sanctum', 'admin-or-creator'])->group(function () {
-   // Контакты
-   Route::post('/save-contacts-changes', [AdminController::class, 'saveContactsChanges'])->middleware('auth:sanctum');
-
-   // Цены 
-   Route::get('/get-prices-files-all', [AdminController::class, 'getPricesFilesAll']);
-
-   Route::post('/save-prices-changes', [AdminController::class, 'savePricesChanges']);
-   Route::post('/make-prices-files', [AdminController::class, 'makePricesFiles']);
-
-   // Видео 
-   Route::post('/add-video', [AdminController::class, 'addVideo']);
-   Route::post('/save-videos-changes', [AdminController::class, 'saveVideoChanges']);
-});
+Route::post('/check-user', [LoginController::class, 'checkUser'])->middleware('auth:sanctum');
+Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth:sanctum');
+Route::post('/upload-file', [AdminController::class, 'uploadFile'])->middleware('auth:sanctum');
+Route::get('/get-profile-info', [AdminController::class, 'getProfileInfo'])->middleware('auth:sanctum');
 
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 /* |                    СОЗДАТЕЛЬ                      |*/
 /* |___________________________________________________|*/
-Route::middleware(['auth:sanctum', 'creator'])->group(function () {
-   // Пользователи
-   Route::get('/get-users-all', [CreatorController::class, 'getUsersAll']);
-   Route::post('/save-user', [CreatorController::class, 'saveUser'])->middleware('auth:sanctum');
-   Route::post('/create-user', [CreatorController::class, 'createUser'])->middleware('auth:sanctum');
-   Route::post('/delete-user', [CreatorController::class, 'deleteUser'])->middleware('auth:sanctum');
-   Route::post('/set-user-password', [CreatorController::class, 'setUserPassword'])->middleware('auth:sanctum');
-   Route::post('/set-user-status', [CreatorController::class, 'setUserStatus'])->middleware('auth:sanctum');
+/* _____________________________________________________*/
+/* Пользователи                                         */
+/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+Route::get('/get-users-all', [CreatorController::class, 'getUsersAll'])->middleware(['auth:sanctum', 'creator']);
+Route::post('/save-user', [CreatorController::class, 'saveUser'])->middleware(['auth:sanctum', 'creator']);
+Route::post('/create-user', [CreatorController::class, 'createUser'])->middleware(['auth:sanctum', 'creator']);
+Route::post('/delete-user', [CreatorController::class, 'deleteUser'])->middleware(['auth:sanctum', 'creator']);
+Route::post('/set-user-password', [CreatorController::class, 'setUserPassword'])->middleware(['auth:sanctum', 'creator']);
+Route::post('/set-user-status', [CreatorController::class, 'setUserStatus'])->middleware(['auth:sanctum', 'creator']);
 
-   // Статистика
-   Route::post('/get-tracking-statistics-list', [CreatorController::class, 'getTrackingStatisticsList']);
-   Route::post('/get-tracking-statistics-range', [CreatorController::class, 'getTrackingStatisticsRange']);
-});
+/* _____________________________________________________*/
+/* Статистика                                           */
+/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+Route::post('/get-tracking-statistics-list', [CreatorController::class, 'getTrackingStatisticsList'])->middleware(['auth:sanctum', 'creator']);
+Route::post('/get-tracking-statistics-range', [CreatorController::class, 'getTrackingStatisticsRange'])->middleware(['auth:sanctum', 'creator']);
 
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 /* |                     РАЗДЕЛЫ                       |*/
@@ -165,3 +136,19 @@ Route::post('/add-news', [NewsController::class, 'addNews'])->middleware(['auth:
 Route::post('/save-news-changes-all', [NewsController::class, 'saveNewsChangesAll'])->middleware(['auth:sanctum', 'admin-or-creator']);
 Route::post('/save-news-changes-once', [NewsController::class, 'saveNewsChangesOnce'])->middleware(['auth:sanctum', 'admin-or-creator']);
 Route::post('/publish-news-once', [NewsController::class, 'publishNewsOnce'])->middleware(['auth:sanctum', 'admin-or-creator']);
+
+/* _____________________________________________________*/
+/* Контакты                                             */
+/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+Route::get('/get-contacts-all', [ContactController::class, 'getContactsAll']);
+Route::get('/get-contacts-clinics-all', [ContactController::class, 'getContactsClinicsAll']);
+
+Route::post('/save-contacts-changes', [ContactController::class, 'saveContactsChanges'])->middleware(['auth:sanctum', 'admin-or-creator']);
+
+/* _____________________________________________________*/
+/* Видео                                                */
+/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+Route::get('/get-videos-all', [VideoController::class, 'getVideosAll']);
+
+Route::post('/add-video', [VideoController::class, 'addVideo'])->middleware(['auth:sanctum', 'admin-or-creator']);
+Route::post('/save-videos-changes', [VideoController::class, 'saveVideoChanges'])->middleware(['auth:sanctum', 'admin-or-creator']);

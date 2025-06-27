@@ -33,9 +33,7 @@ class HomeController extends Controller
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                 БОТ ТЕЛЕГРАММ                     |*/
    /* |___________________________________________________|*/
-   /* _____________________________________________________*/
-   /* 1. Отправка данных                                   */
-   /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+   /* Отправка заявки в бота */
    public function requestTelegramBot(Request $request)
    {
       $validator = Validator::make($request->all(), [
@@ -112,122 +110,6 @@ class HomeController extends Controller
             "result" => null,
          ], 50);
       }
-   }
-
-   /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-   /* |                    КОНТАКТЫ                       |*/
-   /* |___________________________________________________|*/
-   public function getContactsAll(Request $request)
-   {
-      try {
-         $clinics = Clinic::all();
-         $contacts = Contact::all();
-
-         foreach ($contacts as $contactKey => $contactValue) {
-            $contactPhones = ContactPhone::where('contactId', $contactValue->id)->get();
-            $phones = [];
-
-            foreach ($contactPhones as $contactPhonesKey => $contactPhonesValue) {
-               $phones[] = Phone::where('id', $contactPhonesValue->phoneId)->first();
-            };
-            $contactValue->phones = $phones;
-
-            $contactMails = ContactMail::where('contactId', $contactValue->id)->get();
-            $mails = [];
-
-            foreach ($contactMails as $contactMailsKey => $contactMailsValue) {
-               $mails[] = Mail::where('id', $contactMailsValue->mailId)->first();
-            };
-            $contactValue->mails = $mails;
-         };
-
-         return response()->json([
-            "success" => true,
-            "debug" => false,
-            "message" => "Данные получены.",
-            "result" => [
-               "contacts" => $contacts,
-               "clinics" => $clinics,
-            ],
-         ], 200);
-      } catch (Throwable $e) {
-         return response()->json([
-            "success" => false,
-            "debug" => true,
-            "message" => $e->getMessage(),
-            "result" => null,
-         ], 500);
-      }
-   }
-
-   /* Получение контактов и клиник */
-   public function getContactsClinicsAll(Request $request)
-   {
-      try {
-         $contacts = Contact::all();
-
-         foreach ($contacts as $contactKey => $contactValue) {
-            $contactPhones = ContactPhone::where('contactId', $contactValue->id)->get();
-            $phones = [];
-
-            foreach ($contactPhones as $contactPhonesKey => $contactPhonesValue) {
-               $phones[] = Phone::where('id', $contactPhonesValue->phoneId)->first();
-            };
-            $contactValue->phones = $phones;
-
-            $contactMails = ContactMail::where('contactId', $contactValue->id)->get();
-            $mails = [];
-
-            foreach ($contactMails as $contactMailsKey => $contactMailsValue) {
-               $mails[] = Mail::where('id', $contactMailsValue->mailId)->first();
-            };
-            $contactValue->mails = $mails;
-            $contactValue->clinic = Clinic::where('id', $contactValue->clinicId)->first();
-         }
-
-         return response()->json([
-            "success" => true,
-            "debug" => false,
-            "message" => "Данные получены.",
-            "result" => $contacts,
-         ], 200);
-      } catch (Throwable $e) {
-         return response()->json([
-            "success" => false,
-            "debug" => true,
-            "message" => $e->getMessage(),
-            "result" => null,
-         ], 500);
-      }
-   }
-
-   /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-   /* |                      ВИДЕО                        |*/
-   /* |___________________________________________________|*/
-   /* Получение всех видео */
-   public function getVideosAll(Request $request)
-   {
-      try {
-         $videos = Video::all()->sortBy('order')->values();
-
-         foreach ($videos as $key => $value) {
-            $value->path = Storage::url('video/' . $value->video);
-         };
-      } catch (Throwable $th) {
-         return response()->json([
-            "success" => false,
-            "debug" => true,
-            "message" => "Не удалось получить данные.",
-            "result" => null,
-         ], 500);
-      }
-
-      return response()->json([
-         "success" => true,
-         "debug" => false,
-         "message" => "Не удалось получить данные.",
-         "result" => $videos,
-      ], 200);
    }
 
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
