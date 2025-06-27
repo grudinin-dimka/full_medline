@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Contact;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ShedulesDay extends Model
+class ContactMail extends Model
 {
     use HasFactory;
 
-    protected $table = 'shedules_days';
+    protected $table = 'contact_mails';
     protected $guarded = ['id'];
-    protected $hidden = ['created_at','updated_at'];
+    protected $hidden = ['created_at', 'updated_at']; 
 }

@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Prices;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PriceFile extends Model
+class PriceCategory extends Model
 {
     use HasFactory;
 
-    protected $table = "price_files";
+    protected $table = "price_categories";
     protected $guarded = ['id'];
-    protected $hidden = ['updated_at'];
+    protected $hidden = ['created_at, updated_at'];
 }

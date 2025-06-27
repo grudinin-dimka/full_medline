@@ -19,13 +19,13 @@ use Throwable;
 use Carbon\Carbon;
 
 /* Модели */
-use App\Models\Specialist;
+use App\Models\Specialist\Specialist;
 
-use App\Models\Shedule;
-use App\Models\ShedulesClinic;
-use App\Models\ShedulesCurrentDay;
-use App\Models\ShedulesDay;
-use App\Models\ShedulesDaysTime;
+use App\Models\Shedule\Shedule;
+use App\Models\Shedule\ShedulesClinic;
+use App\Models\Shedule\ShedulesCurrentDay;
+use App\Models\Shedule\ShedulesDay;
+use App\Models\Shedule\ShedulesDaysTime;
 
 class SheduleController extends Controller
 {

@@ -3,28 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
 use Throwable;
-
-use App\Models\Clinic;
-
-use App\Models\About;
-
-use App\Models\Contact;
-use App\Models\Phone;
-use App\Models\ContactPhone;
-use App\Models\Mail;
-use App\Models\ContactMail;
-use App\Models\InfoFile;
-
-use App\Models\News;
-use App\Models\Video;
 
 use App\Models\Tracking;
 

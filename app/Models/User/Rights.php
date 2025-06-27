@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\User;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ContactPhone extends Model
+class Rights extends Model
 {
     use HasFactory;
 
-    protected $table = 'contact_phones';
+    protected $table = 'rights';
     protected $guarded = ['id'];
     protected $hidden = ['created_at', 'updated_at']; 
 }

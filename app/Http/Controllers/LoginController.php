@@ -8,11 +8,9 @@ use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
-use App\Models\User;
-use App\Models\Slide;
-use App\Models\Footer;
-use App\Models\Rights;
-use App\Models\Status;
+use App\Models\User\User;
+use App\Models\User\Rights;
+use App\Models\User\Status;
 
 class LoginController extends Controller
 {

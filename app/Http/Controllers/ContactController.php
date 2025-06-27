@@ -19,12 +19,12 @@ use Throwable;
 use Carbon\Carbon;
 
 /* Модели */
-use App\Models\Contact;
-use App\Models\ContactMail;
-use App\Models\ContactPhone;
-use App\Models\Clinic;
-use App\Models\Mail;
-use App\Models\Phone;
+use App\Models\Contact\Contact;
+use App\Models\Contact\ContactMail;
+use App\Models\Contact\ContactPhone;
+use App\Models\Shared\Clinic;
+use App\Models\Shared\Mail;
+use App\Models\Shared\Phone;
 
 class ContactController extends Controller
 {

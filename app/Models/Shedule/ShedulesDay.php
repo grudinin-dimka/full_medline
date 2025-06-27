@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Shedule;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PriceCategory extends Model
+class ShedulesDay extends Model
 {
     use HasFactory;
 
-    protected $table = "price_categories";
+    protected $table = 'shedules_days';
     protected $guarded = ['id'];
-    protected $hidden = ['created_at, updated_at'];
+    protected $hidden = ['created_at','updated_at'];
 }

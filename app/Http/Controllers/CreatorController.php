@@ -3,22 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Rules\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
-use App\Models\User;
-use App\Models\Rights;
-use App\Models\Status;
+use App\Models\User\User;
+use App\Models\User\Rights;
+use App\Models\User\Status;
 use App\Models\Tracking;
 use Carbon\Carbon;
 use Illuminate\Validation\Rule;
-use PhpOffice\PhpSpreadsheet\RichText\Run;
+
 use Throwable;
 
 class CreatorController extends Controller

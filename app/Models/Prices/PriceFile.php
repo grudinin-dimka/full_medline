@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Prices;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Shedule extends Model
+class PriceFile extends Model
 {
     use HasFactory;
 
-    protected $table = 'shedules';
+    protected $table = "price_files";
     protected $guarded = ['id'];
-    protected $hidden = ['created_at', 'updated_at'];
+    protected $hidden = ['updated_at'];
 }

@@ -16,30 +16,9 @@ use Illuminate\Validation\Rules\File;
 use Illuminate\Validation\Rule;
 
 /* Модели */
-use App\Models\Rights;
-use App\Models\Status;
-use App\Models\User;
-
-use App\Models\Slide;
-use App\Models\Footer;
-
-use App\Models\About;
-use App\Models\InfoFile;
-
-use App\Models\Contact;
-use App\Models\Phone;
-use App\Models\ContactPhone;
-use App\Models\Mail;
-use App\Models\ContactMail;
-
-use App\Models\Shedule;
-use App\Models\ShedulesClinic;
-use App\Models\ShedulesCurrentDay;
-use App\Models\ShedulesDay;
-use App\Models\ShedulesDaysTime;
-
-use App\Models\News;
-use App\Models\Video;
+use App\Models\User\Rights;
+use App\Models\User\Status;
+use App\Models\User\User;
 
 use Exception;
 use Throwable;

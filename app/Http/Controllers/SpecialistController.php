@@ -20,17 +20,17 @@ use XMLWriter;
 use Transliterator;
 
 /* Модели */
-use App\Models\Specialist;
-use App\Models\Work;
-use App\Models\SpecialistWork;
-use App\Models\Certificate;
-use App\Models\SpecialistCertificate;
-use App\Models\Clinic;
-use App\Models\SpecialistClinic;
-use App\Models\Education;
-use App\Models\SpecialistEducation;
-use App\Models\Specialization;
-use App\Models\SpecialistSpecialization;
+use App\Models\Specialist\Specialist;
+use App\Models\Shared\Work;
+use App\Models\Specialist\SpecialistWork;
+use App\Models\Shared\Certificate;
+use App\Models\Specialist\SpecialistCertificate;
+use App\Models\Shared\Clinic;
+use App\Models\Specialist\SpecialistClinic;
+use App\Models\Shared\Education;
+use App\Models\Specialist\SpecialistEducation;
+use App\Models\Shared\Specialization;
+use App\Models\Specialist\SpecialistSpecialization;
 
 class SpecialistController extends Controller
 {

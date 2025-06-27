@@ -27,11 +27,11 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use XMLWriter;
 
 /* Модели */
-use App\Models\Price;
-use App\Models\PriceAddress;
-use App\Models\PriceCategory;
-use App\Models\PriceFile;
-use App\Models\PriceValue;
+use App\Models\Prices\Price;
+use App\Models\Prices\PriceAddress;
+use App\Models\Prices\PriceCategory;
+use App\Models\Prices\PriceFile;
+use App\Models\Prices\PriceValue;
 
 class PricesController extends Controller
 {

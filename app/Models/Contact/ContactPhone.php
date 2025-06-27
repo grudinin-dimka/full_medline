@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Contact;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ContactMail extends Model
+class ContactPhone extends Model
 {
     use HasFactory;
 
-    protected $table = 'contact_mails';
+    protected $table = 'contact_phones';
     protected $guarded = ['id'];
     protected $hidden = ['created_at', 'updated_at']; 
 }

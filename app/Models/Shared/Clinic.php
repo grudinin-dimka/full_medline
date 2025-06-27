@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Shared;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SpecialistSpecialization extends Model
+class Clinic extends Model
 {
    use HasFactory;
 
-   protected $table = 'specialist_specializations';
+   protected $table = 'clinics';
    protected $guarded = ['id'];
    protected $hidden = ['created_at', 'updated_at'];
 }

@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Specialist;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Specialist extends Model
+class SpecialistCertificate extends Model
 {
     use HasFactory;
 
-    protected $table = 'specialists';
+    protected $table = 'specialist_certificates';
     protected $guarded = ['id'];
     protected $hidden = ['created_at', 'updated_at'];
 }
