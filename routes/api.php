@@ -12,11 +12,12 @@ use App\Http\Controllers\FooterController;
 use App\Http\Controllers\SpecialistController;
 use App\Http\Controllers\PricesController;
 use App\Http\Controllers\SheduleController;
+use App\Http\Controllers\AboutController;
+use App\Http\Controllers\NewsController;
 
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 /* |                   БОТ ТЕЛЕГРАММ                   |*/
 /* |___________________________________________________|*/
-
 Route::post('/request-telegram-bot', [HomeController::class, 'requestTelegramBot']);
 
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -27,19 +28,9 @@ Route::post('/login', [LoginController::class, 'login']);
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 /* |              ПОЛУЧЕНИЕ ДАННЫХ ИЗ БД               |*/
 /* |___________________________________________________|*/
-/* О нас */
-Route::get('/get-abouts-all', [HomeController::class, 'getAboutsAll']);
-Route::get('/get-info-files-all', [HomeController::class, 'getInfoFilesAll']);
-
 /* Контакты */
 Route::get('/get-contacts-all', [HomeController::class, 'getContactsAll']);
 Route::get('/get-contacts-clinics-all', [HomeController::class, 'getContactsClinicsAll']);
-
-/* Новости */
-Route::get('/get-news-all', [HomeController::class, 'getNewsAll']);
-Route::post('/get-news-short', [HomeController::class, 'getNewsShort']);
-Route::post('/get-news-once-without', [HomeController::class, 'getNewsOnceWithout']);
-Route::post('/get-news-more', [HomeController::class, 'getNewsMore']);
 
 /* Видео */
 Route::get('/get-videos-all', [HomeController::class, 'getVideosAll']);
@@ -62,10 +53,6 @@ Route::middleware('auth:sanctum')->group(function () {
 /* |                  АДМИНИСТРАТОР                    |*/
 /* |___________________________________________________|*/
 Route::middleware(['auth:sanctum', 'admin-or-creator'])->group(function () {
-   // О нас
-   Route::post('/save-abouts-changes', [AdminController::class, 'saveAboutsChanges'])->middleware('auth:sanctum');
-   Route::post('/save-info-files-changes', [AdminController::class, 'saveInfoFilesChanges'])->middleware('auth:sanctum');
-
    // Контакты
    Route::post('/save-contacts-changes', [AdminController::class, 'saveContactsChanges'])->middleware('auth:sanctum');
 
@@ -75,15 +62,7 @@ Route::middleware(['auth:sanctum', 'admin-or-creator'])->group(function () {
    Route::post('/save-prices-changes', [AdminController::class, 'savePricesChanges']);
    Route::post('/make-prices-files', [AdminController::class, 'makePricesFiles']);
 
-   // Новости 
-   Route::post('/get-news-once', [HomeController::class, 'getNewsOnce']);
-
-   Route::post('/add-news', [AdminController::class, 'addNews']);
-   Route::post('/save-news-changes-all', [AdminController::class, 'saveNewsChangesAll']);
-   Route::post('/save-news-changes-once', [AdminController::class, 'saveNewsChangesOnce']);
-   Route::post('/publish-news-once', [AdminController::class, 'publishNewsOnce']);
-
-   // Новости 
+   // Видео 
    Route::post('/add-video', [AdminController::class, 'addVideo']);
    Route::post('/save-videos-changes', [AdminController::class, 'saveVideoChanges']);
 });
@@ -105,18 +84,27 @@ Route::middleware(['auth:sanctum', 'creator'])->group(function () {
    Route::post('/get-tracking-statistics-range', [CreatorController::class, 'getTrackingStatisticsRange']);
 });
 
-/* Слайдер */
+/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+/* |                     РАЗДЕЛЫ                       |*/
+/* |___________________________________________________|*/
+/* _____________________________________________________*/
+/* Слайдер                                              */
+/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 Route::get('/get-slides-all', [SlidesController::class, 'getSlidesAll']);
 Route::get('/get-slides-not-hide', [SlidesController::class, 'getSlidesNotHide']);
 
 Route::post('/save-slides-changes', [SlidesController::class, 'saveSlidesChanges'])->middleware(['auth:sanctum', 'admin-or-creator']);
 
-/* Футер */
+/* _____________________________________________________*/
+/* Футер                                                */
+/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 Route::get('/get-footer', [FooterController::class, 'getFooter']);
 
 Route::post('/save-footer', [FooterController::class, 'saveFooter'])->middleware(['auth:sanctum', 'admin-or-creator']);
 
-/* Специалисты */
+/* _____________________________________________________*/
+/* Специалисты                                          */
+/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 Route::get('/get-specialists', [SpecialistController::class, 'getSpecialists']);
 Route::post('/get-specialist-profile', [SpecialistController::class, 'getSpecialistProfile']);
 Route::post('/get-specialist-all', [SpecialistController::class, 'getSpecialistAll']);
@@ -132,7 +120,9 @@ Route::post('/save-specializations-changes', [SpecialistController::class, 'save
 Route::post('/save-clinics-changes', [SpecialistController::class, 'saveClinicsChanges'])->middleware(['auth:sanctum', 'admin-or-creator']);
 Route::post('/make-specialists-xml', [SpecialistController::class, 'makeSpecialistsXML'])->middleware(['auth:sanctum', 'admin-or-creator']);
 
-/* Цены */
+/* _____________________________________________________*/
+/* Цены                                                 */
+/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 Route::get('/get-prices-choice', [PricesController::class, 'getPricesChoice']);
 Route::post('/get-prices-group', [PricesController::class, 'getPricesGruop']);
 Route::post('/get-prices-template', [PricesController::class, 'getPricesTemplate']);
@@ -140,13 +130,38 @@ Route::post('/get-prices-manual', [PricesController::class, 'getPricesManual']);
 Route::post('/get-prices-complecte', [PricesController::class, 'getPricesComplecte']);
 Route::get('/get-prices-addresses-list', [PricesController::class, 'getPricesAddressesList']);
 Route::get('/get-prices-categories-list', [PricesController::class, 'getPricesCategoriesList']);
+Route::get('/download-prices-archive', [PricesController::class, 'downloadPricesArchive']);
 
 Route::get('/get-prices-files-all', [PricesController::class, 'getPricesFilesAll'])->middleware(['auth:sanctum', 'admin-or-creator']);
 Route::post('/save-prices-changes', [PricesController::class, 'savePricesChanges'])->middleware(['auth:sanctum', 'admin-or-creator']);
 Route::post('/make-prices-files', [PricesController::class, 'makePricesFiles'])->middleware(['auth:sanctum', 'admin-or-creator']);
-Route::get('/download-prices-archive', [PricesController::class, 'downloadPricesArchive']);
 
-/* Расписание */
+/* _____________________________________________________*/
+/* Расписание                                           */
+/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 Route::get('/get-shedules-all', [SheduleController::class, 'getShedulesAll']);
 
-Route::post('/save-shedules-all/{type}', [SheduleController::class, 'saveShedulesAll']);
+Route::post('/save-shedules-all/{type}', [SheduleController::class, 'saveShedulesAll'])->middleware(['auth:sanctum', 'admin-or-creator']);
+
+/* _____________________________________________________*/
+/* О нас                                                */
+/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+Route::get('/get-abouts-all', [AboutController::class, 'getAboutsAll']);
+Route::get('/get-info-files-all', [AboutController::class, 'getInfoFilesAll']);
+
+Route::post('/save-abouts-changes', [AboutController::class, 'saveAboutsChanges'])->middleware(['auth:sanctum', 'admin-or-creator']);
+Route::post('/save-info-files-changes', [AboutController::class, 'saveInfoFilesChanges'])->middleware(['auth:sanctum', 'admin-or-creator']);
+
+/* _____________________________________________________*/
+/* Новости                                              */
+/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+Route::get('/get-news-all', [NewsController::class, 'getNewsAll']);
+Route::post('/get-news-short', [NewsController::class, 'getNewsShort']);
+Route::post('/get-news-once-without', [NewsController::class, 'getNewsOnceWithout']);
+Route::post('/get-news-more', [NewsController::class, 'getNewsMore']);
+
+Route::post('/get-news-once', [NewsController::class, 'getNewsOnce'])->middleware(['auth:sanctum', 'admin-or-creator']);
+Route::post('/add-news', [NewsController::class, 'addNews'])->middleware(['auth:sanctum', 'admin-or-creator']);
+Route::post('/save-news-changes-all', [NewsController::class, 'saveNewsChangesAll'])->middleware(['auth:sanctum', 'admin-or-creator']);
+Route::post('/save-news-changes-once', [NewsController::class, 'saveNewsChangesOnce'])->middleware(['auth:sanctum', 'admin-or-creator']);
+Route::post('/publish-news-once', [NewsController::class, 'publishNewsOnce'])->middleware(['auth:sanctum', 'admin-or-creator']);
