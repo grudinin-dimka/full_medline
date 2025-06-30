@@ -126,6 +126,13 @@
 					</a>
 				</div>
 
+				<div class="aside__item" :class="{ active: isActive('/admin/eclients') }">
+					<a class="aside__item-title" href="#" @click.prevent="insertPage(links.clients)">
+						<Icon :name="'clients'" :fill="'white'" :width="'24px'" :height="'24px'" />
+						КЛИЕНТЫ
+					</a>
+				</div>
+
 				<div class="aside__item">
 					<a
 						class="aside__item-title"
@@ -323,6 +330,12 @@ export default {
 
 				schedule: {
 					name: "eschedule",
+					status: false,
+					list: null,
+				},
+
+				clients: {
+					name: "eclients",
 					status: false,
 					list: null,
 				},

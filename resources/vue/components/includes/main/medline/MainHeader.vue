@@ -90,16 +90,18 @@
 			</VueInput>
 
 			<div class="modal__points-result">
-				<div class="modal__result-points">
+				<div class="modal__result-points" :class="{ skeleton: disabled.modalPoints.request }">
 					<div class="modal__points-title">Баланс</div>
-					<div class="modal__points-value">1000</div>
+					<div class="modal__points-value">
+						{{ modalPointsForm.data.points.value }}
+					</div>
 				</div>
-				<div class="modal__result-barcode">
+				<div class="modal__result-barcode" :class="{ skeleton: disabled.modalPoints.request }">
 					<div class="modal__barcode-title">Штрихкод</div>
 
 					<div class="modal__points-value">
 						<vue-js-barcode
-							:value="'4003994155486'"
+							:value="modalPointsForm.data.barcode.value"
 							:width="'2rem'"
 							:height="80"
 							format="EAN13"
@@ -112,7 +114,7 @@
 		</template>
 
 		<template #footer>
-			<VueButton @click="sendClientPoints" :disabled="false">
+			<VueButton @click="sendClientPoints" :disabled="disabled.modalPoints.request">
 				<Icon :name="'info'" :fill="'white'" :width="'26px'" :height="'26px'" />
 				Узнать баланс
 			</VueButton>
@@ -425,6 +427,10 @@ export default {
 						value: "4003994155486",
 						edited: false,
 					},
+					points: {
+						value: "",
+						edited: false,
+					},
 				},
 			},
 
@@ -493,6 +499,9 @@ export default {
 
 			disabled: {
 				modalForm: {
+					request: false,
+				},
+				modalPoints: {
 					request: false,
 				},
 			},
@@ -683,27 +692,29 @@ export default {
 				return;
 			}
 
-			this.disabled.modalForm.request = true;
+			this.disabled.modalPoints.request = true;
 
 			let formData = new FormData();
 
+			this.modalPointsForm.data.points.value = "";
+			this.modalPointsForm.data.barcode.value = "";
+
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `request-telegram-bot`,
+				url: this.$store.getters.urlApi + `clieint-points`,
 				headers: {
 					ContentType: "multipart/form-data",
 				},
 				data: {
-					title: this.modalRequestForm.data.title.value,
-					name: this.modalRequestForm.data.name.value,
-					phone: this.modalRequestForm.data.phone.value,
-					description: this.modalRequestForm.data.description.value,
+					name: this.modalPointsForm.data.name.value,
+					snils: this.modalPointsForm.data.snils.value,
 				},
 			})
 				.then((response) => {
 					if (!response) return;
 
-					this.$refs.modalRequest.close();
+					this.modalPointsForm.data.points.value = response.data.result.points;
+					this.modalPointsForm.data.barcode.value = response.data.result.barcode;
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
@@ -713,7 +724,7 @@ export default {
 					});
 				})
 				.finally(() => {
-					this.disabled.modalForm.request = false;
+					this.disabled.modalPoints.request = false;
 				});
 		},
 	},

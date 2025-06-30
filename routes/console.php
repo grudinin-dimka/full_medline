@@ -6,8 +6,13 @@ use Illuminate\Support\Facades\Schedule;
 use Illuminate\Support\Facades\DB;
 
 use App\Http\Controllers\SheduleController;
+use App\Http\Controllers\ClientController;
 
-// Обновление расписания каждй день
+/* Обновление расписания каждый день */
 Schedule::call(function () {
+    // Обновление расписания
     (new SheduleController)->saveShedulesAll();
+
+    // Обновление клиентов
+    (new ClientController)->saveClientsAll();
 })->everyMinute()->timezone(env('APP_TIMEZONE', 'Asia/Yekaterinburg'));

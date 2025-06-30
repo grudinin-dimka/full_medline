@@ -1,22 +1,23 @@
 <template>
 	<div
-		class="select"
+		class="selector"
 		ref="selector"
 		:class="{
 			error: type === 'error',
 			create: type === 'create',
 		}"
 	>
-		<div class="control" :class="{ open: isOpen }">
-			<div class="label" @click="isOpen = !isOpen">
+		<div class="selector__control" :class="{ open: isOpen }">
+			<div class="selector__control-label" @click="isOpen = !isOpen">
 				{{
 					modelValue !== ""
 						? list.find((item) => item.value === modelValue).label
 						: placeholder
 				}}
 			</div>
+
 			<div
-				class="clear"
+				class="selector__control-clear"
 				v-if="modelValue !== '' && cleared"
 				@click="$emit('update:modelValue', '')"
 			>
@@ -32,7 +33,8 @@
 					/>
 				</svg>
 			</div>
-			<div class="arrow" @click="isOpen = !isOpen">
+
+			<div class="selector__control-arrow" @click="isOpen = !isOpen">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					height="24px"
@@ -44,12 +46,15 @@
 				</svg>
 			</div>
 		</div>
-		<div class="menu" :class="{ open: isOpen }">
-			<div class="input" v-if="filter">
+
+		<div class="selector__menu" :class="{ open: isOpen }">
+			<div class="selector__menu-input" v-if="filter">
 				<input type="text" placeholder="Введите название" v-model="name" />
 			</div>
-			<ul>
+
+			<ul class="selector__menu-list">
 				<li
+					class="selector__list-item"
 					v-for="item in getFilteredList"
 					v-if="getFilteredList.length > 0"
 					:class="{ active: item.value === modelValue }"
@@ -57,7 +62,7 @@
 				>
 					{{ item.label }}
 				</li>
-				<li v-else class="empty">Ничего нет</li>
+				<li class="selector__list-item empty" v-else>Ничего нет</li>
 			</ul>
 		</div>
 	</div>
@@ -153,14 +158,14 @@ export default {
 </script>
 
 <style scoped>
-.select {
+.selector {
 	width: 100%;
 
 	position: relative;
 	display: inline-block;
 }
 
-.control {
+.selector__control {
 	user-select: none;
 	box-sizing: border-box;
 	cursor: default;
@@ -168,7 +173,7 @@ export default {
 	justify-content: space-between;
 	align-items: center;
 	gap: 10px;
-	
+
 	border: 1px solid rgba(0, 0, 0, 0.25);
 	border-radius: 10px;
 	padding: 0px 10px 0px 10px;
@@ -184,7 +189,7 @@ export default {
 	transition: all 0.2s;
 }
 
-.control > .label {
+.selector__control > .selector__control-label {
 	display: flex;
 	align-items: center;
 	flex-grow: 1;
@@ -197,18 +202,18 @@ export default {
 	overflow: hidden;
 }
 
-.control > :is(.clear, .arrow) {
+.selector__control > :is(.selector__control-clear, .selector__control-arrow) {
 	cursor: pointer;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 }
 
-.control.open {
+.selector__control.open {
 	border: var(--input-border-focus);
 }
 
-.input > input {
+.selector__menu-input > input {
 	box-sizing: border-box;
 
 	outline: none;
@@ -222,11 +227,11 @@ export default {
 	transition: all 0.2s;
 }
 
-.input > input:focus {
+.selector__menu-input > input:focus {
 	border: var(--input-border-focus);
 }
 
-.select.error > .control {
+.selector.error > .selector__control {
 	background-color: var(--input-error-background-color);
 	border: var(--input-error-border);
 
@@ -243,12 +248,12 @@ export default {
 	transition: all 0.2s;
 }
 
-.select.create > .control.open {
+.selector.create > .selector__control.open {
 	border: 1px solid #44a533;
 }
 
 /* Меню */
-.menu {
+.selector__menu {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
@@ -272,12 +277,12 @@ export default {
 	transition: all 0.2s;
 }
 
-.menu.open {
+.selector__menu.open {
 	visibility: visible;
 	opacity: 1;
 }
 
-.menu > ul {
+.selector__menu-list {
 	display: flex;
 	flex-direction: column;
 	gap: 5px;
@@ -291,31 +296,31 @@ export default {
 }
 
 /* Скролбар блока с контентом. */
-.menu > ul::-webkit-scrollbar {
+.selector__menu-list::-webkit-scrollbar {
 	width: 20px;
 }
 
-.menu > ul::-webkit-scrollbar-track {
+.selector__menu-list::-webkit-scrollbar-track {
 	background-color: rgb(255, 255, 255);
 	border-radius: 10px;
 	margin: 2px;
 }
 
-.menu > ul::-webkit-scrollbar-thumb {
+.selector__menu-list::-webkit-scrollbar-thumb {
 	background-color: rgb(220, 220, 220);
 	border: 6px solid rgb(255, 255, 255);
 	border-radius: 10px;
 }
 
-.menu > ul::-webkit-scrollbar-thumb:hover {
+.selector__menu-list::-webkit-scrollbar-thumb:hover {
 	background-color: rgb(230, 230, 230);
 	cursor: all-scroll;
 }
 /* Конец. */
 
-.menu > ul > li {
+.selector__list-item {
 	user-select: none;
-	white-space: nowrap;
+	/* white-space: nowrap; */
 
 	padding: 10px;
 	border-radius: 10px;
@@ -326,15 +331,15 @@ export default {
 	background-color: rgba(255, 255, 255, 1);
 }
 
-.menu > ul > li:hover {
+.selector__list-item:hover {
 	background-color: rgb(242, 242, 242);
 }
 
-.menu > ul > li.empty {
+.selector__list-item.empty {
 	color: rgb(150, 150, 150);
 }
 
-.menu > ul > li.active {
+.selector__list-item.active {
 	background-color: rgb(242, 242, 242);
 }
 </style>

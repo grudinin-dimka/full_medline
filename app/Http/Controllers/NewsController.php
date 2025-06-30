@@ -38,6 +38,13 @@ class NewsController extends Controller
             $value->url_time = Carbon::parse($value->created_at)->format('H:i:s');
             $value->path = Storage::url('news/' . $value->image);
          };
+
+         return response()->json([
+            "success" => true,
+            "debug" => false,
+            "message" => "Данные получены.",
+            "result" => $news,
+         ], 200);
       } catch (Throwable $th) {
          return response()->json([
             "success" => false,
@@ -46,13 +53,6 @@ class NewsController extends Controller
             "result" => null,
          ], 500);
       }
-
-      return response()->json([
-         "success" => true,
-         "debug" => false,
-         "message" => "Данные получены.",
-         "result" => $news,
-      ], 200);
    }
 
    /* Получение всех новостей */
@@ -84,6 +84,16 @@ class NewsController extends Controller
             $value->url_time = Carbon::parse($value->created_at)->format('H:i:s');
             $value->path = Storage::url('news/' . $value->image);
          };
+
+         return response()->json([
+            "success" => true,
+            "debug" => false,
+            "message" => "Данные получены.",
+            "result" => [
+               "news" => $news,
+               "count" => News::all()->where('hide', 1)->count(),
+            ],
+         ], 200);
       } catch (Throwable $th) {
          return response()->json([
             "success" => false,
@@ -92,16 +102,6 @@ class NewsController extends Controller
             "result" => null,
          ], 500);
       }
-
-      return response()->json([
-         "success" => true,
-         "debug" => false,
-         "message" => "Данные получены.",
-         "result" => [
-            "news" => $news,
-            "count" => News::all()->where('hide', 1)->count(),
-         ],
-      ], 200);
    }
 
    /* Получение одной новости */

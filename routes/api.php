@@ -16,12 +16,26 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\VideoController;
+use App\Http\Controllers\ClientController;
 
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 /* |                      ДРУГОЕ                       |*/
 /* |___________________________________________________|*/
+/* _____________________________________________________*/
+/* Формирование заявки                                  */
+/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+
 Route::post('/request-telegram-bot', [HomeController::class, 'requestTelegramBot']);
+/* _____________________________________________________*/
+/* Создание нового трека                                */
+/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 Route::post('/create-track', [HomeController::class, 'createTrack']);
+/* _____________________________________________________*/
+/* Данные о баллах клиентов                             */
+/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+Route::get('/clieints', [ClientController::class, 'getClients']);
+Route::post('/clieint-points', [ClientController::class, 'getClientPoints']);
+Route::post('/save-clieint-points', [ClientController::class, 'saveClientPoints'])->middleware(['auth:sanctum', 'admin-or-creator']);
 
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 /* |                   АВТОРИЗАЦИЯ                     |*/

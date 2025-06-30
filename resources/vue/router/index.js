@@ -301,6 +301,20 @@ const router = createRouter({
 						},
 					],
 				},
+				{
+					path: "eclients",
+					name: "eclients",
+					meta: { title: "(e) Клиенты" },
+					redirect: { name: "eclients-all" },
+					component: () => import("../views/admin/clients/AdminClients.vue"),
+					children: [
+						{
+							path: "",
+							name: "eclients-all",
+							component: () => import("../views/admin/clients/AdminClientsAll.vue"),
+						},
+					],
+				},
 			],
 		},
 		// Роутер для логина

@@ -1,16 +1,16 @@
 <template>
 	<info-bar>
-		<template #title>Расписание</template>
-		<template #addreas>schedule</template>
+		<template #title>Клиенты</template>
+		<template #addreas>clients</template>
 	</info-bar>
 
 	<block-once :minHeight="200">
-		<template #title>КЛИНИКИ</template>
+		<template #title>КЛИЕНТЫ</template>
 
 		<template #options>
 			<button-default
-				@click.prevent="updateSheduleFromServe"
-				:disabled="disabled.schedule.save"
+				@click.prevent="updateClientsFromServe"
+				:disabled="disabled.clients.save"
 				:look="'white'"
 			>
 				<Icon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
@@ -19,38 +19,10 @@
 		</template>
 
 		<template #body>
-			<BaseTable v-if="loading.sections.schedule" :table="tableCLinics" />
+			<BaseTable v-if="loading.sections.clients" :table="table" />
 
 			<loader-child
-				:isLoading="loading.loader.schedule"
-				:minHeight="200"
-				@loaderChildAfterLeave="loaderChildAfterLeave"
-			/>
-		</template>
-	</block-once>
-
-	<block-once :minHeight="200">
-		<template #title>ДНИ</template>
-
-		<template #body>
-			<BaseTable v-if="loading.sections.schedule" :table="tableDays" />
-
-			<loader-child
-				:isLoading="loading.loader.schedule"
-				:minHeight="200"
-				@loaderChildAfterLeave="loaderChildAfterLeave"
-			/>
-		</template>
-	</block-once>
-
-	<block-once :minHeight="200">
-		<template #title>СПЕЦИАЛИСТЫ</template>
-
-		<template #body>
-			<BaseTable v-if="loading.sections.schedule" :table="tableSchedules" />
-
-			<loader-child
-				:isLoading="loading.loader.schedule"
+				:isLoading="loading.loader.clients"
 				:minHeight="200"
 				@loaderChildAfterLeave="loaderChildAfterLeave"
 			/>
@@ -91,47 +63,22 @@ export default {
 			/* Загрузчик */
 			loading: {
 				loader: {
-					schedule: true,
+					clients: true,
 				},
 				sections: {
-					schedule: false,
+					clients: false,
 				},
 			},
 
 			/* Кнопки */
 			disabled: {
-				schedule: {
+				clients: {
 					save: false,
 				},
 			},
 
 			/* Таблица */
-			tableDays: {
-				// Настройки
-				options: {
-					create: false,
-					delete: false,
-					update: false,
-					report: false,
-				},
-
-				// Колонки
-				head: [
-					{ name: "id", text: "ID", columnType: "id" },
-					{
-						name: "date",
-						text: "Дата",
-						columnType: "time",
-						columnSize: "auto",
-					},
-				],
-
-				// Элементы
-				body: [],
-			},
-
-			/* Таблица */
-			tableCLinics: {
+			table: {
 				// Настройки
 				options: {
 					create: false,
@@ -145,34 +92,27 @@ export default {
 					{ name: "id", text: "ID", columnType: "id" },
 					{
 						name: "name",
-						text: "Название",
+						text: "ФИО",
 						columnType: "default",
-						columnSize: "auto",
+						columnSize: "300px",
 					},
-				],
-
-				// Элементы
-				body: [],
-			},
-
-			/* Таблица */
-			tableSchedules: {
-				// Настройки
-				options: {
-					create: false,
-					delete: false,
-					update: false,
-					report: false,
-				},
-
-				// Колонки
-				head: [
-					{ name: "id", text: "ID", columnType: "id" },
 					{
-						name: "name",
-						text: "Название",
+						name: "snils",
+						text: "СНИЛС",
 						columnType: "default",
-						columnSize: "auto",
+						columnSize: "100px",
+					},
+					{
+						name: "barcode",
+						text: "Баркод",
+						columnType: "default",
+						columnSize: "100px",
+					},
+					{
+						name: "points",
+						text: "Баллы",
+						columnType: "default",
+						columnSize: "100px",
 					},
 				],
 
@@ -187,34 +127,40 @@ export default {
 		/* |___________________________________________________|*/
 		/* После скрытия элементы */
 		loaderChildAfterLeave() {
-			this.loading.sections.schedule = true;
+			for (let key in this.loading.loader) {
+				if (!this.loading.loader[key]) {
+					this.loading.sections[key] = true;
+				}
+			}
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |             Обновление расписания                 |*/
 		/* |___________________________________________________|*/
-		updateSheduleFromServe() {
-			this.disabled.schedule.save = true;
+		updateClientsFromServe() {
+			this.disabled.clients.save = true;
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `save-shedules-all/manual`,
-			}).finally(() => {
-				this.disabled.schedule.save = false;
-			});
+				url: this.$store.getters.urlApi + `save-clieint-points`,
+			})
+				.then((response) => {
+					this.table.body = response.data.result;
+				})
+				.finally(() => {
+					this.disabled.clients.save = false;
+				});
 		},
 	},
 	mounted() {
 		api({
 			method: "get",
-			url: this.$store.getters.urlApi + `get-shedules-all`,
+			url: this.$store.getters.urlApi + `clieints`,
 		})
 			.then((response) => {
 				if (!response) return;
 
-				this.tableDays.body = response.data.result.currentDays;
-				this.tableCLinics.body = response.data.result.sheduleClinics;
-				this.tableSchedules.body = response.data.result.shedules;
+				this.table.body = response.data.result;
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {
@@ -224,7 +170,7 @@ export default {
 				});
 			})
 			.finally(() => {
-				this.loading.loader.schedule = false;
+				this.loading.loader.clients = false;
 			});
 	},
 };
