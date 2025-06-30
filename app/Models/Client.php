@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ClientPoints extends Model
+class Client extends Model
 {
     use HasFactory;
 
-    protected $table = 'client_points';
+    protected $table = 'clients';
     protected $guarded = ['id'];
     protected $hidden = ['created_at', 'updated_at'];
 }

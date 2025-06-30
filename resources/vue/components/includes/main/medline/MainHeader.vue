@@ -1,8 +1,8 @@
 <template>
-	<!-- Модальное окно: Видео -->
-	<Modal ref="modal" :settings="modal">
+	<!-- Модальное окно: Баллы -->
+	<Modal ref="modalPoints" :settings="modalPoints">
 		<template #title>
-			{{ modal.values.title }}
+			{{ modalPoints.values.title }}
 		</template>
 
 		<template #body>
@@ -10,80 +10,27 @@
 				<template #legend> КОНТАКТНЫЕ ДАННЫЕ </template>
 				<template #inputs>
 					<VueInput
-						v-model="modalForm.data.name.value"
+						v-model="modalPointsForm.data.name.value"
 						:type="'text'"
-						:placeholder="'Введите имя'"
-						:error="modalForm.errors.name.status"
+						:placeholder="'Введите ФИО'"
+						:error="modalPointsForm.errors.name.status"
 					>
-						<template #label> ИМЯ </template>
+						<template #label> ФИО </template>
 						<template #error>
-							{{ modalForm.errors.name.message }}
+							{{ modalPointsForm.errors.name.message }}
 						</template>
 					</VueInput>
 
 					<VueInput
-						v-model="modalForm.data.phone.value"
-						:type="'phone'"
-						:placeholder="'+7 (___) ___-__-__'"
-						:error="modalForm.errors.phone.status"
+						v-model="modalPointsForm.data.snils.value"
+						:type="'mask'"
+						:mask="'###-###-###-##'"
+						:placeholder="'___-___-___-__'"
+						:error="modalPointsForm.errors.snils.status"
 					>
-						<template #label> НОМЕР ТЕЛЕФОНА </template>
+						<template #label> НОМЕР СНИЛСА </template>
 						<template #error>
-							{{ modalForm.errors.phone.message }}
-						</template>
-					</VueInput>
-				</template>
-			</VueInputContainer>
-
-			<VueInputContainer :direction="'column'" :gap="'10px'">
-				<template #legend> ДРУГАЯ ИНФОРМАЦИЯ </template>
-				<template #inputs>
-					<VueInput
-						v-model="modalForm.data.description.value"
-						:type="'textarea'"
-						:placeholder="'Введите описание'"
-						:error="modalForm.errors.description.status"
-					>
-						<template #label> ОПИСАНИЕ </template>
-						<template #error>
-							{{ modalForm.errors.description.message }}
-						</template>
-					</VueInput>
-
-					<VueInput
-						v-model="modalForm.data.title.value"
-						:type="'select'"
-						:options="[
-							{
-								default: true,
-								disabled: true,
-								value: '',
-								label: 'Выберите категорию',
-							},
-							{
-								default: false,
-								disabled: false,
-								value: 'Запись к врачу',
-								label: 'Запись к врачу',
-							},
-							{
-								default: false,
-								disabled: false,
-								value: 'Вызов врач на дом',
-								label: 'Вызов врач на дом',
-							},
-							{
-								default: false,
-								disabled: false,
-								value: 'Другое',
-								label: 'Другое',
-							},
-						]"
-						:error="modalForm.errors.title.status"
-					>
-						<template #label> ТИП ЗАЯВКИ </template>
-						<template #error>
-							{{ modalForm.errors.title.message }}
+							{{ modalPointsForm.errors.snils.message }}
 						</template>
 					</VueInput>
 				</template>
@@ -117,14 +64,14 @@
 						</div>
 
 						<VueInput
-							v-model="modalForm.data.captcha.value"
+							v-model="modalPointsForm.data.captcha.value"
 							:type="'text'"
 							:placeholder="'Введите текст'"
-							:error="modalForm.errors.captcha.status"
+							:error="modalPointsForm.errors.captcha.status"
 						>
 							<template #label> КОД С КАРТИНКИ </template>
 							<template #error>
-								{{ modalForm.errors.captcha.message }}
+								{{ modalPointsForm.errors.captcha.message }}
 							</template>
 						</VueInput>
 					</div>
@@ -132,9 +79,182 @@
 			</VueInputContainer>
 
 			<VueInput
-				v-model="modalForm.data.checkbox.value"
+				v-model="modalPointsForm.data.checkbox.value"
 				:type="'checkbox'"
-				:error="modalForm.errors.checkbox.status"
+				:error="modalPointsForm.errors.checkbox.status"
+			>
+				<template #label
+					>Согласие на обработку указанных персональных данных в соответствии с
+					законодательством Российской Федерации.</template
+				>
+			</VueInput>
+
+			<div class="modal__points-result">
+				<div class="modal__result-points">
+					<div class="modal__points-title">Баланс</div>
+					<div class="modal__points-value">1000</div>
+				</div>
+				<div class="modal__result-barcode">
+					<div class="modal__barcode-title">Штрихкод</div>
+
+					<div class="modal__points-value">
+						<vue-js-barcode
+							:value="'4003994155486'"
+							:width="'2rem'"
+							:height="80"
+							format="EAN13"
+							line-color="#000000"
+							background="white"
+						></vue-js-barcode>
+					</div>
+				</div>
+			</div>
+		</template>
+
+		<template #footer>
+			<VueButton @click="sendClientPoints" :disabled="false">
+				<Icon :name="'info'" :fill="'white'" :width="'26px'" :height="'26px'" />
+				Узнать баланс
+			</VueButton>
+		</template>
+	</Modal>
+
+	<!-- Модальное окно: Заявка -->
+	<Modal ref="modalRequest" :settings="modalRequest">
+		<template #title>
+			{{ modalRequest.values.title }}
+		</template>
+
+		<template #body>
+			<VueInputContainer :direction="'column'" :gap="'10px'">
+				<template #legend> КОНТАКТНЫЕ ДАННЫЕ </template>
+				<template #inputs>
+					<VueInput
+						v-model="modalRequestForm.data.name.value"
+						:type="'text'"
+						:placeholder="'Введите ФИО'"
+						:error="modalRequestForm.errors.name.status"
+					>
+						<template #label> ФИО </template>
+						<template #error>
+							{{ modalRequestForm.errors.name.message }}
+						</template>
+					</VueInput>
+
+					<VueInput
+						v-model="modalRequestForm.data.phone.value"
+						:type="'phone'"
+						:placeholder="'+7 (___) ___-__-__'"
+						:error="modalRequestForm.errors.phone.status"
+					>
+						<template #label> НОМЕР ТЕЛЕФОНА </template>
+						<template #error>
+							{{ modalRequestForm.errors.phone.message }}
+						</template>
+					</VueInput>
+				</template>
+			</VueInputContainer>
+
+			<VueInputContainer :direction="'column'" :gap="'10px'">
+				<template #legend> ДРУГАЯ ИНФОРМАЦИЯ </template>
+				<template #inputs>
+					<VueInput
+						v-model="modalRequestForm.data.description.value"
+						:type="'textarea'"
+						:placeholder="'Введите описание'"
+						:error="modalRequestForm.errors.description.status"
+					>
+						<template #label> ОПИСАНИЕ </template>
+						<template #error>
+							{{ modalRequestForm.errors.description.message }}
+						</template>
+					</VueInput>
+
+					<VueInput
+						v-model="modalRequestForm.data.title.value"
+						:type="'select'"
+						:options="[
+							{
+								default: true,
+								disabled: true,
+								value: '',
+								label: 'Выберите категорию',
+							},
+							{
+								default: false,
+								disabled: false,
+								value: 'Запись к врачу',
+								label: 'Запись к врачу',
+							},
+							{
+								default: false,
+								disabled: false,
+								value: 'Вызов врач на дом',
+								label: 'Вызов врач на дом',
+							},
+							{
+								default: false,
+								disabled: false,
+								value: 'Другое',
+								label: 'Другое',
+							},
+						]"
+						:error="modalRequestForm.errors.title.status"
+					>
+						<template #label> ТИП ЗАЯВКИ </template>
+						<template #error>
+							{{ modalRequestForm.errors.title.message }}
+						</template>
+					</VueInput>
+				</template>
+			</VueInputContainer>
+
+			<VueInputContainer :direction="'column'" :gap="'10px'">
+				<template #legend> ПРОВЕРОЧНЫЙ КОД </template>
+				<template #inputs>
+					<div class="captcha">
+						<div class="captcha__content">
+							<div class="captcha__content-text">
+								<span v-for="letter in getCaptchaSplited" :style="getLetterStyle()">
+									{{ letter }}
+								</span>
+
+								<div class="content__text-line" ref="line"></div>
+								<div class="content__text-trash"></div>
+							</div>
+							<div class="captcha__content-update" @click="reloadCaptcha">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									height="26px"
+									viewBox="0 -960 960 960"
+									width="26px"
+								>
+									<path
+										d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-110h80v280H520v-80h168q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q77 0 139-44t87-116h84q-28 106-114 173t-196 67Z"
+									/>
+								</svg>
+							</div>
+						</div>
+
+						<VueInput
+							v-model="modalRequestForm.data.captcha.value"
+							:type="'text'"
+							:placeholder="'Введите текст'"
+							:error="modalRequestForm.errors.captcha.status"
+						>
+							<template #label> КОД С КАРТИНКИ </template>
+							<template #error>
+								{{ modalRequestForm.errors.captcha.message }}
+							</template>
+						</VueInput>
+					</div>
+				</template>
+			</VueInputContainer>
+
+			<VueInput
+				v-model="modalRequestForm.data.checkbox.value"
+				:type="'checkbox'"
+				:error="modalRequestForm.errors.checkbox.status"
 			>
 				<template #label
 					>Согласие на обработку указанных персональных данных в соответствии с
@@ -188,9 +308,13 @@
 			</div>
 		</div>
 		<div class="header-buttons">
-			<VueButton @click="openModalEdite('ЗАПИСЬ НА ПРИЕМ')">
+			<VueButton @click="openModalRequestEdite()">
 				<Icon :name="'phone'" :fill="'white'" :width="'22px'" :height="'22px'" />
 				Записаться на прием
+			</VueButton>
+			<VueButton @click="openModalPointsEdite()">
+				<Icon :name="'info'" :fill="'white'" :width="'26px'" :height="'26px'" />
+				Мой баланс
 			</VueButton>
 		</div>
 	</header>
@@ -238,7 +362,16 @@ export default {
 			isShadow: false,
 
 			/* Модальное окно */
-			modal: {
+			modalPoints: {
+				thin: false,
+				clamped: true,
+				values: {
+					title: "",
+					look: "default",
+				},
+			},
+
+			modalRequest: {
 				thin: false,
 				clamped: true,
 				values: {
@@ -248,7 +381,54 @@ export default {
 			},
 
 			/* Форма */
-			modalForm: {
+			modalPointsForm: {
+				errors: {
+					name: {
+						status: false,
+						message: "",
+					},
+					snils: {
+						status: false,
+						message: "",
+					},
+					checkbox: {
+						status: false,
+						message: "",
+					},
+					captcha: {
+						status: false,
+						message: "",
+					},
+					barcode: {
+						status: false,
+						message: "",
+					},
+				},
+				data: {
+					name: {
+						value: "",
+						edited: false,
+					},
+					snils: {
+						value: "",
+						edited: false,
+					},
+					checkbox: {
+						value: false,
+						edited: false,
+					},
+					captcha: {
+						value: "",
+						edited: false,
+					},
+					barcode: {
+						value: "4003994155486",
+						edited: false,
+					},
+				},
+			},
+
+			modalRequestForm: {
 				errors: {
 					title: {
 						status: false,
@@ -353,12 +533,20 @@ export default {
 			this.$refs[name].open();
 		},
 
-		/* Открытие модального окна для добавления */
-		openModalEdite() {
-			shared.clearObjectFull(this.modalForm);
+		/* Открытие модального окна баллов */
+		openModalPointsEdite() {
+			shared.clearObjectFull(this.modalPointsForm);
 			this.reloadCaptcha();
 
-			this.openModal("modal", "ЗАЯВКА", "default");
+			this.openModal("modalPoints", "БАЛЛЫ", "default");
+		},
+
+		/* Открытие модального окна заявки */
+		openModalRequestEdite() {
+			shared.clearObjectFull(this.modalRequestForm);
+			this.reloadCaptcha();
+
+			this.openModal("modalRequest", "ЗАЯВКА", "default");
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -379,14 +567,14 @@ export default {
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                 ОТПРАВКА ЗАПРОСА                  |*/
+		/* |                 ОТПРАВКА ДАННЫХ                   |*/
 		/* |___________________________________________________|*/
 		/* Отправка запроса */
 		sendRequest() {
 			let errors = false;
 
 			if (
-				validate.checkInputsAll(this.modalForm, [
+				validate.checkInputsAll(this.modalRequestForm, [
 					{
 						key: "name",
 						type: "text",
@@ -434,16 +622,88 @@ export default {
 					ContentType: "multipart/form-data",
 				},
 				data: {
-					title: this.modalForm.data.title.value,
-					name: this.modalForm.data.name.value,
-					phone: this.modalForm.data.phone.value,
-					description: this.modalForm.data.description.value,
+					title: this.modalRequestForm.data.title.value,
+					name: this.modalRequestForm.data.name.value,
+					phone: this.modalRequestForm.data.phone.value,
+					description: this.modalRequestForm.data.description.value,
 				},
 			})
 				.then((response) => {
 					if (!response) return;
 
-					this.$refs.modal.close();
+					this.$refs.modalRequest.close();
+				})
+				.catch((error) => {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка.",
+						body: error,
+						type: "error",
+					});
+				})
+				.finally(() => {
+					this.disabled.modalForm.request = false;
+				});
+		},
+
+		/* Отправка запроса */
+		sendClientPoints() {
+			let errors = false;
+
+			if (
+				validate.checkInputsAll(this.modalPointsForm, [
+					{
+						key: "name",
+						type: "text",
+					},
+					{
+						key: "snils",
+						type: "text",
+					},
+					{
+						key: "checkbox",
+						type: "boolean",
+						reference: true,
+					},
+					{
+						key: "captcha",
+						type: "twice",
+						reference: this.captcha,
+					},
+				])
+			)
+				errors++;
+
+			if (errors) {
+				this.$store.commit("addDebugger", {
+					title: "Ошибка.",
+					body: "Заполните важные поля.",
+					type: "error",
+				});
+
+				return;
+			}
+
+			this.disabled.modalForm.request = true;
+
+			let formData = new FormData();
+
+			api({
+				method: "post",
+				url: this.$store.getters.urlApi + `request-telegram-bot`,
+				headers: {
+					ContentType: "multipart/form-data",
+				},
+				data: {
+					title: this.modalRequestForm.data.title.value,
+					name: this.modalRequestForm.data.name.value,
+					phone: this.modalRequestForm.data.phone.value,
+					description: this.modalRequestForm.data.description.value,
+				},
+			})
+				.then((response) => {
+					if (!response) return;
+
+					this.$refs.modalRequest.close();
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
@@ -464,6 +724,59 @@ export default {
 </script>
 
 <style scoped>
+/* Баллы */
+.modal__points-result {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--default-gap);
+
+	margin-top: 10px;
+}
+
+.modal__result-points,
+.modal__result-barcode {
+	flex: 1 1 200px;
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--default-gap) / 2);
+
+	padding: var(--default-padding);
+	background-color: var(--skeleton-background-color);
+	border-radius: calc(var(--default-border-radius) / 1.5);
+
+	color: var(--primary-color);
+
+	font-size: 3rem;
+}
+
+.modal__points-title,
+.modal__barcode-title {
+	top: 5px;
+	left: 5px;
+	z-index: 1;
+
+	padding: 5px 10px;
+	border-radius: calc(var(--default-border-radius) / 2);
+
+	font-size: 1.25rem;
+	color: black;
+	background-color: white;
+}
+
+.modal__points-value,
+.modal__barcode-value {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	border-radius: calc(var(--default-border-radius) / 2);
+
+	height: 150px;
+
+	background-color: white;
+}
+
+/* Шапка */
 header {
 	display: flex;
 	justify-content: space-between;

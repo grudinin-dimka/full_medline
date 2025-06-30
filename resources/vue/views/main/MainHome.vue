@@ -9,7 +9,7 @@
 			<p class="section-info-sub-title">Индивидуальный подход и лучшие врачи</p>
 		</div>
 	</block>
-
+	
 	<block :minHeight="450">
 		<div class="news__main">
 			<div class="news__main-head">

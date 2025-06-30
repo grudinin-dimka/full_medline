@@ -25,6 +25,8 @@
         "@tiptap/vue-3": "^2.11.7",
         "@vitejs/plugin-vue": "^5.1.2",
         "apexcharts": "^4.7.0",
+        "jsbarcode": "^3.12.1",
+        "vue-jsbarcode": "^1.0.2",
         "vue-router": "^4.4.3",
         "vue-the-mask": "^0.11.1",
         "vue3-apexcharts": "^1.8.0",

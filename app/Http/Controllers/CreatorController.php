@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+/* Подключения */
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
+/* Модели */
 use App\Models\User\User;
 use App\Models\User\Rights;
 use App\Models\User\Status;
@@ -16,6 +18,7 @@ use App\Models\Tracking;
 use Carbon\Carbon;
 use Illuminate\Validation\Rule;
 
+/* Ошибки */
 use Throwable;
 
 class CreatorController extends Controller
