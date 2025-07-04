@@ -611,7 +611,7 @@ option {
 
 	border: var(--option-border);
 	background: var(--option-background-color);
-	padding: var(---option-padding);
+	padding: var(--option-padding);
 	transition: 0.2s;
 }
 

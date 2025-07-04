@@ -16,7 +16,8 @@ use Illuminate\Validation\Rule;
 use Throwable;
 
 /* Модели */
-use App\Models\Client;
+use App\Models\Client\Client;
+use App\Models\Client\ClientBarcode;
 
 class ClientController extends Controller
 {
@@ -27,6 +28,10 @@ class ClientController extends Controller
    {
       try {
          $clients = Client::all();
+
+         foreach ($clients as $client) {
+            $client->barcodes = $client->barcodes()->get();
+         };
 
          return response()->json([
             "success" => true,
@@ -82,7 +87,7 @@ class ClientController extends Controller
             return response()->json([
                "success" => false,
                "debug" => true,
-               "message" => "Клиент не найден.",
+               "message" => "Клиент не найден, проверьте правильность заполнение данных и повторите попытку.",
                "result" => [],
             ], 422);
          };
@@ -91,10 +96,7 @@ class ClientController extends Controller
             "success" => true,
             "debug" => false,
             "message" => "Данные получены.",
-            "result" => [
-               "points" => $client->points,
-               "barcode" => $client->barcode
-            ],
+            "result" => ClientBarcode::where("client_id", $client->id)->get(),
          ], 200);
       } catch (Throwable $e) {
          return response()->json([
@@ -107,7 +109,7 @@ class ClientController extends Controller
    }
 
    /* Сохранение поинтов из файла */
-   public function saveClientPoints(Request $request)
+   public function saveClientPoints()
    {
       try {
          // Проверка наличия директории
@@ -142,17 +144,32 @@ class ClientController extends Controller
             $clientFromDB = Client::where("name", $client->name)->where("snils", $client->snils)->first();
 
             if (!$clientFromDB) {
-               Client::create([
+               $newClient = Client::create([
                   "name" => $client->name,
                   "snils" => $client->snils,
-                  "points" => $client->points,
-                  "barcode" => $client->barcode,
                ]);
-            } else {
-               $clientFromDB->points = $client->points;
-               $clientFromDB->barcode = $client->barcode;
 
-               $clientFromDB->save();
+               foreach ($client->barcode as $barcode) {
+                  ClientBarcode::create([
+                     "type" => $barcode->type,
+                     "value" => $barcode->value,
+                     "barcode_type" => $barcode->barcode_type,
+                     "barcode_value" => $barcode->barcode_value,
+                     "client_id" => $newClient->id,
+                  ]);
+               };
+            } else {
+               $clientFromDB->barcodes()->delete();
+
+               foreach ($client->barcode as $barcode) {
+                  ClientBarcode::create([
+                     "type" => $barcode->type,
+                     "value" => $barcode->value,
+                     "barcode_type" => $barcode->barcode_type,
+                     "barcode_value" => $barcode->barcode_value,
+                     "client_id" => $clientFromDB->id,
+                  ]);
+               };
             };
          };
 

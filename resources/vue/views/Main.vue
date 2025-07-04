@@ -5,7 +5,10 @@
 	<!-- Шапка -->
 	<main-header ref="mainHeader" />
 	<!-- Навигация -->
-	<main-nav @openModal="openModal" />
+	<main-nav
+		@openModalRequestEdite="$refs.mainHeader.openModalRequestEdite()"
+		@openModalPointsEdite="$refs.mainHeader.openModalPointsEdite()"
+	/>
 	<!-- Содержимое -->
 	<router-view />
 	<!-- Подвал -->
@@ -36,11 +39,6 @@ export default {
 		MainHeader,
 		MainNav,
 		MainFooter,
-	},
-	methods: {
-		openModal(title) {
-			this.$refs.mainHeader.openModalEdite(title);
-		},
 	},
 	created() {
 		axios({

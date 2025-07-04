@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id();
             $table->text('name');
             $table->string('snils')->unique();
-            $table->string('barcode');
-            $table->integer('points');
             $table->timestamps();
         });
     }

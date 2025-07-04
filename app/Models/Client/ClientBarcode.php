@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Client;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Client extends Model
+class ClientBarcode extends Model
 {
     use HasFactory;
 
-    protected $table = 'clients';
+    protected $table = 'client_barcodes';
     protected $guarded = ['id'];
     protected $hidden = ['created_at', 'updated_at'];
 }

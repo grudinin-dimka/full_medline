@@ -89,27 +89,28 @@
 				>
 			</VueInput>
 
-			<div class="modal__points-result">
-				<div class="modal__result-points" :class="{ skeleton: disabled.modalPoints.request }">
-					<div class="modal__points-title">Баланс</div>
-					<div class="modal__points-value">
-						{{ modalPointsForm.data.points.value }}
-					</div>
-				</div>
-				<div class="modal__result-barcode" :class="{ skeleton: disabled.modalPoints.request }">
-					<div class="modal__barcode-title">Штрихкод</div>
+			<div class="modal__result" :class="{ skeleton: disabled.modalPoints.request }">
+				<template v-if="barcodes.length > 0">
+					<div class="modal__result-item" v-for="barcode in barcodes">
+						<div class="result__item-header">
+							<div class="result__header-title">{{ barcode.type }}</div>
+							<div class="result__header-value">{{ barcode.value }}</div>
+						</div>
 
-					<div class="modal__points-value">
-						<vue-js-barcode
-							:value="modalPointsForm.data.barcode.value"
-							:width="'2rem'"
-							:height="80"
-							format="EAN13"
-							line-color="#000000"
-							background="white"
-						></vue-js-barcode>
+						<div class="result__item-barcode">
+							<vue-js-barcode
+								:value="barcode.barcode_value"
+								:width="'2rem'"
+								:height="40"
+								:format="barcode.barcode_type"
+								line-color="#000000"
+								background="white"
+							></vue-js-barcode>
+						</div>
 					</div>
-				</div>
+				</template>
+
+				<template v-else> </template>
 			</div>
 		</template>
 
@@ -363,6 +364,16 @@ export default {
 		return {
 			isShadow: false,
 
+			/* Отключение */
+			disabled: {
+				modalForm: {
+					request: false,
+				},
+				modalPoints: {
+					request: false,
+				},
+			},
+
 			/* Модальное окно */
 			modalPoints: {
 				thin: false,
@@ -401,10 +412,6 @@ export default {
 						status: false,
 						message: "",
 					},
-					barcode: {
-						status: false,
-						message: "",
-					},
 				},
 				data: {
 					name: {
@@ -423,8 +430,12 @@ export default {
 						value: "",
 						edited: false,
 					},
-					barcode: {
-						value: "4003994155486",
+					barcode_value: {
+						value: "",
+						edited: false,
+					},
+					barcode_type: {
+						value: "",
 						edited: false,
 					},
 					points: {
@@ -497,29 +508,44 @@ export default {
 				},
 			},
 
-			disabled: {
-				modalForm: {
-					request: false,
-				},
-				modalPoints: {
-					request: false,
-				},
-			},
-
+			/* Данные */
+			barcodes: [],
 			captcha: "",
-			rotate: 0,
 		};
 	},
 	computed: {
 		/* Разделение капчи на отдельные символы */
 		getCaptchaSplited() {
-			let slplited = [];
+			let array = [];
 
 			for (let i = 0; i < this.captcha.length; i++) {
-				slplited.push(this.captcha[i]);
+				array.push(this.captcha[i]);
 			}
 
-			return slplited;
+			return array;
+		},
+
+		/* Разделение капчи на отдельные символы */
+		filteredBarcodes() {
+			let array = [];
+
+			array = this.barcodes.map((value, index) => {
+				return {
+					default: false,
+					disabled: false,
+					value: value.id,
+					label: value.type,
+				};
+			});
+
+			array.unshift({
+				default: true,
+				disabled: true,
+				value: "",
+				label: "Выберите карту",
+			});
+
+			return array;
 		},
 	},
 	methods: {
@@ -545,6 +571,18 @@ export default {
 		/* Открытие модального окна баллов */
 		openModalPointsEdite() {
 			shared.clearObjectFull(this.modalPointsForm);
+			this.barcodes = [
+				{
+					id: 1,
+					type: "Карта 1",
+					value: "?",
+				},
+				{
+					id: 2,
+					type: "Карта 2",
+					value: "?",
+				},
+			];
 			this.reloadCaptcha();
 
 			this.openModal("modalPoints", "БАЛЛЫ", "default");
@@ -694,11 +732,6 @@ export default {
 
 			this.disabled.modalPoints.request = true;
 
-			let formData = new FormData();
-
-			this.modalPointsForm.data.points.value = "";
-			this.modalPointsForm.data.barcode.value = "";
-
 			api({
 				method: "post",
 				url: this.$store.getters.urlApi + `clieint-points`,
@@ -713,8 +746,19 @@ export default {
 				.then((response) => {
 					if (!response) return;
 
-					this.modalPointsForm.data.points.value = response.data.result.points;
-					this.modalPointsForm.data.barcode.value = response.data.result.barcode;
+					if (!response.data.result.length) {
+						this.$store.commit("addDebugger", {
+							title: "Ошибка.",
+							body: "К вам не привязана ни одна карта.",
+							type: "error",
+						});
+					} else {
+						for (let i = 0; i < response.data.result.length; i++) {
+							this.barcodes[i] = response.data.result[i];
+						}
+
+						this.barcodes.splice(response.data.result.length, this.barcodes.length);
+					}
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
@@ -736,55 +780,54 @@ export default {
 
 <style scoped>
 /* Баллы */
-.modal__points-result {
-	display: flex;
-	flex-wrap: wrap;
+.modal__result {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
 	gap: var(--default-gap);
 
 	margin-top: 10px;
-}
-
-.modal__result-points,
-.modal__result-barcode {
-	flex: 1 1 200px;
-	display: flex;
-	flex-direction: column;
-	gap: calc(var(--default-gap) / 2);
-
 	padding: var(--default-padding);
 	background-color: var(--skeleton-background-color);
+
 	border-radius: calc(var(--default-border-radius) / 1.5);
-
-	color: var(--primary-color);
-
-	font-size: 3rem;
 }
 
-.modal__points-title,
-.modal__barcode-title {
-	top: 5px;
-	left: 5px;
-	z-index: 1;
+.modal__result-item {
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 
-	padding: 5px 10px;
 	border-radius: calc(var(--default-border-radius) / 2);
+	padding: var(--default-padding);
+
+	min-height: 200px;
+	background-color: var(--primary-color);
+}
+
+.result__item-header {
+	display: flex;
+	justify-content: space-between;
 
 	font-size: 1.25rem;
-	color: black;
-	background-color: white;
+	color: white;
 }
 
-.modal__points-value,
-.modal__barcode-value {
+.result__item-barcode {
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 
 	border-radius: calc(var(--default-border-radius) / 2);
-
-	height: 150px;
-
 	background-color: white;
+	min-height: 100px;
+}
+
+@media screen and (width <= 800px) {
+	.modal__result {
+		grid-template-columns: repeat(1, 1fr);
+	}
 }
 
 /* Шапка */

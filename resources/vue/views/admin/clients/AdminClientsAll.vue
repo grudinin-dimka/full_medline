@@ -102,18 +102,6 @@ export default {
 						columnType: "default",
 						columnSize: "100px",
 					},
-					{
-						name: "barcode",
-						text: "Баркод",
-						columnType: "default",
-						columnSize: "100px",
-					},
-					{
-						name: "points",
-						text: "Баллы",
-						columnType: "default",
-						columnSize: "100px",
-					},
 				],
 
 				// Элементы

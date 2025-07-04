@@ -26,13 +26,13 @@
 	--select-border-radius: calc(var(--default-border-radius) / 1.5);
 	--select-padding: var(--default-padding);
 	--select-color: var(--default-font-color);
-	--select-background-color: var(--secondary-background-color-hover);
-	--select-background-color-hover: rgba(0, 0, 0, 0.05);
+	--select-background-color: white;
+	--select-background-color-hover: white;
 
 	--option-font-color: black;
 	--option-border: var(--default-border);
 	--option-background-color: rgba(255, 255, 255, 1);
-	---option-padding: 10px;
+	--option-padding: 10px;
 	--option-color-focus: var(--primary-color);
 	--option-color-disabled: rgba(0, 0, 0, 0.5);
 

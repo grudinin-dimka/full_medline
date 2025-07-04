@@ -14,5 +14,5 @@ Schedule::call(function () {
     (new SheduleController)->saveShedulesAll();
 
     // Обновление клиентов
-    (new ClientController)->saveClientsAll();
+    (new ClientController)->saveClientPoints();
 })->everyMinute()->timezone(env('APP_TIMEZONE', 'Asia/Yekaterinburg'));

@@ -129,8 +129,12 @@
 		</div>
 
 		<div class="nav__buttons">
-			<button @click.prevent="$emit('openModal', 'ЗАПИСАТЬСЯ НА ПРИЕМ')">
+			<button @click.prevent="$emit('openModalRequestEdite')">
 				ЗАПИСАТЬСЯ НА ПРИЕМ
+			</button>
+
+			<button @click.prevent="$emit('openModalPointsEdite')">
+				УЗНАТЬ БАЛАНС
 			</button>
 		</div>
 	</nav>
