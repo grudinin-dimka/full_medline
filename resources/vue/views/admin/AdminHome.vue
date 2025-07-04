@@ -2,7 +2,7 @@
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                  МОДАЛЬНОЕ ОКНО                   |-->
 	<!--|___________________________________________________|-->
-	<Modal ref="modal" :settings="modal">
+	<VueModal ref="modal" :settings="modal">
 		<template #title>
 			{{ modal.values.title }}
 		</template>
@@ -15,7 +15,7 @@
 				!currentSlide.data.create.value
 			"
 		>
-			<Icon
+			<VueIcon
 				v-if="currentSlide.data.hide.value"
 				:name="'hide'"
 				:fill="'var(--primary-color)'"
@@ -25,7 +25,7 @@
 				:height="'26px'"
 				@click="currentSlide.data.hide.value = false"
 			/>
-			<Icon
+			<VueIcon
 				v-else
 				:name="'visible'"
 				:fill="'var(--primary-color)'"
@@ -45,7 +45,7 @@
 				!currentSlide.data.create.value
 			"
 		>
-			<Icon
+			<VueIcon
 				:name="'arrow'"
 				:fill="'var(--icon-multi-fill)'"
 				:hover="'var(--icon-nulti-fill-hover)'"
@@ -56,7 +56,7 @@
 				@click="changeSlideOrder('down')"
 			/>
 			#{{ currentSlide.data.order.value }}
-			<Icon
+			<VueIcon
 				:name="'arrow'"
 				:fill="'var(--icon-multi-fill)'"
 				:hover="'var(--icon-nulti-fill-hover)'"
@@ -130,7 +130,7 @@
 					v-if="!currentSlide.data.create.value & !currentSlide.data.delete.value"
 					@click.prevent="markDeleteSlide"
 				>
-					<Icon :name="'delete'" :fill="'white'" :width="'24px'" :height="'22px'" />
+					<VueIcon :name="'delete'" :fill="'white'" :width="'24px'" :height="'22px'" />
 					Удалить
 				</button-remove>
 				<button-default
@@ -138,23 +138,23 @@
 					@click.prevent="updateSlide"
 					:disabled="disabled.slider.update"
 				>
-					<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</button-default>
 				<button-default v-if="currentSlide.data.delete.value" @click.prevent="markDeleteSlide">
-					<Icon :name="'restore'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					<VueIcon :name="'restore'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Вернуть
 				</button-default>
 			</template>
 
 			<template v-if="modal.values.look == 'create'">
 				<button-default @click.prevent="addSlide" :disabled="disabled.slider.create">
-					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+					<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-default>
 			</template>
 		</template>
-	</Modal>
+	</VueModal>
 
 	<info-bar>
 		<template #title>Главная</template>
@@ -169,7 +169,7 @@
 
 		<template #options>
 			<ButtonDefault look="white" :disabled="disabled.slider.save" @click="saveSlidesChanges">
-				<Icon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
+				<VueIcon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
 			</ButtonDefault>
 		</template>
@@ -204,7 +204,7 @@
 						<!-- <div class="slider-block-id">#{{ slide.order }}</div> -->
 						<div class="slider-block-info">
 							<article>
-								<Icon
+								<VueIcon
 									:name="'user-card'"
 									:fill="'var(--primary-color)'"
 									:width="'30px'"
@@ -215,7 +215,7 @@
 								</label>
 							</article>
 							<article>
-								<Icon
+								<VueIcon
 									:name="'link'"
 									:fill="'var(--primary-color)'"
 									:width="'30px'"
@@ -226,7 +226,7 @@
 								</label>
 							</article>
 							<article>
-								<Icon
+								<VueIcon
 									:name="'directory-link'"
 									:fill="'var(--primary-color)'"
 									:width="'30px'"
@@ -251,7 +251,7 @@
 
 		<template #buttons>
 			<ButtonDefault @click="openModalСreate" :disabled="disabled.slider.add">
-				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</ButtonDefault>
 		</template>
@@ -265,7 +265,7 @@
 
 		<template #options>
 			<ButtonDefault look="white" :disabled="disabled.footer.save" @click="saveFooterChanges">
-				<Icon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
+				<VueIcon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
 			</ButtonDefault>
 		</template>
@@ -296,7 +296,7 @@
 import LoaderChild from "../../components/modules/LoaderChild.vue";
 import Empty from "../../components/modules/Empty.vue";
 
-import Modal from "../../components/modules/modal/Modal.vue";
+import VueModal from "../../components/modules/modal/VueModal.vue";
 import InfoBar from "../../components/ui/admin/InfoBar.vue";
 import VueTiptap from "../../components/modules/VueTiptap.vue";
 
@@ -308,7 +308,7 @@ import ButtonDefault from "../../components/ui/admin/buttons/ButtonDefault.vue";
 import ButtonRemove from "../../components/ui/admin/buttons/ButtonRemove.vue";
 import ButtonClaim from "../../components/ui/admin/buttons/ButtonClaim.vue";
 
-import Icon from "../../components/modules/icon/Icon.vue";
+import VueIcon from "../../components/modules/icon/VueIcon.vue";
 
 import api from "../../services/api";
 import shared from "../../services/shared";
@@ -321,12 +321,12 @@ export default {
 		LoaderChild,
 		Empty,
 
-		Modal,
+		VueModal,
 		InfoBar,
 		VueTiptap,
 		VueInput,
 
-		Icon,
+		VueIcon,
 
 		BlockOnce,
 		ButtonDefault,

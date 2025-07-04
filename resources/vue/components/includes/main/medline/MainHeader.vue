@@ -1,6 +1,6 @@
 <template>
 	<!-- Модальное окно: Баллы -->
-	<Modal ref="modalPoints" :settings="modalPoints">
+	<VueModal ref="modalPoints" :settings="modalPoints">
 		<template #title>
 			{{ modalPoints.values.title }}
 		</template>
@@ -89,9 +89,13 @@
 				>
 			</VueInput>
 
-			<div class="modal__result" :class="{ skeleton: disabled.modalPoints.request }">
+			<div class="modal__result">
 				<template v-if="barcodes.length > 0">
-					<div class="modal__result-item" v-for="barcode in barcodes">
+					<div
+						class="modal__result-item"
+						v-for="barcode in barcodes"
+						:class="{ skeleton: disabled.modalPoints.request }"
+					>
 						<div class="result__item-header">
 							<div class="result__header-title">{{ barcode.type }}</div>
 							<div class="result__header-value">{{ barcode.value }}</div>
@@ -120,10 +124,10 @@
 				Узнать баланс
 			</VueButton>
 		</template>
-	</Modal>
+	</VueModal>
 
 	<!-- Модальное окно: Заявка -->
-	<Modal ref="modalRequest" :settings="modalRequest">
+	<VueModal ref="modalRequest" :settings="modalRequest">
 		<template #title>
 			{{ modalRequest.values.title }}
 		</template>
@@ -272,7 +276,7 @@
 				Отправить заявку
 			</VueButton>
 		</template>
-	</Modal>
+	</VueModal>
 
 	<!-- Шапка страницы -->
 	<header :class="{ slide: isShadow }">
@@ -334,14 +338,14 @@
 </template>
 
 <script>
-import Modal from "../../../modules/modal/Modal.vue";
+import VueModal from "../../../modules/modal/VueModal.vue";
 import Captcha from "../../../modules/Captcha.vue";
 
 import VueInput from "../../../modules/input/VueInput.vue";
 import VueInputContainer from "../../../modules/input/VueInputContainer.vue";
 
 import VueButton from "../../../ui/VueButton.vue";
-import Icon from "../../../modules/icon/Icon.vue";
+import Icon from "../../../modules/icon/VueIcon.vue";
 import ButtonDefault from "../../../ui/admin/buttons/ButtonDefault.vue";
 
 import api from "../../../../services/api";
@@ -350,7 +354,7 @@ import shared from "../../../../services/shared";
 
 export default {
 	components: {
-		Modal,
+		VueModal,
 		Captcha,
 
 		VueInput,
@@ -731,6 +735,18 @@ export default {
 			}
 
 			this.disabled.modalPoints.request = true;
+			this.barcodes = [
+				{
+					id: 1,
+					type: "Карта 1",
+					value: "?",
+				},
+				{
+					id: 2,
+					type: "Карта 2",
+					value: "?",
+				},
+			];
 
 			api({
 				method: "post",
@@ -786,8 +802,6 @@ export default {
 	gap: var(--default-gap);
 
 	margin-top: 10px;
-	padding: var(--default-padding);
-	background-color: var(--skeleton-background-color);
 
 	border-radius: calc(var(--default-border-radius) / 1.5);
 }
@@ -802,7 +816,7 @@ export default {
 	padding: var(--default-padding);
 
 	min-height: 200px;
-	background-color: var(--primary-color);
+	background-color: var(--skeleton-background-color);
 }
 
 .result__item-header {
@@ -810,7 +824,7 @@ export default {
 	justify-content: space-between;
 
 	font-size: 1.25rem;
-	color: white;
+	color: black;
 }
 
 .result__item-barcode {
@@ -1097,14 +1111,20 @@ header.slide {
 	fill: rgb(0, 0, 0);
 }
 
+@media screen and (max-width: 1600px) {
+	.header__item:nth-child(3) {
+		display: none;
+	}
+}
+
 @media screen and (max-width: 1400px) {
 	.header__logo-name {
 		display: none;
 	}
 }
 
-@media screen and (max-width: 1150px) {
-	.header__item:nth-child(3) {
+@media screen and (max-width: 1000px) {
+	.header__item:nth-child(4) {
 		display: none;
 	}
 }
@@ -1120,19 +1140,11 @@ header.slide {
 	}
 }
 
-@media screen and (max-width: 850px) {
-	.header__item:nth-child(4) {
-		display: none;
-	}
-}
-
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 750px) {
 	.header-buttons {
 		display: none;
 	}
-}
 
-@media screen and (max-width: 500px) {
 	.burger {
 		display: block;
 	}

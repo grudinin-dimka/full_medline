@@ -14,13 +14,13 @@
 				:disabled="disabled.news.save"
 				:look="'white'"
 			>
-				<Icon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
+				<VueIcon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
 			</button-default>
 		</template>
 
 		<template #body>
-			<BaseTable
+			<VueTable
 				v-if="loading.sections.news"
 				:table="table"
 				@create="
@@ -39,7 +39,7 @@
 					<div class="table__hide" v-if="row.hide" @click="setHideNews(row)">Да</div>
 					<div class="table__hide" v-else @click="setHideNews(row)">Нет</div>
 				</template>
-			</BaseTable>
+			</VueTable>
 
 			<loader-child
 				:isLoading="loading.loader.news"
@@ -55,12 +55,12 @@ import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 
-import BaseTable from "../../../components/modules/table/BaseTable.vue";
+import VueTable from "../../../components/modules/table/VueTable.vue";
 import Tiptap from "../../../components/modules/VueTiptap.vue";
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 
-import Icon from "../../../components/modules/icon/Icon.vue";
+import VueIcon from "../../../components/modules/icon/VueIcon.vue";
 
 import shared from "../../../services/shared";
 import api from "../../../services/api";
@@ -71,12 +71,12 @@ export default {
 		LoaderChild,
 		InfoBar,
 
-		BaseTable,
+		VueTable,
 		Tiptap,
 
 		ButtonDefault,
 
-		Icon,
+		VueIcon,
 	},
 	data() {
 		return {

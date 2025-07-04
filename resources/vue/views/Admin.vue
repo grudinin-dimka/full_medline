@@ -1,5 +1,5 @@
 <template>
-	<debugger></debugger>
+	<VueDebugger></VueDebugger>
 	<Loader :isLoading="loader.loading" />
 
 	<AdminHeader v-if="loader.other" />
@@ -9,7 +9,7 @@
 
 <script>
 import { RouterLink, RouterView } from "vue-router";
-import Debugger from "../components/modules/Debugger.vue";
+import VueDebugger from "../components/modules/VueDebugger.vue";
 import Loader from "../components/modules/loader.vue";
 import axios from "axios";
 
@@ -22,7 +22,7 @@ import { compile } from "vue";
 export default {
 	components: {
 		Loader,
-		Debugger,
+		VueDebugger,
 		RouterLink,
 		RouterView,
 		axios,

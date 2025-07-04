@@ -41,7 +41,7 @@ export default {
 		},
 		cursor: {
 			type: String,
-			default: "auto",
+			default: "pointer",
 		},
 		rotate: {
 			type: Number,

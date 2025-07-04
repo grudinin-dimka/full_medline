@@ -2,7 +2,7 @@
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                  МОДАЛЬНОЕ ОКНО                   |-->
 	<!--|___________________________________________________|-->
-	<Modal ref="modal" :settings="modal">
+	<VueModal ref="modal" :settings="modal">
 		<template #title>
 			{{ modal.values.title }}
 		</template>
@@ -24,19 +24,19 @@
 		<template #footer>
 			<template v-if="modal.values.look == 'create'">
 				<button-default @click="addSpecialization">
-					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+					<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-default>
 			</template>
 
 			<template v-if="modal.values.look == 'default'">
 				<button-default @click="updateSpecialization">
-					<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</button-default>
 			</template>
 		</template>
-	</Modal>
+	</VueModal>
 
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                   СПЕЦИАЛИЗАЦИИ                   |-->
@@ -55,13 +55,13 @@
 				:disabled="disabled.specializations.save"
 				:look="'white'"
 			>
-				<Icon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
+				<VueIcon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
 			</button-default>
 		</template>
 
 		<template #body>
-			<BaseTable
+			<VueTable
 				v-if="loading.sections.specializations"
 				:table="table"
 				@create="openModalСreate"
@@ -79,9 +79,9 @@
 </template>
 
 <script>
-import Modal from "../../../components/modules/modal/Modal.vue";
+import VueModal from "../../../components/modules/modal/VueModal.vue";
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
-import BaseTable from "../../../components/modules/table/BaseTable.vue";
+import VueTable from "../../../components/modules/table/VueTable.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import VueInput from "../../../components/modules/input/VueInput.vue";
@@ -90,7 +90,7 @@ import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vu
 import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
 import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 
-import Icon from "../../../components/modules/icon/Icon.vue";
+import VueIcon from "../../../components/modules/icon/VueIcon.vue";
 
 import api from "../../../services/api";
 import shared from "../../../services/shared";
@@ -99,10 +99,10 @@ import validate from "../../../services/validate";
 
 export default {
 	components: {
-		Modal,
+		VueModal,
 		VueInput,
 		InfoBar,
-		BaseTable,
+		VueTable,
 		LoaderChild,
 		BlockOnce,
 
@@ -110,7 +110,7 @@ export default {
 		ButtonClaim,
 		ButtonRemove,
 
-		Icon,
+		VueIcon,
 	},
 	data() {
 		return {

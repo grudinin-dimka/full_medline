@@ -18,7 +18,7 @@
 
 			<!-- Right side -->
 			<div class="table__header-right">
-				<BaseTableButtonHead @click="filter = !filter">
+				<VueTableButtonHead @click="filter = !filter">
 					<svg
 						data-v-0db40482=""
 						xmlns="http://www.w3.org/2000/svg"
@@ -33,9 +33,9 @@
 					</svg>
 					<span v-if="!filter">Вкл. фильтр полей</span>
 					<span v-else>Выкл. фильтр полей</span>
-				</BaseTableButtonHead>
+				</VueTableButtonHead>
 
-				<BaseTableButtonHead v-if="table.options.create" @click="$emit('create')">
+				<VueTableButtonHead v-if="table.options.create" @click="$emit('create')">
 					<svg
 						data-v-0db40482=""
 						xmlns="http://www.w3.org/2000/svg"
@@ -47,7 +47,7 @@
 						<path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"></path>
 					</svg>
 					<span>Добавить</span>
-				</BaseTableButtonHead>
+				</VueTableButtonHead>
 
 				<input v-model="searchInput" type="text" placeholder="Поиск" />
 			</div>
@@ -73,25 +73,28 @@
 									value.columnType == 'time'
 								"
 							>
-								<Icons
+								<VueIcon
 									v-if="this.sorting.sortField == value.name"
 									:class="
 										this.sorting.sortType == 'asc' ? 'appear-rotate' : 'reverse-rotate'
 									"
+									:name="'arrow'"
 									:width="'16px'"
 									:height="'16px'"
-									name="arrow"
+									:fill="'black'"
 									@click="changeTypeSort(value.name)"
 								>
-								</Icons>
-								<Icons
+								</VueIcon>
+
+								<VueIcon
 									v-else
-									:width="'16px'"
-									:height="'16px'"
-									name="sort"
+									:name="'sort'"
+									:width="'24px'"
+									:height="'24px'"
+									:fill="'black'"
 									@click="changeTypeSort(value.name)"
 								>
-								</Icons>
+								</VueIcon>
 							</div>
 						</div>
 					</th>
@@ -122,9 +125,9 @@
 								filterFields.find((field) => field.name === value.name).type == 'time'
 							"
 						>
-							<BaseTableButton :wide="true" @click="openFilter(value.name)">
+							<VueTableButton :wide="true" @click="openFilter(value.name)">
 								Диапазон
-							</BaseTableButton>
+							</VueTableButton>
 						</div>
 
 						<!-- Фильтр по списку || Фильтр по спискам -->
@@ -193,7 +196,7 @@
 
 							<!-- Кнопка -->
 							<template v-else-if="typeOfField(key) == 'button'">
-								<BaseTableButton
+								<VueTableButton
 									:wide="true"
 									@click="
 										$emit(
@@ -202,11 +205,17 @@
 										)
 									"
 								>
-									<Icons name="devices" />
+									<VueIcon
+										:name="'device'"
+										:width="'16px'"
+										:height="'16px'"
+										:fill="'black'"
+									/>
+
 									<span>{{
 										table.head.find((field) => field.name == key).options.buttonName
 									}}</span>
-								</BaseTableButton>
+								</VueTableButton>
 							</template>
 
 							<!-- Кастомный слот -->
@@ -221,7 +230,7 @@
 					<!-- Действия -->
 					<td v-if="table.options.update || table.options.delete">
 						<div class="table__buttons">
-							<BaseTableButton
+							<VueTableButton
 								:wide="true"
 								v-if="table.options.update"
 								@click="
@@ -231,11 +240,12 @@
 									)
 								"
 							>
-								<Icons name="edit" :width="'22px'" :height="'22px'" />
-								<span>Изменить</span>
-							</BaseTableButton>
+								<VueIcon :name="'edit'" :width="'22px'" :height="'22px'" :fill="'black'" />
 
-							<BaseTableButton
+								<span>Изменить</span>
+							</VueTableButton>
+
+							<VueTableButton
 								:wide="true"
 								:look="
 									this.table.body.find((item) => item.id == row.id).create
@@ -253,11 +263,17 @@
 									)
 								"
 							>
-								<Icons name="delete" />
-								<span>Удалить</span>
-							</BaseTableButton>
+								<VueIcon
+									:name="'delete'"
+									:width="'16px'"
+									:height="'16px'"
+									:fill="'black'"
+								/>
 
-							<BaseTableButton
+								<span>Удалить</span>
+							</VueTableButton>
+
+							<VueTableButton
 								:wide="true"
 								v-else="table.options.delete"
 								@click="
@@ -267,9 +283,15 @@
 									)
 								"
 							>
-								<Icons name="delete" />
+								<VueIcon
+									:name="'delete'"
+									:width="'16px'"
+									:height="'16px'"
+									:fill="'black'"
+								/>
+
 								<span>Вернуть</span>
-							</BaseTableButton>
+							</VueTableButton>
 						</div>
 					</td>
 				</tr>
@@ -289,31 +311,28 @@
 </template>
 
 <script>
-import Icons from "../Icons.vue";
+import VueIcon from "../icon/VueIcon.vue";
 
-import Modal from "../modal/Modal.vue";
-import ModalTime from "../modal/filters/ModalTime.vue";
+import Modal from "../modal/VueModal.vue";
+import ModalTime from "../modal/filters/VueModalTime.vue";
 
 import Pagination from "../Pagination.vue";
 
-import BaseTableButton from "./BaseTableButton.vue";
-import BaseTableButtonHead from "./BaseTableButtonHead.vue";
-import ButtonDefault from "../../ui/admin/buttons/ButtonDefault.vue";
+import VueTableButton from "./VueTableButton.vue";
+import VueTableButtonHead from "./VueTableButtonHead.vue";
 
 import sorted from "../../../services/sorted";
 
 export default {
 	components: {
-		Icons,
+		VueIcon,
 		Pagination,
 
 		Modal,
 		ModalTime,
 
-		ButtonDefault,
-
-		BaseTableButton,
-		BaseTableButtonHead,
+		VueTableButton,
+		VueTableButtonHead,
 	},
 	props: {
 		table: {

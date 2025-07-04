@@ -3,7 +3,7 @@
 	<Modal ref="modal" :settings="modal">
 		<template #title>
 			<template v-if="modal.values.look == 'default' && !currentContact.data.delete.value">
-				<Icon
+				<VueIcon
 					:name="'arrow'"
 					:fill="'var(--icon-multi-fill)'"
 					:hover="'var(--icon-nulti-fill-hover)'"
@@ -14,7 +14,7 @@
 					@click="changeContactsOrder('down')"
 				/>
 				#{{ currentContact.data.order.value }}
-				<Icon
+				<VueIcon
 					:name="'arrow'"
 					:fill="'var(--icon-multi-fill)'"
 					:hover="'var(--icon-nulti-fill-hover)'"
@@ -63,7 +63,7 @@
 				@touchDelete="deleteContactPhone"
 			>
 				<template #title>
-					<Icon
+					<VueIcon
 						:name="'phone'"
 						:fill="'var(--primary-color)'"
 						:width="'20px'"
@@ -80,7 +80,7 @@
 				@touchDelete="deleteContactMail"
 			>
 				<template #title>
-					<Icon
+					<VueIcon
 						:name="'mail'"
 						:fill="'var(--primary-color)'"
 						:width="'20px'"
@@ -93,25 +93,25 @@
 		<template #footer>
 			<template v-if="modal.values.look == 'create'">
 				<button-default @click="addContact">
-					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+					<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-default>
 			</template>
 
 			<template v-if="modal.values.look == 'default' && !currentContact.data.delete.value">
 				<button-remove v-if="!currentContact.data.create.value" @click="deleteContact">
-					<Icon :name="'delete'" :fill="'white'" :width="'24px'" :height="'22px'" />
+					<VueIcon :name="'delete'" :fill="'white'" :width="'24px'" :height="'22px'" />
 					Удалить
 				</button-remove>
 				<ButtonDefault @click="updateContact">
-					<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</ButtonDefault>
 			</template>
 
 			<template v-if="modal.values.look == 'default' && currentContact.data.delete.value">
 				<ButtonDefault @click="deleteContact">
-					<Icon :name="'restore'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					<VueIcon :name="'restore'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Вернуть
 				</ButtonDefault>
 			</template>
@@ -140,11 +140,11 @@
 
 		<template #footer>
 			<button-default v-if="modalPhone.values.look == 'default'" @click="updateContactPhone">
-				<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
+				<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 				Обновить
 			</button-default>
 			<button-default v-if="modalPhone.values.look == 'create'" @click="addContactPhone">
-				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</button-default>
 		</template>
@@ -171,12 +171,12 @@
 		</template>
 		<template #footer>
 			<button-default v-if="modalMail.values.look == 'default'" @click="updateContactMail">
-				<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
+				<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 				Обновить
 			</button-default>
 
 			<button-default v-if="modalMail.values.look == 'create'" @click="addContactMail">
-				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</button-default>
 		</template>
@@ -199,7 +199,7 @@
 				:disabled="disabled.contacts.save"
 				:look="'white'"
 			>
-				<Icon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
+				<VueIcon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
 			</button-default>
 		</template>
@@ -227,7 +227,7 @@
 
 		<template #buttons>
 			<ButtonDefault @click="openModalСreate">
-				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</ButtonDefault>
 		</template>
@@ -235,8 +235,8 @@
 </template>
 
 <script>
-import Modal from "../../../components/modules/modal/Modal.vue";
-import ModalList from "../../../components/modules/modal/ModalList.vue";
+import Modal from "../../../components/modules/modal/VueModal.vue";
+import ModalList from "../../../components/modules/modal/VueModalList.vue";
 import VueInput from "../../../components/modules/input/VueInput.vue";
 
 import AdminContactsList from "./AdminContactsList.vue";
@@ -252,7 +252,7 @@ import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vu
 import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
 import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 
-import Icon from "../../../components/modules/icon/Icon.vue";
+import VueIcon from "../../../components/modules/icon/VueIcon.vue";
 
 import api from "../../../services/api";
 import shared from "../../../services/shared.js";
@@ -277,7 +277,7 @@ export default {
 		ButtonRemove,
 		ButtonClaim,
 
-		Icon,
+		VueIcon,
 	},
 	data() {
 		return {

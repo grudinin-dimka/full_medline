@@ -64,7 +64,7 @@
 					:disabled="disabled.apexchart.load"
 					:look="'white'"
 				>
-					<Icon
+					<VueIcon
 						:name="'publish'"
 						:fill="'var(--icon-edit-fill)'"
 						:width="'28px'"
@@ -99,11 +99,9 @@ import BlockTwo from "../../../components/ui/admin/blocks/BlockTwo.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import VueInput from "../../../components/modules/input/VueInput.vue";
 
-import BaseTable from "../../../components/modules/table/BaseTable.vue";
-
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 
-import Icon from "../../../components/modules/icon/Icon.vue";
+import VueIcon from "../../../components/modules/icon/VueIcon.vue";
 
 import api from "../../../services/api";
 import validate from "../../../services/validate";
@@ -117,9 +115,7 @@ export default {
 
 		ButtonDefault,
 
-		Icon,
-
-		BaseTable,
+		VueIcon,
 	},
 	data() {
 		return {

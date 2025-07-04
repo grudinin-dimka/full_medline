@@ -1,6 +1,6 @@
 <template>
 	<!-- Модальное окно: Видео -->
-	<Modal ref="modal" :settings="modal">
+	<VueModal ref="modal" :settings="modal">
 		<template #title>
 			{{ modal.values.title }}
 		</template>
@@ -75,11 +75,11 @@
 			</ButtonDefault>
 
 			<ButtonDefault @click="downloadSpecialistsXML" :disabled="disabled.specialists.download">
-				<Icon :name="'download'" :fill="'white'" :width="'24px'" :height="'24px'" />
+				<VueIcon :name="'download'" :fill="'white'" :width="'24px'" :height="'24px'" />
 				Выгрузить
 			</ButtonDefault>
 		</template>
-	</Modal>
+	</VueModal>
 
 	<info-bar>
 		<template v-slot:title>Специалисты</template>
@@ -91,7 +91,7 @@
 
 		<template #options>
 			<button-default @click.prevent="openModalEdite" :look="'white'">
-				<Icon
+				<VueIcon
 					:name="'download'"
 					:fill="'var(--primary-color)'"
 					:width="'28px'"
@@ -104,13 +104,13 @@
 				:disabled="disabled.specialists.save"
 				:look="'white'"
 			>
-				<Icon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
+				<VueIcon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
 			</button-default>
 		</template>
 
 		<template #body>
-			<BaseTable
+			<VueTable
 				v-if="loading.sections.specialists"
 				:table="table"
 				@create="$router.push('especialists/new')"
@@ -121,7 +121,7 @@
 					<div class="table__hide" v-if="row.hide" @click="hideSpecialist(row)">Да</div>
 					<div class="table__hide" v-else @click="hideSpecialist(row)">Нет</div>
 				</template>
-			</BaseTable>
+			</VueTable>
 
 			<loader-child
 				:isLoading="loading.loader.specialists"
@@ -134,9 +134,9 @@
 
 <script>
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
-import BaseTable from "../../../components/modules/table/BaseTable.vue";
+import VueTable from "../../../components/modules/table/VueTable.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
-import Modal from "../../../components/modules/modal/Modal.vue";
+import VueModal from "../../../components/modules/modal/VueModal.vue";
 import VueInput from "../../../components/modules/input/VueInput.vue";
 
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
@@ -144,7 +144,7 @@ import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
 
-import Icon from "../../../components/modules/icon/Icon.vue";
+import VueIcon from "../../../components/modules/icon/VueIcon.vue";
 
 import api from "../../../services/api";
 import validate from "../../../services/validate";
@@ -155,9 +155,9 @@ import { RouterView, RouterLink } from "vue-router";
 export default {
 	components: {
 		InfoBar,
-		BaseTable,
+		VueTable,
 		LoaderChild,
-		Modal,
+		VueModal,
 		VueInput,
 
 		BlockOnce,
@@ -165,7 +165,7 @@ export default {
 		ButtonDefault,
 		ButtonRemove,
 
-		Icon,
+		VueIcon,
 
 		RouterView,
 		RouterLink,

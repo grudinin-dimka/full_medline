@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import Icon from "../icon/Icon.vue";
+import Icon from "../icon/VueIcon.vue";
 
 export default {
 	components: {

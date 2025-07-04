@@ -1,9 +1,9 @@
 <template>
 	<!-- Модальное окно: Видео -->
-	<Modal ref="modalVideo" :settings="modalVideo">
+	<VueModal ref="modalVideo" :settings="modalVideo">
 		<template #title>
 			<template v-if="modalVideo.values.look == 'default' && !currentVideo.data.delete.value">
-				<Icon
+				<VueIcon
 					:name="'arrow'"
 					:fill="'var(--icon-multi-fill)'"
 					:hover="'var(--icon-nulti-fill-hover)'"
@@ -14,7 +14,7 @@
 					@click="changeOrderItem('down')"
 				/>
 				#{{ currentVideo.data.order.value }}
-				<Icon
+				<VueIcon
 					:name="'arrow'"
 					:fill="'var(--icon-multi-fill)'"
 					:hover="'var(--icon-nulti-fill-hover)'"
@@ -49,7 +49,7 @@
 				<div class="modal__video-buttons">
 					<template v-if="currentVideo.data.path.value === ''">
 						<div class="modal__buttons-icon create" @click="openVideoUpload">
-							<Icon
+							<VueIcon
 								:name="'add'"
 								:fill="'var(--icon-create-fill)'"
 								:width="'19px'"
@@ -60,7 +60,7 @@
 
 					<template v-else>
 						<div class="modal__buttons-icon edit" @click="openVideoUpload">
-							<Icon
+							<VueIcon
 								:name="'edit'"
 								:fill="'var(--icon-edit-fill)'"
 								:width="'24px'"
@@ -89,7 +89,7 @@
 
 		<template #footer>
 			<ButtonDefault @click="addVideo" v-if="modalVideo.values.look == 'create'">
-				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</ButtonDefault>
 
@@ -98,25 +98,25 @@
 					@click="deleteItem"
 					v-if="!currentVideo.data.delete.value && !currentVideo.data.create.value"
 				>
-					<Icon :name="'delete'" :fill="'white'" :width="'22px'" :height="'22px'" />
+					<VueIcon :name="'delete'" :fill="'white'" :width="'22px'" :height="'22px'" />
 					Удалить
 				</button-remove>
 
 				<ButtonDefault @click="updateVideo" v-if="!currentVideo.data.delete.value">
-					<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</ButtonDefault>
 
 				<ButtonDefault @click="deleteItem" v-if="currentVideo.data.delete.value">
-					<Icon :name="'restore'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					<VueIcon :name="'restore'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Вернуть
 				</ButtonDefault>
 			</template>
 		</template>
-	</Modal>
+	</VueModal>
 
 	<!-- Модальное окно: Видео -> Загрузка -->
-	<Modal ref="modalVideoUpload" :settings="modalVideoUpload">
+	<VueModal ref="modalVideoUpload" :settings="modalVideoUpload">
 		<template #title>{{ modalVideoUpload.values.title }}</template>
 		<template #body>
 			<VueInput
@@ -138,16 +138,16 @@
 				@click="uploadVideo"
 				:disabled="disabled.video.upload"
 			>
-				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</button-default>
 
 			<button-default v-else @click="uploadVideo" :disabled="disabled.video.upload">
-				<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
+				<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 				Обновить
 			</button-default>
 		</template>
-	</Modal>
+	</VueModal>
 
 	<!-- Новости -->
 	<info-bar>
@@ -164,7 +164,7 @@
 				:disabled="disabled.video.save"
 				:look="'white'"
 			>
-				<Icon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
+				<VueIcon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
 			</button-default>
 		</template>
@@ -208,7 +208,7 @@
 
 		<template #buttons>
 			<ButtonDefault @click="openVideoCreate">
-				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</ButtonDefault>
 		</template>
@@ -216,7 +216,7 @@
 </template>
 
 <script>
-import Modal from "../../../components/modules/modal/Modal.vue";
+import VueModal from "../../../components/modules/modal/VueModal.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
@@ -228,7 +228,7 @@ import VueTiptap from "../../../components/modules/VueTiptap.vue";
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
 
-import Icon from "../../../components/modules/icon/Icon.vue";
+import VueIcon from "../../../components/modules/icon/VueIcon.vue";
 
 import api from "../../../services/api";
 import shared from "../../../services/shared";
@@ -237,7 +237,7 @@ import files from "../../../services/files";
 
 export default {
 	components: {
-		Modal,
+		VueModal,
 		BlockOnce,
 		LoaderChild,
 		InfoBar,
@@ -249,7 +249,7 @@ export default {
 		ButtonDefault,
 		ButtonRemove,
 
-		Icon,
+		VueIcon,
 	},
 	data() {
 		return {

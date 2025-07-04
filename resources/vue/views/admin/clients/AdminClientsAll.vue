@@ -13,13 +13,13 @@
 				:disabled="disabled.clients.save"
 				:look="'white'"
 			>
-				<Icon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
+				<VueIcon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
 			</button-default>
 		</template>
 
 		<template #body>
-			<BaseTable v-if="loading.sections.clients" :table="table" />
+			<VueTable v-if="loading.sections.clients" :table="table" />
 
 			<loader-child
 				:isLoading="loading.loader.clients"
@@ -36,11 +36,11 @@ import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTitle from "../../../components/ui/admin/blocks/BlockTitle.vue";
 
-import BaseTable from "../../../components/modules/table/BaseTable.vue";
+import VueTable from "../../../components/modules/table/VueTable.vue";
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 
-import Icon from "../../../components/modules/icon/Icon.vue";
+import VueIcon from "../../../components/modules/icon/VueIcon.vue";
 
 import api from "../../../services/api";
 
@@ -52,11 +52,11 @@ export default {
 
 		InfoBar,
 
-		BaseTable,
+		VueTable,
 
 		ButtonDefault,
 
-		Icon,
+		VueIcon,
 	},
 	data() {
 		return {

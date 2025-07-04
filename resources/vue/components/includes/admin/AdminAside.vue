@@ -1,5 +1,5 @@
 <template>
-	<Modal ref="modalExit" :settings="modalExit">
+	<VueModal ref="modalExit" :settings="modalExit">
 		<template #title>{{ modalExit.values.title }}</template>
 		<template #body>Вы уверены, что хотите выйти из системы?</template>
 		<template #footer>
@@ -11,7 +11,7 @@
 				Выход
 			</ButtonDefault>
 		</template>
-	</Modal>
+	</VueModal>
 
 	<aside :class="{ active: $store.getters.burgerAdminStatus }">
 		<div class="aside__body">
@@ -240,16 +240,16 @@
 </template>
 
 <script>
-import Modal from "../../modules/modal/Modal.vue";
+import VueModal from "../../modules/modal/VueModal.vue";
 import ButtonDefault from "../../ui/admin/buttons/ButtonDefault.vue";
 
-import Icon from "../../modules/icon/Icon.vue";
+import Icon from "../../modules/icon/VueIcon.vue";
 
 import axios from "axios";
 
 export default {
 	components: {
-		Modal,
+		VueModal,
 		ButtonDefault,
 
 		Icon,

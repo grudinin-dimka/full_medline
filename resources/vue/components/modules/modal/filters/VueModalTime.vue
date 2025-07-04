@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import Modal from "../Modal.vue";
+import Modal from "../VueModal.vue";
 
 import VueInput from "../../input/VueInput.vue";
 

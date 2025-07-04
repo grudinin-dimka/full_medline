@@ -13,7 +13,7 @@
 		<template #options>
 			<template v-if="$route.params.date === 'new' || $route.params.time === 'new'">
 				<ButtonDefault look="white" :disabled="disabled.news.add" @click="addNews">
-					<Icon
+					<VueIcon
 						:name="'add'"
 						:fill="'var(--primary-color)'"
 						:width="'23px'"
@@ -30,7 +30,7 @@
 						@click="publishNews"
 						v-if="!currentNews.data.hide.value"
 					>
-						<Icon
+						<VueIcon
 							:name="'publish'"
 							:fill="'var(--primary-color)'"
 							:width="'28px'"
@@ -44,7 +44,7 @@
 						@click="publishNews"
 						v-else
 					>
-						<Icon
+						<VueIcon
 							:name="'unpublish'"
 							:fill="'var(--primary-color)'"
 							:width="'28px'"
@@ -54,7 +54,7 @@
 					</ButtonDefault>
 				</template>
 				<ButtonDefault look="white" :disabled="disabled.news.save" @click="saveNews">
-					<Icon
+					<VueIcon
 						:name="'save'"
 						:fill="'var(--primary-color)'"
 						:width="'28px'"
@@ -194,12 +194,11 @@ import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 
-import BaseTable from "../../../components/modules/table/BaseTable.vue";
 import VueTiptap from "../../../components/modules/VueTiptap.vue";
 
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 
-import Icon from "../../../components/modules/icon/Icon.vue";
+import VueIcon from "../../../components/modules/icon/VueIcon.vue";
 
 import api from "../../../services/api";
 import validate from "../../../services/validate";
@@ -210,12 +209,11 @@ export default {
 		LoaderChild,
 		InfoBar,
 
-		BaseTable,
 		VueTiptap,
 
 		ButtonDefault,
 
-		Icon,
+		VueIcon,
 	},
 	data() {
 		return {

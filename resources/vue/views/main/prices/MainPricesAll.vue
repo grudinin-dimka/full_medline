@@ -11,7 +11,7 @@
 				<VueInput v-model="filters.name" :type="'search'" :placeholder="'Введите услугу'" />
 
 				<button class="filters__item-button" @click="getPrices">
-					<Icon
+					<VueIcon
 						:name="'search'"
 						:width="'24px'"
 						:height="'24px'"
@@ -107,7 +107,7 @@ import Empty from "../../../components/modules/Empty.vue";
 import VueSelector from "../../../components/modules/VueSelector.vue";
 import VueInput from "../../../components/modules/input/VueInput.vue";
 
-import Icon from "../../../components/modules/icon/Icon.vue";
+import VueIcon from "../../../components/modules/icon/VueIcon.vue";
 
 import api from "../../../services/api";
 import sorted from "../../../services/sorted.js";
@@ -124,7 +124,7 @@ export default {
 		VueSelector,
 		VueInput,
 
-		Icon,
+		VueIcon,
 	},
 	data() {
 		return {

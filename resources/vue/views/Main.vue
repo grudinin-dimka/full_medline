@@ -1,6 +1,6 @@
 <template>
 	<!-- Дебагер -->
-	<debugger />
+	<VueDebugger />
 
 	<!-- Шапка -->
 	<main-header ref="mainHeader" />
@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import Debugger from "../components/modules/Debugger.vue";
+import VueDebugger from "../components/modules/VueDebugger.vue";
 
 // NOTE: Модули на главной
 import MainHeader from "../components/includes/main/medline/MainHeader.vue";
@@ -35,7 +35,7 @@ export default {
 		};
 	},
 	components: {
-		Debugger,
+		VueDebugger,
 		MainHeader,
 		MainNav,
 		MainFooter,

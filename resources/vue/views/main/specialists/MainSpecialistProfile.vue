@@ -139,8 +139,6 @@ import VueTiptap from "../../../components/modules/VueTiptap.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import LoadText from "../../../components/ui/main/LoadText.vue";
 
-import Icon from "../../../components/modules/icon/Icon.vue";
-
 import api from "../../../services/api";
 import sorted from "../../../services/sorted";
 
@@ -152,8 +150,6 @@ export default {
 
 		LoaderChild,
 		LoadText,
-
-		Icon,
 	},
 	data() {
 		return {
@@ -269,20 +265,19 @@ export default {
 	width: 1350px;
 
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
-
 }
 
 .container-specialist-profile > .img {
 	align-self: self-start;
 	justify-self: end;
-	
+
 	width: 350px;
 	height: 350px;
 	border-radius: 100%;
 	background-size: contain;
 	background-position: center center;
 	background-repeat: no-repeat;
-	
+
 	background-color: var(--skeleton-background-color);
 }
 

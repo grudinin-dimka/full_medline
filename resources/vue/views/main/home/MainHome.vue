@@ -1,6 +1,6 @@
 <template>
 	<block :minHeight="400">
-		<Slider v-if="slides.length > 0" class="slider__loader" :slides="slides" />
+		<MainHomeSlides v-if="slides.length > 0" class="slider__loader" :slides="slides" />
 		<Empty :minHeight="400" v-else />
 
 		<div class="section-info">
@@ -9,7 +9,7 @@
 			<p class="section-info-sub-title">Индивидуальный подход и лучшие врачи</p>
 		</div>
 	</block>
-	
+
 	<block :minHeight="450">
 		<div class="news__main">
 			<div class="news__main-head">
@@ -27,19 +27,19 @@
 </template>
 
 <script>
-import Slider from "../../components/modules/Slider.vue";
-import Block from "../../components/ui/main/Block.vue";
-import Empty from "../../components/modules/Empty.vue";
-import LoaderChild from "../../components/modules/LoaderChild.vue";
+import MainHomeSlides from "./MainHomeSlides.vue";
+import Block from "../../../components/ui/main/Block.vue";
+import Empty from "../../../components/modules/Empty.vue";
+import LoaderChild from "../../../components/modules/LoaderChild.vue";
 
-import MainNewsItem from "./news/MainNewsItem.vue";
+import MainNewsItem from "../news/MainNewsItem.vue";
 
-import api from "../../services/api.js";
-import sorted from "../../services/sorted.js";
+import api from "../../../services/api.js";
+import sorted from "../../../services/sorted.js";
 
 export default {
 	components: {
-		Slider,
+		MainHomeSlides,
 		Block,
 		Empty,
 		LoaderChild,

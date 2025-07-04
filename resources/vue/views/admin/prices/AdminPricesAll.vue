@@ -2,7 +2,7 @@
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                  МОДАЛЬНОЕ ОКНО                   |-->
 	<!--|___________________________________________________|-->
-	<Modal ref="modal" :settings="modal">
+	<VueModal ref="modal" :settings="modal">
 		<template #title>
 			{{ modal.values.title }}
 		</template>
@@ -24,11 +24,11 @@
 
 		<template #footer>
 			<ButtonDefault @click="createPrice" :disabled="disabled.prices.create">
-				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</ButtonDefault>
 		</template>
-	</Modal>
+	</VueModal>
 
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                    СПИСОК ЦЕН                     |-->
@@ -47,7 +47,7 @@
 				:disabled="disabled.prices.download"
 				:look="'white'"
 			>
-				<Icon
+				<VueIcon
 					:name="'download'"
 					:fill="'var(--primary-color)'"
 					:width="'28px'"
@@ -61,13 +61,13 @@
 				:disabled="disabled.prices.save"
 				:look="'white'"
 			>
-				<Icon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
+				<VueIcon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
 			</button-default>
 		</template>
 
 		<template #body>
-			<BaseTable
+			<VueTable
 				v-if="loading.sections.prices"
 				:table="table"
 				@create="openModalСreate"
@@ -86,9 +86,9 @@
 
 <script>
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
-import Modal from "../../../components/modules/modal/Modal.vue";
+import VueModal from "../../../components/modules/modal/VueModal.vue";
 import Empty from "../../../components/modules/Empty.vue";
-import BaseTable from "../../../components/modules/table/BaseTable.vue";
+import VueTable from "../../../components/modules/table/VueTable.vue";
 import VueInput from "../../../components/modules/input/VueInput.vue";
 
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
@@ -98,7 +98,7 @@ import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
 import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 
-import Icon from "../../../components/modules/icon/Icon.vue";
+import VueIcon from "../../../components/modules/icon/VueIcon.vue";
 
 import api from "../../../services/api";
 import validate from "../../../services/validate";
@@ -108,9 +108,9 @@ import files from "../../../services/files";
 export default {
 	components: {
 		LoaderChild,
-		Modal,
+		VueModal,
 		Empty,
-		BaseTable,
+		VueTable,
 		VueInput,
 
 		BlockOnce,
@@ -121,7 +121,7 @@ export default {
 		ButtonClaim,
 		ButtonDefault,
 
-		Icon,
+		VueIcon,
 	},
 	data() {
 		return {

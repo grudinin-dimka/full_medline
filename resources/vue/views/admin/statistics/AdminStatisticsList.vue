@@ -2,7 +2,7 @@
 	<block-once :minHeight="100">
 		<template #title> СТАТИСТИКА </template>
 		<template #body>
-			<BaseTable
+			<VueTable
 				v-if="loading.sections.statistics"
 				:table="table"
 				@create="console.log('create')"
@@ -23,7 +23,7 @@
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 
-import BaseTable from "../../../components/modules/table/BaseTable.vue";
+import VueTable from "../../../components/modules/table/VueTable.vue";
 
 import api from "../../../services/api";
 
@@ -32,7 +32,7 @@ export default {
 		BlockOnce,
 		LoaderChild,
 
-		BaseTable,
+		VueTable,
 	},
 	data() {
 		return {

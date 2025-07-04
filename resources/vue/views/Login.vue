@@ -1,5 +1,5 @@
 <template>
-	<debugger />
+	<VueDebugger />
 
 	<Loader :isLoading="loader.loading" />
 
@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import Debugger from "../components/modules/Debugger.vue";
+import VueDebugger from "../components/modules/VueDebugger.vue";
 import Loader from "../components/modules/loader.vue";
 import VueInput from "../components/modules/input/VueInput.vue";
 
@@ -56,7 +56,7 @@ import validate from "../services/validate";
 
 export default {
 	components: {
-		Debugger,
+		VueDebugger,
 		Loader,
 		VueInput,
 

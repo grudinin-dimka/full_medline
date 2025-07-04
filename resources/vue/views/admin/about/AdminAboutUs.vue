@@ -1,8 +1,8 @@
 <template>
 	<!-- Модальное окно: Информационный блок -->
-	<Modal ref="modal" :settings="modal">
+	<VueModal ref="modal" :settings="modal">
 		<template #title v-if="modal.values.look == 'default' && !currentInfoBlock.data.delete.value">
-			<Icon
+			<VueIcon
 				:name="'arrow'"
 				:fill="'var(--icon-multi-fill)'"
 				:hover="'var(--icon-nulti-fill-hover)'"
@@ -13,7 +13,7 @@
 				@click="changeInfoBlockOrder('down')"
 			/>
 			#{{ currentInfoBlock.data.order.value }}
-			<Icon
+			<VueIcon
 				:name="'arrow'"
 				:fill="'var(--icon-multi-fill)'"
 				:hover="'var(--icon-nulti-fill-hover)'"
@@ -40,7 +40,7 @@
 					></div>
 					<div class="buttons" v-if="!currentInfoBlock.data.delete.value">
 						<div class="icon edit" @click="openModalImageEdite('imageOne')">
-							<Icon
+							<VueIcon
 								:name="'edit'"
 								:fill="'var(--icon-edit-fill)'"
 								:width="'24px'"
@@ -48,7 +48,7 @@
 							/>
 						</div>
 						<div class="icon delete" @click="removeInfoBlockImage('imageOne')">
-							<Icon
+							<VueIcon
 								:name="'delete'"
 								:fill="'var(--delete-secondary-color)'"
 								:width="'24px'"
@@ -66,7 +66,7 @@
 					></div>
 					<div class="buttons add" v-if="!currentInfoBlock.data.delete.value">
 						<div class="icon create" @click="openModalImageCreate('imageOne')">
-							<Icon
+							<VueIcon
 								:name="'add'"
 								:fill="'var(--icon-create-fill)'"
 								:width="'19px'"
@@ -84,7 +84,7 @@
 					></div>
 					<div class="buttons" v-if="!currentInfoBlock.data.delete.value">
 						<div class="icon edit" @click="openModalImageEdite('imageTwo')">
-							<Icon
+							<VueIcon
 								:name="'edit'"
 								:fill="'var(--icon-edit-fill)'"
 								:width="'24px'"
@@ -92,7 +92,7 @@
 							/>
 						</div>
 						<div class="icon delete" @click="removeInfoBlockImage('imageTwo')">
-							<Icon
+							<VueIcon
 								:name="'delete'"
 								:fill="'var(--delete-secondary-color)'"
 								:width="'24px'"
@@ -110,7 +110,7 @@
 					></div>
 					<div class="buttons add" v-if="!currentInfoBlock.data.delete.value">
 						<div class="icon create" @click="openModalImageCreate('imageTwo')">
-							<Icon
+							<VueIcon
 								:name="'add'"
 								:fill="'var(--icon-create-fill)'"
 								:width="'19px'"
@@ -128,7 +128,7 @@
 					></div>
 					<div class="buttons" v-if="!currentInfoBlock.data.delete.value">
 						<div class="icon edit" @click="openModalImageEdite('imageThree')">
-							<Icon
+							<VueIcon
 								:name="'edit'"
 								:fill="'var(--icon-edit-fill)'"
 								:width="'24px'"
@@ -136,7 +136,7 @@
 							/>
 						</div>
 						<div class="icon delete" @click="removeInfoBlockImage('imageThree')">
-							<Icon
+							<VueIcon
 								:name="'delete'"
 								:fill="'var(--delete-secondary-color)'"
 								:width="'24px'"
@@ -154,7 +154,7 @@
 					></div>
 					<div class="buttons add" v-if="!currentInfoBlock.data.delete.value">
 						<div class="icon create" @click="openModalImageCreate('imageThree')">
-							<Icon
+							<VueIcon
 								:name="'add'"
 								:fill="'var(--icon-create-fill)'"
 								:width="'19px'"
@@ -189,7 +189,7 @@
 		<template #footer>
 			<template v-if="modal.values.look == 'create'">
 				<ButtonDefault @click="addInfoBlock">
-					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+					<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</ButtonDefault>
 			</template>
@@ -199,25 +199,25 @@
 					@click="deleteInfoBlock"
 					v-if="!currentInfoBlock.data.delete.value && !currentInfoBlock.data.create.value"
 				>
-					<Icon :name="'delete'" :fill="'white'" :width="'24px'" :height="'22px'" />
+					<VueIcon :name="'delete'" :fill="'white'" :width="'24px'" :height="'22px'" />
 					Удалить
 				</button-remove>
 
 				<ButtonDefault @click="updateInfoBlock" v-if="!currentInfoBlock.data.delete.value">
-					<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</ButtonDefault>
 
 				<ButtonDefault @click="deleteInfoBlock" v-if="currentInfoBlock.data.delete.value">
-					<Icon :name="'restore'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					<VueIcon :name="'restore'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Вернуть
 				</ButtonDefault>
 			</template>
 		</template>
-	</Modal>
+	</VueModal>
 
 	<!-- Модальное окно: Добавить картинку -->
-	<Modal ref="modalImage" :settings="modalImage">
+	<VueModal ref="modalImage" :settings="modalImage">
 		<template #title>
 			{{ modalImage.values.title }}
 		</template>
@@ -240,22 +240,22 @@
 		<template #footer>
 			<template v-if="modalImage.values.look == 'create'">
 				<button-default @click="updateImage" :disabled="disabled.image.add">
-					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+					<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-default>
 			</template>
 
 			<template v-if="modalImage.values.look == 'default'">
 				<button-default @click="updateImage" :disabled="disabled.image.update">
-					<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</button-default>
 			</template>
 		</template>
-	</Modal>
+	</VueModal>
 
 	<!-- Модальное окно: Добавить файл -->
-	<Modal ref="modalFiles" :settings="modalFiles">
+	<VueModal ref="modalFiles" :settings="modalFiles">
 		<template #title>
 			{{ modalFiles.values.title }}
 		</template>
@@ -277,11 +277,11 @@
 
 		<template #footer>
 			<button-default @click="uploadFile" :disabled="disabled.files.upload">
-				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Загрузить
 			</button-default>
 		</template>
-	</Modal>
+	</VueModal>
 
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|               ИНФОРМАЦИОННЫЕ БЛОКИ                |-->
@@ -301,7 +301,7 @@
 				:disabled="disabled.about.save"
 				:look="'white'"
 			>
-				<Icon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
+				<VueIcon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
 			</button-default>
 		</template>
@@ -327,7 +327,7 @@
 
 		<template #buttons>
 			<button-default @click="openModalСreate">
-				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</button-default>
 		</template>
@@ -343,13 +343,13 @@
 				:disabled="disabled.files.save"
 				:look="'white'"
 			>
-				<Icon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
+				<VueIcon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
 			</button-default>
 		</template>
 
 		<template #body>
-			<BaseTable
+			<VueTable
 				v-if="loading.sections.infoFiles"
 				:table="table"
 				@create="openFilesCreate"
@@ -367,11 +367,11 @@
 </template>
 
 <script>
-import Modal from "../../../components/modules/modal/Modal.vue";
+import VueModal from "../../../components/modules/modal/VueModal.vue";
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import VueTiptap from "../../../components/modules/VueTiptap.vue";
 import VueInput from "../../../components/modules/input/VueInput.vue";
-import BaseTable from "../../../components/modules/table/BaseTable.vue";
+import VueTable from "../../../components/modules/table/VueTable.vue";
 
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTwo from "../../../components/ui/admin/blocks/BlockTwo.vue";
@@ -380,7 +380,7 @@ import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vu
 import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
 import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 
-import Icon from "../../../components/modules/icon/Icon.vue";
+import VueIcon from "../../../components/modules/icon/VueIcon.vue";
 
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import Empty from "../../../components/modules/Empty.vue";
@@ -395,11 +395,11 @@ import validate from "../../../services/validate";
 
 export default {
 	components: {
-		Modal,
+		VueModal,
 		InfoBar,
 		VueTiptap,
 		LoaderChild,
-		BaseTable,
+		VueTable,
 		VueInput,
 
 		BlockOnce,
@@ -409,7 +409,7 @@ export default {
 		ButtonRemove,
 		ButtonClaim,
 
-		Icon,
+		VueIcon,
 
 		Empty,
 		AdminAboutUsList,

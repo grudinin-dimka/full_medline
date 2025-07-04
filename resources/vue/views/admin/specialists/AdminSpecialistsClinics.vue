@@ -2,7 +2,7 @@
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                  МОДАЛЬНОЕ ОКНО                   |-->
 	<!--|___________________________________________________|-->
-	<Modal ref="modal" :settings="modal">
+	<VueModal ref="modal" :settings="modal">
 		<template #title>
 			{{ modal.values.title }}
 		</template>
@@ -131,19 +131,19 @@
 		<template #footer>
 			<template v-if="modal.values.look == 'create'">
 				<button-default @click="addClinic">
-					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+					<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-default>
 			</template>
 
 			<template v-if="modal.values.look == 'default'">
 				<button-default @click="updateClinic">
-					<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</button-default>
 			</template>
 		</template>
-	</Modal>
+	</VueModal>
 
 	<info-bar>
 		<template v-slot:title>Специалисты</template>
@@ -159,13 +159,13 @@
 				:disabled="disabled.clinics.save"
 				:look="'white'"
 			>
-				<Icon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
+				<VueIcon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
 			</button-default>
 		</template>
 
 		<template #body>
-			<BaseTable
+			<VueTable
 				v-if="loading.sections.clinics"
 				:table="table"
 				@create="openModalСreate"
@@ -184,8 +184,8 @@
 
 <script>
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
-import Modal from "../../../components/modules/modal/Modal.vue";
-import BaseTable from "../../../components/modules/table/BaseTable.vue";
+import VueModal from "../../../components/modules/modal/VueModal.vue";
+import VueTable from "../../../components/modules/table/VueTable.vue";
 import VueInput from "../../../components/modules/input/VueInput.vue";
 import VueInputContainer from "../../../components/modules/input/VueInputContainer.vue";
 
@@ -197,7 +197,7 @@ import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vu
 import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
 import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 
-import Icon from "../../../components/modules/icon/Icon.vue";
+import VueIcon from "../../../components/modules/icon/VueIcon.vue";
 
 import api from "../../../services/api";
 import shared from "../../../services/shared";
@@ -205,9 +205,9 @@ import validate from "../../../services/validate";
 
 export default {
 	components: {
-		Modal,
+		VueModal,
 		InfoBar,
-		BaseTable,
+		VueTable,
 		LoaderChild,
 		VueInput,
 		VueInputContainer,
@@ -218,7 +218,7 @@ export default {
 		ButtonRemove,
 		ButtonClaim,
 
-		Icon,
+		VueIcon,
 	},
 	data() {
 		return {

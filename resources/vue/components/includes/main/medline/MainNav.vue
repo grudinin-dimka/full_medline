@@ -129,19 +129,15 @@
 		</div>
 
 		<div class="nav__buttons">
-			<button @click.prevent="$emit('openModalRequestEdite')">
-				ЗАПИСАТЬСЯ НА ПРИЕМ
-			</button>
+			<button @click.prevent="$emit('openModalRequestEdite')">ЗАПИСАТЬСЯ НА ПРИЕМ</button>
 
-			<button @click.prevent="$emit('openModalPointsEdite')">
-				УЗНАТЬ БАЛАНС
-			</button>
+			<button @click.prevent="$emit('openModalPointsEdite')">УЗНАТЬ БАЛАНС</button>
 		</div>
 	</nav>
 </template>
 
 <script>
-import Icon from "../../../modules/icon/Icon.vue";
+import Icon from "../../../modules/icon/VueIcon.vue";
 
 export default {
 	components: {
@@ -358,7 +354,7 @@ nav::-webkit-scrollbar-thumb:hover {
 	}
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 750px) {
 	nav {
 		z-index: 5;
 		position: fixed;

@@ -1,6 +1,6 @@
 <template>
 	<!-- Модальное окно: Специализации -->
-	<Modal ref="modalSpecializations" :settings="modalSpecializations">
+	<VueModal ref="modalSpecializations" :settings="modalSpecializations">
 		<template #title>
 			{{ modalSpecializations.values.title }}
 		</template>
@@ -67,14 +67,14 @@
 
 		<template #footer>
 			<button-default @click="updateSpecialization">
-				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</button-default>
 		</template>
-	</Modal>
+	</VueModal>
 
 	<!-- Модальное окно: Клиники -->
-	<Modal ref="modalClinics" :settings="modalClinics">
+	<VueModal ref="modalClinics" :settings="modalClinics">
 		<template #title>
 			{{ modalClinics.values.title }}
 		</template>
@@ -147,14 +147,14 @@
 
 		<template #footer>
 			<button-default @click="updateClinics">
-				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</button-default>
 		</template>
-	</Modal>
+	</VueModal>
 
 	<!-- Модальное окно: Сертификат -->
-	<Modal ref="modalCertificates" :settings="modalCertificates">
+	<VueModal ref="modalCertificates" :settings="modalCertificates">
 		<template #title>
 			{{ modalCertificates.values.title }}
 		</template>
@@ -200,22 +200,22 @@
 		<template #footer>
 			<template v-if="modalCertificates.values.look == 'create'">
 				<button-default @click="addCertificate">
-					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+					<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-default>
 			</template>
 
 			<template v-if="modalCertificates.values.look == 'default'">
 				<button-default @click="updateCertificate">
-					<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</button-default>
 			</template>
 		</template>
-	</Modal>
+	</VueModal>
 
 	<!-- Модальное окно: Образования -->
-	<Modal ref="modalEducations" :settings="modalEducations">
+	<VueModal ref="modalEducations" :settings="modalEducations">
 		<template #title>
 			{{ modalEducations.values.title }}
 		</template>
@@ -272,22 +272,22 @@
 		<template #footer>
 			<template v-if="modalEducations.values.look == 'create'">
 				<button-default @click="addEducation">
-					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+					<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-default>
 			</template>
 
 			<template v-if="modalEducations.values.look == 'default'">
 				<button-default @click="updateEducation">
-					<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</button-default>
 			</template>
 		</template>
-	</Modal>
+	</VueModal>
 
 	<!-- Модальное окно: Работы -->
-	<Modal ref="modalWorks" :settings="modalWorks">
+	<VueModal ref="modalWorks" :settings="modalWorks">
 		<template #title>
 			{{ modalWorks.values.title }}
 		</template>
@@ -347,19 +347,19 @@
 		<template #footer>
 			<template v-if="modalWorks.values.look == 'create'">
 				<button-default @click="addWork">
-					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+					<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-default>
 			</template>
 
 			<template v-if="modalWorks.values.look == 'default'">
 				<button-default @click="updateWork">
-					<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</button-default>
 			</template>
 		</template>
-	</Modal>
+	</VueModal>
 
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                   СПЕЦИАЛИСТ                      |-->
@@ -385,7 +385,7 @@
 					:disabled="disabled.profile.create"
 					:look="'white'"
 				>
-					<Icon
+					<VueIcon
 						:name="'add'"
 						:fill="'var(--primary-color)'"
 						:width="'23px'"
@@ -401,7 +401,7 @@
 					:disabled="disabled.profile.save"
 					:look="'white'"
 				>
-					<Icon
+					<VueIcon
 						:name="'save'"
 						:fill="'var(--primary-color)'"
 						:width="'28px'"
@@ -849,7 +849,7 @@
 								class="item-close"
 								@click="removeArrValue('specializations', specialization)"
 							>
-								<icon-close :width="26" :height="26" />
+								<VueIcon :name="'close'" :fill="'black'" :width="'23px'" :height="'23px'" />
 							</div>
 						</div>
 					</template>
@@ -865,7 +865,7 @@
 
 			<template #one-buttons>
 				<button-default @click="openModalSpecializationsEdite">
-					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+					<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-default>
 			</template>
@@ -905,7 +905,7 @@
 								{{ clinic.priem ? `Да` : "Нет" }}
 							</div>
 							<div class="item-close" @click="removeArrValue('clinics', clinic)">
-								<icon-close :width="26" :height="26" />
+								<VueIcon :name="'close'" :fill="'black'" :width="'16px'" :height="'16px'" />
 							</div>
 						</div>
 					</template>
@@ -921,7 +921,7 @@
 
 			<template #two-buttons>
 				<button-default @click="openModalClinicsEdite">
-					<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+					<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
 				</button-default>
 			</template>
@@ -939,7 +939,7 @@
 			</template>
 
 			<template #body>
-				<BaseTable
+				<VueTable
 					v-if="loading.sections.certificates"
 					:table="tableCertificates"
 					@create="openModalCertificatesCreate"
@@ -965,7 +965,7 @@
 			</template>
 
 			<template #body>
-				<BaseTable
+				<VueTable
 					v-if="loading.sections.educations"
 					:table="tableEducations"
 					@create="openModalEducationsCreate"
@@ -992,7 +992,7 @@
 			</template>
 
 			<template #body>
-				<BaseTable
+				<VueTable
 					v-if="loading.sections.works"
 					:table="tableWorks"
 					@create="openModalWorksCreate"
@@ -1012,8 +1012,8 @@
 </template>
 
 <script>
-import Modal from "../../../components/modules/modal/Modal.vue";
-import BaseTable from "../../../components/modules/table/BaseTable.vue";
+import VueModal from "../../../components/modules/modal/VueModal.vue";
+import VueTable from "../../../components/modules/table/VueTable.vue";
 import VueTiptap from "../../../components/modules/VueTiptap.vue";
 
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
@@ -1033,8 +1033,7 @@ import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 
 import Pagination from "../../../components/modules/Pagination.vue";
 
-import Icon from "../../../components/modules/icon/Icon.vue";
-import IconClose from "../../../components/icons/IconClose.vue";
+import VueIcon from "../../../components/modules/icon/VueIcon.vue";
 
 import api from "../../../services/api";
 import validate from "../../../services/validate";
@@ -1046,8 +1045,8 @@ import { RouterView, RouterLink } from "vue-router";
 
 export default {
 	components: {
-		Modal,
-		BaseTable,
+		VueModal,
+		VueTable,
 		VueTiptap,
 
 		InfoBar,
@@ -1067,8 +1066,7 @@ export default {
 
 		Pagination,
 
-		Icon,
-		IconClose,
+		VueIcon,
 
 		RouterView,
 		RouterLink,
@@ -2955,7 +2953,7 @@ export default {
 .profile-list > .clinics__list-head {
 	display: grid;
 	align-items: center;
-	grid-template-columns: 1fr 1fr 30px;
+	grid-template-columns: 1fr 1fr auto;
 	gap: 10px;
 
 	border: var(--input-border);
@@ -2992,12 +2990,7 @@ export default {
 }
 
 .profile-list > .clinics__list-head > .item-close {
-	display: flex;
-	justify-content: center;
-	align-items: center;
 
-	justify-self: end;
-	align-self: end;
 }
 
 @media screen and (width <= 1000px) {

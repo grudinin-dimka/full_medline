@@ -24,7 +24,7 @@
 				<a v-for="file in infoFiles" class="files__item" :href="file.path" target="_blank">
 					<div class="files__item-content">
 						<div class="files__content-icon">
-							<Icon
+							<VueIcon
 								:name="'pdf'"
 								:width="'30px'"
 								:height="'30px'"
@@ -58,7 +58,7 @@ import MainAboutList from "./MainAboutList.vue";
 import Empty from "../../../components/modules/Empty.vue";
 
 import api from "../../../services/api";
-import Icon from "../../../components/modules/icon/Icon.vue";
+import VueIcon from "../../../components/modules/icon/VueIcon.vue";
 import files from "../../../services/files";
 
 export default {
@@ -69,7 +69,7 @@ export default {
 		MainAboutList,
 		Empty,
 
-		Icon,
+		VueIcon,
 	},
 	methods: {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/

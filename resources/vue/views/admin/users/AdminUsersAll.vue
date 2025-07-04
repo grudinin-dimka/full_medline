@@ -1,6 +1,6 @@
 <template>
 	<!-- Модальное окно: Пользователи -->
-	<Modal ref="modal" :settings="modal">
+	<VueModal ref="modal" :settings="modal">
 		<template #title>
 			{{ modal.values.title }}
 		</template>
@@ -173,7 +173,7 @@
 				:disabled="disabled.users.save"
 				v-if="modal.values.look == 'default'"
 			>
-				<Icon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
+				<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 				Обновить
 			</ButtonDefault>
 			<ButtonDefault
@@ -181,14 +181,14 @@
 				:disabled="disabled.users.create"
 				v-if="modal.values.look == 'create'"
 			>
-				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</ButtonDefault>
 		</template>
-	</Modal>
+	</VueModal>
 
 	<!-- Модальное окно: Пользователи -> Пароль -->
-	<Modal ref="modalPassword" :settings="modalPassword">
+	<VueModal ref="modalPassword" :settings="modalPassword">
 		<template #title>
 			{{ modalPassword.values.title }}
 		</template>
@@ -220,10 +220,10 @@
 				Закрыть
 			</button-password-wide>
 		</template>
-	</Modal>
+	</VueModal>
 
 	<!-- Модальное окно: Пользователи -> Блокировка -->
-	<Modal ref="modalBlock" :settings="modalBlock">
+	<VueModal ref="modalBlock" :settings="modalBlock">
 		<template #title>
 			{{ modalBlock.values.title }}
 		</template>
@@ -260,10 +260,10 @@
 				Нет
 			</ButtonDefaultWide>
 		</template>
-	</Modal>
+	</VueModal>
 
 	<!-- Модальное окно: Пользователи -> Удаление -->
-	<Modal ref="modalDelete" :settings="modalDelete">
+	<VueModal ref="modalDelete" :settings="modalDelete">
 		<template #title>
 			{{ modalDelete.values.title }}
 		</template>
@@ -296,7 +296,7 @@
 				Нет
 			</button-remove-wide>
 		</template>
-	</Modal>
+	</VueModal>
 
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                   БЛОК ПРОФИЛЯ                    |-->
@@ -322,7 +322,7 @@
 					</div>
 					<div class="buttons">
 						<div class="icon edit" @click="openModalEdite(user)">
-							<Icon
+							<VueIcon
 								:name="'edit'"
 								:fill="'var(--icon-edit-fill)'"
 								:width="'24px'"
@@ -331,7 +331,7 @@
 							<div class="label">Редактирование</div>
 						</div>
 						<div class="icon admin" @click="openModalPassword(user)">
-							<Icon
+							<VueIcon
 								:name="'password'"
 								:fill="'var(--icon-admin-fill)'"
 								:width="'22px'"
@@ -344,14 +344,14 @@
 							:class="{ default: user.statusId === 1, delete: user.statusId === 2 }"
 							@click="openModalBlock(user)"
 						>
-							<Icon
+							<VueIcon
 								:name="'lock-open'"
 								:fill="'var(--icon-fill)'"
 								:width="'24px'"
 								:height="'24px'"
 								v-if="user.statusId === 1"
 							/>
-							<Icon
+							<VueIcon
 								:name="'lock-close'"
 								:fill="'var(--delete-secondary-color)'"
 								:width="'24px'"
@@ -361,7 +361,7 @@
 							<div class="label">Блокировка</div>
 						</div>
 						<div class="icon delete" @click="openModalDelete(user)">
-							<Icon
+							<VueIcon
 								:name="'delete'"
 								:fill="'var(--delete-secondary-color)'"
 								:width="'24px'"
@@ -382,7 +382,7 @@
 
 		<template #buttons>
 			<ButtonDefault @click="openModalСreate">
-				<Icon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</ButtonDefault>
 		</template>
@@ -391,7 +391,7 @@
 
 <script>
 import LoaderChild from "../../../components/modules/LoaderChild.vue";
-import Modal from "../../../components/modules/modal/Modal.vue";
+import VueModal from "../../../components/modules/modal/VueModal.vue";
 import PasswordGenerator from "../../../components/modules/PasswordGenerator.vue";
 
 import VueInput from "../../../components/modules/input/VueInput.vue";
@@ -399,7 +399,7 @@ import VueInputContainer from "../../../components/modules/input/VueInputContain
 
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 
-import Icon from "../../../components/modules/icon/Icon.vue";
+import VueIcon from "../../../components/modules/icon/VueIcon.vue";
 
 import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
 import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
@@ -415,14 +415,14 @@ import shared from "../../../services/shared";
 export default {
 	components: {
 		LoaderChild,
-		Modal,
+		VueModal,
 		PasswordGenerator,
 		BlockOnce,
 
 		VueInput,
 		VueInputContainer,
 
-		Icon,
+		VueIcon,
 
 		ButtonClaim,
 		ButtonDefault,
