@@ -27,10 +27,13 @@ export default {
 				state.burger.main.status = true;
 			}
 		},
+
+		/* Закрытие меню навигации */
 		closeBurgerMain(state) {
 			document.body.classList.remove("modal-open");
 			state.burger.main.status = false;
 		},
+		
 		/* Изменение меню навигации (админка) */
 		setBurgerAdmin(state) {
 			if (state.burger.admin.status) {

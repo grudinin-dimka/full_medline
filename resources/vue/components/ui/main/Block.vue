@@ -49,4 +49,10 @@ export default {
 		align-items: stretch;
 	}
 }
+
+@media screen and (width <= 750px) {
+	.block {
+		margin: 20px 20px;
+	}
+}
 </style>

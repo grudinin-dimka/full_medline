@@ -30,10 +30,10 @@
 	--button-inverse-border: var(--input-border);
 	--button-inverse-border-hover: var(--input-border-focus);
 
-	--button-inverse-font-color: rgb(255, 255, 255);
-	--button-inverse-font-color-hover: rgb(255, 255, 255);
+	--button-inverse-font-color: black;
+	--button-inverse-font-color-hover: black;
 	--button-inverse-background-color: rgba(190, 132, 86, 0.0);
-	--button-inverse-background-color-hover: rgba(190, 132, 86, 0.1);
+	--button-inverse-background-color-hover: var(--edit-secondary-background-color);
 
 	/* create */
 	--button-create-font-color: rgb(255, 255, 255);

@@ -4,19 +4,20 @@
 
 	<!-- Шапка -->
 	<main-header ref="mainHeader" />
+
 	<!-- Навигация -->
-	<main-nav
-		@openModalRequestEdite="$refs.mainHeader.openModalRequestEdite()"
-		@openModalPointsEdite="$refs.mainHeader.openModalPointsEdite()"
-	/>
+	<main-nav ref="mainNav" />
+
 	<!-- Содержимое -->
 	<router-view />
+
 	<!-- Подвал -->
-	<main-footer />
+	<main-footer ref="mainFooter" />
 </template>
 
 <script>
 import VueDebugger from "../components/modules/VueDebugger.vue";
+import VueIcon from "../components/modules/icon/VueIcon.vue";
 
 // NOTE: Модули на главной
 import MainHeader from "../components/includes/main/medline/MainHeader.vue";
@@ -36,6 +37,8 @@ export default {
 	},
 	components: {
 		VueDebugger,
+		VueIcon,
+
 		MainHeader,
 		MainNav,
 		MainFooter,

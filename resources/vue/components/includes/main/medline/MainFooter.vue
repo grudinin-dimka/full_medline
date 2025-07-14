@@ -374,6 +374,12 @@ footer article {
 	color: rgb(158, 130, 130);
 }
 
+@media screen and (width <= 750px) {
+	section.bottom {
+		margin: 0px 20px 20px 20px;
+	}
+}
+
 @media screen and (max-width: 500px) {
 	footer a[href="/"] {
 		display: none;

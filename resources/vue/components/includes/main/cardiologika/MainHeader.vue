@@ -35,6 +35,14 @@
 			</div>
 		</div>
 	</header>
+
+	<!-- Кнопки -->
+	<div class="main__buttons">
+		<button class="main__buttons-button" @click="topFunction">
+			<VueIcon :name="'arrow'" :fill="'white'" :width="'26px'" :height="'26px'" />
+		</button>
+	</div>
+
 	<!-- Кнопка "бургер" -->
 	<div
 		class="burger"
@@ -92,12 +100,23 @@ export default {
 		},
 	},
 	methods: {
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾| */
+		/* |                      Шапка                        | */
+		/* |___________________________________________________| */
+		/* Подсветка шапки */
 		setShadow() {
 			if (window.scrollY > 0 && window.document.documentElement.clientWidth <= 500) {
 				this.isShadow = true;
 			} else {
 				this.isShadow = false;
 			}
+		},
+
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾| */
+		/* |            Кнопки для пользователей               | */
+		/* |___________________________________________________| */
+		topFunction() {
+			window.scrollTo({ top: 0, behavior: "smooth" });
 		},
 	},
 	mounted() {

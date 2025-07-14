@@ -120,7 +120,7 @@
 
 		<template #footer>
 			<VueButton @click="sendClientPoints" :disabled="disabled.modalPoints.request">
-				<Icon :name="'info'" :fill="'white'" :width="'26px'" :height="'26px'" />
+				<VueIcon :name="'credit-card'" :fill="'white'" :width="'26px'" :height="'26px'" />
 				Узнать баланс
 			</VueButton>
 		</template>
@@ -272,7 +272,7 @@
 
 		<template #footer>
 			<VueButton @click="sendRequest" :disabled="disabled.modalForm.request">
-				<Icon :name="'phone'" :fill="'white'" :width="'22px'" :height="'22px'" />
+				<VueIcon :name="'phone'" :fill="'white'" :width="'22px'" :height="'22px'" />
 				Отправить заявку
 			</VueButton>
 		</template>
@@ -314,17 +314,50 @@
 				<a href="tel:+79630070006" target="_blank">+7 (963) 007-00-06</a>
 			</div>
 		</div>
+
 		<div class="header-buttons">
-			<VueButton @click="openModalRequestEdite()">
-				<Icon :name="'phone'" :fill="'white'" :width="'22px'" :height="'22px'" />
-				Записаться на прием
-			</VueButton>
-			<VueButton @click="openModalPointsEdite()">
-				<Icon :name="'info'" :fill="'white'" :width="'26px'" :height="'26px'" />
-				Мой баланс
+			<VueButton :look="'inverse'" @click="sayHelloCabinet">
+				<VueIcon :name="'profile'" :fill="'black'" :width="'24px'" :height="'24px'" />
+				Личный кабинет
 			</VueButton>
 		</div>
 	</header>
+
+	<!-- Кнопки -->
+	<div class="main__buttons">
+		<div class="main__buttons__actions" :class="{ active: isActions }">
+			<button class="main__buttons-button" @click="sayHelloPoints">
+				<VueIcon :name="'credit-card'" :fill="'white'" :width="'26px'" :height="'26px'" />
+			</button>
+
+			<button class="main__buttons-button" @click="openModalRequestEdite">
+				<VueIcon :name="'phone'" :fill="'white'" :width="'26px'" :height="'26px'" />
+			</button>
+		</div>
+
+		<button class="main__buttons-button" @click="isActions = !isActions">
+			<VueIcon
+				v-if="!isActions"
+				:name="'more'"
+				:fill="'white'"
+				:width="'26px'"
+				:height="'26px'"
+			/>
+			<VueIcon
+				v-else
+				:name="'add'"
+				:fill="'white'"
+				:rotate="45"
+				:width="'26px'"
+				:height="'26px'"
+			/>
+		</button>
+
+		<button class="main__buttons-button" @click="topFunction">
+			<VueIcon :name="'arrow'" :fill="'white'" :width="'26px'" :height="'26px'" />
+		</button>
+	</div>
+
 	<!-- Кнопка "бургер" -->
 	<div
 		class="burger"
@@ -345,7 +378,7 @@ import VueInput from "../../../modules/input/VueInput.vue";
 import VueInputContainer from "../../../modules/input/VueInputContainer.vue";
 
 import VueButton from "../../../ui/VueButton.vue";
-import Icon from "../../../modules/icon/VueIcon.vue";
+import VueIcon from "../../../modules/icon/VueIcon.vue";
 import ButtonDefault from "../../../ui/admin/buttons/ButtonDefault.vue";
 
 import api from "../../../../services/api";
@@ -361,12 +394,13 @@ export default {
 		VueInputContainer,
 
 		VueButton,
-		Icon,
+		VueIcon,
 		ButtonDefault,
 	},
 	data() {
 		return {
 			isShadow: false,
+			isActions: false,
 
 			/* Отключение */
 			disabled: {
@@ -553,11 +587,34 @@ export default {
 		},
 	},
 	methods: {
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾| */
+		/* |                      Шапка                        | */
+		/* |___________________________________________________| */
+		/* Подсветка шапки */
 		setShadow() {
 			if (window.scrollY > 0 && window.document.documentElement.clientWidth <= 500) {
 				this.isShadow = true;
 			} else {
 				this.isShadow = false;
+			}
+		},
+
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾| */
+		/* |            Кнопки для пользователей               | */
+		/* |___________________________________________________| */
+		topFunction() {
+			window.scrollTo({ top: 0, behavior: "smooth" });
+		},
+
+		scrollFunction() {
+			var backToTop = document.getElementById("back-to-top");
+
+			if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+				backToTop.style.opacity = "1";
+				backToTop.style.visibility = "visible";
+			} else {
+				backToTop.style.opacity = "0";
+				backToTop.style.visibility = "hidden";
 			}
 		},
 
@@ -575,6 +632,8 @@ export default {
 		/* Открытие модального окна баллов */
 		openModalPointsEdite() {
 			shared.clearObjectFull(this.modalPointsForm);
+			this.reloadCaptcha();
+
 			this.barcodes = [
 				{
 					id: 1,
@@ -587,9 +646,8 @@ export default {
 					value: "?",
 				},
 			];
-			this.reloadCaptcha();
 
-			this.openModal("modalPoints", "БАЛЛЫ", "default");
+			this.openModal("modalPoints", "УЗНАТЬ БАЛЛЫ", "default");
 		},
 
 		/* Открытие модального окна заявки */
@@ -597,7 +655,7 @@ export default {
 			shared.clearObjectFull(this.modalRequestForm);
 			this.reloadCaptcha();
 
-			this.openModal("modalRequest", "ЗАЯВКА", "default");
+			this.openModal("modalRequest", "ЗАКАЗАТЬ ЗВОНОК", "default");
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -615,6 +673,26 @@ export default {
 				transform: `translateY(${shared.generateRandomAngle(25)}deg)`,
 				transform: `rotate(${shared.generateRandomAngle(25)}deg)`,
 			};
+		},
+
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                     ЗАТЫЧКИ                       |*/
+		/* |___________________________________________________|*/
+		/* Отправка запроса */
+		sayHelloCabinet() {
+			this.$store.commit("addDebugger", {
+				title: "Ой!",
+				body: "Извините, но это пока что не готово!",
+				type: "completed",
+			});
+		},
+
+		sayHelloPoints() {
+			this.$store.commit("addDebugger", {
+				title: "Упс...",
+				body: "Это ещё не готово, но уже скоро будет :)",
+				type: "completed",
+			});
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -790,11 +868,67 @@ export default {
 	},
 	mounted() {
 		window.addEventListener("scroll", this.setShadow);
+		// window.addEventListener("scroll", this.scrollFunction);
 	},
 };
 </script>
 
 <style scoped>
+/* Кнопки */
+.main__buttons {
+	position: fixed;
+	bottom: 30px;
+	right: 30px;
+	z-index: 1;
+
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.main__buttons__actions {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+
+	opacity: 0;
+	visibility: hidden;
+	transition: all 0.2s ease-in-out;
+}
+
+.main__buttons__actions.active {
+	opacity: 1;
+	visibility: visible;
+}
+
+.main__buttons-button {
+	cursor: pointer;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border: none;
+	border-radius: 50%;
+	outline: none;
+
+	width: 70px;
+	height: 70px;
+	background-color: var(--primary-color);
+	color: white;
+	font-size: 16px;
+
+	transition: all 0.2s ease-in-out;
+	box-shadow: var(--default-shadow);
+}
+
+.main__buttons-button.rotate {
+	transform: rotate(-90deg);
+}
+
+.main__buttons-button:hover {
+	background-color: var(--primary-color-hover);
+}
+
 /* Баллы */
 .modal__result {
 	display: grid;
@@ -1141,6 +1275,11 @@ header.slide {
 }
 
 @media screen and (max-width: 750px) {
+	.main__buttons {
+		bottom: 20px;
+		right: 20px;
+	}
+
 	.header-buttons {
 		display: none;
 	}
