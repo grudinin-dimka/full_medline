@@ -1,20 +1,21 @@
 <template>
 	<MainHeader />
 	<MainNav />
-	
+
 	<div class="not-found">
 		<div class="not-found-container">
 			<div class="not-found-container-status">
 				404
 				<div class="not-found-container-title">Страница не найдена <code>;(</code></div>
 			</div>
-			<ButtonDefault @click="$router.push({ name: 'home' })">На главную</ButtonDefault>
+
+			<VueButton @click="$router.push({ name: 'home' })">Починить</VueButton>
 		</div>
 	</div>
 </template>
 
 <script>
-import ButtonDefault from "../components/ui/admin/buttons/ButtonDefault.vue";
+import VueButton from "../components/ui/VueButton.vue";
 
 // NOTE : Not Found
 import MainNav from "../components/includes/main/medline/MainNav.vue";
@@ -22,7 +23,8 @@ import MainHeader from "../components/includes/main/medline/MainHeader.vue";
 
 export default {
 	components: {
-		ButtonDefault,
+		VueButton,
+
 		MainNav,
 		MainHeader,
 	},

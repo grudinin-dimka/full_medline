@@ -66,17 +66,18 @@
 				</div>
 			</div>
 
-			<LoaderChild
+			<VueLoader
 				:isLoading="loading.loader.profile"
-				:minHeight="300"
-				@loaderChildAfterLeave="loaderChildAfterLeave"
-			></LoaderChild>
+				:isChild="true"
+				:minHeight="400"
+				@afterLeave="loaderChildAfterLeave"
+			/>
 		</template>
 	</block-once>
 </template>
 
 <script>
-import LoaderChild from "../../../components/modules/LoaderChild.vue";
+import VueLoader from "../../../components/modules/VueLoader.vue";
 
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 
@@ -84,7 +85,8 @@ import api from "../../../services/api";
 
 export default {
 	components: {
-		LoaderChild,
+		VueLoader,
+
 		BlockOnce,
 	},
 	data() {

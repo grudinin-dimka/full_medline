@@ -11,10 +11,11 @@
 			<Empty v-else />
 		</template>
 
-		<loader-child
-			:minHeight="300"
+		<VueLoader
+			:minHeight="400"
+			:isChild="true"
 			:isLoading="loading.loader.about"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
+			@afterLeave="loaderChildAfterLeave"
 		/>
 	</block>
 
@@ -41,32 +42,37 @@
 			</div>
 		</template>
 
-		<loader-child
-			:minHeight="300"
+		<VueLoader
+			:minHeight="400"
+			:isChild="true"
 			:isLoading="loading.loader.infoFiles"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
+			@afterLeave="loaderChildAfterLeave"
 		/>
 	</block>
 </template>
 
 <script>
-import InfoBar from "../../../components/ui/main/InfoBar.vue";
-import LoaderChild from "../../../components/modules/LoaderChild.vue";
-import Block from "../../../components/ui/main/Block.vue";
+import VueLoader from "../../../components/modules/VueLoader.vue";
+
 import MainAboutList from "./MainAboutList.vue";
 
+import InfoBar from "../../../components/ui/main/InfoBar.vue";
+import Block from "../../../components/ui/main/Block.vue";
 import Empty from "../../../components/modules/Empty.vue";
 
-import api from "../../../services/api";
 import VueIcon from "../../../components/modules/icon/VueIcon.vue";
+
+import api from "../../../services/api";
 import files from "../../../services/files";
 
 export default {
 	components: {
-		InfoBar,
-		LoaderChild,
-		Block,
+		VueLoader,
+
 		MainAboutList,
+
+		InfoBar,
+		Block,
 		Empty,
 
 		VueIcon,

@@ -7,10 +7,12 @@
 		</router-link>
 	</info-bar>
 
-	<block :minHeight="100">
-		<loader-child
+	<block :minHeight="600">
+		<VueLoader
 			:isLoading="loading.loader.plastic"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
+			:minHeight="600"
+			:isChild="true"
+			@afterLeave="loaderChildAfterLeave"
 		/>
 
 		<template v-if="loading.sections.plastic">
@@ -288,17 +290,19 @@
 </template>
 
 <script>
+import VueLoader from "../../../components/modules/VueLoader.vue";
+
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import Block from "../../../components/ui/main/Block.vue";
-import LoaderChild from "../../../components/modules/LoaderChild.vue";
 
 import { RouterLink } from "vue-router";
 
 export default {
 	components: {
+		VueLoader,
+
 		InfoBar,
 		Block,
-		LoaderChild,
 
 		RouterLink,
 	},

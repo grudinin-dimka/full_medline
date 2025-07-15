@@ -372,14 +372,12 @@
 
 <script>
 import VueModal from "../../../modules/modal/VueModal.vue";
-import Captcha from "../../../modules/Captcha.vue";
-
 import VueInput from "../../../modules/input/VueInput.vue";
 import VueInputContainer from "../../../modules/input/VueInputContainer.vue";
 
-import VueButton from "../../../ui/VueButton.vue";
+import Captcha from "../../../modules/Captcha.vue";
 import VueIcon from "../../../modules/icon/VueIcon.vue";
-import ButtonDefault from "../../../ui/admin/buttons/ButtonDefault.vue";
+import VueButton from "../../../ui/VueButton.vue";
 
 import api from "../../../../services/api";
 import validate from "../../../../services/validate";
@@ -387,15 +385,13 @@ import shared from "../../../../services/shared";
 
 export default {
 	components: {
-		VueModal,
-		Captcha,
-
+		VueModal,		
 		VueInput,
 		VueInputContainer,
-
+		
+		Captcha,
 		VueButton,
 		VueIcon,
-		ButtonDefault,
 	},
 	data() {
 		return {

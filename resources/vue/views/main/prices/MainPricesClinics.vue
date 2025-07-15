@@ -27,17 +27,20 @@
 			<Empty :minHeight="300" v-else />
 		</template>
 
-		<loader-child
+		<VueLoader
 			:isLoading="loading.loader.addresses"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
+			:isChild="true"
+			:minHeight="700"
+			@afterLeave="loaderChildAfterLeave"
 		/>
 	</Block>
 </template>
 
 <script>
+import VueLoader from "../../../components/modules/VueLoader.vue";
+
 import Block from "../../../components/ui/main/Block.vue";
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
-import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import Empty from "../../../components/modules/Empty.vue";
 
 import api from "../../../services/api";
@@ -46,9 +49,10 @@ import sorted from "../../../services/sorted";
 
 export default {
 	components: {
+		VueLoader,
+
 		InfoBar,
 		Block,
-		LoaderChild,
 		Empty,
 	},
 	computed: {

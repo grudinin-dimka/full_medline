@@ -93,9 +93,9 @@
 </template>
 
 <script>
-import LoaderChild from "../../../modules/LoaderChild.vue";
-import Empty from "../../../modules/Empty.vue";
 import VueTiptap from "../../../modules/VueTiptap.vue";
+
+import Empty from "../../../modules/Empty.vue";
 
 import IconVisa from "../../../icons/IconVisa.vue";
 import IconMasterCard from "../../../icons/IconMasterCard.vue";
@@ -105,9 +105,9 @@ import api from "../../../../services/api";
 
 export default {
 	components: {
-		LoaderChild,
-		Empty,
 		VueTiptap,
+
+		Empty,
 
 		IconVisa,
 		IconMasterCard,

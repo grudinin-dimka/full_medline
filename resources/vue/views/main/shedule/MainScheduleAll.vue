@@ -262,9 +262,11 @@
 			</table>
 		</template>
 
-		<loader-child
+		<VueLoader
 			:isLoading="loading.loader.schedule"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
+			:isChild="true"
+			:minHeight="700"
+			@afterLeave="loaderChildAfterLeave"
 		/>
 	</Block>
 </template>
@@ -272,9 +274,9 @@
 <script>
 import VueSelector from "../../../components/modules/VueSelector.vue";
 import VueInput from "../../../components/modules/input/VueInput.vue";
+import VueLoader from "../../../components/modules/VueLoader.vue";
 
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
-import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import Block from "../../../components/ui/main/Block.vue";
 
 import api from "../../../services/api";
@@ -284,9 +286,9 @@ export default {
 	components: {
 		VueSelector,
 		VueInput,
+		VueLoader,
 
 		InfoBar,
-		LoaderChild,
 		Block,
 	},
 	data() {

@@ -60,30 +60,35 @@
 			<Empty :minHeight="300" v-else />
 		</template>
 
-		<loader-child :isLoading="loading.loader.group" @loaderChildAfterLeave="afterLeave" />
+		<VueLoader
+			:isLoading="loading.loader.group"
+			:isChild="true"
+			:minHeight="700"
+			@afterLeave="afterLeave"
+		/>
 	</block>
 </template>
 
 <script>
+import VueInput from "../../../components/modules/input/VueInput.vue";
+import VueLoader from "../../../components/modules/VueLoader.vue";
+
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import Block from "../../../components/ui/main/Block.vue";
-import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import Empty from "../../../components/modules/Empty.vue";
 import LoadText from "../../../components/ui/main/LoadText.vue";
-
-import VueInput from "../../../components/modules/input/VueInput.vue";
 
 import api from "../../../services/api";
 
 export default {
 	components: {
+		VueInput,
+		VueLoader,
+
 		InfoBar,
 		Block,
-		LoaderChild,
 		Empty,
 		LoadText,
-
-		VueInput,
 	},
 	data() {
 		return {

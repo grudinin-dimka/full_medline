@@ -1,6 +1,7 @@
 <template>
 	<VueDebugger></VueDebugger>
-	<Loader :isLoading="loader.loading" />
+
+	<VueLoader :isLoading="loader.loading" />
 
 	<AdminHeader v-if="loader.other" />
 	<AdminAside v-if="loader.other" />
@@ -10,8 +11,7 @@
 <script>
 import { RouterLink, RouterView } from "vue-router";
 import VueDebugger from "../components/modules/VueDebugger.vue";
-import Loader from "../components/modules/loader.vue";
-import axios from "axios";
+import VueLoader from "../components/modules/VueLoader.vue";
 
 // NOTE: Модули в админке
 import AdminHeader from "../components/includes/admin/medline/AdminHeader.vue";
@@ -19,16 +19,21 @@ import AdminAside from "../components/includes/admin/AdminAside.vue";
 import AdminContent from "../components/includes/admin/AdminContent.vue";
 import { compile } from "vue";
 
+import axios from "axios";
+
 export default {
 	components: {
-		Loader,
+		VueLoader,
 		VueDebugger,
-		RouterLink,
-		RouterView,
-		axios,
+
 		AdminHeader,
 		AdminAside,
 		AdminContent,
+
+		RouterLink,
+		RouterView,
+
+		axios,
 	},
 	data() {
 		return {

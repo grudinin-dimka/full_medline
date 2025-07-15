@@ -1,7 +1,7 @@
 <template>
 	<VueDebugger />
 
-	<Loader :isLoading="loader.loading" />
+	<VueLoader :isLoading="loader.loading" />
 
 	<div class="container-login" v-if="loader.other">
 		<form @submit.prevent class="login">
@@ -35,9 +35,9 @@
 			</VueInput>
 
 			<div class="buttons">
-				<ButtonDefault @click="loginUser" :disabled="disabled.login.update">
+				<VueButton @click="loginUser" :disabled="disabled.login.update">
 					Войти
-				</ButtonDefault>
+				</VueButton>
 			</div>
 		</form>
 	</div>
@@ -45,22 +45,19 @@
 
 <script>
 import VueDebugger from "../components/modules/VueDebugger.vue";
-import Loader from "../components/modules/loader.vue";
+import VueLoader from "../components/modules/VueLoader.vue";
 import VueInput from "../components/modules/input/VueInput.vue";
+import VueButton from "../components/ui/VueButton.vue";
 
 import axios from "axios";
-
-import ButtonDefault from "../components/ui/admin/buttons/ButtonDefault.vue";
-
 import validate from "../services/validate";
 
 export default {
 	components: {
 		VueDebugger,
-		Loader,
+		VueLoader,
 		VueInput,
-
-		ButtonDefault,
+		VueButton,
 
 		axios,
 		validate,

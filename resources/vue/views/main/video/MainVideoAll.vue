@@ -5,7 +5,7 @@
 		<router-link to="/videos">Видео</router-link>
 	</info-bar>
 
-	<block>
+	<block :minHeight="600">
 		<template v-if="loading.sections.videos">
 			<div class="video" v-if="videos.length > 0">
 				<div class="video__item" v-for="video in videos">
@@ -23,19 +23,21 @@
 			<Empty :minHeight="300" v-else />
 		</template>
 
-		<loader-child
+		<VueLoader
 			:isLoading="loading.loader.videos"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
+			:isChild="true"
+			:minHeight="600"
+			@afterLeave="loaderChildAfterLeave"
 		/>
 	</block>
 </template>
 
 <script>
-import InfoBar from "../../../components/ui/main/InfoBar.vue";
-import LoaderChild from "../../../components/modules/LoaderChild.vue";
-import Block from "../../../components/ui/main/Block.vue";
+import VueLoader from "../../../components/modules/VueLoader.vue";
 import VueTiptap from "../../../components/modules/VueTiptap.vue";
 
+import InfoBar from "../../../components/ui/main/InfoBar.vue";
+import Block from "../../../components/ui/main/Block.vue";
 import Empty from "../../../components/modules/Empty.vue";
 
 import api from "../../../services/api";
@@ -43,10 +45,11 @@ import files from "../../../services/files";
 
 export default {
 	components: {
-		InfoBar,
-		LoaderChild,
-		Block,
 		VueTiptap,
+		VueLoader,
+		
+		InfoBar,
+		Block,
 
 		Empty,
 	},

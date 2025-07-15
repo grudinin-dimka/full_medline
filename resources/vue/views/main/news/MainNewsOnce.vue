@@ -21,23 +21,23 @@
 </template>
 
 <script>
-import InfoBar from "../../../components/ui/main/InfoBar.vue";
-import LoaderChild from "../../../components/modules/LoaderChild.vue";
-import Block from "../../../components/ui/main/Block.vue";
-
 import VueTiptap from "../../../components/modules/VueTiptap.vue";
+import VueLoader from "../../../components/modules/VueLoader.vue";
+
+import InfoBar from "../../../components/ui/main/InfoBar.vue";
+import Block from "../../../components/ui/main/Block.vue";
 import Empty from "../../../components/modules/Empty.vue";
 
 import api from "../../../services/api";
 
 export default {
 	components: {
+		VueTiptap,
+		VueLoader,
+		
 		InfoBar,
-		LoaderChild,
-
 		Block,
 
-		VueTiptap,
 		Empty,
 	},
 	data() {

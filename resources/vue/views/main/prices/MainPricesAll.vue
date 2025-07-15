@@ -89,23 +89,24 @@
 			</div>
 		</template>
 
-		<loader-child
+		<VueLoader
 			:isLoading="loading.loader.prices"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
+			:minHeight="600"
+			:isChild="true"
+			@afterLeave="loaderChildAfterLeave"
 		/>
 	</Block>
 </template>
 
 <script>
-import InfoBar from "../../../components/ui/main/InfoBar.vue";
-import LoaderChild from "../../../components/modules/LoaderChild.vue";
-import Block from "../../../components/ui/main/Block.vue";
-import LoadText from "../../../components/ui/main/LoadText.vue";
-import Filter from "../../../components/modules/filter/VueFilter.vue";
-import Empty from "../../../components/modules/Empty.vue";
-
+import VueLoader from "../../../components/modules/VueLoader.vue";
 import VueSelector from "../../../components/modules/VueSelector.vue";
 import VueInput from "../../../components/modules/input/VueInput.vue";
+
+import InfoBar from "../../../components/ui/main/InfoBar.vue";
+import Block from "../../../components/ui/main/Block.vue";
+import LoadText from "../../../components/ui/main/LoadText.vue";
+import Empty from "../../../components/modules/Empty.vue";
 
 import VueIcon from "../../../components/modules/icon/VueIcon.vue";
 
@@ -114,15 +115,14 @@ import sorted from "../../../services/sorted.js";
 
 export default {
 	components: {
-		InfoBar,
-		LoaderChild,
-		Block,
-		LoadText,
-		Filter,
-		Empty,
-
+		VueLoader,
 		VueSelector,
 		VueInput,
+
+		InfoBar,
+		Block,
+		LoadText,
+		Empty,
 
 		VueIcon,
 	},

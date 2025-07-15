@@ -3,13 +3,12 @@
 		<template #title>{{ modalExit.values.title }}</template>
 		<template #body>Вы уверены, что хотите выйти из системы?</template>
 		<template #footer>
-			<ButtonDefault
-				:wide="false"
+			<VueButton
 				:disabled="$store.getters.getLogoutStatus"
 				@click="$store.dispatch('logout')"
 			>
 				Выход
-			</ButtonDefault>
+			</VueButton>
 		</template>
 	</VueModal>
 
@@ -17,7 +16,7 @@
 		<div class="aside__body">
 			<div class="aside__item" :class="{ active: isActive('/admin/profile') }">
 				<a class="aside__item-title" href="#" @click.prevent="insertPage(links.profile)">
-					<Icon :name="'profile'" :fill="'white'" :width="'22px'" :height="'22px'" />
+					<VueIcon :name="'profile'" :fill="'white'" :width="'22px'" :height="'22px'" />
 					ПРОФИЛЬ
 				</a>
 			</div>
@@ -27,7 +26,7 @@
 			>
 				<div class="aside__item" :class="{ active: isActive('/admin/ehome') }">
 					<a class="aside__item-title" href="#" @click.prevent="insertPage(links.home)">
-						<Icon :name="'home'" :fill="'white'" :width="'22px'" :height="'22px'" />
+						<VueIcon :name="'home'" :fill="'white'" :width="'22px'" :height="'22px'" />
 						ГЛАВНАЯ
 					</a>
 				</div>
@@ -39,9 +38,9 @@
 						href="#"
 						@click.prevent="openList('specialists')"
 					>
-						<Icon :name="'specialists'" :fill="'white'" :width="'24px'" :height="'24px'" />
+						<VueIcon :name="'specialists'" :fill="'white'" :width="'24px'" :height="'24px'" />
 
-						<Icon
+						<VueIcon
 							class="item-arrow"
 							:name="'arrow'"
 							:fill="'white'"
@@ -89,9 +88,9 @@
 						href="#"
 						@click.prevent="openList('prices')"
 					>
-						<Icon :name="'prices'" :fill="'white'" :width="'26px'" :height="'26px'" />
+						<VueIcon :name="'prices'" :fill="'white'" :width="'26px'" :height="'26px'" />
 
-						<Icon
+						<VueIcon
 							class="item-arrow"
 							:name="'arrow'"
 							:fill="'white'"
@@ -121,14 +120,14 @@
 
 				<div class="aside__item" :class="{ active: isActive('/admin/eschedule') }">
 					<a class="aside__item-title" href="#" @click.prevent="insertPage(links.schedule)">
-						<Icon :name="'schedule'" :fill="'white'" :width="'24px'" :height="'24px'" />
+						<VueIcon :name="'schedule'" :fill="'white'" :width="'24px'" :height="'24px'" />
 						РАСПИСАНИЕ
 					</a>
 				</div>
 
 				<div class="aside__item" :class="{ active: isActive('/admin/eclients') }">
 					<a class="aside__item-title" href="#" @click.prevent="insertPage(links.clients)">
-						<Icon :name="'clients'" :fill="'white'" :width="'24px'" :height="'24px'" />
+						<VueIcon :name="'clients'" :fill="'white'" :width="'24px'" :height="'24px'" />
 						КЛИЕНТЫ
 					</a>
 				</div>
@@ -140,9 +139,9 @@
 						href="#"
 						@click.prevent="openList('info')"
 					>
-						<Icon :name="'info'" :fill="'white'" :width="'24px'" :height="'24px'" />
+						<VueIcon :name="'info'" :fill="'white'" :width="'24px'" :height="'24px'" />
 
-						<Icon
+						<VueIcon
 							class="item-arrow"
 							:name="'arrow'"
 							:fill="'white'"
@@ -188,7 +187,7 @@
 			<template v-if="$store.getters.userRights === 'creator'">
 				<div class="aside__item" :class="{ active: isActive('/admin/users') }">
 					<a class="aside__item-title" href="#" @click.prevent="insertPage(links.users)">
-						<Icon :name="'users'" :fill="'white'" :width="'26px'" :height="'26px'" />
+						<VueIcon :name="'users'" :fill="'white'" :width="'26px'" :height="'26px'" />
 						ПОЛЬЗОВАТЕЛИ
 					</a>
 				</div>
@@ -200,9 +199,9 @@
 						href="#"
 						@click.prevent="openList('statistics')"
 					>
-						<Icon :name="'stats'" :fill="'white'" :width="'30px'" :height="'30px'" />
+						<VueIcon :name="'stats'" :fill="'white'" :width="'30px'" :height="'30px'" />
 
-						<Icon
+						<VueIcon
 							class="item-arrow"
 							:name="'arrow'"
 							:fill="'white'"
@@ -241,18 +240,19 @@
 
 <script>
 import VueModal from "../../modules/modal/VueModal.vue";
-import ButtonDefault from "../../ui/admin/buttons/ButtonDefault.vue";
 
-import Icon from "../../modules/icon/VueIcon.vue";
+import VueButton from "../../ui/VueButton.vue";
+
+import VueIcon from "../../modules/icon/VueIcon.vue";
 
 import axios from "axios";
 
 export default {
 	components: {
 		VueModal,
-		ButtonDefault,
-
-		Icon,
+		
+		VueIcon,
+		VueButton,
 
 		axios,
 	},

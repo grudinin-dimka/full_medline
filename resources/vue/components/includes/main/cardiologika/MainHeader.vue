@@ -56,48 +56,16 @@
 </template>
 
 <script>
-import Captcha from "../../../modules/Captcha.vue";
-
-import ButtonDefault from "../../../ui/admin/buttons/ButtonDefault.vue";
-
 import axios from "axios";
-import validate from "../../../../services/validate";
-import shared from "../../../../services/shared";
 
 export default {
 	components: {
-		Captcha,
-
-		ButtonDefault,
-
 		axios,
-		validate,
-		shared,
 	},
 	data() {
 		return {
 			isShadow: false,
-
-			disabled: {
-				modalForm: {
-					request: false,
-				},
-			},
-			captcha: "",
-			rotate: 0,
 		};
-	},
-	computed: {
-		/* Разделение капчи на отдельные символы */
-		getCaptchaSplited() {
-			let slplited = [];
-
-			for (let i = 0; i < this.captcha.length; i++) {
-				slplited.push(this.captcha[i]);
-			}
-
-			return slplited;
-		},
 	},
 	methods: {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾| */

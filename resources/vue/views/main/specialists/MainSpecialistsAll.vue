@@ -9,7 +9,7 @@
 		<div class="filter-blocks">
 			<VueInput v-model="filters.name" :type="'search'" :placeholder="'Введите ФИО'" />
 
-			<Selector
+			<VueSelector
 				v-model="filters.specialization"
 				:placeholder="'Выберите специализацию'"
 				:list="calcSpecializations"
@@ -32,15 +32,13 @@
 </template>
 
 <script>
-import Block from "../../../components/ui/main/Block.vue";
-import InfoBar from "../../../components/ui/main/InfoBar.vue";
-
-import Filters from "../../../components/ui/main/Filters.vue";
-import Selector from "../../../components/modules/VueSelector.vue";
+import VueSelector from "../../../components/modules/VueSelector.vue";
 import VueInput from "../../../components/modules/input/VueInput.vue";
 
-import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import SpecialistsList from "./MainSpecialistsAllList.vue";
+
+import Block from "../../../components/ui/main/Block.vue";
+import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import Empty from "../../../components/modules/Empty.vue";
 
 import { RouterLink } from "vue-router";
@@ -50,18 +48,16 @@ import sorted from "../../../services/sorted";
 
 export default {
 	components: {
-		Block,
-		InfoBar,
-
-		Filters,
-		Selector,
+		VueSelector,
 		VueInput,
 
-		LoaderChild,
 		SpecialistsList,
-		RouterLink,
 
+		Block,
+		InfoBar,
 		Empty,
+
+		RouterLink,
 	},
 	data() {
 		return {

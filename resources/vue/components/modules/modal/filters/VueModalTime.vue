@@ -1,5 +1,5 @@
 <template>
-	<Modal ref="modal" :settings="modal">
+	<VueModal ref="modal" :settings="modal">
 		<template #title>Диапазон</template>
 		<template #body>
 			<VueInput
@@ -21,25 +21,25 @@
 			</VueInput>
 		</template>
 		<template #footer>
-			<ButtonDefault @click="submit">Применить</ButtonDefault>
+			<VueButton @click="submit">Применить</VueButton>
 		</template>
-	</Modal>
+	</VueModal>
 </template>
 
 <script>
-import Modal from "../VueModal.vue";
+import VueModal from "../VueModal.vue";
 
 import VueInput from "../../input/VueInput.vue";
 
-import ButtonDefault from "../../../ui/admin/buttons/ButtonDefault.vue";
+import VueButton from "../../../ui/VueButton.vue";
 
 export default {
 	emits: ["changed"],
 	components: {
-		Modal,
+		VueModal,
 		VueInput,
 
-		ButtonDefault,
+		VueButton,
 	},
 	data() {
 		return {

@@ -11,14 +11,14 @@
 				<MainNewsItem v-for="item in news" :key="item.id" :item="item" />
 			</div>
 
-			<ButtonDefault
+			<VueButton
 				v-if="isLoadMoreNews"
-				:look="'white'"
+				:look="'inverse'"
 				:disabled="disabled.news.more"
 				@click.prevent="loadMoreNews"
 			>
 				Загрузить ещё
-			</ButtonDefault>
+			</VueButton>
 		</div>
 
 		<Empty :minHeight="300" v-else />
@@ -26,27 +26,25 @@
 </template>
 
 <script>
-import InfoBar from "../../../components/ui/main/InfoBar.vue";
-import LoaderChild from "../../../components/modules/LoaderChild.vue";
-import Block from "../../../components/ui/main/Block.vue";
+import VueButton from "../../../components/ui/VueButton.vue";
 
-import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
-
-import Empty from "../../../components/modules/Empty.vue";
 import MainNewsItem from "./MainNewsItem.vue";
+
+import InfoBar from "../../../components/ui/main/InfoBar.vue";
+import Block from "../../../components/ui/main/Block.vue";
+import Empty from "../../../components/modules/Empty.vue";
 
 import api from "../../../services/api";
 
 export default {
 	components: {
-		InfoBar,
-		LoaderChild,
-		Block,
+		VueButton,
 
-		ButtonDefault,
-
-		Empty,
 		MainNewsItem,
+
+		InfoBar,
+		Block,
+		Empty,
 	},
 	data() {
 		return {

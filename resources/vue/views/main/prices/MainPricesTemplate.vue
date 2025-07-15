@@ -12,7 +12,7 @@
 		</router-link>
 	</info-bar>
 
-	<Block>
+	<Block :minHeight="700">
 		<template v-if="loading.sections.prices">
 			<div class="filter_blocks">
 				<VueInput v-model="filters.name" :type="'search'" :placeholder="'Введите услугу'" />
@@ -187,22 +187,23 @@
 			</div>
 		</template>
 
-		<loader-child
+		<VueLoader
 			:isLoading="loading.loader.prices"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
+			:isChild="true"
+			:minHeight="700"
+			@afterLeave="loaderChildAfterLeave"
 		/>
 	</Block>
 </template>
 
 <script>
-import InfoBar from "../../../components/ui/main/InfoBar.vue";
-import LoaderChild from "../../../components/modules/LoaderChild.vue";
-import Block from "../../../components/ui/main/Block.vue";
-import LoadText from "../../../components/ui/main/LoadText.vue";
-
 import VueFilter from "../../../components/modules/filter/VueFilter.vue";
 import VueInput from "../../../components/modules/input/VueInput.vue";
+import VueLoader from "../../../components/modules/VueLoader.vue";
 
+import InfoBar from "../../../components/ui/main/InfoBar.vue";
+import Block from "../../../components/ui/main/Block.vue";
+import LoadText from "../../../components/ui/main/LoadText.vue";
 import Empty from "../../../components/modules/Empty.vue";
 
 import api from "../../../services/api";
@@ -210,14 +211,13 @@ import sorted from "../../../services/sorted.js";
 
 export default {
 	components: {
-		InfoBar,
-		LoaderChild,
-		Block,
-		LoadText,
-
 		VueFilter,
 		VueInput,
+		VueLoader,
 
+		InfoBar,
+		Block,
+		LoadText,
 		Empty,
 	},
 	data() {

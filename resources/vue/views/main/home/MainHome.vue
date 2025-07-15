@@ -27,11 +27,10 @@
 </template>
 
 <script>
-import MainHomeSlides from "./MainHomeSlides.vue";
 import Block from "../../../components/ui/main/Block.vue";
 import Empty from "../../../components/modules/Empty.vue";
-import LoaderChild from "../../../components/modules/LoaderChild.vue";
 
+import MainHomeSlides from "./MainHomeSlides.vue";
 import MainNewsItem from "../news/MainNewsItem.vue";
 
 import api from "../../../services/api.js";
@@ -39,11 +38,10 @@ import sorted from "../../../services/sorted.js";
 
 export default {
 	components: {
-		MainHomeSlides,
 		Block,
 		Empty,
-		LoaderChild,
-
+		
+		MainHomeSlides,
 		MainNewsItem,
 	},
 	data() {

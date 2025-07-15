@@ -16,7 +16,7 @@
 		</router-link>
 	</info-bar>
 
-	<block :minHeight="500">
+	<block :minHeight="700">
 		<div class="container-specialist-profile" v-if="loading.sections.profile">
 			<div class="img" :style="{ backgroundImage: `url(${specialist.profile.path})` }"></div>
 			<div class="specialist-profile">
@@ -124,19 +124,21 @@
 			</div>
 		</div>
 
-		<loader-child
+		<VueLoader
 			:isLoading="loading.loader.profile"
-			@loaderChildAfterLeave="loaderChildAfterLeave"
+			:isChild="true"
+			:minHeight="700"
+			@afterLeave="loaderChildAfterLeave"
 		/>
 	</block>
 </template>
 
 <script>
+import VueTiptap from "../../../components/modules/VueTiptap.vue";
+import VueLoader from "../../../components/modules/VueLoader.vue";
+
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import Block from "../../../components/ui/main/Block.vue";
-import VueTiptap from "../../../components/modules/VueTiptap.vue";
-
-import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import LoadText from "../../../components/ui/main/LoadText.vue";
 
 import api from "../../../services/api";
@@ -144,11 +146,11 @@ import sorted from "../../../services/sorted";
 
 export default {
 	components: {
+		VueTiptap,
+		VueLoader,
+
 		InfoBar,
 		Block,
-		VueTiptap,
-
-		LoaderChild,
 		LoadText,
 	},
 	data() {

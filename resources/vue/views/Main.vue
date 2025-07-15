@@ -3,16 +3,16 @@
 	<VueDebugger />
 
 	<!-- Шапка -->
-	<main-header ref="mainHeader" />
+	<MainHeader ref="mainHeader" />
 
 	<!-- Навигация -->
-	<main-nav ref="mainNav" />
+	<MainNav ref="mainNav" />
 
 	<!-- Содержимое -->
-	<router-view />
+	<RouterView />
 
 	<!-- Подвал -->
-	<main-footer ref="mainFooter" />
+	<MainFooter ref="mainFooter" />
 </template>
 
 <script>

@@ -13,7 +13,7 @@
 			<div class="dropdown">
 				<div class="dropdown-title element">
 					Цены
-					<Icon
+					<VueIcon
 						class="item-arrow"
 						:name="'arrow'"
 						:fill="'white'"
@@ -77,7 +77,7 @@
 			<div class="dropdown">
 				<div class="dropdown-title element">
 					Информация
-					<Icon
+					<VueIcon
 						class="item-arrow"
 						:name="'arrow'"
 						:fill="'white'"
@@ -131,11 +131,11 @@
 </template>
 
 <script>
-import Icon from "../../../modules/icon/VueIcon.vue";
+import VueIcon from "../../../modules/icon/VueIcon.vue";
 
 export default {
 	components: {
-		Icon,
+		VueIcon,
 	},
 	data() {
 		return {};
