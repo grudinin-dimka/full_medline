@@ -8,23 +8,24 @@
 		<template #title>КЛИНИКИ</template>
 
 		<template #options>
-			<button-default
+			<VueButton
 				@click.prevent="updateSheduleFromServe"
 				:disabled="disabled.schedule.save"
-				:look="'white'"
+				:look="'inverse'"
 			>
 				<VueIcon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
-			</button-default>
+			</VueButton>
 		</template>
 
 		<template #body>
 			<VueTable v-if="loading.sections.schedule" :table="tableCLinics" />
 
-			<loader-child
+			<VueLoader
 				:isLoading="loading.loader.schedule"
+				:isChild="true"
 				:minHeight="200"
-				@loaderChildAfterLeave="loaderChildAfterLeave"
+				@afterLeave="loaderChildAfterLeave"
 			/>
 		</template>
 	</block-once>
@@ -35,10 +36,11 @@
 		<template #body>
 			<VueTable v-if="loading.sections.schedule" :table="tableDays" />
 
-			<loader-child
+			<VueLoader
 				:isLoading="loading.loader.schedule"
+				:isChild="true"
 				:minHeight="200"
-				@loaderChildAfterLeave="loaderChildAfterLeave"
+				@afterLeave="loaderChildAfterLeave"
 			/>
 		</template>
 	</block-once>
@@ -49,42 +51,40 @@
 		<template #body>
 			<VueTable v-if="loading.sections.schedule" :table="tableSchedules" />
 
-			<loader-child
+			<VueLoader
 				:isLoading="loading.loader.schedule"
+				:isChild="true"
 				:minHeight="200"
-				@loaderChildAfterLeave="loaderChildAfterLeave"
+				@afterLeave="loaderChildAfterLeave"
 			/>
 		</template>
 	</block-once>
 </template>
 
 <script>
-import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTitle from "../../../components/ui/admin/blocks/BlockTitle.vue";
 
 import VueTable from "../../../components/modules/table/VueTable.vue";
 
-import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
-
+import VueLoader from "../../../components/modules/VueLoader.vue";
 import VueIcon from "../../../components/modules/icon/VueIcon.vue";
+import VueButton from "../../../components/ui/VueButton.vue";
 
 import api from "../../../services/api";
 
 export default {
 	components: {
-		LoaderChild,
+		InfoBar,
 		BlockOnce,
 		BlockTitle,
 
-		InfoBar,
-
 		VueTable,
 
-		ButtonDefault,
-
+		VueLoader,
 		VueIcon,
+		VueButton,
 	},
 	data() {
 		return {

@@ -12,11 +12,12 @@
 				:series="attendance.series"
 			></apexchart>
 
-			<LoaderChild
+			<VueLoader
 				:isLoading="loading.loader.attendance"
+				:isChild="true"
 				:minHeight="150"
-				@loaderChildAfterLeave="loaderChildAfterLeave"
-			></LoaderChild>
+				@afterLeave="loaderChildAfterLeave"
+			/>
 		</template>
 
 		<template #two-title> ЗАПИСЬ НА ПРИЕМ </template>
@@ -31,11 +32,12 @@
 				:series="recordPriem.series"
 			></apexchart>
 
-			<LoaderChild
+			<VueLoader
 				:isLoading="loading.loader.recordPriem"
+				:isChild="true"
 				:minHeight="150"
-				@loaderChildAfterLeave="loaderChildAfterLeave"
-			></LoaderChild>
+				@afterLeave="loaderChildAfterLeave"
+			/>
 		</template>
 	</BlockTwo>
 
@@ -59,10 +61,10 @@
 					<template #error> {{ currentDate.errors.dateEnd.message }} </template>
 				</VueInput>
 
-				<button-default
-					@click.prevent="getStatsValues"
+				<VueButton
+					:look="'inverse'"
 					:disabled="disabled.apexchart.load"
-					:look="'white'"
+					@click.prevent="getStatsValues"
 				>
 					<VueIcon
 						:name="'publish'"
@@ -71,7 +73,7 @@
 						:height="'28px'"
 					/>
 					Загрузить
-				</button-default>
+				</VueButton>
 			</div>
 
 			<apexchart
@@ -82,40 +84,41 @@
 				type="area"
 				:options="apexchart.options"
 				:series="apexchart.series"
-			></apexchart>
+			/>
 
-			<LoaderChild
+			<VueLoader
 				:isLoading="loading.loader.week"
+				:isChild="true"
 				:minHeight="700"
-				@loaderChildAfterLeave="loaderChildAfterLeave"
-			></LoaderChild>
+				@afterLeave="loaderChildAfterLeave"
+			/>
 		</template>
 	</BlockOnce>
 </template>
 
 <script>
-import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
-import BlockTwo from "../../../components/ui/admin/blocks/BlockTwo.vue";
-import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import VueInput from "../../../components/modules/input/VueInput.vue";
 
-import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
+import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
+import BlockTwo from "../../../components/ui/admin/blocks/BlockTwo.vue";
 
+import VueLoader from "../../../components/modules/VueLoader.vue";
 import VueIcon from "../../../components/modules/icon/VueIcon.vue";
+import VueButton from "../../../components/ui/VueButton.vue";
 
 import api from "../../../services/api";
 import validate from "../../../services/validate";
 
 export default {
 	components: {
-		BlockOnce,
-		BlockTwo,
-		LoaderChild,
 		VueInput,
 
-		ButtonDefault,
+		BlockOnce,
+		BlockTwo,
 
+		VueLoader,
 		VueIcon,
+		VueButton,
 	},
 	data() {
 		return {

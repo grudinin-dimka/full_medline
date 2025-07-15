@@ -88,29 +88,30 @@
 		</template>
 
 		<template #footer>
-			<ButtonDefault @click="addVideo" v-if="modalVideo.values.look == 'create'">
+			<VueButton @click="addVideo" v-if="modalVideo.values.look == 'create'">
 				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
-			</ButtonDefault>
+			</VueButton>
 
 			<template v-else>
-				<button-remove
+				<VueButton
+					:look="'delete'"
 					@click="deleteItem"
 					v-if="!currentVideo.data.delete.value && !currentVideo.data.create.value"
 				>
 					<VueIcon :name="'delete'" :fill="'white'" :width="'22px'" :height="'22px'" />
 					Удалить
-				</button-remove>
+				</VueButton>
 
-				<ButtonDefault @click="updateVideo" v-if="!currentVideo.data.delete.value">
+				<VueButton @click="updateVideo" v-if="!currentVideo.data.delete.value">
 					<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
-				</ButtonDefault>
+				</VueButton>
 
-				<ButtonDefault @click="deleteItem" v-if="currentVideo.data.delete.value">
+				<VueButton @click="deleteItem" v-if="currentVideo.data.delete.value">
 					<VueIcon :name="'restore'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Вернуть
-				</ButtonDefault>
+				</VueButton>
 			</template>
 		</template>
 	</VueModal>
@@ -133,19 +134,19 @@
 			</VueInput>
 		</template>
 		<template #footer>
-			<button-default
+			<VueButton
 				v-if="modalVideoUpload.values.look == 'default'"
 				@click="uploadVideo"
 				:disabled="disabled.video.upload"
 			>
 				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
-			</button-default>
+			</VueButton>
 
-			<button-default v-else @click="uploadVideo" :disabled="disabled.video.upload">
+			<VueButton v-else @click="uploadVideo" :disabled="disabled.video.upload">
 				<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 				Обновить
-			</button-default>
+			</VueButton>
 		</template>
 	</VueModal>
 
@@ -159,14 +160,14 @@
 		<template #title>ВИДЕО</template>
 
 		<template #options>
-			<button-default
+			<VueButton
 				@click.prevent="saveVideosChanges"
 				:disabled="disabled.video.save"
-				:look="'white'"
+				:look="'inverse'"
 			>
 				<VueIcon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
-			</button-default>
+			</VueButton>
 		</template>
 
 		<template #body>
@@ -199,36 +200,35 @@
 				<empty :minHeight="300" v-else />
 			</template>
 
-			<loader-child
+			<VueLoader
 				:isLoading="loading.loader.video"
-				:minHeight="200"
-				@loaderChildAfterLeave="loaderChildAfterLeave"
+				:isChild="true"
+				:minHeight="300"
+				@afterLeave="loaderChildAfterLeave"
 			/>
 		</template>
 
 		<template #buttons>
-			<ButtonDefault @click="openVideoCreate">
+			<VueButton @click="openVideoCreate">
 				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
-			</ButtonDefault>
+			</VueButton>
 		</template>
 	</block-once>
 </template>
 
 <script>
 import VueModal from "../../../components/modules/modal/VueModal.vue";
-import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
-import LoaderChild from "../../../components/modules/LoaderChild.vue";
-import InfoBar from "../../../components/ui/admin/InfoBar.vue";
-import Empty from "../../../components/modules/Empty.vue";
-
 import VueInput from "../../../components/modules/input/VueInput.vue";
 import VueTiptap from "../../../components/modules/VueTiptap.vue";
 
-import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
-import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
+import InfoBar from "../../../components/ui/admin/InfoBar.vue";
+import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
+import Empty from "../../../components/modules/Empty.vue";
 
+import VueLoader from "../../../components/modules/VueLoader.vue";
 import VueIcon from "../../../components/modules/icon/VueIcon.vue";
+import VueButton from "../../../components/ui/VueButton.vue";
 
 import api from "../../../services/api";
 import shared from "../../../services/shared";
@@ -238,18 +238,16 @@ import files from "../../../services/files";
 export default {
 	components: {
 		VueModal,
-		BlockOnce,
-		LoaderChild,
-		InfoBar,
-		Empty,
-
 		VueTiptap,
 		VueInput,
 
-		ButtonDefault,
-		ButtonRemove,
-
+		InfoBar,
+		BlockOnce,
+		Empty,
+		
+		VueLoader,
 		VueIcon,
+		VueButton,
 	},
 	data() {
 		return {

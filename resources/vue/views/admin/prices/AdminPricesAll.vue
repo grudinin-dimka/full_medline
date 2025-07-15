@@ -23,10 +23,10 @@
 		</template>
 
 		<template #footer>
-			<ButtonDefault @click="createPrice" :disabled="disabled.prices.create">
+			<VueButton @click="createPrice" :disabled="disabled.prices.create">
 				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
-			</ButtonDefault>
+			</VueButton>
 		</template>
 	</VueModal>
 
@@ -42,10 +42,10 @@
 		<template #title>СПИСОК ЦЕН</template>
 
 		<template #options>
-			<button-default
+			<VueButton
 				@click.prevent="downloadPricesFiles"
 				:disabled="disabled.prices.download"
-				:look="'white'"
+				:look="'inverse'"
 			>
 				<VueIcon
 					:name="'download'"
@@ -54,16 +54,16 @@
 					:height="'28px'"
 				/>
 				Выгрузить
-			</button-default>
+			</VueButton>
 
-			<button-default
+			<VueButton
 				@click.prevent="savePricesFiles"
 				:disabled="disabled.prices.save"
-				:look="'white'"
+				:look="'inverse'"
 			>
 				<VueIcon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
-			</button-default>
+			</VueButton>
 		</template>
 
 		<template #body>
@@ -75,30 +75,29 @@
 				@delete="removePriceFile"
 			/>
 
-			<LoaderChild
+			<VueLoader
 				:isLoading="loading.loader.prices"
+				:isChild="true"
 				:minHeight="300"
-				@loaderChildAfterLeave="loaderChildAfterLeave"
-			></LoaderChild>
+				@afterLeave="loaderChildAfterLeave"
+			/>
 		</template>
 	</block-once>
 </template>
 
 <script>
-import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import VueModal from "../../../components/modules/modal/VueModal.vue";
-import Empty from "../../../components/modules/Empty.vue";
 import VueTable from "../../../components/modules/table/VueTable.vue";
 import VueInput from "../../../components/modules/input/VueInput.vue";
+import Empty from "../../../components/modules/Empty.vue";
 
+import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTitle from "../../../components/ui/admin/blocks/BlockTitle.vue";
-import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 
-import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
-import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
-
+import VueLoader from "../../../components/modules/VueLoader.vue";
 import VueIcon from "../../../components/modules/icon/VueIcon.vue";
+import VueButton from "../../../components/ui/VueButton.vue";
 
 import api from "../../../services/api";
 import validate from "../../../services/validate";
@@ -107,21 +106,18 @@ import files from "../../../services/files";
 
 export default {
 	components: {
-		LoaderChild,
 		VueModal,
-		Empty,
 		VueTable,
 		VueInput,
+		Empty,
 
+		InfoBar,
 		BlockOnce,
 		BlockTitle,
 
-		InfoBar,
-
-		ButtonClaim,
-		ButtonDefault,
-
+		VueLoader,
 		VueIcon,
+		VueButton,
 	},
 	data() {
 		return {

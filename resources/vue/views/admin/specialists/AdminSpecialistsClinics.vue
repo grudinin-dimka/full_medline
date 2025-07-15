@@ -130,17 +130,17 @@
 
 		<template #footer>
 			<template v-if="modal.values.look == 'create'">
-				<button-default @click="addClinic">
+				<VueButton @click="addClinic">
 					<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
-				</button-default>
+				</VueButton>
 			</template>
 
 			<template v-if="modal.values.look == 'default'">
-				<button-default @click="updateClinic">
+				<VueButton @click="updateClinic">
 					<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
-				</button-default>
+				</VueButton>
 			</template>
 		</template>
 	</VueModal>
@@ -154,14 +154,14 @@
 		<template #title>КЛИНИКИ</template>
 
 		<template #options>
-			<button-default
+			<VueButton
 				@click.prevent="saveClinicsChanges"
 				:disabled="disabled.clinics.save"
-				:look="'white'"
+				:look="'inverse'"
 			>
 				<VueIcon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
-			</button-default>
+			</VueButton>
 		</template>
 
 		<template #body>
@@ -173,31 +173,28 @@
 				@delete="removeClinic"
 			/>
 
-			<loader-child
+			<VueLoader
 				:isLoading="loading.loader.clinics"
-				:minHeight="200"
-				@loaderChildAfterLeave="loaderChildAfterLeave"
+				:isChild="true"
+				:minHeight="300"
+				@afterLeave="loaderChildAfterLeave"
 			/>
 		</template>
 	</block-once>
 </template>
 
 <script>
-import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import VueModal from "../../../components/modules/modal/VueModal.vue";
 import VueTable from "../../../components/modules/table/VueTable.vue";
 import VueInput from "../../../components/modules/input/VueInput.vue";
 import VueInputContainer from "../../../components/modules/input/VueInputContainer.vue";
 
-import LoaderChild from "../../../components/modules/LoaderChild.vue";
-
+import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 
-import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
-import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
-import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
-
+import VueLoader from "../../../components/modules/VueLoader.vue";
 import VueIcon from "../../../components/modules/icon/VueIcon.vue";
+import VueButton from "../../../components/ui/VueButton.vue";
 
 import api from "../../../services/api";
 import shared from "../../../services/shared";
@@ -206,19 +203,16 @@ import validate from "../../../services/validate";
 export default {
 	components: {
 		VueModal,
-		InfoBar,
 		VueTable,
-		LoaderChild,
 		VueInput,
 		VueInputContainer,
-
+		
+		InfoBar,
 		BlockOnce,
 
-		ButtonDefault,
-		ButtonRemove,
-		ButtonClaim,
-
+		VueLoader,
 		VueIcon,
+		VueButton,
 	},
 	data() {
 		return {

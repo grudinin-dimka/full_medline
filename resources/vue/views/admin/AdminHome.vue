@@ -126,32 +126,35 @@
 
 		<template #footer>
 			<template v-if="modal.values.look == 'default'">
-				<button-remove
+				<VueButton
+					:look="'delete'"
 					v-if="!currentSlide.data.create.value & !currentSlide.data.delete.value"
 					@click.prevent="markDeleteSlide"
 				>
 					<VueIcon :name="'delete'" :fill="'white'" :width="'24px'" :height="'22px'" />
 					Удалить
-				</button-remove>
-				<button-default
+				</VueButton>
+
+				<VueButton
 					v-if="!currentSlide.data.delete.value"
 					@click.prevent="updateSlide"
 					:disabled="disabled.slider.update"
 				>
 					<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
-				</button-default>
-				<button-default v-if="currentSlide.data.delete.value" @click.prevent="markDeleteSlide">
+				</VueButton>
+
+				<VueButton v-if="currentSlide.data.delete.value" @click.prevent="markDeleteSlide">
 					<VueIcon :name="'restore'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Вернуть
-				</button-default>
+				</VueButton>
 			</template>
 
 			<template v-if="modal.values.look == 'create'">
-				<button-default @click.prevent="addSlide" :disabled="disabled.slider.create">
+				<VueButton @click.prevent="addSlide" :disabled="disabled.slider.create">
 					<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
-				</button-default>
+				</VueButton>
 			</template>
 		</template>
 	</VueModal>
@@ -168,10 +171,15 @@
 		<template #title>СЛАЙДЕР</template>
 
 		<template #options>
-			<ButtonDefault look="white" :disabled="disabled.slider.save" @click="saveSlidesChanges">
-				<VueIcon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
+			<VueButton :look="'inverse'" :disabled="disabled.slider.save" @click="saveSlidesChanges">
+				<VueIcon
+					:name="'save'"
+					:fill="'var(--primary-color)'"
+					:width="'28px'"
+					:height="'28px'"
+				/>
 				Сохранить
-			</ButtonDefault>
+			</VueButton>
 		</template>
 
 		<template #body>
@@ -242,18 +250,19 @@
 			</template>
 
 			<!-- Загрузка слайдов -->
-			<loader-child
+			<VueLoader
 				:isLoading="loading.loader.slider"
+				:isChild="true"
 				:minHeight="300"
-				@loaderChildAfterLeave="loaderChildAfterLeave"
+				@afterLeave="loaderChildAfterLeave"
 			/>
 		</template>
 
 		<template #buttons>
-			<ButtonDefault @click="openModalСreate" :disabled="disabled.slider.add">
+			<VueButton @click="openModalСreate" :disabled="disabled.slider.add">
 				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
-			</ButtonDefault>
+			</VueButton>
 		</template>
 	</block-once>
 
@@ -264,10 +273,15 @@
 		<template #title>ФУТЕР</template>
 
 		<template #options>
-			<ButtonDefault look="white" :disabled="disabled.footer.save" @click="saveFooterChanges">
-				<VueIcon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
+			<VueButton :look="'inverse'" :disabled="disabled.footer.save" @click="saveFooterChanges">
+				<VueIcon
+					:name="'save'"
+					:fill="'var(--primary-color)'"
+					:width="'28px'"
+					:height="'28px'"
+				/>
 				Сохранить
-			</ButtonDefault>
+			</VueButton>
 		</template>
 
 		<template #body>
@@ -283,32 +297,29 @@
 			</div>
 
 			<!-- Загрузка футера -->
-			<loader-child
+			<VueLoader
 				:isLoading="loading.loader.footer"
-				:minHeight="400"
-				@loaderChildAfterLeave="loaderChildAfterLeave"
+				:isChild="true"
+				:minHeight="300"
+				@afterLeave="loaderChildAfterLeave"
 			/>
 		</template>
 	</block-once>
 </template>
 
 <script>
-import LoaderChild from "../../components/modules/LoaderChild.vue";
-import Empty from "../../components/modules/Empty.vue";
-
 import VueModal from "../../components/modules/modal/VueModal.vue";
-import InfoBar from "../../components/ui/admin/InfoBar.vue";
+import VueLoader from "../../components/modules/VueLoader.vue";
 import VueTiptap from "../../components/modules/VueTiptap.vue";
 
 import VueInput from "../../components/modules/input/VueInput.vue";
 
+import Empty from "../../components/modules/Empty.vue";
+import InfoBar from "../../components/ui/admin/InfoBar.vue";
 import BlockOnce from "../../components/ui/admin/blocks/BlockOnce.vue";
 
-import ButtonDefault from "../../components/ui/admin/buttons/ButtonDefault.vue";
-import ButtonRemove from "../../components/ui/admin/buttons/ButtonRemove.vue";
-import ButtonClaim from "../../components/ui/admin/buttons/ButtonClaim.vue";
-
 import VueIcon from "../../components/modules/icon/VueIcon.vue";
+import VueButton from "../../components/ui/VueButton.vue";
 
 import api from "../../services/api";
 import shared from "../../services/shared";
@@ -318,20 +329,17 @@ import validate from "../../services/validate";
 
 export default {
 	components: {
-		LoaderChild,
-		Empty,
-
+		VueLoader,
 		VueModal,
-		InfoBar,
 		VueTiptap,
 		VueInput,
 
 		VueIcon,
-
+		VueButton,
+		
+		Empty,
+		InfoBar,
 		BlockOnce,
-		ButtonDefault,
-		ButtonRemove,
-		ButtonClaim,
 	},
 	data() {
 		return {

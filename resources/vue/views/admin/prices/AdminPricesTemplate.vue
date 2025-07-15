@@ -108,38 +108,28 @@
 					</div>
 				</div>
 			</details>
-
-			<LoaderChild
-				:isLoading="loading.loader.rools"
-				:minHeight="300"
-				@loaderChildAfterLeave=""
-			></LoaderChild>
 		</template>
 
 		<template #buttons>
 			<a :href="`/storage/other/shablon.ods`" download>
-				<ButtonDefault>Скачать шаблон </ButtonDefault>
+				<VueButton>Скачать шаблон </VueButton>
 			</a>
 		</template>
 	</block-once>
 </template>
 
 <script>
-import LoaderChild from "../../../components/modules/LoaderChild.vue";
-
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 
-import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
+import VueButton from "../../../components/ui/VueButton.vue";
 
 export default {
 	components: {
 		InfoBar,
-		LoaderChild,
-
 		BlockOnce,
 
-		ButtonDefault,
+		VueButton,
 	},
 	data() {
 		return {

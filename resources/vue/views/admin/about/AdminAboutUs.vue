@@ -188,30 +188,31 @@
 
 		<template #footer>
 			<template v-if="modal.values.look == 'create'">
-				<ButtonDefault @click="addInfoBlock">
+				<VueButton @click="addInfoBlock">
 					<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
-				</ButtonDefault>
+				</VueButton>
 			</template>
 
 			<template v-if="modal.values.look == 'default'">
-				<button-remove
+				<VueButton
+					:look="'delete'"
 					@click="deleteInfoBlock"
 					v-if="!currentInfoBlock.data.delete.value && !currentInfoBlock.data.create.value"
 				>
 					<VueIcon :name="'delete'" :fill="'white'" :width="'24px'" :height="'22px'" />
 					Удалить
-				</button-remove>
+				</VueButton>
 
-				<ButtonDefault @click="updateInfoBlock" v-if="!currentInfoBlock.data.delete.value">
+				<VueButton @click="updateInfoBlock" v-if="!currentInfoBlock.data.delete.value">
 					<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
-				</ButtonDefault>
+				</VueButton>
 
-				<ButtonDefault @click="deleteInfoBlock" v-if="currentInfoBlock.data.delete.value">
+				<VueButton @click="deleteInfoBlock" v-if="currentInfoBlock.data.delete.value">
 					<VueIcon :name="'restore'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Вернуть
-				</ButtonDefault>
+				</VueButton>
 			</template>
 		</template>
 	</VueModal>
@@ -239,17 +240,17 @@
 
 		<template #footer>
 			<template v-if="modalImage.values.look == 'create'">
-				<button-default @click="updateImage" :disabled="disabled.image.add">
+				<VueButton @click="updateImage" :disabled="disabled.image.add">
 					<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
-				</button-default>
+				</VueButton>
 			</template>
 
 			<template v-if="modalImage.values.look == 'default'">
-				<button-default @click="updateImage" :disabled="disabled.image.update">
+				<VueButton @click="updateImage" :disabled="disabled.image.update">
 					<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
-				</button-default>
+				</VueButton>
 			</template>
 		</template>
 	</VueModal>
@@ -276,10 +277,10 @@
 		</template>
 
 		<template #footer>
-			<button-default @click="uploadFile" :disabled="disabled.files.upload">
+			<VueButton @click="uploadFile" :disabled="disabled.files.upload">
 				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Загрузить
-			</button-default>
+			</VueButton>
 		</template>
 	</VueModal>
 
@@ -296,14 +297,14 @@
 		<template #title>ИНФОРМАЦИОННЫЕ БЛОКИ</template>
 
 		<template #options>
-			<button-default
+			<VueButton
 				@click.prevent="saveInfoBlocks"
 				:disabled="disabled.about.save"
-				:look="'white'"
+				:look="'inverse'"
 			>
 				<VueIcon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
-			</button-default>
+			</VueButton>
 		</template>
 
 		<template #body>
@@ -318,18 +319,19 @@
 				<empty :minHeight="300" v-if="infoBlocks.length == 0" />
 			</template>
 
-			<LoaderChild
+			<VueLoader
 				:isLoading="loading.loader.infoBlocks"
+				:isChild="true"
 				:minHeight="300"
-				@loaderChildAfterLeave="loaderChildAfterLeave"
-			></LoaderChild>
+				@afterLeave="loaderChildAfterLeave"
+			/>
 		</template>
 
 		<template #buttons>
-			<button-default @click="openModalСreate">
+			<VueButton @click="openModalСreate">
 				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
-			</button-default>
+			</VueButton>
 		</template>
 	</block-once>
 
@@ -338,14 +340,14 @@
 		<template #title>ФАЙЛЫ</template>
 
 		<template #options>
-			<button-default
+			<VueButton
 				@click.prevent="saveInfoFiles"
 				:disabled="disabled.files.save"
-				:look="'white'"
+				:look="'inverse'"
 			>
 				<VueIcon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
-			</button-default>
+			</VueButton>
 		</template>
 
 		<template #body>
@@ -357,35 +359,32 @@
 				@delete="markToDelete"
 			/>
 
-			<LoaderChild
+			<VueLoader
 				:isLoading="loading.loader.infoFiles"
+				:isChild="true"
 				:minHeight="300"
-				@loaderChildAfterLeave="loaderChildAfterLeave"
-			></LoaderChild>
+				@afterLeave="loaderChildAfterLeave"
+			/>
 		</template>
 	</block-once>
 </template>
 
 <script>
 import VueModal from "../../../components/modules/modal/VueModal.vue";
-import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import VueTiptap from "../../../components/modules/VueTiptap.vue";
 import VueInput from "../../../components/modules/input/VueInput.vue";
 import VueTable from "../../../components/modules/table/VueTable.vue";
 
+import AdminAboutUsList from "./AdminAboutUsList.vue";
+
+import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTwo from "../../../components/ui/admin/blocks/BlockTwo.vue";
-
-import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
-import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
-import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
-
-import VueIcon from "../../../components/modules/icon/VueIcon.vue";
-
-import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import Empty from "../../../components/modules/Empty.vue";
 
-import AdminAboutUsList from "./AdminAboutUsList.vue";
+import VueLoader from "../../../components/modules/VueLoader.vue";
+import VueIcon from "../../../components/modules/icon/VueIcon.vue";
+import VueButton from "../../../components/ui/VueButton.vue";
 
 import api from "../../../services/api";
 import shared from "../../../services/shared";
@@ -396,20 +395,17 @@ import validate from "../../../services/validate";
 export default {
 	components: {
 		VueModal,
-		InfoBar,
 		VueTiptap,
-		LoaderChild,
 		VueTable,
 		VueInput,
-
+		
+		InfoBar,
 		BlockOnce,
 		BlockTwo,
 
-		ButtonDefault,
-		ButtonRemove,
-		ButtonClaim,
-
+		VueLoader,
 		VueIcon,
+		VueButton,
 
 		Empty,
 		AdminAboutUsList,

@@ -10,29 +10,32 @@
 				@delete="console.log('delete')"
 			/>
 
-			<LoaderChild
+			<VueLoader
 				:isLoading="loading.loader.statistics"
+				:isChild="true"
 				:minHeight="300"
-				@loaderChildAfterLeave="loaderChildAfterLeave"
-			></LoaderChild>
+				@afterLeave="loaderChildAfterLeave"
+			/>
 		</template>
 	</block-once>
 </template>
 
 <script>
-import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
-import LoaderChild from "../../../components/modules/LoaderChild.vue";
-
 import VueTable from "../../../components/modules/table/VueTable.vue";
+
+import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
+
+import VueLoader from "../../../components/modules/VueLoader.vue";
 
 import api from "../../../services/api";
 
 export default {
 	components: {
-		BlockOnce,
-		LoaderChild,
-
 		VueTable,
+
+		BlockOnce,
+
+		VueLoader,
 	},
 	data() {
 		return {

@@ -9,14 +9,14 @@
 		<template #title>НОВОСТИ</template>
 
 		<template #options>
-			<button-default
+			<VueButton
 				@click.prevent="saveNewsAll"
 				:disabled="disabled.news.save"
-				:look="'white'"
+				:look="'inverse'"
 			>
 				<VueIcon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
-			</button-default>
+			</VueButton>
 		</template>
 
 		<template #body>
@@ -41,42 +41,39 @@
 				</template>
 			</VueTable>
 
-			<loader-child
+			<VueLoader
 				:isLoading="loading.loader.news"
-				:minHeight="200"
-				@loaderChildAfterLeave="loaderChildAfterLeave"
+				:isChild="true"
+				:minHeight="300"
+				@afterLeave="loaderChildAfterLeave"
 			/>
 		</template>
 	</block-once>
 </template>
 
 <script>
-import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
-import LoaderChild from "../../../components/modules/LoaderChild.vue";
-import InfoBar from "../../../components/ui/admin/InfoBar.vue";
-
 import VueTable from "../../../components/modules/table/VueTable.vue";
-import Tiptap from "../../../components/modules/VueTiptap.vue";
 
-import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
+import InfoBar from "../../../components/ui/admin/InfoBar.vue";
+import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 
+import VueLoader from "../../../components/modules/VueLoader.vue";
 import VueIcon from "../../../components/modules/icon/VueIcon.vue";
+import VueButton from "../../../components/ui/VueButton.vue";
 
 import shared from "../../../services/shared";
 import api from "../../../services/api";
 
 export default {
 	components: {
-		BlockOnce,
-		LoaderChild,
-		InfoBar,
-
 		VueTable,
-		Tiptap,
 
-		ButtonDefault,
+		InfoBar,
+		BlockOnce,
 
+		VueLoader,
 		VueIcon,
+		VueButton,
 	},
 	data() {
 		return {

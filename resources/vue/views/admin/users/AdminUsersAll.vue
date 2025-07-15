@@ -168,22 +168,23 @@
 		</template>
 
 		<template #footer>
-			<ButtonDefault
+			<VueButton
 				@click="saveUser"
 				:disabled="disabled.users.save"
 				v-if="modal.values.look == 'default'"
 			>
 				<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 				Обновить
-			</ButtonDefault>
-			<ButtonDefault
+			</VueButton>
+
+			<VueButton
 				@click="addUser"
 				:disabled="disabled.users.create"
 				v-if="modal.values.look == 'create'"
 			>
 				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
-			</ButtonDefault>
+			</VueButton>
 		</template>
 	</VueModal>
 
@@ -209,16 +210,13 @@
 		</template>
 
 		<template #footer>
-			<button-password-wide
-				:type="'default'"
-				@click="saveUserPassword"
-				:disabled="disabled.userPassword.save"
-			>
+			<VueButton :wide="true" @click="saveUserPassword" :disabled="disabled.userPassword.save">
 				Сбросить
-			</button-password-wide>
-			<button-password-wide :type="'other'" @click="$refs.modalPassword.close()">
+			</VueButton>
+
+			<VueButton :wide="true" :look="'edit-secondary'" @click="$refs.modalPassword.close()">
 				Закрыть
-			</button-password-wide>
+			</VueButton>
 		</template>
 	</VueModal>
 
@@ -249,16 +247,12 @@
 		</template>
 
 		<template #footer>
-			<ButtonDefaultWide
-				:type="'default'"
-				@click="saveUserBlock"
-				:disabled="disabled.userBlock.save"
-			>
+			<VueButton :wide="true" @click="saveUserBlock" :disabled="disabled.userBlock.save">
 				Да
-			</ButtonDefaultWide>
-			<ButtonDefaultWide :type="'other'" @click="$refs.modalBlock.close()">
+			</VueButton>
+			<VueButton :wide="true" :look="'edit-secondary'" @click="$refs.modalBlock.close()">
 				Нет
-			</ButtonDefaultWide>
+			</VueButton>
 		</template>
 	</VueModal>
 
@@ -285,16 +279,18 @@
 		</template>
 
 		<template #footer>
-			<button-remove-wide
-				:type="'default'"
+			<VueButton
+				:look="'delete'"
+				:wide="true"
 				@click="deleteUser"
 				:disabled="disabled.users.delete"
 			>
 				Да
-			</button-remove-wide>
-			<button-remove-wide :type="'other'" @click="$refs.modalDelete.close()">
+			</VueButton>
+
+			<VueButton :wide="true" :look="'delete-secondary'" @click="$refs.modalDelete.close()">
 				Нет
-			</button-remove-wide>
+			</VueButton>
 		</template>
 	</VueModal>
 
@@ -373,39 +369,34 @@
 				</div>
 			</div>
 
-			<LoaderChild
+			<VueLoader
 				:isLoading="loading.loader.users"
+				:isChild="true"
 				:minHeight="300"
-				@loaderChildAfterLeave="loaderChildAfterLeave"
-			></LoaderChild>
+				@afterLeave="loaderChildAfterLeave"
+			/>
 		</template>
 
 		<template #buttons>
-			<ButtonDefault @click="openModalСreate">
+			<VueButton @click="openModalСreate">
 				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
-			</ButtonDefault>
+			</VueButton>
 		</template>
 	</block-once>
 </template>
 
 <script>
-import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import VueModal from "../../../components/modules/modal/VueModal.vue";
-import PasswordGenerator from "../../../components/modules/PasswordGenerator.vue";
-
 import VueInput from "../../../components/modules/input/VueInput.vue";
 import VueInputContainer from "../../../components/modules/input/VueInputContainer.vue";
 
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
+import PasswordGenerator from "../../../components/modules/PasswordGenerator.vue";
 
+import VueLoader from "../../../components/modules/VueLoader.vue";
 import VueIcon from "../../../components/modules/icon/VueIcon.vue";
-
-import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
-import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
-import ButtonRemoveWide from "../../../components/ui/admin/buttons/ButtonRemoveWide.vue";
-import ButtonDefaultWide from "../../../components/ui/admin/buttons/ButtonDefaultWide.vue";
-import ButtonPasswordWide from "../../../components/ui/admin/buttons/ButtonPasswordWide.vue";
+import VueButton from "../../../components/ui/VueButton.vue";
 
 import api from "../../../services/api";
 import validate from "../../../services/validate";
@@ -414,21 +405,16 @@ import shared from "../../../services/shared";
 
 export default {
 	components: {
-		LoaderChild,
 		VueModal,
-		PasswordGenerator,
-		BlockOnce,
-
 		VueInput,
 		VueInputContainer,
 
-		VueIcon,
+		PasswordGenerator,
+		BlockOnce,
 
-		ButtonClaim,
-		ButtonDefault,
-		ButtonRemoveWide,
-		ButtonDefaultWide,
-		ButtonPasswordWide,
+		VueLoader,
+		VueIcon,
+		VueButton,
 	},
 	data() {
 		return {

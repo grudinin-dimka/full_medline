@@ -219,7 +219,8 @@ export default {
 }
 
 .price__group__category-title {
-	display: flex;
+	display: grid;
+	grid-template-columns: auto 1fr;
 	align-items: center;
 	gap: 5px;
 
@@ -312,6 +313,12 @@ export default {
 	.price__group__prices-name {
 		text-overflow: ellipsis;
 		word-break: break-all;
+	}
+}
+
+@media screen and (width <= 750px) {
+	.price__group__prices > li {
+		margin: 0px 0px 0px 35px;
 	}
 }
 </style>

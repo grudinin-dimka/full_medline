@@ -66,7 +66,11 @@ export default {
 		calcItemsToShow() {
 			this.windowWidth = window.document.documentElement.clientWidth;
 
-			if (this.windowWidth >= 1600 || this.windowWidth == null) {
+			if (this.windowWidth >= 2300 || this.windowWidth == null) {
+				return 7;
+			} else if ((this.windowWidth > 1920) & (this.windowWidth <= 2300)) {
+				return 6;
+			} else if ((this.windowWidth >= 1600) & (this.windowWidth <= 1920)) {
 				return 5;
 			} else if ((this.windowWidth >= 1300) & (this.windowWidth <= 1600)) {
 				return 4;

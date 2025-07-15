@@ -66,10 +66,10 @@
 		</template>
 
 		<template #footer>
-			<button-default @click="updateSpecialization">
+			<VueButton @click="updateSpecialization">
 				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
-			</button-default>
+			</VueButton>
 		</template>
 	</VueModal>
 
@@ -146,10 +146,10 @@
 		</template>
 
 		<template #footer>
-			<button-default @click="updateClinics">
+			<VueButton @click="updateClinics">
 				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
-			</button-default>
+			</VueButton>
 		</template>
 	</VueModal>
 
@@ -199,17 +199,17 @@
 
 		<template #footer>
 			<template v-if="modalCertificates.values.look == 'create'">
-				<button-default @click="addCertificate">
+				<VueButton @click="addCertificate">
 					<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
-				</button-default>
+				</VueButton>
 			</template>
 
 			<template v-if="modalCertificates.values.look == 'default'">
-				<button-default @click="updateCertificate">
+				<VueButton @click="updateCertificate">
 					<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
-				</button-default>
+				</VueButton>
 			</template>
 		</template>
 	</VueModal>
@@ -271,17 +271,17 @@
 
 		<template #footer>
 			<template v-if="modalEducations.values.look == 'create'">
-				<button-default @click="addEducation">
+				<VueButton @click="addEducation">
 					<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
-				</button-default>
+				</VueButton>
 			</template>
 
 			<template v-if="modalEducations.values.look == 'default'">
-				<button-default @click="updateEducation">
+				<VueButton @click="updateEducation">
 					<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
-				</button-default>
+				</VueButton>
 			</template>
 		</template>
 	</VueModal>
@@ -346,17 +346,17 @@
 		</template>
 		<template #footer>
 			<template v-if="modalWorks.values.look == 'create'">
-				<button-default @click="addWork">
+				<VueButton @click="addWork">
 					<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
-				</button-default>
+				</VueButton>
 			</template>
 
 			<template v-if="modalWorks.values.look == 'default'">
-				<button-default @click="updateWork">
+				<VueButton @click="updateWork">
 					<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
-				</button-default>
+				</VueButton>
 			</template>
 		</template>
 	</VueModal>
@@ -380,10 +380,10 @@
 
 		<template #options>
 			<template v-if="$route.params.id === 'new'">
-				<button-default
+				<VueButton
 					@click.prevent="addSpecialist"
 					:disabled="disabled.profile.create"
-					:look="'white'"
+					:look="'inverse'"
 				>
 					<VueIcon
 						:name="'add'"
@@ -392,14 +392,14 @@
 						:height="'23px'"
 					/>
 					Добавить
-				</button-default>
+				</VueButton>
 			</template>
 
 			<template v-else>
-				<button-default
+				<VueButton
 					@click.prevent="saveSpecialistModular('all')"
 					:disabled="disabled.profile.save"
-					:look="'white'"
+					:look="'inverse'"
 				>
 					<VueIcon
 						:name="'save'"
@@ -408,7 +408,7 @@
 						:height="'28px'"
 					/>
 					Сохранить
-				</button-default>
+				</VueButton>
 			</template>
 		</template>
 
@@ -706,11 +706,13 @@
 					:placeholder="'Описание'"
 				/>
 			</div>
+
 			<!-- Загрузчик профиля -->
-			<loader-child
+			<VueLoader
 				:isLoading="loading.loader.profile"
+				:isChild="true"
 				:minHeight="600"
-				@loaderChildAfterLeave="loaderChildAfterLeave"
+				@afterLeave="loaderChildAfterLeave"
 			/>
 		</template>
 	</block-once>
@@ -727,10 +729,11 @@
 				</div>
 
 				<!-- Загрузчик специализаций -->
-				<loader-child
+				<VueLoader
 					:isLoading="loading.loader.specializations"
+					:isChild="true"
 					:minHeight="100"
-					@loaderChildAfterLeave="loaderChildAfterLeave"
+					@afterLeave="loaderChildAfterLeave"
 				/>
 			</template>
 
@@ -744,10 +747,11 @@
 				</div>
 
 				<!-- Загрузчик клиник -->
-				<loader-child
+				<VueLoader
 					:isLoading="loading.loader.clinics"
+					:isChild="true"
 					:minHeight="100"
-					@loaderChildAfterLeave="loaderChildAfterLeave"
+					@afterLeave="loaderChildAfterLeave"
 				/>
 			</template>
 		</block-two>
@@ -763,10 +767,11 @@
 				</div>
 
 				<!-- Загрузчик профиля -->
-				<loader-child
+				<VueLoader
 					:isLoading="loading.loader.certificates"
+					:isChild="true"
 					:minHeight="100"
-					@loaderChildAfterLeave="loaderChildAfterLeave"
+					@afterLeave="loaderChildAfterLeave"
 				/>
 			</template>
 		</block-once>
@@ -782,10 +787,11 @@
 				</div>
 
 				<!-- Загрузчик профиля -->
-				<loader-child
+				<VueLoader
 					:isLoading="loading.loader.educations"
+					:isChild="true"
 					:minHeight="100"
-					@loaderChildAfterLeave="loaderChildAfterLeave"
+					@afterLeave="loaderChildAfterLeave"
 				/>
 			</template>
 		</block-once>
@@ -801,10 +807,11 @@
 				</div>
 
 				<!-- Загрузчик профиля -->
-				<loader-child
+				<VueLoader
 					:isLoading="loading.loader.works"
+					:isChild="true"
 					:minHeight="100"
-					@loaderChildAfterLeave="loaderChildAfterLeave"
+					@afterLeave="loaderChildAfterLeave"
 				/>
 			</template>
 		</block-once>
@@ -856,18 +863,19 @@
 				</div>
 
 				<!-- Загрузчик специализаций -->
-				<loader-child
+				<VueLoader
 					:isLoading="loading.loader.specializations"
+					:isChild="true"
 					:minHeight="100"
-					@loaderChildAfterLeave="loaderChildAfterLeave"
+					@afterLeave="loaderChildAfterLeave"
 				/>
 			</template>
 
 			<template #one-buttons>
-				<button-default @click="openModalSpecializationsEdite">
+				<VueButton @click="openModalSpecializationsEdite">
 					<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
-				</button-default>
+				</VueButton>
 			</template>
 
 			<!--____________________________________________________-->
@@ -912,18 +920,19 @@
 				</div>
 
 				<!-- Загрузчик клиник -->
-				<loader-child
+				<VueLoader
 					:isLoading="loading.loader.clinics"
+					:isChild="true"
 					:minHeight="100"
-					@loaderChildAfterLeave="loaderChildAfterLeave"
+					@afterLeave="loaderChildAfterLeave"
 				/>
 			</template>
 
 			<template #two-buttons>
-				<button-default @click="openModalClinicsEdite">
+				<VueButton @click="openModalClinicsEdite">
 					<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
-				</button-default>
+				</VueButton>
 			</template>
 		</block-two>
 
@@ -948,10 +957,11 @@
 				/>
 
 				<!-- Загрузчик профиля -->
-				<loader-child
+				<VueLoader
 					:isLoading="loading.loader.clinics"
+					:isChild="true"
 					:minHeight="100"
-					@loaderChildAfterLeave="loaderChildAfterLeave"
+					@afterLeave="loaderChildAfterLeave"
 				/>
 			</template>
 		</block-once>
@@ -974,10 +984,11 @@
 				/>
 
 				<!-- Загрузчик профиля -->
-				<loader-child
+				<VueLoader
 					:isLoading="loading.loader.clinics"
+					:isChild="true"
 					:minHeight="100"
-					@loaderChildAfterLeave="loaderChildAfterLeave"
+					@afterLeave="loaderChildAfterLeave"
 				/>
 			</template>
 		</block-once>
@@ -1001,10 +1012,11 @@
 				/>
 
 				<!-- Загрузчик профиля -->
-				<loader-child
+				<VueLoader
 					:isLoading="loading.loader.clinics"
+					:isChild="true"
 					:minHeight="100"
-					@loaderChildAfterLeave="loaderChildAfterLeave"
+					@afterLeave="loaderChildAfterLeave"
 				/>
 			</template>
 		</block-once>
@@ -1015,25 +1027,19 @@
 import VueModal from "../../../components/modules/modal/VueModal.vue";
 import VueTable from "../../../components/modules/table/VueTable.vue";
 import VueTiptap from "../../../components/modules/VueTiptap.vue";
-
-import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import VueSelector from "../../../components/modules/VueSelector.vue";
-import LoaderChild from "../../../components/modules/LoaderChild.vue";
-
-import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
-import BlockTwo from "../../../components/ui/admin/blocks/BlockTwo.vue";
-
 import VueInput from "../../../components/modules/input/VueInput.vue";
 import VueInputContainer from "../../../components/modules/input/VueInputContainer.vue";
 
-import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
-import ButtonDisabled from "../../../components/ui/admin/buttons/ButtonDisabled.vue";
-import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
-import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
-
 import Pagination from "../../../components/modules/Pagination.vue";
 
+import InfoBar from "../../../components/ui/admin/InfoBar.vue";
+import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
+import BlockTwo from "../../../components/ui/admin/blocks/BlockTwo.vue";
+
+import VueLoader from "../../../components/modules/VueLoader.vue";
 import VueIcon from "../../../components/modules/icon/VueIcon.vue";
+import VueButton from "../../../components/ui/VueButton.vue";
 
 import api from "../../../services/api";
 import validate from "../../../services/validate";
@@ -1048,25 +1054,19 @@ export default {
 		VueModal,
 		VueTable,
 		VueTiptap,
+		VueSelector,
+		VueInput,
+		VueInputContainer,
+		
+		Pagination,
 
 		InfoBar,
-		VueSelector,
-		LoaderChild,
-
 		BlockOnce,
 		BlockTwo,
 
-		VueInput,
-		VueInputContainer,
-
-		ButtonDefault,
-		ButtonDisabled,
-		ButtonRemove,
-		ButtonClaim,
-
-		Pagination,
-
+		VueLoader,
 		VueIcon,
+		VueButton,
 
 		RouterView,
 		RouterLink,
@@ -2987,10 +2987,6 @@ export default {
 	align-items: center;
 	height: 100%;
 	color: #bcbcbc;
-}
-
-.profile-list > .clinics__list-head > .item-close {
-
 }
 
 @media screen and (width <= 1000px) {

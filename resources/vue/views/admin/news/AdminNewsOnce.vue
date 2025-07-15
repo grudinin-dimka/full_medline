@@ -12,7 +12,7 @@
 
 		<template #options>
 			<template v-if="$route.params.date === 'new' || $route.params.time === 'new'">
-				<ButtonDefault look="white" :disabled="disabled.news.add" @click="addNews">
+				<VueButton look="inverse" :disabled="disabled.news.add" @click="addNews">
 					<VueIcon
 						:name="'add'"
 						:fill="'var(--primary-color)'"
@@ -20,12 +20,12 @@
 						:height="'23px'"
 					/>
 					Добавить
-				</ButtonDefault>
+				</VueButton>
 			</template>
 			<template v-else>
 				<template v-if="loading.sections.news">
-					<ButtonDefault
-						look="white"
+					<VueButton
+						look="inverse"
 						:disabled="disabled.news.publish"
 						@click="publishNews"
 						v-if="!currentNews.data.hide.value"
@@ -37,9 +37,10 @@
 							:height="'28px'"
 						/>
 						Опубликовать
-					</ButtonDefault>
-					<ButtonDefault
-						look="white"
+					</VueButton>
+
+					<VueButton
+						look="inverse"
 						:disabled="disabled.news.publish"
 						@click="publishNews"
 						v-else
@@ -51,9 +52,10 @@
 							:height="'28px'"
 						/>
 						Убрать с публикации
-					</ButtonDefault>
+					</VueButton>
 				</template>
-				<ButtonDefault look="white" :disabled="disabled.news.save" @click="saveNews">
+
+				<VueButton look="inverse" :disabled="disabled.news.save" @click="saveNews">
 					<VueIcon
 						:name="'save'"
 						:fill="'var(--primary-color)'"
@@ -61,7 +63,7 @@
 						:height="'28px'"
 					/>
 					Сохранить
-				</ButtonDefault>
+				</VueButton>
 			</template>
 		</template>
 
@@ -180,40 +182,39 @@
 				</div>
 			</div>
 
-			<loader-child
+			<VueLoader
 				:isLoading="loading.loader.news"
-				:minHeight="200"
-				@loaderChildAfterLeave="loaderChildAfterLeave"
+				:isChild="true"
+				:minHeight="300"
+				@afterLeave="loaderChildAfterLeave"
 			/>
 		</template>
 	</block-once>
 </template>
 
 <script>
-import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
-import LoaderChild from "../../../components/modules/LoaderChild.vue";
-import InfoBar from "../../../components/ui/admin/InfoBar.vue";
-
 import VueTiptap from "../../../components/modules/VueTiptap.vue";
 
-import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
+import InfoBar from "../../../components/ui/admin/InfoBar.vue";
+import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 
+import VueLoader from "../../../components/modules/VueLoader.vue";
 import VueIcon from "../../../components/modules/icon/VueIcon.vue";
+import VueButton from "../../../components/ui/VueButton.vue";
 
 import api from "../../../services/api";
 import validate from "../../../services/validate";
 
 export default {
 	components: {
-		BlockOnce,
-		LoaderChild,
-		InfoBar,
-
 		VueTiptap,
 
-		ButtonDefault,
+		InfoBar,
+		BlockOnce,
 
+		VueLoader,
 		VueIcon,
+		VueButton,
 	},
 	data() {
 		return {

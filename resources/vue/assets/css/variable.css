@@ -9,6 +9,7 @@
 @import url("./medline/modules/pagination.css");
 @import url("./medline/modules/modal.css");
 @import url("./medline/modules/list.css");
+@import url("./medline/modules/loader.css");
 
 /* Элементы */
 @import url("./medline/elements/icons.css");

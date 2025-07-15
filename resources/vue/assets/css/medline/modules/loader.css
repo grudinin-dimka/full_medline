@@ -1,0 +1,8 @@
+:root {
+   --loader-z-index: 1000;
+   
+   --loader-background-color: white;
+   --loader-child-background-color: rgba(0, 0, 0, 0);
+
+   --loader-icon-color: var(--primary-color);
+}

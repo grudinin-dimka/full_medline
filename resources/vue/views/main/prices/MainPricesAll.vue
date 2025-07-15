@@ -368,7 +368,7 @@ export default {
 	gap: 20px;
 }
 
-.prices__address-title {
+.prices__address > .prices__address-title {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -386,7 +386,7 @@ export default {
 	margin-top: 10px;
 }
 
-.prices__address-title > svg {
+.prices__address > .prices__address-title > svg {
 	fill: var(--button-default-color);
 }
 
@@ -412,10 +412,10 @@ export default {
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
-.prices__address-title {
+.prices__category > .prices__address-title {
 	display: grid;
-	align-items: center;
 	grid-template-columns: auto 1fr;
+	align-items: center;
 	gap: 5px;
 
 	font-size: 1.25rem;
@@ -428,7 +428,7 @@ export default {
 	border: 0px solid #2d9aa7;
 }
 
-.prices__address-title > svg {
+.prices__category > .prices__address-title > svg {
 	fill: var(--primary-color);
 }
 
@@ -501,6 +501,12 @@ export default {
 
 	.filters__item {
 		flex-direction: column;
+	}
+}
+
+@media screen and (width <= 750px) {
+	.prices__values > li {
+		margin: 0px 0px 0px 35px;
 	}
 }
 </style>

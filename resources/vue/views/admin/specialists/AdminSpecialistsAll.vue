@@ -68,16 +68,16 @@
 		</template>
 
 		<template #footer>
-			<ButtonDefault :look="'white'" @click="fillForm('Медлайн')"> Медлайн </ButtonDefault>
+			<VueButton :look="'inverse'" @click="fillForm('Медлайн')"> Медлайн </VueButton>
 
-			<ButtonDefault :look="'white'" @click="fillForm('Кардиологика')">
+			<VueButton :look="'inverse'" @click="fillForm('Кардиологика')">
 				Кардиологика
-			</ButtonDefault>
+			</VueButton>
 
-			<ButtonDefault @click="downloadSpecialistsXML" :disabled="disabled.specialists.download">
+			<VueButton @click="downloadSpecialistsXML" :disabled="disabled.specialists.download">
 				<VueIcon :name="'download'" :fill="'white'" :width="'24px'" :height="'24px'" />
 				Выгрузить
-			</ButtonDefault>
+			</VueButton>
 		</template>
 	</VueModal>
 
@@ -90,7 +90,7 @@
 		<template #title>СПИСОК ВРАЧЕЙ</template>
 
 		<template #options>
-			<button-default @click.prevent="openModalEdite" :look="'white'">
+			<VueButton @click.prevent="openModalEdite" :look="'inverse'">
 				<VueIcon
 					:name="'download'"
 					:fill="'var(--primary-color)'"
@@ -98,15 +98,16 @@
 					:height="'28px'"
 				/>
 				Выгрузить
-			</button-default>
-			<button-default
+			</VueButton>
+
+			<VueButton
 				@click.prevent="saveSpecialistChanges"
 				:disabled="disabled.specialists.save"
-				:look="'white'"
+				:look="'inverse'"
 			>
 				<VueIcon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
-			</button-default>
+			</VueButton>
 		</template>
 
 		<template #body>
@@ -123,28 +124,27 @@
 				</template>
 			</VueTable>
 
-			<loader-child
+			<VueLoader
 				:isLoading="loading.loader.specialists"
+				:isChild="true"
 				:minHeight="300"
-				@loaderChildAfterLeave="loaderChildAfterLeave"
+				@afterLeave="loaderChildAfterLeave"
 			/>
 		</template>
 	</block-once>
 </template>
 
 <script>
-import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import VueTable from "../../../components/modules/table/VueTable.vue";
-import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import VueModal from "../../../components/modules/modal/VueModal.vue";
 import VueInput from "../../../components/modules/input/VueInput.vue";
 
+import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 
-import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
-import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
-
+import VueLoader from "../../../components/modules/VueLoader.vue";
 import VueIcon from "../../../components/modules/icon/VueIcon.vue";
+import VueButton from "../../../components/ui/VueButton.vue";
 
 import api from "../../../services/api";
 import validate from "../../../services/validate";
@@ -154,18 +154,16 @@ import { RouterView, RouterLink } from "vue-router";
 
 export default {
 	components: {
-		InfoBar,
 		VueTable,
-		LoaderChild,
 		VueModal,
 		VueInput,
-
+		
+		InfoBar,
 		BlockOnce,
 
-		ButtonDefault,
-		ButtonRemove,
-
+		VueLoader,
 		VueIcon,
+		VueButton,
 
 		RouterView,
 		RouterLink,

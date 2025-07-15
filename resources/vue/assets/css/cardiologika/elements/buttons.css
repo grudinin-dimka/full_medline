@@ -15,6 +15,8 @@
 	--button-secondary-background-color: #ffe8f0;
 	--button-secondary-background-color-hover: #eed2db;
 
+	--button-loader-border: 3px solid white;
+
 	/* edit */
 	--button-edit-font-color: rgb(255, 255, 255);
 	--button-edit-font-color-hover: rgb(255, 255, 255);
@@ -32,8 +34,10 @@
 
 	--button-inverse-font-color: black;
 	--button-inverse-font-color-hover: black;
-	--button-inverse-background-color: rgba(190, 132, 86, 0.0);
+	--button-inverse-background-color: rgba(190, 132, 86, 0);
 	--button-inverse-background-color-hover: var(--edit-secondary-background-color);
+
+	--button-loader-inverse-border: 3px solid var(--primary-color);
 
 	/* create */
 	--button-create-font-color: rgb(255, 255, 255);

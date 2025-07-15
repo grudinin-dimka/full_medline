@@ -666,7 +666,8 @@ export default {
 }
 
 .prices__category > .prices__address-title {
-	display: flex;
+	display: grid;
+	grid-template-columns: auto 1fr;
 	align-items: center;
 	gap: 5px;
 
@@ -749,6 +750,12 @@ export default {
 	.prices__values-name {
 		text-overflow: ellipsis;
 		word-break: break-all;
+	}
+}
+
+@media screen and (width <= 750px) {
+	.prices__values > li {
+		margin: 0px 0px 0px 35px;
 	}
 }
 </style>

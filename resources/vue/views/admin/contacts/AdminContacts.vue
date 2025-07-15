@@ -1,6 +1,6 @@
 <template>
 	<!-- Модальное окно: Контакты -->
-	<Modal ref="modal" :settings="modal">
+	<VueModal ref="modal" :settings="modal">
 		<template #title>
 			<template v-if="modal.values.look == 'default' && !currentContact.data.delete.value">
 				<VueIcon
@@ -56,7 +56,7 @@
 				</template>
 			</VueInput>
 
-			<ModalList
+			<VueModalList
 				:array="currentContact.data.phones.value"
 				@touchCreate="openModalPhoneCreate"
 				@touchEdit="openModalPhoneEdite"
@@ -71,9 +71,9 @@
 					/>
 					ТЕЛЕФОНЫ
 				</template>
-			</ModalList>
+			</VueModalList>
 
-			<ModalList
+			<VueModalList
 				:array="currentContact.data.mails.value"
 				@touchCreate="openModalMailCreate"
 				@touchEdit="openModalMailEdite"
@@ -88,38 +88,39 @@
 					/>
 					ПОЧТА
 				</template>
-			</ModalList>
+			</VueModalList>
 		</template>
 		<template #footer>
 			<template v-if="modal.values.look == 'create'">
-				<button-default @click="addContact">
+				<VueButton @click="addContact">
 					<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
-				</button-default>
+				</VueButton>
 			</template>
 
 			<template v-if="modal.values.look == 'default' && !currentContact.data.delete.value">
-				<button-remove v-if="!currentContact.data.create.value" @click="deleteContact">
+				<VueButton :look="'delete'" v-if="!currentContact.data.create.value" @click="deleteContact">
 					<VueIcon :name="'delete'" :fill="'white'" :width="'24px'" :height="'22px'" />
 					Удалить
-				</button-remove>
-				<ButtonDefault @click="updateContact">
+				</VueButton>
+
+				<VueButton @click="updateContact">
 					<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
-				</ButtonDefault>
+				</VueButton>
 			</template>
 
 			<template v-if="modal.values.look == 'default' && currentContact.data.delete.value">
-				<ButtonDefault @click="deleteContact">
+				<VueButton @click="deleteContact">
 					<VueIcon :name="'restore'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Вернуть
-				</ButtonDefault>
+				</VueButton>
 			</template>
 		</template>
-	</Modal>
+	</VueModal>
 
 	<!-- Модальное окно: Контакты -> Телефон -->
-	<Modal ref="modalPhone" :settings="modalPhone">
+	<VueModal ref="modalPhone" :settings="modalPhone">
 		<template #title>
 			{{ modalPhone.values.title }}
 		</template>
@@ -139,19 +140,20 @@
 		</template>
 
 		<template #footer>
-			<button-default v-if="modalPhone.values.look == 'default'" @click="updateContactPhone">
+			<VueButton v-if="modalPhone.values.look == 'default'" @click="updateContactPhone">
 				<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 				Обновить
-			</button-default>
-			<button-default v-if="modalPhone.values.look == 'create'" @click="addContactPhone">
+			</VueButton>
+
+			<VueButton v-if="modalPhone.values.look == 'create'" @click="addContactPhone">
 				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
-			</button-default>
+			</VueButton>
 		</template>
-	</Modal>
+	</VueModal>
 
 	<!-- Модальное окно: Контакты -> Почта -->
-	<Modal ref="modalMail" :settings="modalMail">
+	<VueModal ref="modalMail" :settings="modalMail">
 		<template #title>
 			{{ modalMail.values.title }}
 		</template>
@@ -170,17 +172,17 @@
 			</VueInput>
 		</template>
 		<template #footer>
-			<button-default v-if="modalMail.values.look == 'default'" @click="updateContactMail">
+			<VueButton v-if="modalMail.values.look == 'default'" @click="updateContactMail">
 				<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 				Обновить
-			</button-default>
+			</VueButton>
 
-			<button-default v-if="modalMail.values.look == 'create'" @click="addContactMail">
+			<VueButton v-if="modalMail.values.look == 'create'" @click="addContactMail">
 				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
-			</button-default>
+			</VueButton>
 		</template>
-	</Modal>
+	</VueModal>
 
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
 	<!--|                     КОНТАКТЫ                      |-->
@@ -194,14 +196,14 @@
 		<template #title>КОНТАКТЫ</template>
 
 		<template #options>
-			<button-default
+			<VueButton
 				@click.prevent="saveContact"
 				:disabled="disabled.contacts.save"
-				:look="'white'"
+				:look="'inverse'"
 			>
 				<VueIcon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
-			</button-default>
+			</VueButton>
 		</template>
 
 		<template #body>
@@ -218,41 +220,37 @@
 			</template>
 
 			<!-- Загрузка элементов -->
-			<loader-child
+			<VueLoader
 				:isLoading="loading.loader.clinics"
+				:isChild="true"
 				:minHeight="300"
-				@loaderChildAfterLeave="loaderChildAfterLeave"
+				@afterLeave="loaderChildAfterLeave"
 			/>
 		</template>
 
 		<template #buttons>
-			<ButtonDefault @click="openModalСreate">
+			<VueButton @click="openModalСreate">
 				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
-			</ButtonDefault>
+			</VueButton>
 		</template>
 	</block-once>
 </template>
 
 <script>
-import Modal from "../../../components/modules/modal/VueModal.vue";
-import ModalList from "../../../components/modules/modal/VueModalList.vue";
+import VueModal from "../../../components/modules/modal/VueModal.vue";
+import VueModalList from "../../../components/modules/modal/VueModalList.vue";
 import VueInput from "../../../components/modules/input/VueInput.vue";
 
 import AdminContactsList from "./AdminContactsList.vue";
 
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
-
-import LoaderChild from "../../../components/modules/LoaderChild.vue";
+import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import Empty from "../../../components/modules/Empty.vue";
 
-import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
-
-import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
-import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
-import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
-
+import VueLoader from "../../../components/modules/VueLoader.vue";
 import VueIcon from "../../../components/modules/icon/VueIcon.vue";
+import VueButton from "../../../components/ui/VueButton.vue";
 
 import api from "../../../services/api";
 import shared from "../../../services/shared.js";
@@ -261,23 +259,19 @@ import sorted from "../../../services/sorted.js";
 
 export default {
 	components: {
-		Modal,
-		ModalList,
+		VueModal,
+		VueModalList,
 		VueInput,
 
 		AdminContactsList,
 
 		InfoBar,
-		LoaderChild,
+		BlockOnce,
 		Empty,
 
-		BlockOnce,
-
-		ButtonDefault,
-		ButtonRemove,
-		ButtonClaim,
-
+		VueLoader,
 		VueIcon,
+		VueButton,
 	},
 	data() {
 		return {

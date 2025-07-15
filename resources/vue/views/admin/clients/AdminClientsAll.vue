@@ -8,55 +8,53 @@
 		<template #title>КЛИЕНТЫ</template>
 
 		<template #options>
-			<button-default
+			<VueButton
 				@click.prevent="updateClientsFromServe"
 				:disabled="disabled.clients.save"
-				:look="'white'"
+				:look="'inverse'"
 			>
 				<VueIcon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
-			</button-default>
+			</VueButton>
 		</template>
 
 		<template #body>
 			<VueTable v-if="loading.sections.clients" :table="table" />
 
-			<loader-child
+			<VueLoader
 				:isLoading="loading.loader.clients"
-				:minHeight="200"
-				@loaderChildAfterLeave="loaderChildAfterLeave"
+				:isChild="true"
+				:minHeight="300"
+				@afterLeave="loaderChildAfterLeave"
 			/>
 		</template>
 	</block-once>
 </template>
 
 <script>
-import LoaderChild from "../../../components/modules/LoaderChild.vue";
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTitle from "../../../components/ui/admin/blocks/BlockTitle.vue";
 
 import VueTable from "../../../components/modules/table/VueTable.vue";
 
-import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
-
+import VueLoader from "../../../components/modules/VueLoader.vue";
 import VueIcon from "../../../components/modules/icon/VueIcon.vue";
+import VueButton from "../../../components/ui/VueButton.vue";
 
 import api from "../../../services/api";
 
 export default {
 	components: {
-		LoaderChild,
+		InfoBar,
 		BlockOnce,
 		BlockTitle,
 
-		InfoBar,
-
 		VueTable,
 
-		ButtonDefault,
-
+		VueLoader,
 		VueIcon,
+		VueButton,
 	},
 	data() {
 		return {

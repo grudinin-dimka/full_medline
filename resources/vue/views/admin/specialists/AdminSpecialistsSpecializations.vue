@@ -23,17 +23,17 @@
 
 		<template #footer>
 			<template v-if="modal.values.look == 'create'">
-				<button-default @click="addSpecialization">
+				<VueButton @click="addSpecialization">
 					<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 					Добавить
-				</button-default>
+				</VueButton>
 			</template>
 
 			<template v-if="modal.values.look == 'default'">
-				<button-default @click="updateSpecialization">
+				<VueButton @click="updateSpecialization">
 					<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
-				</button-default>
+				</VueButton>
 			</template>
 		</template>
 	</VueModal>
@@ -50,14 +50,14 @@
 		<template #title>СПЕЦИАЛИЗАЦИИ</template>
 
 		<template #options>
-			<button-default
+			<VueButton
 				@click.prevent="saveSpecializationsChanges"
 				:disabled="disabled.specializations.save"
-				:look="'white'"
+				:look="'inverse'"
 			>
 				<VueIcon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
-			</button-default>
+			</VueButton>
 		</template>
 
 		<template #body>
@@ -69,10 +69,11 @@
 				@delete="removeSpecialization"
 			/>
 
-			<loader-child
+			<VueLoader
 				:isLoading="loading.loader.specializations"
-				:minHeight="200"
-				@loaderChildAfterLeave="loaderChildAfterLeave"
+				:isChild="true"
+				:minHeight="300"
+				@afterLeave="loaderChildAfterLeave"
 			/>
 		</template>
 	</block-once>
@@ -80,17 +81,15 @@
 
 <script>
 import VueModal from "../../../components/modules/modal/VueModal.vue";
-import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import VueTable from "../../../components/modules/table/VueTable.vue";
-import LoaderChild from "../../../components/modules/LoaderChild.vue";
-import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import VueInput from "../../../components/modules/input/VueInput.vue";
 
-import ButtonDefault from "../../../components/ui/admin/buttons/ButtonDefault.vue";
-import ButtonRemove from "../../../components/ui/admin/buttons/ButtonRemove.vue";
-import ButtonClaim from "../../../components/ui/admin/buttons/ButtonClaim.vue";
+import InfoBar from "../../../components/ui/admin/InfoBar.vue";
+import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 
+import VueLoader from "../../../components/modules/VueLoader.vue";
 import VueIcon from "../../../components/modules/icon/VueIcon.vue";
+import VueButton from "../../../components/ui/VueButton.vue";
 
 import api from "../../../services/api";
 import shared from "../../../services/shared";
@@ -101,16 +100,14 @@ export default {
 	components: {
 		VueModal,
 		VueInput,
-		InfoBar,
 		VueTable,
-		LoaderChild,
+
+		InfoBar,
 		BlockOnce,
 
-		ButtonDefault,
-		ButtonClaim,
-		ButtonRemove,
-
+		VueLoader,
 		VueIcon,
+		VueButton,
 	},
 	data() {
 		return {

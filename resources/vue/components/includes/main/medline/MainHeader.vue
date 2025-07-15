@@ -315,11 +315,11 @@
 			</div>
 		</div>
 
-		<div class="header-buttons">
-			<VueButton :look="'inverse'" @click="sayHelloCabinet">
+		<div class="header__buttons">
+			<a href="https://lk.medlinegroup.ru/" target="_blank" class="header__buttons-button">
 				<VueIcon :name="'profile'" :fill="'black'" :width="'24px'" :height="'24px'" />
 				Личный кабинет
-			</VueButton>
+			</a>
 		</div>
 	</header>
 
@@ -399,6 +399,8 @@ export default {
 	},
 	data() {
 		return {
+			countPoints: 0,
+
 			isShadow: false,
 			isActions: false,
 
@@ -678,21 +680,72 @@ export default {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                     ЗАТЫЧКИ                       |*/
 		/* |___________________________________________________|*/
-		/* Отправка запроса */
-		sayHelloCabinet() {
-			this.$store.commit("addDebugger", {
-				title: "Ой!",
-				body: "Извините, но это пока что не готово!",
-				type: "completed",
-			});
+		sayHelloPoints() {
+			switch (true) {
+				case this.countPoints < 3:
+					this.$store.commit("addDebugger", {
+						title: "Упс...",
+						body: "Это ещё не готово, но уже скоро будет :)",
+						type: "completed",
+					});
+		
+					this.countPoints++;
+					break;
+
+				case this.countPoints >= 3 && this.countPoints < 6:
+					this.$store.commit("addDebugger", {
+						title: "Ой!",
+						body: "Всё-таки, это ещё не готово, но уже скоро будет :)",
+						type: "completed",
+					});
+
+					this.countPoints++;
+					break;
+
+				case this.countPoints == 6:
+					this.$store.commit("addDebugger", {
+						title: "Ошибка.",
+						body: "Вы сломали матрицу...",
+						type: "error",
+					});
+
+					this.countPoints++;
+					break;
+
+				case this.countPoints == 7:
+					this.$store.commit("addDebugger", {
+						title: "ФЫык0_-йц0",
+						body: "С#!@%^&* ()_+~",
+						type: "error",
+					});
+
+					this.countPoints++;
+					break;
+
+				case this.countPoints == 8:
+					this.$store.commit("addDebugger", {
+						title: "КритичЕсК0й сб0й...",
+						body: "╬╠╬╠╣╠╬",
+						type: "error",
+					});
+
+					this.countPoints++;
+					break;
+
+				case this.countPoints >= 9:
+					this.$store.commit("addDebugger", {
+						title: "Шутка!",
+						body: "Вы ничего не сломали! Но всё-таки, ещё не готово и вам следует подождать :)",
+						type: "completed",
+					});
+
+					this.countPoints = 0;
+					break;
+			}
 		},
 
-		sayHelloPoints() {
-			this.$store.commit("addDebugger", {
-				title: "Упс...",
-				body: "Это ещё не готово, но уже скоро будет :)",
-				type: "completed",
-			});
+		redirectToCabinet() {
+			window.location.href = "https://lk.medlinegroup.ru/";
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -868,7 +921,6 @@ export default {
 	},
 	mounted() {
 		window.addEventListener("scroll", this.setShadow);
-		// window.addEventListener("scroll", this.scrollFunction);
 	},
 };
 </script>
@@ -1060,10 +1112,33 @@ header.slide {
 	background-color: var(--primary-color-hover);
 }
 
-.header-buttons {
+.header__buttons {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 10px;
+}
+
+.header__buttons-button {
+	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: var(--button-gap);
+
+	padding: var(--button-padding);
+	border: var(--button-inverse-border);
+	border-radius: var(--button-border-radius);
+
+	text-decoration: none;
+	font-size: 1.125rem;
+	color: black;
+
+	transition: all 0.2s ease-in-out;
+}
+
+.header__buttons-button:hover {
+	border: var(--button-inverse-border-hover);
+	background-color: var(--button-inverse-background-color-hover);
 }
 
 .button {
@@ -1280,7 +1355,7 @@ header.slide {
 		right: 20px;
 	}
 
-	.header-buttons {
+	.header__buttons {
 		display: none;
 	}
 
