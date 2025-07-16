@@ -1,34 +1,58 @@
 <template>
 	<div class="about">
-		<div class="item" v-for="about in abouts" :key="about.id">
-			<div class="title" v-if="about.title">
-				<VueTiptap v-model="about.title" :editable="false" :limit="500" :minHeight="0" />
+		<div class="about__item" v-for="about in abouts" :key="about.id">
+			<div
+				class="about__item-title"
+				v-if="about.title !== ''"
+				:class="{ skeleton: !about.title && about.title !== '' }"
+			>
+				<VueTiptap
+					v-if="about.title"
+					v-model="about.title"
+					:editable="false"
+					:limit="500"
+					:minHeight="0"
+				/>
 			</div>
-			<div class="images">
+
+			<div class="about__item-images">
 				<div
-					v-if="about.imageOne"
-					class="item"
-					:style="{
-						backgroundImage: `url(${about.pathOne})`,
-					}"
-				></div>
+					class="item__images-item"
+					v-if="about.imageOne !== ''"
+					:class="{ skeleton: !about.imageOne }"
+				>
+					<img v-if="about.imageOne" :src="about.pathOne" alt="" />
+				</div>
+
 				<div
-					v-if="about.imageTwo"
-					class="item"
-					:style="{
-						backgroundImage: `url(${about.pathTwo})`,
-					}"
-				></div>
+					class="item__images-item"
+					v-if="about.imageTwo !== ''"
+					:class="{ skeleton: !about.imageTwo }"
+				>
+					<img v-if="about.imageTwo" :src="about.pathTwo" alt="" />
+				</div>
+
 				<div
-					v-if="about.imageThree"
-					class="item"
-					:style="{
-						backgroundImage: `url(${about.pathThree})`,
-					}"
-				></div>
+					class="item__images-item"
+					v-if="about.imageThree !== ''"
+					:class="{ skeleton: !about.imageThree }"
+				>
+					<img v-if="about.imageThree" :src="about.pathThree" alt="" />
+				</div>
 			</div>
-			<div class="description" v-if="about.description">
-				<VueTiptap v-model="about.description" :editable="false" :limit="10_000" :minHeight="0" />
+
+			<div
+				class="about__item-description"
+				v-if="about.description !== ''"
+				:class="{ skeleton: !about.description && about.description !== '' }"
+			>
+				<VueTiptap
+					v-if="about.description"
+					v-model="about.description"
+					:editable="false"
+					:limit="10_000"
+					:minHeight="0"
+				/>
 			</div>
 		</div>
 	</div>
@@ -59,45 +83,58 @@ export default {
 
 	width: 1350px;
 	font-size: 18px;
-
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
-.about > .title {
-	font-size: 20px;
-	font-weight: bold;
-
-	color: var(--primary-color);
-}
-
-.about > .item > .title {
-	font-size: 22px;
-	font-weight: bold;
-
-	color: var(--primary-color);
-}
-
-.about > .item {
+.about__item {
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
 }
 
-.images {
+.about__item-title {
+	font-size: 1.25rem;
+	font-weight: bold;
+
+	color: var(--primary-color);
+	min-height: 40px;
+
+	border-radius: var(--default-border-radius);
+}
+
+.about__item-images {
 	display: flex;
 	align-items: center;
 	flex-wrap: wrap;
 	gap: 10px;
+
+	width: 100%;
 }
 
-.images > .item {
-	flex: 1 0 300px;
-	border-radius: 10px;
-	width: 300px;
+.item__images-item {
+	flex-grow: 1;
+	flex-basis: 300px;
+	padding: var(--default-padding);
+	border-radius: var(--default-border-radius);
+
+	width: 100%;
 	height: 300px;
-	background-position: center center;
-	background-repeat: no-repeat;
-	background-size: cover;
+	background-color: var(--skeleton-background-color);
+}
+
+.item__images-item > img {
+	width: 100%;
+	height: 100%;
+	border-radius: calc(var(--default-border-radius) / 1.5);
+
+	object-fit: cover;
+
+	animation: show 0.5s ease-in-out;
+}
+
+.about__item-description {
+	min-height: 50px;
+
+	border-radius: var(--default-border-radius);
 }
 
 @media screen and (width <= 1425px) {

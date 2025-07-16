@@ -724,8 +724,14 @@ export default {
 		this.editor = new Editor({
 			onUpdate: ({ editor }) => {
 				const html = editor.getHTML();
+				const symbols = editor.storage.characterCount.characters();
+
 				if (html !== this.modelValue) {
-					this.$emit("update:modelValue", html);
+					if (!symbols) {
+						this.$emit("update:modelValue", "");
+					} else {
+						this.$emit("update:modelValue", html);
+					}
 				}
 			},
 
@@ -1012,18 +1018,18 @@ export default {
 /* error */
 .tiptap__error {
 	position: absolute;
-   user-select: none;
-   position: absolute;
-   right: 10px;
-   top: -15px;
+	user-select: none;
+	position: absolute;
+	right: 10px;
+	top: -15px;
 
-   border: var(--error-border);
-   border-radius: var(--error-border-radius);
-   padding: var(--error-padding);
+	border: var(--error-border);
+	border-radius: var(--error-border-radius);
+	padding: var(--error-padding);
 
-   background-color: var(--error-background-color);
-   color: var(--error-color);
+	background-color: var(--error-background-color);
+	color: var(--error-color);
 
-   animation: show-translate-x 0.2s ease;
+	animation: show-translate-x 0.2s ease;
 }
 </style>

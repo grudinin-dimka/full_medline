@@ -6,29 +6,32 @@
 	</info-bar>
 
 	<block :minHeight="600">
-		<template v-if="loading.sections.videos">
-			<div class="video" v-if="videos.length > 0">
-				<div class="video__item" v-for="video in videos">
-					<div class="video__item-video">
-						<video controls preload="metadata" :key="video.video">
-							<source :src="video.path" :type="`video/${getVideoType(video.video)}`" />
-						</video>
-					</div>
-					<div class="video__item-description">
-						<VueTiptap :editable="false" :limit="10_000" v-model="video.description" />
-					</div>
+		<div class="video" v-if="videos.length > 0">
+			<div class="video__item" v-for="video in videos">
+				<div class="video__item-video" :class="{ skeleton: loading.loader.videos }">
+					<video controls preload="metadata" :key="video.video" v-if="video.video">
+						<source :src="video.path" :type="`video/${getVideoType(video.video)}`" />
+					</video>
+				</div>
+				<div class="video__item-description" :class="{ skeleton: loading.loader.videos }">
+					<VueTiptap
+						v-if="!loading.loader.videos"
+						:editable="false"
+						:limit="10_000"
+						v-model="video.description"
+					/>
 				</div>
 			</div>
+		</div>
 
-			<Empty :minHeight="300" v-else />
-		</template>
+		<Empty :minHeight="300" v-else />
 
-		<VueLoader
+		<!-- <VueLoader
 			:isLoading="loading.loader.videos"
 			:isChild="true"
 			:minHeight="600"
 			@afterLeave="loaderChildAfterLeave"
-		/>
+		/> -->
 	</block>
 </template>
 
@@ -47,7 +50,7 @@ export default {
 	components: {
 		VueTiptap,
 		VueLoader,
-		
+
 		InfoBar,
 		Block,
 
@@ -66,7 +69,26 @@ export default {
 			},
 
 			/* Даннные */
-			videos: [],
+			videos: [
+				{
+					id: 1,
+					path: null,
+					video: null,
+					description: null,
+				},
+				{
+					id: 2,
+					path: null,
+					video: null,
+					description: null,
+				},
+				{
+					id: 3,
+					path: null,
+					video: null,
+					description: null,
+				},
+			],
 		};
 	},
 	methods: {
@@ -96,6 +118,12 @@ export default {
 				if (!response) return;
 
 				this.videos = response.data.result;
+
+				for (let i = 0; i < response.data.result.length; i++) {
+					this.videos[i] = response.data.result[i];
+				}
+
+				this.videos.splice(response.data.result.length, this.videos.length);
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {
@@ -118,8 +146,6 @@ export default {
 	gap: 20px;
 
 	width: 1350px;
-
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 .video__item {
@@ -127,6 +153,8 @@ export default {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+
+	gap: var(--default-padding);
 }
 
 .video__item-video {
@@ -134,18 +162,25 @@ export default {
 	height: 350px;
 	width: 100%;
 
-	background-color: rgba(0, 0, 0);
+	background-color: var(--skeleton-background-color);
 }
 
 .video__item-video > video {
+	object-fit: contain;
+
 	width: 100%;
 	height: 350px;
-	object-fit: contain;
+
 	border-radius: var(--default-border-radius);
+
+	animation: show 0.5s ease-in-out;
 }
 
 .video__item-description {
+	border-radius: var(--default-border-radius);
+
 	width: 100%;
+	min-height: 100px;
 }
 
 /* Адаптив */

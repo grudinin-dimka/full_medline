@@ -1,9 +1,14 @@
 <template>
-	<div class="news__item" :class="{ skeleton: !item.path }" @click="openNews(item)">
+	<a
+		:href="`/news/${item.url_date}/${item.url_time}`"
+		class="news__item"
+		:class="{ skeleton: !item.path }"
+		@click.prevent="openNews(item)"
+	>
 		<div class="news__item-date">{{ item.date }}</div>
 		<img class="news__item-image" :src="`${item.path}`" v-if="item.path" />
 		<div class="news__item-title" v-html="item.title"></div>
-	</div>
+	</a>
 </template>
 
 <script>
@@ -36,13 +41,13 @@ export default {
 	flex-direction: column;
 	gap: 10px;
 
-	padding: 20px;
 	border-radius: var(--default-border-radius);
+	padding: 20px;
+
+	text-decoration: none;
+	color: black;
 	height: auto;
 	min-height: 450px;
-
-	border-radius: var(--default-border-radius);
-
 	background-color: var(--skeleton-background-color);
 
 	transition: all 0.2s ease-out;

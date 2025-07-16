@@ -6,48 +6,68 @@
 	</info-bar>
 
 	<block :minHeight="300">
-		<template v-if="loading.sections.about">
-			<MainAboutList :abouts="abouts" v-if="abouts.length > 0" />
-			<Empty v-else />
-		</template>
-
-		<VueLoader
-			:minHeight="400"
-			:isChild="true"
-			:isLoading="loading.loader.about"
-			@afterLeave="loaderChildAfterLeave"
-		/>
+		<MainAboutList :abouts="abouts" v-if="abouts.length > 0" />
+		<Empty v-else />
 	</block>
 
 	<block :minHeight="300">
-		<template v-if="loading.sections.infoFiles">
-			<div class="files">
-				<a v-for="file in infoFiles" class="files__item" :href="file.path" target="_blank">
-					<div class="files__item-content">
-						<div class="files__content-icon">
-							<VueIcon
-								:name="'pdf'"
-								:width="'30px'"
-								:height="'30px'"
-								:fill="'var(--primary-color)'"
-								:cursor="'pointer'"
-							/>
-						</div>
-						<div class="files__content-name">{{ getFilename(file.path) }}</div>
-					</div>
-					<div class="files__item-other">
-						<button class="files__other-button">Смотреть</button>
-					</div>
-				</a>
-			</div>
-		</template>
+		<div class="files">
+			<a
+				v-for="file in infoFiles"
+				class="files__item"
+				:class="{ skeleton: loading.loader.infoFiles }"
+				:href="file.path"
+				target="_blank"
+			>
+				<div class="files__item-content">
+					<div class="files__content-icon" v-if="file.path">
+						<VueIcon
+							v-if="getFiletype(file.path) === 'pdf'"
+							:name="'pdf'"
+							:width="'30px'"
+							:height="'30px'"
+							:fill="'var(--primary-color)'"
+							:cursor="'pointer'"
+						/>
 
-		<VueLoader
-			:minHeight="400"
-			:isChild="true"
-			:isLoading="loading.loader.infoFiles"
-			@afterLeave="loaderChildAfterLeave"
-		/>
+						<svg
+							v-else-if="
+								getFiletype(file.path) === 'jpg' || getFiletype(file.path) === 'jpeg'
+							"
+							width="30"
+							height="30"
+							viewBox="0 0 24 24"
+							fill="var(--primary-color)"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<g clip-path="url(#clip0_768_2)">
+								<path
+									d="M2.66667 24C1.93333 24 1.30556 23.7389 0.783333 23.2167C0.261111 22.6944 0 22.0667 0 21.3333V2.66667C0 1.93333 0.261111 1.30556 0.783333 0.783333C1.30556 0.261111 1.93333 0 2.66667 0H21.3333C22.0667 0 22.6944 0.261111 23.2167 0.783333C23.7389 1.30556 24 1.93333 24 2.66667V21.3333C24 22.0667 23.7389 22.6944 23.2167 23.2167C22.6944 23.7389 22.0667 24 21.3333 24H2.66667ZM2.66667 21.3333H21.3333V2.66667H2.66667V21.3333ZM4 18.6667H20L15 12L11 17.3333L8 13.3333L4 18.6667Z"
+								/>
+							</g>
+							<defs>
+								<clipPath id="clip0_768_2">
+									<rect width="24" height="24" />
+								</clipPath>
+							</defs>
+						</svg>
+
+						<VueIcon
+							v-else
+							:name="'file'"
+							:width="'30px'"
+							:height="'30px'"
+							:fill="'var(--primary-color)'"
+							:cursor="'pointer'"
+						/>
+					</div>
+					<div class="files__content-name">{{ file.path ? getFilename(file.path) : "" }}</div>
+				</div>
+				<div class="files__item-other" v-if="file.path">
+					<button class="files__other-button">Смотреть</button>
+				</div>
+			</a>
+		</div>
 	</block>
 </template>
 
@@ -93,6 +113,10 @@ export default {
 		getFilename(value) {
 			return files.basename(value);
 		},
+
+		getFiletype(value) {
+			return files.basetype(value);
+		},
 	},
 	data() {
 		return {
@@ -107,8 +131,50 @@ export default {
 				},
 			},
 
-			abouts: [],
-			infoFiles: [],
+			abouts: [
+				{
+					id: 1,
+					title: null,
+					imageOne: null,
+					imageTwo: null,
+					imageThree: null,
+					description: null,
+					order: 1,
+				},
+				{
+					id: 2,
+					title: null,
+					imageOne: null,
+					imageTwo: null,
+					imageThree: null,
+					description: null,
+					order: 2,
+				},
+				{
+					id: 3,
+					title: null,
+					imageOne: null,
+					imageTwo: null,
+					imageThree: null,
+					description: null,
+					order: 3,
+				},
+			],
+
+			infoFiles: [
+				{
+					id: 1,
+					path: null,
+				},
+				{
+					id: 2,
+					path: null,
+				},
+				{
+					id: 3,
+					path: null,
+				},
+			],
 		};
 	},
 	mounted() {
@@ -119,7 +185,11 @@ export default {
 			.then((response) => {
 				if (!response) return;
 
-				this.abouts = response.data.result;
+				for (let i = 0; i < response.data.result.length; i++) {
+					this.abouts[i] = response.data.result[i];
+				}
+
+				this.abouts.splice(response.data.result.length, this.abouts.length);
 
 				this.abouts.sort((a, b) => {
 					return a.order - b.order;
@@ -143,7 +213,11 @@ export default {
 			.then((response) => {
 				if (!response) return;
 
-				this.infoFiles = response.data.result;
+				for (let i = 0; i < response.data.result.length; i++) {
+					this.infoFiles[i] = response.data.result[i];
+				}
+
+				this.infoFiles.splice(response.data.result.length, this.infoFiles.length);
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {
@@ -166,8 +240,6 @@ export default {
 	gap: 20px;
 
 	width: 1350px;
-
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 .files__item {
@@ -176,13 +248,14 @@ export default {
 	align-items: center;
 	gap: 10px;
 
-	border: var(--default-border);
 	border-radius: calc(var(--default-border-radius) / 1.5);
 	padding: 10px;
 
+	min-height: 40px;
 	font-size: 1.125rem;
 	text-decoration: none;
 	color: black;
+	background-color: var(--skeleton-background-color);
 }
 
 .files__item-content {

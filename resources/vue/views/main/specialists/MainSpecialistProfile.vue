@@ -5,74 +5,88 @@
 		<router-link to="/specialists">Специалисты</router-link>
 		<span class="link-arrow"> / </span>
 		<router-link :to="`/specialists/${$route.params.name}`">
-			<load-text :isLoading="loading.loader.profile"> Загрузка... </load-text>
-			<span class="specialist-name" v-if="loading.sections.profile">{{
-				specialist.profile.family +
-				" " +
-				specialist.profile.name +
-				" " +
-				specialist.profile.surname
-			}}</span>
+			<span class="specialist__name" :class="{ skeleton: loading.loader.profile }">
+				{{
+					(specialist.profile.family ?? "") +
+					" " +
+					(specialist.profile.name ?? "") +
+					" " +
+					(specialist.profile.surname ?? "")
+				}}
+			</span>
 		</router-link>
 	</info-bar>
 
 	<block :minHeight="700">
-		<div class="container-specialist-profile" v-if="loading.sections.profile">
-			<div class="img" :style="{ backgroundImage: `url(${specialist.profile.path})` }"></div>
-			<div class="specialist-profile">
-				<div class="title">
+		<div class="profile">
+			<div class="profile__img" :class="{ skeleton: loading.loader.profile }">
+				<img
+					class="profile__img-img"
+					v-if="specialist.profile.path"
+					:src="specialist.profile.path"
+					alt="Фото специалиста"
+				/>
+			</div>
+
+			<div class="profile__info">
+				<div class="profile__info-title" :class="{ skeleton: loading.loader.profile }">
 					{{
-						specialist.profile.family +
+						(specialist.profile.family ?? "") +
 						" " +
-						specialist.profile.name +
+						(specialist.profile.name ?? "") +
 						" " +
-						specialist.profile.surname
+						(specialist.profile.surname ?? "")
 					}}
 				</div>
-				<div class="item info">
-					<div class="label">Основная информация</div>
-					<ul>
-						<li>
-							<article>
-								<div>Специализация:</div>
-								<div>{{ getSpecializations }}.</div>
-							</article>
-						</li>
-						<li>
-							<article>
-								<div>Категория:</div>
-								<div>{{ specialist.profile.category }}.</div>
-							</article>
-						</li>
-						<li>
-							<article>
-								<div>Стаж:</div>
-								<div>{{ getWorkAges(specialist.profile.startWorkAge) }}.</div>
-							</article>
-						</li>
-					</ul>
+
+				<div class="profile__info-info info" :class="{ skeleton: loading.loader.profile }">
+					<template v-if="!loading.loader.profile">
+						<div class="label">Основная информация</div>
+						<ul>
+							<li>
+								<article>
+									<div>Специализация:</div>
+									<div>{{ getSpecializations }}.</div>
+								</article>
+							</li>
+							<li>
+								<article>
+									<div>Категория:</div>
+									<div>{{ specialist.profile.category }}.</div>
+								</article>
+							</li>
+							<li>
+								<article>
+									<div>Стаж:</div>
+									<div>{{ getWorkAges(specialist.profile.startWorkAge) }}.</div>
+								</article>
+							</li>
+						</ul>
+					</template>
 				</div>
-				<div class="item priem">
-					<div class="label">Прием пациентов</div>
-					<ul>
-						<li>
-							<article>
-								<div>У детей:</div>
-								<div v-if="specialist.profile.childrenDoctor">
-									{{ specialist.profile.childrenDoctorAge }}+.
-								</div>
-								<div v-else>Нет.</div>
-							</article>
-						</li>
-						<li>
-							<article>
-								<div>У взрослых:</div>
-								<div>{{ specialist.profile.adultDoctor ? "Да" : "Нет" }}.</div>
-							</article>
-						</li>
-					</ul>
+				<div class="profile__info-info priem" :class="{ skeleton: loading.loader.profile }">
+					<template v-if="!loading.loader.profile">
+						<div class="label">Прием пациентов</div>
+						<ul>
+							<li>
+								<article>
+									<div>У детей:</div>
+									<div v-if="specialist.profile.childrenDoctor">
+										{{ specialist.profile.childrenDoctorAge }}+.
+									</div>
+									<div v-else>Нет.</div>
+								</article>
+							</li>
+							<li>
+								<article>
+									<div>У взрослых:</div>
+									<div>{{ specialist.profile.adultDoctor ? "Да" : "Нет" }}.</div>
+								</article>
+							</li>
+						</ul>
+					</template>
 				</div>
-				<div class="item certificates" v-if="specialist.certificates.length">
+				<div class="profile__info-info certificates" v-if="specialist.certificates.length">
 					<div class="label">Сертификаты</div>
 					<ul>
 						<li v-for="certificate in specialist.certificates">
@@ -88,7 +102,7 @@
 						</li>
 					</ul>
 				</div>
-				<div class="item educations" v-if="specialist.educations.length">
+				<div class="profile__info-info educations" v-if="specialist.educations.length">
 					<div class="label">Образование</div>
 					<ul>
 						<li v-for="education in specialist.educations">
@@ -104,7 +118,10 @@
 						</li>
 					</ul>
 				</div>
-				<div class="item links" v-if="specialist.profile.link !== '#'">
+				<div
+					class="profile__info-info links"
+					v-if="specialist.profile.link !== '#' && specialist.profile.link"
+				>
 					<div class="label">Ссылки</div>
 					<ul>
 						<li>
@@ -120,16 +137,14 @@
 					</ul>
 				</div>
 
-				<VueTiptap :editable="false" :limit="10_000" v-model="specialist.profile.description" />
+				<VueTiptap
+					v-if="specialist.profile.description"
+					:editable="false"
+					:limit="10_000"
+					v-model="specialist.profile.description"
+				/>
 			</div>
 		</div>
-
-		<VueLoader
-			:isLoading="loading.loader.profile"
-			:isChild="true"
-			:minHeight="700"
-			@afterLeave="loaderChildAfterLeave"
-		/>
 	</block>
 </template>
 
@@ -164,7 +179,19 @@ export default {
 				},
 			},
 			specialist: {
-				profile: {},
+				profile: {
+					path: null,
+					family: null,
+					name: null,
+					surname: null,
+					category: null,
+					startWorkAge: null,
+					childrenDoctor: null,
+					childrenDoctorAge: null,
+					adultDoctor: null,
+					link: null,
+					description: null,
+				},
 				specializations: [],
 				certificates: [],
 				educations: [],
@@ -185,14 +212,6 @@ export default {
 		},
 	},
 	methods: {
-		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                   ЗАГРУЗЧИК                       |*/
-		/* |___________________________________________________|*/
-		/* После скрытия элементы */
-		loaderChildAfterLeave() {
-			this.loading.sections.profile = true;
-		},
-
 		formatDate(date) {
 			let options = {
 				month: "numeric",
@@ -245,76 +264,94 @@ export default {
 				});
 			})
 			.finally(() => {
-				if (this.specialist.profile != null) {
-					this.loading.loader.profile = false;
-				}
+				this.loading.loader.profile = false;
 			});
 	},
 };
 </script>
 
 <style scoped>
-.specialist-name {
-	animation: show 0.5s linear;
+.specialist__name {
+	display: inline-block;
+
+	border-radius: var(--default-border-radius);
 }
 
-.container-specialist-profile {
+.profile {
 	display: grid;
 	grid-template-columns: 500px 1fr;
 	gap: 20px;
 
 	min-height: 300px;
 	width: 1350px;
-
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
-.container-specialist-profile > .img {
+.profile__img {
 	align-self: self-start;
 	justify-self: end;
 
 	width: 350px;
 	height: 350px;
 	border-radius: 100%;
-	background-size: contain;
-	background-position: center center;
-	background-repeat: no-repeat;
 
 	background-color: var(--skeleton-background-color);
 }
 
-.specialist-profile {
+.profile__img-img {
+	width: 100%;
+	border-radius: 100%;
+	height: 100%;
+	object-fit: contain;
+
+	animation: show 0.5s ease-out;
+}
+
+.profile__info {
 	display: flex;
 	flex-direction: column;
-	gap: 20px;
+	gap: 10px;
 
 	font-size: 1.125rem;
 }
 
-.specialist-profile > .title {
+.profile__info-title {
 	font-size: 1.5rem;
+
+	border-radius: 15px;
+	border: 0px;
+	padding: 10px 30px;
+
+	min-height: 30px;
 }
 
-.specialist-profile > .item {
+.profile__info-info {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
 
 	border-radius: 15px;
 	border: 0px;
-	padding: 0px 0px 0px 30px;
+	padding: 10px 30px;
 }
 
-.specialist-profile > .item > .label {
+.profile__info-info.info {
+	min-height: 160px;
+}
+
+.profile__info-info.priem {
+	min-height: 110px;
+}
+
+.profile__info-info > .label {
 	color: var(--primary-color);
 	font-size: 1.25rem;
 }
 
-.specialist-profile > .item > ul {
+.profile__info-info > ul {
 	margin: 0px;
 }
 
-.specialist-profile > .item > ul > li > article {
+.profile__info-info > ul > li > article {
 	display: grid;
 	grid-template-columns: 200px 1fr;
 
@@ -324,7 +361,7 @@ export default {
 	transition: all 0.2s;
 }
 
-.specialist-profile > .item:is(.educations, .certificates) > ul > li > article {
+.profile__info-info:is(.educations, .certificates) > ul > li > article {
 	grid-template-columns: 1fr;
 }
 
@@ -378,42 +415,46 @@ a.prodoctorov:hover {
 }
 
 @media screen and (width <= 1250px) {
-	.container-specialist-profile {
+	.profile {
 		grid-template-columns: 1fr 1fr;
 
 		width: 100%;
 	}
 
-	.container-specialist-profile > img {
+	.profile > img {
 		align-self: center;
 		justify-self: center;
 	}
 }
 
 @media screen and (width <= 900px) {
-	.container-specialist-profile {
+	.profile {
 		grid-template-columns: 1fr;
 	}
 
-	.specialist-profile > .item {
+	.profile__info-title {
+		padding: 10px 0px;
+	}
+
+	.profile__info > .profile__info-info {
 		padding: 0px 0px;
 	}
 
-	.specialist-profile > .item > ul {
+	.profile__info > .profile__info-info > ul {
 		padding: 0px 0px 0px 20px;
 	}
 
-	.specialist-profile > .item > ul > li > article {
+	.profile__info > .profile__info-info > ul > li > article {
 		grid-template-columns: 175px 1fr;
 	}
 
-	.container-specialist-profile > .img {
+	.profile > .profile__img {
 		margin: 0px auto;
 	}
 }
 
 @media screen and (width <= 420px) {
-	.container-specialist-profile > .img {
+	.profile > .profile__img {
 		width: 100%;
 		height: 100%;
 		aspect-ratio: 1 / 1;
