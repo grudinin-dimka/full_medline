@@ -45,89 +45,102 @@
 		</div>
 	</Block>
 
-	<Block>
-		<template v-if="loading.sections.schedule">
-			<table class="shedule__table">
-				<thead>
-					<tr class="shedule__table-tr">
-						<th class="shedule__table-th" width="400px"></th>
-						<th class="shedule__table-th" width="110px" v-for="day in week">
-							<div>
-								{{ getDateDayNumberMonth(day.date) }}
-							</div>
-							<div>
-								{{ getDateDayWeekName(day.date) }}
-							</div>
-						</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr
-						class="shedule__table-tr"
-						v-for="shedule in getFilteredShedules"
-						:key="shedule.id"
-						v-if="getFilteredShedules.length > 0"
-					>
-						<td class="shedule__table-td">
-							<div class="shedule__specialist">
-								<div class="shedule__specialist-head">
-									<template
-										v-if="
-											['кт', 'мрт', 'рентген', 'маммограф'].includes(
-												shedule.name.trim().toLowerCase()
-											)
-										"
-									>
-										<img
-											v-if="shedule.name.trim().toLowerCase() === 'кт'"
-											:src="`/storage/img/kt.webp`"
-											width="50"
-											height="50"
-											alt="КТ"
-										/>
+	<Block :minHeight="400">
+		<table class="shedule__table">
+			<thead>
+				<tr class="shedule__table-tr">
+					<th class="shedule__table-th" width="400px"></th>
+					<th class="shedule__table-th" width="110px" v-for="day in week">
+						<div class="shedule__table-date" :class="{ skeleton: loading.loader.schedule }">
+							{{ day.date ? getDateDayNumberMonth(day.date) : "" }}
+						</div>
+						<div class="shedule__table-date" :class="{ skeleton: loading.loader.schedule }">
+							{{ day.date ? getDateDayWeekName(day.date) : "" }}
+						</div>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr
+					class="shedule__table-tr"
+					v-for="shedule in getFilteredShedules"
+					:key="shedule.id"
+					v-if="getFilteredShedules.length > 0"
+				>
+					<td class="shedule__table-td">
+						<div class="shedule__specialist">
+							<div class="shedule__specialist-head">
+								<div
+									class="specialist__head-img"
+									:class="{ skeleton: loading.loader.schedule }"
+								>
+									<template v-if="!loading.loader.schedule">
+										<template
+											v-if="
+												['кт', 'мрт', 'рентген', 'маммограф'].includes(
+													shedule.name.trim().toLowerCase()
+												)
+											"
+										>
+											<img
+												v-if="shedule.name.trim().toLowerCase() === 'кт'"
+												:src="`/storage/img/kt.webp`"
+												alt="КТ"
+											/>
 
-										<img
-											v-if="shedule.name.trim().toLowerCase() === 'мрт'"
-											:src="`/storage/img/mrt.webp`"
-											width="50"
-											height="50"
-											alt="МРТ"
-										/>
+											<img
+												v-if="shedule.name.trim().toLowerCase() === 'мрт'"
+												:src="`/storage/img/mrt.webp`"
+												alt="МРТ"
+											/>
 
-										<img
-											v-if="shedule.name.trim().toLowerCase() === 'рентген'"
-											:src="`/storage/img/rentgen.webp`"
-											width="50"
-											height="50"
-											alt="рентген"
-										/>
+											<img
+												v-if="shedule.name.trim().toLowerCase() === 'рентген'"
+												:src="`/storage/img/rentgen.webp`"
+												alt="рентген"
+											/>
 
-										<img
-											v-if="shedule.name.trim().toLowerCase() === 'маммограф'"
-											:src="`/storage/img/mammograph.webp`"
-											width="50"
-											height="50"
-											alt="маммограф"
-										/>
+											<img
+												v-if="shedule.name.trim().toLowerCase() === 'маммограф'"
+												:src="`/storage/img/mammograph.webp`"
+												alt="маммограф"
+											/>
+										</template>
 
-										<div class="shedule__specialist-info">
-											<div class="shedule__specialist-specializations">Диагностика</div>
-											<div class="shedule__specialist-name">
-												{{ shedule.name }}
-											</div>
-										</div>
+										<template v-else>
+											<img
+												v-if="!shedule.image"
+												:src="`/storage/default/specialits-schedule.webp`"
+												alt="Врач"
+											/>
+
+											<a
+												class="specialist__head-link"
+												@click.prevent="
+													$router.push({
+														name: 'specialists-profile',
+														params: {
+															name: shedule.link,
+															catagory: null,
+														},
+													})
+												"
+												:href="`/specialists/${shedule.link}`"
+												v-else
+											>
+												<img :src="shedule.image" alt="Врач" />
+											</a>
+										</template>
 									</template>
+								</div>
 
-									<template v-else>
-										<img
-											:src="`/storage/default/specialits-schedule.webp`"
-											width="50"
-											height="50"
-											alt="Врач"
-											v-if="!shedule.image"
-										/>
-
+								<div class="shedule__specialist-info">
+									<div class="shedule__specialist-specializations">
+										{{ shedule.specializations ?? "" }}
+									</div>
+									<div class="shedule__specialist-name">
 										<a
+											v-if="shedule.image"
 											@click.prevent="
 												$router.push({
 													name: 'specialists-profile',
@@ -138,49 +151,40 @@
 												})
 											"
 											:href="`/specialists/${shedule.link}`"
-											v-else
 										>
-											<img :src="shedule.image" width="50" height="50" alt="Врач" />
+											{{ shedule.name }}
 										</a>
 
-										<div class="shedule__specialist-info">
-											<div class="shedule__specialist-specializations">
-												{{ shedule.specializations }}
-											</div>
-											<div class="shedule__specialist-name">
-												<a
-													v-if="shedule.image"
-													@click.prevent="
-														$router.push({
-															name: 'specialists-profile',
-															params: {
-																name: shedule.link,
-																catagory: null,
-															},
-														})
-													"
-													:href="`/specialists/${shedule.link}`"
-												>
-													{{ shedule.name }}
-												</a>
-
-												<template v-else>
-													{{ shedule.name }}
-												</template>
-											</div>
-										</div>
-									</template>
+										<template v-else>
+											{{ shedule.name }}
+										</template>
+									</div>
 								</div>
+							</div>
 
-								<table class="shedule__specialist-table">
-									<tbody>
-										<tr v-for="day in week" :key="day.id">
-											<td>
+							<div class="shedule__specialist-table">
+								<div class="specialist__table-tbody">
+									<div class="specialist__table-tr" v-for="day in week" :key="day.id">
+										<template v-if="loading.loader.schedule">
+											<div class="specialist__table-td">
+												<div class="skeleton">&nbsp;</div>
+											</div>
+
+											<div class="specialist__table-td days">
+												<div class="days__item all">
+													<div class="days__item-content skeleton">&nbsp;</div>
+												</div>
+											</div>
+										</template>
+
+										<template v-else>
+											<div class="specialist__table-td">
 												<div>
 													{{ getDateDayNumberMonth(day.date) }}
 												</div>
-											</td>
-											<td class="days">
+											</div>
+
+											<div class="specialist__table-td days">
 												<div
 													class="days__item all"
 													v-for="clinic in getClinicsWithoutAll"
@@ -216,15 +220,23 @@
 														{{ time }}
 													</div>
 												</div>
-											</td>
-										</tr>
-									</tbody>
-								</table>
+											</div>
+										</template>
+									</div>
+								</div>
 							</div>
-						</td>
+						</div>
+					</td>
 
-						<td class="shedule__table-td" v-for="day in week" :key="day.id">
-							<div class="days">
+					<td class="shedule__table-td" v-for="day in week" :key="day.id">
+						<div class="days">
+							<template v-if="loading.loader.schedule">
+								<div class="days__item">
+									<div class="days__item-content" :class="{ skeleton: true }">&nbsp;</div>
+								</div>
+							</template>
+
+							<template v-else>
 								<div
 									class="days__item all"
 									v-for="clinic in getClinicsWithoutAll"
@@ -252,22 +264,22 @@
 										{{ time }}
 									</div>
 								</div>
-							</div>
-						</td>
-					</tr>
-					<tr class="shedule__table-tr empty" v-else>
-						<td class="shedule__table-td" colspan="10">Ничего нет.</td>
-					</tr>
-				</tbody>
-			</table>
-		</template>
+							</template>
+						</div>
+					</td>
+				</tr>
+				<tr class="shedule__table-tr empty" v-else>
+					<td class="shedule__table-td" colspan="10">Ничего нет.</td>
+				</tr>
+			</tbody>
+		</table>
 
-		<VueLoader
+		<!-- <VueLoader
 			:isLoading="loading.loader.schedule"
 			:isChild="true"
 			:minHeight="700"
 			@afterLeave="loaderChildAfterLeave"
-		/>
+		/> -->
 	</Block>
 </template>
 
@@ -354,8 +366,113 @@ export default {
 					name: null,
 				},
 			],
-			week: [],
-			shedules: [],
+
+			week: [
+				{
+					id: 1,
+					date: null,
+				},
+				{
+					id: 2,
+					date: null,
+				},
+				{
+					id: 3,
+					date: null,
+				},
+				{
+					id: 4,
+					date: null,
+				},
+				{
+					id: 5,
+					date: null,
+				},
+				{
+					id: 6,
+					date: null,
+				},
+				{
+					id: 7,
+					date: null,
+				},
+				{
+					id: 8,
+					date: null,
+				},
+			],
+			shedules: [
+				{
+					id: 1,
+					name: null,
+					image: null,
+					specializations: null,
+					weeks: null,
+				},
+				{
+					id: 2,
+					name: null,
+					image: null,
+					specializations: null,
+					weeks: null,
+				},
+				{
+					id: 3,
+					name: null,
+					image: null,
+					specializations: null,
+					weeks: null,
+				},
+				{
+					id: 4,
+					name: null,
+					image: null,
+					specializations: null,
+					weeks: null,
+				},
+				{
+					id: 5,
+					name: null,
+					image: null,
+					specializations: null,
+					weeks: null,
+				},
+				{
+					id: 6,
+					name: null,
+					image: null,
+					specializations: null,
+					weeks: null,
+				},
+				{
+					id: 7,
+					name: null,
+					image: null,
+					specializations: null,
+					weeks: null,
+				},
+				{
+					id: 8,
+					name: null,
+					image: null,
+					specializations: null,
+					weeks: null,
+				},
+				{
+					id: 9,
+					name: null,
+					image: null,
+					specializations: null,
+					weeks: null,
+				},
+				{
+					id: 10,
+					name: null,
+					image: null,
+					specializations: null,
+					weeks: null,
+				},
+			],
 
 			colors: [
 				{
@@ -436,6 +553,8 @@ export default {
 	computed: {
 		/* Получение всех специализаций */
 		getFormatSpecializations() {
+			if (this.loading.loader.schedule) return [];
+
 			let specializations = [];
 
 			this.shedules.forEach((shedule) => {
@@ -461,16 +580,23 @@ export default {
 
 			return specializations;
 		},
+
 		/* Получение всех специализаций */
 		getAllSpecializations() {
+			if (this.loading.loader.schedule) return [];
+
 			let specializations = [];
+
 			this.shedules.forEach((shedule) => {
 				if (!specializations.includes(shedule.specializations))
 					specializations.push(shedule.specializations);
 			});
+
 			sorted.sortString("up", specializations);
+
 			return specializations;
 		},
+
 		/* Получение количества активных фильтров */
 		getActiveFilters() {
 			let count = 0;
@@ -481,12 +607,16 @@ export default {
 			}
 			return count;
 		},
+
 		/* Получение клиник, которые не "Все" */
 		getClinicsWithoutAll() {
 			return this.clinics.filter((item) => item.name !== "Все");
 		},
+
 		/* Получение расписания */
 		getFilteredShedules() {
+			if (this.loading.loader.schedule) return [...this.shedules];
+
 			let filteredShedules = [];
 
 			switch (this.activeClinic.name) {
@@ -537,6 +667,8 @@ export default {
 		loaderChildAfterLeave() {
 			this.loading.sections.schedule = true;
 		},
+
+		/* Изменение активной клиники */
 		changeActiveClinic(selectedClinic) {
 			this.activeClinic = selectedClinic;
 
@@ -548,6 +680,7 @@ export default {
 				}
 			});
 		},
+
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                   РАСПИСАНИЕ                      |*/
 		/* |___________________________________________________|*/
@@ -610,10 +743,13 @@ export default {
 		/* Получение статуса клиники */
 		getClinicStatus(sheduleId, clinicId) {
 			let shedule = this.shedules.find((item) => item.id === sheduleId);
+
 			let week = shedule.weeks.find((item) => item.clinicId === clinicId);
+
 			if (week.status === true) {
 				return true;
 			}
+
 			return false;
 		},
 
@@ -731,7 +867,7 @@ export default {
 				}
 
 				this.clinics.splice(response.data.result.sheduleClinics.length, this.clinics.length);
-				
+
 				this.clinics.forEach((clinic) => {
 					clinic.status = false;
 				});
@@ -933,9 +1069,29 @@ export default {
 	gap: 10px;
 }
 
-.shedule__specialist img {
+.specialist__head-img {
+	width: 50px;
+	height: 50px;
+	background-color: var(--skeleton-background-color);
+
+	border-radius: 50%;
+}
+
+.specialist__head-link {
+	width: 100%;
+	height: 100%;
+
+	border-radius: 50%;
+}
+
+.specialist__head-img img {
+	width: 100%;
+	height: 100%;
+
 	border-radius: 100px;
 	object-fit: contain;
+
+	animation: show 0.5s ease-out;
 }
 
 .shedule__specialist-specializations {
@@ -963,7 +1119,6 @@ export default {
 /* Таблица: таблица */
 .shedule__table {
 	border-collapse: collapse;
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
 
 	width: 1350px;
 
@@ -1029,10 +1184,14 @@ export default {
 	background-color: var(--item-background-color-active);
 }
 
-.shedule__table-tr {
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
+.shedule__table-date {
+	min-height: 20px;
+	border-radius: 10px;
+
+	margin: 5px 0px;
 }
 
+/* Таблица: дни */
 .days {
 	display: flex;
 	flex-direction: column;
@@ -1089,7 +1248,25 @@ export default {
 /* Таблица для телефона */
 .shedule__specialist-table {
 	display: none;
-	width: auto;
+}
+
+.specialist__table-tbody {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.specialist__table-tr {
+	display: grid;
+	grid-template-columns: 100px 1fr;
+	gap: 10px;
+}
+
+.specialist__table-td > div.skeleton {
+	width: 100%;
+	height: 100%;
+
+	border-radius: 50px;
 }
 
 @keyframes show {
@@ -1196,6 +1373,10 @@ export default {
 }
 
 @media screen and (width <= 630px) {
+	.shedule__table {
+		width: 100%;
+	}
+
 	.shedule__table-td:nth-child(2) {
 		display: none;
 	}
