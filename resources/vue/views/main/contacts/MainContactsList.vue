@@ -3,12 +3,15 @@
 		<div
 			class="contacts__item"
 			v-for="contact in contacts"
-			:class="{ one: contact.clinicId == null }"
+			:class="{
+				one: contact.clinicId == null,
+				skeleton: !contact.name,
+			}"
 		>
 			<div class="contacts__info">
-				<div class="contacts__info-title">{{ contact.name }}</div>
+				<div class="contacts__info-title">{{ contact.name ?? "" }}</div>
 				<div class="contacts__info-body">
-					<div class="contacts__phones">
+					<div class="contacts__phones" v-if="contact.phones">
 						<div class="contacts__phones-title">Телефоны:</div>
 						<ul>
 							<li v-for="phone in contact.phones" v-if="contact.phones.length > 0">
@@ -21,7 +24,8 @@
 							</li>
 						</ul>
 					</div>
-					<div class="contacts__mails">
+
+					<div class="contacts__mails" v-if="contact.mails">
 						<div class="contacts__mails-title">Почта:</div>
 						<ul>
 							<li v-for="mail in contact.mails" v-if="contact.mails.length > 0">
@@ -47,6 +51,7 @@
 					</div>
 				</div>
 			</div>
+
 			<div class="contacts__map" v-if="contact.clinicId != null" :id="`map-${contact.id}`">
 				<div
 					class="contacts__map-body"
@@ -189,8 +194,6 @@ export default {
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
-
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 .contacts__item {
@@ -198,6 +201,11 @@ export default {
 	grid-template-columns: repeat(2, 1fr);
 	gap: 20px;
 	font-size: 18px;
+}
+
+.contacts__item.skeleton {
+	min-height: 300px;
+	border-radius: var(--default-border-radius);
 }
 
 .contacts__item.one {
@@ -313,6 +321,8 @@ span.empty {
 	border-radius: var(--input-border-radius);
 
 	transition: all 0.2s;
+
+	animation: show 0.5s ease-in-out;
 }
 
 .contacts__map:hover {

@@ -6,18 +6,8 @@
 	</info-bar>
 
 	<block :minHeight="600">
-		<template v-if="loading.sections.contacts">
-			<MainContactsList :contacts="contacts" v-if="contacts.length > 0"></MainContactsList>
-
-			<Empty :minHeight="300" v-else />
-		</template>
-
-		<VueLoader
-			:minHeight="600"
-			:isChild="true"
-			:isLoading="loading.loader.contacts"
-			@afterLeave="loaderChildAfterLeave"
-		/>
+		<MainContactsList :contacts="contacts" v-if="contacts.length > 0"></MainContactsList>
+		<Empty :minHeight="300" v-else />
 	</block>
 </template>
 
@@ -52,7 +42,29 @@ export default {
 					contacts: false,
 				},
 			},
-			contacts: [],
+			contacts: [
+				{
+					id: 1,
+					name: null,
+					phones: null,
+					mails: null,
+					clinicId: null,
+				},
+				{
+					id: 2,
+					name: null,
+					phones: null,
+					mails: null,
+					clinicId: null,
+				},
+				{
+					id: 3,
+					name: null,
+					phones: null,
+					mails: null,
+					clinicId: null,
+				},
+			],
 		};
 	},
 	methods: {
@@ -76,6 +88,12 @@ export default {
 
 				this.contacts = response.data.result;
 				sorted.sortByOrder("up", this.contacts);
+
+				for (let i = 0; i < response.data.result.length; i++) {
+					this.contacts[i] = response.data.result[i];
+				}
+
+				this.contacts.splice(response.data.result.length, this.contacts.length);
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {
@@ -85,9 +103,7 @@ export default {
 				});
 			})
 			.finally(() => {
-				if (this.specialists != null) {
-					this.loading.loader.specialists = false;
-				}
+				this.loading.loader.contacts = false;
 			});
 	},
 };
