@@ -158,9 +158,12 @@ export default {
 }
 
 .video__item-video {
+	box-sizing: border-box;
 	border-radius: var(--default-border-radius);
 	height: 350px;
 	width: 100%;
+
+	padding: var(--default-padding);
 
 	background-color: var(--skeleton-background-color);
 }
@@ -169,9 +172,10 @@ export default {
 	object-fit: contain;
 
 	width: 100%;
-	height: 350px;
+	height: 100%;
 
 	border-radius: var(--default-border-radius);
+	background-color: black;
 
 	animation: show 0.5s ease-in-out;
 }

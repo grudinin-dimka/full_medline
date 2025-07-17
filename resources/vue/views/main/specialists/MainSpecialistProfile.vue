@@ -86,55 +86,69 @@
 						</ul>
 					</template>
 				</div>
-				<div class="profile__info-info certificates" v-if="specialist.certificates.length">
-					<div class="label">Сертификаты</div>
-					<ul>
-						<li v-for="certificate in specialist.certificates">
-							<article>
-								<div>
-									{{
-										`${formatDate(certificate.endEducation)} - ${certificate.name} (${
-											certificate.organization
-										}) `
-									}}.
-								</div>
-							</article>
-						</li>
-					</ul>
-				</div>
-				<div class="profile__info-info educations" v-if="specialist.educations.length">
-					<div class="label">Образование</div>
-					<ul>
-						<li v-for="education in specialist.educations">
-							<article>
-								<div>
-									{{
-										`${formatDate(education.date)} - ${education.name} (${
-											education.organization
-										}).`
-									}}
-								</div>
-							</article>
-						</li>
-					</ul>
-				</div>
+
 				<div
-					class="profile__info-info links"
-					v-if="specialist.profile.link !== '#' && specialist.profile.link"
+					class="profile__info-info certificates"
+					:class="{ skeleton: loading.loader.profile }"
+					v-if="specialist.certificates.length"
 				>
-					<div class="label">Ссылки</div>
-					<ul>
-						<li>
-							<article>
-								<div>
-									<a class="prodoctorov" :href="specialist.profile.link">
-										<span class="red">ПРО</span>
-										<span class="blue">ДОКТОРОВ</span>
-									</a>
-								</div>
-							</article>
-						</li>
-					</ul>
+					<template v-if="specialist.certificates.length && !loading.loader.profile">
+						<div class="label">Сертификаты</div>
+						<ul>
+							<li v-for="certificate in specialist.certificates">
+								<article>
+									<div>
+										{{
+											`${formatDate(certificate.endEducation)} - ${certificate.name} (${
+												certificate.organization
+											}) `
+										}}.
+									</div>
+								</article>
+							</li>
+						</ul>
+					</template>
+				</div>
+
+				<div
+					class="profile__info-info educations"
+					:class="{ skeleton: loading.loader.profile }"
+					v-if="specialist.educations.length"
+				>
+					<template v-if="specialist.educations.length && !loading.loader.profile">
+						<div class="label">Образование</div>
+						<ul>
+							<li v-for="education in specialist.educations">
+								<article>
+									<div>
+										{{
+											`${formatDate(education.date)} - ${education.name} (${
+												education.organization
+											}).`
+										}}
+									</div>
+								</article>
+							</li>
+						</ul>
+					</template>
+				</div>
+
+				<div class="profile__info-info links" :class="{ skeleton: loading.loader.profile }">
+					<template v-if="specialist.profile.link !== '#' && specialist.profile.link">
+						<div class="label">Ссылки</div>
+						<ul>
+							<li>
+								<article>
+									<div>
+										<a class="prodoctorov" :href="specialist.profile.link">
+											<span class="red">ПРО</span>
+											<span class="blue">ДОКТОРОВ</span>
+										</a>
+									</div>
+								</article>
+							</li>
+						</ul>
+					</template>
 				</div>
 
 				<VueTiptap
@@ -192,9 +206,24 @@ export default {
 					link: null,
 					description: null,
 				},
+
 				specializations: [],
-				certificates: [],
-				educations: [],
+				certificates: [
+					{
+						id: null,
+						name: null,
+						organization: null,
+						endEducation: null,
+					},
+				],
+				educations: [
+					{
+						id: null,
+						name: null,
+						organization: null,
+						date: null,
+					},
+				],
 			},
 		};
 	},
@@ -340,6 +369,18 @@ export default {
 
 .profile__info-info.priem {
 	min-height: 110px;
+}
+
+.profile__info-info.certificates {
+	min-height: 70px;
+}
+
+.profile__info-info.educations {
+	min-height: 70px;
+}
+
+.profile__info-info.links {
+	min-height: 70px;
 }
 
 .profile__info-info > .label {
