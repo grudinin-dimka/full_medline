@@ -12,6 +12,7 @@
 					class="specialists__list-img"
 					:src="specialist.path"
 					alt="Фото специалиста"
+					loading="lazy"
 				/>
 			</a>
 

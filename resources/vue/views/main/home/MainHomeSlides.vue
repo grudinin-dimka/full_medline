@@ -9,157 +9,103 @@
 		:touchDrag="true"
 		:pauseAutoplayOnHover="true"
 	>
-		<slide v-for="slide in slides" :key="slide">
+		<slide v-for="slide in slides" :key="slide.id">
 			<a :href="slide.link" class="slider__link" :class="{ skeleton: !slide.path }">
-				<img v-if="slide.path" :src="slide.path" alt="Слайд" class="slider__img" />
+				<img
+					v-if="slide.path"
+					:src="slide.path"
+					alt="Слайд"
+					class="slider__img"
+					loading="lazy"
+				/>
 			</a>
 		</slide>
-
-		<template #addons>
-			<!-- <navigation /> -->
-			<!-- <pagination /> -->
-		</template>
 	</carousel>
 </template>
 
 <script>
+import { Carousel, Slide } from "vue3-carousel";
 import "vue3-carousel/dist/carousel.css";
-import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
-
-import axios from "axios";
 
 export default {
-	components: {
-		axios,
-		Carousel,
-		Slide,
-		Pagination,
-		Navigation,
-	},
+	components: { Carousel, Slide },
 	props: {
-		slides: {
-			type: Array,
-			required: true,
-			default: [],
-		},
+		slides: { type: Array, required: true, default: () => [] },
 	},
 	data() {
 		return {
-			windowWidth: null,
-			carouselSettings: {
-				itemsToShow: 1,
-			},
+			windowWidth: typeof window !== "undefined" ? window.innerWidth : 0,
 		};
 	},
-	mounted() {
-		window.addEventListener("resize", this.setWidth);
-		window.addEventListener("load", this.setWidth);
-		window.addEventListener("reload", this.setWidth);
-	},
-	unmounted() {
-		window.removeEventListener("resize", this.setWidth);
-		window.removeEventListener("load", this.setWidth);
-		window.removeEventListener("reload", this.setWidth);
-	},
 	computed: {
-		/* Изменение настроек слайдера */
 		calcItemsToShow() {
-			this.windowWidth = window.document.documentElement.clientWidth;
+			const width = this.windowWidth;
+			if (!width) return 1;
 
-			if (this.windowWidth >= 2300 || this.windowWidth == null) {
-				return 7;
-			} else if ((this.windowWidth > 1920) & (this.windowWidth <= 2300)) {
-				return 6;
-			} else if ((this.windowWidth >= 1600) & (this.windowWidth <= 1920)) {
-				return 5;
-			} else if ((this.windowWidth >= 1300) & (this.windowWidth <= 1600)) {
-				return 4;
-			} else if ((this.windowWidth >= 960) & (this.windowWidth <= 1300)) {
-				return 3;
-			} else if ((this.windowWidth >= 660) & (this.windowWidth <= 960)) {
-				return 2;
-			} else if ((this.windowWidth >= 0) & (this.windowWidth <= 660)) {
-				return 1;
-			}
+			return width >= 2300
+				? 7
+				: width > 1920
+				? 6
+				: width >= 1600
+				? 5
+				: width >= 1300
+				? 4
+				: width >= 960
+				? 3
+				: width >= 660
+				? 2
+				: 1;
 		},
 	},
 	methods: {
-		setWidth() {
-			this.windowWidth = window.document.documentElement.clientWidth;
-		},
+		onResize() {
+			this.windowWidth = window.innerWidth;
+		}		
 	},
+	mounted() {
+		window.addEventListener("resize", this.onResize);
+	},
+	beforeUnmount() {
+		window.removeEventListener("resize", this.onResize);
+	}
 };
 </script>
 
 <style>
-:is(.carousel__prev, .carousel__next) {
-	color: var(--primary-color);
-}
-
-:is(.carousel__prev, .carousel__next):hover {
-	color: var(--primary-color-hover);
-}
-
-.carousel__slide {
-	transition: all 0.5s;
-}
-
-.carousel__slide:hover .slider__link {
-	background-image: linear-gradient(120deg, #ececec 50%, #fafafa 60%, #fafafa 61%, #ececec 70%);
-	background-size: 200%;
-	background-position: 100% 0;
-
-	animation: waves 2s linear infinite;
-}
-
-.carousel__pagination-button::after {
-	border-radius: 30px;
-	margin: 0px 5px;
-
-	height: 10px;
-	width: 10px;
-	background-color: rgba(0, 171, 189, 0.5);
-}
-
-.carousel__pagination-button:hover::after {
-	background-color: rgba(0, 171, 189, 1);
-}
-
-.carousel__pagination-button.carousel__pagination-button--active::after {
-	background-color: rgba(0, 171, 189, 1);
-}
-
 .carousel {
 	width: 100%;
-
-	animation: show 0.5s ease-out;
+	contain: layout paint style;
 }
 
-/* Изображение */
 .slider__link {
 	height: 375px;
 	width: 300px;
-
 	border-radius: var(--default-border-radius);
-
 	background-color: var(--skeleton-background-color);
-
-	transition: all 0.2s ease-out;
+	display: block;
+	overflow: hidden;
+	will-change: transform;
 }
 
 .slider__img {
 	height: 100%;
 	width: 100%;
-	border-radius: var(--default-border-radius);
-
 	object-fit: cover;
+	transform: translateZ(0);
+	will-change: transform;
 
-	animation: show 0.5s ease-out;
+	animation: show 0.5s ease-in-out;
 }
 
-@media screen and (width <= 600px) {
+.carousel__slide:hover .slider__link {
+	transform: scale(1.02);
+	transition: transform 0.3s ease;
+}
+
+@media (max-width: 600px) {
 	.slider__link {
-		width: auto;
+		width: 100%;
+		max-width: 100vw;
 	}
 }
 </style>

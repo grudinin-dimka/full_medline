@@ -21,7 +21,7 @@
 					v-if="about.imageOne !== ''"
 					:class="{ skeleton: !about.imageOne }"
 				>
-					<img v-if="about.imageOne" :src="about.pathOne" alt="" />
+					<img v-if="about.imageOne" :src="about.pathOne" alt="" loading="lazy"/>
 				</div>
 
 				<div
@@ -29,7 +29,7 @@
 					v-if="about.imageTwo !== ''"
 					:class="{ skeleton: !about.imageTwo }"
 				>
-					<img v-if="about.imageTwo" :src="about.pathTwo" alt="" />
+					<img v-if="about.imageTwo" :src="about.pathTwo" alt="" loading="lazy"/>
 				</div>
 
 				<div
@@ -37,7 +37,7 @@
 					v-if="about.imageThree !== ''"
 					:class="{ skeleton: !about.imageThree }"
 				>
-					<img v-if="about.imageThree" :src="about.pathThree" alt="" />
+					<img v-if="about.imageThree" :src="about.pathThree" alt="" loading="lazy"/>
 				</div>
 			</div>
 

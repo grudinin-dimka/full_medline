@@ -86,24 +86,28 @@
 												v-if="shedule.name.trim().toLowerCase() === 'кт'"
 												:src="`/storage/img/kt.webp`"
 												alt="КТ"
+												loading="lazy"
 											/>
 
 											<img
 												v-if="shedule.name.trim().toLowerCase() === 'мрт'"
 												:src="`/storage/img/mrt.webp`"
 												alt="МРТ"
+												loading="lazy"
 											/>
 
 											<img
 												v-if="shedule.name.trim().toLowerCase() === 'рентген'"
 												:src="`/storage/img/rentgen.webp`"
 												alt="рентген"
+												loading="lazy"
 											/>
 
 											<img
 												v-if="shedule.name.trim().toLowerCase() === 'маммограф'"
 												:src="`/storage/img/mammograph.webp`"
 												alt="маммограф"
+												loading="lazy"
 											/>
 										</template>
 
@@ -112,6 +116,7 @@
 												v-if="!shedule.image"
 												:src="`/storage/default/specialits-schedule.webp`"
 												alt="Врач"
+												loading="lazy"
 											/>
 
 											<a
@@ -128,7 +133,7 @@
 												:href="`/specialists/${shedule.link}`"
 												v-else
 											>
-												<img :src="shedule.image" alt="Врач" />
+												<img :src="shedule.image" alt="Врач" loading="lazy"/>
 											</a>
 										</template>
 									</template>
@@ -162,7 +167,7 @@
 								</div>
 							</div>
 
-							<div class="shedule__specialist-table">
+							<div class="shedule__specialist-table" v-if="isMobile">
 								<div class="specialist__table-tbody">
 									<div class="specialist__table-tr" v-for="day in week" :key="day.id">
 										<template v-if="loading.loader.schedule">
@@ -273,13 +278,6 @@
 				</tr>
 			</tbody>
 		</table>
-
-		<!-- <VueLoader
-			:isLoading="loading.loader.schedule"
-			:isChild="true"
-			:minHeight="700"
-			@afterLeave="loaderChildAfterLeave"
-		/> -->
 	</Block>
 </template>
 
@@ -305,7 +303,10 @@ export default {
 	},
 	data() {
 		return {
+			isMobile: window.matchMedia('(max-width: 630px)').matches,
 			selected: null,
+
+			/* Загрузка */
 			loading: {
 				loader: {
 					schedule: true,
@@ -314,11 +315,13 @@ export default {
 					schedule: false,
 				},
 			},
+
 			activeClinic: {
 				id: 0,
 				name: "Все",
 			},
-			// Фильтры
+
+			/* Фильтры */
 			filters: {
 				fio: {
 					status: false,
@@ -679,6 +682,18 @@ export default {
 					clinic.status = false;
 				}
 			});
+		},
+
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                   РАСПИСАНИЕ                      |*/
+		/* |___________________________________________________|*/
+		/* При скролле */
+		handleScroll() {
+			if (window.document.documentElement.clientWidth <= 630) {
+				this.isMobile = true;
+			} else {
+				this.isMobile = false;
+			};
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
