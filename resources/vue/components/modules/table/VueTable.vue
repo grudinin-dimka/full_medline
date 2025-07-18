@@ -240,7 +240,7 @@
 									)
 								"
 							>
-								<VueIcon :name="'edit'" :width="'22px'" :height="'22px'" :fill="'black'" />
+								<VueIcon :name="'edit'" :width="'22px'" :height="'22px'" :fill="'white'" />
 
 								<span>Изменить</span>
 							</VueTableButton>
@@ -267,7 +267,7 @@
 									:name="'delete'"
 									:width="'16px'"
 									:height="'16px'"
-									:fill="'black'"
+									:fill="'white'"
 								/>
 
 								<span>Удалить</span>
@@ -287,7 +287,7 @@
 									:name="'delete'"
 									:width="'16px'"
 									:height="'16px'"
-									:fill="'black'"
+									:fill="'white'"
 								/>
 
 								<span>Вернуть</span>
@@ -971,10 +971,6 @@ tr.delete > td > div {
 
 tr.delete > td {
 	background-color: var(--input-delete-background-color-hover);
-}
-
-.table__buttons svg {
-	fill: white;
 }
 
 .table-button-listMany {
