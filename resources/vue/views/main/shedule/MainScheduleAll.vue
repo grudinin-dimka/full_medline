@@ -133,7 +133,7 @@
 												:href="`/specialists/${shedule.link}`"
 												v-else
 											>
-												<img :src="shedule.image" alt="Врач" loading="lazy"/>
+												<img :src="shedule.image" alt="Врач" loading="lazy" />
 											</a>
 										</template>
 									</template>
@@ -303,7 +303,7 @@ export default {
 	},
 	data() {
 		return {
-			isMobile: window.matchMedia('(max-width: 630px)').matches,
+			isMobile: window.matchMedia("(max-width: 630px)").matches,
 			selected: null,
 
 			/* Загрузка */
@@ -693,7 +693,7 @@ export default {
 				this.isMobile = true;
 			} else {
 				this.isMobile = false;
-			};
+			}
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -1080,7 +1080,8 @@ export default {
 }
 
 .shedule__specialist-head {
-	display: flex;
+	display: grid;
+	grid-template-columns: 50px 1fr;
 	gap: 10px;
 }
 
@@ -1420,6 +1421,18 @@ export default {
 		z-index: 1;
 
 		background-color: rgba(0, 0, 0, 0.75);
+	}
+
+	.specialist__head-img {
+		flex-grow: 1;
+		width: 100%;
+		height: 100%;
+		max-height: 100px;
+		max-width: 100px;
+	}
+
+	.shedule__specialist-head {
+		grid-template-columns: 100px 1fr;
 	}
 }
 

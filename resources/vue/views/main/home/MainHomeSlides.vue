@@ -54,20 +54,22 @@ export default {
 				? 3
 				: width >= 660
 				? 2
+				: width >= 500
+				? 1.5
 				: 1;
 		},
 	},
 	methods: {
 		onResize() {
 			this.windowWidth = window.innerWidth;
-		}		
+		},
 	},
 	mounted() {
 		window.addEventListener("resize", this.onResize);
 	},
 	beforeUnmount() {
 		window.removeEventListener("resize", this.onResize);
-	}
+	},
 };
 </script>
 
@@ -80,10 +82,12 @@ export default {
 .slider__link {
 	height: 375px;
 	width: 300px;
+
 	border-radius: var(--default-border-radius);
 	background-color: var(--skeleton-background-color);
 	display: block;
 	overflow: hidden;
+
 	will-change: transform;
 }
 
@@ -98,14 +102,19 @@ export default {
 }
 
 .carousel__slide:hover .slider__link {
-	transform: scale(1.02);
-	transition: transform 0.3s ease;
+	background-image: linear-gradient(120deg, #ececec 50%, #fafafa 60%, #fafafa 61%, #ececec 70%);
+	background-size: 200%;
+	background-position: 100% 0;
+
+	animation: waves 2s linear infinite;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 450px) {
 	.slider__link {
-		width: 100%;
-		max-width: 100vw;
+		width: auto;
+		height: 100%;
+		
+		min-height: 375px;
 	}
 }
 </style>

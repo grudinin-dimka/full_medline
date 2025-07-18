@@ -40,7 +40,7 @@ export default {
 	components: {
 		Block,
 		Empty,
-		
+
 		MainHomeSlides,
 		MainNewsItem,
 	},
@@ -276,6 +276,12 @@ p {
 	}
 }
 
+@media screen and (max-width: 750px) {
+	.slider__loader {
+		margin-top: 70px;
+	}
+}
+
 @media screen and (max-width: 700px) {
 	.news__main-body {
 		grid-template-columns: repeat(1, 1fr);
@@ -289,10 +295,6 @@ p {
 
 	.section-info-sub-title {
 		font-size: 20px;
-	}
-
-	.slider__loader {
-		margin-top: 70px;
 	}
 }
 </style>

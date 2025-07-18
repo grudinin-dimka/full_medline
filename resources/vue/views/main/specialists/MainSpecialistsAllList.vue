@@ -339,10 +339,6 @@ export default {
 }
 
 @media screen and (max-width: 500px) {
-	.specialists__body-other {
-		display: none;
-	}
-
 	.specialists__list-body {
 		text-align: center;
 		grid-template-columns: 1fr;

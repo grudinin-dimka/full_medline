@@ -321,8 +321,6 @@ span.empty {
 	border-radius: var(--input-border-radius);
 
 	transition: all 0.2s;
-
-	animation: show 0.5s ease-in-out;
 }
 
 .contacts__map:hover {
