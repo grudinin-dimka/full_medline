@@ -12,4 +12,10 @@ class Specialist extends Model
     protected $table = 'specialists';
     protected $guarded = ['id'];
     protected $hidden = ['created_at', 'updated_at'];
+
+    /* Связка с таблицей SpecialistSpecialization */
+    public function specializations()
+    {
+        return $this->hasMany(SpecialistSpecialization::class, 'id_specialist', 'id');
+    }
 }

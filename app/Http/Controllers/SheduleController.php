@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Shared\Specialization;
 use Illuminate\Http\Request;
 
 /* Подключения */
@@ -41,10 +42,12 @@ class SheduleController extends Controller
          $schedules = Shedule::all();
          $scheduleClinics = ShedulesClinic::all();
          $currentDays = ShedulesCurrentDay::all();
+         $specializations = Specialization::all();
 
          // Подготовка ID для массовой загрузки связанных данных
          $scheduleIds = $schedules->pluck('id');
          $clinicIds = $scheduleClinics->pluck('id');
+         $specializationsIds = $specializations->groupBy('id');
 
          // Загрузка ВСЕХ дней расписаний за ОДИН запрос
          $scheduleDays = ShedulesDay::whereIn('sheduleId', $scheduleIds)
@@ -75,6 +78,17 @@ class SheduleController extends Controller
             if ($sheduleSpecialits) {
                $schedule->image = Storage::url('specialists/' . $sheduleSpecialits[0]->filename);
                $schedule->link = $this->makeUrl($sheduleSpecialits[0]->family . ' ' . $sheduleSpecialits[0]->name . ' ' . $sheduleSpecialits[0]->surname);
+
+               // Получаем специализации
+               $sheduleSpecialitsSpecialization = "";
+
+               foreach ($sheduleSpecialits[0]->specializations()->get() as $specialization) {
+                  $sheduleSpecialitsSpecialization .= $specializationsIds[$specialization->id_specialization][0]->name . ", ";
+               };
+
+               $sheduleSpecialitsSpecialization = substr($sheduleSpecialitsSpecialization, 0, -2);
+
+               $schedule->specializations = $sheduleSpecialitsSpecialization;
             } else {
                $schedule->image = null;
             }

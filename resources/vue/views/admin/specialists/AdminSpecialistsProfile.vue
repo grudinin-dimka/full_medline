@@ -856,7 +856,7 @@
 								class="item-close"
 								@click="removeArrValue('specializations', specialization)"
 							>
-								<VueIcon :name="'close'" :fill="'black'" :width="'23px'" :height="'23px'" />
+								<VueIcon :name="'close'" :fill="'black'" :width="'16px'" :height="'16px'" />
 							</div>
 						</div>
 					</template>
