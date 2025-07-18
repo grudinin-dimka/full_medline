@@ -5,40 +5,91 @@
 		<router-link to="/prices">Цены</router-link>
 		<span class="link-arrow"> / </span>
 		<router-link :to="`/prices/${$route.params.group}`">
-			<load-text :isLoading="loading.loader.title" @afterLeave="afterLeave">
-				Загрузка...
-			</load-text>
-			<span v-if="loading.sections.title">{{ title }}</span>
+			<span v-if="!loading.loader.title">{{ title }}</span>
 		</router-link>
 	</info-bar>
 
 	<block :minHeight="100">
-		<template v-if="loading.sections.group">
-			<div class="price__group" v-if="group.length > 0">
-				<div class="price__group__search">
-					<VueInput v-model="search" :type="'search'" :placeholder="'Введите услугу'" />
-				</div>
+		<div class="price__group">
+			<div class="price__group__search">
+				<VueInput v-model="search" :type="'search'" :placeholder="'Введите услугу'" />
+			</div>
 
-				<div class="price__group__list">
+			<div class="price__group__list">
+				<template v-if="loading.loader.group">
+					<div class="price__group__address" v-for="item in 3">
+						<div class="price__group__address-title">
+							<div :class="{ skeleton: loading.loader.group }">&nbsp;</div>
+						</div>
+
+						<div class="price__group__category">
+							<div class="price__group__category-title">
+								<div
+									class="category__title-icon"
+									:class="{ skeleton: loading.loader.group }"
+								></div>
+								<div
+									class="category__title-title-name"
+									:class="{ skeleton: loading.loader.group }"
+								>
+									&nbsp;
+								</div>
+							</div>
+							<ol class="price__group__prices">
+								<li v-for="price in 5" :key="price">
+									<div class="price__group__prices-item">
+										<div
+											class="price__group__prices-name"
+											:class="{ skeleton: loading.loader.group }"
+										>
+											&nbsp;
+										</div>
+										<div
+											class="price__group__prices-value"
+											:class="{ skeleton: loading.loader.group }"
+										>
+											&nbsp;
+										</div>
+										<div
+											class="price__group__prices-valute"
+											:class="{ skeleton: loading.loader.group }"
+										>
+											&nbsp;
+										</div>
+									</div>
+								</li>
+							</ol>
+						</div>
+					</div>
+				</template>
+
+				<template v-else>
 					<div class="price__group__address" v-for="item in group">
-						<div class="price__group__address-title">{{ item.name }}</div>
+						<div class="price__group__address-title">
+							<div>{{ item.name }}</div>
+						</div>
+
 						<template v-if="isPricesGroupEmpty(item)" v-for="category in item.categories">
 							<div
 								class="price__group__category"
 								v-if="getCurrentPrices(category.prices).length > 0"
 							>
 								<div class="price__group__category-title">
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										height="30px"
-										viewBox="0 -960 960 960"
-										width="30px"
-									>
-										<path
-											d="m260-520 220-360 220 360H260ZM700-80q-75 0-127.5-52.5T520-260q0-75 52.5-127.5T700-440q75 0 127.5 52.5T880-260q0 75-52.5 127.5T700-80Zm-580-20v-320h320v320H120Zm580-60q42 0 71-29t29-71q0-42-29-71t-71-29q-42 0-71 29t-29 71q0 42 29 71t71 29Zm-500-20h160v-160H200v160Zm202-420h156l-78-126-78 126Zm78 0ZM360-340Zm340 80Z"
-										/>
-									</svg>
-									{{ category.name }}
+									<div class="category__title-icon">
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											height="30px"
+											viewBox="0 -960 960 960"
+											width="30px"
+										>
+											<path
+												d="m260-520 220-360 220 360H260ZM700-80q-75 0-127.5-52.5T520-260q0-75 52.5-127.5T700-440q75 0 127.5 52.5T880-260q0 75-52.5 127.5T700-80Zm-580-20v-320h320v320H120Zm580-60q42 0 71-29t29-71q0-42-29-71t-71-29q-42 0-71 29t-29 71q0 42 29 71t71 29Zm-500-20h160v-160H200v160Zm202-420h156l-78-126-78 126Zm78 0ZM360-340Zm340 80Z"
+											/>
+										</svg>
+									</div>
+									<div class="category__title-title-name">
+										{{ category.name }}
+									</div>
 								</div>
 								<ol class="price__group__prices">
 									<li v-for="price in getCurrentPrices(category.prices)" :key="price.id">
@@ -54,18 +105,12 @@
 							</div>
 						</template>
 						<div class="price__group__prices--none" v-else>Ничего нет...</div>
-					</div>
-				</div>
-			</div>
-			<Empty :minHeight="300" v-else />
-		</template>
 
-		<VueLoader
-			:isLoading="loading.loader.group"
-			:isChild="true"
-			:minHeight="700"
-			@afterLeave="afterLeave"
-		/>
+						<Empty :minHeight="300" v-else />
+					</div>
+				</template>
+			</div>
+		</div>
 	</block>
 </template>
 
@@ -193,10 +238,6 @@ export default {
 	gap: 20px;
 }
 
-.price__group__search {
-	animation: show 0.5s ease-in-out;
-}
-
 .price__group__list {
 	width: 1350px;
 	display: grid;
@@ -210,17 +251,24 @@ export default {
 }
 
 .price__group__address-title {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-
 	margin-top: 10px;
+}
+
+.price__group__address-title > div {
+	margin-top: 10px;
+
+	border-radius: 50px;
+	min-height: 40px;
+
+	width: 100%;
 
 	font-size: 1.5rem;
 	font-weight: 600;
 	color: black;
+}
 
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
+.price__group__address-title > div.skeleton {
+	max-width: 300px;
 }
 
 .price__group__category-title {
@@ -244,8 +292,6 @@ export default {
 	gap: 0px;
 
 	border-radius: 20px;
-
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 .price__group__prices--none {
@@ -256,8 +302,6 @@ export default {
 
 	font-size: 1.125rem;
 	color: rgb(150, 150, 150);
-
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 .price__group__prices {
@@ -295,10 +339,42 @@ export default {
 	color: var(--button-default-color);
 }
 
+.category__title-icon {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	width: 36px;
+	height: 36px;
+	border-radius: 50px;
+
+	fill: var(--primary-color);
+}
+
+.category__title-title-name {
+	min-height: 36px;
+	display: flex;
+	align-items: center;
+
+	border-radius: 50px;
+}
+
+.price__group__prices-name {
+	border-radius: 50px;
+}
+
+.price__group__prices-value {
+	border-radius: 50px;
+}
+
+.price__group__prices-valute {
+	border-radius: 50px;
+}
+
 @media screen and (width <= 1450px) {
 	.price__group,
 	.price__group__list {
-		width: auto;
+		width: 100%;
 	}
 
 	.filter_blocks {

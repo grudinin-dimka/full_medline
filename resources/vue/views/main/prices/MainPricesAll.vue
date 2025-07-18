@@ -59,7 +59,7 @@
 							</div>
 						</div>
 						<ol class="prices__values">
-							<li v-for="price in getRandomPricesCount()" :key="price">
+							<li v-for="price in 5" :key="price">
 								<div class="prices__values-item">
 									<div
 										class="prices__values-name"
@@ -134,13 +134,6 @@
 				</template>
 			</div>
 		</div>
-
-		<!-- <VueLoader
-			:isLoading="loading.loader.prices"
-			:minHeight="600"
-			:isChild="true"
-			@afterLeave="loaderChildAfterLeave"
-		/> -->
 	</Block>
 </template>
 
@@ -547,7 +540,7 @@ export default {
 
 @media screen and (width <= 1450px) {
 	.prices {
-		width: auto;
+		width: 100%;
 	}
 
 	.filters {

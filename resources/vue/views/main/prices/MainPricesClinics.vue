@@ -6,7 +6,22 @@
 	</info-bar>
 
 	<Block :minHeight="500">
-		<template v-if="loading.sections.addresses">
+		<template v-if="loading.loader.addresses">
+			<div class="prices__choice">
+				<div class="prices__item" v-for="city in 3">
+					<div class="prices__item-label" :class="{ skeleton: loading.loader.addresses }">
+						&nbsp;
+					</div>
+					<ul>
+						<li v-for="street in 3" :class="{ skeleton: loading.loader.addresses }">
+							<div class="address">&nbsp;</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</template>
+
+		<template v-if="!loading.loader.addresses">
 			<div class="prices__choice" v-if="getCities.length > 0">
 				<div class="prices__item" v-for="city in getCities">
 					<div class="prices__item-label">{{ city }}</div>
@@ -26,13 +41,6 @@
 			</div>
 			<Empty :minHeight="300" v-else />
 		</template>
-
-		<VueLoader
-			:isLoading="loading.loader.addresses"
-			:isChild="true"
-			:minHeight="700"
-			@afterLeave="loaderChildAfterLeave"
-		/>
 	</Block>
 </template>
 
@@ -88,7 +96,17 @@ export default {
 					addresses: false,
 				},
 			},
-			addresses: [],
+			addresses: [
+				// {
+				// 	id: 1,
+				// 	city: "Далматово",
+				// 	cityUrl: "dalmatovo",
+				// 	house: "64",
+				// 	houseUrl: "64",
+				// 	street: "4-го Уральского Полка",
+				// 	streetUrl: "4-go-ural'skogo-polka",
+				// },
+			],
 		};
 	},
 	methods: {
@@ -155,8 +173,6 @@ export default {
 
 	width: 1350px;
 	font-size: 18px;
-
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 .prices__item {
@@ -166,9 +182,17 @@ export default {
 }
 
 .prices__item-label {
+	border-radius: 50px;
+
+	min-height: 30px;
+
 	font-weight: 600;
 	font-size: 1.5rem;
 	color: var(--primary-color);
+}
+
+.prices__item-label.skeleton {
+	max-width: 300px;
 }
 
 .prices__item > ul {
@@ -190,10 +214,16 @@ export default {
 	border: var(--input-border);
 	border-radius: var(--input-border-radius);
 	padding: 10px;
+	min-height: 40px;
 
 	font-size: 1.125em;
 
 	transition: all 0.2s;
+}
+
+.prices__item > ul > li.skeleton {
+	border: 0px;
+	border-radius: 50px;
 }
 
 .prices__item > ul > li > a {
