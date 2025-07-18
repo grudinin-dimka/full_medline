@@ -39,10 +39,53 @@
 			</div>
 		</div>
 
-		<template v-if="loading.sections.prices">
-			<!-- Цены -->
-			<div class="prices">
-				<div class="prices__address">
+		<!-- Цены -->
+		<div class="prices">
+			<div class="prices__address">
+				<template v-if="loading.loader.prices">
+					<div class="prices__category" v-for="category in 3" :key="category">
+						<div class="prices__address-title">
+							<div
+								class="prices__address-title-icon"
+								:class="{ skeleton: loading.loader.prices }"
+							>
+								&nbsp;
+							</div>
+							<div
+								class="prices__address-title-name"
+								:class="{ skeleton: loading.loader.prices }"
+							>
+								&nbsp;
+							</div>
+						</div>
+						<ol class="prices__values">
+							<li v-for="price in getRandomPricesCount()" :key="price">
+								<div class="prices__values-item">
+									<div
+										class="prices__values-name"
+										:class="{ skeleton: loading.loader.prices }"
+									>
+										&nbsp;
+									</div>
+									<div
+										class="prices__values-price"
+										:class="{ skeleton: loading.loader.prices }"
+									>
+										&nbsp;
+									</div>
+									<div
+										class="prices__values-valute"
+										:class="{ skeleton: loading.loader.prices }"
+									>
+										&nbsp;
+									</div>
+								</div>
+							</li>
+						</ol>
+					</div>
+				</template>
+
+				<template v-else>
 					<div
 						class="prices__category"
 						:class="{
@@ -53,17 +96,19 @@
 						:key="category.id"
 					>
 						<div class="prices__address-title">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								height="30px"
-								viewBox="0 -960 960 960"
-								width="30px"
-							>
-								<path
-									d="m260-520 220-360 220 360H260ZM700-80q-75 0-127.5-52.5T520-260q0-75 52.5-127.5T700-440q75 0 127.5 52.5T880-260q0 75-52.5 127.5T700-80Zm-580-20v-320h320v320H120Zm580-60q42 0 71-29t29-71q0-42-29-71t-71-29q-42 0-71 29t-29 71q0 42 29 71t71 29Zm-500-20h160v-160H200v160Zm202-420h156l-78-126-78 126Zm78 0ZM360-340Zm340 80Z"
-								/>
-							</svg>
-							{{ category.name }}
+							<div class="prices__address-title-icon">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									height="30px"
+									viewBox="0 -960 960 960"
+									width="30px"
+								>
+									<path
+										d="m260-520 220-360 220 360H260ZM700-80q-75 0-127.5-52.5T520-260q0-75 52.5-127.5T700-440q75 0 127.5 52.5T880-260q0 75-52.5 127.5T700-80Zm-580-20v-320h320v320H120Zm580-60q42 0 71-29t29-71q0-42-29-71t-71-29q-42 0-71 29t-29 71q0 42 29 71t71 29Zm-500-20h160v-160H200v160Zm202-420h156l-78-126-78 126Zm78 0ZM360-340Zm340 80Z"
+									/>
+								</svg>
+							</div>
+							<div class="prices__address-title-name">{{ category.name }}</div>
 						</div>
 						<ol class="prices__values" v-if="category.id !== null">
 							<li v-for="price in getCurrentPrices(category.id)" :key="price.id">
@@ -84,17 +129,18 @@
 							</li>
 						</ol>
 					</div>
-					<div class="prices__categories--none" v-else>Ничего нет...</div>
-				</div>
-			</div>
-		</template>
 
-		<VueLoader
+					<div class="prices__categories--none" v-else>Ничего нет...</div>
+				</template>
+			</div>
+		</div>
+
+		<!-- <VueLoader
 			:isLoading="loading.loader.prices"
 			:minHeight="600"
 			:isChild="true"
 			@afterLeave="loaderChildAfterLeave"
-		/>
+		/> -->
 	</Block>
 </template>
 
@@ -218,6 +264,10 @@ export default {
 			this.loading.sections.prices = true;
 		},
 
+		getRandomPricesCount() {
+			return Math.floor(Math.random() * 10) + 1;
+		},
+
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                      ЦЕНЫ                         |*/
 		/* |___________________________________________________|*/
@@ -324,7 +374,6 @@ export default {
 	margin: 0 auto;
 
 	width: 1350px;
-	animation: show 0.5s ease-out;
 }
 
 .filters__item {
@@ -378,16 +427,14 @@ export default {
 	font-size: 1.5rem;
 	font-weight: 600;
 	color: black;
-
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 .prices__address:first-child > .prices__address-title {
 	margin-top: 10px;
 }
 
-.prices__address > .prices__address-title > svg {
-	fill: var(--button-default-color);
+.prices__address > .prices__address-title svg {
+	fill: var(--primary-color);
 }
 
 .prices__category {
@@ -396,8 +443,6 @@ export default {
 	gap: 0px;
 
 	border-radius: 20px;
-
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 .prices__categories--none {
@@ -408,8 +453,6 @@ export default {
 
 	font-size: 1.125rem;
 	color: rgb(150, 150, 150);
-
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 .prices__category > .prices__address-title {
@@ -418,18 +461,35 @@ export default {
 	align-items: center;
 	gap: 5px;
 
+	min-height: 30px;
 	font-size: 1.25rem;
 	font-weight: 600;
 	color: var(--primary-color);
 	padding: 10px 0px;
 
-	border-radius: 20px 20px 0px 0px;
+	border-radius: 20px;
 
 	border: 0px solid #2d9aa7;
 }
 
-.prices__category > .prices__address-title > svg {
+.prices__address-title-icon {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	width: 36px;
+	height: 36px;
+	border-radius: 50px;
+
 	fill: var(--primary-color);
+}
+
+.prices__address-title-name {
+	min-height: 36px;
+	display: flex;
+	align-items: center;
+
+	border-radius: 50px;
 }
 
 .prices__category.disabled > .prices__address-title {
@@ -469,10 +529,20 @@ export default {
 	gap: 5px;
 }
 
+.prices__values-name {
+	border-radius: 50px;
+}
+
 .prices__values-price {
+	border-radius: 50px;
+
 	font-family: "Roboto", sans-serif;
 	text-align: right;
 	color: var(--primary-color);
+}
+
+.prices__values-valute {
+	border-radius: 50px;
 }
 
 @media screen and (width <= 1450px) {
