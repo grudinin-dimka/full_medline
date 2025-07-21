@@ -254,7 +254,7 @@ p {
 
 @media screen and (max-width: 1450px) {
 	.news__main {
-		width: auto;
+		width: 100%;
 	}
 }
 
