@@ -289,8 +289,10 @@ import VueLoader from "../../../components/modules/VueLoader.vue";
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import Block from "../../../components/ui/main/Block.vue";
 
-import api from "../../../services/api";
+import api from "../../../mixin/api.js";
 import sorted from "../../../services/sorted.js";
+
+import TimeManager from "../../../mixin/time-manager.js";
 
 export default {
 	components: {
@@ -870,6 +872,9 @@ export default {
 		},
 	},
 	mounted() {
+		const timeShedule = new TimeManager();
+		timeShedule.start();
+
 		api({
 			method: "get",
 			url: `${this.$store.getters.urlApi}` + `get-shedules-all`,
@@ -877,18 +882,24 @@ export default {
 			.then((response) => {
 				if (!response) return;
 
-				for (let i = 0; i < response.data.result.sheduleClinics.length; i++) {
-					this.clinics[i] = response.data.result.sheduleClinics[i];
-				}
+				timeShedule.end();
 
-				this.clinics.splice(response.data.result.sheduleClinics.length, this.clinics.length);
+				timeShedule.difference(this.$store.getters.timeout, () => {
+					for (let i = 0; i < response.data.result.sheduleClinics.length; i++) {
+						this.clinics[i] = response.data.result.sheduleClinics[i];
+					}
 
-				this.clinics.forEach((clinic) => {
-					clinic.status = false;
+					this.clinics.splice(response.data.result.sheduleClinics.length, this.clinics.length);
+
+					this.clinics.forEach((clinic) => {
+						clinic.status = false;
+					});
+
+					this.week = response.data.result.currentDays;
+					this.shedules = response.data.result.shedules;
+
+					this.loading.loader.schedule = false;
 				});
-
-				this.week = response.data.result.currentDays;
-				this.shedules = response.data.result.shedules;
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {
@@ -896,9 +907,6 @@ export default {
 					body: error,
 					type: "error",
 				});
-			})
-			.finally(() => {
-				this.loading.loader.schedule = false;
 			});
 	},
 };

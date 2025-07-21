@@ -302,7 +302,12 @@
 				:disabled="disabled.about.save"
 				:look="'inverse'"
 			>
-				<VueIcon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
+				<VueIcon
+					:name="'save'"
+					:fill="'var(--primary-color)'"
+					:width="'28px'"
+					:height="'28px'"
+				/>
 				Сохранить
 			</VueButton>
 		</template>
@@ -328,7 +333,7 @@
 		</template>
 
 		<template #buttons>
-			<VueButton @click="openModalСreate">
+			<VueButton @click="openModalСreate;">
 				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</VueButton>
@@ -345,7 +350,12 @@
 				:disabled="disabled.files.save"
 				:look="'inverse'"
 			>
-				<VueIcon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
+				<VueIcon
+					:name="'save'"
+					:fill="'var(--primary-color)'"
+					:width="'28px'"
+					:height="'28px'"
+				/>
 				Сохранить
 			</VueButton>
 		</template>
@@ -386,7 +396,7 @@ import VueLoader from "../../../components/modules/VueLoader.vue";
 import VueIcon from "../../../components/modules/icon/VueIcon.vue";
 import VueButton from "../../../components/ui/VueButton.vue";
 
-import api from "../../../services/api";
+import api from "../../../mixin/api";
 import shared from "../../../services/shared";
 import files from "../../../services/files";
 import sorted from "../../../services/sorted";
@@ -398,7 +408,7 @@ export default {
 		VueTiptap,
 		VueTable,
 		VueInput,
-		
+
 		InfoBar,
 		BlockOnce,
 		BlockTwo,

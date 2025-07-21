@@ -28,13 +28,15 @@ import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import Block from "../../../components/ui/main/Block.vue";
 import Empty from "../../../components/modules/Empty.vue";
 
-import api from "../../../services/api";
+import api from "../../../mixin/api";
+
+import TimeManager from "../../../mixin/time-manager";
 
 export default {
 	components: {
 		VueTiptap,
 		VueLoader,
-		
+
 		InfoBar,
 		Block,
 
@@ -70,6 +72,9 @@ export default {
 		},
 	},
 	mounted() {
+		const timeNews = new TimeManager();
+		timeNews.start();
+
 		api({
 			method: "post",
 			url: this.$store.getters.urlApi + `get-news-once-without`,
@@ -84,9 +89,15 @@ export default {
 			.then((response) => {
 				if (!response) return;
 
-				this.title = response.data.result.title;
-				this.description = response.data.result.description;
-				this.path = response.data.result.path;
+				timeNews.end();
+
+				timeNews.difference(this.$store.getters.timeout, () => {
+					this.title = response.data.result.title;
+					this.description = response.data.result.description;
+					this.path = response.data.result.path;
+
+					this.loading.loader.news = false;
+				});
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {
@@ -94,9 +105,6 @@ export default {
 					body: error,
 					type: "error",
 				});
-			})
-			.finally(() => {
-				this.loading.loader.news = false;
 			});
 	},
 };

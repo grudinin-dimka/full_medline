@@ -25,31 +25,24 @@
 		</div>
 
 		<Empty :minHeight="300" v-else />
-
-		<!-- <VueLoader
-			:isLoading="loading.loader.videos"
-			:isChild="true"
-			:minHeight="600"
-			@afterLeave="loaderChildAfterLeave"
-		/> -->
 	</block>
 </template>
 
 <script>
-import VueLoader from "../../../components/modules/VueLoader.vue";
 import VueTiptap from "../../../components/modules/VueTiptap.vue";
 
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import Block from "../../../components/ui/main/Block.vue";
 import Empty from "../../../components/modules/Empty.vue";
 
-import api from "../../../services/api";
+import api from "../../../mixin/api";
 import files from "../../../services/files";
+
+import TimeManager from "../../../mixin/time-manager";
 
 export default {
 	components: {
 		VueTiptap,
-		VueLoader,
 
 		InfoBar,
 		Block,
@@ -92,24 +85,15 @@ export default {
 		};
 	},
 	methods: {
-		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                   Загрузчик                       |*/
-		/* |___________________________________________________|*/
-		/* После скрытия элементы */
-		loaderChildAfterLeave() {
-			for (let key in this.loading.loader) {
-				if (!this.loading.loader[key]) {
-					this.loading.sections[key] = true;
-				}
-			}
-		},
-
 		/* Тип видеофайла */
 		getVideoType(value) {
 			return files.basetype(value);
 		},
 	},
 	mounted() {
+		const timeVideo = new TimeManager();
+		timeVideo.start();
+
 		api({
 			method: "get",
 			url: `${this.$store.getters.urlApi}` + `get-videos-all`,
@@ -117,13 +101,19 @@ export default {
 			.then((response) => {
 				if (!response) return;
 
-				this.videos = response.data.result;
+				timeVideo.end();
 
-				for (let i = 0; i < response.data.result.length; i++) {
-					this.videos[i] = response.data.result[i];
-				}
+				timeVideo.difference(this.$store.getters.timeout, () => {
+					this.videos = response.data.result;
+					
+					for (let i = 0; i < response.data.result.length; i++) {
+						this.videos[i] = response.data.result[i];
+					}
 
-				this.videos.splice(response.data.result.length, this.videos.length);
+					this.videos.splice(response.data.result.length, this.videos.length);
+				
+					this.loading.loader.videos = false;
+				});
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {
@@ -131,9 +121,6 @@ export default {
 					body: error,
 					type: "error",
 				});
-			})
-			.finally(() => {
-				this.loading.loader.videos = false;
 			});
 	},
 };

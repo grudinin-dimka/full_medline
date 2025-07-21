@@ -149,8 +149,10 @@ import Empty from "../../../components/modules/Empty.vue";
 
 import VueIcon from "../../../components/modules/icon/VueIcon.vue";
 
-import api from "../../../services/api";
+import api from "../../../mixin/api.js";
 import sorted from "../../../services/sorted.js";
+
+import TimeManager from "../../../mixin/time-manager.js";
 
 export default {
 	components: {
@@ -327,6 +329,9 @@ export default {
 		},
 	},
 	mounted() {
+		const timePrices = new TimeManager();
+		timePrices.start();
+
 		api({
 			method: "post",
 			url: `${this.$store.getters.urlApi}` + `get-prices-complecte`,
@@ -343,6 +348,8 @@ export default {
 				sorted.sortByName("up", this.categoriesList);
 
 				this.prices = response.data.result.prices;
+
+				this.loading.sections.prices = true;
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {
@@ -352,7 +359,11 @@ export default {
 				});
 			})
 			.finally(() => {
-				this.loading.loader.prices = false;
+				timePrices.end();
+
+				timePrices.difference(this.$store.getters.timeout, () => {
+					this.loading.loader.prices = false;
+				});
 			});
 	},
 };

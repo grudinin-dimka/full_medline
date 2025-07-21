@@ -170,8 +170,10 @@ import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import Block from "../../../components/ui/main/Block.vue";
 import LoadText from "../../../components/ui/main/LoadText.vue";
 
-import api from "../../../services/api";
+import api from "../../../mixin/api";
 import sorted from "../../../services/sorted";
+
+import TimeManager from "../../../mixin/time-manager";
 
 export default {
 	components: {
@@ -269,7 +271,9 @@ export default {
 		},
 	},
 	mounted() {
-		// Получение массива слайдов с сервера
+		const timeProfile = new TimeManager();
+		timeProfile.start();
+
 		api({
 			method: "post",
 			url: this.$store.getters.urlApi + "get-specialist-profile",
@@ -280,10 +284,16 @@ export default {
 			.then((response) => {
 				if (!response) return;
 
-				this.specialist.profile = response.data.result.profile;
-				this.specialist.specializations = response.data.result.specializations;
-				this.specialist.educations = response.data.result.educations;
-				this.specialist.certificates = response.data.result.certificates;
+				timeProfile.end();
+
+				timeProfile.difference(this.$store.getters.timeout, () => {
+					this.specialist.profile = response.data.result.profile;
+					this.specialist.specializations = response.data.result.specializations;
+					this.specialist.educations = response.data.result.educations;
+					this.specialist.certificates = response.data.result.certificates;
+
+					this.loading.loader.profile = false;
+				});
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {
@@ -291,9 +301,6 @@ export default {
 					body: error,
 					type: "error",
 				});
-			})
-			.finally(() => {
-				this.loading.loader.profile = false;
 			});
 	},
 };

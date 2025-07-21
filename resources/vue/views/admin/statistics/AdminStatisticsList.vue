@@ -27,7 +27,7 @@ import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 
 import VueLoader from "../../../components/modules/VueLoader.vue";
 
-import api from "../../../services/api";
+import api from "../../../mixin/api";
 
 export default {
 	components: {

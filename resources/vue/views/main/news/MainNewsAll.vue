@@ -34,7 +34,9 @@ import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import Block from "../../../components/ui/main/Block.vue";
 import Empty from "../../../components/modules/Empty.vue";
 
-import api from "../../../services/api";
+import api from "../../../mixin/api";
+
+import TimeManager from "../../../mixin/time-manager";
 
 export default {
 	components: {
@@ -172,6 +174,9 @@ export default {
 		},
 	},
 	mounted() {
+		const timeNews = new TimeManager();
+		timeNews.start();
+
 		api({
 			method: "post",
 			url: this.$store.getters.urlApi + `get-news-short`,
@@ -185,13 +190,19 @@ export default {
 			.then((response) => {
 				if (!response) return;
 
-				this.count = response.data.result.count;
+				timeNews.end();
 
-				for (let i = 0; i < response.data.result.news.length; i++) {
-					this.news[i] = response.data.result.news[i];
-				}
+				timeNews.difference(this.$store.getters.timeout, () => {
+					this.count = response.data.result.count;
 
-				this.news.splice(response.data.result.news.length, this.news.length);
+					for (let i = 0; i < response.data.result.news.length; i++) {
+						this.news[i] = response.data.result.news[i];
+					}
+
+					this.news.splice(response.data.result.news.length, this.news.length);
+
+					this.loading.loader.news = false;
+				});
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {
@@ -199,9 +210,6 @@ export default {
 					body: error,
 					type: "error",
 				});
-			})
-			.finally(() => {
-				this.loading.loader.news = false;
 			});
 	},
 };

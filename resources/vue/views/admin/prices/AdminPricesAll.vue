@@ -61,7 +61,12 @@
 				:disabled="disabled.prices.save"
 				:look="'inverse'"
 			>
-				<VueIcon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
+				<VueIcon
+					:name="'save'"
+					:fill="'var(--primary-color)'"
+					:width="'28px'"
+					:height="'28px'"
+				/>
 				Сохранить
 			</VueButton>
 		</template>
@@ -70,7 +75,7 @@
 			<VueTable
 				v-if="loading.sections.prices"
 				:table="table"
-				@create="openModalСreate"
+				@create="openModalСreate;"
 				@edite="downloadFile"
 				@delete="removePriceFile"
 			/>
@@ -99,7 +104,7 @@ import VueLoader from "../../../components/modules/VueLoader.vue";
 import VueIcon from "../../../components/modules/icon/VueIcon.vue";
 import VueButton from "../../../components/ui/VueButton.vue";
 
-import api from "../../../services/api";
+import api from "../../../mixin/api";
 import validate from "../../../services/validate";
 import shared from "../../../services/shared";
 import files from "../../../services/files";

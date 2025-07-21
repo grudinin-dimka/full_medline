@@ -1,5 +1,6 @@
 export default {
 	state: {
+		timeout: 350, 
 		modal: {
 			title: "",
 			status: false,
@@ -60,6 +61,10 @@ export default {
 
 		burgerMainStatus(state) {
 			return state.burger.main.status;
+		},
+
+		timeout(state) {
+			return state.timeout;
 		},
 	},
 };

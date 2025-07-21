@@ -259,7 +259,7 @@
 		</template>
 
 		<template #buttons>
-			<VueButton @click="openModalСreate" :disabled="disabled.slider.add">
+			<VueButton @click="openModalСreate;" :disabled="disabled.slider.add">
 				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</VueButton>
@@ -321,7 +321,7 @@ import BlockOnce from "../../components/ui/admin/blocks/BlockOnce.vue";
 import VueIcon from "../../components/modules/icon/VueIcon.vue";
 import VueButton from "../../components/ui/VueButton.vue";
 
-import api from "../../services/api";
+import api from "../../mixin/api";
 import shared from "../../services/shared";
 import files from "../../services/files";
 import sorted from "../../services/sorted";
@@ -336,7 +336,7 @@ export default {
 
 		VueIcon,
 		VueButton,
-		
+
 		Empty,
 		InfoBar,
 		BlockOnce,

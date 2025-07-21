@@ -102,7 +102,7 @@ import IconMasterCard from "../../../icons/IconMasterCard.vue";
 import IconMir from "../../../icons/IconMir.vue";
 
 import axios from "axios";
-import api from "../../../../services/api";
+import api from "../../../../mixin/api";
 
 export default {
 	components: {

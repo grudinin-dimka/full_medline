@@ -379,16 +379,16 @@ import Captcha from "../../../modules/Captcha.vue";
 import VueIcon from "../../../modules/icon/VueIcon.vue";
 import VueButton from "../../../ui/VueButton.vue";
 
-import api from "../../../../services/api";
+import api from "../../../../mixin/api";
 import validate from "../../../../services/validate";
 import shared from "../../../../services/shared";
 
 export default {
 	components: {
-		VueModal,		
+		VueModal,
 		VueInput,
 		VueInputContainer,
-		
+
 		Captcha,
 		VueButton,
 		VueIcon,
@@ -684,7 +684,7 @@ export default {
 						body: "Это ещё не готово, но уже скоро будет :)",
 						type: "completed",
 					});
-		
+
 					this.countPoints++;
 					break;
 

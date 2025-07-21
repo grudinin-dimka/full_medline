@@ -106,7 +106,7 @@ import VueLoader from "../../../components/modules/VueLoader.vue";
 import VueIcon from "../../../components/modules/icon/VueIcon.vue";
 import VueButton from "../../../components/ui/VueButton.vue";
 
-import api from "../../../services/api";
+import api from "../../../mixin/api";
 import validate from "../../../services/validate";
 
 export default {

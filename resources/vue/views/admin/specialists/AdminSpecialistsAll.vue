@@ -70,9 +70,7 @@
 		<template #footer>
 			<VueButton :look="'inverse'" @click="fillForm('Медлайн')"> Медлайн </VueButton>
 
-			<VueButton :look="'inverse'" @click="fillForm('Кардиологика')">
-				Кардиологика
-			</VueButton>
+			<VueButton :look="'inverse'" @click="fillForm('Кардиологика')"> Кардиологика </VueButton>
 
 			<VueButton @click="downloadSpecialistsXML" :disabled="disabled.specialists.download">
 				<VueIcon :name="'download'" :fill="'white'" :width="'24px'" :height="'24px'" />
@@ -105,7 +103,12 @@
 				:disabled="disabled.specialists.save"
 				:look="'inverse'"
 			>
-				<VueIcon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
+				<VueIcon
+					:name="'save'"
+					:fill="'var(--primary-color)'"
+					:width="'28px'"
+					:height="'28px'"
+				/>
 				Сохранить
 			</VueButton>
 		</template>
@@ -146,7 +149,7 @@ import VueLoader from "../../../components/modules/VueLoader.vue";
 import VueIcon from "../../../components/modules/icon/VueIcon.vue";
 import VueButton from "../../../components/ui/VueButton.vue";
 
-import api from "../../../services/api";
+import api from "../../../mixin/api";
 import validate from "../../../services/validate";
 import shared from "../../../services/shared";
 
@@ -157,7 +160,7 @@ export default {
 		VueTable,
 		VueModal,
 		VueInput,
-		
+
 		InfoBar,
 		BlockOnce,
 

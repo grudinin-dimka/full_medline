@@ -181,29 +181,6 @@ nav {
 	transition: all 0.5s ease-out;
 }
 
-/* Скролбар блока с контентом. */
-nav::-webkit-scrollbar {
-	width: 20px;
-}
-
-nav::-webkit-scrollbar-track {
-	background-color: rgba(255, 255, 255, 0);
-	border-radius: 10px;
-	margin: 2px;
-}
-
-nav::-webkit-scrollbar-thumb {
-	background-color: rgba(255, 255, 255, 0.3);
-	border: 6px solid var(--primary-color);
-	border-radius: 10px;
-}
-
-nav::-webkit-scrollbar-thumb:hover {
-	background-color: rgba(255, 255, 255, 0.5);
-	cursor: all-scroll;
-}
-/* Конец. */
-
 .nav__list {
 	display: grid;
 	grid-template-columns: repeat(5, auto);

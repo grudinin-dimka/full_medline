@@ -123,7 +123,9 @@ import Block from "../../../components/ui/main/Block.vue";
 import Empty from "../../../components/modules/Empty.vue";
 import LoadText from "../../../components/ui/main/LoadText.vue";
 
-import api from "../../../services/api";
+import api from "../../../mixin/api";
+
+import TimeManager from "../../../mixin/time-manager";
 
 export default {
 	components: {
@@ -198,6 +200,9 @@ export default {
 		},
 	},
 	created() {
+		const timeGroup = new TimeManager();
+		timeGroup.start();
+
 		// Получение массива докторов с сервера
 		api({
 			method: "post",
@@ -223,8 +228,12 @@ export default {
 				});
 			})
 			.finally(() => {
-				this.loading.loader.title = false;
-				this.loading.loader.group = false;
+				timeGroup.end();
+				
+				timeGroup.difference(this.$store.getters.timeout, () => {
+					this.loading.loader.title = false;
+					this.loading.loader.group = false;
+				});
 			});
 	},
 };

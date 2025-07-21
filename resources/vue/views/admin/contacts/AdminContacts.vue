@@ -99,7 +99,11 @@
 			</template>
 
 			<template v-if="modal.values.look == 'default' && !currentContact.data.delete.value">
-				<VueButton :look="'delete'" v-if="!currentContact.data.create.value" @click="deleteContact">
+				<VueButton
+					:look="'delete'"
+					v-if="!currentContact.data.create.value"
+					@click="deleteContact"
+				>
 					<VueIcon :name="'delete'" :fill="'white'" :width="'24px'" :height="'22px'" />
 					Удалить
 				</VueButton>
@@ -201,7 +205,12 @@
 				:disabled="disabled.contacts.save"
 				:look="'inverse'"
 			>
-				<VueIcon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
+				<VueIcon
+					:name="'save'"
+					:fill="'var(--primary-color)'"
+					:width="'28px'"
+					:height="'28px'"
+				/>
 				Сохранить
 			</VueButton>
 		</template>
@@ -229,7 +238,7 @@
 		</template>
 
 		<template #buttons>
-			<VueButton @click="openModalСreate">
+			<VueButton @click="openModalСreate;">
 				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</VueButton>
@@ -252,7 +261,7 @@ import VueLoader from "../../../components/modules/VueLoader.vue";
 import VueIcon from "../../../components/modules/icon/VueIcon.vue";
 import VueButton from "../../../components/ui/VueButton.vue";
 
-import api from "../../../services/api";
+import api from "../../../mixin/api.js";
 import shared from "../../../services/shared.js";
 import validate from "../../../services/validate.js";
 import sorted from "../../../services/sorted.js";

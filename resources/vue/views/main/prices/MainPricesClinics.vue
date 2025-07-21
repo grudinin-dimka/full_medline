@@ -51,9 +51,10 @@ import Block from "../../../components/ui/main/Block.vue";
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import Empty from "../../../components/modules/Empty.vue";
 
-import api from "../../../services/api";
-import shared from "../../../services/shared";
+import api from "../../../mixin/api";
 import sorted from "../../../services/sorted";
+
+import TimeManager from "../../../mixin/time-manager";
 
 export default {
 	components: {
@@ -96,17 +97,7 @@ export default {
 					addresses: false,
 				},
 			},
-			addresses: [
-				// {
-				// 	id: 1,
-				// 	city: "Далматово",
-				// 	cityUrl: "dalmatovo",
-				// 	house: "64",
-				// 	houseUrl: "64",
-				// 	street: "4-го Уральского Полка",
-				// 	streetUrl: "4-go-ural'skogo-polka",
-				// },
-			],
+			addresses: [],
 		};
 	},
 	methods: {
@@ -142,6 +133,9 @@ export default {
 		},
 	},
 	mounted() {
+		const timePrices = new TimeManager();
+		timePrices.start();
+
 		api({
 			method: "get",
 			url: this.$store.getters.urlApi + `get-prices-choice`,
@@ -159,7 +153,11 @@ export default {
 				});
 			})
 			.finally(() => {
-				this.loading.loader.addresses = false;
+				timePrices.end();
+
+				timePrices.difference(this.$store.getters.timeout, () => {
+					this.loading.loader.addresses = false;
+				});
 			});
 	},
 };
@@ -214,7 +212,7 @@ export default {
 	border: var(--input-border);
 	border-radius: var(--input-border-radius);
 	padding: 10px;
-	min-height: 40px;
+	min-height: 42px;
 
 	font-size: 1.125em;
 
@@ -223,7 +221,6 @@ export default {
 
 .prices__item > ul > li.skeleton {
 	border: 0px;
-	border-radius: 50px;
 }
 
 .prices__item > ul > li > a {

@@ -20,8 +20,10 @@ import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import Block from "../../../components/ui/main/Block.vue";
 import Empty from "../../../components/modules/Empty.vue";
 
-import api from "../../../services/api";
+import api from "../../../mixin/api.js";
 import sorted from "../../../services/sorted.js";
+
+import TimeManager from "../../../mixin/time-manager.js";
 
 export default {
 	components: {
@@ -77,7 +79,8 @@ export default {
 		},
 	},
 	mounted() {
-		this.loading.loader.contacts = false;
+		const timeContacts = new TimeManager();
+		timeContacts.start();
 
 		api({
 			method: "get",
@@ -86,14 +89,20 @@ export default {
 			.then((response) => {
 				if (!response) return;
 
-				this.contacts = response.data.result;
-				sorted.sortByOrder("up", this.contacts);
+				timeContacts.end();
 
-				for (let i = 0; i < response.data.result.length; i++) {
-					this.contacts[i] = response.data.result[i];
-				}
+				timeContacts.difference(this.$store.getters.timeout, () => {
+					this.contacts = response.data.result;
+					sorted.sortByOrder("up", this.contacts);
 
-				this.contacts.splice(response.data.result.length, this.contacts.length);
+					for (let i = 0; i < response.data.result.length; i++) {
+						this.contacts[i] = response.data.result[i];
+					}
+
+					this.contacts.splice(response.data.result.length, this.contacts.length);
+
+					this.loading.loader.contacts = false;
+				});
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {
@@ -101,9 +110,6 @@ export default {
 					body: error,
 					type: "error",
 				});
-			})
-			.finally(() => {
-				this.loading.loader.contacts = false;
 			});
 	},
 };

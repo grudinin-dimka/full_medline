@@ -378,7 +378,7 @@
 		</template>
 
 		<template #buttons>
-			<VueButton @click="openModalСreate">
+			<VueButton @click="openModalСreate;">
 				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</VueButton>
@@ -398,7 +398,7 @@ import VueLoader from "../../../components/modules/VueLoader.vue";
 import VueIcon from "../../../components/modules/icon/VueIcon.vue";
 import VueButton from "../../../components/ui/VueButton.vue";
 
-import api from "../../../services/api";
+import api from "../../../mixin/api";
 import validate from "../../../services/validate";
 import files from "../../../services/files";
 import shared from "../../../services/shared";

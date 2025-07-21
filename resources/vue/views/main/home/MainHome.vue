@@ -33,8 +33,10 @@ import Empty from "../../../components/modules/Empty.vue";
 import MainHomeSlides from "./MainHomeSlides.vue";
 import MainNewsItem from "../news/MainNewsItem.vue";
 
-import api from "../../../services/api.js";
+import api from "../../../mixin/api.js";
 import sorted from "../../../services/sorted.js";
+
+import TimeManager from "../../../mixin/time-manager.js";
 
 export default {
 	components: {
@@ -112,20 +114,10 @@ export default {
 			],
 		};
 	},
-	methods: {
-		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                   Загрузчик                       |*/
-		/* |___________________________________________________|*/
-		/* После скрытия элементы */
-		loaderChildAfterLeave() {
-			for (let key in this.loading.loader) {
-				if (!this.loading.loader[key]) {
-					this.loading.sections[key] = true;
-				}
-			}
-		},
-	},
 	mounted() {
+		const timeNews = new TimeManager();
+		timeNews.start();
+
 		api({
 			method: "post",
 			url: this.$store.getters.urlApi + "get-news-short",
@@ -139,13 +131,19 @@ export default {
 			.then((response) => {
 				if (!response) return;
 
-				sorted.sortByOrder("up", response.data.result.news);
+				timeNews.end();
 
-				for (let i = 0; i < response.data.result.news.length; i++) {
-					this.news[i] = response.data.result.news[i];
-				}
+				timeNews.difference(this.$store.getters.timeout, () => {
+					sorted.sortByOrder("up", response.data.result.news);
 
-				this.news.splice(response.data.result.news.length, this.news.length);
+					for (let i = 0; i < response.data.result.news.length; i++) {
+						this.news[i] = response.data.result.news[i];
+					}
+
+					this.news.splice(response.data.result.news.length, this.news.length);
+
+					this.loading.loader.news = false;
+				});
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {
@@ -153,12 +151,11 @@ export default {
 					body: error,
 					type: "error",
 				});
-			})
-			.finally(() => {
-				this.loading.loader.news = false;
 			});
 
-		// Получение массива слайдов с сервера
+		const timeSlides = new TimeManager();
+		timeSlides.start();
+
 		api({
 			method: "get",
 			url: this.$store.getters.urlApi + "get-slides-not-hide",
@@ -166,13 +163,19 @@ export default {
 			.then((response) => {
 				if (!response) return;
 
-				sorted.sortByOrder("up", response.data.result);
+				timeSlides.end();
 
-				for (let i = 0; i < response.data.result.length; i++) {
-					this.slides[i] = response.data.result[i];
-				}
+				timeSlides.difference(this.$store.getters.timeout, () => {
+					sorted.sortByOrder("up", response.data.result);
 
-				this.slides.splice(response.data.result.length, this.slides.length);
+					for (let i = 0; i < response.data.result.length; i++) {
+						this.slides[i] = response.data.result[i];
+					}
+
+					this.slides.splice(response.data.result.length, this.slides.length);
+
+					this.loading.loader.slider = false;
+				});
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {
@@ -180,9 +183,6 @@ export default {
 					body: error,
 					type: "error",
 				});
-			})
-			.finally(() => {
-				this.loading.loader.slider = false;
 			});
 	},
 };
@@ -216,8 +216,6 @@ p {
 	gap: 20px;
 
 	width: 1350px;
-
-	animation: show 0.5s ease-in-out;
 }
 
 .news__main-head {

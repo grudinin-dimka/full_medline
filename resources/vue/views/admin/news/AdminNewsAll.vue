@@ -9,12 +9,13 @@
 		<template #title>НОВОСТИ</template>
 
 		<template #options>
-			<VueButton
-				@click.prevent="saveNewsAll"
-				:disabled="disabled.news.save"
-				:look="'inverse'"
-			>
-				<VueIcon :name="'save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
+			<VueButton @click.prevent="saveNewsAll" :disabled="disabled.news.save" :look="'inverse'">
+				<VueIcon
+					:name="'save'"
+					:fill="'var(--primary-color)'"
+					:width="'28px'"
+					:height="'28px'"
+				/>
 				Сохранить
 			</VueButton>
 		</template>
@@ -62,7 +63,7 @@ import VueIcon from "../../../components/modules/icon/VueIcon.vue";
 import VueButton from "../../../components/ui/VueButton.vue";
 
 import shared from "../../../services/shared";
-import api from "../../../services/api";
+import api from "../../../mixin/api";
 
 export default {
 	components: {

@@ -243,8 +243,10 @@ import Block from "../../../components/ui/main/Block.vue";
 import LoadText from "../../../components/ui/main/LoadText.vue";
 import Empty from "../../../components/modules/Empty.vue";
 
-import api from "../../../services/api";
+import api from "../../../mixin/api.js";
 import sorted from "../../../services/sorted.js";
+
+import TimeManager from "../../../mixin/time-manager.js";
 
 export default {
 	components: {
@@ -355,7 +357,7 @@ export default {
 		loaderChildAfterLeave() {
 			this.loading.sections.prices = true;
 		},
-		
+
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                      ЦЕНЫ                         |*/
 		/* |___________________________________________________|*/
@@ -486,6 +488,9 @@ export default {
 		},
 	},
 	mounted() {
+		const timeTemplate = new TimeManager();
+		timeTemplate.start();
+
 		api({
 			method: "post",
 			url: `${this.$store.getters.urlApi}` + `get-prices-template`,
@@ -514,7 +519,11 @@ export default {
 				});
 			})
 			.finally(() => {
-				this.loading.loader.prices = false;
+				timeTemplate.end();
+
+				timeTemplate.difference(this.$store.getters.timeout, () => {
+					this.loading.loader.prices = false;
+				});
 			});
 	},
 };

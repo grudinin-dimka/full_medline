@@ -82,8 +82,10 @@ import Empty from "../../../components/modules/Empty.vue";
 
 import VueIcon from "../../../components/modules/icon/VueIcon.vue";
 
-import api from "../../../services/api";
+import api from "../../../mixin/api";
 import files from "../../../services/files";
+
+import TimeManager from "../../../mixin/time-manager";
 
 export default {
 	components: {
@@ -178,6 +180,9 @@ export default {
 		};
 	},
 	mounted() {
+		const timeAbout = new TimeManager();
+		timeAbout.start();
+
 		api({
 			method: "get",
 			url: this.$store.getters.urlApi + `get-abouts-all`,
@@ -185,14 +190,20 @@ export default {
 			.then((response) => {
 				if (!response) return;
 
-				for (let i = 0; i < response.data.result.length; i++) {
-					this.abouts[i] = response.data.result[i];
-				}
+				timeAbout.end();
 
-				this.abouts.splice(response.data.result.length, this.abouts.length);
+				timeAbout.difference(this.$store.getters.timeout, () => {
+					for (let i = 0; i < response.data.result.length; i++) {
+						this.abouts[i] = response.data.result[i];
+					}
 
-				this.abouts.sort((a, b) => {
-					return a.order - b.order;
+					this.abouts.splice(response.data.result.length, this.abouts.length);
+
+					this.abouts.sort((a, b) => {
+						return a.order - b.order;
+					});
+
+					this.loading.loader.about = false;
 				});
 			})
 			.catch((error) => {
@@ -201,10 +212,10 @@ export default {
 					body: error,
 					type: "error",
 				});
-			})
-			.finally(() => {
-				this.loading.loader.about = false;
 			});
+
+		const timeFiles = new TimeManager();
+		timeFiles.start();
 
 		api({
 			method: "get",
@@ -213,11 +224,17 @@ export default {
 			.then((response) => {
 				if (!response) return;
 
-				for (let i = 0; i < response.data.result.length; i++) {
-					this.infoFiles[i] = response.data.result[i];
-				}
+				timeFiles.end();
 
-				this.infoFiles.splice(response.data.result.length, this.infoFiles.length);
+				timeFiles.difference(this.$store.getters.timeout, () => {
+					for (let i = 0; i < response.data.result.length; i++) {
+						this.infoFiles[i] = response.data.result[i];
+					}
+
+					this.infoFiles.splice(response.data.result.length, this.infoFiles.length);
+
+					this.loading.loader.infoFiles = false;
+				});
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {
@@ -225,9 +242,6 @@ export default {
 					body: error,
 					type: "error",
 				});
-			})
-			.finally(() => {
-				this.loading.loader.infoFiles = false;
 			});
 	},
 };

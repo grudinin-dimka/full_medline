@@ -43,8 +43,10 @@ import Empty from "../../../components/modules/Empty.vue";
 
 import { RouterLink } from "vue-router";
 
-import api from "../../../services/api";
+import api from "../../../mixin/api";
 import sorted from "../../../services/sorted";
+
+import TimeManager from "../../../mixin/time-manager";
 
 export default {
 	components: {
@@ -241,16 +243,25 @@ export default {
 		},
 	},
 	mounted() {
+		const timeSpecialists = new TimeManager();
+		timeSpecialists.start();
+
 		api({
 			method: "get",
 			url: this.$store.getters.urlApi + `get-specialists`,
 		})
 			.then((response) => {
-				for (let i = 0; i < response.data.result.length; i++) {
-					this.specialists[i] = response.data.result[i];
-				}
+				timeSpecialists.end();
 
-				this.specialists.splice(response.data.result.length, this.specialists.length);
+				timeSpecialists.difference(this.$store.getters.timeout, () => {
+					for (let i = 0; i < response.data.result.length; i++) {
+						this.specialists[i] = response.data.result[i];
+					}
+
+					this.specialists.splice(response.data.result.length, this.specialists.length);
+
+					this.loading.loader.specialists = false;
+				});
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {
