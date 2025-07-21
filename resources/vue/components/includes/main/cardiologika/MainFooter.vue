@@ -101,7 +101,7 @@ import IconVisa from "../../../icons/IconVisa.vue";
 import IconMasterCard from "../../../icons/IconMasterCard.vue";
 import IconMir from "../../../icons/IconMir.vue";
 
-import api from "../../../../services/api";
+import api from "../../../../mixin/api";
 
 export default {
 	components: {
