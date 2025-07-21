@@ -10,15 +10,18 @@
 			<form @submit.prevent class="filters__item">
 				<VueInput v-model="filters.name" :type="'search'" :placeholder="'Введите услугу'" />
 
-				<button class="filters__item-button" @click="getPrices">
-					<VueIcon
-						:name="'search'"
-						:width="'24px'"
-						:height="'24px'"
-						:fill="'white'"
-						:cursor="'pointer'"
-					/>
-					Поиск
+				<button class="filters__item-button" @click="getPrices" :disabled="disabled.prices.get">
+					<span class="loader" v-if="disabled.prices.get"></span>
+					<div class="content" :class="{ disabled: disabled.prices.get }">
+						<VueIcon
+							:name="'search'"
+							:width="'24px'"
+							:height="'24px'"
+							:fill="'white'"
+							:cursor="'pointer'"
+						/>
+						Поиск
+					</div>
 				</button>
 			</form>
 
@@ -178,6 +181,12 @@ export default {
 				},
 			},
 
+			disabled: {
+				prices: {
+					get: false,
+				},
+			},
+
 			/* Фильтры */
 			filters: {
 				name: "",
@@ -287,8 +296,7 @@ export default {
 
 		/* Получение текущих цен */
 		getPrices() {
-			this.loading.loader.prices = true;
-			this.loading.sections.prices = false;
+			this.disabled.prices.get = true;
 
 			api({
 				method: "post",
@@ -324,7 +332,7 @@ export default {
 					});
 				})
 				.finally(() => {
-					this.loading.loader.prices = false;
+					this.disabled.prices.get = false;
 				});
 		},
 	},
@@ -387,25 +395,60 @@ export default {
 
 .filters__item-button {
 	cursor: pointer;
-
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	gap: 10px;
+	gap: var(--button-gap);
 
-	border: 0px;
+	padding: var(--button-padding);
+	border: var(--button-border);
 	border-radius: var(--input-border-radius);
-	background-color: var(--primary-color);
-	color: white;
-	padding: 0px 20px;
 
-	min-height: 58px;
-	font-size: 1.125rem;
-	transition: all 0.2s ease;
+	font-size: var(--button-font-size);
+	color: var(--button-font-color);
+	background-color: var(--button-background-color);
+
+	transition: all 0.2s;
 }
 
 .filters__item-button:hover {
-	background-color: var(--primary-color-hover);
+	color: var(--button-font-color-hover);
+	background-color: var(--button-background-color-hover);
+}
+
+button > .content {
+	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: var(--button-gap);
+}
+
+button > .content.disabled {
+	visibility: hidden;
+	opacity: 0;
+}
+
+.loader {
+	position: absolute;
+
+	width: 26px;
+	height: 26px;
+	border: var(--button-loader-border);
+	border-bottom-color: transparent;
+	border-radius: 50%;
+	display: inline-block;
+	box-sizing: border-box;
+	animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
 }
 
 /* Цены */
