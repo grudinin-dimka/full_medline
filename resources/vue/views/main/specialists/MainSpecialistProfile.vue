@@ -173,7 +173,7 @@ import LoadText from "../../../components/ui/main/LoadText.vue";
 import api from "../../../mixin/api";
 import sorted from "../../../services/sorted";
 
-import TimeManager from "../../../mixin/time-manager";
+import fakeDelay from "../../../mixin/fake-delay";
 
 export default {
 	components: {
@@ -271,37 +271,32 @@ export default {
 		},
 	},
 	mounted() {
-		const timeProfile = new TimeManager();
-		timeProfile.start();
-
-		api({
-			method: "post",
-			url: this.$store.getters.urlApi + "get-specialist-profile",
-			data: {
-				url: this.$route.params.name,
-			},
-		})
-			.then((response) => {
-				if (!response) return;
-
-				timeProfile.end();
-
-				timeProfile.difference(this.$store.getters.timeout, () => {
-					this.specialist.profile = response.data.result.profile;
-					this.specialist.specializations = response.data.result.specializations;
-					this.specialist.educations = response.data.result.educations;
-					this.specialist.certificates = response.data.result.certificates;
-
-					this.loading.loader.profile = false;
-				});
+		fakeDelay(this.$store.getters.timeout, () =>
+			api({
+				method: "post",
+				url: this.$store.getters.urlApi + "get-specialist-profile",
+				data: {
+					url: this.$route.params.name,
+				},
 			})
-			.catch((error) => {
+		).then((response) => {
+			if (!response) return;
+
+			try {
+				this.specialist.profile = response.data.result.profile;
+				this.specialist.specializations = response.data.result.specializations;
+				this.specialist.educations = response.data.result.educations;
+				this.specialist.certificates = response.data.result.certificates;
+
+				this.loading.loader.profile = false;
+			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
 					body: error,
 					type: "error",
 				});
-			});
+			}
+		});
 	},
 };
 </script>

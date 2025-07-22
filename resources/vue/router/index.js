@@ -59,17 +59,27 @@ const router = createRouter({
 						{
 							path: "clinics",
 							name: "prices-clinics",
-							component: () => import("../views/main/prices/MainPricesClinics.vue"),
+							component: () => import("../views/main/prices/clinics/MainPricesClinics.vue"),
+							redirect: { name: "prices-clinics-all" },
+							children: [
+								{
+									path: "",
+									name: "prices-clinics-all",
+									component: () =>
+										import("../views/main/prices/clinics/MainPricesClinicsAll.vue"),
+								},
+								{
+									path: ":city/:street/:house",
+									name: "prices-clinics-template",
+									component: () =>
+										import("../views/main/prices/clinics/MainPricesClinicsTemplate.vue"),
+								},
+							],
 						},
 						{
 							path: ":group",
 							name: "prices-group",
 							component: () => import("../views/main/prices/MainPricesGroup.vue"),
-						},
-						{
-							path: ":city/:street/:house",
-							name: "prices-template",
-							component: () => import("../views/main/prices/MainPricesTemplate.vue"),
 						},
 					],
 				},

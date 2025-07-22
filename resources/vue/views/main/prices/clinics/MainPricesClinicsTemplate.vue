@@ -4,8 +4,10 @@
 		<span class="link-arrow"> / </span>
 		<router-link to="/prices">Цены</router-link>
 		<span class="link-arrow"> / </span>
+		<router-link to="/prices/clinics">Клиники</router-link>
+		<span class="link-arrow"> / </span>
 		<router-link
-			:to="`/prices/${$route.params.city}/${$route.params.street}/${$route.params.house}`"
+			:to="`/prices/clinics/${$route.params.city}/${$route.params.street}/${$route.params.house}`"
 		>
 			<span class="address-name" v-if="!loading.loader.prices">{{ filters.address.name }}</span>
 		</router-link>
@@ -234,19 +236,19 @@
 </template>
 
 <script>
-import VueFilter from "../../../components/modules/filter/VueFilter.vue";
-import VueInput from "../../../components/modules/input/VueInput.vue";
-import VueLoader from "../../../components/modules/VueLoader.vue";
+import VueFilter from "../../../../components/modules/filter/VueFilter.vue";
+import VueInput from "../../../../components/modules/input/VueInput.vue";
+import VueLoader from "../../../../components/modules/VueLoader.vue";
 
-import InfoBar from "../../../components/ui/main/InfoBar.vue";
-import Block from "../../../components/ui/main/Block.vue";
-import LoadText from "../../../components/ui/main/LoadText.vue";
-import Empty from "../../../components/modules/Empty.vue";
+import InfoBar from "../../../../components/ui/main/InfoBar.vue";
+import Block from "../../../../components/ui/main/Block.vue";
+import LoadText from "../../../../components/ui/main/LoadText.vue";
+import Empty from "../../../../components/modules/Empty.vue";
 
-import api from "../../../mixin/api.js";
-import sorted from "../../../services/sorted.js";
+import api from "../../../../mixin/api.js";
+import sorted from "../../../../services/sorted.js";
 
-import TimeManager from "../../../mixin/time-manager.js";
+import fakeDelay from "../../../../mixin/fake-delay.js";
 
 export default {
 	components: {
@@ -488,43 +490,37 @@ export default {
 		},
 	},
 	mounted() {
-		const timeTemplate = new TimeManager();
-		timeTemplate.start();
+		fakeDelay(this.$store.getters.timeout, () =>
+			api({
+				method: "post",
+				url: `${this.$store.getters.urlApi}` + `get-prices-template`,
+				headers: {
+					Accept: "application/json",
+				},
+				data: {
+					city: this.$route.params.city,
+					street: this.$route.params.street,
+					house: this.$route.params.house,
+				},
+			})
+		).then((response) => {
+			if (!response) return;
 
-		api({
-			method: "post",
-			url: `${this.$store.getters.urlApi}` + `get-prices-template`,
-			headers: {
-				Accept: "application/json",
-			},
-			data: {
-				city: this.$route.params.city,
-				street: this.$route.params.street,
-				house: this.$route.params.house,
-			},
-		})
-			.then((response) => {
-				if (!response) return;
-
+			try {
 				this.filters.address = response.data.result.address;
 				this.categories = response.data.result.categories;
 				this.categoriesList = response.data.result.categoriesList;
 				this.prices = response.data.result.prices;
-			})
-			.catch((error) => {
+
+				this.loading.loader.prices = false;
+			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
 					body: error,
 					type: "error",
 				});
-			})
-			.finally(() => {
-				timeTemplate.end();
-
-				timeTemplate.difference(this.$store.getters.timeout, () => {
-					this.loading.loader.prices = false;
-				});
-			});
+			}
+		});
 	},
 };
 </script>

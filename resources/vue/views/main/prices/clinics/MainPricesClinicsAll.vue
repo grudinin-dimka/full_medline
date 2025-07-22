@@ -3,6 +3,8 @@
 		<router-link to="/">Главная</router-link>
 		<span class="link-arrow"> / </span>
 		<router-link to="/prices">Цены</router-link>
+		<span class="link-arrow"> / </span>
+		<router-link to="/prices/clinics">Клиники</router-link>
 	</info-bar>
 
 	<Block :minHeight="500">
@@ -30,7 +32,7 @@
 							<div class="address">{{ `ул. ${street.street}, д. ${street.house}` }}</div>
 							<a
 								@click.prevent="pushStreet(street)"
-								:href="`/prices/${street.cityUrl}/${street.streetUrl}/${street.houseUrl}`"
+								:href="`/prices/clinics/${street.cityUrl}/${street.streetUrl}/${street.houseUrl}`"
 								alt="смотреть"
 							>
 								Смотреть
@@ -45,16 +47,16 @@
 </template>
 
 <script>
-import VueLoader from "../../../components/modules/VueLoader.vue";
+import VueLoader from "../../../../components/modules/VueLoader.vue";
 
-import Block from "../../../components/ui/main/Block.vue";
-import InfoBar from "../../../components/ui/main/InfoBar.vue";
-import Empty from "../../../components/modules/Empty.vue";
+import Block from "../../../../components/ui/main/Block.vue";
+import InfoBar from "../../../../components/ui/main/InfoBar.vue";
+import Empty from "../../../../components/modules/Empty.vue";
 
-import api from "../../../mixin/api";
-import sorted from "../../../services/sorted";
+import api from "../../../../mixin/api";
+import sorted from "../../../../services/sorted";
 
-import TimeManager from "../../../mixin/time-manager";
+import fakeDelay from "../../../../mixin/fake-delay";
 
 export default {
 	components: {
@@ -97,6 +99,7 @@ export default {
 					addresses: false,
 				},
 			},
+
 			addresses: [],
 		};
 	},
@@ -123,7 +126,7 @@ export default {
 
 		pushStreet(street) {
 			this.$router.push({
-				name: "prices-template",
+				name: "prices-clinics-template",
 				params: {
 					city: street.cityUrl,
 					street: street.streetUrl,
@@ -133,32 +136,26 @@ export default {
 		},
 	},
 	mounted() {
-		const timePrices = new TimeManager();
-		timePrices.start();
-
-		api({
-			method: "get",
-			url: this.$store.getters.urlApi + `get-prices-choice`,
-		})
-			.then((response) => {
-				if (!response) return;
-
-				this.addresses = response.data.result;
+		fakeDelay(this.$store.getters.timeout, () =>
+			api({
+				method: "get",
+				url: this.$store.getters.urlApi + `get-prices-choice`,
 			})
-			.catch((error) => {
+		).then((response) => {
+			if (!response) return;
+
+			try {
+				this.addresses = response.data.result;
+
+				this.loading.loader.addresses = false;
+			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
 					body: error,
 					type: "error",
 				});
-			})
-			.finally(() => {
-				timePrices.end();
-
-				timePrices.difference(this.$store.getters.timeout, () => {
-					this.loading.loader.addresses = false;
-				});
-			});
+			}
+		});
 	},
 };
 </script>

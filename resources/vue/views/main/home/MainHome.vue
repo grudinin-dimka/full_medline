@@ -36,7 +36,7 @@ import MainNewsItem from "../news/MainNewsItem.vue";
 import api from "../../../mixin/api.js";
 import sorted from "../../../services/sorted.js";
 
-import TimeManager from "../../../mixin/time-manager.js";
+import fakeDelay from "../../../mixin/fake-delay.js";
 
 export default {
 	components: {
@@ -115,75 +115,65 @@ export default {
 		};
 	},
 	mounted() {
-		const timeNews = new TimeManager();
-		timeNews.start();
-
-		api({
-			method: "post",
-			url: this.$store.getters.urlApi + "get-news-short",
-			headers: {
-				Accept: "application/json",
-			},
-			data: {
-				limit: 6,
-			},
-		})
-			.then((response) => {
-				if (!response) return;
-
-				timeNews.end();
-
-				timeNews.difference(this.$store.getters.timeout, () => {
-					sorted.sortByOrder("up", response.data.result.news);
-
-					for (let i = 0; i < response.data.result.news.length; i++) {
-						this.news[i] = response.data.result.news[i];
-					}
-
-					this.news.splice(response.data.result.news.length, this.news.length);
-
-					this.loading.loader.news = false;
-				});
+		fakeDelay(this.$store.getters.timeout, () =>
+			api({
+				method: "post",
+				url: this.$store.getters.urlApi + "get-news-short",
+				headers: {
+					Accept: "application/json",
+				},
+				data: {
+					limit: 6,
+				},
 			})
-			.catch((error) => {
+		).then((response) => {
+			if (!response) return;
+
+			try {
+				sorted.sortByOrder("up", response.data.result.news);
+
+				for (let i = 0; i < response.data.result.news.length; i++) {
+					this.news[i] = response.data.result.news[i];
+				}
+
+				this.news.splice(response.data.result.news.length, this.news.length);
+
+				this.loading.loader.news = false;
+			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
 					body: error,
 					type: "error",
 				});
-			});
+			}
+		});
 
-		const timeSlides = new TimeManager();
-		timeSlides.start();
-
-		api({
-			method: "get",
-			url: this.$store.getters.urlApi + "get-slides-not-hide",
-		})
-			.then((response) => {
-				if (!response) return;
-
-				timeSlides.end();
-
-				timeSlides.difference(this.$store.getters.timeout, () => {
-					sorted.sortByOrder("up", response.data.result);
-
-					for (let i = 0; i < response.data.result.length; i++) {
-						this.slides[i] = response.data.result[i];
-					}
-
-					this.slides.splice(response.data.result.length, this.slides.length);
-
-					this.loading.loader.slider = false;
-				});
+		fakeDelay(this.$store.getters.timeout, () =>
+			api({
+				method: "get",
+				url: this.$store.getters.urlApi + "get-slides-not-hide",
 			})
-			.catch((error) => {
+		).then((response) => {
+			if (!response) return;
+
+			try {
+				sorted.sortByOrder("up", response.data.result);
+
+				for (let i = 0; i < response.data.result.length; i++) {
+					this.slides[i] = response.data.result[i];
+				}
+
+				this.slides.splice(response.data.result.length, this.slides.length);
+
+				this.loading.loader.slider = false;
+			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
 					body: error,
 					type: "error",
 				});
-			});
+			}
+		});
 	},
 };
 </script>

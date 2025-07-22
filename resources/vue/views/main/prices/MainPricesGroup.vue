@@ -125,7 +125,7 @@ import LoadText from "../../../components/ui/main/LoadText.vue";
 
 import api from "../../../mixin/api";
 
-import TimeManager from "../../../mixin/time-manager";
+import fakeDelay from "../../../mixin/fake-delay";
 
 export default {
 	components: {
@@ -200,41 +200,34 @@ export default {
 		},
 	},
 	created() {
-		const timeGroup = new TimeManager();
-		timeGroup.start();
+		fakeDelay(this.$store.getters.timeout, () =>
+			api({
+				method: "post",
+				url: this.$store.getters.urlApi + `get-prices-group`,
+				headers: {
+					Accept: "application/json",
+				},
+				data: {
+					group: this.$route.params.group,
+				},
+			})
+		).then((response) => {
+			if (!response) return;
 
-		// Получение массива докторов с сервера
-		api({
-			method: "post",
-			url: this.$store.getters.urlApi + `get-prices-group`,
-			headers: {
-				Accept: "application/json",
-			},
-			data: {
-				group: this.$route.params.group,
-			},
-		})
-			.then((response) => {
-				if (!response) return;
-
+			try {
 				this.title = response.data.result.title;
 				this.group = response.data.result.array;
-			})
-			.catch((error) => {
+
+				this.loading.loader.title = false;
+				this.loading.loader.group = false;
+			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
 					body: error,
 					type: "error",
 				});
-			})
-			.finally(() => {
-				timeGroup.end();
-				
-				timeGroup.difference(this.$store.getters.timeout, () => {
-					this.loading.loader.title = false;
-					this.loading.loader.group = false;
-				});
-			});
+			}
+		});
 	},
 };
 </script>

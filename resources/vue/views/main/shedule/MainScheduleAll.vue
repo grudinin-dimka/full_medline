@@ -292,7 +292,7 @@ import Block from "../../../components/ui/main/Block.vue";
 import api from "../../../mixin/api.js";
 import sorted from "../../../services/sorted.js";
 
-import TimeManager from "../../../mixin/time-manager.js";
+import fakeDelay from "../../../mixin/fake-delay.js";
 
 export default {
 	components: {
@@ -872,42 +872,37 @@ export default {
 		},
 	},
 	mounted() {
-		const timeShedule = new TimeManager();
-		timeShedule.start();
-
-		api({
-			method: "get",
-			url: `${this.$store.getters.urlApi}` + `get-shedules-all`,
-		})
-			.then((response) => {
-				if (!response) return;
-
-				timeShedule.end();
-
-				timeShedule.difference(this.$store.getters.timeout, () => {
-					for (let i = 0; i < response.data.result.sheduleClinics.length; i++) {
-						this.clinics[i] = response.data.result.sheduleClinics[i];
-					}
-
-					this.clinics.splice(response.data.result.sheduleClinics.length, this.clinics.length);
-
-					this.clinics.forEach((clinic) => {
-						clinic.status = false;
-					});
-
-					this.week = response.data.result.currentDays;
-					this.shedules = response.data.result.shedules;
-
-					this.loading.loader.schedule = false;
-				});
+		fakeDelay(this.$store.getters.timeout, () =>
+			api({
+				method: "get",
+				url: `${this.$store.getters.urlApi}` + `get-shedules-all`,
 			})
-			.catch((error) => {
+		).then((response) => {
+			if (!response) return;
+
+			try {
+				for (let i = 0; i < response.data.result.sheduleClinics.length; i++) {
+					this.clinics[i] = response.data.result.sheduleClinics[i];
+				}
+
+				this.clinics.splice(response.data.result.sheduleClinics.length, this.clinics.length);
+
+				this.clinics.forEach((clinic) => {
+					clinic.status = false;
+				});
+
+				this.week = response.data.result.currentDays;
+				this.shedules = response.data.result.shedules;
+
+				this.loading.loader.schedule = false;
+			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
 					body: error,
 					type: "error",
 				});
-			});
+			}
+		});
 	},
 };
 </script>

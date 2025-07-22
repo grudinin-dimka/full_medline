@@ -85,7 +85,8 @@ import VueIcon from "../../../components/modules/icon/VueIcon.vue";
 import api from "../../../mixin/api";
 import files from "../../../services/files";
 
-import TimeManager from "../../../mixin/time-manager";
+import fakeDelay from "../../../mixin/fake-delay";
+import sorted from "../../../services/sorted";
 
 export default {
 	components: {
@@ -180,69 +181,57 @@ export default {
 		};
 	},
 	mounted() {
-		const timeAbout = new TimeManager();
-		timeAbout.start();
-
-		api({
-			method: "get",
-			url: this.$store.getters.urlApi + `get-abouts-all`,
-		})
-			.then((response) => {
+		fakeDelay(this.$store.getters.timeout, () =>
+			api({
+				method: "get",
+				url: this.$store.getters.urlApi + `get-abouts-all`,
+			})
+		).then((response) => {
+			try {
 				if (!response) return;
 
-				timeAbout.end();
+				for (let i = 0; i < response.data.result.length; i++) {
+					this.abouts[i] = response.data.result[i];
+				}
 
-				timeAbout.difference(this.$store.getters.timeout, () => {
-					for (let i = 0; i < response.data.result.length; i++) {
-						this.abouts[i] = response.data.result[i];
-					}
+				this.abouts.splice(response.data.result.length, this.abouts.length);
 
-					this.abouts.splice(response.data.result.length, this.abouts.length);
+				sorted.sortNumberByKey("up", this.abouts, "order");
 
-					this.abouts.sort((a, b) => {
-						return a.order - b.order;
-					});
-
-					this.loading.loader.about = false;
-				});
-			})
-			.catch((error) => {
+				this.loading.loader.about = false;
+			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
 					body: error,
 					type: "error",
 				});
-			});
+			}
+		});
 
-		const timeFiles = new TimeManager();
-		timeFiles.start();
-
-		api({
-			method: "get",
-			url: this.$store.getters.urlApi + `get-info-files-all`,
-		})
-			.then((response) => {
+		fakeDelay(this.$store.getters.timeout, () =>
+			api({
+				method: "get",
+				url: this.$store.getters.urlApi + `get-info-files-all`,
+			})
+		).then((response) => {
+			try {
 				if (!response) return;
 
-				timeFiles.end();
+				for (let i = 0; i < response.data.result.length; i++) {
+					this.infoFiles[i] = response.data.result[i];
+				}
 
-				timeFiles.difference(this.$store.getters.timeout, () => {
-					for (let i = 0; i < response.data.result.length; i++) {
-						this.infoFiles[i] = response.data.result[i];
-					}
+				this.infoFiles.splice(response.data.result.length, this.infoFiles.length);
 
-					this.infoFiles.splice(response.data.result.length, this.infoFiles.length);
-
-					this.loading.loader.infoFiles = false;
-				});
-			})
-			.catch((error) => {
+				this.loading.loader.infoFiles = false;
+			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
 					body: error,
 					type: "error",
 				});
-			});
+			}
+		});
 	},
 };
 </script>

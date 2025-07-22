@@ -46,7 +46,7 @@ import { RouterLink } from "vue-router";
 import api from "../../../mixin/api";
 import sorted from "../../../services/sorted";
 
-import TimeManager from "../../../mixin/time-manager";
+import fakeDelay from "../../../mixin/fake-delay";
 
 export default {
 	components: {
@@ -243,36 +243,30 @@ export default {
 		},
 	},
 	mounted() {
-		const timeSpecialists = new TimeManager();
-		timeSpecialists.start();
-
-		api({
-			method: "get",
-			url: this.$store.getters.urlApi + `get-specialists`,
-		})
-			.then((response) => {
-				timeSpecialists.end();
-
-				timeSpecialists.difference(this.$store.getters.timeout, () => {
-					for (let i = 0; i < response.data.result.length; i++) {
-						this.specialists[i] = response.data.result[i];
-					}
-
-					this.specialists.splice(response.data.result.length, this.specialists.length);
-
-					this.loading.loader.specialists = false;
-				});
+		fakeDelay(this.$store.getters.timeout, () =>
+			api({
+				method: "get",
+				url: this.$store.getters.urlApi + `get-specialists`,
 			})
-			.catch((error) => {
+		).then((response) => {
+			if (!response) return;
+
+			try {
+				for (let i = 0; i < response.data.result.length; i++) {
+					this.specialists[i] = response.data.result[i];
+				}
+
+				this.specialists.splice(response.data.result.length, this.specialists.length);
+
+				this.loading.loader.specialists = false;
+			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
 					body: error,
 					type: "error",
 				});
-			})
-			.finally(() => {
-				this.loading.loader.specialists = false;
-			});
+			}
+		});
 	},
 };
 </script>

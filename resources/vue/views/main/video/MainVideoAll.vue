@@ -38,7 +38,7 @@ import Empty from "../../../components/modules/Empty.vue";
 import api from "../../../mixin/api";
 import files from "../../../services/files";
 
-import TimeManager from "../../../mixin/time-manager";
+import fakeDelay from "../../../mixin/fake-delay";
 
 export default {
 	components: {
@@ -91,37 +91,31 @@ export default {
 		},
 	},
 	mounted() {
-		const timeVideo = new TimeManager();
-		timeVideo.start();
-
-		api({
-			method: "get",
-			url: `${this.$store.getters.urlApi}` + `get-videos-all`,
-		})
-			.then((response) => {
+		fakeDelay(this.$store.getters.timeout, () =>
+			api({
+				// <-- Теперь это функция, которая при вызове вернёт промис
+				method: "get",
+				url: `${this.$store.getters.urlApi}` + `get-videos-all`,
+			})
+		).then((response) => {
+			try {
 				if (!response) return;
 
-				timeVideo.end();
+				for (let i = 0; i < response.data.result.length; i++) {
+					this.videos[i] = response.data.result[i];
+				}
 
-				timeVideo.difference(this.$store.getters.timeout, () => {
-					this.videos = response.data.result;
-					
-					for (let i = 0; i < response.data.result.length; i++) {
-						this.videos[i] = response.data.result[i];
-					}
+				this.videos.splice(response.data.result.length, this.videos.length);
 
-					this.videos.splice(response.data.result.length, this.videos.length);
-				
-					this.loading.loader.videos = false;
-				});
-			})
-			.catch((error) => {
+				this.loading.loader.videos = false;
+			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
 					body: error,
 					type: "error",
 				});
-			});
+			}
+		});
 	},
 };
 </script>

@@ -280,8 +280,6 @@ import VueLoader from "../../../components/modules/VueLoader.vue";
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import Block from "../../../components/ui/main/Block.vue";
 
-import TimeManager from "../../../mixin/time-manager";
-
 import { RouterLink } from "vue-router";
 
 export default {
@@ -318,6 +316,7 @@ export default {
 
 .plastic__img > img {
 	width: 100%;
+	min-height: 300px;
 }
 
 .plastic > article {

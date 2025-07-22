@@ -155,7 +155,7 @@ import VueIcon from "../../../components/modules/icon/VueIcon.vue";
 import api from "../../../mixin/api.js";
 import sorted from "../../../services/sorted.js";
 
-import TimeManager from "../../../mixin/time-manager.js";
+import fakeDelay from "../../../mixin/fake-delay.js";
 
 export default {
 	components: {
@@ -337,16 +337,15 @@ export default {
 		},
 	},
 	mounted() {
-		const timePrices = new TimeManager();
-		timePrices.start();
+		fakeDelay(this.$store.getters.timeout, () =>
+			api({
+				method: "post",
+				url: `${this.$store.getters.urlApi}` + `get-prices-complecte`,
+			})
+		).then((response) => {
+			if (!response) return;
 
-		api({
-			method: "post",
-			url: `${this.$store.getters.urlApi}` + `get-prices-complecte`,
-		})
-			.then((response) => {
-				if (!response) return;
-
+			try {
 				this.addresses = response.data.result.addresses;
 				this.categories = response.data.result.uniqueCategories;
 
@@ -357,22 +356,15 @@ export default {
 
 				this.prices = response.data.result.prices;
 
-				this.loading.sections.prices = true;
-			})
-			.catch((error) => {
+				this.loading.loader.prices = false;
+			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
 					body: error,
 					type: "error",
 				});
-			})
-			.finally(() => {
-				timePrices.end();
-
-				timePrices.difference(this.$store.getters.timeout, () => {
-					this.loading.loader.prices = false;
-				});
-			});
+			}
+		});
 	},
 };
 </script>

@@ -23,7 +23,7 @@ import Empty from "../../../components/modules/Empty.vue";
 import api from "../../../mixin/api.js";
 import sorted from "../../../services/sorted.js";
 
-import TimeManager from "../../../mixin/time-manager.js";
+import fakeDelay from "../../../mixin/fake-delay.js";
 
 export default {
 	components: {
@@ -79,38 +79,32 @@ export default {
 		},
 	},
 	mounted() {
-		const timeContacts = new TimeManager();
-		timeContacts.start();
-
-		api({
-			method: "get",
-			url: this.$store.getters.urlApi + `get-contacts-clinics-all`,
-		})
-			.then((response) => {
+		fakeDelay(this.$store.getters.timeout, () =>
+			api({
+				method: "get",
+				url: this.$store.getters.urlApi + `get-contacts-clinics-all`,
+			})
+		).then((response) => {
+			try {
 				if (!response) return;
 
-				timeContacts.end();
+				for (let i = 0; i < response.data.result.length; i++) {
+					this.contacts[i] = response.data.result[i];
+				}
 
-				timeContacts.difference(this.$store.getters.timeout, () => {
-					this.contacts = response.data.result;
-					sorted.sortByOrder("up", this.contacts);
+				this.contacts.splice(response.data.result.length, this.contacts.length);
+				
+				sorted.sortByOrder("up", this.contacts);
 
-					for (let i = 0; i < response.data.result.length; i++) {
-						this.contacts[i] = response.data.result[i];
-					}
-
-					this.contacts.splice(response.data.result.length, this.contacts.length);
-
-					this.loading.loader.contacts = false;
-				});
-			})
-			.catch((error) => {
+				this.loading.loader.contacts = false;
+			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
 					body: error,
 					type: "error",
 				});
-			});
+			}
+		});
 	},
 };
 </script>

@@ -36,7 +36,7 @@ import Empty from "../../../components/modules/Empty.vue";
 
 import api from "../../../mixin/api";
 
-import TimeManager from "../../../mixin/time-manager";
+import fakeDelay from "../../../mixin/fake-delay";
 
 export default {
 	components: {
@@ -174,43 +174,38 @@ export default {
 		},
 	},
 	mounted() {
-		const timeNews = new TimeManager();
-		timeNews.start();
-
-		api({
-			method: "post",
-			url: this.$store.getters.urlApi + `get-news-short`,
-			headers: {
-				Accept: "application/json",
-			},
-			data: {
-				limit: 9,
-			},
-		})
-			.then((response) => {
+		fakeDelay(this.$store.getters.timeout, () =>
+			api({
+				method: "post",
+				url: this.$store.getters.urlApi + `get-news-short`,
+				headers: {
+					Accept: "application/json",
+				},
+				data: {
+					limit: 9,
+				},
+			})
+		).then((response) => {
+			try {
 				if (!response) return;
 
-				timeNews.end();
+				this.count = response.data.result.count;
 
-				timeNews.difference(this.$store.getters.timeout, () => {
-					this.count = response.data.result.count;
+				for (let i = 0; i < response.data.result.news.length; i++) {
+					this.news[i] = response.data.result.news[i];
+				}
 
-					for (let i = 0; i < response.data.result.news.length; i++) {
-						this.news[i] = response.data.result.news[i];
-					}
+				this.news.splice(response.data.result.news.length, this.news.length);
 
-					this.news.splice(response.data.result.news.length, this.news.length);
-
-					this.loading.loader.news = false;
-				});
-			})
-			.catch((error) => {
+				this.loading.loader.news = false;
+			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
 					body: error,
 					type: "error",
 				});
-			});
+			}
+		});
 	},
 };
 </script>
