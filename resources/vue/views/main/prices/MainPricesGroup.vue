@@ -36,7 +36,7 @@
 								</div>
 							</div>
 							<ol class="price__group__prices">
-								<li v-for="price in 5" :key="price">
+								<li v-for="price in 5" :key="price" :class="{ load: true }">
 									<div class="price__group__prices-item">
 										<div
 											class="price__group__prices-name"
@@ -327,6 +327,15 @@ export default {
 	border-color: #c3c3c3;
 
 	transition: all 0.2s;
+}
+
+.price__group__prices > li.load {
+	border-top: 0px;
+	border-right: 0px;
+	border-bottom: 1px;
+	border-left: 0px;
+	border-style: solid;
+	border-color: white;
 }
 
 .price__group__prices-item {

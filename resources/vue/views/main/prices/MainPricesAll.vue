@@ -62,7 +62,7 @@
 							</div>
 						</div>
 						<ol class="prices__values">
-							<li v-for="price in 5" :key="price">
+							<li v-for="price in 5" :key="price" :class="{ load: loading.loader.prices }">
 								<div class="prices__values-item">
 									<div
 										class="prices__values-name"
@@ -558,6 +558,17 @@ button > .content.disabled {
 	border-left: 0px;
 	border-style: solid;
 	border-color: #c3c3c3;
+
+	transition: all 0.2s;
+}
+
+.prices__values > li.load {
+	border-top: 0px;
+	border-right: 0px;
+	border-bottom: 1px;
+	border-left: 0px;
+	border-style: solid;
+	border-color: #ffffff;
 
 	transition: all 0.2s;
 }
