@@ -238,7 +238,7 @@
 		</template>
 
 		<template #buttons>
-			<VueButton @click="openModalСreate;">
+			<VueButton @click="openModalСreate">
 				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</VueButton>
@@ -837,7 +837,7 @@ export default {
 					contact.create = false;
 					contact.delete = false;
 				});
-				sorted.sortByOrder("up", this.contacts);
+				sorted.sortNumberByKey("up", this.contacts, "order");
 
 				this.clinics = response.data.result.clinics;
 			})

@@ -94,7 +94,7 @@ export default {
 
 				this.contacts.splice(response.data.result.length, this.contacts.length);
 				
-				sorted.sortByOrder("up", this.contacts);
+				sorted.sortNumberByKey("up", this.contacts, "order");
 
 				this.loading.loader.contacts = false;
 			} catch (error) {

@@ -334,7 +334,7 @@ export default {
 				return resultCategories;
 			}
 
-			sorted.sortByName("up", currentCategories);
+			sorted.sortStringByKey("up", currentCategories, "name");
 
 			return currentCategories;
 		},
@@ -342,7 +342,7 @@ export default {
 		/* Вывод выбранных категорий */
 		getCategorySelected() {
 			let selected = this.filters.category.selected;
-			sorted.sortByName("up", this.filters.category.selected);
+			sorted.sortStringByKey("up", this.filters.category.selected, "name");
 
 			return selected;
 		},

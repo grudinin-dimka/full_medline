@@ -372,23 +372,15 @@ export default {
 		};
 	},
 	computed: {
+		/* Отображаемая таблица */
 		displayTable() {
+			// Дублируем массив таблицы
 			let tableBody = this.table.body.map((row) => {
-				const sortedData = this.table.head.reduce((acc, column) => {
-					acc[column.name] = row[column.name];
+				return this.table.head.reduce((acc, column) => {
+					acc[column.name] = row[column.name] ?? "...";
 					return acc;
 				}, {});
-				return sortedData;
 			});
-
-			// Заполнение пустых значений
-			for (let i = 0; i < tableBody.length; i++) {
-				for (let j = 0; j < this.table.head.length; j++) {
-					if (tableBody[i][this.table.head[j].name] == null) {
-						tableBody[i][this.table.head[j].name] = "...";
-					}
-				}
-			}
 
 			// Поиск по значению в общем поле ввода
 			if (this.searchInput != "") {
@@ -423,82 +415,82 @@ export default {
 			}
 
 			// Фильтрация полей по полям ввода
-			if (this.filter == true) {
-				for (let i = 0; i < this.filterFields.length; i++) {
-					// Проверка на пустое значение фильтра
-					if (this.filterFields[i].filter != "") {
-						let str, strFrom, strTo;
-						let searchBody = [];
+			// if (this.filter == true) {
+			// 	for (let i = 0; i < this.filterFields.length; i++) {
+			// 		// Проверка на пустое значение фильтра
+			// 		if (this.filterFields[i].filter != "") {
+			// 			let str, strFrom, strTo;
+			// 			let searchBody = [];
 
-						for (let j = 0; j < tableBody.length; j++) {
-							strFrom = this.filterFields[i].filter;
-							if (!strFrom.match(/^[a-zA-Z]+$/)) {
-								strFrom = strFrom.toLowerCase();
-								strFrom = strFrom.trim();
-							}
+			// 			for (let j = 0; j < tableBody.length; j++) {
+			// 				strFrom = this.filterFields[i].filter;
+			// 				if (!strFrom.match(/^[a-zA-Z]+$/)) {
+			// 					strFrom = strFrom.toLowerCase();
+			// 					strFrom = strFrom.trim();
+			// 				}
 
-							// Значение поля по this.filterFields[i].name
-							str = tableBody[j][this.filterFields[i].name];
+			// 				// Значение поля по this.filterFields[i].name
+			// 				str = tableBody[j][this.filterFields[i].name];
 
-							switch (this.filterFields[i].type) {
-								case "time":
-									strFrom = strFrom.split(" ")[0];
+			// 				switch (this.filterFields[i].type) {
+			// 					case "time":
+			// 						strFrom = strFrom.split(" ")[0];
 
-									if (
-										this.filterFields[i].from == null ||
-										this.filterFields[i].to == null
-									) {
-										searchBody.push(tableBody[j]);
-									}
+			// 						if (
+			// 							this.filterFields[i].from == null ||
+			// 							this.filterFields[i].to == null
+			// 						) {
+			// 							searchBody.push(tableBody[j]);
+			// 						}
 
-									if (
-										new Date(this.filterFields[i].from).getTime() <=
-											new Date(str).getTime() &&
-										new Date(this.filterFields[i].to).getTime() >= new Date(str).getTime()
-									) {
-										searchBody.push(tableBody[j]);
-									}
-									break;
-								case "button":
-									if (str.length != 0) {
-										for (let k = 0; k < str.length; k++) {
-											strTo = str[k].text;
-											strTo = String(strTo);
-											if (!strTo.match(/^[a-zA-Z]+$/)) {
-												strTo = strTo.toLowerCase().trim();
-											}
+			// 						if (
+			// 							new Date(this.filterFields[i].from).getTime() <=
+			// 								new Date(str).getTime() &&
+			// 							new Date(this.filterFields[i].to).getTime() >= new Date(str).getTime()
+			// 						) {
+			// 							searchBody.push(tableBody[j]);
+			// 						}
+			// 						break;
+			// 					case "button":
+			// 						if (str.length != 0) {
+			// 							for (let k = 0; k < str.length; k++) {
+			// 								strTo = str[k].text;
+			// 								strTo = String(strTo);
+			// 								if (!strTo.match(/^[a-zA-Z]+$/)) {
+			// 									strTo = strTo.toLowerCase().trim();
+			// 								}
 
-											if (strTo.includes(strFrom)) {
-												searchBody.push(tableBody[j]);
-											}
-										}
-									}
-									break;
-								case "default":
-								case "list":
-									strTo = str;
-									strTo = String(strTo);
-									if (!strTo.match(/^[a-zA-Z]+$/)) {
-										strTo = strTo.toLowerCase().trim();
-									}
+			// 								if (strTo.includes(strFrom)) {
+			// 									searchBody.push(tableBody[j]);
+			// 								}
+			// 							}
+			// 						}
+			// 						break;
+			// 					case "default":
+			// 					case "list":
+			// 						strTo = str;
+			// 						strTo = String(strTo);
+			// 						if (!strTo.match(/^[a-zA-Z]+$/)) {
+			// 							strTo = strTo.toLowerCase().trim();
+			// 						}
 
-									if (strTo.includes(strFrom)) {
-										searchBody.push(tableBody[j]);
-									}
-									break;
-								default:
-									break;
-							}
-						}
+			// 						if (strTo.includes(strFrom)) {
+			// 							searchBody.push(tableBody[j]);
+			// 						}
+			// 						break;
+			// 					default:
+			// 						break;
+			// 				}
+			// 			}
 
-						tableBody = searchBody;
-					}
-				}
-			} else {
-				for (let i = 0; i < this.filterFields.length; i++) {
-					this.filterFields[i].filter = "";
-				}
-			}
+			// 			tableBody = searchBody;
+			// 		}
+			// 	}
+			// } else {
+			// 	for (let i = 0; i < this.filterFields.length; i++) {
+			// 		this.filterFields[i].filter = "";
+			// 	}
+			// }
 
 			// Сортировка
 			let copyTable = [];
@@ -508,11 +500,11 @@ export default {
 				array.push(tableBody[i][this.sorting.sortField]);
 			}
 
-			if (this.sorting.sortType == "asc") {
-				sorted.sortString("up", array);
-			} else {
-				sorted.sortString("down", array);
-			}
+			// if (this.sorting.sortType == "asc") {
+			// 	sorted.sortString("up", array);
+			// } else {
+			// 	sorted.sortString("down", array);
+			// }
 
 			for (let i = 0; i < array.length; i++) {
 				for (let j = 0; j < tableBody.length; j++) {
@@ -526,18 +518,13 @@ export default {
 
 			tableBody = copyTable;
 
-			// Pagination
+			// Пагинация
 			tableBody = tableBody.slice(
 				(this.settings.pages.current - 1) * this.settings.elements.range,
 				this.settings.pages.current * this.settings.elements.range
 			);
 
 			return tableBody;
-		},
-
-		lang() {
-			// Языковые константы
-			return this.$store.getters.getLanguage;
 		},
 	},
 	methods: {

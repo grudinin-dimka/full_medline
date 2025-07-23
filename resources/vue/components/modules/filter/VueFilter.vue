@@ -59,7 +59,7 @@ import shared from "../../../services/shared";
 export default {
 	components: {
 		VueFIlterList,
-		
+
 		sorted,
 	},
 	props: {
@@ -118,7 +118,7 @@ export default {
 				});
 			}
 
-			sorted.sortByName("up", filteredList);
+			sorted.sortStringByKey("up", filteredList, "name");
 
 			return filteredList;
 		},

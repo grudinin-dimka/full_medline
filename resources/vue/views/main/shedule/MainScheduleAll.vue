@@ -659,7 +659,7 @@ export default {
 				}
 			}
 
-			sorted.sortByName("up", filteredShedules);
+			sorted.sortStringByKey("up", filteredShedules, "name");
 
 			return [...filteredShedules];
 		},

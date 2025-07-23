@@ -130,7 +130,7 @@ export default {
 			if (!response) return;
 
 			try {
-				sorted.sortByOrder("up", response.data.result.news);
+				sorted.sortNumberByKey("up", response.data.result.news, "order");
 
 				for (let i = 0; i < response.data.result.news.length; i++) {
 					this.news[i] = response.data.result.news[i];
@@ -157,7 +157,7 @@ export default {
 			if (!response) return;
 
 			try {
-				sorted.sortByOrder("up", response.data.result);
+				sorted.sortNumberByKey("up", response.data.result, "order");
 
 				for (let i = 0; i < response.data.result.length; i++) {
 					this.slides[i] = response.data.result[i];

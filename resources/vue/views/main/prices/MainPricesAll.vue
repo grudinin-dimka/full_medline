@@ -228,7 +228,7 @@ export default {
 		getCurrentCategories() {
 			let currentCategories = this.categoriesList;
 
-			sorted.sortByName("up", currentCategories);
+			sorted.sortStringByKey("up", currentCategories, "name");
 
 			return currentCategories;
 		},
@@ -320,7 +320,7 @@ export default {
 					this.filters.address = response.data.result.address.id;
 
 					this.categoriesList = response.data.result.categories;
-					sorted.sortByName("up", this.categoriesList);
+					sorted.sortNumberByKey("up", this.categoriesList, "name");
 
 					this.prices = response.data.result.prices;
 				})
@@ -352,7 +352,7 @@ export default {
 				this.filters.address = response.data.result.address.id;
 
 				this.categoriesList = response.data.result.categories;
-				sorted.sortByName("up", this.categoriesList);
+				sorted.sortStringByKey("up", this.categoriesList, "name");
 
 				this.prices = response.data.result.prices;
 

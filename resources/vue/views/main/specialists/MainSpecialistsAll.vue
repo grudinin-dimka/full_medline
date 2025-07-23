@@ -195,7 +195,7 @@ export default {
 					});
 				}
 
-				sorted.sortByName("up", filteredSpecialists);
+				sorted.sortStringByKey("up", filteredSpecialists, "name");
 			}
 
 			return filteredSpecialists;

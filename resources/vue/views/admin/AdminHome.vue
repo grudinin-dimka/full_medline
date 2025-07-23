@@ -259,7 +259,7 @@
 		</template>
 
 		<template #buttons>
-			<VueButton @click="openModalСreate;" :disabled="disabled.slider.add">
+			<VueButton @click="openModalСreate" :disabled="disabled.slider.add">
 				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</VueButton>
@@ -758,7 +758,7 @@ export default {
 					this.slides[key].create = false;
 				}
 
-				sorted.sortByOrder("up", this.slides);
+				sorted.sortNumberByKey("up", this.slides, "order");
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {

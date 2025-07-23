@@ -333,7 +333,7 @@
 		</template>
 
 		<template #buttons>
-			<VueButton @click="openModalСreate;">
+			<VueButton @click="openModalСreate">
 				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</VueButton>
@@ -1043,7 +1043,7 @@ export default {
 					item.delete = false;
 				});
 
-				sorted.sortByOrder("up", this.infoBlocks);
+				sorted.sortNumberByKey("up", this.infoBlocks, "order");
 			})
 			.catch((error) => {
 				this.$store.commit("addDebugger", {
