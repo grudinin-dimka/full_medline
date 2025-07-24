@@ -497,7 +497,7 @@ class PricesController extends Controller
 
       foreach ($pricesFiles as $pricesFilesKey => $pricesFilesValue) {
          $pricesFiles[$pricesFilesKey]->path = Storage::url('prices/' . $pricesFilesValue->filename);
-         $pricesFiles[$pricesFilesKey]->date = Carbon::parse($pricesFilesValue->created_at)->format('d.m.Y, H:i:s');
+         $pricesFiles[$pricesFilesKey]->date = $pricesFilesValue->created_at;
       };
 
       return response()->json([
