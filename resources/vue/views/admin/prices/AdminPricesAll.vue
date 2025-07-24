@@ -75,7 +75,7 @@
 			<VueTable
 				v-if="loading.sections.prices"
 				:table="table"
-				@create="openModalСreate;"
+				@create="openModalСreate"
 				@edite="downloadFile"
 				@delete="removePriceFile"
 			/>
@@ -193,7 +193,7 @@ export default {
 					{
 						name: "date",
 						text: "Дата загрузки",
-						columnType: "default",
+						columnType: "time",
 						columnSize: "300px",
 					},
 				],
