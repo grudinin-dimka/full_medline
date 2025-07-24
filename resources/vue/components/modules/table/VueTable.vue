@@ -191,7 +191,7 @@
 						<div :style="{ justifyContent: justifyOfField(key) }">
 							<!-- По умолчанию -->
 							<template v-if="typeOfField(key) == 'default'">
-								{{ value === "" ? "-" : value }}
+								{{ value === "" ? "..." : value }}
 							</template>
 
 							<template v-else-if="typeOfField(key) == 'time'">

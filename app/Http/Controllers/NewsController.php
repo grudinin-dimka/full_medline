@@ -33,7 +33,7 @@ class NewsController extends Controller
          $news = News::all()->sortByDesc('created_at')->values()->all();
 
          foreach ($news as $key => $value) {
-            $value->date = Carbon::parse($value->created_at)->format('d.m.Y H:i:s');
+            $value->date = $value->created_at;
             $value->url_date = Carbon::parse($value->created_at)->format('d.m.Y');
             $value->url_time = Carbon::parse($value->created_at)->format('H:i:s');
             $value->path = Storage::url('news/' . $value->image);

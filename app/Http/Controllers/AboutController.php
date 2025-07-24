@@ -61,7 +61,7 @@ class AboutController extends Controller
 
          foreach ($infoFiles as $infoFilesKey => $infoFilesValue) {
             $infoFiles[$infoFilesKey]->path = Storage::url('files/' . $infoFilesValue->filename);
-            $infoFiles[$infoFilesKey]->date = Carbon::parse($infoFilesValue->created_at)->format('d.m.Y, H:i:s');
+            $infoFiles[$infoFilesKey]->date = $infoFilesValue->created_at;
          };
 
          return response()->json([
