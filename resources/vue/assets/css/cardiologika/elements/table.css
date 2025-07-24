@@ -1,9 +1,28 @@
-/* BaseTable */
 :root {
 	--table-th-gap: calc(var(--default-gap) / 2);
-	--table-th-background-color: var(--default-background-color);	
+	--table-th-background-color: var(--default-background-color);
 
 	--table-td-gap: var(--table-th-gap);
 	--table-td-odd-background-color: rgba(0, 0, 0, 0.05);
 	--table-td-even-background-color: rgba(0, 0, 0, 0);
+
+	/* пагинация */
+	--table-pagination-gap: 10px;
+
+	--table-pagination-padding: 5px;
+	--table-pagination-border: 1px solid rgb(190, 190, 190);
+
+	--table-svg-fill: var(--primary-color);
+	--table-svg-fill-hover: var(--primary-color);
+
+	--table-pagination-button-border-radius: 100px;
+	--table-pagination-button-border: var(--default-border);
+	--table-pagination-button-border-hover: var(--default-border-active);
+	--table-pagination-button-background-color-hover: var(--item-background-color-active);
+
+	--table-pagination-button-font-size: 1rem;
+	--table-pagination-button-height: 30px;
+	--table-pagination-button-width: 30px;
+	--table-pagination-button-background-color: white;
+	--table-pagination-button-color: black;
 }

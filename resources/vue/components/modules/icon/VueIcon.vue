@@ -44,8 +44,8 @@ export default {
 			default: "pointer",
 		},
 		rotate: {
-			type: Number,
-			default: 0,
+			type: [Number, null],
+			default: null,
 		},
 	},
 	data() {
@@ -67,7 +67,10 @@ export default {
 	},
 	mounted() {
 		this.$refs.svg.style.cursor = `${this.cursor}`;
-		this.$refs.svg.style.transform = `rotate(${this.rotate}deg)`;
+
+		if (this.rotate) {
+			this.$refs.svg.style.transform = `rotate(${this.rotate}deg)`;
+		}
 	},
 };
 </script>

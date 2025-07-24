@@ -27,17 +27,18 @@ class CreatorController extends Controller
    /* |                 ПОЛЬЗОВАТЕЛИ                      |*/
    /* |___________________________________________________|*/
    /* Получение списка пользователей */
-   public function getUsersAll(Request $request) {
-      try {         
+   public function getUsersAll(Request $request)
+   {
+      try {
          $users = User::all();
-         
+
          foreach ($users as $userKey => $userValue) {
-               $rights = $userValue->rights();
-               $status = $userValue->status();
-   
-               $userValue->path = Storage::url('users/' . $userValue->filename);
+            $rights = $userValue->rights();
+            $status = $userValue->status();
+
+            $userValue->path = Storage::url('users/' . $userValue->filename);
          };
-   
+
          return response()->json([
             "success" => true,
             "debug" => false,
@@ -59,7 +60,8 @@ class CreatorController extends Controller
    }
 
    /* Сохранение информации о пользователе */
-   public function createUser(Request $request) {
+   public function createUser(Request $request)
+   {
       // Валидация
       $validator = Validator::make($request->all(), [
          'user' => 'required',
@@ -118,7 +120,7 @@ class CreatorController extends Controller
             "message" => "Некорректные данные.",
             "result" => null,
          ], 422);
-      };      
+      };
 
       try {
          $path = $request->file('image')->store(
@@ -137,7 +139,7 @@ class CreatorController extends Controller
             'password' => Hash::make($userData['password']),
             'filename' => basename($path),
          ]);
-         
+
          $user->path = Storage::url($path);
 
          return response()->json([
@@ -152,12 +154,13 @@ class CreatorController extends Controller
             "debug" => true,
             "message" => $e->getMessage(),
             "result" => null,
-         ], 500);         
+         ], 500);
       }
    }
 
    /* Сохранение информации о пользователе */
-   public function saveUser(Request $request) {
+   public function saveUser(Request $request)
+   {
       // Валидация
       $validator = Validator::make($request->all(), [
          'user' => 'required',
@@ -242,8 +245,8 @@ class CreatorController extends Controller
             "message" => "Некорректные данные.",
             "result" => null,
          ], 422);
-      };      
-      
+      };
+
       try {
          $user = User::find($userData['id']);
 
@@ -256,10 +259,10 @@ class CreatorController extends Controller
                   "success" => false,
                   "debug" => true,
                   "message" => "В системе должен быть хотя бы 1 создатель.",
-                  "result" => null,            
+                  "result" => null,
                ], 422);
             }
-         }        
+         }
 
          $user->family = $userData['family'];
          $user->name = $userData['name'];
@@ -271,8 +274,8 @@ class CreatorController extends Controller
          $user->rightsId = $userData['rightsId'];
          if ($path) $user->filename = basename($path);
          if (!empty($userData['password'])) $user->password = Hash::make($userData['password']);
-         $user->save();            
-         
+         $user->save();
+
          return response()->json([
             "success" => true,
             "debug" => true,
@@ -287,12 +290,13 @@ class CreatorController extends Controller
             "debug" => true,
             "message" => $e->getMessage(),
             "result" => null,
-         ], 500);         
+         ], 500);
       };
    }
-   
+
    /* Удаление пользователя */
-   public function deleteUser(Request $request) {
+   public function deleteUser(Request $request)
+   {
       $validator = Validator::make($request->all(), [
          'id' => [
             'required',
@@ -314,7 +318,7 @@ class CreatorController extends Controller
       };
 
       // Проверка на пользователя
-      if($request->user()->id === $request->id) {
+      if ($request->user()->id === $request->id) {
          return response()->json([
             "success" => false,
             "debug" => true,
@@ -337,13 +341,13 @@ class CreatorController extends Controller
 
       try {
          $user->delete();
-     
-            return response()->json([
-               "success" => true,
-               "debug" => true,
-               "message" => "Пользователь удалён.",
-               "result" => null,
-            ], 200);
+
+         return response()->json([
+            "success" => true,
+            "debug" => true,
+            "message" => "Пользователь удалён.",
+            "result" => null,
+         ], 200);
       } catch (Throwable $e) {
          return response()->json([
             "success" => false,
@@ -351,11 +355,12 @@ class CreatorController extends Controller
             "message" => $e->getMessage(),
             "result" => null,
          ], 500);
-      };   
+      };
    }
 
    /* Установка нового пароля */
-   public function setUserPassword(Request $request) {
+   public function setUserPassword(Request $request)
+   {
       $validator = Validator::make($request->all(), [
          'id' => [
             'required',
@@ -394,12 +399,13 @@ class CreatorController extends Controller
             "debug" => true,
             "message" => $e->getMessage(),
             "result" => null,
-         ], 500);         
+         ], 500);
       };
    }
-   
+
    /* Установка нового статуса */
-   public function setUserStatus(Request $request) {
+   public function setUserStatus(Request $request)
+   {
       $validator = Validator::make($request->all(), [
          'id' => [
             'required',
@@ -421,7 +427,7 @@ class CreatorController extends Controller
       };
 
       $user = User::find($request->id);
-      
+
       if ($request->user()->id === $user->id) {
          return response()->json([
             "success" => false,
@@ -447,26 +453,24 @@ class CreatorController extends Controller
             "debug" => true,
             "message" => $e->getMessage(),
             "result" => null,
-         ], 500);         
+         ], 500);
       };
-   }    
+   }
 
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                    СТАТИСТИКА                     |*/
    /* |___________________________________________________|*/
-   public function getTrackingStatisticsList(Request $request) {
+   public function getTrackingStatisticsList(Request $request)
+   {
       try {
          $statistics = Tracking::all()->reverse()->values()->take(1000);
 
          foreach ($statistics as $key => $statistic) {
-            $date = Carbon::parse($statistic->created_at);
-
-            // Форматируем дату в нужный формат
-            $dateShort = $date->format('d.m.Y H:i:s');
-
-            $statistic->created = $dateShort;
+            $statistic->created = $statistic->created_at
+               ->timezone(env('APP_TIMEZONE', 'Asia/Yekaterinburg')) // Конвертируем в часовой пояс приложения
+               ->format('Y-m-d\TH:i'); // Формат без секунд
          };
-         
+
          return response()->json([
             "success" => true,
             "debug" => false,
@@ -483,7 +487,8 @@ class CreatorController extends Controller
       };
    }
 
-   public function getTrackingStatisticsRange(Request $request) {
+   public function getTrackingStatisticsRange(Request $request)
+   {
       $validator = Validator::make($request->all(), [
          'start' => 'required|date',
          'end' => 'required|date',
@@ -505,14 +510,14 @@ class CreatorController extends Controller
       try {
          if ($request->type) {
             $statistics = Tracking::all()
-            ->where('created_at', '>=', Carbon::parse($request->start))
-            ->where('created_at', '<=', Carbon::parse($request->end)->addDay())
-            ->where('type', $request->type)
-            ->groupBy(
-               function($item) {
-                  return $item->created_at->format('Y-m-d'); // Группируем только по дате (без времени)
-               }
-            );
+               ->where('created_at', '>=', Carbon::parse($request->start))
+               ->where('created_at', '<=', Carbon::parse($request->end)->addDay())
+               ->where('type', $request->type)
+               ->groupBy(
+                  function ($item) {
+                     return $item->created_at->format('Y-m-d'); // Группируем только по дате (без времени)
+                  }
+               );
 
             $statisticsFormated = $statistics;
 
@@ -531,11 +536,11 @@ class CreatorController extends Controller
                ->where('created_at', '<=', Carbon::parse($request->end)->addDay())
                ->groupBy([
                   'type',
-                  function($item) {
+                  function ($item) {
                      return $item->created_at->format('Y-m-d'); // Группируем только по дате (без времени)
-                  }, 
+                  },
                ]);
-         
+
             $countDays = Carbon::parse($request->start)->diffInDays(Carbon::parse($request->end));
             $statisticsFormated = [];
             $firsDay = Carbon::parse($request->start);
@@ -547,7 +552,7 @@ class CreatorController extends Controller
             for ($i = $countDays; $i >= 0; $i--) {
                foreach ($statistics as $key => $statistic) {
                   $statisticsFormated[$key][Carbon::parse($firsDay)->format('Y-m-d')] = $statistic[Carbon::parse($firsDay)->format('Y-m-d')] ?? [];
-               } 
+               }
 
                $firsDay->addDay();
             };

@@ -1,13 +1,7 @@
 <template>
-	<!-- Filter -->
-	<ModalTime ref="modalTime" @changed="filterChanged" />
-
-	<!-- Container -->
-	<div class="table">
-		<!-- Container header -->
-		<div class="table__header">
-			<!-- Left side -->
-			<div class="table__header-left">
+	<div class="vue-table">
+		<div class="vue-table__header">
+			<div class="vue-table__header-left">
 				<select v-model="settings.elements.range">
 					<option v-for="value in [10, 20, 30]">
 						{{ value }}
@@ -16,9 +10,8 @@
 				<span>из {{ table.body.length }} записей</span>
 			</div>
 
-			<!-- Right side -->
-			<div class="table__header-right">
-				<VueTableButtonHead @click="filter = !filter">
+			<div class="vue-table__header-right">
+				<VueTableButtonHead @click="isFilter = !isFilter">
 					<svg
 						data-v-0db40482=""
 						xmlns="http://www.w3.org/2000/svg"
@@ -31,7 +24,7 @@
 							d="M120-240v-80h240v80H120Zm0-200v-80h480v80H120Zm0-200v-80h720v80H120Z"
 						></path>
 					</svg>
-					<span v-if="!filter">Вкл. фильтр полей</span>
+					<span v-if="!isFilter">Вкл. фильтр полей</span>
 					<span v-else>Выкл. фильтр полей</span>
 				</VueTableButtonHead>
 
@@ -54,19 +47,20 @@
 		</div>
 
 		<!-- Таблица -->
-		<table>
+		<table class="vue-table__table">
 			<!--  Заголовки таблицы  -->
-			<thead>
-				<tr>
+			<thead class="vue-table__thead">
+				<tr class="vue-table__thead-row">
 					<th
+						class="vue-table__thead-cell"
 						:style="{ width: removeIdHead(table.head)[key].columnSize }"
 						v-for="(value, key) in removeIdHead(table.head)"
 					>
-						<div>
+						<div class="vue-table__cell-content">
 							{{ value.text }}
 
 							<div
-								class="sort"
+								class="vue-table__content-sort"
 								v-if="
 									value.columnType == 'default' ||
 									value.columnType == 'list' ||
@@ -74,10 +68,9 @@
 								"
 							>
 								<VueIcon
+									class="th__content__sort-icon"
+									:class="{ rotate: this.sorting.sortType == 'up' }"
 									v-if="this.sorting.sortField == value.name"
-									:class="
-										this.sorting.sortType == 'asc' ? 'appear-rotate' : 'reverse-rotate'
-									"
 									:name="'arrow'"
 									:width="'16px'"
 									:height="'16px'"
@@ -88,6 +81,7 @@
 
 								<VueIcon
 									v-else
+									class="th__content__sort-icon"
 									:name="'sort'"
 									:width="'24px'"
 									:height="'24px'"
@@ -98,47 +92,64 @@
 							</div>
 						</div>
 					</th>
-					<th style="width: 270px" v-if="this.table.options.update">
+					<th
+						class="vue-table__thead-cell"
+						style="width: 270px"
+						v-if="this.table.options.update"
+					>
 						<div>Действия</div>
 					</th>
 				</tr>
 
 				<!-- Поля фильтра -->
-				<tr v-if="filter">
-					<td v-for="(value, key) in filterFields">
+				<tr class="vue-table__filter-row" v-if="isFilter">
+					<td class="vue-table__filter-cell" v-for="(value, key) in filterFields">
 						<!-- Фильтр по умолчанию -->
 						<div
+							class="vue-table__filter vue-table__filter--default"
 							v-if="
 								filterFields.find((field) => field.name === value.name).type == 'default'
 							"
 						>
 							<input
-								class="filter-field"
+								class="vue-table__filter-field"
 								type="text"
 								placeholder="Поиск"
 								v-model="filterFields.find((field) => field.name === value.name).filter"
 							/>
 						</div>
+
 						<!-- Фильтр по времени -->
 						<div
+							class="vue-table__filter vue-table__filter--time"
 							v-else-if="
 								filterFields.find((field) => field.name === value.name).type == 'time'
 							"
 						>
-							<VueTableButton :wide="true" @click="openFilter(value.name)">
-								Диапазон
-							</VueTableButton>
+							<input
+								class="vue-table__filter-field"
+								type="datetime-local"
+								v-model.trim="filterFields.find((field) => field.name === value.name).from"
+								@change="filterChangedStatus(value, 'on')"
+							/>
+							<input
+								class="vue-table__filter-field"
+								type="datetime-local"
+								v-model.trim="filterFields.find((field) => field.name === value.name).to"
+								@change="filterChangedStatus(value, 'on')"
+							/>
 						</div>
 
-						<!-- Фильтр по списку || Фильтр по спискам -->
+						<!-- Фильтр по списку -->
 						<div
+							class="vue-table__filter vue-table__filter--list"
 							v-else-if="
 								filterFields.find((field) => field.name === value.name).type == 'list' ||
 								filterFields.find((field) => field.name === value.name).type == 'button'
 							"
 						>
 							<input
-								class="filter-field"
+								class="vue-table__filter-field"
 								type="text"
 								:list="filterFields.find((field) => field.name === value.name).name"
 								placeholder="Поиск"
@@ -157,27 +168,34 @@
 							<div></div>
 						</div>
 					</td>
-					<td v-if="this.table.options.update">
+					<td class="vue-table__filter-cell" v-if="this.table.options.update">
 						<div></div>
 					</td>
 				</tr>
 			</thead>
 
 			<!--  Тело таблицы  -->
-			<tbody v-if="displayTable.length !== 0">
+			<tbody class="vue-table__tbody" v-if="displayTable.length !== 0">
 				<tr
+					class="vue-table__tbody-row"
 					v-for="row in displayTable"
 					:class="{
-						create: table.body.find((item) => item.id == row.id).create,
-						delete: table.body.find((item) => item.id == row.id).delete,
+						'vue-table__tbody-row--create': table.body.find((item) => item.id == row.id)
+							.create,
+						'vue-table__tbody-row--delete': table.body.find((item) => item.id == row.id)
+							.delete,
 					}"
 				>
 					<!-- Поля -->
-					<td v-for="(value, key) in removeIdTableBody(row)">
+					<td class="vue-table__tbody-cell" v-for="(value, key) in removeIdTableBody(row)">
 						<div :style="{ justifyContent: justifyOfField(key) }">
 							<!-- По умолчанию -->
-							<template v-if="typeOfField(key) == 'default' || typeOfField(key) == 'time'">
+							<template v-if="typeOfField(key) == 'default'">
 								{{ value === "" ? "-" : value }}
+							</template>
+
+							<template v-else-if="typeOfField(key) == 'time'">
+								{{ formatDate(value) }}
 							</template>
 
 							<!-- Список -->
@@ -227,8 +245,12 @@
 							</template>
 						</div>
 					</td>
+
 					<!-- Действия -->
-					<td v-if="table.options.update || table.options.delete">
+					<td
+						class="vue-table__tbody-cell"
+						v-if="table.options.update || table.options.delete"
+					>
 						<div class="table__buttons">
 							<VueTableButton
 								:wide="true"
@@ -297,27 +319,27 @@
 				</tr>
 			</tbody>
 			<!-- Пустая таблица -->
-			<tbody v-else>
-				<tr>
-					<td :colspan="Object.keys(this.table.head).length + 1">
+			<tbody class="vue-table__tbody" v-else>
+				<tr class="vue-table__tbody-row">
+					<td class="vue-table__tbody-cell" :colspan="Object.keys(this.table.head).length + 1">
 						<div class="table__tbody-empty">Пустая таблица</div>
 					</td>
 				</tr>
 			</tbody>
 		</table>
 
-		<Pagination :settings="settings" :arrayLength="table.body.length" @changePage="changePage" />
+		<VueTablePagination
+			:settings="settings"
+			:arrayLength="table.body.length"
+			@changePage="changePage"
+		/>
 	</div>
 </template>
 
 <script>
 import VueIcon from "../icon/VueIcon.vue";
 
-import Modal from "../modal/VueModal.vue";
-import ModalTime from "../modal/filters/VueModalTime.vue";
-
-import Pagination from "../Pagination.vue";
-
+import VueTablePagination from "./VueTablePagination.vue";
 import VueTableButton from "./VueTableButton.vue";
 import VueTableButtonHead from "./VueTableButtonHead.vue";
 
@@ -326,11 +348,8 @@ import sorted from "../../../services/sorted";
 export default {
 	components: {
 		VueIcon,
-		Pagination,
-
-		Modal,
-		ModalTime,
-
+		
+		VueTablePagination,
 		VueTableButton,
 		VueTableButtonHead,
 	},
@@ -345,7 +364,7 @@ export default {
 			default: "",
 		},
 	},
-	emits: ["create", "edite", "delete", "report", "rowEditedListMany", "button"],
+	emits: ["create", "edite", "delete", "report", "button"],
 	data() {
 		return {
 			/* Пагинация */
@@ -367,194 +386,110 @@ export default {
 
 			searchInput: "",
 
-			filter: false,
+			isFilter: false,
 			filterFields: [],
 		};
 	},
 	computed: {
 		/* Отображаемая таблица */
 		displayTable() {
-			// Дублируем массив таблицы
-			let tableBody = this.table.body.map((row) => {
-				return this.table.head.reduce((acc, column) => {
+			// 1. Создаем копию таблицы с нужными колонками
+			let tableBody = this.table.body.map((row) =>
+				this.table.head.reduce((acc, column) => {
 					acc[column.name] = row[column.name] ?? "...";
 					return acc;
-				}, {});
-			});
-
-			// Поиск по значению в общем поле ввода
-			if (this.searchInput != "") {
-				let strFrom, strTo;
-				let searchBody = [];
-
-				if (tableBody.length == 0) {
-					return [];
-				}
-
-				for (let key of Object.keys(tableBody[0])) {
-					for (let i = 0; i < tableBody.length; i++) {
-						strFrom = tableBody[i][key];
-						strFrom = String(strFrom);
-						strFrom = strFrom.toLowerCase();
-						strFrom = strFrom.trim();
-
-						strTo = this.searchInput;
-						strTo = String(strTo);
-						strTo = strTo.toLowerCase();
-						strTo = strTo.trim();
-
-						if (strFrom.includes(strTo)) {
-							if (!searchBody.includes(tableBody[i])) {
-								searchBody.push(tableBody[i]);
-							}
-						}
-					}
-				}
-
-				tableBody = searchBody;
-			}
-
-			// Фильтрация полей по полям ввода
-			// if (this.filter == true) {
-			// 	for (let i = 0; i < this.filterFields.length; i++) {
-			// 		// Проверка на пустое значение фильтра
-			// 		if (this.filterFields[i].filter != "") {
-			// 			let str, strFrom, strTo;
-			// 			let searchBody = [];
-
-			// 			for (let j = 0; j < tableBody.length; j++) {
-			// 				strFrom = this.filterFields[i].filter;
-			// 				if (!strFrom.match(/^[a-zA-Z]+$/)) {
-			// 					strFrom = strFrom.toLowerCase();
-			// 					strFrom = strFrom.trim();
-			// 				}
-
-			// 				// Значение поля по this.filterFields[i].name
-			// 				str = tableBody[j][this.filterFields[i].name];
-
-			// 				switch (this.filterFields[i].type) {
-			// 					case "time":
-			// 						strFrom = strFrom.split(" ")[0];
-
-			// 						if (
-			// 							this.filterFields[i].from == null ||
-			// 							this.filterFields[i].to == null
-			// 						) {
-			// 							searchBody.push(tableBody[j]);
-			// 						}
-
-			// 						if (
-			// 							new Date(this.filterFields[i].from).getTime() <=
-			// 								new Date(str).getTime() &&
-			// 							new Date(this.filterFields[i].to).getTime() >= new Date(str).getTime()
-			// 						) {
-			// 							searchBody.push(tableBody[j]);
-			// 						}
-			// 						break;
-			// 					case "button":
-			// 						if (str.length != 0) {
-			// 							for (let k = 0; k < str.length; k++) {
-			// 								strTo = str[k].text;
-			// 								strTo = String(strTo);
-			// 								if (!strTo.match(/^[a-zA-Z]+$/)) {
-			// 									strTo = strTo.toLowerCase().trim();
-			// 								}
-
-			// 								if (strTo.includes(strFrom)) {
-			// 									searchBody.push(tableBody[j]);
-			// 								}
-			// 							}
-			// 						}
-			// 						break;
-			// 					case "default":
-			// 					case "list":
-			// 						strTo = str;
-			// 						strTo = String(strTo);
-			// 						if (!strTo.match(/^[a-zA-Z]+$/)) {
-			// 							strTo = strTo.toLowerCase().trim();
-			// 						}
-
-			// 						if (strTo.includes(strFrom)) {
-			// 							searchBody.push(tableBody[j]);
-			// 						}
-			// 						break;
-			// 					default:
-			// 						break;
-			// 				}
-			// 			}
-
-			// 			tableBody = searchBody;
-			// 		}
-			// 	}
-			// } else {
-			// 	for (let i = 0; i < this.filterFields.length; i++) {
-			// 		this.filterFields[i].filter = "";
-			// 	}
-			// }
-
-			// Сортировка
-			let copyTable = [];
-			let array = [];
-
-			for (let i = 0; i < tableBody.length; i++) {
-				array.push(tableBody[i][this.sorting.sortField]);
-			}
-
-			// if (this.sorting.sortType == "asc") {
-			// 	sorted.sortString("up", array);
-			// } else {
-			// 	sorted.sortString("down", array);
-			// }
-
-			for (let i = 0; i < array.length; i++) {
-				for (let j = 0; j < tableBody.length; j++) {
-					if (tableBody[j][this.sorting.sortField] == array[i]) {
-						copyTable.push(tableBody[j]);
-						tableBody.splice(j, 1);
-						break;
-					}
-				}
-			}
-
-			tableBody = copyTable;
-
-			// Пагинация
-			tableBody = tableBody.slice(
-				(this.settings.pages.current - 1) * this.settings.elements.range,
-				this.settings.pages.current * this.settings.elements.range
+				}, {})
 			);
 
-			return tableBody;
+			// 2. Применяем поиск
+			if (this.searchInput) {
+				const searchTerm = this.searchInput.toLowerCase();
+				tableBody = tableBody.filter((row) =>
+					Object.values(row).join(" ").toLowerCase().includes(searchTerm)
+				);
+			}
+
+			// 3. Оптимизированная фильтрация
+			if (this.isFilter) {
+				this.filterFields.forEach((filterField) => {
+					if (!filterField.filter) return;
+
+					const filterValue = this.normalizeString(filterField.filter);
+					const fieldName = filterField.name;
+					const fieldType = filterField.type;
+
+					tableBody = tableBody.filter((row) => {
+						const cellValue = row[fieldName];
+
+						switch (fieldType) {
+							case "time":
+								if (!filterField.from && !filterField.to) return true;
+
+								const cellDate = new Date(cellValue);
+
+								if (filterField.from && filterField.to) {
+									return (
+										cellDate > new Date(filterField.from) &&
+										cellDate < new Date(filterField.to)
+									);
+								}
+
+								if (filterField.from && !filterField.to) {
+									return cellDate > new Date(filterField.from);
+								}
+
+								if (!filterField.from && filterField.to) {
+									return cellDate < new Date(filterField.to);
+								}
+							case "button":
+								if (!cellValue?.length) return false;
+
+								return cellValue.some((button) =>
+									this.normalizeString(button.text).includes(filterValue)
+								);
+
+							case "default":
+							case "list":
+								return this.normalizeString(cellValue).includes(filterValue);
+
+							default:
+								return true;
+						}
+					});
+				});
+			} else {
+				// Сброс фильтров
+				this.filterFields.forEach((field) => (field.filter = ""));
+			}
+
+			// 4. Сортировка
+			const sortField = this.sorting.sortField;
+			const sortType = this.sorting.sortType;
+
+			switch (this.typeOfField(sortField)) {
+				case "number":
+					sorted.sortNumberByKey(sortType, tableBody, sortField);
+					break;
+				default:
+					sorted.sortStringByKey(sortType, tableBody, sortField);
+					break;
+			}
+
+			// 5. Пагинация
+			const start = (this.settings.pages.current - 1) * this.settings.elements.range;
+			const end = this.settings.pages.current * this.settings.elements.range;
+
+			return tableBody.slice(start, end);
 		},
 	},
 	methods: {
-		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                    События                       |*/
-		/* |___________________________________________________|*/
-		/* Добавление строки */
-		modalAddRow() {
-			this.$refs.modalNewRow.open(this.table);
-		},
-		/* Создание строки */
-		rowCreated(data) {
-			this.$emit("rowCreated", data);
-		},
-		/* Редактирование строки */
-		modalEditRow(row) {
-			this.$refs.modalEditRow.open(this.fromDisplayToBaseTable(row), this.table);
-		},
-		/* Редактирование строки */
-		rowEdited(data) {
-			this.updateFilterFields();
-			this.$emit("rowEdited", data);
-		},
-		/* Удаление строки */
-		modalRemoveRow(row) {
-			this.$refs.modalDeleteRow.open(row, this.table);
-		},
-		/* Событие удаления */
-		rowDeleted(data) {
-			this.$emit("rowDeleted", data);
+		// Вспомогательная функция для нормализации строк
+		normalizeString(str) {
+			if (typeof str !== "string") str = String(str);
+			if (!str.match(/^[a-zA-Z]+$/)) {
+				return str.toLowerCase().trim();
+			}
+			return str;
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -563,14 +498,14 @@ export default {
 		/* Сортировка */
 		changeTypeSort(key) {
 			if (this.sorting.sortField == key) {
-				if (this.sorting.sortType == "asc") {
-					this.sorting.sortType = "desc";
+				if (this.sorting.sortType == "down") {
+					this.sorting.sortType = "up";
 				} else {
-					this.sorting.sortType = "asc";
+					this.sorting.sortType = "down";
 				}
 			} else {
 				this.sorting.sortField = key;
-				this.sorting.sortType = "desc";
+				this.sorting.sortType = "up";
 			}
 		},
 
@@ -606,12 +541,6 @@ export default {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                     Другое                        |*/
 		/* |___________________________________________________|*/
-		/* Открытие фильтра */
-		openFilter(fieldName) {
-			let field = this.filterFields.find((field) => field.name == fieldName);
-
-			this.$refs.modalTime.open(field);
-		},
 		/* Изменение фильтра */
 		filterChanged(field) {
 			for (let i = 0; i < this.filterFields.length; i++) {
@@ -620,6 +549,15 @@ export default {
 					break;
 				}
 			}
+		},
+
+		/* Изменение статуса фильтра */
+		filterChangedStatus(field, status) {
+			let currentField = this.filterFields.find(
+				(itterateField) => itterateField.name == field.name
+			);
+
+			currentField.filter = status;
 		},
 
 		fromDisplayToBaseTable(rowFromDisplay) {
@@ -652,22 +590,36 @@ export default {
 				}
 			}
 		},
+
 		/* Удаление поля id из tbody */
 		removeIdTableBody(row) {
 			const newRow = { ...row };
 			delete newRow.id;
 			return newRow;
 		},
+
 		/* Удаление поля id из thead */
 		removeIdHead(head) {
 			const newHead = head.filter((row) => row.name != "id");
 			return newHead;
 		},
+
+		formatDate(date) {
+			let currentDate = new Date(date);
+
+			return currentDate.toLocaleString("ru", {
+				month: "short",
+				day: "numeric",
+				year: "numeric",
+				hour: "numeric",
+				minute: "numeric",
+			});
+		},
 	},
 	created() {
-		// First sorting options
+		// Определение сортировки по умолчанию
 		this.sorting.sortField = this.table.head[0].name;
-		this.sorting.sortType = "asc";
+		this.sorting.sortType = "up";
 
 		let i = 0;
 		if (this.table.head[0].columnType == "id") {
@@ -746,40 +698,8 @@ export default {
 </script>
 
 <style scoped>
-/* Название таблицы */
-.info {
-	display: flex;
-	justify-content: space-between;
-	gap: calc(var(--default-padding) / 2);
-
-	min-height: 50px;
-
-	animation: show 0.5s ease-in-out;
-}
-
-.info > .info-name {
-	display: flex;
-	align-items: center;
-	gap: calc(var(--default-padding) / 2);
-
-	font-size: 1.125rem;
-	font-weight: bold;
-}
-
-.info > .info-name > .icon {
-	width: 32px;
-	height: 32px;
-
-	fill: var(--primary-color);
-}
-
-.info > .info-buttons {
-	display: flex;
-	gap: calc(var(--default-padding) / 2);
-}
-
-/* Компонент таблица */
-.table {
+/* Компонент */
+.vue-table {
 	display: flex;
 	flex-direction: column;
 	gap: var(--default-gap);
@@ -792,31 +712,20 @@ export default {
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
-input.filter-field {
-	width: 100%;
-
-	border: var(--default-border);
-	border-radius: calc(var(--button-border-radius) / 2);
-	padding: calc(var(--default-padding) / 2);
-	margin: 10px 0px;
-
-	font-size: 1rem;
-	color: var(--main-font-color);
-}
-
-.table__header {
+/* Компонент: Шапка */
+.vue-table__header {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 }
 
-.table__header-left {
+.vue-table__header-left {
 	display: flex;
 	align-items: center;
 	gap: calc(var(--default-gap) / 2);
 }
 
-.table__header-left > select {
+.vue-table__header-left > select {
 	cursor: pointer;
 
 	padding: 0px 10px;
@@ -829,12 +738,12 @@ input.filter-field {
 	font-size: 1.125rem;
 }
 
-.table__header-right {
+.vue-table__header-right {
 	display: flex;
 	gap: calc(var(--default-gap) / 2);
 }
 
-.table__header-right > input {
+.vue-table__header-right > input {
 	box-sizing: border-box;
 
 	background-color: white;
@@ -847,14 +756,127 @@ input.filter-field {
 	font-size: 1.125rem;
 }
 
-/* Таблица */
-table {
+/* Компонент: Шапка -> Кнопки */
+.table__tbody-empty {
+	display: flex;
+	justify-content: center;
+}
+
+.table-button-listMany {
+	color: var(--color-button-devices-text);
+	background-color: var(--color-button-devices-background);
+}
+
+.table-button-listMany:hover {
+	color: var(--color-button-hover-devices-text);
+	background-color: var(--color-button-hover-devices-background);
+}
+
+/* Компонент: Шапка -> Сортировка */
+.vue-table__content-sort {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	width: 25px;
+	height: 25px;
+}
+
+.th__content__sort-icon {
+	transition: all 0.2s;
+}
+
+.th__content__sort-icon.rotate {
+	transform: rotate(180deg);
+}
+
+/* Компонент: Таблица */
+.vue-table__table {
 	border-collapse: collapse;
 	width: 100%;
 }
 
-td,
-th {
+/* Компонент: Таблица -> Фильтры */
+.vue-table__filter {
+	margin: 10px;
+}
+
+.vue-table__filter.vue-table__filter--time {
+	display: flex;
+	flex-direction: column;
+}
+
+.vue-table__filter-field {
+	box-sizing: border-box;
+	width: 100%;
+
+	border: var(--default-border);
+	border-radius: calc(var(--button-border-radius) / 2);
+	padding: calc(var(--default-padding) / 2);
+
+	font-size: 1rem;
+	color: black;
+	caret-color: var(--primary-color);
+}
+
+/* Компонент: Таблица -> Строка */
+:is(.vue-table__thead-row, .vue-table__tbody-row):nth-child(even) > td {
+	background-color: var(--table-td-even-background-color);
+}
+
+:is(.vue-table__thead-row, .vue-table__tbody-row):nth-child(even) > td > div {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: var(--table-td-gap);
+
+	color: black;
+	font-size: 1rem;
+}
+
+:is(.vue-table__thead-row, .vue-table__tbody-row):nth-child(odd) > td {
+	background-color: var(--table-td-odd-background-color);
+}
+
+:is(.vue-table__thead-row, .vue-table__tbody-row):nth-child(odd) > td > div {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: var(--table-td-gap);
+
+	color: black;
+	font-size: 1rem;
+
+	transition: all 0.2s;
+}
+
+.vue-table__tbody-row {
+	transition: 0.25s;
+}
+
+.vue-table__tbody-row.vue-table__tbody-row--create > td > div {
+	color: var(--input-create-color);
+}
+
+.vue-table__tbody-row.vue-table__tbody-row--create > td {
+	background-color: var(--input-create-background-color-hover);
+}
+
+.vue-table__tbody-row.vue-table__tbody-row--delete > td > div {
+	color: var(--input-delete-color);
+}
+
+.vue-table__tbody-row.vue-table__tbody-row--delete > td {
+	background-color: var(--input-delete-background-color-hover);
+}
+
+/* Компонент: Таблица -> Ячейка */
+:is(
+		.vue-table__thead-cell,
+		.vue-table__filter-cell,
+		.vue-table__thead-cell,
+		.vue-table__tbody-cell
+	) {
 	border-top: 1px;
 	border-right: 1px;
 	border-bottom: 1px;
@@ -867,8 +889,7 @@ th {
 	transition: all 0.2s;
 }
 
-th > div,
-td > div {
+:is(.vue-table__thead-cell, .vue-table__thead-cell, .vue-table__tbody-cell) > div {
 	padding: 0px 10px;
 	border-radius: 0px;
 	min-height: 50px;
@@ -876,7 +897,7 @@ td > div {
 	transition: all 0.2s;
 }
 
-th > div {
+:is(.vue-table__thead-cell, .vue-table__filter-cell, .vue-table__thead-cell) > div {
 	box-sizing: border-box;
 	display: flex;
 	flex-direction: row;
@@ -888,86 +909,21 @@ th > div {
 	font-size: 1.125rem;
 }
 
-tr:nth-child(even) > td {
-	background-color: var(--table-td-even-background-color);
-}
-
-tr:nth-child(even) > td > div {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	gap: var(--table-td-gap);
-
-	color: black;
-	font-size: 1rem;
-}
-
-tr:nth-child(odd) > td {
-	background-color: var(--table-td-odd-background-color);
-}
-
-tr:nth-child(odd) > td > div {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	gap: var(--table-td-gap);
-
-	color: black;
-	font-size: 1rem;
-
-	transition: all 0.2s;
-}
-
-th div {
+:is(.vue-table__thead-cell, .vue-table__filter-cell, .vue-table__thead-cell) div {
 	align-items: center;
 	justify-content: space-between;
 }
 
-th div span {
+:is(.vue-table__thead-cell, .vue-table__filter-cell, .vue-table__thead-cell) div span {
 	font-size: var(--font-size-x-medium);
 	font-weight: bold;
 }
 
-th div .icon {
+:is(.vue-table__thead-cell, .vue-table__filter-cell, .vue-table__thead-cell) div .icon {
 	width: 25px;
 	height: 25px;
 
 	fill: var(--color-main-text);
-}
-
-.table__tbody-empty {
-	display: flex;
-	justify-content: center;
-}
-
-tr {
-	transition: 0.25s;
-}
-
-tr.create > td > div {
-	color: var(--input-create-color);
-}
-
-tr.create > td {
-	background-color: var(--input-create-background-color-hover);
-}
-
-tr.delete > td > div {
-	color: var(--input-delete-color);
-}
-
-tr.delete > td {
-	background-color: var(--input-delete-background-color-hover);
-}
-
-.table-button-listMany {
-	color: var(--color-button-devices-text);
-	background-color: var(--color-button-devices-background);
-}
-
-.table-button-listMany:hover {
-	color: var(--color-button-hover-devices-text);
-	background-color: var(--color-button-hover-devices-background);
 }
 
 .table-footer {
@@ -981,44 +937,11 @@ tr.delete > td {
 	gap: 10px;
 }
 
-.appear-rotate {
-	animation: appear-rotate 0.5s ease-in-out;
-	transform: rotate(180deg);
-}
-
-.sort {
-	cursor: pointer;
-
-	transition: all 0.2s;
-}
-
 @media screen and (width < 500px) {
 	table {
 		width: auto;
 		display: block;
 		overflow-x: scroll;
-	}
-}
-
-@keyframes appear-rotate {
-	0% {
-		transform: rotate(0deg);
-	}
-	100% {
-		transform: rotate(180deg);
-	}
-}
-
-.reverse-rotate {
-	animation: reverse-rotate 0.5s ease-in-out;
-}
-
-@keyframes reverse-rotate {
-	0% {
-		transform: rotate(180deg);
-	}
-	100% {
-		transform: rotate(0deg);
 	}
 }
 </style>

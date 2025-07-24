@@ -69,7 +69,7 @@
 			<VueTable
 				v-if="loading.sections.specializations"
 				:table="table"
-				@create="openModalСreate;"
+				@create="openModalСreate"
 				@edite="openModalEdite"
 				@delete="removeSpecialization"
 			/>
