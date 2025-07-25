@@ -173,7 +173,7 @@
 			<VueTable
 				v-if="loading.sections.clinics"
 				:table="table"
-				@create="openModalСreate;"
+				@create="openModalСreate"
 				@edite="openModalEdite"
 				@delete="removeClinic"
 			/>

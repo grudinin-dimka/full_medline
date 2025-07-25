@@ -6,18 +6,26 @@
 	</info-bar>
 
 	<block :minHeight="500">
-		<div class="filter-blocks">
-			<VueInput v-model="filters.name" :type="'search'" :placeholder="'Введите ФИО'" />
-
-			<VueSelector
-				v-model="filters.specialization"
-				:placeholder="'Выберите специализацию'"
-				:list="calcSpecializations"
-			/>
+		<div class="filters">
+			<div class="filters__item filters__item--default">
+				<VueInput v-model="filters.name" :type="'search'" :placeholder="'Введите ФИО'" />
+			</div>
+			<div class="filters__item filters__item--block">
+				<VueSelector
+					v-model="filters.clinic"
+					:placeholder="'Выберите клинику'"
+					:list="calcClinics"
+				/>
+				<VueSelector
+					v-model="filters.specialization"
+					:placeholder="'Выберите специализацию'"
+					:list="calcSpecializations"
+				/>
+			</div>
 		</div>
 
-		<div class="animation-list" v-if="getFilteredSpecialists.length > 0">
-			<div class="list-header">
+		<div class="specialists" v-if="getFilteredSpecialists.length > 0">
+			<div class="specialists__header">
 				<div></div>
 				<div>Врач</div>
 				<div>Клиника</div>
@@ -160,10 +168,12 @@ export default {
 			filters: {
 				name: "",
 				specialization: "",
+				clinic: "",
 			},
 		};
 	},
 	computed: {
+		/* Отфильтрованные специалисты */
 		getFilteredSpecialists() {
 			let filteredSpecialists = [...this.specialists];
 
@@ -187,6 +197,18 @@ export default {
 					});
 				}
 
+				if (this.filters.clinic !== "") {
+					filteredSpecialists = filteredSpecialists.filter((specialist) => {
+						if (Array.isArray(specialist.clinics)) {
+							for (let i = 0; i < specialist.clinics.length; i++) {
+								if (specialist.clinics[i].name == this.filters.clinic) {
+									return true;
+								}
+							}
+						}
+					});
+				}
+
 				if (this.filters.name !== "") {
 					filteredSpecialists = filteredSpecialists.filter((item) => {
 						if (item.name.toLowerCase().includes(this.filters.name.toLowerCase())) {
@@ -200,6 +222,8 @@ export default {
 
 			return filteredSpecialists;
 		},
+
+		/* Все специализации */
 		calcSpecializations() {
 			let specalizations = [];
 
@@ -231,6 +255,36 @@ export default {
 			sorted.sortStringByKey("up", specalizations, "label");
 
 			return specalizations;
+		},
+
+		calcClinics() {
+			let clinics = [];
+
+			this.specialists.forEach((specialist) => {
+				if (Array.isArray(specialist.clinics)) {
+					specialist.clinics.forEach((clinic) => {
+						if (!clinics.some((item) => item.label == clinic.name)) {
+							clinics.push({
+								value: clinic.name,
+								label: clinic.name,
+							});
+						}
+					});
+
+					return;
+				}
+
+				if (specialist.clinics !== null && typeof specialist.clinics == "object") {
+					clinics.push({
+						value: specialist.clinics.name,
+						label: specialist.clinics.name,
+					});
+				}
+			});
+
+			sorted.sortStringByKey("up", clinics, "label");
+
+			return clinics;
 		},
 	},
 	methods: {
@@ -273,11 +327,14 @@ export default {
 
 <style scoped>
 /* Блоки фильтров */
-.filter-blocks {
+.filters {
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--default-gap) / 2);
+}
+
+.filters__item {
 	box-sizing: border-box;
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	flex-wrap: wrap;
 	gap: 10px;
 
 	border: 0px solid var(--input-border-color-inactive);
@@ -288,110 +345,17 @@ export default {
 	animation: show 0.5s ease-out;
 }
 
-.filter-blocks > .item {
-	position: relative;
-	flex: 1 0 350px;
-
-	transition: all 0.2s;
-}
-
-.filter-blocks > .item.active {
-	border: 2px solid #44a533;
-}
-
-.filter-blocks > .container-input {
-	position: relative;
-	display: grid;
-	grid-template-columns: 1fr auto;
-}
-
-.filter-blocks > .container-input > input {
-	box-sizing: border-box;
-
-	padding: 15px;
-	border-radius: var(--input-border-radius);
-	border: var(--input-border);
-	outline: none;
-
-	font-size: 1.125rem;
-
-	height: 58px;
-
-	transition: all 0.2s;
-	caret-color: var(--input-border-color-active);
-}
-
-.filter-blocks > .container-input > input:focus {
-	border: var(--input-border-focus);
-}
-
-.filter-blocks > .container-input > button {
-	position: absolute;
-	top: 0px;
-	right: 5px;
-	cursor: pointer;
+.filters__item--default {
 	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 5px;
-
-	height: 58px;
-
-	border-radius: 10px;
-	border: 0px solid white;
-
-	font-size: 1.125rem;
-	color: white;
-	background-color: rgba(0, 0, 0, 0);
 }
 
-.filter-blocks > .container-input > button > svg {
-	fill: rgba(0, 0, 0, 1);
+.filters__item--block {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
 }
 
-.filter-blocks > .container-input > button > svg:hover {
-	fill: rgba(0, 0, 0, 1);
-}
-
-.filter-button.active {
-	background-color: #f2feff;
-	border: 2px solid var(--input-border-color-active);
-}
-
-.clear-filter {
-	position: absolute;
-	cursor: pointer;
-
-	top: 0px;
-	right: 0px;
-	color: var(--button-remove-color);
-}
-
-.clear-filter:hover {
-	text-decoration: underline;
-}
-
-.clear-filter > .point {
-	position: absolute;
-	top: 2px;
-
-	border-radius: 30px;
-
-	width: 16px;
-	height: 16px;
-}
-
-.clear-filter > .point.default {
-	left: 2px;
-	background-color: #b6b6b6;
-}
-
-.clear-filter > .point.active {
-	right: 2px;
-	background-color: var(--primary-color);
-}
-
-.animation-list {
+/* Блок специалистов */
+.specialists {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
@@ -400,7 +364,7 @@ export default {
 	min-height: 400px;
 }
 
-.animation-list > .list-header {
+.specialists > .specialists__header {
 	display: grid;
 	grid-template-columns: 110px 1fr 1fr 150px;
 	align-items: center;
@@ -409,71 +373,22 @@ export default {
 	font-size: 1.125rem;
 }
 
-.specialists-filters {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 10px;
-
-	width: 1350px;
-
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
-}
-
-.specialists-filters > .title {
-	display: flex;
-	align-items: center;
-	font-size: 1.5rem;
-	font-weight: 600;
-}
-
-.specialists-filters > .item {
-	cursor: pointer;
-	padding: 5px;
-
-	border-top: 2px;
-	border-top-color: rgba(255, 255, 255, 0);
-	border-right: 2px;
-	border-right-color: rgba(255, 255, 255, 0);
-	border-bottom: 2px;
-	border-bottom-color: var(--input-border-color-inactive);
-	border-left: 2px;
-	border-left-color: rgba(255, 255, 255, 0);
-	border-style: solid;
-
-	font-size: 1.125rem;
-
-	transition: all 0.2s;
-}
-
-.specialists-filters > .item:is(:hover, .active) {
-	color: black;
-	border-top: 2px;
-	border-top-color: rgba(255, 255, 255, 0);
-	border-right: 2px;
-	border-right-color: rgba(255, 255, 255, 0);
-	border-bottom: 2px;
-	border-bottom-color: var(--primary-color);
-	border-left: 2px;
-	border-left-color: rgba(255, 255, 255, 0);
-	border-style: solid;
-}
-
 @media screen and (width < 1450px) {
-	.animation-list,
-	.specialists-filters,
-	.filter-blocks {
+	.specialists,
+	.filters,
+	.filters__item {
 		width: 100%;
 	}
 }
 
 @media screen and (max-width: 1100px) {
-	.animation-list > .list-header {
+	.specialists > .specialists__header {
 		display: none;
 	}
 }
 
 @media screen and (max-width: 700px) {
-	.filter-blocks {
+	.filters__item--block {
 		grid-template-columns: 1fr;
 	}
 }

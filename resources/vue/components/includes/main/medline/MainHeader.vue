@@ -325,32 +325,12 @@
 
 	<!-- Кнопки -->
 	<div class="main__buttons">
-		<div class="main__buttons__actions" :class="{ active: isActions }">
-			<button class="main__buttons-button" @click="sayHelloPoints">
-				<VueIcon :name="'credit-card'" :fill="'white'" :width="'26px'" :height="'26px'" />
-			</button>
+		<button class="main__buttons-button" @click="sayHelloPoints">
+			<VueIcon :name="'credit-card'" :fill="'white'" :width="'26px'" :height="'26px'" />
+		</button>
 
-			<button class="main__buttons-button" @click="openModalRequestEdite">
-				<VueIcon :name="'phone'" :fill="'white'" :width="'26px'" :height="'26px'" />
-			</button>
-		</div>
-
-		<button class="main__buttons-button" @click="isActions = !isActions">
-			<VueIcon
-				v-if="!isActions"
-				:name="'more'"
-				:fill="'white'"
-				:width="'26px'"
-				:height="'26px'"
-			/>
-			<VueIcon
-				v-else
-				:name="'add'"
-				:fill="'white'"
-				:rotate="45"
-				:width="'26px'"
-				:height="'26px'"
-			/>
+		<button class="main__buttons-button" @click="openModalRequestEdite">
+			<VueIcon :name="'phone'" :fill="'white'" :width="'26px'" :height="'26px'" />
 		</button>
 
 		<button class="main__buttons-button" @click="topFunction">
@@ -398,7 +378,6 @@ export default {
 			countPoints: 0,
 
 			isShadow: false,
-			isActions: false,
 
 			/* Отключение */
 			disabled: {
@@ -932,21 +911,6 @@ export default {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
-}
-
-.main__buttons__actions {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
-
-	opacity: 0;
-	visibility: hidden;
-	transition: all 0.2s ease-in-out;
-}
-
-.main__buttons__actions.active {
-	opacity: 1;
-	visibility: visible;
 }
 
 .main__buttons-button {

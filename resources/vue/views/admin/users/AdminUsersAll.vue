@@ -378,7 +378,7 @@
 		</template>
 
 		<template #buttons>
-			<VueButton @click="openModalСreate;">
+			<VueButton @click="openModalСreate">
 				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</VueButton>

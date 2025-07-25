@@ -207,7 +207,7 @@ export default {
 		"filters.address": {
 			handler(newValue, oldValue) {
 				if (oldValue !== "") {
-					this.getPrices();
+					this.getPrices(true, false);
 				}
 			},
 		},
@@ -295,8 +295,25 @@ export default {
 		},
 
 		/* Получение текущих цен */
-		getPrices() {
+		getPrices(isAddress = true, isCategory = true) {
 			this.disabled.prices.get = true;
+
+			let values = {
+				price: this.filters.name === "" ? null : this.filters.name,
+			};
+
+			if (isAddress) {
+				values.address =
+					this.addresses.find((category) => category.id == this.filters.address)?.name ?? null;
+			}
+
+			if (isCategory) {
+				values.category =
+					this.categories.find((category) => category.id == this.filters.category)?.name ??
+					null;
+			} else {
+				this.filters.category = "";
+			}
 
 			api({
 				method: "post",
@@ -304,25 +321,17 @@ export default {
 				headers: {
 					Accept: "application/json",
 				},
-				data: {
-					price: this.filters.name === "" ? null : this.filters.name,
-					address:
-						this.addresses.find((category) => category.id == this.filters.address)?.name ??
-						null,
-					category:
-						this.categories.find((category) => category.id == this.filters.category)?.name ??
-						null,
-				},
+				data: values,
 			})
 				.then((response) => {
 					if (!response) return;
-					``;
+
 					this.filters.address = response.data.result.address.id;
-
-					this.categoriesList = response.data.result.categories;
-					sorted.sortNumberByKey("up", this.categoriesList, "name");
-
+					this.categories = response.data.result.categories;
+					this.categoriesList = response.data.result.categoriesList;
 					this.prices = response.data.result.prices;
+
+					sorted.sortNumberByKey("up", this.categoriesList, "name");
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
@@ -347,7 +356,7 @@ export default {
 
 			try {
 				this.addresses = response.data.result.addresses;
-				this.categories = response.data.result.uniqueCategories;
+				this.categories = response.data.result.categories;
 
 				this.filters.address = response.data.result.address.id;
 

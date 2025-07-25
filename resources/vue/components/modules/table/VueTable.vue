@@ -12,33 +12,57 @@
 
 			<div class="vue-table__header-right">
 				<VueTableButtonHead @click="isFilter = !isFilter">
-					<svg
-						data-v-0db40482=""
-						xmlns="http://www.w3.org/2000/svg"
-						height="24px"
-						width="24px"
-						viewBox="0 -960 960 960"
-						fill="var(--primary-color)"
-					>
-						<path
-							d="M120-240v-80h240v80H120Zm0-200v-80h480v80H120Zm0-200v-80h720v80H120Z"
-						></path>
-					</svg>
-					<span v-if="!isFilter">Вкл. фильтр полей</span>
-					<span v-else>Выкл. фильтр полей</span>
+					<template v-if="!isFilter">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="18"
+							height="18"
+							viewBox="0 0 24 24"
+							fill="var(--primary-color)"
+						>
+							<path
+								d="M9.33333 20V17.3333H14.6667V20H9.33333ZM4 13.3333V10.6667H20V13.3333H4ZM0 6.66667V4H24V6.66667H0Z"
+							></path>
+						</svg>
+
+						<span>Вкл. фильтр полей</span>
+					</template>
+
+					<template v-else>
+						<svg
+							width="18"
+							height="18"
+							viewBox="0 0 24 24"
+							fill="var(--primary-color)"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<g clip-path="url(#clip0_1_8)">
+								<path
+									d="M22.2749 24L0 1.72509L1.72509 0L24 22.2749L22.2749 24ZM17.4931 12.348L15.0719 9.92686H20.1261V12.348H17.4931ZM11.4401 6.29508L9.01892 3.8739H23.7579V6.29508H11.4401ZM10.4414 18.401V15.9798H15.2837V18.401H10.4414ZM5.59899 12.348V9.92686H10.623V12.348H5.59899ZM1.96721 6.29508V3.8739H4.56999V6.29508H1.96721Z"
+								/>
+							</g>
+							<defs>
+								<clipPath id="clip0_1_8">
+									<rect width="24" height="24" fill="white" />
+								</clipPath>
+							</defs>
+						</svg>
+
+						<span>Выкл. фильтр полей</span>
+					</template>
 				</VueTableButtonHead>
 
 				<VueTableButtonHead v-if="table.options.create" @click="$emit('create')">
 					<svg
-						data-v-0db40482=""
-						xmlns="http://www.w3.org/2000/svg"
-						height="24px"
-						width="24px"
-						viewBox="0 -960 960 960"
+						width="18"
+						height="18"
+						viewBox="0 0 24 24"
 						fill="var(--primary-color)"
+						xmlns="http://www.w3.org/2000/svg"
 					>
-						<path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"></path>
+						<path d="M11 21V13H3V11H11V3H13V11H21V13H13V21H11Z" />
 					</svg>
+
 					<span>Добавить</span>
 				</VueTableButtonHead>
 
@@ -348,7 +372,7 @@ import sorted from "../../../services/sorted";
 export default {
 	components: {
 		VueIcon,
-		
+
 		VueTablePagination,
 		VueTableButton,
 		VueTableButtonHead,

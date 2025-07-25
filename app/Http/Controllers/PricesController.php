@@ -210,20 +210,8 @@ class PricesController extends Controller
 
          $categories = PriceCategory::all()->whereIn('id', $pricesCategorys);
 
-         $uniqueCategories = [];
-
-         foreach ($categories as $categoryKey => $categoryValue) {
-            foreach ($uniqueCategories as $uniqueCategoriesKey => $uniqueCategoriesValue) {
-               if ($uniqueCategoriesValue->name == $categoryValue->name) {
-                  continue 2;
-               };
-            };
-
-            $uniqueCategories[] = $categoryValue;
-         };
-
          // Текущий адрес
-         $currentAddress = PriceAddress::all()->first();
+         $currentAddress = PriceAddress::where('name', 'like', '%Комсомольская%')->first();
          $categories = PriceCategory::where('addressId', $currentAddress->id)->get();
 
          // Получаем ID категорий
@@ -240,7 +228,7 @@ class PricesController extends Controller
             "message" => "Адрес успешно получен.",
             "result" => [
                "addresses" => $addresses,
-               "uniqueCategories" => $uniqueCategories,
+               // "uniqueCategories" => $uniqueCategories,
 
                "address" => $currentAddress,
                "categories" => $categories,
@@ -270,15 +258,15 @@ class PricesController extends Controller
 
          // Категории
          if (isset($request->category)) {
-            $categories = PriceCategory::where('addressId', $currentAddress->id)
+            $categoriesList = PriceCategory::where('addressId', $currentAddress->id)
                ->where('name', $request->category)
                ->get();
          } else {
-            $categories = PriceCategory::where('addressId', $currentAddress->id)->get();
+            $categoriesList = PriceCategory::where('addressId', $currentAddress->id)->get();
          };
 
          // Получаем ID категорий
-         $categoryIds = $categories->pluck('id');
+         $categoryIds = $categoriesList->pluck('id');
 
          // Получаем цены, привязанные к этим категориям
          if (isset($request->price)) {
@@ -288,7 +276,13 @@ class PricesController extends Controller
          };
 
          $pricesCategories = $prices->pluck('categoryId');
-         $categories = PriceCategory::whereIn('id', $pricesCategories)->get();
+
+         $categoriesListAll = PriceCategory::where('addressId', $currentAddress->id)->get();
+         $pricesAddress = PriceValue::whereIn('categoryId', $categoriesListAll->pluck('id'))->get();
+         $pricesAddressCategories = $pricesAddress->pluck('categoryId');
+         $categoriesAddress = PriceCategory::whereIn('id', $pricesAddressCategories)->get();
+
+         $categoriesList = PriceCategory::whereIn('id', $pricesCategories)->get();
 
          return response()->json([
             "success" => true,
@@ -296,7 +290,8 @@ class PricesController extends Controller
             "message" => "Адрес успешно получен.",
             "result" => [
                "address" => $currentAddress,
-               "categories" => $categories,
+               "categories" => $categoriesAddress,
+               "categoriesList" => $categoriesList,
                "prices" => $prices
             ],
          ], 200);
