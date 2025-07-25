@@ -1,43 +1,39 @@
 <template>
-	<BlockTwo :minHeight="185">
+	<BlockTwo :minHeight="100">
 		<template #one-title> ПОСЕЩАЕМОСТЬ </template>
 		<template #one-body>
-			<apexchart
-				v-if="loading.sections.attendance"
-				class="apex"
-				width="100%"
-				height="150px"
-				type="heatmap"
-				:options="attendance.options"
-				:series="attendance.series"
-			></apexchart>
-
-			<VueLoader
-				:isLoading="loading.loader.attendance"
-				:isChild="true"
-				:minHeight="150"
-				@afterLeave="loaderChildAfterLeave"
-			/>
+			<div
+				class="apexchart__skeleton"
+				:class="{ skeleton: loading.loader.attendance }"
+				:style="{ minHeight: '170px' }"
+			>
+				<apexchart
+					v-if="!loading.loader.attendance"
+					width="100%"
+					height="150px"
+					type="heatmap"
+					:options="attendance.options"
+					:series="attendance.series"
+				></apexchart>
+			</div>
 		</template>
 
 		<template #two-title> ЗАПИСЬ НА ПРИЕМ </template>
 		<template #two-body>
-			<apexchart
-				v-if="loading.sections.recordPriem"
-				class="apex"
-				width="100%"
-				height="150px"
-				type="heatmap"
-				:options="recordPriem.options"
-				:series="recordPriem.series"
-			></apexchart>
-
-			<VueLoader
-				:isLoading="loading.loader.recordPriem"
-				:isChild="true"
-				:minHeight="150"
-				@afterLeave="loaderChildAfterLeave"
-			/>
+			<div
+				class="apexchart__skeleton"
+				:class="{ skeleton: loading.loader.recordPriem }"
+				:style="{ minHeight: '170px' }"
+			>
+				<apexchart
+					v-if="!loading.loader.recordPriem"
+					width="100%"
+					height="150px"
+					type="heatmap"
+					:options="recordPriem.options"
+					:series="recordPriem.series"
+				></apexchart>
+			</div>
 		</template>
 	</BlockTwo>
 
@@ -63,7 +59,7 @@
 		<template #body>
 			<VueInputContainer :direction="'row'" :count="2" :gap="'10px'">
 				<template #legend> ОТ И ДО </template>
-				
+
 				<template #inputs>
 					<VueInput
 						v-model="currentDate.data.dateStart.value"
@@ -85,22 +81,20 @@
 				</template>
 			</VueInputContainer>
 
-			<apexchart
-				v-if="loading.sections.week"
-				class="apex"
-				width="100%"
-				height="700px"
-				type="area"
-				:options="apexchart.options"
-				:series="apexchart.series"
-			/>
-
-			<VueLoader
-				:isLoading="loading.loader.week"
-				:isChild="true"
-				:minHeight="700"
-				@afterLeave="loaderChildAfterLeave"
-			/>
+			<div
+				class="apexchart__skeleton"
+				:class="{ skeleton: loading.loader.week }"
+				:style="{ minHeight: '730px', marginTop: '20px' }"
+			>
+				<apexchart
+					v-if="!loading.loader.week"
+					width="100%"
+					height="700px"
+					type="area"
+					:options="apexchart.options"
+					:series="apexchart.series"
+				/>
+			</div>
 		</template>
 	</BlockOnce>
 </template>
@@ -118,6 +112,8 @@ import VueButton from "../../../components/ui/VueButton.vue";
 
 import api from "../../../mixin/api";
 import validate from "../../../services/validate";
+
+import fakeDelay from "../../../mixin/fake-delay";
 
 export default {
 	components: {
@@ -402,30 +398,32 @@ export default {
 		previousDay.setDate(currentDay.getDate() - 7);
 		this.currentDate.data.dateStart.value = previousDay.toISOString().slice(0, 10);
 
-		api({
-			method: "post",
-			url: this.$store.getters.urlApi + `get-tracking-statistics-range`,
-			headers: {
-				Accept: "application/json",
-			},
-			data: {
-				start: previousDay.toISOString().split("T")[0],
-				end: currentDay.toISOString().split("T")[0],
-				types: [
-					"Посещение",
-					"Специалисты",
-					"Цены",
-					"Расписание",
-					"Новости",
-					"Видео",
-					"Контакты",
-					"О нас",
-				],
-			},
-		})
-			.then((response) => {
-				if (!response) return;
+		fakeDelay(this.$store.getters.timeout, () =>
+			api({
+				method: "post",
+				url: this.$store.getters.urlApi + `get-tracking-statistics-range`,
+				headers: {
+					Accept: "application/json",
+				},
+				data: {
+					start: previousDay.toISOString().split("T")[0],
+					end: currentDay.toISOString().split("T")[0],
+					types: [
+						"Посещение",
+						"Специалисты",
+						"Цены",
+						"Расписание",
+						"Новости",
+						"Видео",
+						"Контакты",
+						"О нас",
+					],
+				},
+			})
+		).then((response) => {
+			if (!response) return;
 
+			try {
 				// Полностью сбрасываем данные графика
 				this.apexchart.series = [];
 
@@ -462,33 +460,34 @@ export default {
 						data: counts,
 					});
 				}
-			})
-			.catch((error) => {
+
+				this.loading.loader.week = false;
+			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
 					body: error,
 					type: "error",
 				});
+			}
+		});
+
+		fakeDelay(this.$store.getters.timeout, () =>
+			api({
+				method: "post",
+				url: this.$store.getters.urlApi + `get-tracking-statistics-range`,
+				headers: {
+					Accept: "application/json",
+				},
+				data: {
+					start: previousDay.toISOString().split("T")[0],
+					end: currentDay.toISOString().split("T")[0],
+					types: ["Посещение"],
+				},
 			})
-			.finally(() => {
-				this.loading.loader.week = false;
-			});
+		).then((response) => {
+			if (!response) return;
 
-		api({
-			method: "post",
-			url: this.$store.getters.urlApi + `get-tracking-statistics-range`,
-			headers: {
-				Accept: "application/json",
-			},
-			data: {
-				start: previousDay.toISOString().split("T")[0],
-				end: currentDay.toISOString().split("T")[0],
-				types: ["Посещение"],
-			},
-		})
-			.then((response) => {
-				if (!response) return;
-
+			try {
 				let counts = [];
 
 				for (let key in response.data.result) {
@@ -505,31 +504,34 @@ export default {
 					name: "",
 					data: counts,
 				});
-			})
-			.catch((error) => {
+
+				this.loading.loader.attendance = false;
+			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
 					body: error,
 					type: "error",
 				});
-			})
-			.finally(() => {
-				this.loading.loader.attendance = false;
-			});
+			}
+		});
 
-		api({
-			method: "post",
-			url: this.$store.getters.urlApi + `get-tracking-statistics-range`,
-			headers: {
-				Accept: "application/json",
-			},
-			data: {
-				start: previousDay.toISOString().split("T")[0],
-				end: currentDay.toISOString().split("T")[0],
-				types: ["Запись на прием"],
-			},
-		})
-			.then((response) => {
+		fakeDelay(this.$store.getters.timeout, () =>
+			api({
+				method: "post",
+				url: this.$store.getters.urlApi + `get-tracking-statistics-range`,
+				headers: {
+					Accept: "application/json",
+				},
+				data: {
+					start: previousDay.toISOString().split("T")[0],
+					end: currentDay.toISOString().split("T")[0],
+					types: ["Запись на прием"],
+				},
+			})
+		).then((response) => {
+			if (!response) return;
+
+			try {
 				if (!response) return;
 
 				let counts = [];
@@ -548,33 +550,35 @@ export default {
 					name: "",
 					data: counts,
 				});
-			})
-			.catch((error) => {
+
+				this.loading.loader.recordPriem = false;
+			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
 					body: error,
 					type: "error",
 				});
-			})
-			.finally(() => {
-				this.loading.loader.recordPriem = false;
-			});
+			}
+		});
 	},
 };
 </script>
 
 <style>
+.apexchart__skeleton {
+	border-radius: calc(var(--default-border-radius) / 1.5);
+}
+
+.vue-apexcharts {
+	animation: show 0.5s ease-in-out;
+}
+
 .apexchart__buttons {
 	display: grid;
 	grid-template-columns: repeat(2, 1fr) auto;
 	gap: 20px;
 
 	width: 100%;
-}
-
-.apex {
-	margin-top: 20px;
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 .apexcharts-toolbar > div:not(.apexcharts-menu) {
