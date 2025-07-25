@@ -1,5 +1,5 @@
 <template>
-	<BlockTwo :minHeight="100">
+	<BlockTwo :minHeight="185">
 		<template #one-title> ПОСЕЩАЕМОСТЬ </template>
 		<template #one-body>
 			<apexchart
@@ -42,39 +42,48 @@
 	</BlockTwo>
 
 	<BlockOnce :minHeight="100">
-		<template #title> ОБЩИЕ ДАННЫЕ </template>
+		<template #title> ПЕРЕХОДЫ ПО САЙТУ </template>
+
+		<template #options>
+			<VueButton
+				:look="'inverse'"
+				:disabled="disabled.apexchart.load"
+				@click.prevent="getStatsValues"
+			>
+				<VueIcon
+					:name="'publish'"
+					:fill="'var(--icon-edit-fill)'"
+					:width="'28px'"
+					:height="'28px'"
+				/>
+				Загрузить
+			</VueButton>
+		</template>
+
 		<template #body>
-			<div class="apexchart__buttons">
-				<VueInput
-					v-model="currentDate.data.dateStart.value"
-					:type="'date'"
-					:error="currentDate.errors.dateStart.status"
-				>
-					<template #error> {{ currentDate.errors.dateStart.message }} </template>
-				</VueInput>
+			<VueInputContainer :direction="'row'" :count="2" :gap="'10px'">
+				<template #legend> ОТ И ДО </template>
+				
+				<template #inputs>
+					<VueInput
+						v-model="currentDate.data.dateStart.value"
+						:type="'date'"
+						:error="currentDate.errors.dateStart.status"
+					>
+						<template #label> ОТ </template>
+						<template #error> {{ currentDate.errors.dateStart.message }} </template>
+					</VueInput>
 
-				<VueInput
-					v-model.trim="currentDate.data.dateEnd.value"
-					:type="'date'"
-					:error="currentDate.errors.dateEnd.status"
-				>
-					<template #error> {{ currentDate.errors.dateEnd.message }} </template>
-				</VueInput>
-
-				<VueButton
-					:look="'inverse'"
-					:disabled="disabled.apexchart.load"
-					@click.prevent="getStatsValues"
-				>
-					<VueIcon
-						:name="'publish'"
-						:fill="'var(--icon-edit-fill)'"
-						:width="'28px'"
-						:height="'28px'"
-					/>
-					Загрузить
-				</VueButton>
-			</div>
+					<VueInput
+						v-model.trim="currentDate.data.dateEnd.value"
+						:type="'date'"
+						:error="currentDate.errors.dateEnd.status"
+					>
+						<template #label> ДО </template>
+						<template #error> {{ currentDate.errors.dateEnd.message }} </template>
+					</VueInput>
+				</template>
+			</VueInputContainer>
 
 			<apexchart
 				v-if="loading.sections.week"
@@ -98,6 +107,7 @@
 
 <script>
 import VueInput from "../../../components/modules/input/VueInput.vue";
+import VueInputContainer from "../../../components/modules/input/VueInputContainer.vue";
 
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTwo from "../../../components/ui/admin/blocks/BlockTwo.vue";
@@ -112,6 +122,7 @@ import validate from "../../../services/validate";
 export default {
 	components: {
 		VueInput,
+		VueInputContainer,
 
 		BlockOnce,
 		BlockTwo,
@@ -286,6 +297,16 @@ export default {
 				data: {
 					start: start.toISOString().split("T")[0],
 					end: end.toISOString().split("T")[0],
+					types: [
+						"Посещение",
+						"Специалисты",
+						"Цены",
+						"Расписание",
+						"Новости",
+						"Видео",
+						"Контакты",
+						"О нас",
+					],
 				},
 			})
 				.then((response) => {
@@ -390,6 +411,16 @@ export default {
 			data: {
 				start: previousDay.toISOString().split("T")[0],
 				end: currentDay.toISOString().split("T")[0],
+				types: [
+					"Посещение",
+					"Специалисты",
+					"Цены",
+					"Расписание",
+					"Новости",
+					"Видео",
+					"Контакты",
+					"О нас",
+				],
 			},
 		})
 			.then((response) => {
@@ -452,7 +483,7 @@ export default {
 			data: {
 				start: previousDay.toISOString().split("T")[0],
 				end: currentDay.toISOString().split("T")[0],
-				type: "Посещение",
+				types: ["Посещение"],
 			},
 		})
 			.then((response) => {
@@ -495,7 +526,7 @@ export default {
 			data: {
 				start: previousDay.toISOString().split("T")[0],
 				end: currentDay.toISOString().split("T")[0],
-				type: "Запись на прием",
+				types: ["Запись на прием"],
 			},
 		})
 			.then((response) => {
@@ -542,6 +573,7 @@ export default {
 }
 
 .apex {
+	margin-top: 20px;
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
@@ -561,10 +593,10 @@ export default {
 }
 
 .apexcharts-selected > svg {
-	fill: #00abbd !important;
+	fill: var(--primary-color) !important;
 }
 
 .apexcharts-toolbar > div > svg:hover {
-	fill: #00abbd !important;
+	fill: var(--primary-color-hover) !important;
 }
 </style>
