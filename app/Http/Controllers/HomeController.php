@@ -42,7 +42,7 @@ class HomeController extends Controller
       try {
          // Добавление заголовков
          $request->merge([
-            'type' => 'form_request_telegram_bot',
+            'type' => 'Запись на прием',
             'meta' => 'Заявка - ' . $request->title,
          ]);
 

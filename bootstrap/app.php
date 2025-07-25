@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\CheckAdmin::class,
             'creator' => \App\Http\Middleware\CheckCreator::class,
             'admin-or-creator' => \App\Http\Middleware\CheckAdminOrCreator::class,
+            'track-load' => \App\Http\Middleware\TrackLoad::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

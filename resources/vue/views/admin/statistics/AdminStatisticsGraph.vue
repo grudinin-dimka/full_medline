@@ -452,7 +452,7 @@ export default {
 			data: {
 				start: previousDay.toISOString().split("T")[0],
 				end: currentDay.toISOString().split("T")[0],
-				type: "page_load",
+				type: "Посещение",
 			},
 		})
 			.then((response) => {
@@ -495,7 +495,7 @@ export default {
 			data: {
 				start: previousDay.toISOString().split("T")[0],
 				end: currentDay.toISOString().split("T")[0],
-				type: "form_request_telegram_bot",
+				type: "Запись на прием",
 			},
 		})
 			.then((response) => {
