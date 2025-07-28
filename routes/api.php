@@ -17,6 +17,7 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\StatisticController;
 
 use App\Http\Middleware\TrackLoad;
 
@@ -59,6 +60,7 @@ Route::get('/get-profile-info', [AdminController::class, 'getProfileInfo'])->mid
 /* Пользователи                                         */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 Route::get('/get-users-all', [CreatorController::class, 'getUsersAll'])->middleware(['auth:sanctum', 'creator']);
+
 Route::post('/save-user', [CreatorController::class, 'saveUser'])->middleware(['auth:sanctum', 'creator']);
 Route::post('/create-user', [CreatorController::class, 'createUser'])->middleware(['auth:sanctum', 'creator']);
 Route::post('/delete-user', [CreatorController::class, 'deleteUser'])->middleware(['auth:sanctum', 'creator']);
@@ -68,8 +70,10 @@ Route::post('/set-user-status', [CreatorController::class, 'setUserStatus'])->mi
 /* _____________________________________________________*/
 /* Статистика                                           */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-Route::post('/get-tracking-statistics-list', [CreatorController::class, 'getTrackingStatisticsList'])->middleware(['auth:sanctum', 'creator']);
-Route::post('/get-tracking-statistics-range', [CreatorController::class, 'getTrackingStatisticsRange'])->middleware(['auth:sanctum', 'creator']);
+Route::get('/get-tracking-statistics-list', [StatisticController::class, 'getTrackingStatisticsList'])->middleware(['auth:sanctum', 'creator']);
+
+Route::post('/get-tracking-statistics-range', [StatisticController::class, 'getTrackingStatisticsRange'])->middleware(['auth:sanctum', 'creator']);
+Route::post('/get-tracking-statistics-diagram', [StatisticController::class, 'getTrackingStatisticsDiagram'])->middleware(['auth:sanctum', 'creator']);
 
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 /* |                     РАЗДЕЛЫ                       |*/

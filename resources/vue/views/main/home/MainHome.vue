@@ -124,6 +124,7 @@ export default {
 				},
 				data: {
 					limit: 6,
+					tracking: false,
 				},
 			})
 		).then((response) => {

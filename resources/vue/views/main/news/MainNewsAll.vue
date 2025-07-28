@@ -183,6 +183,7 @@ export default {
 				},
 				data: {
 					limit: 9,
+					tracking: true,
 				},
 			})
 		).then((response) => {

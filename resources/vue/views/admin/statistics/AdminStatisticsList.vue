@@ -124,7 +124,7 @@ export default {
 	},
 	mounted() {
 		api({
-			method: "post",
+			method: "get",
 			url: this.$store.getters.urlApi + `get-tracking-statistics-list`,
 			headers: {
 				Accept: "application/json",

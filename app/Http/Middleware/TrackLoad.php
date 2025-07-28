@@ -202,6 +202,12 @@ class TrackLoad
 
    private function getNews(Request $request)
    {
+      if ($request->has('tracking')) {
+         if (!$request->tracking) {
+            return null;
+         }
+      }
+
       return (object) [
          "type" => "Новости",
          "meta" => "Список новостей",

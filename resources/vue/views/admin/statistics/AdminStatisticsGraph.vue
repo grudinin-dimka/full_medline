@@ -12,8 +12,8 @@
 					width="100%"
 					height="150px"
 					type="heatmap"
-					:options="attendance.options"
-					:series="attendance.series"
+					:options="apexAttendanceWeek.options"
+					:series="apexAttendanceWeek.series"
 				></apexchart>
 			</div>
 		</template>
@@ -30,12 +30,33 @@
 					width="100%"
 					height="150px"
 					type="heatmap"
-					:options="recordPriem.options"
-					:series="recordPriem.series"
+					:options="apexRecordPriem.options"
+					:series="apexRecordPriem.series"
 				></apexchart>
 			</div>
 		</template>
 	</BlockTwo>
+
+	<BlockOnce :minHeight="300">
+		<template #title> ВЫБОР КЛИНИК В ЦЕНАХ </template>
+
+		<template #body>
+			<div
+				class="apexchart__skeleton"
+				:class="{ skeleton: loading.loader.clinics }"
+				:style="{ minHeight: '300px' }"
+			>
+				<apexchart
+					v-if="!loading.loader.clinics"
+					width="100%"
+					height="400px"
+					type="donut"
+					:options="apexClinics.options"
+					:series="apexClinics.series"
+				></apexchart>
+			</div>
+		</template>
+	</BlockOnce>
 
 	<BlockOnce :minHeight="100">
 		<template #title> ПЕРЕХОДЫ ПО САЙТУ </template>
@@ -91,8 +112,8 @@
 					width="100%"
 					height="700px"
 					type="area"
-					:options="apexchart.options"
-					:series="apexchart.series"
+					:options="apexAttendanceAll.options"
+					:series="apexAttendanceAll.series"
 				/>
 			</div>
 		</template>
@@ -142,11 +163,8 @@ export default {
 					week: true,
 					attendance: true,
 					recordPriem: true,
-				},
-				sections: {
-					week: false,
-					attendance: false,
-					recordPriem: false,
+					clinics: true,
+					sources: true,
 				},
 			},
 
@@ -174,7 +192,7 @@ export default {
 			},
 
 			/* Данные */
-			attendance: {
+			apexAttendanceWeek: {
 				options: {
 					colors: [
 						this.getPrimaryColor(),
@@ -184,7 +202,7 @@ export default {
 						"rgb(60, 107, 236)",
 					],
 					chart: {
-						id: "vuechart-attendance",
+						id: "vuechart-attendance-week",
 					},
 					xaxis: {
 						categories: [],
@@ -196,15 +214,9 @@ export default {
 				series: [],
 			},
 
-			recordPriem: {
+			apexRecordPriem: {
 				options: {
-					colors: [
-						this.getPrimaryColor(),
-						"rgb(255, 85, 77)",
-						"rgb(255, 174, 0)",
-						"rgb(27, 197, 35)",
-						"rgb(60, 107, 236)",
-					],
+					colors: this.getColors(),
 					chart: {
 						id: "vuechart-record-priem",
 					},
@@ -218,17 +230,32 @@ export default {
 				series: [],
 			},
 
-			apexchart: {
+			apexClinics: {
 				options: {
-					colors: [
-						this.getPrimaryColor(),
-						"rgb(255, 85, 77)",
-						"rgb(255, 174, 0)",
-						"rgb(27, 197, 35)",
-						"rgb(60, 107, 236)",
-					],
+					colors: this.getColors(),
+					labels: [],
 					chart: {
-						id: "vuechart-apexchart",
+						id: "vuechart-clinics",
+					},
+				},
+				series: [],
+			},
+
+			apexSources: {
+				options: {
+					colors: this.getColors(),
+					chart: {
+						id: "vuechart-clinics",
+					},
+				},
+				series: [44, 55, 41, 17, 15],
+			},
+
+			apexAttendanceAll: {
+				options: {
+					colors: this.getColors(),
+					chart: {
+						id: "vuechart-attendance-all",
 						toolbar: {
 							show: true,
 						},
@@ -265,6 +292,17 @@ export default {
 			);
 		},
 
+		/* Считывание переменной CSS */
+		getColors() {
+			return [
+				this.getPrimaryColor(),
+				"rgb(255, 85, 77)",
+				"rgb(255, 174, 0)",
+				"rgb(27, 197, 35)",
+				"rgb(60, 107, 236)",
+			];
+		},
+
 		/* Получение данных из бд */
 		getStatsValues() {
 			if (
@@ -281,7 +319,6 @@ export default {
 			this.disabled.apexchart.load = true;
 
 			// Скрываем график перед загрузкой новых данных
-			this.loading.sections.week = false;
 			this.loading.loader.week = true;
 
 			api({
@@ -309,7 +346,7 @@ export default {
 					if (!response) return;
 
 					// Полностью сбрасываем данные графика
-					this.apexchart.series = [];
+					this.apexAttendanceAll.series = [];
 
 					// Собираем все уникальные даты
 					const allDates = new Set();
@@ -326,20 +363,20 @@ export default {
 
 					// Определение количество дней для вывода по группам
 					if (allDates.size / 7 > 4) {
-						this.apexchart.options.xaxis.tickAmount = 7;
+						this.apexAttendanceAll.options.xaxis.tickAmount = 7;
 					} else if (allDates.size / 30 > 3) {
-						this.apexchart.options.xaxis.tickAmount = 14;
+						this.apexAttendanceAll.options.xaxis.tickAmount = 14;
 					} else if (allDates.size / 30 > 6) {
-						this.apexchart.options.xaxis.tickAmount = 31;
+						this.apexAttendanceAll.options.xaxis.tickAmount = 31;
 					} else {
-						delete this.apexchart.options.xaxis.tickAmount;
+						delete this.apexAttendanceAll.options.xaxis.tickAmount;
 					}
 
 					// Сортируем даты
 					const sortedDates = Array.from(allDates).sort((a, b) => new Date(a) - new Date(b));
 
 					// Форматируем даты для отображения
-					this.apexchart.options.xaxis.categories = sortedDates.map((dateStr) => {
+					this.apexAttendanceAll.options.xaxis.categories = sortedDates.map((dateStr) => {
 						return new Date(dateStr).toLocaleDateString("ru", {
 							day: "numeric",
 							month: "short",
@@ -353,20 +390,20 @@ export default {
 							return Array.isArray(dataForDate) ? dataForDate.length : 0;
 						});
 
-						this.apexchart.series.push({
+						this.apexAttendanceAll.series.push({
 							name: requestType,
 							data: counts,
 						});
 					}
 
 					// Форсируем обновление опций
-					this.apexchart = {
-						...this.apexchart,
+					this.apexAttendanceAll = {
+						...this.apexAttendanceAll,
 						options: {
-							...this.apexchart.options,
+							...this.apexAttendanceAll.options,
 							xaxis: {
-								...this.apexchart.options.xaxis,
-								categories: [...this.apexchart.options.xaxis.categories],
+								...this.apexAttendanceAll.options.xaxis,
+								categories: [...this.apexAttendanceAll.options.xaxis.categories],
 							},
 						},
 					};
@@ -425,7 +462,7 @@ export default {
 
 			try {
 				// Полностью сбрасываем данные графика
-				this.apexchart.series = [];
+				this.apexAttendanceAll.series = [];
 
 				// Собираем все уникальные даты
 				const allDates = new Set();
@@ -441,7 +478,7 @@ export default {
 				const sortedDates = Array.from(allDates).sort((a, b) => new Date(a) - new Date(b));
 
 				// Форматируем даты для отображения
-				this.apexchart.options.xaxis.categories = sortedDates.map((dateStr) => {
+				this.apexAttendanceAll.options.xaxis.categories = sortedDates.map((dateStr) => {
 					return new Date(dateStr).toLocaleDateString("ru", {
 						day: "numeric",
 						month: "short",
@@ -455,7 +492,7 @@ export default {
 						return Array.isArray(dataForDate) ? dataForDate.length : 0;
 					});
 
-					this.apexchart.series.push({
+					this.apexAttendanceAll.series.push({
 						name: requestType,
 						data: counts,
 					});
@@ -500,7 +537,7 @@ export default {
 					});
 				}
 
-				this.attendance.series.push({
+				this.apexAttendanceWeek.series.push({
 					name: "",
 					data: counts,
 				});
@@ -546,12 +583,44 @@ export default {
 					});
 				}
 
-				this.recordPriem.series.push({
+				this.apexRecordPriem.series.push({
 					name: "",
 					data: counts,
 				});
 
 				this.loading.loader.recordPriem = false;
+			} catch (error) {
+				this.$store.commit("addDebugger", {
+					title: "Ошибка.",
+					body: error,
+					type: "error",
+				});
+			}
+		});
+
+		fakeDelay(this.$store.getters.timeout, () =>
+			api({
+				method: "post",
+				url: this.$store.getters.urlApi + `get-tracking-statistics-diagram`,
+				headers: {
+					Accept: "application/json",
+				},
+				data: {
+					type: "Клиники",
+				},
+			})
+		).then((response) => {
+			if (!response) return;
+
+			try {
+				if (!response) return;
+
+				for (let key in response.data.result) {
+					this.apexClinics.options.labels.push(key);
+					this.apexClinics.series.push(response.data.result[key]);
+				}
+
+				this.loading.loader.clinics = false;
 			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
