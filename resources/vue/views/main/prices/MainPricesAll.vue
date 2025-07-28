@@ -303,15 +303,19 @@ export default {
 			};
 
 			if (isAddress) {
-				values.address =
-					this.addresses.find((category) => category.id == this.filters.address)?.name ?? null;
+				values.address = this.addresses.find(
+					(address) => address.id == this.filters.address
+				)?.name;
+			} else {
+				values.address = null;
 			}
 
 			if (isCategory) {
-				values.category =
-					this.categories.find((category) => category.id == this.filters.category)?.name ??
-					null;
+				values.category = this.categories.find(
+					(category) => category.id == this.filters.category
+				)?.name;
 			} else {
+				values.category = null;
 				this.filters.category = "";
 			}
 

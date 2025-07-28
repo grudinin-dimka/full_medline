@@ -112,8 +112,10 @@ Route::post('/make-specialists-xml', [SpecialistController::class, 'makeSpeciali
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 Route::get('/get-prices-choice', [PricesController::class, 'getPricesChoice'])->middleware(TrackLoad::class.':prices,Общие');
 Route::post('/get-prices-group', [PricesController::class, 'getPricesGruop'])->middleware(TrackLoad::class.':prices,Группа');
-Route::post('/get-prices-template', [PricesController::class, 'getPricesTemplate'])->middleware(TrackLoad::class.':prices,Клиника');
-Route::post('/get-prices-manual', [PricesController::class, 'getPricesManual']);
+
+Route::post('/get-prices-template', [PricesController::class, 'getPricesTemplate'])->middleware(TrackLoad::class.':clinics');
+Route::post('/get-prices-manual', [PricesController::class, 'getPricesManual'])->middleware(TrackLoad::class.':clinics');
+
 Route::post('/get-prices-complecte', [PricesController::class, 'getPricesComplecte'])->middleware(TrackLoad::class.':prices,Список клиник');
 Route::get('/get-prices-addresses-list', [PricesController::class, 'getPricesAddressesList']);
 Route::get('/get-prices-categories-list', [PricesController::class, 'getPricesCategoriesList']);
@@ -142,9 +144,9 @@ Route::post('/save-info-files-changes', [AboutController::class, 'saveInfoFilesC
 /* _____________________________________________________*/
 /* Новости                                              */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-Route::get('/get-news-all', [NewsController::class, 'getNewsAll'])->middleware(TrackLoad::class.':news,Новости');
-Route::post('/get-news-short', [NewsController::class, 'getNewsShort']);
-Route::post('/get-news-once-without', [NewsController::class, 'getNewsOnceWithout']);
+Route::get('/get-news-all', [NewsController::class, 'getNewsAll']);
+Route::post('/get-news-short', [NewsController::class, 'getNewsShort'])->middleware(TrackLoad::class.':news,Раздел');
+Route::post('/get-news-once-without', [NewsController::class, 'getNewsOnceWithout'])->middleware(TrackLoad::class.':news,Пост');
 Route::post('/get-news-more', [NewsController::class, 'getNewsMore']);
 
 Route::post('/get-news-once', [NewsController::class, 'getNewsOnce'])->middleware(['auth:sanctum', 'admin-or-creator']);
@@ -156,8 +158,8 @@ Route::post('/publish-news-once', [NewsController::class, 'publishNewsOnce'])->m
 /* _____________________________________________________*/
 /* Контакты                                             */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-Route::get('/get-contacts-all', [ContactController::class, 'getContactsAll'])->middleware(TrackLoad::class.':contacts,Контакты');
-Route::get('/get-contacts-clinics-all', [ContactController::class, 'getContactsClinicsAll']);
+Route::get('/get-contacts-all', [ContactController::class, 'getContactsAll']);
+Route::get('/get-contacts-clinics-all', [ContactController::class, 'getContactsClinicsAll'])->middleware(TrackLoad::class.':contacts,Список');
 
 Route::post('/save-contacts-changes', [ContactController::class, 'saveContactsChanges'])->middleware(['auth:sanctum', 'admin-or-creator']);
 

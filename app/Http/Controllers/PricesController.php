@@ -212,6 +212,11 @@ class PricesController extends Controller
 
          // Текущий адрес
          $currentAddress = PriceAddress::where('name', 'like', '%Комсомольская%')->first();
+         
+         if (!isset($currentAddress)) {
+            $currentAddress = PriceAddress::all()->first();
+         };
+
          $categories = PriceCategory::where('addressId', $currentAddress->id)->get();
 
          // Получаем ID категорий
@@ -248,15 +253,34 @@ class PricesController extends Controller
    /* Вывод шаблона цен */
    public function getPricesManual(Request $request)
    {
+      // Валидация
+      $validated = Validator::make($request->all(), [
+         'address' => 'nullable',
+         'category' => 'nullable',
+      ], [
+         'address.required' => 'Отсутствует адресс.',
+         'category.required' => 'Отсутствует категория.',
+      ]);
+
+      if ($validated->fails()) {
+         return response()->json([
+            "success" => false,
+            "debug" => true,
+            "errors" => $validated->errors(),
+            "message" => "Некорректные данные.",
+            "result" => null,
+         ], 422);
+      };
+
       try {
-         // Текущий адрес
+         // Проверка на существование адреса
          if (isset($request->address)) {
             $currentAddress = PriceAddress::where('name', $request->address)->first();
          } else {
             $currentAddress = PriceAddress::all()->first();
          }
 
-         // Категории
+         // Проверка на существование категории
          if (isset($request->category)) {
             $categoriesList = PriceCategory::where('addressId', $currentAddress->id)
                ->where('name', $request->category)
