@@ -13,11 +13,16 @@ return new class extends Migration
     {
         Schema::create('trackings', function (Blueprint $table) {
             $table->id();
-            $table->string('type')->default('none');
+            $table->string('type')->index()->default('none');
             $table->string('ip')->index()->nullable()->default('none');
             $table->string('user_agent')->nullable()->default('none');
-            $table->string('meta')->nullable()->default('none'); 
+            $table->string('meta')->nullable()->default('none');
             $table->timestamps();
+        });
+
+        Schema::table('trackings', function (Blueprint $table) {
+            $table->index('created_at');
+            $table->index(['created_at', 'type']);
         });
     }
 
