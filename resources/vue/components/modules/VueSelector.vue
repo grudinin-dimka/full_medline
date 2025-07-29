@@ -194,12 +194,11 @@ export default {
 	align-items: center;
 	flex-grow: 1;
 
-	height: 62px;
 	overflow: hidden;
 	white-space: nowrap;
-
+	
+	height: 62px;
 	width: 100%;
-	overflow: hidden;
 }
 
 .selector__control > :is(.selector__control-clear, .selector__control-arrow) {

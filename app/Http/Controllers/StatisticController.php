@@ -87,7 +87,7 @@ class StatisticController extends Controller
                     $firsDay = Carbon::parse($request->start);
 
                     for ($i = $countDays; $i >= 0; $i--) {
-                        $statisticsFormated[Carbon::parse($firsDay)->format('Y-m-d')] = $statistics[Carbon::parse($firsDay)->format('Y-m-d')] ?? [];
+                        $statisticsFormated[Carbon::parse($firsDay)->format('Y-m-d')] = count($statistics[Carbon::parse($firsDay)->format('Y-m-d')] ?? []);
 
                         $firsDay->addDay();
                     };
@@ -113,7 +113,7 @@ class StatisticController extends Controller
 
                     for ($i = $countDays; $i >= 0; $i--) {
                         foreach ($statistics as $key => $statistic) {
-                            $statisticsFormated[$key][Carbon::parse($firsDay)->format('Y-m-d')] = $statistic[Carbon::parse($firsDay)->format('Y-m-d')] ?? [];
+                            $statisticsFormated[$key][Carbon::parse($firsDay)->format('Y-m-d')] = count($statistic[Carbon::parse($firsDay)->format('Y-m-d')] ?? []);
                         }
 
                         $firsDay->addDay();

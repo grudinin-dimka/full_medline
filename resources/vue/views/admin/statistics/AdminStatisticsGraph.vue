@@ -1,14 +1,31 @@
 <template>
 	<BlockTwo :minHeight="100">
 		<template #one-title> ПОСЕЩАЕМОСТЬ </template>
+
+		<template #one-options>
+			<VueButton
+				:look="'inverse'"
+				:disabled="disabled.apexAttendanceWeek.load"
+				@click.prevent="getApexAttendanceWeek"
+			>
+				<VueIcon
+					:name="'update'"
+					:fill="'var(--icon-edit-fill)'"
+					:width="'36px'"
+					:height="'36px'"
+				/>
+				Обновить
+			</VueButton>
+		</template>
+
 		<template #one-body>
 			<div
 				class="apexchart__skeleton"
-				:class="{ skeleton: loading.loader.attendance }"
+				:class="{ skeleton: loading.loader.apexAttendanceWeek }"
 				:style="{ minHeight: '170px' }"
 			>
 				<apexchart
-					v-if="!loading.loader.attendance"
+					v-if="!loading.loader.apexAttendanceWeek"
 					width="100%"
 					height="150px"
 					type="heatmap"
@@ -19,14 +36,31 @@
 		</template>
 
 		<template #two-title> ЗАПИСЬ НА ПРИЕМ </template>
+
+		<template #two-options>
+			<VueButton
+				:look="'inverse'"
+				:disabled="disabled.apexRecordPriem.load"
+				@click.prevent="getApexRecordPriem"
+			>
+				<VueIcon
+					:name="'update'"
+					:fill="'var(--icon-edit-fill)'"
+					:width="'36px'"
+					:height="'36px'"
+				/>
+				Обновить
+			</VueButton>
+		</template>
+
 		<template #two-body>
 			<div
 				class="apexchart__skeleton"
-				:class="{ skeleton: loading.loader.recordPriem }"
+				:class="{ skeleton: loading.loader.apexRecordPriem }"
 				:style="{ minHeight: '170px' }"
 			>
 				<apexchart
-					v-if="!loading.loader.recordPriem"
+					v-if="!loading.loader.apexRecordPriem"
 					width="100%"
 					height="150px"
 					type="heatmap"
@@ -37,17 +71,33 @@
 		</template>
 	</BlockTwo>
 
-	<BlockOnce :minHeight="300">
+	<BlockOnce :minHeight="400">
 		<template #title> ВЫБОР КЛИНИК В ЦЕНАХ </template>
+
+		<template #options>
+			<VueButton
+				:look="'inverse'"
+				:disabled="disabled.apexClinics.load"
+				@click.prevent="getApexClinics"
+			>
+				<VueIcon
+					:name="'update'"
+					:fill="'var(--icon-edit-fill)'"
+					:width="'36px'"
+					:height="'36px'"
+				/>
+				Обновить
+			</VueButton>
+		</template>
 
 		<template #body>
 			<div
 				class="apexchart__skeleton"
-				:class="{ skeleton: loading.loader.clinics }"
-				:style="{ minHeight: '300px' }"
+				:class="{ skeleton: loading.loader.apexClinics }"
+				:style="{ minHeight: '400px' }"
 			>
 				<apexchart
-					v-if="!loading.loader.clinics"
+					v-if="!loading.loader.apexClinics"
 					width="100%"
 					height="400px"
 					type="donut"
@@ -64,16 +114,16 @@
 		<template #options>
 			<VueButton
 				:look="'inverse'"
-				:disabled="disabled.apexchart.load"
-				@click.prevent="getStatsValues"
+				:disabled="disabled.apexAttendanceAll.load"
+				@click.prevent="getApexAttendanceAll"
 			>
 				<VueIcon
-					:name="'publish'"
+					:name="'update'"
 					:fill="'var(--icon-edit-fill)'"
-					:width="'28px'"
-					:height="'28px'"
+					:width="'36px'"
+					:height="'36px'"
 				/>
-				Загрузить
+				Обновить
 			</VueButton>
 		</template>
 
@@ -104,11 +154,11 @@
 
 			<div
 				class="apexchart__skeleton"
-				:class="{ skeleton: loading.loader.week }"
+				:class="{ skeleton: loading.loader.apexAttendanceAll }"
 				:style="{ minHeight: '730px', marginTop: '20px' }"
 			>
 				<apexchart
-					v-if="!loading.loader.week"
+					v-if="!loading.loader.apexAttendanceAll"
 					width="100%"
 					height="700px"
 					type="area"
@@ -152,7 +202,19 @@ export default {
 		return {
 			/* Кно */
 			disabled: {
-				apexchart: {
+				apexAttendanceAll: {
+					load: false,
+				},
+				apexClinics: {
+					load: false,
+				},
+				apexAttendanceWeek: {
+					load: false,
+				},
+				apexRecordPriem: {
+					load: false,
+				},
+				apexSources: {
 					load: false,
 				},
 			},
@@ -160,11 +222,11 @@ export default {
 			/* Загрузчик */
 			loading: {
 				loader: {
-					week: true,
-					attendance: true,
-					recordPriem: true,
-					clinics: true,
-					sources: true,
+					apexAttendanceWeek: true,
+					apexAttendanceAll: true,
+					apexRecordPriem: true,
+					apexClinics: true,
+					apexSources: true,
 				},
 			},
 
@@ -194,13 +256,7 @@ export default {
 			/* Данные */
 			apexAttendanceWeek: {
 				options: {
-					colors: [
-						this.getPrimaryColor(),
-						"rgb(255, 85, 77)",
-						"rgb(255, 174, 0)",
-						"rgb(27, 197, 35)",
-						"rgb(60, 107, 236)",
-					],
+					colors: this.getColors(),
 					chart: {
 						id: "vuechart-attendance-week",
 					},
@@ -300,11 +356,180 @@ export default {
 				"rgb(255, 174, 0)",
 				"rgb(27, 197, 35)",
 				"rgb(60, 107, 236)",
+				"rgb(170, 68, 221)",
+				"rgb(255, 105, 180)",
+				"rgb(40, 53, 147)",
+				"rgb(144, 238, 144)",
+				"rgb(100, 210, 255)",
 			];
 		},
 
 		/* Получение данных из бд */
-		getStatsValues() {
+		getApexClinics() {
+			this.disabled.apexClinics.load = true;
+
+			// Скрываем график перед загрузкой новых данных
+			this.loading.loader.apexClinics = true;
+
+			api({
+				method: "post",
+				url: this.$store.getters.urlApi + `get-tracking-statistics-diagram`,
+				headers: {
+					Accept: "application/json",
+				},
+				data: {
+					type: "Клиники",
+				},
+			}).then((response) => {
+				if (!response) return;
+
+				try {
+					if (!response) return;
+
+					this.apexClinics.options.labels = [];
+					this.apexClinics.series = [];
+
+					for (let key in response.data.result) {
+						this.apexClinics.options.labels.push(key);
+						this.apexClinics.series.push(response.data.result[key]);
+					}
+
+					this.loading.loader.apexClinics = false;
+					this.disabled.apexClinics.load = false;
+				} catch (error) {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка.",
+						body: error,
+						type: "error",
+					});
+				}
+			});
+		},
+
+		/* Получение данных из бд */
+		getApexAttendanceWeek() {
+			this.disabled.apexAttendanceWeek.load = true;
+
+			// Скрываем график перед загрузкой новых данных
+			this.loading.loader.apexAttendanceWeek = true;
+
+			let currentDay = new Date();
+			let previousDay = new Date(currentDay.getTime());
+
+			/* На неделю */
+			previousDay.setDate(currentDay.getDate() - 7);
+			this.currentDate.data.dateStart.value = previousDay.toISOString().slice(0, 10);
+
+			api({
+				method: "post",
+				url: this.$store.getters.urlApi + `get-tracking-statistics-range`,
+				headers: {
+					Accept: "application/json",
+				},
+				data: {
+					start: previousDay.toISOString().split("T")[0],
+					end: currentDay.toISOString().split("T")[0],
+					types: ["Посещение"],
+				},
+			}).then((response) => {
+				if (!response) return;
+
+				try {
+					if (!response) return;
+
+					this.apexAttendanceWeek.series = [];
+					let counts = [];
+
+					for (let key in response.data.result) {
+						counts.push({
+							x: new Date(key).toLocaleDateString("ru", {
+								day: "numeric",
+								month: "short",
+							}),
+							y: response.data.result[key],
+						});
+					}
+
+					this.apexAttendanceWeek.series.push({
+						name: "",
+						data: counts,
+					});
+
+					this.loading.loader.apexAttendanceWeek = false;
+					this.disabled.apexAttendanceWeek.load = false;
+				} catch (error) {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка.",
+						body: error,
+						type: "error",
+					});
+				}
+			});
+		},
+
+		/* Получение данных из бд */
+		getApexRecordPriem() {
+			this.disabled.apexRecordPriem.load = true;
+
+			// Скрываем график перед загрузкой новых данных
+			this.loading.loader.apexRecordPriem = true;
+
+			let currentDay = new Date();
+			let previousDay = new Date(currentDay.getTime());
+
+			/* На неделю */
+			previousDay.setDate(currentDay.getDate() - 7);
+			this.currentDate.data.dateStart.value = previousDay.toISOString().slice(0, 10);
+
+			api({
+				method: "post",
+				url: this.$store.getters.urlApi + `get-tracking-statistics-range`,
+				headers: {
+					Accept: "application/json",
+				},
+				data: {
+					start: previousDay.toISOString().split("T")[0],
+					end: currentDay.toISOString().split("T")[0],
+					types: ["Запись на прием"],
+				},
+			}).then((response) => {
+				if (!response) return;
+
+				try {
+					if (!response) return;
+
+					this.apexRecordPriem.series = [];
+					let counts = [];
+
+					for (let key in response.data.result) {
+						counts.push({
+							x: new Date(key).toLocaleDateString("ru", {
+								day: "numeric",
+								month: "short",
+							}),
+							y: response.data.result[key],
+						});
+					}
+
+					this.apexRecordPriem.series.push({
+						name: "",
+						data: counts,
+					});
+
+					this.disabled.apexRecordPriem.load = false;
+					this.loading.loader.apexRecordPriem = false;
+				} catch (error) {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка.",
+						body: error,
+						type: "error",
+					});
+				}
+			});
+		},
+
+		/* Получение данных из бд */
+		getApexAttendanceAll() {
 			if (
 				validate.checkInputsAll(this.currentDate, [
 					{ key: "dateStart", type: "text" },
@@ -316,10 +541,8 @@ export default {
 			let start = new Date(this.currentDate.data.dateStart.value);
 			let end = new Date(this.currentDate.data.dateEnd.value);
 
-			this.disabled.apexchart.load = true;
-
-			// Скрываем график перед загрузкой новых данных
-			this.loading.loader.week = true;
+			this.disabled.apexAttendanceAll.load = true;
+			this.loading.loader.apexAttendanceAll = true;
 
 			api({
 				method: "post",
@@ -384,10 +607,12 @@ export default {
 					});
 
 					// Заполняем данные для каждой серии
+					// Заполняем данные для каждой серии
 					for (let requestType in response.data.result) {
 						const counts = sortedDates.map((dateStr) => {
-							const dataForDate = response.data.result[requestType][dateStr];
-							return Array.isArray(dataForDate) ? dataForDate.length : 0;
+							const dataForDate = response.data.result[requestType][dateStr] ?? 0;
+
+							return dataForDate;
 						});
 
 						this.apexAttendanceAll.series.push({
@@ -416,10 +641,10 @@ export default {
 					});
 				})
 				.finally(() => {
-					this.disabled.apexchart.load = false;
+					this.disabled.apexAttendanceAll.load = false;
 
 					// Показываем график с новыми данными
-					this.loading.loader.week = false;
+					this.loading.loader.apexAttendanceAll = false;
 				});
 		},
 	},
@@ -488,8 +713,9 @@ export default {
 				// Заполняем данные для каждой серии
 				for (let requestType in response.data.result) {
 					const counts = sortedDates.map((dateStr) => {
-						const dataForDate = response.data.result[requestType][dateStr];
-						return Array.isArray(dataForDate) ? dataForDate.length : 0;
+						const dataForDate = response.data.result[requestType][dateStr] ?? 0;
+
+						return dataForDate;
 					});
 
 					this.apexAttendanceAll.series.push({
@@ -498,7 +724,7 @@ export default {
 					});
 				}
 
-				this.loading.loader.week = false;
+				this.loading.loader.apexAttendanceAll = false;
 			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
@@ -533,7 +759,7 @@ export default {
 							day: "numeric",
 							month: "short",
 						}),
-						y: response.data.result[key].length,
+						y: response.data.result[key],
 					});
 				}
 
@@ -542,7 +768,7 @@ export default {
 					data: counts,
 				});
 
-				this.loading.loader.attendance = false;
+				this.loading.loader.apexAttendanceWeek = false;
 			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
@@ -579,7 +805,7 @@ export default {
 							day: "numeric",
 							month: "short",
 						}),
-						y: response.data.result[key].length,
+						y: response.data.result[key],
 					});
 				}
 
@@ -588,7 +814,7 @@ export default {
 					data: counts,
 				});
 
-				this.loading.loader.recordPriem = false;
+				this.loading.loader.apexRecordPriem = false;
 			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
@@ -620,7 +846,7 @@ export default {
 					this.apexClinics.series.push(response.data.result[key]);
 				}
 
-				this.loading.loader.clinics = false;
+				this.loading.loader.apexClinics = false;
 			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
