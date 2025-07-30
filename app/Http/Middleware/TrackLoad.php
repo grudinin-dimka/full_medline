@@ -104,9 +104,28 @@ class TrackLoad
    /* Посещение */
    private function getAttendance(Request $request)
    {
+      if ($request->hasHeader('custom-referer')) {
+         $referer = $request->header('custom-referer');
+
+         $refererUrl = parse_url($referer, PHP_URL_HOST);
+         $hostUrl = parse_url($request->url(), PHP_URL_HOST);
+
+         if ($refererUrl === $hostUrl) {
+            return (object) [
+               "type" => "Посещение",
+               "meta" => "Сайт",
+            ];
+         }
+
+         return (object) [
+            "type" => "Посещение",
+            "meta" => $referer,
+         ];
+      }
+
       return (object) [
          "type" => "Посещение",
-         "meta" => "Посещение",
+         "meta" => "Сайт",
       ];
    }
 

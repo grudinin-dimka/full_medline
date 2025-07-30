@@ -70,10 +70,10 @@ Route::post('/set-user-status', [CreatorController::class, 'setUserStatus'])->mi
 /* _____________________________________________________*/
 /* Статистика                                           */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-Route::get('/get-tracking-statistics-list', [StatisticController::class, 'getTrackingStatisticsList'])->middleware(['auth:sanctum', 'creator']);
+Route::get('/get-tracking-statistics-list', [StatisticController::class, 'getTrackingStatisticsList'])->middleware(['auth:sanctum', 'admin-or-creator']);
 
-Route::post('/get-tracking-statistics-range', [StatisticController::class, 'getTrackingStatisticsRange'])->middleware(['auth:sanctum', 'creator']);
-Route::post('/get-tracking-statistics-diagram', [StatisticController::class, 'getTrackingStatisticsDiagram'])->middleware(['auth:sanctum', 'creator']);
+Route::post('/get-tracking-statistics-range', [StatisticController::class, 'getTrackingStatisticsRange'])->middleware(['auth:sanctum', 'admin-or-creator']);
+Route::post('/get-tracking-statistics-diagram', [StatisticController::class, 'getTrackingStatisticsDiagram'])->middleware(['auth:sanctum', 'admin-or-creator']);
 
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 /* |                     РАЗДЕЛЫ                       |*/
@@ -89,15 +89,15 @@ Route::post('/save-slides-changes', [SlidesController::class, 'saveSlidesChanges
 /* _____________________________________________________*/
 /* Футер                                                */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-Route::get('/get-footer', [FooterController::class, 'getFooter'])->middleware(TrackLoad::class.':attendance,Футер');
+Route::get('/get-footer', [FooterController::class, 'getFooter'])->middleware(TrackLoad::class.':attendance');
 
 Route::post('/save-footer', [FooterController::class, 'saveFooter'])->middleware(['auth:sanctum', 'admin-or-creator']);
 
 /* _____________________________________________________*/
 /* Специалисты                                          */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-Route::get('/get-specialists', [SpecialistController::class, 'getSpecialists'])->middleware(TrackLoad::class.':specialists,Cписок');
-Route::post('/get-specialist-profile', [SpecialistController::class, 'getSpecialistProfile'])->middleware(TrackLoad::class.':specialists,Профиль');
+Route::get('/get-specialists', [SpecialistController::class, 'getSpecialists'])->middleware(TrackLoad::class . ':specialists,Cписок');
+Route::post('/get-specialist-profile', [SpecialistController::class, 'getSpecialistProfile'])->middleware(TrackLoad::class . ':specialists,Профиль');
 Route::post('/get-specialist-all', [SpecialistController::class, 'getSpecialistAll']);
 Route::post('/get-specialist-sections', [SpecialistController::class, 'getSpecialistSections']);
 Route::get('/get-specialists-short', [SpecialistController::class, 'getSpecialistsShort']);
@@ -114,13 +114,13 @@ Route::post('/make-specialists-xml', [SpecialistController::class, 'makeSpeciali
 /* _____________________________________________________*/
 /* Цены                                                 */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-Route::get('/get-prices-choice', [PricesController::class, 'getPricesChoice'])->middleware(TrackLoad::class.':prices,Общие');
-Route::post('/get-prices-group', [PricesController::class, 'getPricesGruop'])->middleware(TrackLoad::class.':prices,Группа');
+Route::get('/get-prices-choice', [PricesController::class, 'getPricesChoice'])->middleware(TrackLoad::class . ':prices,Общие');
+Route::post('/get-prices-group', [PricesController::class, 'getPricesGruop'])->middleware(TrackLoad::class . ':prices,Группа');
 
-Route::post('/get-prices-template', [PricesController::class, 'getPricesTemplate'])->middleware(TrackLoad::class.':clinics');
-Route::post('/get-prices-manual', [PricesController::class, 'getPricesManual'])->middleware(TrackLoad::class.':clinics');
+Route::post('/get-prices-template', [PricesController::class, 'getPricesTemplate'])->middleware(TrackLoad::class . ':clinics');
+Route::post('/get-prices-manual', [PricesController::class, 'getPricesManual'])->middleware(TrackLoad::class . ':clinics');
 
-Route::post('/get-prices-complecte', [PricesController::class, 'getPricesComplecte'])->middleware(TrackLoad::class.':prices,Список клиник');
+Route::post('/get-prices-complecte', [PricesController::class, 'getPricesComplecte'])->middleware(TrackLoad::class . ':prices,Список клиник');
 Route::get('/get-prices-addresses-list', [PricesController::class, 'getPricesAddressesList']);
 Route::get('/get-prices-categories-list', [PricesController::class, 'getPricesCategoriesList']);
 Route::get('/download-prices-archive', [PricesController::class, 'downloadPricesArchive']);
@@ -132,14 +132,14 @@ Route::post('/make-prices-files', [PricesController::class, 'makePricesFiles'])-
 /* _____________________________________________________*/
 /* Расписание                                           */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-Route::get('/get-shedules-all', [SheduleController::class, 'getShedulesAll'])->middleware(TrackLoad::class.':shedule,Расписание');
+Route::get('/get-shedules-all', [SheduleController::class, 'getShedulesAll'])->middleware(TrackLoad::class . ':shedule,Расписание');
 
 Route::post('/save-shedules-all/{type}', [SheduleController::class, 'saveShedulesAll'])->middleware(['auth:sanctum', 'admin-or-creator']);
 
 /* _____________________________________________________*/
 /* О нас                                                */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-Route::get('/get-abouts-all', [AboutController::class, 'getAboutsAll'])->middleware(TrackLoad::class.':about,О нас');
+Route::get('/get-abouts-all', [AboutController::class, 'getAboutsAll'])->middleware(TrackLoad::class . ':about,О нас');
 Route::get('/get-info-files-all', [AboutController::class, 'getInfoFilesAll']);
 
 Route::post('/save-abouts-changes', [AboutController::class, 'saveAboutsChanges'])->middleware(['auth:sanctum', 'admin-or-creator']);
@@ -149,8 +149,8 @@ Route::post('/save-info-files-changes', [AboutController::class, 'saveInfoFilesC
 /* Новости                                              */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 Route::get('/get-news-all', [NewsController::class, 'getNewsAll']);
-Route::post('/get-news-short', [NewsController::class, 'getNewsShort'])->middleware(TrackLoad::class.':news,Раздел');
-Route::post('/get-news-once-without', [NewsController::class, 'getNewsOnceWithout'])->middleware(TrackLoad::class.':news,Пост');
+Route::post('/get-news-short', [NewsController::class, 'getNewsShort'])->middleware(TrackLoad::class . ':news,Раздел');
+Route::post('/get-news-once-without', [NewsController::class, 'getNewsOnceWithout'])->middleware(TrackLoad::class . ':news,Пост');
 Route::post('/get-news-more', [NewsController::class, 'getNewsMore']);
 
 Route::post('/get-news-once', [NewsController::class, 'getNewsOnce'])->middleware(['auth:sanctum', 'admin-or-creator']);
@@ -163,14 +163,14 @@ Route::post('/publish-news-once', [NewsController::class, 'publishNewsOnce'])->m
 /* Контакты                                             */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 Route::get('/get-contacts-all', [ContactController::class, 'getContactsAll']);
-Route::get('/get-contacts-clinics-all', [ContactController::class, 'getContactsClinicsAll'])->middleware(TrackLoad::class.':contacts,Список');
+Route::get('/get-contacts-clinics-all', [ContactController::class, 'getContactsClinicsAll'])->middleware(TrackLoad::class . ':contacts,Список');
 
 Route::post('/save-contacts-changes', [ContactController::class, 'saveContactsChanges'])->middleware(['auth:sanctum', 'admin-or-creator']);
 
 /* _____________________________________________________*/
 /* Видео                                                */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-Route::get('/get-videos-all', [VideoController::class, 'getVideosAll'])->middleware(TrackLoad::class.':video,Видео');
+Route::get('/get-videos-all', [VideoController::class, 'getVideosAll'])->middleware(TrackLoad::class . ':video,Видео');
 
 Route::post('/add-video', [VideoController::class, 'addVideo'])->middleware(['auth:sanctum', 'admin-or-creator']);
 Route::post('/save-videos-changes', [VideoController::class, 'saveVideoChanges'])->middleware(['auth:sanctum', 'admin-or-creator']);

@@ -3,10 +3,7 @@
 		<template #title>{{ modalExit.values.title }}</template>
 		<template #body>Вы уверены, что хотите выйти из системы?</template>
 		<template #footer>
-			<VueButton
-				:disabled="$store.getters.getLogoutStatus"
-				@click="$store.dispatch('logout')"
-			>
+			<VueButton :disabled="$store.getters.getLogoutStatus" @click="$store.dispatch('logout')">
 				Выход
 			</VueButton>
 		</template>
@@ -182,15 +179,6 @@
 						</a>
 					</div>
 				</div>
-			</template>
-
-			<template v-if="$store.getters.userRights === 'creator'">
-				<div class="aside__item" :class="{ active: isActive('/admin/users') }">
-					<a class="aside__item-title" href="#" @click.prevent="insertPage(links.users)">
-						<VueIcon :name="'users'" :fill="'white'" :width="'26px'" :height="'26px'" />
-						ПОЛЬЗОВАТЕЛИ
-					</a>
-				</div>
 
 				<div class="aside__item">
 					<a
@@ -229,6 +217,15 @@
 					</div>
 				</div>
 			</template>
+
+			<template v-if="$store.getters.userRights === 'creator'">
+				<div class="aside__item" :class="{ active: isActive('/admin/users') }">
+					<a class="aside__item-title" href="#" @click.prevent="insertPage(links.users)">
+						<VueIcon :name="'users'" :fill="'white'" :width="'26px'" :height="'26px'" />
+						ПОЛЬЗОВАТЕЛИ
+					</a>
+				</div>
+			</template>
 		</div>
 		<div class="aside__footer">
 			<button class="aside__close" @click="openModal('modalExit', 'Выход', 'default')">
@@ -250,7 +247,7 @@ import axios from "axios";
 export default {
 	components: {
 		VueModal,
-		
+
 		VueIcon,
 		VueButton,
 

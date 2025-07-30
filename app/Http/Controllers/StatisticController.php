@@ -170,7 +170,14 @@ class StatisticController extends Controller
                         })->values()->all();
                     break;
                 case 'Источники':
-                    $statistic = Tracking::all()->where('type', 'Источники')->groupBy('type')->values()->all();
+                    $statistic = Tracking::where('type', 'Посещение')->where('meta', '<>', 'Сайт')
+                        ->get()
+                        ->groupBy(['type', 'meta'])
+                        ->map(function ($typeGroup) {
+                            return $typeGroup->map(function ($metaGroup) {
+                                return $metaGroup->count();
+                            });
+                        })->values()->all();
                     break;
                 default:
                     $statistic = [];

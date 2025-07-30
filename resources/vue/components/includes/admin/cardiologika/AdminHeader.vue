@@ -102,7 +102,7 @@ header img {
 	background-color: white;
 }
 
-@media screen and (max-width: 860px) {
+@media screen and (max-width: 1000px) {
 	.user p {
 		font-size: 20px;
 		margin-right: 50px;

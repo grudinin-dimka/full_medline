@@ -71,10 +71,10 @@
 		</template>
 	</BlockTwo>
 
-	<BlockOnce :minHeight="400">
-		<template #title> ВЫБОР КЛИНИК В ЦЕНАХ </template>
+	<BlockTwo :minHeight="350">
+		<template #one-title> ВЫБОР КЛИНИК В ЦЕНАХ </template>
 
-		<template #options>
+		<template #one-options>
 			<VueButton
 				:look="'inverse'"
 				:disabled="disabled.apexClinics.load"
@@ -90,23 +90,58 @@
 			</VueButton>
 		</template>
 
-		<template #body>
+		<template #one-body>
 			<div
 				class="apexchart__skeleton"
 				:class="{ skeleton: loading.loader.apexClinics }"
-				:style="{ minHeight: '400px' }"
+				:style="{ minHeight: '350px' }"
 			>
 				<apexchart
 					v-if="!loading.loader.apexClinics"
 					width="100%"
-					height="400px"
+					height="350px"
 					type="donut"
 					:options="apexClinics.options"
 					:series="apexClinics.series"
 				></apexchart>
 			</div>
 		</template>
-	</BlockOnce>
+
+		<template #two-title> СТОРОННИЕ ИСТОЧНИКИ </template>
+
+		<template #two-options>
+			<VueButton
+				:look="'inverse'"
+				:disabled="disabled.apexSources.load"
+				@click.prevent="getApexSources"
+			>
+				<VueIcon
+					:name="'update'"
+					:fill="'var(--icon-edit-fill)'"
+					:width="'36px'"
+					:height="'36px'"
+				/>
+				Обновить
+			</VueButton>
+		</template>
+
+		<template #two-body>
+			<div
+				class="apexchart__skeleton"
+				:class="{ skeleton: loading.loader.apexSources }"
+				:style="{ minHeight: '350px' }"
+			>
+				<apexchart
+					v-if="!loading.loader.apexSources"
+					width="100%"
+					height="350px"
+					type="donut"
+					:options="apexSources.options"
+					:series="apexSources.series"
+				></apexchart>
+			</div>
+		</template>
+	</BlockTwo>
 
 	<BlockOnce :minHeight="100">
 		<template #title> ПЕРЕХОДЫ ПО САЙТУ </template>
@@ -293,6 +328,55 @@ export default {
 					chart: {
 						id: "vuechart-clinics",
 					},
+					legend: {
+						position: "right",
+						horizontalAlign: "center",
+						formatter: function (seriesName, opts) {
+							// Обрезаем длинные названия до 20 символов
+							return seriesName.length > 30
+								? seriesName.substring(0, 40) + "..."
+								: seriesName;
+						},
+					},
+					tooltip: {
+						enabled: true,
+						enabledOnSeries: undefined,
+						shared: true,
+						hideEmptySeries: true,
+						fillSeriesColor: false,
+						theme: false,
+						x: {
+							show: true,
+						},
+						y: {
+							show: true,
+							title: {
+								formatter: function (val) {
+									return val.length > 70 ? val.substring(0, 70) + "..." : val;
+								},
+							},
+						},
+					},
+					plotOptions: {
+						pie: {
+							donut: {
+								labels: {
+									show: true,
+									total: {
+										show: true,
+										label: "Всего",
+									},
+									name: {
+										show: true,
+										formatter: function (val) {
+											return val.length > 25 ? val.substring(0, 25) + "..." : val;
+										},
+									},
+								},
+							},
+							customScale: 0.9, // Дает немного больше места
+						},
+					},
 				},
 				series: [],
 			},
@@ -300,11 +384,65 @@ export default {
 			apexSources: {
 				options: {
 					colors: this.getColors(),
+					labels: [], // Ваши исходные labels будут обработаны
 					chart: {
-						id: "vuechart-clinics",
+						id: "vuechart-sources",
+						type: "donut",
+						animations: {
+							enabled: false, // Улучшает производительность
+						},
+					},
+					legend: {
+						position: "right",
+						horizontalAlign: "center",
+						formatter: function (seriesName, opts) {
+							// Обрезаем длинные названия до 20 символов
+							return seriesName.length > 30
+								? seriesName.substring(0, 40) + "..."
+								: seriesName;
+						},
+					},
+					tooltip: {
+						enabled: true,
+						enabledOnSeries: undefined,
+						shared: true,
+						hideEmptySeries: true,
+						fillSeriesColor: false,
+						theme: false,
+						x: {
+							show: true,
+						},
+						y: {
+							show: true,
+							title: {
+								formatter: function (val) {
+									return val.length > 70 ? val.substring(0, 70) + "..." : val;
+								},
+							},
+						},
+					},
+					plotOptions: {
+						pie: {
+							donut: {
+								labels: {
+									show: true,
+									total: {
+										show: true,
+										label: "Всего",
+									},
+									name: {
+										show: true,
+										formatter: function (val) {
+											return val.length > 25 ? val.substring(0, 25) + "..." : val;
+										},
+									},
+								},
+							},
+							customScale: 0.9, // Дает немного больше места
+						},
 					},
 				},
-				series: [44, 55, 41, 17, 15],
+				series: [],
 			},
 
 			apexAttendanceAll: {
@@ -396,6 +534,48 @@ export default {
 
 					this.loading.loader.apexClinics = false;
 					this.disabled.apexClinics.load = false;
+				} catch (error) {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка.",
+						body: error,
+						type: "error",
+					});
+				}
+			});
+		},
+
+		/* Получение данных из бд */
+		getApexSources() {
+			this.disabled.apexSources.load = true;
+
+			// Скрываем график перед загрузкой новых данных
+			this.loading.loader.apexSources = true;
+
+			api({
+				method: "post",
+				url: this.$store.getters.urlApi + `get-tracking-statistics-diagram`,
+				headers: {
+					Accept: "application/json",
+				},
+				data: {
+					type: "Источники",
+				},
+			}).then((response) => {
+				if (!response) return;
+
+				try {
+					if (!response) return;
+
+					this.apexSources.options.labels = [];
+					this.apexSources.series = [];
+
+					for (let key in response.data.result) {
+						this.apexSources.options.labels.push(key);
+						this.apexSources.series.push(response.data.result[key]);
+					}
+
+					this.loading.loader.apexSources = false;
+					this.disabled.apexSources.load = false;
 				} catch (error) {
 					this.$store.commit("addDebugger", {
 						title: "Ошибка.",
@@ -847,6 +1027,38 @@ export default {
 				}
 
 				this.loading.loader.apexClinics = false;
+			} catch (error) {
+				this.$store.commit("addDebugger", {
+					title: "Ошибка.",
+					body: error,
+					type: "error",
+				});
+			}
+		});
+
+		fakeDelay(this.$store.getters.timeout, () =>
+			api({
+				method: "post",
+				url: this.$store.getters.urlApi + `get-tracking-statistics-diagram`,
+				headers: {
+					Accept: "application/json",
+				},
+				data: {
+					type: "Источники",
+				},
+			})
+		).then((response) => {
+			if (!response) return;
+
+			try {
+				if (!response) return;
+
+				for (let key in response.data.result) {
+					this.apexSources.options.labels.push(key);
+					this.apexSources.series.push(response.data.result[key]);
+				}
+
+				this.loading.loader.apexSources = false;
 			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
