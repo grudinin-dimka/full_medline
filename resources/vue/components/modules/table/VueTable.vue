@@ -86,9 +86,9 @@
 							<div
 								class="vue-table__content-sort"
 								v-if="
-									value.columnType == 'default' ||
-									value.columnType == 'list' ||
-									value.columnType == 'time'
+									['string', 'number', 'list', 'boolean', 'time'].includes(
+										value.columnType
+									)
 								"
 							>
 								<VueIcon
@@ -128,69 +128,84 @@
 				<!-- Поля фильтра -->
 				<tr class="vue-table__filter-row" v-if="isFilter">
 					<td class="vue-table__filter-cell" v-for="(value, key) in filterFields">
-						<!-- Фильтр по умолчанию -->
-						<div
-							class="vue-table__filter vue-table__filter--default"
+						<!-- Фильтр: строка, число -->
+						<template
 							v-if="
-								filterFields.find((field) => field.name === value.name).type == 'default'
+								['string', 'number'].includes(
+									filterFields.find((field) => field.name === value.name).type
+								)
 							"
 						>
-							<input
-								class="vue-table__filter-field"
-								type="text"
-								placeholder="Поиск"
-								v-model="filterFields.find((field) => field.name === value.name).filter"
-							/>
-						</div>
+							<div class="vue-table__filter vue-table__filter--default">
+								<input
+									class="vue-table__filter-field"
+									type="text"
+									placeholder="Поиск"
+									v-model="filterFields.find((field) => field.name === value.name).filter"
+								/>
+							</div>
+						</template>
 
-						<!-- Фильтр по времени -->
-						<div
-							class="vue-table__filter vue-table__filter--time"
+						<!-- Фильтр: время -->
+						<template
 							v-else-if="
-								filterFields.find((field) => field.name === value.name).type == 'time'
+								['time'].includes(
+									filterFields.find((field) => field.name === value.name).type
+								)
 							"
 						>
-							<input
-								class="vue-table__filter-field"
-								type="datetime-local"
-								v-model.trim="filterFields.find((field) => field.name === value.name).from"
-								@change="filterChangedStatus(value, 'on')"
-							/>
-							<input
-								class="vue-table__filter-field"
-								type="datetime-local"
-								v-model.trim="filterFields.find((field) => field.name === value.name).to"
-								@change="filterChangedStatus(value, 'on')"
-							/>
-						</div>
+							<div class="vue-table__filter vue-table__filter--time">
+								<input
+									class="vue-table__filter-field"
+									type="datetime-local"
+									v-model.trim="
+										filterFields.find((field) => field.name === value.name).from
+									"
+									@change="filterChangedStatus(value, 'on')"
+								/>
+								<input
+									class="vue-table__filter-field"
+									type="datetime-local"
+									v-model.trim="filterFields.find((field) => field.name === value.name).to"
+									@change="filterChangedStatus(value, 'on')"
+								/>
+							</div>
+						</template>
 
-						<!-- Фильтр по списку -->
-						<div
-							class="vue-table__filter vue-table__filter--list"
+						<!-- Фильтр: список -->
+						<template
 							v-else-if="
-								filterFields.find((field) => field.name === value.name).type == 'list' ||
-								filterFields.find((field) => field.name === value.name).type == 'button'
+								['list'].includes(
+									filterFields.find((field) => field.name === value.name).type
+								)
 							"
 						>
-							<input
-								class="vue-table__filter-field"
-								type="text"
-								:list="filterFields.find((field) => field.name === value.name).name"
-								placeholder="Поиск"
-								v-model="filterFields.find((field) => field.name === value.name).filter"
-							/>
-							<datalist :id="filterFields.find((field) => field.name === value.name).name">
-								<option
-									v-for="value in filterFields.find((field) => field.name === value.name)
-										.values"
+							<div class="vue-table__filter vue-table__filter--list">
+								<input
+									class="vue-table__filter-field"
+									type="text"
+									:list="filterFields.find((field) => field.name === value.name).name"
+									placeholder="Поиск"
+									v-model="filterFields.find((field) => field.name === value.name).filter"
+								/>
+								<datalist
+									:id="filterFields.find((field) => field.name === value.name).name"
 								>
-									{{ value.text }}
-								</option>
-							</datalist>
-						</div>
-						<div v-else>
+									<option
+										v-for="value in filterFields.find(
+											(field) => field.name === value.name
+										).values"
+									>
+										{{ value.text }}
+									</option>
+								</datalist>
+							</div>
+						</template>
+
+						<!-- Фильтр: не поддерживается -->
+						<template v-else>
 							<div></div>
-						</div>
+						</template>
 					</td>
 					<td class="vue-table__filter-cell" v-if="this.table.options.update">
 						<div></div>
@@ -213,11 +228,22 @@
 					<!-- Поля -->
 					<td class="vue-table__tbody-cell" v-for="(value, key) in removeIdTableBody(row)">
 						<div :style="{ justifyContent: justifyOfField(key) }">
-							<!-- По умолчанию -->
-							<template v-if="typeOfField(key) == 'default'">
-								{{ value === "" ? "..." : value }}
+							<!-- Строка -->
+							<template v-if="typeOfField(key) == 'string'">
+								{{ formatString(value) }}
 							</template>
 
+							<!-- Число -->
+							<template v-if="typeOfField(key) == 'number'">
+								{{ formatNumber(value) }}
+							</template>
+
+							<!-- Логический -->
+							<template v-else-if="typeOfField(key) == 'boolean'">
+								{{ formatBoolean(value) }}
+							</template>
+
+							<!-- Время -->
 							<template v-else-if="typeOfField(key) == 'time'">
 								{{ formatDate(value) }}
 							</template>
@@ -231,39 +257,10 @@
 								}}
 							</template>
 
-							<!-- Логический -->
-							<template v-else-if="typeOfField(key) == 'boolean'">
-								{{ value ? "Да" : "Нет" }}
-							</template>
-
-							<!-- Кнопка -->
-							<template v-else-if="typeOfField(key) == 'button'">
-								<VueTableButton
-									:wide="true"
-									@click="
-										$emit(
-											'button',
-											this.table.body.find((item) => item.id == row.id)
-										)
-									"
-								>
-									<VueIcon
-										:name="'device'"
-										:width="'16px'"
-										:height="'16px'"
-										:fill="'black'"
-									/>
-
-									<span>{{
-										table.head.find((field) => field.name == key).options.buttonName
-									}}</span>
-								</VueTableButton>
-							</template>
-
 							<!-- Кастомный слот -->
-							<template v-else>
+							<template v-else-if="typeOfField(key) == 'slot'">
 								<slot
-									:name="typeOfField(key)"
+									:name="key"
 									v-bind:row="table.body.find((item) => item.id == row.id)"
 								></slot>
 							</template>
@@ -420,7 +417,7 @@ export default {
 			// 1. Создаем копию таблицы с нужными колонками
 			let tableBody = this.table.body.map((row) =>
 				this.table.head.reduce((acc, column) => {
-					acc[column.name] = row[column.name] ?? "...";
+					acc[column.name] = row[column.name];
 					return acc;
 				}, {})
 			);
@@ -446,17 +443,16 @@ export default {
 						const cellValue = row[fieldName];
 
 						switch (fieldType) {
+							case "string":
+							case "number":
+							case "list":
+								return this.normalizeString(cellValue).includes(filterValue);
+
+								break;
 							case "time":
 								if (!filterField.from && !filterField.to) return true;
 
 								const cellDate = new Date(cellValue);
-
-								if (filterField.from && filterField.to) {
-									return (
-										cellDate > new Date(filterField.from) &&
-										cellDate < new Date(filterField.to)
-									);
-								}
 
 								if (filterField.from && !filterField.to) {
 									return cellDate > new Date(filterField.from);
@@ -465,17 +461,13 @@ export default {
 								if (!filterField.from && filterField.to) {
 									return cellDate < new Date(filterField.to);
 								}
-							case "button":
-								if (!cellValue?.length) return false;
 
-								return cellValue.some((button) =>
-									this.normalizeString(button.text).includes(filterValue)
+								return (
+									cellDate > new Date(filterField.from) &&
+									cellDate < new Date(filterField.to)
 								);
 
-							case "default":
-							case "list":
-								return this.normalizeString(cellValue).includes(filterValue);
-
+								break;
 							default:
 								return true;
 						}
@@ -492,6 +484,7 @@ export default {
 
 			switch (this.typeOfField(sortField)) {
 				case "number":
+				case "boolean":
 					sorted.sortNumberByKey(sortType, tableBody, sortField);
 					break;
 				default:
@@ -517,77 +510,13 @@ export default {
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                   Сортировка                      |*/
+		/* |                     Таблица                       |*/
 		/* |___________________________________________________|*/
-		/* Сортировка */
-		changeTypeSort(key) {
-			if (this.sorting.sortField == key) {
-				if (this.sorting.sortType == "down") {
-					this.sorting.sortType = "up";
-				} else {
-					this.sorting.sortType = "down";
-				}
-			} else {
-				this.sorting.sortField = key;
-				this.sorting.sortType = "up";
-			}
-		},
-
-		/* Тип поля */
-		typeOfField(name) {
-			for (let i = 0; i < this.table.head.length; i++) {
-				if (this.table.head[i].name == name) {
-					return this.table.head[i].columnType;
-				}
-			}
-		},
-
-		/* Тип поля */
-		justifyOfField(name) {
-			for (let i = 0; i < this.table.head.length; i++) {
-				if (this.table.head[i].name == name) {
-					return this.table.head[i].columnJustify ?? "flex-start";
-				}
-			}
-		},
-
-		/* Переключение страниц */
-		changePage(page) {
-			if (page > Math.ceil(this.table.body.length / this.settings.elements.range)) {
-				return;
-			} else if (page < 1) {
-				return;
-			}
-
-			this.settings.pages.current = page;
-		},
-
-		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                     Другое                        |*/
-		/* |___________________________________________________|*/
-		/* Изменение фильтра */
-		filterChanged(field) {
-			for (let i = 0; i < this.filterFields.length; i++) {
-				if (this.filterFields[i].name == field.name) {
-					this.filterFields[i] = field;
-					break;
-				}
-			}
-		},
-
-		/* Изменение статуса фильтра */
-		filterChangedStatus(field, status) {
-			let currentField = this.filterFields.find(
-				(itterateField) => itterateField.name == field.name
-			);
-
-			currentField.filter = status;
-		},
-
 		fromDisplayToBaseTable(rowFromDisplay) {
 			return this.table.body.find((row) => row.id == rowFromDisplay.id);
 		},
 
+		/* Обновление полей фильтра */
 		updateFilterFields() {
 			let values = [];
 
@@ -628,8 +557,92 @@ export default {
 			return newHead;
 		},
 
-		formatDate(date) {
-			let currentDate = new Date(date);
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                   Определители                    |*/
+		/* |___________________________________________________|*/
+		/* Тип поля */
+		typeOfField(name) {
+			for (let i = 0; i < this.table.head.length; i++) {
+				if (this.table.head[i].name == name) {
+					return this.table.head[i].columnType;
+				}
+			}
+		},
+
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                   Сортировка                      |*/
+		/* |___________________________________________________|*/
+		/* Сортировка */
+		changeTypeSort(key) {
+			if (this.sorting.sortField == key) {
+				if (this.sorting.sortType == "down") {
+					this.sorting.sortType = "up";
+				} else {
+					this.sorting.sortType = "down";
+				}
+			} else {
+				this.sorting.sortField = key;
+				this.sorting.sortType = "up";
+			}
+		},
+
+		/* Тип поля */
+		justifyOfField(name) {
+			for (let i = 0; i < this.table.head.length; i++) {
+				if (this.table.head[i].name == name) {
+					return this.table.head[i].columnJustify ?? "flex-start";
+				}
+			}
+		},
+
+		/* Переключение страниц */
+		changePage(page) {
+			if (page > Math.ceil(this.table.body.length / this.settings.elements.range)) {
+				return;
+			} else if (page < 1) {
+				return;
+			}
+
+			this.settings.pages.current = page;
+		},
+
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                 Форматирование                    |*/
+		/* |___________________________________________________|*/
+		/* Форматирование: string */
+		formatString(value) {
+			if (!value || value === null) {
+				return "...";
+			}
+
+			return String(value);
+		},
+
+		/* Форматирование: number */
+		formatNumber(value) {
+			if (Number.isNaN(Number(value)) || value === null) {
+				return "...";
+			}
+
+			return Number(value);
+		},
+
+		/* Форматирование: boolean */
+		formatBoolean(value) {
+			if (value === null) {
+				return "...";
+			}
+
+			return value ? "Да" : "Нет";
+		},
+
+		/* Форматирование: date */
+		formatDate(value) {
+			if (!value) {
+				return "...";
+			}
+
+			let currentDate = new Date(value);
 
 			return currentDate.toLocaleString("ru", {
 				month: "short",
@@ -639,34 +652,42 @@ export default {
 				minute: "numeric",
 			});
 		},
+
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                     Фильтры                       |*/
+		/* |___________________________________________________|*/
+		/* Изменение фильтра */
+		filterChanged(field) {
+			for (let i = 0; i < this.filterFields.length; i++) {
+				if (this.filterFields[i].name == field.name) {
+					this.filterFields[i] = field;
+					break;
+				}
+			}
+		},
+
+		/* Изменение статуса фильтра */
+		filterChangedStatus(field, status) {
+			let currentField = this.filterFields.find(
+				(itterateField) => itterateField.name == field.name
+			);
+
+			currentField.filter = status;
+		},
 	},
 	created() {
-		// Определение сортировки по умолчанию
+		/* Определение сортировки по умолчанию */
 		this.sorting.sortField = this.table.head[0].name;
 		this.sorting.sortType = "up";
 
-		let i = 0;
-		if (this.table.head[0].columnType == "id") {
-			i = 1;
-		}
+		/* Определение полей фильтра */
+		for (let i = 0; i < this.table.head.length; i++) {
+			// Пропускаем поле id
+			if (this.table.head[i].columnType == "id") {
+				continue;
+			}
 
-		// First filter options
-		for (i; i < this.table.head.length; i++) {
 			switch (this.table.head[i].columnType) {
-				case "default":
-					this.filterFields.push({
-						name: this.table.head[i].name,
-						type: "default",
-						filter: "",
-					});
-					break;
-				case "static":
-					this.filterFields.push({
-						name: this.table.head[i].name,
-						type: "default",
-						filter: "",
-					});
-					break;
 				case "time":
 					this.filterFields.push({
 						name: this.table.head[i].name,
@@ -683,33 +704,10 @@ export default {
 						values: this.table.head[i].values,
 					});
 					break;
-				case "button":
-					let values = [];
-
-					for (let j = 0; j < this.table.body.length; j++) {
-						for (let k = 0; k < this.table.body[j][this.table.head[i].name].length; k++) {
-							const value = JSON.parse(
-								JSON.stringify(this.table.body[j][this.table.head[i].name][k])
-							);
-
-							if (!values.find((item) => item.id === value.id && item.text === value.text)) {
-								values.push(value);
-							}
-						}
-					}
-
-					this.filterFields.push({
-						name: this.table.head[i].name,
-						type: "button",
-						filter: "",
-						values: values,
-					});
-					break;
-
 				default:
 					this.filterFields.push({
 						name: this.table.head[i].name,
-						type: "none",
+						type: this.table.head[i].columnType,
 						filter: "",
 					});
 					break;

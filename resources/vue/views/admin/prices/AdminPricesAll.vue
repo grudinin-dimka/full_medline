@@ -187,7 +187,7 @@ export default {
 					{
 						name: "filename",
 						text: "Файл",
-						columnType: "default",
+						columnType: "string",
 						columnSize: "auto",
 					},
 					{
@@ -309,7 +309,7 @@ export default {
 						id: shared.getMaxId(this.table.body) + 1,
 						filename: files.basename(response.data.result),
 						path: response.data.result,
-						date: "Не определено",
+						date: null,
 						delete: false,
 						create: true,
 					});

@@ -96,13 +96,13 @@ export default {
 					{
 						name: "name",
 						text: "ФИО",
-						columnType: "default",
+						columnType: "string",
 						columnSize: "300px",
 					},
 					{
 						name: "snils",
 						text: "СНИЛС",
-						columnType: "default",
+						columnType: "string",
 						columnSize: "100px",
 					},
 				],

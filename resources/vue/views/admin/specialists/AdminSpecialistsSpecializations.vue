@@ -191,7 +191,7 @@ export default {
 					{
 						name: "name",
 						text: "Название",
-						columnType: "default",
+						columnType: "string",
 						columnSize: "auto",
 					},
 				],

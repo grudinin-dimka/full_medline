@@ -121,7 +121,7 @@
 				@edite="openSpecialist"
 				@delete="removeSpecialist"
 			>
-				<template v-slot:hideSpecialist="{ row }">
+				<template v-slot:hide="{ row }">
 					<div class="table__hide" v-if="row.hide" @click="hideSpecialist(row)">Да</div>
 					<div class="table__hide" v-else @click="hideSpecialist(row)">Нет</div>
 				</template>
@@ -265,19 +265,19 @@ export default {
 					{
 						name: "name",
 						text: "Название",
-						columnType: "default",
+						columnType: "string",
 						columnSize: "600px",
 					},
 					{
 						name: "specializations",
 						text: "Специализации",
-						columnType: "default",
+						columnType: "string",
 						columnSize: "auto",
 					},
 					{
-						name: "hideSpecialist",
+						name: "hide",
 						text: "Скрытие",
-						columnType: "hideSpecialist",
+						columnType: "slot",
 						columnSize: "100px",
 						columnJustify: "center",
 					},

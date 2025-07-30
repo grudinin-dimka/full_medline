@@ -36,7 +36,7 @@
 				@edite="openNews"
 				@delete="setFlagDelete"
 			>
-				<template v-slot:hideNews="{ row }">
+				<template v-slot:hide="{ row }">
 					<div class="table__hide" v-if="row.hide" @click="setHideNews(row)">Да</div>
 					<div class="table__hide" v-else @click="setHideNews(row)">Нет</div>
 				</template>
@@ -158,13 +158,13 @@ export default {
 					{
 						name: "title",
 						text: "Заголовок",
-						columnType: "default",
+						columnType: "string",
 						columnSize: "auto",
 					},
 					{
-						name: "hideNews",
+						name: "hide",
 						text: "Публикация",
-						columnType: "hideNews",
+						columnType: "slot",
 						columnSize: "100px",
 						columnJustify: "center",
 					},
