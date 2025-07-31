@@ -81,15 +81,11 @@
 						v-for="(value, key) in removeIdHead(table.head)"
 					>
 						<div class="vue-table__cell-content">
-							{{ value.text }}
+							{{ value.title }}
 
 							<div
 								class="vue-table__content-sort"
-								v-if="
-									['string', 'number', 'list', 'boolean', 'time'].includes(
-										value.columnType
-									)
-								"
+								v-if="['string', 'number', 'list', 'boolean', 'time'].includes(value.type)"
 							>
 								<VueIcon
 									class="th__content__sort-icon"
@@ -226,8 +222,12 @@
 					}"
 				>
 					<!-- Поля -->
-					<td class="vue-table__tbody-cell" v-for="(value, key) in removeIdTableBody(row)">
-						<div :style="{ justifyContent: justifyOfField(key) }">
+					<td
+						v-for="(value, key) in removeIdTableBody(row)"
+						:style="getStyleOfField(key, 'column')"
+						class="vue-table__tbody-cell"
+					>
+						<div :style="getStyleOfField(key, 'data')">
 							<!-- Строка -->
 							<template v-if="typeOfField(key) == 'string'">
 								{{ formatString(value) }}
@@ -516,34 +516,6 @@ export default {
 			return this.table.body.find((row) => row.id == rowFromDisplay.id);
 		},
 
-		/* Обновление полей фильтра */
-		updateFilterFields() {
-			let values = [];
-
-			for (let i = 0; i < this.removeIdHead(this.table.head).length; i++) {
-				if (this.removeIdHead(this.table.head)[i].columnType == "button") {
-					for (let j = 0; j < this.table.body.length; j++) {
-						for (
-							let k = 0;
-							k < this.table.body[j][this.removeIdHead(this.table.head)[i].name].length;
-							k++
-						) {
-							let value = JSON.stringify(
-								this.table.body[j][this.removeIdHead(this.table.head)[i].name][k]
-							);
-							value = JSON.parse(value);
-
-							if (!values.some((v) => v.name === value.name && v.text === value.text)) {
-								values.push(value);
-							}
-						}
-					}
-
-					this.filterFields[i].values = values;
-				}
-			}
-		},
-
 		/* Удаление поля id из tbody */
 		removeIdTableBody(row) {
 			const newRow = { ...row };
@@ -564,7 +536,7 @@ export default {
 		typeOfField(name) {
 			for (let i = 0; i < this.table.head.length; i++) {
 				if (this.table.head[i].name == name) {
-					return this.table.head[i].columnType;
+					return this.table.head[i].type;
 				}
 			}
 		},
@@ -586,11 +558,15 @@ export default {
 			}
 		},
 
-		/* Тип поля */
-		justifyOfField(name) {
+		/* Стиль поля */
+		getStyleOfField(name, type) {
 			for (let i = 0; i < this.table.head.length; i++) {
 				if (this.table.head[i].name == name) {
-					return this.table.head[i].columnJustify ?? "flex-start";
+					if (this.table.head[i].style && this.table.head[i].style[type]) {						
+						return this.table.head[i].style[type];
+					} else {
+						return "";
+					}
 				}
 			}
 		},
@@ -683,11 +659,11 @@ export default {
 		/* Определение полей фильтра */
 		for (let i = 0; i < this.table.head.length; i++) {
 			// Пропускаем поле id
-			if (this.table.head[i].columnType == "id") {
+			if (this.table.head[i].type == "id") {
 				continue;
 			}
 
-			switch (this.table.head[i].columnType) {
+			switch (this.table.head[i].type) {
 				case "time":
 					this.filterFields.push({
 						name: this.table.head[i].name,
@@ -707,14 +683,12 @@ export default {
 				default:
 					this.filterFields.push({
 						name: this.table.head[i].name,
-						type: this.table.head[i].columnType,
+						type: this.table.head[i].type,
 						filter: "",
 					});
 					break;
 			}
 		}
-
-		this.updateFilterFields();
 	},
 };
 </script>

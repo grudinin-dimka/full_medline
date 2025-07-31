@@ -92,18 +92,30 @@ export default {
 
 				// Колонки
 				head: [
-					{ name: "id", text: "ID", columnType: "id" },
+					{
+						name: "id",
+						title: "ID",
+						type: "id",
+					},
 					{
 						name: "name",
-						text: "ФИО",
-						columnType: "string",
-						columnSize: "300px",
+						title: "ФИО",
+						type: "string",
+						style: {
+							column: {
+								width: "300px",
+							},
+						},
 					},
 					{
 						name: "snils",
-						text: "СНИЛС",
-						columnType: "string",
-						columnSize: "100px",
+						title: "СНИЛС",
+						type: "string",
+						style: {
+							column: {
+								width: "200px",
+							},
+						},
 					},
 				],
 

@@ -1513,24 +1513,35 @@ export default {
 
 				// Колонки
 				head: [
-					{ name: "id", text: "ID", columnType: "id" },
+					{
+						name: "id",
+						title: "ID",
+						type: "id",
+					},
 					{
 						name: "name",
-						text: "Название",
-						columnType: "string",
-						columnSize: "250px",
+						title: "Название",
+						type: "string",
+						style: {
+							column: {
+								width: "250px",
+							},
+						},
 					},
 					{
 						name: "organization",
-						text: "Организация",
-						columnType: "string",
-						columnSize: "auto",
+						title: "Организация",
+						type: "string",
 					},
 					{
 						name: "endEducation",
-						text: "Конец обучение",
-						columnType: "time",
-						columnSize: "250px",
+						title: "Конец обучение",
+						type: "time",
+						style: {
+							column: {
+								width: "250px",
+							},
+						},
 					},
 				],
 
@@ -1549,25 +1560,42 @@ export default {
 
 				// Колонки
 				head: [
-					{ name: "id", text: "ID", columnType: "id" },
+					{ name: "id", title: "ID", type: "id" },
 					{
 						name: "name",
-						text: "Название",
-						columnType: "string",
-						columnSize: "250px",
+						title: "Название",
+						type: "string",
+						style: {
+							column: {
+								width: "250px",
+							},
+						},
 					},
 					{
 						name: "organization",
-						text: "Организация",
-						columnType: "string",
-						columnSize: "auto",
+						title: "Организация",
+						type: "string",
 					},
 					{
 						name: "speсialization",
-						text: "Специализация",
-						columnType: "string",
-						columnSize: "250px",
+						title: "Специализация",
+						type: "string",
+						style: {
+							column: {
+								width: "250px",
+							},
+						},
 					},
+					{
+						name: "date",
+						title: "Начало обучение",
+						type: "time",
+						style: {
+							column: {
+								width: "250px",
+							},
+						},
+					}
 				],
 
 				// Элементы
@@ -1585,18 +1613,25 @@ export default {
 
 				// Колонки
 				head: [
-					{ name: "id", text: "ID", columnType: "id" },
+					{
+						name: "id",
+						title: "ID",
+						type: "id",
+					},
 					{
 						name: "name",
-						text: "Название",
-						columnType: "string",
-						columnSize: "600px",
+						title: "Название",
+						type: "string",
+						style: {
+							column: {
+								width: "600px",
+							},
+						},
 					},
 					{
 						name: "organization",
-						text: "Организация",
-						columnType: "string",
-						columnSize: "auto",
+						title: "Организация",
+						type: "string",
 					},
 				],
 

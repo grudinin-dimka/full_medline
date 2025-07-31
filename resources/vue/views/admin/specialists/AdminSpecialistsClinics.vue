@@ -356,30 +356,41 @@ export default {
 
 				// Колонки
 				head: [
-					{ name: "id", text: "ID", columnType: "id" },
+					{ name: "id", title: "ID", type: "id" },
 					{
 						name: "name",
-						text: "Название",
-						columnType: "string",
-						columnSize: "400px",
+						title: "Название",
+						type: "string",
+						style: {
+							column: {
+								width: "400px",
+							},
+						},
 					},
 					{
 						name: "city",
-						text: "Город",
-						columnType: "string",
-						columnSize: "250px",
+						title: "Город",
+						type: "string",
+						style: {
+							column: {
+								width: "250px",
+							},
+						},
 					},
 					{
 						name: "street",
-						text: "Улица",
-						columnType: "string",
-						columnSize: "250px",
+						title: "Улица",
+						type: "string",
+						style: {
+							column: {
+								width: "250px",
+							},
+						},
 					},
 					{
 						name: "home",
-						text: "Дом",
-						columnType: "string",
-						columnSize: "auto",
+						title: "Дом",
+						type: "string",
 					},
 				],
 

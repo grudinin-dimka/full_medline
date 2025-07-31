@@ -75,36 +75,75 @@ export default {
 
 				// Колонки
 				head: [
-					{ name: "id", text: "ID", columnType: "id" },
+					{
+						name: "id",
+						title: "ID",
+						type: "id",
+					},
 					{
 						name: "created",
-						text: "Дата",
-						columnType: "time",
-						columnSize: "200px",
+						title: "Дата",
+						type: "time",
+						style: {
+							column: {
+								width: "200px",
+							},
+							data: {
+								width: "auto",
+							},
+						},
 					},
 					{
 						name: "ip",
-						text: "ip",
-						columnType: "string",
-						columnSize: "200px",
+						title: "ip",
+						type: "string",
+						style: {
+							column: {
+								width: "200px",
+							},
+							data: {
+								width: "auto",
+							},
+						},
 					},
 					{
 						name: "user_agent",
-						text: "Браузер",
-						columnType: "string",
-						columnSize: "200px",
+						title: "Браузер",
+						type: "string",
+						style: {
+							column: {
+								width: "200px",
+							},
+							data: {
+								width: "auto",
+							},
+						},
 					},
 					{
 						name: "type",
-						text: "Тип события",
-						columnType: "string",
-						columnSize: "300px",
+						title: "Тип события",
+						type: "string",
+						style: {
+							column: {
+								width: "200px",
+							},
+							data: {
+								width: "auto",
+							},
+						},
 					},
 					{
 						name: "meta",
-						text: "Описание",
-						columnType: "string",
-						columnSize: "auto",
+						title: "Описание",
+						type: "string",
+						style: {
+							column: {
+								width: "auto",
+							},
+							data: {
+								width: "auto",
+							},
+						},
 					},
 				],
 

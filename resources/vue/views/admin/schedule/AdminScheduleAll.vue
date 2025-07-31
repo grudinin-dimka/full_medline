@@ -122,12 +122,15 @@ export default {
 
 				// Колонки
 				head: [
-					{ name: "id", text: "ID", columnType: "id" },
+					{
+						name: "id",
+						title: "ID",
+						type: "id",
+					},
 					{
 						name: "date",
-						text: "Дата",
-						columnType: "time",
-						columnSize: "auto",
+						title: "Дата",
+						type: "time",
 					},
 				],
 
@@ -147,12 +150,15 @@ export default {
 
 				// Колонки
 				head: [
-					{ name: "id", text: "ID", columnType: "id" },
+					{
+						name: "id",
+						title: "ID",
+						type: "id",
+					},
 					{
 						name: "name",
-						text: "Название",
-						columnType: "string",
-						columnSize: "auto",
+						title: "Название",
+						type: "string",
 					},
 				],
 
@@ -172,12 +178,15 @@ export default {
 
 				// Колонки
 				head: [
-					{ name: "id", text: "ID", columnType: "id" },
+					{
+						name: "id",
+						title: "ID",
+						type: "id",
+					},
 					{
 						name: "name",
-						text: "Название",
-						columnType: "string",
-						columnSize: "auto",
+						title: "Название",
+						type: "string",
 					},
 				],
 

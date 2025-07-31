@@ -261,25 +261,38 @@ export default {
 
 				// Колонки
 				head: [
-					{ name: "id", text: "ID", columnType: "id" },
+					{
+						name: "id",
+						title: "ID",
+						type: "id",
+					},
 					{
 						name: "name",
-						text: "Название",
-						columnType: "string",
-						columnSize: "600px",
+						title: "Название",
+						type: "string",
+						style: {
+							column: {
+								width: "600px",
+							},
+						},
 					},
 					{
 						name: "specializations",
-						text: "Специализации",
-						columnType: "string",
-						columnSize: "auto",
+						title: "Специализации",
+						type: "string",
 					},
 					{
 						name: "hide",
-						text: "Скрытие",
-						columnType: "slot",
-						columnSize: "100px",
-						columnJustify: "center",
+						title: "Скрытие",
+						type: "slot",
+						style: {
+							column: {
+								width: "100px",
+							},
+							data: {
+								justifyContent: "center",
+							},
+						},
 					},
 				],
 

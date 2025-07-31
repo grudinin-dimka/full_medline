@@ -187,12 +187,11 @@ export default {
 
 				// Колонки
 				head: [
-					{ name: "id", text: "ID", columnType: "id" },
+					{ name: "id", title: "ID", type: "id" },
 					{
 						name: "name",
-						text: "Название",
-						columnType: "string",
-						columnSize: "auto",
+						title: "Название",
+						type: "string",
 					},
 				],
 

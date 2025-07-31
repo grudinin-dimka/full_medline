@@ -183,18 +183,25 @@ export default {
 
 				// Колонки
 				head: [
-					{ name: "id", text: "ID", columnType: "id" },
+					{
+						name: "id",
+						title: "ID",
+						type: "id",
+					},
 					{
 						name: "filename",
-						text: "Файл",
-						columnType: "string",
-						columnSize: "auto",
+						title: "Файл",
+						type: "string",
 					},
 					{
 						name: "date",
-						text: "Дата загрузки",
-						columnType: "time",
-						columnSize: "300px",
+						title: "Дата загрузки",
+						type: "time",
+						style: {
+							column: {
+								width: "200px",
+							},
+						},
 					},
 				],
 
