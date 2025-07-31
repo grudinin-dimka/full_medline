@@ -72,10 +72,10 @@ class StatisticController extends Controller
         try {
             if (is_array($request->types) && $request->types) {
                 if (count($request->types) === 1) {
-                    $statistics = Tracking::all()
-                        ->where('created_at', '>=', Carbon::parse($request->start))
+                    $statistics = Tracking::where('created_at', '>=', Carbon::parse($request->start))
                         ->where('created_at', '<=', Carbon::parse($request->end)->addDay())
                         ->whereIn('type', $request->types)
+                        ->get()
                         ->groupBy(
                             function ($item) {
                                 return $item->created_at->format('Y-m-d'); // Группируем только по дате (без времени)
@@ -92,10 +92,10 @@ class StatisticController extends Controller
                         $firsDay->addDay();
                     };
                 } else {
-                    $statistics = Tracking::all()
-                        ->where('created_at', '>=', Carbon::parse($request->start))
+                    $statistics = Tracking::where('created_at', '>=', Carbon::parse($request->start))
                         ->where('created_at', '<=', Carbon::parse($request->end)->addDay())
                         ->whereIn('type', $request->types)
+                        ->get()
                         ->groupBy([
                             'type',
                             function ($item) {
@@ -162,33 +162,54 @@ class StatisticController extends Controller
                 case 'Клиники':
                     $statistic = Tracking::where('type', 'Клиники')
                         ->get()
-                        ->groupBy(['type', 'meta'])
-                        ->map(function ($typeGroup) {
-                            return $typeGroup->map(function ($metaGroup) {
-                                return $metaGroup->count();
-                            });
-                        })->values()->all();
+                        ->groupBy(['meta'])
+                        ->map(function ($group) {
+                            return count($group);
+                        })
+                        ->toArray();
                     break;
                 case 'Источники':
                     $statistic = Tracking::where('type', 'Посещение')->where('meta', '<>', 'Сайт')
                         ->get()
-                        ->groupBy(['type', 'meta'])
-                        ->map(function ($typeGroup) {
-                            return $typeGroup->map(function ($metaGroup) {
-                                return $metaGroup->count();
-                            });
-                        })->values()->all();
+                        ->groupBy(['meta'])
+                        ->map(function ($group) {
+                            return count($group);
+                        })
+                        ->toArray();
                     break;
                 default:
                     $statistic = [];
                     break;
             }
 
+            if (count($statistic) >= 10) {
+                /* Подсчёт суммы значений массива */
+                $statisticSum = array_sum($statistic);
+    
+                $statisticFiltered = [];
+    
+                foreach ($statistic as $key => $value) {
+                    if (round($value / $statisticSum * 100, 0) < 1) {
+                        if (!isset($statisticFiltered["Другое"])) {
+                            $statisticFiltered["Другое"] = $value;
+                        } else {
+                            $statisticFiltered["Другое"] += $value;
+                        };
+    
+                        continue;
+                    }
+    
+                    $statisticFiltered[$key] = $value;
+                };
+
+                $statistic = $statisticFiltered;
+            };
+
             return response()->json([
                 "success" => true,
                 "debug" => false,
                 "message" => "Данные успешно получены.",
-                "result" => $statistic[0] ?? [],
+                "result" => $statistic ?? [],
             ], 200);
         } catch (Throwable $e) {
             return response()->json([

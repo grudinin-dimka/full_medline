@@ -410,7 +410,7 @@
 
 		<VueTablePagination
 			:settings="settings"
-			:arrayLength="table.body.length"
+			:arrayLength="tableLength"
 			@changePage="changePage"
 		/>
 	</div>
@@ -467,7 +467,7 @@ export default {
 			searchInput: "",
 
 			isFilter: false,
-
+			tableLength: 0,
 			filterFields: [],
 		};
 	},
@@ -543,6 +543,9 @@ export default {
 				this.filterFields.forEach((field) => (field.filter = ""));
 			}
 
+			// 3.5. Обновление длины
+			this.updateTableLength(tableBody.length);
+
 			// 4. Сортировка
 			const sortField = this.sorting.sortField;
 			const sortType = this.sorting.sortType;
@@ -594,12 +597,6 @@ export default {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                     Таблица                       |*/
 		/* |___________________________________________________|*/
-		fromDisplayToBaseTable(rowFromDisplay) {
-			return this.table.body.find(
-				(row) => row[getNameOfColumnTypeById] == rowFromDisplay[getNameOfColumnTypeById]
-			);
-		},
-
 		/* Удаление поля id из tbody */
 		deleteOptionsInTableRow(row) {
 			const newRow = { ...row };
@@ -616,6 +613,11 @@ export default {
 			const newHead = head.filter((row) => !this.getTableHeadHideNames.includes(row.name));
 
 			return newHead;
+		},
+
+		/* Удаление поля id из thead */
+		updateTableLength(length) {
+			this.tableLength = length;
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
