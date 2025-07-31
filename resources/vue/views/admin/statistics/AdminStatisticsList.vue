@@ -79,6 +79,7 @@ export default {
 						name: "id",
 						title: "ID",
 						type: "id",
+						hide: true,
 					},
 					{
 						name: "created",
@@ -142,6 +143,7 @@ export default {
 							},
 							data: {
 								width: "auto",
+								wordBreak: "break-all",
 							},
 						},
 					},

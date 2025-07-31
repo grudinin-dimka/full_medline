@@ -126,6 +126,7 @@ export default {
 						name: "id",
 						title: "ID",
 						type: "id",
+						hide: true,
 					},
 					{
 						name: "date",
@@ -154,6 +155,7 @@ export default {
 						name: "id",
 						title: "ID",
 						type: "id",
+						hide: true,
 					},
 					{
 						name: "name",
@@ -182,6 +184,7 @@ export default {
 						name: "id",
 						title: "ID",
 						type: "id",
+						hide: true,
 					},
 					{
 						name: "name",

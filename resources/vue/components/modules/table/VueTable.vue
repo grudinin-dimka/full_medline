@@ -77,15 +77,19 @@
 				<tr class="vue-table__thead-row">
 					<th
 						class="vue-table__thead-cell"
-						:style="{ width: removeIdHead(table.head)[key].columnSize }"
-						v-for="(value, key) in removeIdHead(table.head)"
+						:style="{ width: deleteHeadsInTableHead(table.head)[key].columnSize }"
+						v-for="(value, key) in deleteHeadsInTableHead(table.head)"
 					>
 						<div class="vue-table__cell-content">
 							{{ value.title }}
 
 							<div
 								class="vue-table__content-sort"
-								v-if="['string', 'number', 'list', 'boolean', 'time'].includes(value.type)"
+								v-if="
+									['id', 'string', 'number', 'list', 'boolean', 'time'].includes(
+										value.type
+									)
+								"
 							>
 								<VueIcon
 									class="th__content__sort-icon"
@@ -127,7 +131,7 @@
 						<!-- Фильтр: строка, число -->
 						<template
 							v-if="
-								['string', 'number'].includes(
+								['id', 'number'].includes(
 									filterFields.find((field) => field.name === value.name).type
 								)
 							"
@@ -139,6 +143,34 @@
 									placeholder="Поиск"
 									v-model="filterFields.find((field) => field.name === value.name).filter"
 								/>
+							</div>
+						</template>
+
+						<!-- Фильтр: время -->
+						<template
+							v-else-if="
+								['string'].includes(
+									filterFields.find((field) => field.name === value.name).type
+								)
+							"
+						>
+							<div class="vue-table__filter vue-table__filter--time">
+								<input
+									class="vue-table__filter-field"
+									type="text"
+									placeholder="Поиск"
+									v-model="filterFields.find((field) => field.name === value.name).filter"
+								/>
+								<select
+									class="vue-table__filter-field"
+									v-model="
+										filterFields.find((field) => field.name === value.name).register
+									"
+								>
+									<option value="" disabled>Учет регистра</option>
+									<option :value="true">с регистром</option>
+									<option :value="false">без регистра</option>
+								</select>
 							</div>
 						</template>
 
@@ -215,21 +247,28 @@
 					class="vue-table__tbody-row"
 					v-for="row in displayTable"
 					:class="{
-						'vue-table__tbody-row--create': table.body.find((item) => item.id == row.id)
-							.create,
-						'vue-table__tbody-row--delete': table.body.find((item) => item.id == row.id)
-							.delete,
+						'vue-table__tbody-row--create': table.body.find(
+							(item) => item[getNameOfColumnTypeById] == row[getNameOfColumnTypeById]
+						).create,
+						'vue-table__tbody-row--delete': table.body.find(
+							(item) => item[getNameOfColumnTypeById] == row[getNameOfColumnTypeById]
+						).delete,
 					}"
 				>
 					<!-- Поля -->
 					<td
-						v-for="(value, key) in removeIdTableBody(row)"
+						v-for="(value, key) in deleteOptionsInTableRow(row)"
 						:style="getStyleOfField(key, 'column')"
 						class="vue-table__tbody-cell"
 					>
 						<div :style="getStyleOfField(key, 'data')">
 							<!-- Строка -->
-							<template v-if="typeOfField(key) == 'string'">
+							<template v-if="typeOfField(key) == 'id'">
+								{{ value }}
+							</template>
+
+							<!-- Строка -->
+							<template v-else-if="typeOfField(key) == 'string'">
 								{{ formatString(value) }}
 							</template>
 
@@ -261,7 +300,12 @@
 							<template v-else-if="typeOfField(key) == 'slot'">
 								<slot
 									:name="key"
-									v-bind:row="table.body.find((item) => item.id == row.id)"
+									v-bind:row="
+										table.body.find(
+											(item) =>
+												item[getNameOfColumnTypeById] == row[getNameOfColumnTypeById]
+										)
+									"
 								></slot>
 							</template>
 						</div>
@@ -279,7 +323,10 @@
 								@click="
 									$emit(
 										'edite',
-										this.table.body.find((item) => item.id == row.id)
+										this.table.body.find(
+											(item) =>
+												item[getNameOfColumnTypeById] == row[getNameOfColumnTypeById]
+										)
 									)
 								"
 							>
@@ -291,18 +338,27 @@
 							<VueTableButton
 								:wide="true"
 								:look="
-									this.table.body.find((item) => item.id == row.id).create
+									this.table.body.find(
+										(item) =>
+											item[getNameOfColumnTypeById] == row[getNameOfColumnTypeById]
+									).create
 										? 'disabled'
 										: 'delete'
 								"
 								v-if="
 									table.options.delete &&
-									!table.body.find((item) => item.id == row.id).delete
+									!table.body.find(
+										(item) =>
+											item[getNameOfColumnTypeById] == row[getNameOfColumnTypeById]
+									).delete
 								"
 								@click="
 									$emit(
 										'delete',
-										this.table.body.find((item) => item.id == row.id)
+										this.table.body.find(
+											(item) =>
+												item[getNameOfColumnTypeById] == row[getNameOfColumnTypeById]
+										)
 									)
 								"
 							>
@@ -322,7 +378,10 @@
 								@click="
 									$emit(
 										'delete',
-										this.table.body.find((item) => item.id == row.id)
+										this.table.body.find(
+											(item) =>
+												item[getNameOfColumnTypeById] == row[getNameOfColumnTypeById]
+										)
 									)
 								"
 							>
@@ -408,6 +467,7 @@ export default {
 			searchInput: "",
 
 			isFilter: false,
+
 			filterFields: [],
 		};
 	},
@@ -443,12 +503,17 @@ export default {
 						const cellValue = row[fieldName];
 
 						switch (fieldType) {
-							case "string":
+							case "id":
 							case "number":
 							case "list":
 								return this.normalizeString(cellValue).includes(filterValue);
-
 								break;
+							case "string":
+								if (filterField.register) {
+									return cellValue.includes(filterValue);
+								} else {
+									return cellValue.toLowerCase().includes(filterValue.toLowerCase());
+								}
 							case "time":
 								if (!filterField.from && !filterField.to) return true;
 
@@ -483,6 +548,7 @@ export default {
 			const sortType = this.sorting.sortType;
 
 			switch (this.typeOfField(sortField)) {
+				case "id":
 				case "number":
 				case "boolean":
 					sorted.sortNumberByKey(sortType, tableBody, sortField);
@@ -498,34 +564,57 @@ export default {
 
 			return tableBody.slice(start, end);
 		},
+
+		/* Скрытые колонки */
+		getTableHeadHideNames() {
+			return this.table.head.filter((column) => column.hide).map((column) => column.name);
+		},
+
+		/* Имя колонки с типом id */
+		getNameOfColumnTypeById() {
+			return this.table.head.find((column) => column.type == "id").name;
+		},
 	},
 	methods: {
 		// Вспомогательная функция для нормализации строк
-		normalizeString(str) {
-			if (typeof str !== "string") str = String(str);
-			if (!str.match(/^[a-zA-Z]+$/)) {
-				return str.toLowerCase().trim();
+		normalizeString(str, type = "") {
+			switch (type) {
+				case "lower":
+					return String(str).trim().toLowerCase();
+					break;
+				case "upper":
+					return String(str).trim().toUpperCase();
+					break;
+				default:
+					return String(str).trim();
+					break;
 			}
-			return str;
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                     Таблица                       |*/
 		/* |___________________________________________________|*/
 		fromDisplayToBaseTable(rowFromDisplay) {
-			return this.table.body.find((row) => row.id == rowFromDisplay.id);
+			return this.table.body.find(
+				(row) => row[getNameOfColumnTypeById] == rowFromDisplay[getNameOfColumnTypeById]
+			);
 		},
 
 		/* Удаление поля id из tbody */
-		removeIdTableBody(row) {
+		deleteOptionsInTableRow(row) {
 			const newRow = { ...row };
-			delete newRow.id;
+
+			for (let i = 0; i < this.getTableHeadHideNames.length; i++) {
+				delete newRow[this.getTableHeadHideNames[i]];
+			}
+
 			return newRow;
 		},
 
 		/* Удаление поля id из thead */
-		removeIdHead(head) {
-			const newHead = head.filter((row) => row.name != "id");
+		deleteHeadsInTableHead(head) {
+			const newHead = head.filter((row) => !this.getTableHeadHideNames.includes(row.name));
+
 			return newHead;
 		},
 
@@ -562,7 +651,7 @@ export default {
 		getStyleOfField(name, type) {
 			for (let i = 0; i < this.table.head.length; i++) {
 				if (this.table.head[i].name == name) {
-					if (this.table.head[i].style && this.table.head[i].style[type]) {						
+					if (this.table.head[i].style && this.table.head[i].style[type]) {
 						return this.table.head[i].style[type];
 					} else {
 						return "";
@@ -659,11 +748,19 @@ export default {
 		/* Определение полей фильтра */
 		for (let i = 0; i < this.table.head.length; i++) {
 			// Пропускаем поле id
-			if (this.table.head[i].type == "id") {
+			if (this.table.head[i].hide) {
 				continue;
 			}
 
 			switch (this.table.head[i].type) {
+				case "string":
+					this.filterFields.push({
+						name: this.table.head[i].name,
+						type: this.table.head[i].type,
+						register: true,
+						filter: "",
+					});
+					break;
 				case "time":
 					this.filterFields.push({
 						name: this.table.head[i].name,

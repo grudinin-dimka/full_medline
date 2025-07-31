@@ -1517,6 +1517,7 @@ export default {
 						name: "id",
 						title: "ID",
 						type: "id",
+						hide: true,
 					},
 					{
 						name: "name",
@@ -1560,7 +1561,12 @@ export default {
 
 				// Колонки
 				head: [
-					{ name: "id", title: "ID", type: "id" },
+					{
+						name: "id",
+						title: "ID",
+						type: "id",
+						hide: true,
+					},
 					{
 						name: "name",
 						title: "Название",
@@ -1617,6 +1623,7 @@ export default {
 						name: "id",
 						title: "ID",
 						type: "id",
+						hide: true,
 					},
 					{
 						name: "name",

@@ -69,7 +69,7 @@
 			<VueTable
 				v-if="loading.sections.specializations"
 				:table="table"
-				@create="openModalСreate"
+				@create="openModalСreate()"
 				@edite="openModalEdite"
 				@delete="removeSpecialization"
 			/>
@@ -187,7 +187,12 @@ export default {
 
 				// Колонки
 				head: [
-					{ name: "id", title: "ID", type: "id" },
+					{
+						name: "id",
+						title: "ID",
+						type: "id",
+						hide: true,
+					},
 					{
 						name: "name",
 						title: "Название",
