@@ -147,24 +147,33 @@ export default {
 		},
 	},
 	mounted() {
+		let headers = {};
+
+		if (document.referrer) {
+			const referrer = document.referrer;
+
+			headers["Custom-Referer"] = referrer;
+		}
+
 		api({
 			method: "get",
 			url: this.$store.getters.urlApi + "get-footer",
-		})
-			.then((response) => {
-				if (!response) return;
+			headers: headers,
+		}).then((response) => {
+			if (!response) return;
+
+			try {
 				this.footer = response.data.result;
-			})
-			.catch((error) => {
+
+				this.loading.loader.footer = false;
+			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
 					body: error,
 					type: "error",
 				});
-			})
-			.finally(() => {
-				this.loading.loader.footer = false;
-			});
+			}
+		});
 	},
 };
 </script>
