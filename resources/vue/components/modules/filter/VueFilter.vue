@@ -189,16 +189,10 @@ export default {
 	},
 	mounted() {
 		document.addEventListener("click", this.handleClickOutside);
-
-		window.addEventListener("reload", this.changeFilterBodyPosition);
-		window.addEventListener("load", this.changeFilterBodyPosition);
 		window.addEventListener("resize", this.changeFilterBodyPosition);
 	},
 	unmounted() {
 		document.removeEventListener("click", this.handleClickOutside);
-
-		window.removeEventListener("reload", this.changeFilterBodyPosition);
-		window.removeEventListener("load", this.changeFilterBodyPosition);
 		window.removeEventListener("resize", this.changeFilterBodyPosition);
 	},
 };

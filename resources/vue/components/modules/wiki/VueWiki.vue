@@ -1,23 +1,25 @@
 <template>
-	<div class="wiki" :class="{ 'wiki--open': $store.getters.getWikiShow }">
-		<div class="wiki__header">
-			<div class="wiki__header-title">
-				{{ $store.getters.getWikiTitle }}
+	<div class="wiki-wrapper" @click.self="$store.commit('closeWiki')" :class="{ 'wiki-wrapper--open': $store.getters.getWikiShow }">
+		<div class="wiki" ref="wiki" :class="{ 'wiki--open': $store.getters.getWikiShow }">
+			<div class="wiki__header">
+				<div class="wiki__header-title">
+					{{ $store.getters.getWikiTitle }}
+				</div>
+				<div class="wiki__header-buttons">
+					<button
+						class="wiki__header-buttons-button wiki__header-buttons-button--close"
+						@click="$store.commit('closeWiki')"
+					>
+						<VueIcon :name="'close'" :fill="'black'" :width="'20px'" :height="'20px'" />
+					</button>
+				</div>
 			</div>
-			<div class="wiki__header-buttons">
-				<button
-					class="wiki__header-buttons-button wiki__header-buttons-button--close"
-					@click="$store.commit('closeWiki')"
-				>
-					<VueIcon :name="'close'" :fill="'black'" :width="'20px'" :height="'20px'" />
-				</button>
-			</div>
-		</div>
 
-		<div class="wiki__body">
-         <template v-if="$store.getters.getWikiComponent">
-            <component :is="$store.getters.getWikiComponent" />
-         </template>
+			<div class="wiki__body">
+				<template v-if="$store.getters.getWikiComponent">
+					<component :is="$store.getters.getWikiComponent" />
+				</template>
+			</div>
 		</div>
 	</div>
 </template>
@@ -26,12 +28,22 @@
 import HomeFooter from "./components/home/HomeFooter.vue";
 import HomeSlider from "./components/home/HomeSlider.vue";
 
+import SpecialistsAll from "./components/specialists/SpecialistsAll.vue";
+import SpecialistsProfile from "./components/specialists/SpecialistsProfile.vue";
+import SpecialistsClinics from "./components/specialists/SpecialistsClinics.vue";
+import SpecialistsSpecializations from "./components/specialists/SpecialistsSpecializations.vue";
+
 import VueIcon from "../icon/VueIcon.vue";
 
 export default {
 	components: {
-      HomeFooter,
-      HomeSlider,
+		HomeFooter,
+		HomeSlider,
+
+		SpecialistsAll,
+		SpecialistsProfile,
+		SpecialistsClinics,
+		SpecialistsSpecializations,
 
 		VueIcon,
 	},
@@ -39,6 +51,27 @@ export default {
 </script>
 
 <style scoped>
+.wiki-wrapper {
+	position: fixed;
+	z-index: var(--wiki-z-index);
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+
+	background-color: rgba(0, 0, 0, 0.3);
+
+	visibility: hidden;
+	opacity: 0;
+
+	transition: all 0.3s ease;
+}
+
+.wiki-wrapper--open {
+	visibility: visible;
+	opacity: 1;
+}
+
 .wiki {
 	box-sizing: border-box;
 	position: var(--wiki-position);
@@ -83,10 +116,10 @@ export default {
 }
 
 .wiki__header-title {
-   font-size: 1.5rem;
-   font-weight: 500;
-   text-transform: uppercase;
-   color: black;
+	font-size: 1.5rem;
+	font-weight: 500;
+	text-transform: uppercase;
+	color: black;
 }
 
 .wiki__header-buttons-button {
@@ -102,6 +135,6 @@ export default {
 }
 
 .wiki__body {
-   overflow-y: auto;
+	overflow-y: auto;
 }
 </style>
