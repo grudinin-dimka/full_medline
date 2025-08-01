@@ -198,9 +198,11 @@ export default {
 						name: "date",
 						title: "Дата загрузки",
 						type: "time",
-						style: {
+						options: {
 							column: {
-								width: "200px",
+								style: {
+									width: "200px",
+								},
 							},
 						},
 					},

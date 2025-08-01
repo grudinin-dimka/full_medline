@@ -366,9 +366,11 @@ export default {
 						name: "name",
 						title: "Название",
 						type: "string",
-						style: {
+						options: {
 							column: {
-								width: "400px",
+								style: {
+									width: "400px",
+								},
 							},
 						},
 					},
@@ -376,9 +378,11 @@ export default {
 						name: "city",
 						title: "Город",
 						type: "string",
-						style: {
+						options: {
 							column: {
-								width: "250px",
+								style: {
+									width: "250px",
+								},
 							},
 						},
 					},
@@ -386,9 +390,11 @@ export default {
 						name: "street",
 						title: "Улица",
 						type: "string",
-						style: {
+						options: {
 							column: {
-								width: "250px",
+								style: {
+									width: "250px",
+								},
 							},
 						},
 					},

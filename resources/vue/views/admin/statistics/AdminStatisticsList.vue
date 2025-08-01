@@ -85,12 +85,16 @@ export default {
 						name: "created",
 						title: "Дата",
 						type: "time",
-						style: {
+						options: {
 							column: {
-								width: "200px",
+								style: {
+									width: "200px",
+								},
 							},
 							data: {
-								width: "auto",
+								style: {
+									width: "auto",
+								},
 							},
 						},
 					},
@@ -98,12 +102,16 @@ export default {
 						name: "ip",
 						title: "ip",
 						type: "string",
-						style: {
+						options: {
 							column: {
-								width: "200px",
+								style: {
+									width: "150px",
+								},
 							},
 							data: {
-								width: "auto",
+								style: {
+									width: "auto",
+								},
 							},
 						},
 					},
@@ -111,12 +119,16 @@ export default {
 						name: "user_agent",
 						title: "Браузер",
 						type: "string",
-						style: {
+						options: {
 							column: {
-								width: "200px",
+								style: {
+									width: "175px",
+								},
 							},
 							data: {
-								width: "auto",
+								style: {
+									width: "auto",
+								},
 							},
 						},
 					},
@@ -124,12 +136,16 @@ export default {
 						name: "type",
 						title: "Тип события",
 						type: "string",
-						style: {
+						options: {
 							column: {
-								width: "200px",
+								style: {
+									width: "175px",
+								},
 							},
 							data: {
-								width: "auto",
+								style: {
+									width: "auto",
+								},
 							},
 						},
 					},
@@ -137,13 +153,12 @@ export default {
 						name: "meta",
 						title: "Описание",
 						type: "string",
-						style: {
-							column: {
-								width: "auto",
-							},
+						options: {
 							data: {
-								width: "auto",
-								wordBreak: "break-all",
+								style: {
+									width: "auto",
+									wordBreak: "break-all",
+								},
 							},
 						},
 					},

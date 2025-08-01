@@ -477,7 +477,12 @@ export default {
 			// 1. Создаем копию таблицы с нужными колонками
 			let tableBody = this.table.body.map((row) =>
 				this.table.head.reduce((acc, column) => {
-					acc[column.name] = row[column.name];
+					if (column.options?.data?.formatter) {						
+						acc[column.name] = column.options.data.formatter(row[column.name]);
+					} else {
+						acc[column.name] = row[column.name];
+					};
+
 					return acc;
 				}, {})
 			);
@@ -653,8 +658,8 @@ export default {
 		getStyleOfField(name, type) {
 			for (let i = 0; i < this.table.head.length; i++) {
 				if (this.table.head[i].name == name) {
-					if (this.table.head[i].style && this.table.head[i].style[type]) {
-						return this.table.head[i].style[type];
+					if (this.table.head[i]?.options?.[type]?.style) {
+						return this.table.head[i].options[type].style;
 					} else {
 						return "";
 					}

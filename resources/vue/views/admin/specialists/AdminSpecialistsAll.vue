@@ -271,9 +271,11 @@ export default {
 						name: "name",
 						title: "Название",
 						type: "string",
-						style: {
+						options: {
 							column: {
-								width: "600px",
+								style: {
+									width: "600px",
+								},
 							},
 						},
 					},
@@ -286,12 +288,16 @@ export default {
 						name: "hide",
 						title: "Скрытие",
 						type: "slot",
-						style: {
+						options: {
 							column: {
-								width: "100px",
+								style: {
+									width: "100px",
+								},
 							},
 							data: {
-								justifyContent: "center",
+								style: {
+									justifyContent: "center",
+								},
 							},
 						},
 					},

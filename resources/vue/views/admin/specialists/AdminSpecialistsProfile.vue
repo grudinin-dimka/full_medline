@@ -1523,9 +1523,11 @@ export default {
 						name: "name",
 						title: "Название",
 						type: "string",
-						style: {
+						options: {
 							column: {
-								width: "250px",
+								style: {
+									width: "250px",
+								},
 							},
 						},
 					},
@@ -1538,9 +1540,11 @@ export default {
 						name: "endEducation",
 						title: "Конец обучение",
 						type: "time",
-						style: {
+						options: {
 							column: {
-								width: "250px",
+								style: {
+									width: "250px",
+								},
 							},
 						},
 					},
@@ -1571,9 +1575,11 @@ export default {
 						name: "name",
 						title: "Название",
 						type: "string",
-						style: {
+						options: {
 							column: {
-								width: "250px",
+								style: {
+									width: "250px",
+								},
 							},
 						},
 					},
@@ -1586,9 +1592,11 @@ export default {
 						name: "speсialization",
 						title: "Специализация",
 						type: "string",
-						style: {
+						options: {
 							column: {
-								width: "250px",
+								style: {
+									width: "250px",
+								},
 							},
 						},
 					},
@@ -1596,12 +1604,14 @@ export default {
 						name: "date",
 						title: "Начало обучение",
 						type: "time",
-						style: {
+						options: {
 							column: {
-								width: "250px",
+								style: {
+									width: "250px",
+								},
 							},
 						},
-					}
+					},
 				],
 
 				// Элементы
@@ -1629,9 +1639,11 @@ export default {
 						name: "name",
 						title: "Название",
 						type: "string",
-						style: {
+						options: {
 							column: {
-								width: "600px",
+								style: {
+									width: "600px",
+								},
 							},
 						},
 					},
