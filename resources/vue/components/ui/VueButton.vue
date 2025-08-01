@@ -1,5 +1,10 @@
 <template>
-	<button class="button-default" :class="{ [look]: look, wide: wide }" :disabled="disabled">
+	<button
+		class="button-default"
+		ref="button"
+		:class="{ [look]: look, wide: wide }"
+		:disabled="disabled"
+	>
 		<span class="loader" v-if="disabled" :class="{ [look]: look }"></span>
 		<div class="content" :class="{ disabled: disabled }">
 			<slot></slot>
@@ -22,6 +27,32 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		minWidth: {
+			type: [String, Number, null],
+			default: "160px",
+		},
+	},
+	methods: {
+		getMinWidth() {
+			return this.minWidth;
+		},
+	},
+	mounted() {
+		const rootStyles = getComputedStyle(document.documentElement);
+		const myVariable = rootStyles.getPropertyValue("--button-min-width").trim();
+
+		if (this.minWidth) {
+			switch (typeof this.minWidth) {
+				case "string":
+					this.$refs.button.style.minWidth = this.minWidth;
+					break;
+				case "number":
+					this.$refs.button.style.minWidth = this.minWidth + "px";
+					break;
+			}
+		} else {
+			this.$refs.button.style.minWidth = myVariable;
+		}
 	},
 };
 </script>
@@ -36,9 +67,9 @@ export default {
 	gap: var(--button-gap);
 
 	padding: var(--button-padding);
-	max-height: 54px;
-	min-height: 54px;
-	min-width: 160px;
+	min-width: var(--button-min-width);
+	max-height: var(--button-max-height);
+	min-height: var(--button-min-height);
 	border: var(--button-border);
 	border-radius: var(--button-border-radius);
 
@@ -46,7 +77,7 @@ export default {
 	color: var(--button-font-color);
 	background-color: var(--button-background-color);
 
-	transition: all 0.2s;
+	transition: var(--button-transition);
 }
 
 .button-default:hover {
@@ -130,18 +161,17 @@ export default {
 
 /* Содержимое */
 button > .content {
-   cursor: pointer;
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   gap: var(--button-gap);
+	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: var(--button-gap);
 }
 
 button > .content.disabled {
 	visibility: hidden;
 	opacity: 0;
 }
-
 
 /* Загрузчик */
 .loader {

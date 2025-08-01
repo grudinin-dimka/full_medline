@@ -158,9 +158,16 @@ export default {
 						name: "date",
 						title: "Дата",
 						type: "time",
-						style: {
+						options: {
 							column: {
-								width: "200px",
+								style: {
+									width: "200px",
+								},
+							},
+							data: {
+								style: {
+									justifyContent: "center",
+								},
 							},
 						},
 					},
@@ -173,13 +180,17 @@ export default {
 						name: "hide",
 						title: "Публикация",
 						type: "slot",
-						style: {
+						options: {
 							column: {
-								width: "100px",
+								style: {
+									width: "100px",
+								},
 							},
 							data: {
-								justifyContent: "center",
-							}
+								style: {
+									justifyContent: "center",
+								},
+							},
 						},
 					},
 				],

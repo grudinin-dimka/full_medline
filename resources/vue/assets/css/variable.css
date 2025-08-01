@@ -10,6 +10,7 @@
 @import url("./medline/modules/modal.css");
 @import url("./medline/modules/list.css");
 @import url("./medline/modules/loader.css");
+@import url("./medline/modules/wiki.css");
 
 /* Элементы */
 @import url("./medline/elements/icons.css");

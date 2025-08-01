@@ -180,6 +180,19 @@
 				/>
 				Сохранить
 			</VueButton>
+
+			<VueButton
+				:look="'inverse'"
+				@click="$store.commit('openWiki', { title: 'Слайдер', component: 'HomeSlider' })"
+				:minWidth="'30px'"
+			>
+				<VueIcon
+					:name="'info'"
+					:fill="'var(--primary-color)'"
+					:width="'28px'"
+					:height="'28px'"
+				/>
+			</VueButton>
 		</template>
 
 		<template #body>
@@ -259,7 +272,7 @@
 		</template>
 
 		<template #buttons>
-			<VueButton @click="openModalСreate" :disabled="disabled.slider.add">
+			<VueButton @click="openModalСreate()" :disabled="disabled.slider.add">
 				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</VueButton>
@@ -281,6 +294,19 @@
 					:height="'28px'"
 				/>
 				Сохранить
+			</VueButton>
+
+			<VueButton
+				:look="'inverse'"
+				@click="$store.commit('openWiki', { title: 'Футер', component: 'HomeFooter' })"
+				:minWidth="'30px'"
+			>
+				<VueIcon
+					:name="'info'"
+					:fill="'var(--primary-color)'"
+					:width="'28px'"
+					:height="'28px'"
+				/>
 			</VueButton>
 		</template>
 

@@ -1,5 +1,6 @@
 <template>
-	<VueDebugger></VueDebugger>
+	<VueDebugger />
+	<VueWiki />
 
 	<VueLoader :isLoading="loader.loading" />
 
@@ -11,6 +12,7 @@
 <script>
 import { RouterLink, RouterView } from "vue-router";
 import VueDebugger from "../components/modules/VueDebugger.vue";
+import VueWiki from "../components/modules/wiki/VueWiki.vue";
 import VueLoader from "../components/modules/VueLoader.vue";
 
 // NOTE: Модули в админке
@@ -24,6 +26,7 @@ import axios from "axios";
 export default {
 	components: {
 		VueLoader,
+		VueWiki,
 		VueDebugger,
 
 		AdminHeader,

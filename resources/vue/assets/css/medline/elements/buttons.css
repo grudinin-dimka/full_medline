@@ -9,12 +9,19 @@
 	--button-background-color: var(--primary-color);
 	--button-background-color-hover: var(--primary-color-hover);
 
+	--button-min-width: 150px;
+	--button-max-width: none;
+	--button-min-height: 54px;
+
 	--button-secondary-font-color: rgb(255, 255, 255);
 	--button-secondary-font-color-hover: rgb(255, 255, 255);
 	--button-secondary-background-color: #dcfbff;
 	--button-secondary-background-color-hover: #d3f1f5;
 
 	--button-loader-border: 3px solid white;
+
+	--button-transition: border 0.2s ease-in-out, color 0.2s ease-in-out,
+		background-color 0.2s ease-in-out;
 
 	/* edit */
 	--button-edit-font-color: rgb(255, 255, 255);
@@ -33,7 +40,7 @@
 
 	--button-inverse-font-color: black;
 	--button-inverse-font-color-hover: black;
-	--button-inverse-background-color: rgba(190, 132, 86, 0.0);
+	--button-inverse-background-color: rgba(190, 132, 86, 0);
 	--button-inverse-background-color-hover: var(--edit-secondary-background-color);
 
 	--button-loader-inverse-border: 3px solid var(--primary-color);
