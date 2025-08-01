@@ -37,7 +37,13 @@ body.modal-open {
 	overflow: hidden;
 }
 
-body.modal-open > #app > header > .user {
+body.wiki-open {
+	padding-right: 17px;
+	background-color: #ececec;
+	overflow: hidden;
+}
+
+body:is(.modal-open, .wiki-open) > #app > header > .user {
 	margin-right: 17px;
 }
 
@@ -202,12 +208,12 @@ table::-webkit-scrollbar-button:hover {
 }
 
 @media screen and (max-width: 600px) {
-	body.modal-open {
+	body:is(.modal-open, .wiki-open) {
 		padding-right: 0px;
 		background-color: white;
 	}
 
-	body.modal-open > #app > header > .user {
+	body:is(.modal-open, .wiki-open) > #app > header > .user {
 		margin-right: 0px;
 	}
 }

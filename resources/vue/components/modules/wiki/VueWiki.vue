@@ -100,4 +100,8 @@ export default {
 	width: 30px;
 	height: 30px;
 }
+
+.wiki__body {
+   overflow-y: auto;
+}
 </style>

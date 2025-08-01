@@ -12,6 +12,8 @@ export default {
       },
 
       openWiki(state, options) {
+         document.body.classList.add("wiki-open");
+
          state.wiki.show = true;
 
          state.wiki.title = options.title;
@@ -20,6 +22,8 @@ export default {
 
       closeWiki(state) {
          state.wiki.show = false;
+
+         document.body.classList.remove("wiki-open");
       },
    },
    actions: {
