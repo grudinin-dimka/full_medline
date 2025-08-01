@@ -333,7 +333,7 @@
 		</template>
 
 		<template #buttons>
-			<VueButton @click="openModalСreate">
+			<VueButton @click="openModalСreate()">
 				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</VueButton>
@@ -609,18 +609,28 @@ export default {
 
 				// Колонки
 				head: [
-					{ name: "id", text: "ID", columnType: "id" },
+					{
+						name: "id",
+						title: "ID",
+						type: "id",
+						hide: true,
+					},
 					{
 						name: "filename",
-						text: "Файл",
-						columnType: "default",
-						columnSize: "auto",
+						title: "Файл",
+						type: "string",
 					},
 					{
 						name: "date",
-						text: "Дата загрузки",
-						columnType: "time",
-						columnSize: "300px",
+						title: "Дата загрузки",
+						type: "time",
+						options: {
+							column: {
+								style: {
+									width: "300px",
+								},
+							},
+						},
 					},
 				],
 
@@ -1118,6 +1128,7 @@ export default {
 
 .modal-images > .item > .img {
 	flex: 1 0 300px;
+	border: var(--default-border);
 	border-radius: calc(var(--default-border-radius) / 1.5);
 	min-width: 100px;
 	min-height: 300px;
