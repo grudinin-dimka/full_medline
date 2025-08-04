@@ -3,10 +3,10 @@
 
 	<VueWikiTitle>
 		<VueIcon name="add" width="14" height="14" fill="var(--primary-color)" />
-		Добавление специалиста.
+		Добавление новости.
 	</VueWikiTitle>
 	<VueWikiParagraph>
-		1. Для добавления специалиста, нажмите на кнопку «Добавить».
+		1. Для добавления новости, нажмите на кнопку «Добавить».
 	</VueWikiParagraph>
 	<VueWikiParagraph>
 		2. После нажатия на кнопку «Добавить» вы будете перенаправлены на страницу добавления.
@@ -14,11 +14,10 @@
 
 	<VueWikiTitle>
 		<VueIcon name="remove" width="16" height="16" fill="var(--primary-color)" />
-		Удаление специалиста.
+		Удаление новости.
 	</VueWikiTitle>
 	<VueWikiParagraph>
-		1. Для удаления специалиста, нажмите на кнопку «Удалить» в строке таблица с нужным
-		специалистом.
+		1. Для удаления новости, нажмите на кнопку «Удалить» в строке таблица с нужной новостью.
 	</VueWikiParagraph>
 	<VueWikiParagraph>
 		2. Для сохранения изменений, нажмите на кнопку «Сохранить».
@@ -26,22 +25,22 @@
 
 	<VueWikiTitle>
 		<VueIcon name="edit" width="18" height="18" fill="var(--primary-color)" />
-		Изменение специалиста
+		Изменение новости
 	</VueWikiTitle>
 	<VueWikiParagraph>
-		1. Для изменения специалиста, нажмите на кнопку «Изменить» в строке таблица с нужным
-		специалистом.
+		1. Для изменения новости, нажмите на кнопку «Изменить» в строке таблица с нужной
+		новостью.
 	</VueWikiParagraph>
 	<VueWikiParagraph>
 		2. После нажатия на кнопку «Изменить» вы будете перенаправлены на страницу изменения.
 	</VueWikiParagraph>
 
 	<VueWikiTitle>
-		<VueIcon name="hide" width="18" height="18" fill="var(--primary-color)" />
-		Скрытие специалиста.
+		<VueIcon name="publish" width="18" height="18" fill="var(--primary-color)" />
+		Публикация новости.
 	</VueWikiTitle>
 	<VueWikiParagraph>
-		1. Для скрытия специалиста, нажмите на значение в столбике «Скрытие».
+		1. Для пукбликации новостми, нажмите на значение в столбике «Публикация».
 	</VueWikiParagraph>
 	<VueWikiParagraph>
 		2. Для сохранения изменений, нажмите на кнопку «Сохранить».

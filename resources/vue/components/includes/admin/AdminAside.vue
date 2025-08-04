@@ -418,13 +418,6 @@ export default {
 				this.$router.push({ name: `${child.name}` });
 			}
 
-			// скролл к верху
-			window.scrollTo({
-				top: 0,
-				left: 0,
-				behavior: "instant",
-			});
-
 			this.$store.commit("closeBurgerAdmin");
 		},
 

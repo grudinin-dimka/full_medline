@@ -1,10 +1,55 @@
 <template>
 	<General />
 
-	<VueWikiTitle>1. </VueWikiTitle>
+	<VueWikiTitle>
+		<VueIcon name="add" width="14" height="14" fill="var(--primary-color)" />
+		Добавление клиники
+	</VueWikiTitle>
 	<VueWikiParagraph>
-		1.1. .
+		1. Для того, чтобы добавить клинику, вам необходимо нажать но кнопку «Добавить», которая
+		находится внизу блока «Клиники».
 	</VueWikiParagraph>
+	<VueWikiParagraph>
+		2. После нажатия на кнопку «Добавить», откроется модальное окно, в котором вы сможете добавить
+		новую клинику.
+	</VueWikiParagraph>
+	<VueWikiParagraph>
+		3. В случае, когда при нажатии на кнопку «Добавить» внизу модального окна появляется сообщение
+		об ошибке, это означает, что вы не заполнили обязательные поля, которые помечаются красным
+		цветом.
+	</VueWikiParagraph>
+	<VueWikiParagraph>
+		4. После соблюдения предыдущих пунктов, вы сможете добавить новую клинику, нажав на
+		кнопку «Добавить» внизу модального окна.
+	</VueWikiParagraph>
+
+	<VueWikiTitle>
+		<VueIcon name="remove" width="16" height="16" fill="var(--primary-color)" />
+		Удаление клиники
+	</VueWikiTitle>
+	<VueWikiParagraph>
+		1. Для того, чтобы удалить клинику, вам необходимо нажать на кнопку удалить в строке с
+		выбранной клиникой, тем самым пометить на удаление.
+	</VueWikiParagraph>
+	<VueWikiParagraph>
+		2. Для полного удаления клиник, которые помечены на удаление, нажмите на кнопку
+		«Сохранить».
+	</VueWikiParagraph>
+
+	<VueWikiTitle>
+		<VueIcon name="edit" width="18" height="18" fill="var(--primary-color)" />
+		Изменение клиники
+	</VueWikiTitle>
+	<VueWikiParagraph>
+		1. Для того, чтобы изменить клинику, вам необходимо нажать на кнопку «Изменить» левой
+		кнопкой мышки. После этого, вы можете редактировать её содержимое.
+	</VueWikiParagraph>
+	<VueWikiParagraph>
+		2. Для обновления значений слайда нажмите на кнопку «Обновить.
+	</VueWikiParagraph>
+	<VueWikiParagraph> 
+		3. Для сохранения изменений нажмите на кнопку «Сохранить». 
+		</VueWikiParagraph>
 </template>
 
 <script>
@@ -13,8 +58,10 @@ import VueWikiParagraph from "../../VueWikiParagraph.vue";
 
 import General from "../General.vue";
 
+import VueIcon from "../../../icon/VueIcon.vue";
+
 export default {
-	components: { VueWikiTitle, VueWikiParagraph, General },
+	components: { VueWikiTitle, VueWikiParagraph, General, VueIcon },
 };
 </script>
 

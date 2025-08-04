@@ -310,6 +310,24 @@
 				/>
 				Сохранить
 			</VueButton>
+
+			<VueButton
+				:look="'inverse'"
+				@click="
+					$store.commit('openWiki', {
+						title: 'БЛОКИ',
+						component: 'AboutAll',
+					})
+				"
+				:minWidth="'30px'"
+			>
+				<VueIcon
+					:name="'info'"
+					:fill="'var(--primary-color)'"
+					:width="'28px'"
+					:height="'28px'"
+				/>
+			</VueButton>
 		</template>
 
 		<template #body>
@@ -357,6 +375,24 @@
 					:height="'28px'"
 				/>
 				Сохранить
+			</VueButton>
+
+			<VueButton
+				:look="'inverse'"
+				@click="
+					$store.commit('openWiki', {
+						title: 'ФАЙЛЫ',
+						component: 'AboutFiles',
+					})
+				"
+				:minWidth="'30px'"
+			>
+				<VueIcon
+					:name="'info'"
+					:fill="'var(--primary-color)'"
+					:width="'28px'"
+					:height="'28px'"
+				/>
 			</VueButton>
 		</template>
 

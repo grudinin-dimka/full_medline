@@ -173,6 +173,24 @@
 				/>
 				Сохранить
 			</VueButton>
+
+			<VueButton
+				:look="'inverse'"
+				@click="
+					$store.commit('openWiki', {
+						title: 'ВИДЕО',
+						component: 'VideoAll',
+					})
+				"
+				:minWidth="'30px'"
+			>
+				<VueIcon
+					:name="'info'"
+					:fill="'var(--primary-color)'"
+					:width="'28px'"
+					:height="'28px'"
+				/>
+			</VueButton>
 		</template>
 
 		<template #body>

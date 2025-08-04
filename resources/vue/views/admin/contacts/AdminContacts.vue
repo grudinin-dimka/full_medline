@@ -213,6 +213,24 @@
 				/>
 				Сохранить
 			</VueButton>
+
+			<VueButton
+				:look="'inverse'"
+				@click="
+					$store.commit('openWiki', {
+						title: 'КОНТАКТЫ',
+						component: 'ContactsAll',
+					})
+				"
+				:minWidth="'30px'"
+			>
+				<VueIcon
+					:name="'info'"
+					:fill="'var(--primary-color)'"
+					:width="'28px'"
+					:height="'28px'"
+				/>
+			</VueButton>
 		</template>
 
 		<template #body>
@@ -238,7 +256,7 @@
 		</template>
 
 		<template #buttons>
-			<VueButton @click="openModalСreate">
+			<VueButton @click="openModalСreate()">
 				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
 				Добавить
 			</VueButton>

@@ -69,13 +69,31 @@
 				/>
 				Сохранить
 			</VueButton>
+
+			<VueButton
+				:look="'inverse'"
+				@click="
+					$store.commit('openWiki', {
+						title: 'СПИСОК ЦЕН',
+						component: 'PricesAll',
+					})
+				"
+				:minWidth="'30px'"
+			>
+				<VueIcon
+					:name="'info'"
+					:fill="'var(--primary-color)'"
+					:width="'28px'"
+					:height="'28px'"
+				/>
+			</VueButton>
 		</template>
 
 		<template #body>
 			<VueTable
 				v-if="loading.sections.prices"
 				:table="table"
-				@create="openModalСreate"
+				@create="openModalСreate()"
 				@edite="downloadFile"
 				@delete="removePriceFile"
 			/>

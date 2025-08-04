@@ -317,83 +317,92 @@
 						v-if="table.options.update || table.options.delete"
 					>
 						<div class="table__buttons">
-							<VueTableButton
-								:wide="true"
-								v-if="table.options.update"
-								@click="
-									$emit(
-										'edite',
+							<template v-if="table.options.update">
+								<VueTableButton
+									:wide="true"
+									v-if="table.options.update"
+									@click="
+										$emit(
+											'edite',
+											this.table.body.find(
+												(item) =>
+													item[getNameOfColumnTypeById] == row[getNameOfColumnTypeById]
+											)
+										)
+									"
+								>
+									<VueIcon
+										:name="'edit'"
+										:width="'22px'"
+										:height="'22px'"
+										:fill="'white'"
+									/>
+
+									<span>Изменить</span>
+								</VueTableButton>
+							</template>
+
+							<template v-if="table.options.delete">
+								<VueTableButton
+									:wide="true"
+									:look="
 										this.table.body.find(
 											(item) =>
 												item[getNameOfColumnTypeById] == row[getNameOfColumnTypeById]
-										)
-									)
-								"
-							>
-								<VueIcon :name="'edit'" :width="'22px'" :height="'22px'" :fill="'white'" />
-
-								<span>Изменить</span>
-							</VueTableButton>
-
-							<VueTableButton
-								:wide="true"
-								:look="
-									this.table.body.find(
-										(item) =>
-											item[getNameOfColumnTypeById] == row[getNameOfColumnTypeById]
-									).create
-										? 'disabled'
-										: 'delete'
-								"
-								v-if="
-									table.options.delete &&
-									!table.body.find(
-										(item) =>
-											item[getNameOfColumnTypeById] == row[getNameOfColumnTypeById]
-									).delete
-								"
-								@click="
-									$emit(
-										'delete',
-										this.table.body.find(
+										).create
+											? 'disabled'
+											: 'delete'
+									"
+									v-if="
+										table.options.delete &&
+										!table.body.find(
 											(item) =>
 												item[getNameOfColumnTypeById] == row[getNameOfColumnTypeById]
+										).delete
+									"
+									@click="
+										$emit(
+											'delete',
+											this.table.body.find(
+												(item) =>
+													item[getNameOfColumnTypeById] == row[getNameOfColumnTypeById]
+											)
 										)
-									)
-								"
-							>
-								<VueIcon
-									:name="'delete'"
-									:width="'16px'"
-									:height="'16px'"
-									:fill="'white'"
-								/>
+									"
+								>
+									<VueIcon
+										:name="'delete'"
+										:width="'16px'"
+										:height="'16px'"
+										:fill="'white'"
+									/>
 
-								<span>Удалить</span>
-							</VueTableButton>
+									<span>Удалить</span>
+								</VueTableButton>
 
-							<VueTableButton
-								:wide="true"
-								v-else="table.options.delete"
-								@click="
-									$emit(
-										'delete',
-										this.table.body.find(
-											(item) =>
-												item[getNameOfColumnTypeById] == row[getNameOfColumnTypeById]
+								<VueTableButton
+									:wide="true"
+									v-else="table.options.delete"
+									@click="
+										$emit(
+											'delete',
+											this.table.body.find(
+												(item) =>
+													item[getNameOfColumnTypeById] == row[getNameOfColumnTypeById]
+											)
 										)
-									)
-								"
-							>
-								<VueIcon
-									:name="'delete'"
-									:width="'16px'"
-									:height="'16px'"
-									:fill="'white'"
-								/>
+									"
+								>
+									<VueIcon
+										:name="'delete'"
+										:width="'16px'"
+										:height="'16px'"
+										:fill="'white'"
+									/>
 
-								<span>Вернуть</span>
-							</VueTableButton>
+									<span>Вернуть</span>
+								</VueTableButton>
+							</template>
 						</div>
 					</td>
 				</tr>
@@ -477,11 +486,11 @@ export default {
 			// 1. Создаем копию таблицы с нужными колонками
 			let tableBody = this.table.body.map((row) =>
 				this.table.head.reduce((acc, column) => {
-					if (column.options?.data?.formatter) {						
+					if (column.options?.data?.formatter) {
 						acc[column.name] = column.options.data.formatter(row[column.name]);
 					} else {
 						acc[column.name] = row[column.name];
-					};
+					}
 
 					return acc;
 				}, {})

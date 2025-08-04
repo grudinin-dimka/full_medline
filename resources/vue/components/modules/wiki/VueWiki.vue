@@ -1,5 +1,9 @@
 <template>
-	<div class="wiki-wrapper" @click.self="$store.commit('closeWiki')" :class="{ 'wiki-wrapper--open': $store.getters.getWikiShow }">
+	<div
+		class="wiki-wrapper"
+		@click.self="$store.commit('closeWiki')"
+		:class="{ 'wiki-wrapper--open': $store.getters.getWikiShow }"
+	>
 		<div class="wiki" ref="wiki" :class="{ 'wiki--open': $store.getters.getWikiShow }">
 			<div class="wiki__header">
 				<div class="wiki__header-title">
@@ -27,11 +31,18 @@
 <script>
 import HomeFooter from "./components/home/HomeFooter.vue";
 import HomeSlider from "./components/home/HomeSlider.vue";
-
 import SpecialistsAll from "./components/specialists/SpecialistsAll.vue";
 import SpecialistsProfile from "./components/specialists/SpecialistsProfile.vue";
 import SpecialistsClinics from "./components/specialists/SpecialistsClinics.vue";
 import SpecialistsSpecializations from "./components/specialists/SpecialistsSpecializations.vue";
+import PricesAll from "./components/prices/PricesAll.vue";
+import ScheduleAll from "./components/schedule/ScheduleAll.vue";
+import NewsAll from "./components/news/NewsAll.vue";
+import NewsOnce from "./components/news/NewsOnce.vue";
+import VideoAll from "./components/video/VideoAll.vue";
+import ContactsAll from "./components/contacts/ContactsAll.vue";
+import AboutAll from "./components/about/AboutAll.vue";
+import AboutFiles from "./components/about/AboutFiles.vue";
 
 import VueIcon from "../icon/VueIcon.vue";
 
@@ -39,11 +50,18 @@ export default {
 	components: {
 		HomeFooter,
 		HomeSlider,
-
 		SpecialistsAll,
 		SpecialistsProfile,
 		SpecialistsClinics,
 		SpecialistsSpecializations,
+		PricesAll,
+		ScheduleAll,
+		NewsAll,
+		NewsOnce,
+		VideoAll,
+		ContactsAll,
+		AboutAll,
+		AboutFiles,
 
 		VueIcon,
 	},
