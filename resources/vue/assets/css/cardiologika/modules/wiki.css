@@ -1,0 +1,51 @@
+:root {
+	--wiki-position: fixed;
+	--wiki-z-index: 600;
+	--wiki-top: 0px;
+	--wiki-right: -100%;
+	--wiki-bottom: none;
+	--wiki-left: none;
+
+	--wiki-gap: 20px;
+   --wiki-padding: 20px;
+
+   --wiki-opacity: 0;
+   --wiki-visibility: hidden;
+
+	--wiki-width: min(600px, 100dvw);
+	--wiki-height: 100dvh;
+
+	--wiki-background-color: white;
+	--wiki-box-shadow: 0px 0px 20px 10px rgba(0, 0, 0, 0.1);
+
+   --wiki-transition: 0.5s ease-out;
+
+   /* Открыто */
+	--wiki-open-top: 0px;
+	--wiki-open-right: 0px;
+	--wiki-open-bottom: none;
+	--wiki-open-left: none;
+
+   --wiki-open-opacity: 1;
+   --wiki-open-visibility: visible;
+
+	/* Заголовок */
+	--wiki-title-font-size: 1.5rem;
+	--wiki-title-font-weight: 500;
+	--wiki-title-font-color: var(--primary-color);
+
+	--wiki-title-margin: 10px 0px;
+	--wiki-title-padding: 0px;
+
+	--wiki-title-text-align: left;
+
+	/* Параграф */
+	--wiki-paragraph-font-size: 1.125rem;
+	--wiki-paragraph-font-weight: 400;
+	--wiki-paragraph-font-color: black;
+
+	--wiki-paragraph-margin: 10px 0px 10px 30px;
+	--wiki-paragraph-padding: 0px;
+
+	--wiki-paragraph-text-align: left;
+}

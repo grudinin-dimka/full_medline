@@ -1,5 +1,3 @@
-import sorted from "./sorted";
-
 export default {
 	/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 	/* |                    ЗАГРУЗЧИК                      |*/
@@ -187,7 +185,8 @@ export default {
 						itemCurrent.order++;
 						itemNext.order--;
 					}
-					sorted.sortByOrder("up", array);
+
+					array.sort((a, b) => a.order - b.order);
 				}
 				break;
 			case "down":
@@ -201,7 +200,8 @@ export default {
 						itemCurrent.order--;
 						itemPrevious.order++;
 					}
-					sorted.sortByOrder("up", array);
+
+					array.sort((a, b) => a.order - b.order);
 				}
 				break;
 		}
@@ -285,7 +285,7 @@ export default {
 			item.delete = false;
 		});
 	},
-	
+
 	/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 	/* |               ГЕНЕРАЦИЯ ЗНАЧЕНИЙ                  |*/
 	/* |___________________________________________________|*/
