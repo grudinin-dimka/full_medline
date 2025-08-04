@@ -12,6 +12,7 @@
 	--button-min-width: 150px;
 	--button-max-width: none;
 	--button-min-height: 54px;
+	--button-max-height: 54px;
 
 	--button-secondary-font-color: rgb(255, 255, 255);
 	--button-secondary-font-color-hover: rgb(255, 255, 255);

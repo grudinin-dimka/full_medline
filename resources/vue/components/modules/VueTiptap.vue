@@ -999,15 +999,15 @@ export default {
 }
 
 .character-count svg {
-	color: var(--purple);
+	color: var(--primary-color);
 }
 
 .character-count svg circle:first-child {
-	fill: var(--secondary-background-color-hover) !important;
+	fill: rgba(0, 0, 0, 0.15) !important;
 }
 
 .character-count svg circle:last-child {
-	fill: var(--secondary-background-color) !important;
+	fill: rgba(255, 255, 255, 0) !important;
 }
 
 .character-count.--warning,

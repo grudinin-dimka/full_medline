@@ -70,6 +70,7 @@ export default {
 	min-width: var(--button-min-width);
 	max-height: var(--button-max-height);
 	min-height: var(--button-min-height);
+	max-height: var(--button-max-height);
 	border: var(--button-border);
 	border-radius: var(--button-border-radius);
 
