@@ -57,10 +57,14 @@
 			</VueInput>
 
 			<VueModalList
-				:array="currentContact.data.phones.value"
-				@touchCreate="openModalPhoneCreate"
-				@touchEdit="openModalPhoneEdite"
-				@touchDelete="deleteContactPhone"
+				:list="currentContact.data.phones.value"
+				:keys="{
+					value: 'id',
+					label: 'name',
+				}"
+				@create="openModalPhoneCreate"
+				@edit="openModalPhoneEdite"
+				@delete="deleteContactPhone"
 			>
 				<template #title>
 					<VueIcon
@@ -74,10 +78,14 @@
 			</VueModalList>
 
 			<VueModalList
-				:array="currentContact.data.mails.value"
-				@touchCreate="openModalMailCreate"
-				@touchEdit="openModalMailEdite"
-				@touchDelete="deleteContactMail"
+				:list="currentContact.data.mails.value"
+				:keys="{
+					value: 'id',
+					label: 'name',
+				}"
+				@create="openModalMailCreate"
+				@edit="openModalMailEdite"
+				@delete="deleteContactMail"
 			>
 				<template #title>
 					<VueIcon
@@ -116,7 +124,12 @@
 
 			<template v-if="modal.values.look == 'default' && currentContact.data.delete.value">
 				<VueButton @click="deleteContact">
-					<VueIcon :name="'Restore From Trash'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					<VueIcon
+						:name="'Restore From Trash'"
+						:fill="'white'"
+						:width="'28px'"
+						:height="'28px'"
+					/>
 					Вернуть
 				</VueButton>
 			</template>
@@ -737,7 +750,7 @@ export default {
 				});
 
 				for (let key in this.currentPhone.data) {
-					phone[key] = this.currentPhone.data[key].body;
+					phone[key] = this.currentPhone.data[key].value;
 				}
 
 				this.$refs.modalPhone.close();

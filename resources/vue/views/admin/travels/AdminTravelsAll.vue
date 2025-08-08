@@ -1,6 +1,213 @@
 <template>
+	<!-- Модальное окно: Путевка -->
+	<VueModal ref="modalTravels" :settings="modalTravels">
+		<template #title>
+			<template v-if="modalTravels.values.look == 'default' && !currentTravel.data.delete.value">
+				<VueIcon
+					:name="'arrow'"
+					:fill="'var(--icon-multi-fill)'"
+					:hover="'var(--icon-nulti-fill-hover)'"
+					:width="'16px'"
+					:height="'16px'"
+					:rotate="-90"
+					:cursor="'pointer'"
+					@click="changeOrderItem('down')"
+				/>
+				#{{ currentTravel.data.order.value }}
+				<VueIcon
+					:name="'arrow'"
+					:fill="'var(--icon-multi-fill)'"
+					:hover="'var(--icon-nulti-fill-hover)'"
+					:width="'16px'"
+					:height="'16px'"
+					:rotate="90"
+					:cursor="'pointer'"
+					@click="changeOrderItem('up')"
+				/>
+			</template>
+			<template v-else>
+				{{ modalTravels.values.title }}
+			</template>
+		</template>
+
+		<template #body>
+			<div class="modal__info">
+				<div class="modal__info-image">
+					<template v-if="currentTravel.data.path.value">
+						<img :src="currentTravel.data.path.value" alt="" />
+					</template>
+
+					<template v-else>
+						<img :src="`/storage/default/travels-none-default.png`" alt="" />
+					</template>
+				</div>
+				<div class="modal__info-form">
+					<VueInput
+						:placeholder="'Загрузите файл'"
+						:type="'file'"
+						v-model="currentTravel.data.file.value"
+						:error="currentTravel.errors.file.status"
+						ref="fileImage"
+					>
+						<template #label> ИЗОБРАЖЕНИЕ (500x600) </template>
+						<template #error>
+							{{ currentTravel.errors.file.message }}
+						</template>
+					</VueInput>
+
+					<VueInput
+						:placeholder="'Введите заголовок'"
+						:type="'text'"
+						v-model="currentTravel.data.title.value"
+						:error="currentTravel.errors.title.status"
+					>
+						<template #label> ЗАГОЛОВОК </template>
+						<template #error>
+							{{ currentTravel.errors.title.message }}
+						</template>
+					</VueInput>
+
+					<VueInput
+						:placeholder="'Введите описание'"
+						:type="'textarea'"
+						v-model="currentTravel.data.description.value"
+						:error="currentTravel.errors.description.status"
+					>
+						<template #label> ОПИСАНИЕ </template>
+						<template #error>
+							{{ currentTravel.errors.description.message }}
+						</template>
+					</VueInput>
+				</div>
+			</div>
+
+			<VueModalList
+				:list="currentTravel.data.services.value"
+				@create="openTravelServiceCreate"
+				@edit="console.log('edit')"
+				@delete="console.log('delete')"
+			>
+				<template #title>
+					<VueIcon
+						:name="'Design Services'"
+						:fill="'var(--primary-color)'"
+						:width="'26px'"
+						:height="'26px'"
+					/>
+					УСЛУГИ
+				</template>
+			</VueModalList>
+
+			<VueModalList
+				:list="currentTravel.data.services.value"
+				@create="openTravelPriceCreate"
+				@edit="console.log('edit')"
+				@delete="console.log('delete')"
+			>
+				<template #title>
+					<VueIcon
+						:name="'Payments'"
+						:fill="'var(--primary-color)'"
+						:width="'26px'"
+						:height="'26px'"
+					/>
+					ЦЕНЫ
+				</template>
+			</VueModalList>
+		</template>
+
+		<template #footer>
+			<VueButton @click="console.log('add')" v-if="modalTravels.values.look == 'create'">
+				<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
+				Добавить
+			</VueButton>
+
+			<template v-else>
+				<VueButton
+					:look="'delete'"
+					@click="console.log('delete')"
+					v-if="!currentTravel.data.delete.value && !currentTravel.data.create.value"
+				>
+					<VueIcon :name="'Delete'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					Удалить
+				</VueButton>
+
+				<VueButton @click="console.log('update')" v-if="!currentTravel.data.delete.value">
+					<VueIcon :name="'Edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					Обновить
+				</VueButton>
+
+				<VueButton @click="console.log('restore')" v-if="currentTravel.data.delete.value">
+					<VueIcon
+						:name="'Restore From Trash'"
+						:fill="'white'"
+						:width="'28px'"
+						:height="'28px'"
+					/>
+					Вернуть
+				</VueButton>
+			</template>
+		</template>
+	</VueModal>
+
+	<!-- Модальное окно: Услуги -->
+	<VueModal ref="modalTravelServices" :settings="modalTravelServices">
+		<template #title>
+			{{ modalTravelServices.values.title }}
+		</template>
+
+		<template #body>
+			<VueInput
+				:placeholder="'Введите заголовок'"
+				:type="'text'"
+				v-model="currentTravelServices.data.title.value"
+				:error="currentTravelServices.errors.title.status"
+			>
+				<template #label> ЗАГОЛОВОК </template>
+				<template #error>
+					{{ currentTravelServices.errors.title.message }}
+				</template>
+			</VueInput>
+
+			<VueInput
+				:placeholder="'Введите заголовок'"
+				:type="'textarea'"
+				v-model="currentTravelServices.data.description.value"
+				:error="currentTravelServices.errors.description.status"
+			>
+				<template #label> ОПИСАНИЕ </template>
+				<template #error>
+					{{ currentTravelServices.errors.description.message }}
+				</template>
+			</VueInput>
+		</template>
+
+		<template #footer>
+			<VueButton @click="console.log('add')" v-if="modalTravelServices.values.look == 'create'">
+				<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
+				Добавить
+			</VueButton>
+
+			<VueButton @click="console.log('edit')" v-if="modalTravelServices.values.look == 'default'">
+				<VueIcon :name="'Edit'" :fill="'white'" :width="'26px'" :height="'26px'" />
+				Добавить
+			</VueButton>
+		</template>
+	</VueModal>
+
+	<!-- Модальное окно: Цены -->
+	<VueModal ref="modalTravelPrices" :settings="modalTravelPrices">
+		<template #title>
+			{{ modalTravelPrices.values.title }}
+		</template>
+
+		<template #body> </template>
+
+		<template #footer> </template>
+	</VueModal>
+
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
-	<!--|                    СПИСОК ЦЕН                     |-->
+	<!--|                    ПУТЕВКИ                        |-->
 	<!--|___________________________________________________|-->
 	<info-bar>
 		<template v-slot:title>Путевки</template>
@@ -75,7 +282,7 @@
 		</template>
 
 		<template #buttons>
-			<VueButton @click="console.log('add')" :disabled="disabled.travels.create">
+			<VueButton @click="openTravelCreate" :disabled="disabled.travels.create">
 				<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
 				Добавить
 			</VueButton>
@@ -85,6 +292,7 @@
 
 <script>
 import VueModal from "../../../components/modules/modal/VueModal.vue";
+import VueModalList from "../../../components/modules/modal/VueModalList.vue";
 import VueTable from "../../../components/modules/table/VueTable.vue";
 import VueInput from "../../../components/modules/input/VueInput.vue";
 import Empty from "../../../components/modules/Empty.vue";
@@ -105,6 +313,7 @@ import files from "../../../services/files";
 export default {
 	components: {
 		VueModal,
+		VueModalList,
 		VueTable,
 		VueInput,
 		Empty,
@@ -139,7 +348,7 @@ export default {
 			},
 
 			/* Модальное окно */
-			modalVideo: {
+			modalTravels: {
 				thin: false,
 				clamped: false,
 				values: {
@@ -148,10 +357,36 @@ export default {
 				},
 			},
 
+			modalTravelServices: {
+				thin: true,
+				clamped: false,
+				values: {
+					title: "",
+					look: "default",
+				},
+			},
+
+			modalTravelPrices: {
+				thin: true,
+				clamped: false,
+				values: {
+					title: "",
+					look: "default",
+				},
+			},
+
 			/* Форма */
-			currentVideo: {
+			currentTravel: {
 				errors: {
 					file: {
+						message: "",
+						status: false,
+					},
+					title: {
+						message: "",
+						status: false,
+					},
+					duration: {
 						message: "",
 						status: false,
 					},
@@ -170,19 +405,31 @@ export default {
 						edited: false,
 					},
 					path: {
-						value: "/storage/video/IMG_8240.webm",
+						value: "/storage/img/Vjwl6ugvdfQ.webp",
 						edited: false,
 					},
-					video: {
-						value: "IMG_8240.webm",
+					image: {
+						value: "Vjwl6ugvdfQ.webp",
 						edited: false,
 					},
 					file: {
 						value: "",
 						edited: false,
 					},
+					title: {
+						value: "",
+						edited: false,
+					},
+					duration: {
+						value: "",
+						edited: false,
+					},
 					description: {
 						value: "",
+						edited: false,
+					},
+					services: {
+						value: [],
 						edited: false,
 					},
 					create: {
@@ -191,6 +438,43 @@ export default {
 					},
 					delete: {
 						value: false,
+						edited: false,
+					},
+				},
+			},
+
+			currentTravelServices: {
+				errors: {
+					title: {
+						message: "",
+						status: false,
+					},
+					description: {
+						message: "",
+						status: false,
+					},
+				},
+				data: {
+					id: {
+						value: "",
+						edited: false,
+					},
+					title: {
+						value: "",
+						edited: false,
+					},
+					description: {
+						value: "",
+						edited: false,
+					},
+				},
+			},
+
+			currentTravelPrice: {
+				errors: {},
+				data: {
+					id: {
+						value: "",
 						edited: false,
 					},
 				},
@@ -221,28 +505,32 @@ export default {
 		},
 
 		/* Открытие модального окна для добавления */
-		openVideoCreate() {
-			shared.clearObjectFull(this.currentVideo);
+		openTravelCreate() {
+			shared.clearObjectFull(this.currentTravel);
 
-			this.openModal("modalVideo", "Видео", "create");
+			this.openModal("modalTravels", "ПУТЕВКА", "create");
 		},
 
 		/* Открытие модального окна для редактирования */
-		openVideoEdite(video) {
-			shared.clearObjectFull(this.currentVideo);
-			shared.setData(video, this.currentVideo);
+		openTravelEdite(value) {
+			shared.clearObjectFull(this.currentTravel);
+			shared.setData(value, this.currentTravel);
 
-			// Перезагружаем видео
-			this.reloadVideo();
-
-			this.openModal("modalVideo", "Видео", "default");
+			this.openModal("modalTravels", "ПУТЕВКА", "default");
 		},
 
-		/* Загрузка видео */
-		openVideoUpload() {
-			this.$refs.fileVideo.clear();
+		/* Открытие модального окна для добавления */
+		openTravelServiceCreate() {
+			shared.clearObjectFull(this.currentTravelServices);
 
-			this.openModal("modalVideoUpload", "Загрузка видео", "default");
+			this.openModal("modalTravelServices", "УСЛУГА", "create");
+		},
+
+		/* Открытие модального окна для добавления */
+		openTravelPriceCreate() {
+			shared.clearObjectFull(this.currentTravelPrice);
+
+			this.openModal("modalTravelPrices", "ЦЕНА", "create");
 		},
 	},
 	mounted() {
@@ -274,6 +562,34 @@ export default {
 </script>
 
 <style scoped>
+.modal__info {
+	display: flex;
+	gap: var(--default-gap);
+}
+
+.modal__info-image {
+	border-radius: calc(var(--default-border-radius) / 1.5);
+
+	height: 375px;
+	aspect-ratio: 1 / 1.2;
+}
+
+.modal__info-form {
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--default-gap) / 2);
+
+	width: 100%;
+}
+
+.modal__info-image > img {
+	object-fit: cover;
+	height: 100%;
+	width: 100%;
+	aspect-ratio: 1 / 1.2;
+	border-radius: calc(var(--default-border-radius) / 1.5);
+}
+
 .etravels {
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);

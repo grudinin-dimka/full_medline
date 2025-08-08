@@ -5,7 +5,7 @@
 				<slot name="title"></slot>
 			</div>
 			<div class="buttons">
-				<div class="icon create" @click="$emit('touchCreate', item)">
+				<div class="icon create" @click="$emit('create', item)">
 					<Icon
 						:name="'Add'"
 						:fill="'var(--icon-create-fill)'"
@@ -15,23 +15,23 @@
 				</div>
 			</div>
 		</div>
-		<div class="item" v-for="item in array" :key="item.id">
-			<div class="content">{{ item.name }}</div>
+		<div class="item" v-for="item in list" :key="item[keys.value]">
+			<div class="content">{{ item[keys.label] }}</div>
 			<div class="buttons">
-				<div class="icon edit" @click="$emit('touchEdit', item)">
+				<div class="icon edit" @click="$emit('edit', item)">
 					<Icon
-						:name="'edit'"
+						:name="'Edit'"
 						:fill="'var(--icon-edit-fill)'"
 						:width="'24px'"
 						:height="'24px'"
 					/>
 				</div>
-				<div class="icon delete" @click="$emit('touchDelete', item)">
+				<div class="icon delete" @click="$emit('delete', item)">
 					<Icon
-						:name="'delete'"
+						:name="'Delete'"
 						:fill="'var(--delete-secondary-color)'"
-						:width="'20px'"
-						:height="'20px'"
+						:width="'24px'"
+						:height="'24px'"
 					/>
 				</div>
 			</div>
@@ -43,6 +43,7 @@
 import Icon from "../icon/VueIcon.vue";
 
 export default {
+	emits: ["create", "edit", "delete"],
 	components: {
 		Icon,
 	},
@@ -51,7 +52,14 @@ export default {
 			type: String,
 			default: "",
 		},
-		array: {
+		keys: {
+	 		type: Object,
+			default: {
+				value: "value",
+				label: "label",
+			},
+		},
+		list: {
 			type: Array,
 			required: true,
 			default: [],
@@ -91,6 +99,11 @@ export default {
 }
 
 .modal-list > .item > .content {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+
+
 	font-size: 1.125rem;
 	word-break: break-all;
 }

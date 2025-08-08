@@ -6,6 +6,7 @@
 				class="modal"
 				:class="{
 					[settings.values.look]: settings.values.look,
+					hidden: !isOpen,
 					clamped: settings.clamped,
 					unclamped: !settings.clamped,
 				}"
@@ -253,6 +254,10 @@ export default {
 	grid-template-columns: auto;
 
 	overflow: auto;
+}
+
+.modal.hidden {
+	overflow: hidden;
 }
 
 .modal__container {

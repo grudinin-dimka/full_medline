@@ -15,13 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('type');
             $table->string('subtype');
-            $table->string('price');    
-            $table->timestamps();
+            $table->string('price');
 
             $table->foreignId('travel_id')->constrained(
                 table: 'travels',
                 column: 'id'
             )->onDelete('cascade');
+
+            $table->timestamps();
         });
     }
 
