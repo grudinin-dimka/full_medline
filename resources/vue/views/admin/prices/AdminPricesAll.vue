@@ -24,7 +24,7 @@
 
 		<template #footer>
 			<VueButton @click="createPrice" :disabled="disabled.prices.create">
-				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
 				Добавить
 			</VueButton>
 		</template>
@@ -81,10 +81,10 @@
 				:minWidth="'30px'"
 			>
 				<VueIcon
-					:name="'info'"
+					:name="'Info'"
 					:fill="'var(--primary-color)'"
-					:width="'28px'"
-					:height="'28px'"
+					:width="'30px'"
+					:height="'30px'"
 				/>
 			</VueButton>
 		</template>

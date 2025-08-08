@@ -41,20 +41,18 @@
 						>
 							Клиники
 						</a>
-
-						<a
-							class="element"
-							:class="{ active: isActive('/prices/travels') }"
-							href="/prices/travels"
-							@click.prevent="
-								$router.push({ name: `prices-group`, params: { group: 'travels' } })
-							"
-						>
-							Путевки
-						</a>
 					</div>
 				</div>
 			</div>
+
+			<a
+				class="element"
+				:class="{ active: isActive('/prices/travels') }"
+				href="/travels"
+				@click.prevent="$router.push({ name: `travels` })"
+			>
+				Путевки
+			</a>
 
 			<a
 				class="element"
@@ -62,7 +60,7 @@
 				href="/plastic"
 				@click.prevent="$router.push({ name: `plastic` })"
 			>
-				Пластическая хирургия
+				ПЛАСТИКА
 			</a>
 
 			<a
@@ -183,7 +181,7 @@ nav {
 
 .nav__list {
 	display: grid;
-	grid-template-columns: repeat(5, auto);
+	grid-template-columns: repeat(6, auto);
 	gap: 10px;
 
 	background-color: var(--primary-color);

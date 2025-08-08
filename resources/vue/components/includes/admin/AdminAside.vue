@@ -13,7 +13,7 @@
 		<div class="aside__body">
 			<div class="aside__item" :class="{ active: isActive('/admin/profile') }">
 				<a class="aside__item-title" href="#" @click.prevent="insertPage(links.profile)">
-					<VueIcon :name="'profile'" :fill="'white'" :width="'22px'" :height="'22px'" />
+					<VueIcon :name="'Account Circle'" :fill="'white'" :width="'26px'" :height="'26px'" />
 					ПРОФИЛЬ
 				</a>
 			</div>
@@ -23,7 +23,7 @@
 			>
 				<div class="aside__item" :class="{ active: isActive('/admin/ehome') }">
 					<a class="aside__item-title" href="#" @click.prevent="insertPage(links.home)">
-						<VueIcon :name="'home'" :fill="'white'" :width="'22px'" :height="'22px'" />
+						<VueIcon :name="'Home'" :fill="'white'" :width="'26px'" :height="'26px'" />
 						ГЛАВНАЯ
 					</a>
 				</div>
@@ -35,7 +35,7 @@
 						href="#"
 						@click.prevent="openList('specialists')"
 					>
-						<VueIcon :name="'specialists'" :fill="'white'" :width="'24px'" :height="'24px'" />
+						<VueIcon :name="'Ecg Heart'" :fill="'white'" :width="'26px'" :height="'26px'" />
 
 						<VueIcon
 							class="item-arrow"
@@ -85,7 +85,7 @@
 						href="#"
 						@click.prevent="openList('prices')"
 					>
-						<VueIcon :name="'prices'" :fill="'white'" :width="'26px'" :height="'26px'" />
+						<VueIcon :name="'Payments'" :fill="'white'" :width="'26px'" :height="'26px'" />
 
 						<VueIcon
 							class="item-arrow"
@@ -115,16 +115,23 @@
 					</div>
 				</div>
 
+				<div class="aside__item" :class="{ active: isActive('/admin/travels') }">
+					<a class="aside__item-title" href="#" @click.prevent="insertPage(links.travels)">
+						<VueIcon :name="'travel'" :fill="'white'" :width="'28px'" :height="'28px'" />
+						ПУТЕВКИ
+					</a>
+				</div>
+
 				<div class="aside__item" :class="{ active: isActive('/admin/eschedule') }">
 					<a class="aside__item-title" href="#" @click.prevent="insertPage(links.schedule)">
-						<VueIcon :name="'schedule'" :fill="'white'" :width="'24px'" :height="'24px'" />
+						<VueIcon :name="'Calendar Month'" :fill="'white'" :width="'26px'" :height="'26px'" />
 						РАСПИСАНИЕ
 					</a>
 				</div>
 
 				<div class="aside__item" :class="{ active: isActive('/admin/eclients') }">
 					<a class="aside__item-title" href="#" @click.prevent="insertPage(links.clients)">
-						<VueIcon :name="'clients'" :fill="'white'" :width="'24px'" :height="'24px'" />
+						<VueIcon :name="'Patient List'" :fill="'white'" :width="'26px'" :height="'26px'" />
 						КЛИЕНТЫ
 					</a>
 				</div>
@@ -136,7 +143,7 @@
 						href="#"
 						@click.prevent="openList('info')"
 					>
-						<VueIcon :name="'info'" :fill="'white'" :width="'24px'" :height="'24px'" />
+						<VueIcon :name="'Info'" :fill="'white'" :width="'26px'" :height="'26px'" />
 
 						<VueIcon
 							class="item-arrow"
@@ -187,7 +194,7 @@
 						href="#"
 						@click.prevent="openList('statistics')"
 					>
-						<VueIcon :name="'stats'" :fill="'white'" :width="'30px'" :height="'30px'" />
+						<VueIcon :name="'Monitoring'" :fill="'white'" :width="'26px'" :height="'26px'" />
 
 						<VueIcon
 							class="item-arrow"
@@ -221,7 +228,7 @@
 			<template v-if="$store.getters.userRights === 'creator'">
 				<div class="aside__item" :class="{ active: isActive('/admin/users') }">
 					<a class="aside__item-title" href="#" @click.prevent="insertPage(links.users)">
-						<VueIcon :name="'users'" :fill="'white'" :width="'26px'" :height="'26px'" />
+						<VueIcon :name="'Group'" :fill="'white'" :width="'26px'" :height="'26px'" />
 						ПОЛЬЗОВАТЕЛИ
 					</a>
 				</div>
@@ -323,6 +330,12 @@ export default {
 							list: null,
 						},
 					},
+				},
+
+				travels: {
+					name: "etravels",
+					status: false,
+					list: null,
 				},
 
 				schedule: {

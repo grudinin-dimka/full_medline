@@ -50,10 +50,10 @@
 					<template v-if="currentVideo.data.path.value === ''">
 						<div class="modal__buttons-icon create" @click="openVideoUpload">
 							<VueIcon
-								:name="'add'"
+								:name="'Add'"
 								:fill="'var(--icon-create-fill)'"
-								:width="'19px'"
-								:height="'19px'"
+								:width="'24px'"
+								:height="'24px'"
 							/>
 						</div>
 					</template>
@@ -61,7 +61,7 @@
 					<template v-else>
 						<div class="modal__buttons-icon edit" @click="openVideoUpload">
 							<VueIcon
-								:name="'edit'"
+								:name="'Edit'"
 								:fill="'var(--icon-edit-fill)'"
 								:width="'24px'"
 								:height="'24px'"
@@ -89,7 +89,7 @@
 
 		<template #footer>
 			<VueButton @click="addVideo" v-if="modalVideo.values.look == 'create'">
-				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
 				Добавить
 			</VueButton>
 
@@ -99,17 +99,17 @@
 					@click="deleteItem"
 					v-if="!currentVideo.data.delete.value && !currentVideo.data.create.value"
 				>
-					<VueIcon :name="'delete'" :fill="'white'" :width="'22px'" :height="'22px'" />
+					<VueIcon :name="'Delete'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Удалить
 				</VueButton>
 
 				<VueButton @click="updateVideo" v-if="!currentVideo.data.delete.value">
-					<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					<VueIcon :name="'Edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</VueButton>
 
 				<VueButton @click="deleteItem" v-if="currentVideo.data.delete.value">
-					<VueIcon :name="'restore'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					<VueIcon :name="'Restore From Trash'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Вернуть
 				</VueButton>
 			</template>
@@ -139,12 +139,12 @@
 				@click="uploadVideo"
 				:disabled="disabled.video.upload"
 			>
-				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				<VueIcon :name="'Add'" :fill="'white'" :width="'28px'" :height="'28px'" />
 				Добавить
 			</VueButton>
 
 			<VueButton v-else @click="uploadVideo" :disabled="disabled.video.upload">
-				<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
+				<VueIcon :name="'Edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 				Обновить
 			</VueButton>
 		</template>
@@ -185,10 +185,10 @@
 				:minWidth="'30px'"
 			>
 				<VueIcon
-					:name="'info'"
+					:name="'Info'"
 					:fill="'var(--primary-color)'"
-					:width="'28px'"
-					:height="'28px'"
+					:width="'30px'"
+					:height="'30px'"
 				/>
 			</VueButton>
 		</template>
@@ -233,7 +233,7 @@
 
 		<template #buttons>
 			<VueButton @click="openVideoCreate">
-				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
 				Добавить
 			</VueButton>
 		</template>

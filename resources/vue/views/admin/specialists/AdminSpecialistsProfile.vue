@@ -67,7 +67,7 @@
 
 		<template #footer>
 			<VueButton @click="updateSpecialization">
-				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
 				Добавить
 			</VueButton>
 		</template>
@@ -147,7 +147,7 @@
 
 		<template #footer>
 			<VueButton @click="updateClinics">
-				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
 				Добавить
 			</VueButton>
 		</template>
@@ -200,14 +200,14 @@
 		<template #footer>
 			<template v-if="modalCertificates.values.look == 'create'">
 				<VueButton @click="addCertificate">
-					<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+					<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
 					Добавить
 				</VueButton>
 			</template>
 
 			<template v-if="modalCertificates.values.look == 'default'">
 				<VueButton @click="updateCertificate">
-					<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					<VueIcon :name="'Edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</VueButton>
 			</template>
@@ -272,14 +272,14 @@
 		<template #footer>
 			<template v-if="modalEducations.values.look == 'create'">
 				<VueButton @click="addEducation">
-					<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+					<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
 					Добавить
 				</VueButton>
 			</template>
 
 			<template v-if="modalEducations.values.look == 'default'">
 				<VueButton @click="updateEducation">
-					<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					<VueIcon :name="'Edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</VueButton>
 			</template>
@@ -347,14 +347,14 @@
 		<template #footer>
 			<template v-if="modalWorks.values.look == 'create'">
 				<VueButton @click="addWork">
-					<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+					<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
 					Добавить
 				</VueButton>
 			</template>
 
 			<template v-if="modalWorks.values.look == 'default'">
 				<VueButton @click="updateWork">
-					<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					<VueIcon :name="'Edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</VueButton>
 			</template>
@@ -386,10 +386,10 @@
 					:look="'inverse'"
 				>
 					<VueIcon
-						:name="'add'"
+						:name="'Add'"
 						:fill="'var(--primary-color)'"
-						:width="'23px'"
-						:height="'23px'"
+						:width="'26px'"
+						:height="'26px'"
 					/>
 					Добавить
 				</VueButton>
@@ -422,10 +422,10 @@
 				:minWidth="'30px'"
 			>
 				<VueIcon
-					:name="'info'"
+					:name="'Info'"
 					:fill="'var(--primary-color)'"
-					:width="'28px'"
-					:height="'28px'"
+					:width="'30px'"
+					:height="'30px'"
 				/>
 			</VueButton>
 		</template>
@@ -891,7 +891,7 @@
 
 			<template #one-buttons>
 				<VueButton @click="openModalSpecializationsEdite">
-					<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+					<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
 					Добавить
 				</VueButton>
 			</template>
@@ -948,7 +948,7 @@
 
 			<template #two-buttons>
 				<VueButton @click="openModalClinicsEdite">
-					<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+					<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
 					Добавить
 				</VueButton>
 			</template>

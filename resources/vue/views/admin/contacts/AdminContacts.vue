@@ -64,10 +64,10 @@
 			>
 				<template #title>
 					<VueIcon
-						:name="'phone'"
+						:name="'Phone Enabled'"
 						:fill="'var(--primary-color)'"
-						:width="'20px'"
-						:height="'16px'"
+						:width="'22px'"
+						:height="'22px'"
 					/>
 					ТЕЛЕФОНЫ
 				</template>
@@ -81,10 +81,10 @@
 			>
 				<template #title>
 					<VueIcon
-						:name="'mail'"
+						:name="'Alternate Email'"
 						:fill="'var(--primary-color)'"
-						:width="'20px'"
-						:height="'14px'"
+						:width="'22px'"
+						:height="'22px'"
 					/>
 					ПОЧТА
 				</template>
@@ -93,7 +93,7 @@
 		<template #footer>
 			<template v-if="modal.values.look == 'create'">
 				<VueButton @click="addContact">
-					<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+					<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
 					Добавить
 				</VueButton>
 			</template>
@@ -104,19 +104,19 @@
 					v-if="!currentContact.data.create.value"
 					@click="deleteContact"
 				>
-					<VueIcon :name="'delete'" :fill="'white'" :width="'24px'" :height="'22px'" />
+					<VueIcon :name="'Delete'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Удалить
 				</VueButton>
 
 				<VueButton @click="updateContact">
-					<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					<VueIcon :name="'Edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</VueButton>
 			</template>
 
 			<template v-if="modal.values.look == 'default' && currentContact.data.delete.value">
 				<VueButton @click="deleteContact">
-					<VueIcon :name="'restore'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					<VueIcon :name="'Restore From Trash'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Вернуть
 				</VueButton>
 			</template>
@@ -145,12 +145,12 @@
 
 		<template #footer>
 			<VueButton v-if="modalPhone.values.look == 'default'" @click="updateContactPhone">
-				<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
+				<VueIcon :name="'Edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 				Обновить
 			</VueButton>
 
 			<VueButton v-if="modalPhone.values.look == 'create'" @click="addContactPhone">
-				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
 				Добавить
 			</VueButton>
 		</template>
@@ -177,12 +177,12 @@
 		</template>
 		<template #footer>
 			<VueButton v-if="modalMail.values.look == 'default'" @click="updateContactMail">
-				<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
+				<VueIcon :name="'Edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 				Обновить
 			</VueButton>
 
 			<VueButton v-if="modalMail.values.look == 'create'" @click="addContactMail">
-				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
 				Добавить
 			</VueButton>
 		</template>
@@ -225,10 +225,10 @@
 				:minWidth="'30px'"
 			>
 				<VueIcon
-					:name="'info'"
+					:name="'Info'"
 					:fill="'var(--primary-color)'"
-					:width="'28px'"
-					:height="'28px'"
+					:width="'30px'"
+					:height="'30px'"
 				/>
 			</VueButton>
 		</template>
@@ -257,7 +257,7 @@
 
 		<template #buttons>
 			<VueButton @click="openModalСreate()">
-				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
 				Добавить
 			</VueButton>
 		</template>

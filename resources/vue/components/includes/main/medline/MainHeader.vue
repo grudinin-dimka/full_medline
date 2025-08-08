@@ -272,7 +272,7 @@
 
 		<template #footer>
 			<VueButton @click="sendRequest" :disabled="disabled.modalForm.request">
-				<VueIcon :name="'phone'" :fill="'white'" :width="'22px'" :height="'22px'" />
+				<VueIcon :name="'Phone Enabled'" :fill="'white'" :width="'26px'" :height="'26px'" />
 				Отправить заявку
 			</VueButton>
 		</template>
@@ -317,7 +317,7 @@
 
 		<div class="header__buttons">
 			<a href="https://lk.medlinegroup.ru/" target="_blank" class="header__buttons-button">
-				<VueIcon :name="'profile'" :fill="'black'" :width="'24px'" :height="'24px'" />
+				<VueIcon :name="'Account Circle'" :fill="'black'" :width="'24px'" :height="'24px'" />
 				Личный кабинет
 			</a>
 		</div>
@@ -330,7 +330,7 @@
 		</button>
 
 		<button class="main__buttons-button" @click="openModalRequestEdite">
-			<VueIcon :name="'phone'" :fill="'white'" :width="'26px'" :height="'26px'" />
+			<VueIcon :name="'Phone Enabled'" :fill="'white'" :width="'30px'" :height="'30px'" />
 		</button>
 
 		<button class="main__buttons-button" @click="topFunction">

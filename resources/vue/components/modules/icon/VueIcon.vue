@@ -55,14 +55,23 @@ export default {
 	},
 	methods: {
 		getIconPath(name) {
-			let icon = this.icons.find((item) => item.name == name);
+			try {
+				let icon = this.icons.find((item) => item.name == name);
 
-			return icon.path ?? "";
+				return icon.path ?? "";
+			} catch (error) {
+				console.error('Путь к иконке ' + name + ' не найден.');
+			}
 		},
 
 		getIconViewBox(name) {
-			let icon = this.icons.find((item) => item.name == name);
-			return icon?.viewBox ?? "0 0 24 24"; // значение по умолчанию
+			try {
+				let icon = this.icons.find((item) => item.name == name);
+
+				return icon?.viewBox ?? "0 0 24 24"; // значение по умолчанию
+			} catch (error) {
+				console.error('Не удалось найти разметку иконки ' + name);
+			}
 		},
 	},
 	mounted() {

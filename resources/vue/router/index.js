@@ -77,9 +77,9 @@ const router = createRouter({
 							],
 						},
 						{
-							path: ":group",
-							name: "prices-group",
-							component: () => import("../views/main/prices/MainPricesGroup.vue"),
+							path: "travels",
+							name: "prices-travels",
+							component: () => import("../views/main/travels/MainTravels.vue"),
 						},
 					],
 				},
@@ -89,6 +89,25 @@ const router = createRouter({
 					name: "plastic",
 					meta: { title: "Пластическая хирургия" },
 					component: () => import("../views/main/plastic/MainPlastic.vue"),
+				},
+				{
+					path: "travels",
+					name: "travels",
+					meta: { title: "Путевки" },
+					component: () => import("../views/main/travels/MainTravels.vue"),
+					redirect: { name: "travels-all" },
+					children: [
+						{
+							path: "",
+							name: "travels-all",
+							component: () => import("../views/main/travels/MainTravelsAll.vue"),
+						},
+						{
+							path: ":name",
+							name: "travels-once",
+							component: () => import("../views/main/travels/MainTravelsOnce.vue"),
+						},
+					],
 				},
 				{
 					path: "schedule",
@@ -255,6 +274,25 @@ const router = createRouter({
 							path: "rules",
 							name: "eprices-template",
 							component: () => import("../views/admin/prices/AdminPricesTemplate.vue"),
+						},
+						{
+							path: "travels",
+							name: "etravels",
+							component: () => import("../views/admin/travels/AdminTravels.vue"),
+						},
+					],
+				},
+				{
+					path: "etravels",
+					name: "etravels",
+					meta: { title: "(e) Путевки" },
+					component: () => import("../views/admin/travels/AdminTravels.vue"),
+					redirect: { name: "etravels-all" },
+					children: [
+						{
+							path: "",
+							name: "etravels-all",
+							component: () => import("../views/admin/travels/AdminTravelsAll.vue"),
 						},
 					],
 				},

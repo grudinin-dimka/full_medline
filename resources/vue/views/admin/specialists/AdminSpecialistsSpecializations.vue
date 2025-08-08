@@ -24,14 +24,14 @@
 		<template #footer>
 			<template v-if="modal.values.look == 'create'">
 				<VueButton @click="addSpecialization">
-					<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+					<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
 					Добавить
 				</VueButton>
 			</template>
 
 			<template v-if="modal.values.look == 'default'">
 				<VueButton @click="updateSpecialization">
-					<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					<VueIcon :name="'Edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</VueButton>
 			</template>
@@ -75,10 +75,10 @@
 				:minWidth="'30px'"
 			>
 				<VueIcon
-					:name="'info'"
+					:name="'Info'"
 					:fill="'var(--primary-color)'"
-					:width="'28px'"
-					:height="'28px'"
+					:width="'30px'"
+					:height="'30px'"
 				/>
 			</VueButton>
 		</template>

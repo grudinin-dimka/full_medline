@@ -41,18 +41,18 @@
 					<div class="buttons" v-if="!currentInfoBlock.data.delete.value">
 						<div class="icon edit" @click="openModalImageEdite('imageOne')">
 							<VueIcon
-								:name="'edit'"
+								:name="'Edit'"
 								:fill="'var(--icon-edit-fill)'"
-								:width="'24px'"
-								:height="'24px'"
+								:width="'28px'"
+								:height="'28px'"
 							/>
 						</div>
 						<div class="icon delete" @click="removeInfoBlockImage('imageOne')">
 							<VueIcon
-								:name="'delete'"
+								:name="'Delete'"
 								:fill="'var(--delete-secondary-color)'"
-								:width="'24px'"
-								:height="'22px'"
+								:width="'28px'"
+								:height="'28px'"
 							/>
 						</div>
 					</div>
@@ -67,10 +67,10 @@
 					<div class="buttons add" v-if="!currentInfoBlock.data.delete.value">
 						<div class="icon create" @click="openModalImageCreate('imageOne')">
 							<VueIcon
-								:name="'add'"
+								:name="'Add'"
 								:fill="'var(--icon-create-fill)'"
-								:width="'19px'"
-								:height="'19px'"
+								:width="'24px'"
+								:height="'24px'"
 							/>
 						</div>
 					</div>
@@ -85,18 +85,18 @@
 					<div class="buttons" v-if="!currentInfoBlock.data.delete.value">
 						<div class="icon edit" @click="openModalImageEdite('imageTwo')">
 							<VueIcon
-								:name="'edit'"
+								:name="'Edit'"
 								:fill="'var(--icon-edit-fill)'"
-								:width="'24px'"
-								:height="'24px'"
+								:width="'28px'"
+								:height="'28px'"
 							/>
 						</div>
 						<div class="icon delete" @click="removeInfoBlockImage('imageTwo')">
 							<VueIcon
-								:name="'delete'"
+								:name="'Delete'"
 								:fill="'var(--delete-secondary-color)'"
-								:width="'24px'"
-								:height="'22px'"
+								:width="'28px'"
+								:height="'28px'"
 							/>
 						</div>
 					</div>
@@ -111,10 +111,10 @@
 					<div class="buttons add" v-if="!currentInfoBlock.data.delete.value">
 						<div class="icon create" @click="openModalImageCreate('imageTwo')">
 							<VueIcon
-								:name="'add'"
+								:name="'Add'"
 								:fill="'var(--icon-create-fill)'"
-								:width="'19px'"
-								:height="'19px'"
+								:width="'24px'"
+								:height="'24px'"
 							/>
 						</div>
 					</div>
@@ -129,18 +129,18 @@
 					<div class="buttons" v-if="!currentInfoBlock.data.delete.value">
 						<div class="icon edit" @click="openModalImageEdite('imageThree')">
 							<VueIcon
-								:name="'edit'"
+								:name="'Edit'"
 								:fill="'var(--icon-edit-fill)'"
-								:width="'24px'"
-								:height="'24px'"
+								:width="'28px'"
+								:height="'28px'"
 							/>
 						</div>
 						<div class="icon delete" @click="removeInfoBlockImage('imageThree')">
 							<VueIcon
-								:name="'delete'"
+								:name="'Delete'"
 								:fill="'var(--delete-secondary-color)'"
-								:width="'24px'"
-								:height="'22px'"
+								:width="'28px'"
+								:height="'28px'"
 							/>
 						</div>
 					</div>
@@ -155,10 +155,10 @@
 					<div class="buttons add" v-if="!currentInfoBlock.data.delete.value">
 						<div class="icon create" @click="openModalImageCreate('imageThree')">
 							<VueIcon
-								:name="'add'"
+								:name="'Add'"
 								:fill="'var(--icon-create-fill)'"
-								:width="'19px'"
-								:height="'19px'"
+								:width="'24px'"
+								:height="'24px'"
 							/>
 						</div>
 					</div>
@@ -189,7 +189,7 @@
 		<template #footer>
 			<template v-if="modal.values.look == 'create'">
 				<VueButton @click="addInfoBlock">
-					<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+					<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
 					Добавить
 				</VueButton>
 			</template>
@@ -200,17 +200,17 @@
 					@click="deleteInfoBlock"
 					v-if="!currentInfoBlock.data.delete.value && !currentInfoBlock.data.create.value"
 				>
-					<VueIcon :name="'delete'" :fill="'white'" :width="'24px'" :height="'22px'" />
+					<VueIcon :name="'Delete'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Удалить
 				</VueButton>
 
 				<VueButton @click="updateInfoBlock" v-if="!currentInfoBlock.data.delete.value">
-					<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					<VueIcon :name="'Edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</VueButton>
 
 				<VueButton @click="deleteInfoBlock" v-if="currentInfoBlock.data.delete.value">
-					<VueIcon :name="'restore'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					<VueIcon :name="'Restore From Trash'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Вернуть
 				</VueButton>
 			</template>
@@ -241,14 +241,14 @@
 		<template #footer>
 			<template v-if="modalImage.values.look == 'create'">
 				<VueButton @click="updateImage" :disabled="disabled.image.add">
-					<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+					<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
 					Добавить
 				</VueButton>
 			</template>
 
 			<template v-if="modalImage.values.look == 'default'">
 				<VueButton @click="updateImage" :disabled="disabled.image.update">
-					<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					<VueIcon :name="'Edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</VueButton>
 			</template>
@@ -278,7 +278,7 @@
 
 		<template #footer>
 			<VueButton @click="uploadFile" :disabled="disabled.files.upload">
-				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
 				Загрузить
 			</VueButton>
 		</template>
@@ -322,10 +322,10 @@
 				:minWidth="'30px'"
 			>
 				<VueIcon
-					:name="'info'"
+					:name="'Info'"
 					:fill="'var(--primary-color)'"
-					:width="'28px'"
-					:height="'28px'"
+					:width="'26px'"
+					:height="'26px'"
 				/>
 			</VueButton>
 		</template>
@@ -352,7 +352,7 @@
 
 		<template #buttons>
 			<VueButton @click="openModalСreate()">
-				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
 				Добавить
 			</VueButton>
 		</template>
@@ -388,10 +388,10 @@
 				:minWidth="'30px'"
 			>
 				<VueIcon
-					:name="'info'"
+					:name="'Info'"
 					:fill="'var(--primary-color)'"
-					:width="'28px'"
-					:height="'28px'"
+					:width="'30px'"
+					:height="'30px'"
 				/>
 			</VueButton>
 		</template>

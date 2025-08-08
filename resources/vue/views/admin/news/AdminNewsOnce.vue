@@ -14,10 +14,10 @@
 			<template v-if="$route.params.date === 'new' || $route.params.time === 'new'">
 				<VueButton look="inverse" :disabled="disabled.news.add" @click="addNews">
 					<VueIcon
-						:name="'add'"
+						:name="'Add'"
 						:fill="'var(--primary-color)'"
-						:width="'23px'"
-						:height="'23px'"
+						:width="'26px'"
+						:height="'26px'"
 					/>
 					Добавить
 				</VueButton>
@@ -77,10 +77,10 @@
 				:minWidth="'30px'"
 			>
 				<VueIcon
-					:name="'info'"
+					:name="'Info'"
 					:fill="'var(--primary-color)'"
-					:width="'28px'"
-					:height="'28px'"
+					:width="'30px'"
+					:height="'30px'"
 				/>
 			</VueButton>
 		</template>

@@ -7,10 +7,10 @@
 			<div class="buttons">
 				<div class="icon create" @click="$emit('touchCreate', item)">
 					<Icon
-						:name="'add'"
+						:name="'Add'"
 						:fill="'var(--icon-create-fill)'"
-						:width="'19px'"
-						:height="'19px'"
+						:width="'24px'"
+						:height="'24px'"
 					/>
 				</div>
 			</div>

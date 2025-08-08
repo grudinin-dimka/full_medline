@@ -173,7 +173,7 @@
 				:disabled="disabled.users.save"
 				v-if="modal.values.look == 'default'"
 			>
-				<VueIcon :name="'edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
+				<VueIcon :name="'Edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 				Обновить
 			</VueButton>
 
@@ -182,7 +182,7 @@
 				:disabled="disabled.users.create"
 				v-if="modal.values.look == 'create'"
 			>
-				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
 				Добавить
 			</VueButton>
 		</template>
@@ -319,10 +319,10 @@
 					<div class="buttons">
 						<div class="icon edit" @click="openModalEdite(user)">
 							<VueIcon
-								:name="'edit'"
+								:name="'Edit'"
 								:fill="'var(--icon-edit-fill)'"
-								:width="'24px'"
-								:height="'24px'"
+								:width="'28px'"
+								:height="'28px'"
 							/>
 							<div class="label">Редактирование</div>
 						</div>
@@ -358,10 +358,10 @@
 						</div>
 						<div class="icon delete" @click="openModalDelete(user)">
 							<VueIcon
-								:name="'delete'"
+								:name="'Delete'"
 								:fill="'var(--delete-secondary-color)'"
-								:width="'24px'"
-								:height="'22px'"
+								:width="'28px'"
+								:height="'28px'"
 							/>
 							<div class="label">Удаление</div>
 						</div>
@@ -379,7 +379,7 @@
 
 		<template #buttons>
 			<VueButton @click="openModalСreate">
-				<VueIcon :name="'add'" :fill="'white'" :width="'23px'" :height="'23px'" />
+				<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
 				Добавить
 			</VueButton>
 		</template>

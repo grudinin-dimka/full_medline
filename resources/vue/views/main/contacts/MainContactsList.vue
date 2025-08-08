@@ -15,11 +15,11 @@
 						<div class="contacts__phones-title">Телефоны:</div>
 						<ul>
 							<li v-for="phone in contact.phones" v-if="contact.phones.length > 0">
-								<VueIcon :name="'phone'" :fill="'black'" :width="'16px'" :height="'16px'" />
+								<VueIcon :name="'Phone Enabled'" :fill="'black'" :width="'24px'" :height="'24px'" />
 								<a :href="`tel:${phone.name}`" :key="phone.id">{{ phone.name }}</a>
 							</li>
 							<li v-else>
-								<VueIcon :name="'phone'" :fill="'black'" :width="'16px'" :height="'16px'" />
+								<VueIcon :name="'Phone Enabled'" :fill="'black'" :width="'24px'" :height="'24px'" />
 								<span class="empty"> Отсутствует </span>
 							</li>
 						</ul>
@@ -29,11 +29,11 @@
 						<div class="contacts__mails-title">Почта:</div>
 						<ul>
 							<li v-for="mail in contact.mails" v-if="contact.mails.length > 0">
-								<VueIcon :name="'mail'" :fill="'black'" :width="'18px'" :height="'18px'" />
+								<VueIcon :name="'Alternate Email'" :fill="'black'" :width="'24px'" :height="'24px'" />
 								<a :href="`mailto:${mail.name}`">{{ mail.name }}</a>
 							</li>
 							<li v-else>
-								<VueIcon :name="'mail'" :fill="'black'" :width="'14px'" :height="'14px'" />
+								<VueIcon :name="'Alternate Email'" :fill="'black'" :width="'24px'" :height="'24px'" />
 								<span class="empty"> Отсутствует </span>
 							</li>
 						</ul>
@@ -42,7 +42,7 @@
 						<div class="contacts__address-title">Адрес:</div>
 						<ul>
 							<li>
-								<VueIcon :name="'home'" :fill="'black'" :width="'20px'" :height="'18px'" />
+								<VueIcon :name="'Home'" :fill="'black'" :width="'24px'" :height="'24px'" />
 								{{
 									`г. ${contact.clinic.city}, ул. ${contact.clinic.street}, д. ${contact.clinic.home}`
 								}}
@@ -254,7 +254,7 @@ export default {
 }
 
 :is(.contacts__mails, .contacts__phones, .contacts__address) > ul > li > svg {
-	flex: 0 0 20px;
+	flex: 0 0 auto;
 }
 
 :is(.contacts__mails, .contacts__phones, .contacts__address) > ul > li > a {

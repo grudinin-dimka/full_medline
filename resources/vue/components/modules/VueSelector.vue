@@ -77,7 +77,7 @@ export default {
 	},
 	props: {
 		modelValue: {
-			type: [String, Number],
+			type: [String, Number, null, Boolean],
 			default: "",
 			required: true,
 		},

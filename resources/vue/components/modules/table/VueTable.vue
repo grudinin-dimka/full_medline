@@ -332,7 +332,7 @@
 									"
 								>
 									<VueIcon
-										:name="'edit'"
+										:name="'Edit'"
 										:width="'22px'"
 										:height="'22px'"
 										:fill="'white'"
@@ -371,9 +371,9 @@
 									"
 								>
 									<VueIcon
-										:name="'delete'"
-										:width="'16px'"
-										:height="'16px'"
+										:name="'Delete'"
+										:width="'22px'"
+										:height="'22px'"
 										:fill="'white'"
 									/>
 
@@ -394,9 +394,9 @@
 									"
 								>
 									<VueIcon
-										:name="'delete'"
-										:width="'16px'"
-										:height="'16px'"
+										:name="'Restore From Trash'"
+										:width="'22px'"
+										:height="'22px'"
 										:fill="'white'"
 									/>
 

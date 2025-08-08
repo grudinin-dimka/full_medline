@@ -23,11 +23,11 @@
 						<div>Номера:</div>
 						<ul>
 							<li v-if="contact.phones.length > 0" v-for="phone in contact.phones">
-								<VueIcon :name="'phone'" :fill="'black'" :width="'16px'" :height="'16px'" />
+								<VueIcon :name="'Phone Enabled'" :fill="'black'" :width="'22px'" :height="'22px'" />
 								{{ phone.name }}
 							</li>
 							<li v-else>
-								<VueIcon :name="'phone'" :fill="'black'" :width="'16px'" :height="'16px'" />
+								<VueIcon :name="'Phone Enabled'" :fill="'black'" :width="'22px'" :height="'22px'" />
 								<span class="empty"> Отсутствует </span>
 							</li>
 						</ul>
@@ -36,11 +36,11 @@
 						<div>Почта:</div>
 						<ul>
 							<li v-if="contact.mails.length > 0" v-for="mail in contact.mails">
-								<VueIcon :name="'mail'" :fill="'black'" :width="'14px'" :height="'14px'" />
+								<VueIcon :name="'Alternate Email'" :fill="'black'" :width="'22px'" :height="'22px'" />
 								{{ mail.name }}
 							</li>
 							<li v-else>
-								<VueIcon :name="'mail'" :fill="'black'" :width="'14px'" :height="'14px'" />
+								<VueIcon :name="'Alternate Email'" :fill="'black'" :width="'22px'" :height="'22px'" />
 								<span class="empty"> Отсутствует </span>
 							</li>
 						</ul>
