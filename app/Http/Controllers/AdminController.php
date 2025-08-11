@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 /* Подключения */
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -55,20 +56,25 @@ class AdminController extends Controller
             'formats.required' => 'Форматы не указаны.',
          ];
 
+         // Максимальные значения
+         $maxWidth = $request->maxWidth ?? 1500;
+         $maxHeight = $request->maxHeight ?? 1500;
+         $maxSize = $request->maxSize ?? (5 * 1024);
+
          // Добавление правил в зависимости от типа
          if ($isImage) {
             $rules['file'] = [
                'required', // общие правила
                File::image()
                   ->types($request->formats)
-                  ->dimensions(Rule::dimensions()->maxWidth(1500)->maxHeight(1500)),
-               'max:' . (5 * 1024),
+                  ->dimensions(Rule::dimensions()->maxWidth($maxWidth)->maxHeight($maxHeight)),
+               'max:' . $maxSize,
             ];
 
             $messages['file.required'] = 'Файл не указан.';
             $messages['file.types'] = 'Файл не соответствует форматам.';
-            $messages['file.dimensions'] = 'Файл превышает допустимое разрешение 1500х1500.';
-            $messages['file.max'] = 'Файл превышает допустимый размер 5 мб.';
+            $messages['file.dimensions'] = 'Файл превышает допустимое разрешение ' . $maxWidth . 'px' . $maxHeight . 'px.';
+            $messages['file.max'] = 'Файл превышает допустимый размер ' . ($maxSize / 1024) . ' мб.';
          } else if ($isVideo) {
             $rules['file'] = [
                'required', // общие правила

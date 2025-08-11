@@ -218,7 +218,15 @@ const router = createRouter({
 					path: "ehome",
 					name: "ehome",
 					meta: { title: "(e) Главная" },
-					component: () => import("../views/admin/AdminHome.vue"),
+					component: () => import("../views/admin/home/AdminHome.vue"),
+					redirect: { name: "ehome-all" },
+					children: [
+						{
+							path: "",
+							name: "ehome-all",
+							component: () => import("../views/admin/home/AdminHomeAll.vue"),
+						},
+					],
 				},
 				{
 					path: "eabout",

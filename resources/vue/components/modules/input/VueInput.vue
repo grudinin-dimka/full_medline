@@ -129,12 +129,7 @@
 
 		<template v-else-if="type == 'file'">
 			<div class="input__wrapper">
-				<label
-					class="input__file-button"
-					:class="{
-						active: hasFile,
-					}"
-				>
+				<label class="input__file-button">
 					<input
 						name="file"
 						type="file"
@@ -174,8 +169,10 @@
 		<template v-else-if="type == 'textarea'">
 			<textarea
 				:value="modelValue"
+				:rows="rows"
 				:placeholder="placeholder"
 				:autocomplete="autocomplete"
+				:style="{ resize: resize }"
 				@input="$emit('update:modelValue', $event.target.value.trim())"
 			></textarea>
 		</template>
@@ -222,6 +219,16 @@ export default {
 		type: {
 			type: String,
 			default: "text",
+		},
+
+		/* textarea */
+		rows: {
+			type: Number,
+			default: 1,
+		},
+		resize: {
+			type: String,
+			default: "none",
 		},
 
 		/* Минимальное и максимальное значения */
@@ -279,6 +286,10 @@ export default {
 				case "checkbox":
 					this.currentCheckbox = newValue;
 					break;
+
+				case "number":
+					this.currentNumber = newValue;
+					break;
 			}
 		},
 
@@ -334,18 +345,40 @@ export default {
 		/* |___________________________________________________|*/
 		guardInput(type, value) {
 			if (type == "number") {
-				this.currentNumber = this.guardInputNumber(value);
+				if (this.min || this.max) {
+					this.currentNumber = this.guardInputNumber(value);
+				} else {
+					this.currentNumber = value;
+				}
 			}
 		},
 
 		guardInputNumber(value) {
-			if (value > this.max) {
-				return this.max;
-			} else if (value < this.min) {
-				return this.min;
+			if (this.min && this.max) {
+				if (value > this.max) {
+					return this.max;
+				} else if (value < this.min) {
+					return this.min;
+				}
+
+				return value;
 			}
 
-			return value;
+			if (this.min) {
+				if (value < this.min) {
+					return this.min;
+				}
+
+				return value;
+			}
+
+			if (this.max) {
+				if (value > this.max) {
+					return this.max;
+				}
+
+				return value;
+			}
 		},
 	},
 };
@@ -414,8 +447,6 @@ export default {
 }
 
 .input textarea {
-	resize: none;
-
 	padding: var(--textarea-padding);
 
 	min-height: 150px;
@@ -549,7 +580,7 @@ export default {
 	transition: all 0.2s;
 }
 
-.input__file-button:is(:hover, .active) {
+.input__file-button:is(:hover, .active, :focus) {
 	border: var(--input-border-focus);
 	color: var(--primary-color);
 	background-color: var(--input-background-color);

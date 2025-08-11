@@ -41,51 +41,68 @@
 						<img :src="`/storage/default/travels-none-default.png`" alt="" />
 					</template>
 				</div>
-				<div class="modal__info-form">
-					<VueInput
-						:placeholder="'Загрузите файл'"
-						:type="'file'"
-						v-model="currentTravel.data.file.value"
-						:error="currentTravel.errors.file.status"
-						ref="fileImage"
-					>
-						<template #label> ИЗОБРАЖЕНИЕ (500x600) </template>
-						<template #error>
-							{{ currentTravel.errors.file.message }}
-						</template>
-					</VueInput>
-
-					<VueInput
-						:placeholder="'Введите заголовок'"
-						:type="'text'"
-						v-model="currentTravel.data.title.value"
-						:error="currentTravel.errors.title.status"
-					>
-						<template #label> ЗАГОЛОВОК </template>
-						<template #error>
-							{{ currentTravel.errors.title.message }}
-						</template>
-					</VueInput>
-
-					<VueInput
-						:placeholder="'Введите описание'"
-						:type="'textarea'"
-						v-model="currentTravel.data.description.value"
-						:error="currentTravel.errors.description.status"
-					>
-						<template #label> ОПИСАНИЕ </template>
-						<template #error>
-							{{ currentTravel.errors.description.message }}
-						</template>
-					</VueInput>
-				</div>
 			</div>
+
+			<VueInput
+				v-model="currentTravel.data.file.value"
+				:placeholder="'Загрузите файл'"
+				:type="'file'"
+				:error="currentTravel.errors.file.status"
+				ref="fileImage"
+			>
+				<template #label> ИЗОБРАЖЕНИЕ (500x600) </template>
+				<template #error>
+					{{ currentTravel.errors.file.message }}
+				</template>
+			</VueInput>
+
+			<VueInput
+				:placeholder="'Введите заголовок'"
+				:type="'text'"
+				v-model="currentTravel.data.title.value"
+				:error="currentTravel.errors.title.status"
+			>
+				<template #label> ЗАГОЛОВОК </template>
+				<template #error>
+					{{ currentTravel.errors.title.message }}
+				</template>
+			</VueInput>
+
+			<VueInput
+				v-model="currentTravel.data.duration.value"
+				:placeholder="'Введите значение'"
+				:type="'text'"
+				:error="currentTravel.errors.duration.status"
+			>
+				<template #label> ДЛИТЕЛЬНОСТЬ </template>
+				<template #error>
+					{{ currentTravel.errors.duration.message }}
+				</template>
+			</VueInput>
+
+			<VueInput
+				v-model="currentTravel.data.description.value"
+				:placeholder="'Введите описание'"
+				:type="'textarea'"
+				:error="currentTravel.errors.description.status"
+				:rows="5"
+				:resize="'none'"
+			>
+				<template #label> ОПИСАНИЕ </template>
+				<template #error>
+					{{ currentTravel.errors.description.message }}
+				</template>
+			</VueInput>
 
 			<VueModalList
 				:list="currentTravel.data.services.value"
+				:keys="{
+					value: 'id',
+					label: 'title',
+				}"
 				@create="openTravelServiceCreate"
 				@edit="console.log('edit')"
-				@delete="console.log('delete')"
+				@delete="deleteTravelService"
 			>
 				<template #title>
 					<VueIcon
@@ -99,10 +116,14 @@
 			</VueModalList>
 
 			<VueModalList
-				:list="currentTravel.data.services.value"
+				:list="currentTravel.data.prices.value"
+				:keys="{
+					value: 'id',
+					label: ['type', 'subtype', 'price'],
+				}"
 				@create="openTravelPriceCreate"
 				@edit="console.log('edit')"
-				@delete="console.log('delete')"
+				@delete="deleteTravelPrice"
 			>
 				<template #title>
 					<VueIcon
@@ -117,7 +138,11 @@
 		</template>
 
 		<template #footer>
-			<VueButton @click="console.log('add')" v-if="modalTravels.values.look == 'create'">
+			<VueButton
+				@click="addTravel"
+				v-if="modalTravels.values.look == 'create'"
+				:disabled="disabled.travels.create"
+			>
 				<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
 				Добавить
 			</VueButton>
@@ -160,35 +185,38 @@
 			<VueInput
 				:placeholder="'Введите заголовок'"
 				:type="'text'"
-				v-model="currentTravelServices.data.title.value"
-				:error="currentTravelServices.errors.title.status"
+				v-model="currentTravelService.data.title.value"
+				:error="currentTravelService.errors.title.status"
 			>
 				<template #label> ЗАГОЛОВОК </template>
 				<template #error>
-					{{ currentTravelServices.errors.title.message }}
+					{{ currentTravelService.errors.title.message }}
 				</template>
 			</VueInput>
 
 			<VueInput
 				:placeholder="'Введите заголовок'"
 				:type="'textarea'"
-				v-model="currentTravelServices.data.description.value"
-				:error="currentTravelServices.errors.description.status"
+				v-model="currentTravelService.data.description.value"
+				:error="currentTravelService.errors.description.status"
 			>
 				<template #label> ОПИСАНИЕ </template>
 				<template #error>
-					{{ currentTravelServices.errors.description.message }}
+					{{ currentTravelService.errors.description.message }}
 				</template>
 			</VueInput>
 		</template>
 
 		<template #footer>
-			<VueButton @click="console.log('add')" v-if="modalTravelServices.values.look == 'create'">
+			<VueButton @click="addTravelService" v-if="modalTravelServices.values.look == 'create'">
 				<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
 				Добавить
 			</VueButton>
 
-			<VueButton @click="console.log('edit')" v-if="modalTravelServices.values.look == 'default'">
+			<VueButton
+				@click="console.log('edit')"
+				v-if="modalTravelServices.values.look == 'default'"
+			>
 				<VueIcon :name="'Edit'" :fill="'white'" :width="'26px'" :height="'26px'" />
 				Добавить
 			</VueButton>
@@ -201,9 +229,55 @@
 			{{ modalTravelPrices.values.title }}
 		</template>
 
-		<template #body> </template>
+		<template #body>
+			<VueInput
+				v-model="currentTravelPrice.data.type.value"
+				:options="filteredPricesTypes"
+				:type="'select'"
+				:error="currentTravelPrice.errors.type.status"
+			>
+				<template #label> ТИП </template>
+				<template #error>
+					{{ currentTravelPrice.errors.type.message }}
+				</template>
+			</VueInput>
 
-		<template #footer> </template>
+			<VueInput
+				v-model="currentTravelPrice.data.subtype.value"
+				:options="filteredPricesSubtypes"
+				:type="'select'"
+				:error="currentTravelPrice.errors.subtype.status"
+			>
+				<template #label> ПОДТИП </template>
+				<template #error>
+					{{ currentTravelPrice.errors.subtype.message }}
+				</template>
+			</VueInput>
+
+			<VueInput
+				v-model="currentTravelPrice.data.price.value"
+				:type="'number'"
+				:placeholder="'Введите число'"
+				:error="currentTravelPrice.errors.price.status"
+			>
+				<template #label> ЦЕНА </template>
+				<template #error>
+					{{ currentTravelPrice.errors.price.message }}
+				</template>
+			</VueInput>
+		</template>
+
+		<template #footer>
+			<VueButton @click="addTravelPrice" v-if="modalTravelPrices.values.look == 'create'">
+				<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
+				Добавить
+			</VueButton>
+
+			<VueButton @click="console.log('edit')" v-if="modalTravelPrices.values.look == 'default'">
+				<VueIcon :name="'Edit'" :fill="'white'" :width="'26px'" :height="'26px'" />
+				Добавить
+			</VueButton>
+		</template>
 	</VueModal>
 
 	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
@@ -248,17 +322,25 @@
 		</template>
 
 		<template #body>
-			<div class="etravels">
-				<div class="etravels__item">
+			<div class="etravels" v-if="travels.length">
+				<div
+					class="etravels__item"
+					v-for="travel in travels"
+					:class="{
+						'etravels__item--create': travel.create,
+						'etravels__item--delete': travel.delete,
+					}"
+					@click="openTravelEdite(travel)"
+				>
 					<div class="etravels__item-header">
-						<div class="etravels__item-id">id: 1</div>
-						<div class="etravels__item-order">order: 1</div>
+						<div class="etravels__item-id">id: {{ travel.create ? "?" : travel.id }}</div>
+						<div class="etravels__item-order">order: {{ travel.order }}</div>
 					</div>
 					<div class="etravels__item-body">
-						<div class="etravels__item-title">ПОДАРИ ЗДОРОВЬЕ РОДИТЕЛЯМ</div>
+						<div class="etravels__item-title">{{ travel.title }}</div>
 						<div class="etravels__item-other">
 							<div class="etravels__item-image">
-								<img :src="`/storage/img/Vjwl6ugvdfQ.webp`" alt="" />
+								<img :src="travel.path" alt="Картинка путевки" />
 							</div>
 							<div class="etravels__item-info">
 								<div class="etravels__item-range">
@@ -268,17 +350,19 @@
 										:width="'26px'"
 										:height="'26px'"
 									/>
-									10 дней
+									{{ travel.duration }}
 								</div>
 								<div class="etravels__item-description">
-									Наша программа «Подари здоровье родителям» является хитом продаж среди
-									других программ!
+									{{ travel.description }}
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
+
+			<!-- Элемент пустой страницы -->
+			<empty :minHeight="300" v-if="travels.length == 0" />
 		</template>
 
 		<template #buttons>
@@ -350,7 +434,7 @@ export default {
 			/* Модальное окно */
 			modalTravels: {
 				thin: false,
-				clamped: false,
+				clamped: true,
 				values: {
 					title: "",
 					look: "default",
@@ -432,6 +516,10 @@ export default {
 						value: [],
 						edited: false,
 					},
+					prices: {
+						value: [],
+						edited: false,
+					},
 					create: {
 						value: false,
 						edited: false,
@@ -443,7 +531,7 @@ export default {
 				},
 			},
 
-			currentTravelServices: {
+			currentTravelService: {
 				errors: {
 					title: {
 						message: "",
@@ -471,9 +559,34 @@ export default {
 			},
 
 			currentTravelPrice: {
-				errors: {},
+				errors: {
+					type: {
+						message: "",
+						status: false,
+					},
+					subtype: {
+						message: "",
+						status: false,
+					},
+					price: {
+						message: "",
+						status: false,
+					},
+				},
 				data: {
 					id: {
+						value: "",
+						edited: false,
+					},
+					type: {
+						value: "",
+						edited: false,
+					},
+					subtype: {
+						value: "",
+						edited: false,
+					},
+					price: {
 						value: "",
 						edited: false,
 					},
@@ -483,6 +596,53 @@ export default {
 			/* Данные */
 			travels: [],
 		};
+	},
+	computed: {
+		filteredPricesTypes() {
+			return [
+				{
+					default: true,
+					disabled: true,
+					value: "",
+					label: "Выберите тип",
+				},
+				{
+					default: false,
+					disabled: false,
+					value: "С питанием",
+					label: "С питанием",
+				},
+				{
+					default: false,
+					disabled: false,
+					value: "Без питания",
+					label: "Без питания",
+				},
+			];
+		},
+
+		filteredPricesSubtypes() {
+			return [
+				{
+					default: true,
+					disabled: true,
+					value: "",
+					label: "Выберите подтип",
+				},
+				{
+					default: false,
+					disabled: false,
+					value: "До",
+					label: "До",
+				},
+				{
+					default: false,
+					disabled: false,
+					value: "После",
+					label: "После",
+				},
+			];
+		},
 	},
 	methods: {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -507,6 +667,7 @@ export default {
 		/* Открытие модального окна для добавления */
 		openTravelCreate() {
 			shared.clearObjectFull(this.currentTravel);
+			this.$refs.fileImage.clear();
 
 			this.openModal("modalTravels", "ПУТЕВКА", "create");
 		},
@@ -521,7 +682,7 @@ export default {
 
 		/* Открытие модального окна для добавления */
 		openTravelServiceCreate() {
-			shared.clearObjectFull(this.currentTravelServices);
+			shared.clearObjectFull(this.currentTravelService);
 
 			this.openModal("modalTravelServices", "УСЛУГА", "create");
 		},
@@ -531,6 +692,224 @@ export default {
 			shared.clearObjectFull(this.currentTravelPrice);
 
 			this.openModal("modalTravelPrices", "ЦЕНА", "create");
+		},
+
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                    Путевки                        |*/
+		/* |___________________________________________________|*/
+		addTravel() {
+			try {
+				if (
+					validate.checkInputsAll(this.currentTravel, [
+						{
+							key: "file",
+							type: "file",
+							value: this.$refs.fileImage.files(),
+							formats: ["jpg", "jpeg", "png", "webp"],
+						},
+						{
+							key: "title",
+							type: "text",
+						},
+						{
+							key: "duration",
+							type: "text",
+						},
+						{
+							key: "description",
+							type: "text",
+						},
+					])
+				)
+					return;
+
+				/* Загрузка файла */
+				let formData = new FormData();
+				formData.append("file", this.$refs.fileImage.files()[0]);
+				formData.append("type", "travels");
+				formData.append("maxWidth", "500");
+				formData.append("maxHeight", "600");
+				formData.append("formats", ["jpg", "jpeg", "png", "webp"]);
+
+				this.disabled.travels.create = true;
+
+				api({
+					method: "post",
+					url: this.$store.getters.urlApi + "upload-file",
+					headers: {
+						"Content-Type": "multipart/form-data",
+					},
+					data: formData,
+				})
+					.then((response) => {
+						if (!response) return;
+
+						this.travels.push({
+							id: shared.getMaxId(this.travels) + 1,
+							title: this.currentTravel.data.title.value,
+							duration: this.currentTravel.data.duration.value,
+							description: this.currentTravel.data.description.value,
+							image: files.basename(response.data.result),
+							path: response.data.result,
+							order: shared.getMaxOrder(this.travels) + 1,
+							hide: false,
+							create: true,
+							delete: false,
+						});
+
+						this.$refs.modalTravels.close();
+					})
+					.catch((error) => {
+						this.$store.commit("addDebugger", {
+							title: "Ошибка",
+							body: error,
+							type: "error",
+						});
+					})
+					.finally(() => {
+						this.disabled.travels.create = false;
+					});
+			} catch (error) {
+				this.$store.commit("addDebugger", {
+					title: "Ошибка",
+					body: error,
+					type: "error",
+				});
+			}
+		},
+
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                 Путевки (Услуги)                  |*/
+		/* |___________________________________________________|*/
+		addTravelService() {
+			try {
+				if (
+					validate.checkInputsAll(this.currentTravelService, [
+						{
+							key: "title",
+							type: "text",
+						},
+						{
+							key: "description",
+							type: "text",
+						},
+					])
+				)
+					return;
+
+				if (
+					this.currentTravel.data.services.value.some(
+						(item) => item.title === this.currentTravelService.data.title.value
+					)
+				) {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка",
+						body: "Услуга с таким названием уже существует",
+						type: "error",
+					});
+
+					return;
+				}
+
+				this.currentTravel.data.services.value.push({
+					id: shared.getMaxId(this.currentTravel.data.services.value) + 1,
+					title: this.currentTravelService.data.title.value,
+					description: this.currentTravelService.data.description.value,
+				});
+
+				this.$refs.modalTravelServices.close();
+			} catch (error) {
+				this.$store.commit("addDebugger", {
+					title: "Ошибка",
+					body: error,
+					type: "error",
+				});
+			}
+		},
+
+		deleteTravelService(value) {
+			try {
+				this.currentTravel.data.services.value = this.currentTravel.data.services.value.filter(
+					(item) => item !== value
+				);
+			} catch (error) {
+				this.$store.commit("addDebugger", {
+					title: "Ошибка",
+					body: error,
+					type: "error",
+				});
+			}
+		},
+
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                   Путевки (Цены)                  |*/
+		/* |___________________________________________________|*/
+		addTravelPrice() {
+			try {
+				if (
+					validate.checkInputsAll(this.currentTravelPrice, [
+						{
+							key: "type",
+							type: "text",
+						},
+						{
+							key: "subtype",
+							type: "text",
+						},
+						{
+							key: "price",
+							type: "number",
+						},
+					])
+				)
+					return;
+
+				if (
+					this.currentTravel.data.prices.value.some((item) => {
+						return (
+							item.type === this.currentTravelPrice.data.type.value &&
+							item.subtype === this.currentTravelPrice.data.subtype.value
+						);
+					})
+				) {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка",
+						body: "Цена с таким типом и подтипом уже существует",
+						type: "error",
+					});
+
+					return;
+				}
+
+				this.currentTravel.data.prices.value.push({
+					id: shared.getMaxId(this.currentTravel.data.prices.value) + 1,
+					type: this.currentTravelPrice.data.type.value,
+					subtype: this.currentTravelPrice.data.subtype.value,
+					price: this.currentTravelPrice.data.price.value,
+				});
+
+				this.$refs.modalTravelPrices.close();
+			} catch (error) {
+				this.$store.commit("addDebugger", {
+					title: "Ошибка",
+					body: error,
+					type: "error",
+				});
+			}
+		},
+
+		deleteTravelPrice(value) {
+			try {
+				this.currentTravel.data.prices.value = this.currentTravel.data.prices.value.filter(
+					(item) => item !== value
+				);
+			} catch (error) {
+				this.$store.commit("addDebugger", {
+					title: "Ошибка",
+					body: error,
+					type: "error",
+				});
+			}
 		},
 	},
 	mounted() {
@@ -564,13 +943,32 @@ export default {
 <style scoped>
 .modal__info {
 	display: flex;
+	flex-direction: column;
 	gap: var(--default-gap);
 }
 
 .modal__info-image {
+	box-sizing: border-box;
+
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+	border-radius: var(--default-border-radius);
+
+	background-color: var(--item-background-color);
+	padding: var(--default-padding);
+	border: var(--default-border);
+}
+
+.modal__info-image > img {
+	object-fit: cover;
+	margin: auto;
+
+	border: var(--default-border);
 	border-radius: calc(var(--default-border-radius) / 1.5);
 
-	height: 375px;
+	width: 400px;
+	background-color: white;
 	aspect-ratio: 1 / 1.2;
 }
 
@@ -582,17 +980,9 @@ export default {
 	width: 100%;
 }
 
-.modal__info-image > img {
-	object-fit: cover;
-	height: 100%;
-	width: 100%;
-	aspect-ratio: 1 / 1.2;
-	border-radius: calc(var(--default-border-radius) / 1.5);
-}
-
 .etravels {
 	display: grid;
-	grid-template-columns: repeat(2, 1fr);
+	grid-template-columns: repeat(3, 1fr);
 }
 
 .etravels__item {
@@ -612,6 +1002,24 @@ export default {
 	background-color: var(--item-background-color-active);
 }
 
+.etravels__item--create {
+	border: var(--input-create-border);
+}
+
+.etravels__item--create:hover {
+	background-color: var(--input-create-background-color-hover);
+	border: var(--input-create-border);
+}
+
+.etravels__item--delete {
+	border: var(--input-delete-border);
+}
+
+.etravels__item--delete:hover {
+	border: var(--input-delete-border);
+	background-color: var(--input-delete-background-color-hover);
+}
+
 .etravels__item-header {
 	display: flex;
 	gap: calc(var(--default-gap) / 4);
@@ -621,6 +1029,14 @@ export default {
 	border: var(--default-border);
 	border-radius: calc(var(--default-border-radius) / 1.75);
 	padding: 5px 10px;
+}
+
+.etravels__item--create :is(.etravels__item-id, .etravels__item-order) {
+	border: var(--input-create-border);
+}
+
+.etravels__item--delete :is(.etravels__item-id, .etravels__item-order) {
+	border: var(--input-delete-border);
 }
 
 .etravels__item-body {
@@ -644,7 +1060,7 @@ export default {
 .etravels__item-image {
 	border-radius: calc(var(--default-border-radius) / 1.5);
 	object-fit: contain;
-	height: 350px;
+	height: 200px;
 
 	aspect-ratio: 1 / 1.2;
 }

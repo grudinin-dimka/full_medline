@@ -16,7 +16,7 @@
 			</div>
 		</div>
 		<div class="item" v-for="item in list" :key="item[keys.value]">
-			<div class="content">{{ item[keys.label] }}</div>
+			<div class="content">{{ getContent(item) }}</div>
 			<div class="buttons">
 				<div class="icon edit" @click="$emit('edit', item)">
 					<Icon
@@ -53,7 +53,7 @@ export default {
 			default: "",
 		},
 		keys: {
-	 		type: Object,
+			type: Object,
 			default: {
 				value: "value",
 				label: "label",
@@ -63,6 +63,23 @@ export default {
 			type: Array,
 			required: true,
 			default: [],
+		},
+	},
+	methods: {
+		getContent(item) {
+			if (Array.isArray(this.keys.label)) {
+				let label = "";
+
+				for (let i = 0; i < this.keys.label.length; i++) {
+					label += item[this.keys.label[i]] + ", ";
+				}
+
+				return label.slice(0, -2);
+			} else {
+				if (item[this.keys.label]) {
+					return item[this.keys.label];
+				}
+			}
 		},
 	},
 };
@@ -102,7 +119,6 @@ export default {
 	display: flex;
 	align-items: center;
 	gap: 10px;
-
 
 	font-size: 1.125rem;
 	word-break: break-all;

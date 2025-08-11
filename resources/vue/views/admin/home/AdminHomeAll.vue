@@ -145,7 +145,12 @@
 				</VueButton>
 
 				<VueButton v-if="currentSlide.data.delete.value" @click.prevent="markDeleteSlide">
-					<VueIcon :name="'Restore From Trash'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					<VueIcon
+						:name="'Restore From Trash'"
+						:fill="'white'"
+						:width="'28px'"
+						:height="'28px'"
+					/>
 					Вернуть
 				</VueButton>
 			</template>
@@ -258,8 +263,9 @@
 						</div>
 					</div>
 				</div>
+
 				<!-- Элемент пустой страницы -->
-				<empty :minHeight="300" v-if="slides.length == 0" />
+				<empty :minHeight="300" v-else="slides.length == 0" />
 			</template>
 
 			<!-- Загрузка слайдов -->
@@ -334,24 +340,24 @@
 </template>
 
 <script>
-import VueModal from "../../components/modules/modal/VueModal.vue";
-import VueLoader from "../../components/modules/VueLoader.vue";
-import VueTiptap from "../../components/modules/VueTiptap.vue";
+import VueModal from "../../../components/modules/modal/VueModal.vue";
+import VueLoader from "../../../components/modules/VueLoader.vue";
+import VueTiptap from "../../../components/modules/VueTiptap.vue";
 
-import VueInput from "../../components/modules/input/VueInput.vue";
+import VueInput from "../../../components/modules/input/VueInput.vue";
 
-import Empty from "../../components/modules/Empty.vue";
-import InfoBar from "../../components/ui/admin/InfoBar.vue";
-import BlockOnce from "../../components/ui/admin/blocks/BlockOnce.vue";
+import Empty from "../../../components/modules/Empty.vue";
+import InfoBar from "../../../components/ui/admin/InfoBar.vue";
+import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 
-import VueIcon from "../../components/modules/icon/VueIcon.vue";
-import VueButton from "../../components/ui/VueButton.vue";
+import VueIcon from "../../../components/modules/icon/VueIcon.vue";
+import VueButton from "../../../components/ui/VueButton.vue";
 
-import api from "../../mixin/api";
-import shared from "../../services/shared";
-import files from "../../services/files";
-import sorted from "../../services/sorted";
-import validate from "../../services/validate";
+import api from "../../../mixin/api";
+import shared from "../../../services/shared";
+import files from "../../../services/files";
+import sorted from "../../../services/sorted";
+import validate from "../../../services/validate";
 
 export default {
 	components: {
