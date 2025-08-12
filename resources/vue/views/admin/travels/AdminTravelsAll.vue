@@ -30,6 +30,36 @@
 			</template>
 		</template>
 
+		<template
+			#buttons
+			v-if="
+				(modalTravels.values.look == 'default') &
+				!currentTravel.data.delete.value &
+				!currentTravel.data.create.value
+			"
+		>
+			<VueIcon
+				v-if="currentTravel.data.hide.value"
+				:name="'hide'"
+				:fill="'var(--primary-color)'"
+				:hover="'var(--primary-color-hover)'"
+				:cursor="'pointer'"
+				:width="'26px'"
+				:height="'26px'"
+				@click="currentTravel.data.hide.value = false"
+			/>
+			<VueIcon
+				v-else
+				:name="'visible'"
+				:fill="'var(--primary-color)'"
+				:hover="'var(--primary-color-hover)'"
+				:cursor="'pointer'"
+				:width="'26px'"
+				:height="'26px'"
+				@click="currentTravel.data.hide.value = true"
+			/>
+		</template>
+
 		<template #body>
 			<div class="modal__info">
 				<div class="modal__info-image">
@@ -101,7 +131,7 @@
 					label: 'title',
 				}"
 				@create="openTravelServiceCreate"
-				@edit="console.log('edit')"
+				@edit="openTravelServiceEdite"
 				@delete="deleteTravelService"
 			>
 				<template #title>
@@ -122,7 +152,7 @@
 					label: ['type', 'subtype', 'price'],
 				}"
 				@create="openTravelPriceCreate"
-				@edit="console.log('edit')"
+				@edit="openTravelPriceEdite"
 				@delete="deleteTravelPrice"
 			>
 				<template #title>
@@ -157,7 +187,11 @@
 					Удалить
 				</VueButton>
 
-				<VueButton @click="console.log('update')" v-if="!currentTravel.data.delete.value">
+				<VueButton
+					@click="updateTravel"
+					v-if="!currentTravel.data.delete.value"
+					:disabled="disabled.travels.update"
+				>
 					<VueIcon :name="'Edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</VueButton>
@@ -214,11 +248,11 @@
 			</VueButton>
 
 			<VueButton
-				@click="console.log('edit')"
+				@click="updateTravelService"
 				v-if="modalTravelServices.values.look == 'default'"
 			>
 				<VueIcon :name="'Edit'" :fill="'white'" :width="'26px'" :height="'26px'" />
-				Добавить
+				Обновить
 			</VueButton>
 		</template>
 	</VueModal>
@@ -273,9 +307,9 @@
 				Добавить
 			</VueButton>
 
-			<VueButton @click="console.log('edit')" v-if="modalTravelPrices.values.look == 'default'">
+			<VueButton @click="updateTravelPrice" v-if="modalTravelPrices.values.look == 'default'">
 				<VueIcon :name="'Edit'" :fill="'white'" :width="'26px'" :height="'26px'" />
-				Добавить
+				Обновить
 			</VueButton>
 		</template>
 	</VueModal>
@@ -292,7 +326,7 @@
 		<template #title>СПИСОК</template>
 
 		<template #options>
-			<VueButton :disabled="disabled.travels.save" :look="'inverse'">
+			<VueButton :disabled="disabled.travels.save" :look="'inverse'" @click="saveTravelsChanges">
 				<VueIcon
 					:name="'save'"
 					:fill="'var(--primary-color)'"
@@ -322,47 +356,57 @@
 		</template>
 
 		<template #body>
-			<div class="etravels" v-if="travels.length">
-				<div
-					class="etravels__item"
-					v-for="travel in travels"
-					:class="{
-						'etravels__item--create': travel.create,
-						'etravels__item--delete': travel.delete,
-					}"
-					@click="openTravelEdite(travel)"
-				>
-					<div class="etravels__item-header">
-						<div class="etravels__item-id">id: {{ travel.create ? "?" : travel.id }}</div>
-						<div class="etravels__item-order">order: {{ travel.order }}</div>
-					</div>
-					<div class="etravels__item-body">
-						<div class="etravels__item-title">{{ travel.title }}</div>
-						<div class="etravels__item-other">
-							<div class="etravels__item-image">
-								<img :src="travel.path" alt="Картинка путевки" />
-							</div>
-							<div class="etravels__item-info">
-								<div class="etravels__item-range">
-									<VueIcon
-										:name="'Calendar Month'"
-										:fill="'var(--primary-color)'"
-										:width="'26px'"
-										:height="'26px'"
-									/>
-									{{ travel.duration }}
+			<template v-if="loading.sections.travels">
+				<div class="etravels" v-if="travels.length">
+					<div
+						class="etravels__item"
+						v-for="travel in travels"
+						:class="{
+							'etravels__item--create': travel.create,
+							'etravels__item--delete': travel.delete,
+						}"
+						@click="openTravelEdite(travel)"
+					>
+						<div class="etravels__item-header">
+							<div class="etravels__item-id">id: {{ travel.create ? "?" : travel.id }}</div>
+							<div class="etravels__item-order">order: {{ travel.order }}</div>
+						</div>
+						<div class="etravels__item-body">
+							<div class="etravels__item-title">{{ travel.title }}</div>
+							<div class="etravels__item-other">
+								<div class="etravels__item-image">
+									<img :src="travel.path" alt="Картинка путевки" />
 								</div>
-								<div class="etravels__item-description">
-									{{ travel.description }}
+								<div class="etravels__item-info">
+									<div class="etravels__item-range">
+										<VueIcon
+											:name="'Calendar Month'"
+											:fill="'var(--primary-color)'"
+											:width="'26px'"
+											:height="'26px'"
+										/>
+										{{ travel.duration }}
+									</div>
+									<div class="etravels__item-description">
+										{{ travel.description }}
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
 
-			<!-- Элемент пустой страницы -->
-			<empty :minHeight="300" v-if="travels.length == 0" />
+				<!-- Элемент пустой страницы -->
+				<empty :minHeight="300" v-if="travels.length == 0" />
+			</template>
+
+			<!-- Загрузка слайдов -->
+			<VueLoader
+				:isLoading="loading.loader.travels"
+				:isChild="true"
+				:minHeight="300"
+				@afterLeave="loaderChildAfterLeave"
+			/>
 		</template>
 
 		<template #buttons>
@@ -417,6 +461,7 @@ export default {
 				travels: {
 					save: false,
 					create: false,
+					update: false,
 					download: false,
 				},
 			},
@@ -434,7 +479,7 @@ export default {
 			/* Модальное окно */
 			modalTravels: {
 				thin: false,
-				clamped: true,
+				clamped: false,
 				values: {
 					title: "",
 					look: "default",
@@ -486,6 +531,10 @@ export default {
 					},
 					order: {
 						value: "",
+						edited: false,
+					},
+					hide: {
+						value: false,
 						edited: false,
 					},
 					path: {
@@ -664,7 +713,7 @@ export default {
 			this.$refs[name].open();
 		},
 
-		/* Открытие модального окна для добавления */
+		/* Путевки */
 		openTravelCreate() {
 			shared.clearObjectFull(this.currentTravel);
 			this.$refs.fileImage.clear();
@@ -672,7 +721,6 @@ export default {
 			this.openModal("modalTravels", "ПУТЕВКА", "create");
 		},
 
-		/* Открытие модального окна для редактирования */
 		openTravelEdite(value) {
 			shared.clearObjectFull(this.currentTravel);
 			shared.setData(value, this.currentTravel);
@@ -680,23 +728,51 @@ export default {
 			this.openModal("modalTravels", "ПУТЕВКА", "default");
 		},
 
-		/* Открытие модального окна для добавления */
+		/* Путевки -> Услуги */
 		openTravelServiceCreate() {
 			shared.clearObjectFull(this.currentTravelService);
 
 			this.openModal("modalTravelServices", "УСЛУГА", "create");
 		},
 
-		/* Открытие модального окна для добавления */
+		openTravelServiceEdite(value) {
+			shared.clearObjectFull(this.currentTravelService);
+			shared.setData(value, this.currentTravelService);
+
+			this.openModal("modalTravelServices", "УСЛУГА", "default");
+		},
+
+		/* Путевки -> Цены */
 		openTravelPriceCreate() {
 			shared.clearObjectFull(this.currentTravelPrice);
 
 			this.openModal("modalTravelPrices", "ЦЕНА", "create");
 		},
 
+		openTravelPriceEdite(value) {
+			shared.clearObjectFull(this.currentTravelPrice);
+			shared.setData(value, this.currentTravelPrice);
+
+			this.openModal("modalTravelPrices", "УСЛУГА", "default");
+		},
+
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                    Путевки                        |*/
 		/* |___________________________________________________|*/
+		/* Изменение порядка выбранного слайда */
+		changeOrderItem(type) {
+			try {
+				shared.changeOrder(this.travels, this.currentTravel, type);
+			} catch (error) {
+				this.$store.commit("addDebugger", {
+					title: "Ошибка",
+					body: error,
+					type: "error",
+				});
+			}
+		},
+
+		/* Добавление путевки */
 		addTravel() {
 			try {
 				if (
@@ -750,6 +826,8 @@ export default {
 							duration: this.currentTravel.data.duration.value,
 							description: this.currentTravel.data.description.value,
 							image: files.basename(response.data.result),
+							services: this.currentTravel.data.services.value,
+							prices: this.currentTravel.data.prices.value,
 							path: response.data.result,
 							order: shared.getMaxOrder(this.travels) + 1,
 							hide: false,
@@ -776,6 +854,148 @@ export default {
 					type: "error",
 				});
 			}
+		},
+
+		/* Добавление путевки */
+		updateTravel() {
+			try {
+				let errors = 0;
+
+				if (
+					validate.checkInputsAll(this.currentTravel, [
+						{
+							key: "title",
+							type: "text",
+						},
+						{
+							key: "duration",
+							type: "text",
+						},
+						{
+							key: "description",
+							type: "text",
+						},
+					])
+				)
+					errors++;
+
+				if (this.$refs.fileImage.files().length > 0) {
+					if (
+						validate.checkInputsAll(this.currentTravel, [
+							{
+								key: "file",
+								type: "file",
+								value: this.$refs.fileImage.files(),
+								formats: ["jpg", "jpeg", "png", "webp"],
+							},
+						])
+					)
+						errors++;
+				}
+
+				if (errors > 0) return;
+
+				if (this.$refs.fileImage.files().length > 0) {
+					this.disabled.travels.update = true;
+
+					/* Загрузка файла */
+					let formData = new FormData();
+					formData.append("file", this.$refs.fileImage.files()[0]);
+					formData.append("type", "travels");
+					formData.append("maxWidth", "500");
+					formData.append("maxHeight", "600");
+					formData.append("formats", ["jpg", "jpeg", "png", "webp"]);
+
+					api({
+						method: "post",
+						url: this.$store.getters.urlApi + "upload-file",
+						headers: {
+							"Content-Type": "multipart/form-data",
+						},
+						data: formData,
+					})
+						.then((response) => {
+							if (!response) return;
+
+							let travelCurrent = this.travels.find(
+								(travel) => travel.order === this.currentTravel.data.order.value
+							);
+
+							travelCurrent.path = response.data.result;
+							travelCurrent.image = files.basename(response.data.result);
+
+							travelCurrent.title = this.currentTravel.data.title.value;
+							travelCurrent.description = this.currentTravel.data.description.value;
+							travelCurrent.duration = this.currentTravel.data.duration.value;
+							travelCurrent.prices = this.currentTravel.data.prices.value;
+							travelCurrent.services = this.currentTravel.data.services.value;
+
+							this.$refs.modalTravels.close();
+						})
+						.catch((error) => {
+							this.$store.commit("addDebugger", {
+								title: "Ошибка",
+								body: error,
+								type: "error",
+							});
+						})
+						.finally(() => {
+							this.disabled.travels.update = false;
+						});
+				} else {
+					let travelCurrent = this.travels.find(
+						(travel) => travel.order === this.currentTravel.data.order.value
+					);
+
+					travelCurrent.title = this.currentTravel.data.title.value;
+					travelCurrent.description = this.currentTravel.data.description.value;
+					travelCurrent.duration = this.currentTravel.data.duration.value;
+					travelCurrent.prices = this.currentTravel.data.prices.value;
+					travelCurrent.services = this.currentTravel.data.services.value;
+
+					this.$refs.modalTravels.close();
+				}
+			} catch (error) {
+				this.$store.commit("addDebugger", {
+					title: "Ошибка",
+					body: error,
+					type: "error",
+				});
+			}
+		},
+
+		/* Сохранение изменений в базе данных */
+		saveTravelsChanges() {
+			this.disabled.travels.save = true;
+
+			api({
+				method: "post",
+				url: this.$store.getters.urlApi + `save-travels-changes`,
+				headers: {
+					Accept: "application/json",
+				},
+				data: {
+					travels: this.travels,
+				},
+			})
+				.then((response) => {
+					if (!response) return;
+
+					shared.updateId(this.travels, response.data.result);
+					shared.clearDeletes(this.travels);
+					shared.clearFlags(this.travels);
+					shared.updateOrders(this.travels);
+				})
+				.catch((error) => {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка",
+						body: error,
+						type: "error",
+					});
+				})
+				.finally(() => {
+					this.disabled.travels.save = false;
+				});
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -816,6 +1036,56 @@ export default {
 					title: this.currentTravelService.data.title.value,
 					description: this.currentTravelService.data.description.value,
 				});
+
+				this.$refs.modalTravelServices.close();
+			} catch (error) {
+				this.$store.commit("addDebugger", {
+					title: "Ошибка",
+					body: error,
+					type: "error",
+				});
+			}
+		},
+
+		updateTravelService() {
+			try {
+				if (
+					validate.checkInputsAll(this.currentTravelService, [
+						{
+							key: "title",
+							type: "text",
+						},
+						{
+							key: "description",
+							type: "text",
+						},
+					])
+				)
+					return;
+
+				if (
+					this.currentTravel.data.services.value.some((item) => {
+						return (
+							item.title === this.currentTravelService.data.title.value &&
+							item.id !== this.currentTravelService.data.id.value
+						);
+					})
+				) {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка",
+						body: "Услуга с таким названием уже существует",
+						type: "error",
+					});
+
+					return;
+				}
+
+				let service = this.currentTravel.data.services.value.find(
+					(item) => item.id === this.currentTravelService.data.id.value
+				);
+
+				service.title = this.currentTravelService.data.title.value;
+				service.description = this.currentTravelService.data.description.value;
 
 				this.$refs.modalTravelServices.close();
 			} catch (error) {
@@ -898,6 +1168,62 @@ export default {
 			}
 		},
 
+		updateTravelPrice() {
+			try {
+				if (
+					validate.checkInputsAll(this.currentTravelPrice, [
+						{
+							key: "type",
+							type: "text",
+						},
+						{
+							key: "subtype",
+							type: "text",
+						},
+						{
+							key: "price",
+							type: "number",
+						},
+					])
+				)
+					return;
+
+				if (
+					this.currentTravel.data.prices.value.some((item) => {
+						return (
+							item.type === this.currentTravelPrice.data.type.value &&
+							item.subtype === this.currentTravelPrice.data.subtype.value &&
+							item.id !== this.currentTravelPrice.data.id.value
+						);
+					})
+				) {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка",
+						body: "Цена с таким типом и подтипом уже существует",
+						type: "error",
+					});
+
+					return;
+				}
+
+				let price = this.currentTravel.data.prices.value.find(
+					(item) => item.id === this.currentTravelService.data.id.value
+				);
+
+				price.type = this.currentTravelPrice.data.type.value;
+				price.subtype = this.currentTravelPrice.data.subtype.value;
+				price.price = this.currentTravelPrice.data.price.value;
+
+				this.$refs.modalTravelPrices.close();
+			} catch (error) {
+				this.$store.commit("addDebugger", {
+					title: "Ошибка",
+					body: error,
+					type: "error",
+				});
+			}
+		},
+
 		deleteTravelPrice(value) {
 			try {
 				this.currentTravel.data.prices.value = this.currentTravel.data.prices.value.filter(
@@ -913,29 +1239,30 @@ export default {
 		},
 	},
 	mounted() {
-		// this.loading.loader.travels = false;
-		// api({
-		// 	method: "get",
-		// 	url: this.$store.getters.urlApi + `get-prices-files-all`,
-		// })
-		// 	.then((response) => {
-		// 		if (!response) return;
-		// 		this.table.body = response.data.result;
-		// 		this.table.body.forEach((item) => {
-		// 			item.create = false;
-		// 			item.delete = false;
-		// 		});
-		// 	})
-		// 	.catch((error) => {
-		// 		this.$store.commit("addDebugger", {
-		// 			title: "Ошибка.",
-		// 			body: error,
-		// 			type: "error",
-		// 		});
-		// 	})
-		// 	.finally(() => {
-		// 		this.loading.loader.travels = false;
-		// 	});
+		api({
+			method: "get",
+			url: this.$store.getters.urlApi + `get-travels-all`,
+		})
+			.then((response) => {
+				if (!response) return;
+
+				this.travels = response.data.result;
+
+				this.travels.forEach((item) => {
+					item.create = false;
+					item.delete = false;
+				});
+			})
+			.catch((error) => {
+				this.$store.commit("addDebugger", {
+					title: "Ошибка.",
+					body: error,
+					type: "error",
+				});
+			})
+			.finally(() => {
+				this.loading.loader.travels = false;
+			});
 	},
 };
 </script>
@@ -983,6 +1310,9 @@ export default {
 .etravels {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
+	gap: var(--default-gap);
+
+	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
 .etravels__item {

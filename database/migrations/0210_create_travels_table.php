@@ -13,7 +13,7 @@ return new class extends Migration
    {
       Schema::create('travels', function (Blueprint $table) {
          $table->id();
-         $table->string('title')->index();
+         $table->string('title')->unique();
          $table->string('duration');
          $table->text('description');
          $table->string('image');

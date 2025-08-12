@@ -18,6 +18,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\StatisticController;
+use App\Http\Controllers\TravelsController;
 
 use App\Http\Middleware\TrackLoad;
 
@@ -128,6 +129,13 @@ Route::get('/download-prices-archive', [PricesController::class, 'downloadPrices
 Route::get('/get-prices-files-all', [PricesController::class, 'getPricesFilesAll'])->middleware(['auth:sanctum', 'admin-or-creator']);
 Route::post('/save-prices-changes', [PricesController::class, 'savePricesChanges'])->middleware(['auth:sanctum', 'admin-or-creator']);
 Route::post('/make-prices-files', [PricesController::class, 'makePricesFiles'])->middleware(['auth:sanctum', 'admin-or-creator']);
+
+/* _____________________________________________________*/
+/* Путевки                                              */
+/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+Route::get('/get-travels-all', [TravelsController::class, 'getTravelsAll']);
+
+Route::post('/save-travels-changes', [TravelsController::class, 'saveTravelsChanges'])->middleware(['auth:sanctum', 'admin-or-creator']);
 
 /* _____________________________________________________*/
 /* Расписание                                           */
