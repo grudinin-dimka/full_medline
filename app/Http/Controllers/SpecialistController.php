@@ -43,7 +43,7 @@ class SpecialistController extends Controller
       $specialists = Specialist::where('hide', false)->get();
       if ($specialists) {
          foreach ($specialists as $key => $value) {
-            $specialistsSpecializations = SpecialistSpecialization::where('id_specialist', $specialists[$key]->id)->get();
+            $specialistsSpecializations = SpecialistSpecialization::where('id_specialist', $value->id)->get();
             if ($specialistsSpecializations) {
                $specializations = [];
                foreach ($specialistsSpecializations as $specialistsSpecializationsKey => $specialistsSpecializationsValue) {
@@ -58,7 +58,7 @@ class SpecialistController extends Controller
                ], 500);
             };
 
-            $specialistsClinics = SpecialistClinic::where('id_specialist', $specialists[$key]->id)->get();
+            $specialistsClinics = SpecialistClinic::where('id_specialist', $value->id)->get();
             if ($specialistsClinics) {
                $clinics = [];
                foreach ($specialistsClinics as $specialistsClinicsKey => $specialistsClinicsValue) {
@@ -73,12 +73,12 @@ class SpecialistController extends Controller
                ], 500);
             };
 
-            $specialists[$key]->url = $this->makeUrl($specialists[$key]->family . " " . $specialists[$key]->name . " " . $specialists[$key]->surname);
-            $specialists[$key]->path = Storage::url('specialists/' . $value->filename);
-            $specialists[$key]->specialization = $specializations;
-            $specialists[$key]->clinics = $clinics;
+            $value->url = $this->makeUrl($specialists[$key]->family . " " . $specialists[$key]->name . " " . $specialists[$key]->surname);
+            $value->path = $value->path();
+            $value->specialization = $specializations;
+            $value->clinics = $clinics;
 
-            $specialists[$key]->name = $specialists[$key]->family . " " . $specialists[$key]->name . " " . $specialists[$key]->surname;
+            $value->name = $value->family . " " . $value->name . " " . $value->surname;
          };
 
          return response()->json([
@@ -120,10 +120,10 @@ class SpecialistController extends Controller
       $specialists = Specialist::all();
 
       foreach ($specialists as $key => $value) {
-         $stringTransliterate = $this->makeUrl($specialists[$key]->family . " " . $specialists[$key]->name . " " . $specialists[$key]->surname);
+         $stringTransliterate = $this->makeUrl($value->family . " " . $value->name . " " . $value->surname);
 
          if ($request->url == $stringTransliterate) {
-            if ($specialists[$key]->hide == true) {
+            if ($value->hide == true) {
                return response()->json([
                   "success" => false,
                   "debug" => true,
@@ -132,9 +132,9 @@ class SpecialistController extends Controller
                ], 500);
             };
 
-            $specialists[$key]->path = Storage::url('specialists/' . $specialists[$key]->filename);
+            $value->path = $value->path();
 
-            $specialistsSpecializations = SpecialistSpecialization::where('id_specialist', $specialists[$key]->id)->get();
+            $specialistsSpecializations = SpecialistSpecialization::where('id_specialist', $value->id)->get();
             if ($specialistsSpecializations) {
                $specializations = [];
                foreach ($specialistsSpecializations as $specialistsSpecializationsKey => $specialistsSpecializationsValue) {
@@ -153,7 +153,7 @@ class SpecialistController extends Controller
                ], 500);
             };
 
-            $specialistsEducations = SpecialistEducation::where('id_specialist', $specialists[$key]->id)->get();
+            $specialistsEducations = SpecialistEducation::where('id_specialist', $value->id)->get();
             if ($specialistsEducations) {
                $educations = [];
                foreach ($specialistsEducations as $specialistsEducationsKey => $specialistsEducationsValue) {
@@ -172,7 +172,7 @@ class SpecialistController extends Controller
                ], 500);
             }
 
-            $specialistsCertificates = SpecialistCertificate::where('id_specialist', $specialists[$key]->id)->get();
+            $specialistsCertificates = SpecialistCertificate::where('id_specialist', $value->id)->get();
             if ($specialistsCertificates) {
                $certificates = [];
                foreach ($specialistsCertificates as $specialistsCertificatesKey => $specialistsCertificatesValue) {
@@ -196,7 +196,7 @@ class SpecialistController extends Controller
                "debug" => false,
                "message" => "Данные получены.",
                "result" => [
-                  "profile" => $specialists[$key],
+                  "profile" => $value,
                   "specializations" => $specializations,
                   "educations" => $educations,
                   "certificates" => $certificates,
@@ -265,7 +265,7 @@ class SpecialistController extends Controller
 
       $specialist = Specialist::find($request->id);
       if ($specialist) {
-         $specialist->path = Storage::url('specialists/' . $specialist->filename);
+         $specialist->path = $specialist->path();
 
          // Получение данных о специализациях
          $specialistCertificates = SpecialistCertificate::where('id_specialist', $request->id)->get();

@@ -33,7 +33,7 @@ class VideoController extends Controller
          $videos = Video::all()->sortBy('order')->values();
 
          foreach ($videos as $key => $value) {
-            $value->path = Storage::url('video/' . $value->video);
+            $value->path = $value->path();
          };
       } catch (Throwable $th) {
          return response()->json([

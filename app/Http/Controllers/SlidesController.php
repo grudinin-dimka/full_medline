@@ -26,7 +26,7 @@ class SlidesController extends Controller
 
       foreach ($slides as $key => $value) {
          // Добавление нового поля path, в котором хранится путь к изображению
-         $slides[$key]->path = Storage::url('slides/' . $value->filename);
+         $value->path = $value->path();
       };
 
       return response()->json([
@@ -41,8 +41,9 @@ class SlidesController extends Controller
    public function getSlidesNotHide(Request $request)
    {
       $slides = Slide::where('hide', false)->get();
+      
       foreach ($slides as $key => $value) {
-         $slides[$key]->path = Storage::url('slides/' . $value->filename);
+         $value->path = $value->path();
       };
 
       return response()->json([
