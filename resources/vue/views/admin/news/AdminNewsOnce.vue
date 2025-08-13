@@ -31,7 +31,7 @@
 						v-if="!currentNews.data.hide.value"
 					>
 						<VueIcon
-							:name="'publish'"
+							:name="'Publish'"
 							:fill="'var(--primary-color)'"
 							:width="'28px'"
 							:height="'28px'"
@@ -46,7 +46,7 @@
 						v-else
 					>
 						<VueIcon
-							:name="'unpublish'"
+							:name="'Unpublished'"
 							:fill="'var(--primary-color)'"
 							:width="'28px'"
 							:height="'28px'"

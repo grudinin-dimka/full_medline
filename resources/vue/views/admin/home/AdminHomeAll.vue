@@ -17,7 +17,7 @@
 		>
 			<VueIcon
 				v-if="currentSlide.data.hide.value"
-				:name="'hide'"
+				:name="'Visibility'"
 				:fill="'var(--primary-color)'"
 				:hover="'var(--primary-color-hover)'"
 				:cursor="'pointer'"
@@ -27,7 +27,7 @@
 			/>
 			<VueIcon
 				v-else
-				:name="'visible'"
+				:name="'Visibility Off'"
 				:fill="'var(--primary-color)'"
 				:hover="'var(--primary-color-hover)'"
 				:cursor="'pointer'"

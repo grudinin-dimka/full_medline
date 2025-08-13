@@ -133,7 +133,8 @@ Route::post('/make-prices-files', [PricesController::class, 'makePricesFiles'])-
 /* _____________________________________________________*/
 /* Путевки                                              */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
-Route::get('/get-travels-all', [TravelsController::class, 'getTravelsAll']);
+Route::get('/get-travels', [TravelsController::class, 'getTravels']);
+Route::get('/get-travels-all', [TravelsController::class, 'getTravelsAll'])->middleware(['auth:sanctum', 'admin-or-creator']);
 
 Route::post('/save-travels-changes', [TravelsController::class, 'saveTravelsChanges'])->middleware(['auth:sanctum', 'admin-or-creator']);
 

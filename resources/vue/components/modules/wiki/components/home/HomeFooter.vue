@@ -2,7 +2,7 @@
 	<General />
 
 	<VueWikiTitle>
-		<VueIcon name="edit" width="18" height="18" fill="var(--primary-color)" />
+		<VueIcon name="Edit" width="24" height="24" fill="var(--primary-color)" />
 		Изменение футера
 	</VueWikiTitle>
 	<VueWikiParagraph>

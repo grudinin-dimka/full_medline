@@ -6,80 +6,56 @@
 	</info-bar>
 
 	<block :minHeight="100">
-		<div class="filters">
-			<div class="filters__item">
-				<VueInput v-model="filters.name" :type="'search'" :placeholder="'Введите услугу'" />
-			</div>
-
-			<div class="filters__item">
-				<VueSelector
-					v-model="filters.address"
-					:placeholder="'Выберите клинику'"
-					:cleared="false"
-					:list="[]"
-				/>
-
-				<VueSelector
-					v-model="filters.category"
-					:placeholder="'Питание'"
-					:cleared="true"
-					:list="[
-						{ label: 'Включено', value: true },
-						{ label: 'Не включено', value: false },
-					]"
-				/>
-			</div>
-		</div>
-
-		<div class="travels">
-			<div class="travels__item">
+		<div class="travels" v-if="travels.length > 0">
+			<div
+				class="travels__item"
+				v-for="travel in travels"
+				:class="{ 'skeleton': loading.loader.travels }"
+			>
 				<div class="travels__item__header">
-					<div class="travels__item-title">ПОДАРИ ЗДОРОВЬЕ РОДИТЕЛЯМ</div>
+					<div class="travels__item-title">
+						{{ travel.title }}
+					</div>
 				</div>
 				<div class="travels__item__body">
 					<div class="travels__item-image">
-						<img :src="`/storage/img/Vjwl6ugvdfQ.webp`" loading="lazy" alt="" />
+						<img v-if="travel.path" :src="travel.path" loading="lazy" alt="Картинка" />
 					</div>
 					<div class="travels__item-other">
 						<div class="travels__item-info">
 							<div class="travels__item-range">
-								<VueIcon
-									:name="'Calendar Month'"
-									:fill="'var(--primary-color)'"
-									:width="'26px'"
-									:height="'26px'"
-								/>
-								5 дней
+								<template v-if="travel.duration">
+									<VueIcon
+										:name="'Calendar Month'"
+										:fill="'var(--primary-color)'"
+										:width="'26px'"
+										:height="'26px'"
+									/>
+									{{ travel.duration }}
+								</template>
 							</div>
 						</div>
+
 						<div class="travels__item-description">
-							Наша программа «Подари здоровье родителям» является хитом продаж среди других
-							программ!
+							{{ travel.description }}
 						</div>
+
 						<div class="travels__item-price">
 							<div
 								class="travels__price-food"
+								v-for="(prices, key) in travel.food"
 								:class="{ 'travels__price-food--disabled': false }"
 							>
 								<div class="travels__price-food-name">
 									<VueIcon
+										v-if="key === 'С питанием'"
 										:name="'Fastfood'"
 										:fill="'var(--primary-color)'"
 										:width="'26px'"
 										:height="'26px'"
 									/>
-								</div>
-								<div class="travels__price-food-value">
-									<div class="travels__food-value-after">{{ formatPrice(9000) }} ₽</div>
-									<div class="travels__food-value-before">{{ formatPrice(11000) }} ₽</div>
-								</div>
-							</div>
-							<div
-								class="travels__price-food"
-								:class="{ 'travels__price-food--disabled': false }"
-							>
-								<div class="travels__price-food-name">
 									<VueIcon
+										v-if="key === 'Без питания'"
 										:name="'No Food'"
 										:fill="'var(--primary-color)'"
 										:width="'26px'"
@@ -87,53 +63,13 @@
 									/>
 								</div>
 								<div class="travels__price-food-value">
-									<div class="travels__food-value-after">{{ formatPrice(7500) }} ₽</div>
-									<div class="travels__food-value-before">{{ formatPrice(9000) }} ₽</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="travels__item">
-				<div class="travels__item__hit">Хит продаж!</div>
-
-				<div class="travels__item__header">
-					<div class="travels__item-title">ВСЁ ВКЛЮЧЕНО!</div>
-				</div>
-				<div class="travels__item__body">
-					<div class="travels__item-image">
-						<img :src="`/storage/img/Vjwl6ugvdfQ.webp`" loading="lazy" alt="" />
-					</div>
-					<div class="travels__item-other">
-						<div class="travels__item-info">
-							<div class="travels__item-range">
-								<VueIcon
-									:name="'Calendar Month'"
-									:fill="'var(--primary-color)'"
-									:width="'26px'"
-									:height="'26px'"
-								/>
-								10 дней
-							</div>
-						</div>
-						<div class="travels__item-description">
-							Наша программа «Подари здоровье родителям» является хитом продаж среди других
-							программ!
-						</div>
-						<div class="travels__item-price">
-							<div class="travels__price-food">
-								<div class="travels__price-food-name">
-									<VueIcon
-										:name="'Fastfood'"
-										:fill="'var(--primary-color)'"
-										:width="'26px'"
-										:height="'26px'"
-									/>
-								</div>
-								<div class="travels__price-food-value">
-									<div class="travels__food-value-after">{{ formatPrice(30000) }} ₽</div>
-									<div class="travels__food-value-before">{{ formatPrice(40000) }} ₽</div>
+									<div
+										class="travels__food-value"
+										v-for="price in sortPrices(prices)"
+										:class="{ 'travels__food-value--before': price.subtype === 'До' }"
+									>
+										{{ formatPrice(price.price) }} ₽
+									</div>
 								</div>
 							</div>
 						</div>
@@ -141,6 +77,8 @@
 				</div>
 			</div>
 		</div>
+
+		<Empty :minHeight="300" v-else />
 	</block>
 </template>
 
@@ -173,20 +111,96 @@ export default {
 	},
 	data() {
 		return {
+			loading: {
+				loader: {
+					travels: true,
+				},
+			},
+
 			/* Фильтры */
 			filters: {
 				name: "",
 				address: "",
 				category: "",
 			},
+
+			/* Данные */
+			travels: [
+				{
+					id: 1,
+					title: "",
+					duration: "",
+					description: "",
+					order: "",
+					image: "",
+					path: "",
+					prices: "",
+					services: "",
+				},
+				{
+					id: 2,
+					title: "",
+					duration: "",
+					description: "",
+					order: "",
+					image: "",
+					path: "",
+					prices: "",
+					services: "",
+				},
+				{
+					id: 3,
+					title: "",
+					duration: "",
+					description: "",
+					order: "",
+					image: "",
+					path: "",
+					prices: "",
+					services: "",
+				},
+			],
 		};
 	},
 	methods: {
 		formatPrice(price) {
 			return price.toLocaleString("ru-RU");
 		},
+
+		sortPrices(food) {
+			return food.sort((a, b) => {
+				if (a.subtype === "До") return 1;
+				if (a.subtype === "После") return -1;
+				return 0;
+			});
+		},
 	},
-	created() {},
+	created() {
+		fakeDelay(this.$store.getters.timeout, () =>
+			api({
+				method: "get",
+				url: this.$store.getters.urlApi + `get-travels`,
+			})
+		).then((response) => {
+			if (!response) return;
+
+			try {
+				console.log(response.data.result);
+
+				for (let i = 0; i < response.data.result.length; i++) {
+					this.travels[i] = response.data.result[i];
+				}
+				this.travels.splice(response.data.result.length, this.travels.length);
+				this.loading.loader.travels = false;
+			} catch (error) {
+				this.$store.commit("addDebugger", {
+					title: "Ошибка.",
+					body: error,
+					type: "error",
+				});
+			}
+		});
+	},
 };
 </script>
 
@@ -388,12 +402,8 @@ export default {
 .travels__item-description {
 	font-size: 1.125rem;
 	overflow: hidden;
-	display: -webkit-box;
-	-webkit-line-clamp: 13;
-	line-clamp: 13;
-	-webkit-box-orient: vertical;
 
-	height: 100%;
+	height: 190px;
 }
 
 .travels__item-price {
@@ -406,7 +416,7 @@ export default {
 	font-weight: 500;
 }
 
-.travels__food-value-before {
+.travels__food-value--before {
 	color: rgba(0, 0, 0, 0.3);
 	text-decoration: line-through;
 }

@@ -2,7 +2,7 @@
 	<General />
 
 	<VueWikiTitle>
-		<VueIcon name="add" width="14" height="14" fill="var(--primary-color)" />
+		<VueIcon name="Add" width="24" height="24" fill="var(--primary-color)" />
 		Добавление новости.
 	</VueWikiTitle>
 	<VueWikiParagraph>
@@ -13,7 +13,7 @@
 	</VueWikiParagraph>
 
 	<VueWikiTitle>
-		<VueIcon name="remove" width="16" height="16" fill="var(--primary-color)" />
+		<VueIcon name="Delete" width="24" height="24" fill="var(--primary-color)" />
 		Удаление новости.
 	</VueWikiTitle>
 	<VueWikiParagraph>
@@ -24,7 +24,7 @@
 	</VueWikiParagraph>
 
 	<VueWikiTitle>
-		<VueIcon name="edit" width="18" height="18" fill="var(--primary-color)" />
+		<VueIcon name="Edit" width="24" height="24" fill="var(--primary-color)" />
 		Изменение новости
 	</VueWikiTitle>
 	<VueWikiParagraph>
@@ -36,7 +36,7 @@
 	</VueWikiParagraph>
 
 	<VueWikiTitle>
-		<VueIcon name="publish" width="18" height="18" fill="var(--primary-color)" />
+		<VueIcon name="Publish" width="24" height="24" fill="var(--primary-color)" />
 		Публикация новости.
 	</VueWikiTitle>
 	<VueWikiParagraph>

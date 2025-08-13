@@ -2,7 +2,7 @@
 	<General />
 
 	<VueWikiTitle>
-		<VueIcon name="add" width="14" height="14" fill="var(--primary-color)" />
+		<VueIcon name="Add" width="24" height="24" fill="var(--primary-color)" />
 		Добавление специалиста.
 	</VueWikiTitle>
 	<VueWikiParagraph>
@@ -13,7 +13,7 @@
 	</VueWikiParagraph>
 
 	<VueWikiTitle>
-		<VueIcon name="remove" width="16" height="16" fill="var(--primary-color)" />
+		<VueIcon name="Delete" width="24" height="24" fill="var(--primary-color)" />
 		Удаление специалиста.
 	</VueWikiTitle>
 	<VueWikiParagraph>
@@ -25,7 +25,7 @@
 	</VueWikiParagraph>
 
 	<VueWikiTitle>
-		<VueIcon name="edit" width="18" height="18" fill="var(--primary-color)" />
+		<VueIcon name="Edit" width="24" height="24" fill="var(--primary-color)" />
 		Изменение специалиста
 	</VueWikiTitle>
 	<VueWikiParagraph>
@@ -37,7 +37,7 @@
 	</VueWikiParagraph>
 
 	<VueWikiTitle>
-		<VueIcon name="hide" width="18" height="18" fill="var(--primary-color)" />
+		<VueIcon name="Hide" width="24" height="24" fill="var(--primary-color)" />
 		Скрытие специалиста.
 	</VueWikiTitle>
 	<VueWikiParagraph>

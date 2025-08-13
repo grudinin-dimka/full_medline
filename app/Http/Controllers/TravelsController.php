@@ -20,12 +20,52 @@ use Carbon\Carbon;
 
 /* Модели */
 use App\Models\Travels;
+use App\Models\TravelsServices;
+use App\Models\TravelsPrices;
 
 class TravelsController extends Controller
 {
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                      GET                          |*/
    /* |___________________________________________________|*/
+   /* Получение всех новостей */
+   public function getTravels(Request $request)
+   {
+      try {
+         $travels = Travels::all()->where('hide', '=', false);
+
+         foreach ($travels as $key => $value) {
+            $value->path = $value->path();
+            $value->services = $value->services;
+
+            $groupedPrices = [];
+
+            // Группировка цен по типу
+            foreach ($value->prices as $priceKey => $priceValue) {
+               $groupedPrices[$priceValue->type][] = $priceValue;
+            }
+
+            ksort($groupedPrices);
+
+            $value->food = $groupedPrices;
+         };
+
+         return response()->json([
+            "success" => true,
+            "debug" => false,
+            "message" => "Данные получены.",
+            "result" => $travels,
+         ], 200);
+      } catch (Throwable $th) {
+         return response()->json([
+            "success" => false,
+            "debug" => true,
+            "message" => "Не удалось получить данные.",
+            "result" => null,
+         ], 500);
+      }
+   }
+
    /* Получение всех новостей */
    public function getTravelsAll(Request $request)
    {
@@ -99,6 +139,23 @@ class TravelsController extends Controller
                   'order' => $value['order'],
                ]);
 
+               foreach ($value['services'] as $serviceKey => $serviceValue) {
+                  $this->createService(
+                     $serviceValue['title'],
+                     $serviceValue['description'],
+                     $travelCreate->id
+                  );
+               };
+
+               foreach ($value['prices'] as $serviceKey => $serviceValue) {
+                  $this->createPrice(
+                     $serviceValue['type'],
+                     $serviceValue['subtype'],
+                     $serviceValue['price'],
+                     $travelCreate->id
+                  );
+               };
+
                /* Запись нового объекта в массив */
                $arrayID[] = (object) [
                   // Прошлый id
@@ -112,13 +169,35 @@ class TravelsController extends Controller
             // Обновление
             $travel = Travels::find($value['id']);
 
-            $travelUpdate = $travel->update([
+            $travel->update([
                'title' => $value['title'],
                'duration' => $value['duration'],
                'description' => $value['description'],
+               'hide' => $value['hide'],
                'image' => $value['image'],
                'order' => $value['order'],
             ]);
+
+            $travel->services()->delete();
+
+            foreach ($value['services'] as $serviceKey => $serviceValue) {
+               $this->createService(
+                  $serviceValue['title'],
+                  $serviceValue['description'],
+                  $travel->id
+               );
+            };
+
+            $travel->prices()->delete();
+
+            foreach ($value['prices'] as $serviceKey => $serviceValue) {
+               $this->createPrice(
+                  $serviceValue['type'],
+                  $serviceValue['subtype'],
+                  $serviceValue['price'],
+                  $travel->id
+               );
+            };
          };
 
          // Сортировка слайдов по порядку от наименьшего до наибольшого
@@ -175,5 +254,24 @@ class TravelsController extends Controller
             "result" => null,
          ], 500);
       };
+   }
+
+   public function createService($title, $description, $travelId)
+   {
+      $serviceCreate = TravelsServices::create([
+         'title' => $title,
+         'description' => $description,
+         'travel_id' => $travelId
+      ]);
+   }
+
+   public function createPrice($type, $subtype, $price, $travelId)
+   {
+      $priceCreate = TravelsPrices::create([
+         'type' => $type,
+         'subtype' => $subtype,
+         'price' => $price,
+         'travel_id' => $travelId
+      ]);
    }
 }

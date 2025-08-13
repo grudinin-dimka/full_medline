@@ -10,6 +10,10 @@ export default {};
 
 <style scoped>
 h1 {
+   display: flex;
+   align-items: center;
+   gap: var(--wiki-title-gap);
+
    font-size: var(--wiki-title-font-size);
    font-weight: var(--wiki-title-font-weight);
    color: var(--wiki-title-font-color);

@@ -210,7 +210,12 @@
 				</VueButton>
 
 				<VueButton @click="deleteInfoBlock" v-if="currentInfoBlock.data.delete.value">
-					<VueIcon :name="'Restore From Trash'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					<VueIcon
+						:name="'Restore From Trash'"
+						:fill="'white'"
+						:width="'28px'"
+						:height="'28px'"
+					/>
 					Вернуть
 				</VueButton>
 			</template>
@@ -324,8 +329,8 @@
 				<VueIcon
 					:name="'Info'"
 					:fill="'var(--primary-color)'"
-					:width="'26px'"
-					:height="'26px'"
+					:width="'30px'"
+					:height="'30px'"
 				/>
 			</VueButton>
 		</template>

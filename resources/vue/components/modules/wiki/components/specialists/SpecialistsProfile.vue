@@ -2,7 +2,7 @@
 	<General />
 
 	<VueWikiTitle>
-		<VueIcon name="add" width="14" height="14" fill="var(--primary-color)" />
+		<VueIcon name="Add" width="24" height="24" fill="var(--primary-color)" />
 		Добавление специалиста.
 	</VueWikiTitle>
 	<VueWikiParagraph>
@@ -31,7 +31,7 @@
 	</VueWikiParagraph>
 
 	<VueWikiTitle>
-		<VueIcon name="add" width="14" height="14" fill="var(--primary-color)" />
+		<VueIcon name="Add" width="24" height="24" fill="var(--primary-color)" />
 		Добавление специализаций
 	</VueWikiTitle>
 	<VueWikiParagraph>
@@ -45,7 +45,7 @@
 	</VueWikiParagraph>
 
 	<VueWikiTitle>
-		<VueIcon name="add" width="14" height="14" fill="var(--primary-color)" />
+		<VueIcon name="Add" width="24" height="24" fill="var(--primary-color)" />
 		Добавление клиник
 	</VueWikiTitle>
 	<VueWikiParagraph>
@@ -58,7 +58,7 @@
 	</VueWikiParagraph>
 
 	<VueWikiTitle>
-		<VueIcon name="edit" width="18" height="18" fill="var(--primary-color)" />
+		<VueIcon name="Edit" width="24" height="24" fill="var(--primary-color)" />
 		Изменение специалиста
 	</VueWikiTitle>
 	<VueWikiParagraph>

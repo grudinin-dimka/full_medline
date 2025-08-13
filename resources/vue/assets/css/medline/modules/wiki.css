@@ -30,6 +30,8 @@
    --wiki-open-visibility: visible;
 
 	/* Заголовок */
+	--wiki-title-gap: 5px;
+
 	--wiki-title-font-size: 1.5rem;
 	--wiki-title-font-weight: 500;
 	--wiki-title-font-color: var(--primary-color);

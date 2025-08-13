@@ -48,7 +48,7 @@
 				:look="'inverse'"
 			>
 				<VueIcon
-					:name="'download'"
+					:name="'Download 2'"
 					:fill="'var(--primary-color)'"
 					:width="'28px'"
 					:height="'28px'"

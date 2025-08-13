@@ -73,7 +73,7 @@
 			<VueButton :look="'inverse'" @click="fillForm('Кардиологика')"> Кардиологика </VueButton>
 
 			<VueButton @click="downloadSpecialistsXML" :disabled="disabled.specialists.download">
-				<VueIcon :name="'download'" :fill="'white'" :width="'24px'" :height="'24px'" />
+				<VueIcon :name="'Download 2'" :fill="'white'" :width="'28px'" :height="'28px'" />
 				Выгрузить
 			</VueButton>
 		</template>
@@ -90,7 +90,7 @@
 		<template #options>
 			<VueButton @click.prevent="openModalEdite" :look="'inverse'">
 				<VueIcon
-					:name="'download'"
+					:name="'Download 2'"
 					:fill="'var(--primary-color)'"
 					:width="'28px'"
 					:height="'28px'"

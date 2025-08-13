@@ -40,7 +40,7 @@
 		>
 			<VueIcon
 				v-if="currentTravel.data.hide.value"
-				:name="'hide'"
+				:name="'Visibility'"
 				:fill="'var(--primary-color)'"
 				:hover="'var(--primary-color-hover)'"
 				:cursor="'pointer'"
@@ -50,7 +50,7 @@
 			/>
 			<VueIcon
 				v-else
-				:name="'visible'"
+				:name="'Visibility Off'"
 				:fill="'var(--primary-color)'"
 				:hover="'var(--primary-color-hover)'"
 				:cursor="'pointer'"
@@ -180,7 +180,7 @@
 			<template v-else>
 				<VueButton
 					:look="'delete'"
-					@click="console.log('delete')"
+					@click="deleteTravel"
 					v-if="!currentTravel.data.delete.value && !currentTravel.data.create.value"
 				>
 					<VueIcon :name="'Delete'" :fill="'white'" :width="'28px'" :height="'28px'" />
@@ -927,6 +927,7 @@ export default {
 							travelCurrent.title = this.currentTravel.data.title.value;
 							travelCurrent.description = this.currentTravel.data.description.value;
 							travelCurrent.duration = this.currentTravel.data.duration.value;
+							travelCurrent.hide = this.currentTravel.data.hide.value;
 							travelCurrent.prices = this.currentTravel.data.prices.value;
 							travelCurrent.services = this.currentTravel.data.services.value;
 
@@ -950,6 +951,7 @@ export default {
 					travelCurrent.title = this.currentTravel.data.title.value;
 					travelCurrent.description = this.currentTravel.data.description.value;
 					travelCurrent.duration = this.currentTravel.data.duration.value;
+					travelCurrent.hide = this.currentTravel.data.hide.value;
 					travelCurrent.prices = this.currentTravel.data.prices.value;
 					travelCurrent.services = this.currentTravel.data.services.value;
 
@@ -962,6 +964,16 @@ export default {
 					type: "error",
 				});
 			}
+		},
+
+		deleteTravel() {
+			let travel = this.travels.find(
+				(item) => item.order === this.currentTravel.data.order.value
+			);
+
+			travel.delete = !travel.delete;
+
+			this.$refs.modalTravels.close();
 		},
 
 		/* Сохранение изменений в базе данных */
@@ -1411,12 +1423,9 @@ export default {
 .etravels__item-description {
 	font-size: 1.125rem;
 	overflow: hidden;
-	display: -webkit-box;
-	-webkit-line-clamp: 13;
-	line-clamp: 13;
-	-webkit-box-orient: vertical;
 
-	height: 100%;
+	height: 155px;
+	text-align: justify;
 }
 
 .etravels__item-info {

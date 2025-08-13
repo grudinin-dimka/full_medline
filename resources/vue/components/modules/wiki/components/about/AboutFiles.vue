@@ -2,7 +2,7 @@
 	<General />
 
 	<VueWikiTitle>
-		<VueIcon name="add" width="14" height="14" fill="var(--primary-color)" />
+		<VueIcon name="Add" width="24" height="24" fill="var(--primary-color)" />
 		Добавление файла
 	</VueWikiTitle>
 	<VueWikiParagraph>
@@ -36,7 +36,7 @@
 	</VueWikiParagraph>
 
 	<VueWikiTitle>
-		<VueIcon name="remove" width="16" height="16" fill="var(--primary-color)" />
+		<VueIcon name="Delete" width="24" height="24" fill="var(--primary-color)" />
 		Удаление файла
 	</VueWikiTitle>
 	<VueWikiParagraph>
