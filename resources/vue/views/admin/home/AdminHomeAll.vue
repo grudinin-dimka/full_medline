@@ -16,14 +16,14 @@
 			"
 		>
 			<VueIcon
-				v-if="currentSlide.data.hide.value"
+				v-if="!currentSlide.data.hide.value"
 				:name="'Visibility'"
 				:fill="'var(--primary-color)'"
 				:hover="'var(--primary-color-hover)'"
 				:cursor="'pointer'"
 				:width="'26px'"
 				:height="'26px'"
-				@click="currentSlide.data.hide.value = false"
+				@click="currentSlide.data.hide.value = true"
 			/>
 			<VueIcon
 				v-else
@@ -33,7 +33,7 @@
 				:cursor="'pointer'"
 				:width="'26px'"
 				:height="'26px'"
-				@click="currentSlide.data.hide.value = true"
+				@click="currentSlide.data.hide.value = false"
 			/>
 		</template>
 
@@ -206,15 +206,15 @@
 					<div
 						v-for="slide in slides"
 						:key="slide.id"
-						class="slider-block"
+						class="slider__block"
 						:class="{
-							hide: slide.hide,
-							create: slide.create,
-							delete: slide.delete,
+							'slider__block--hide': slide.hide,
+							'slider__block--create': slide.create,
+							'slider__block--delete': slide.delete,
 						}"
 						@click="openModalEdite(slide)"
 					>
-						<div class="head">
+						<div class="slider__block-head">
 							<div>id: {{ slide.create ? "?" : slide.id }}</div>
 							<div>order: {{ slide.order }}</div>
 						</div>
@@ -227,8 +227,8 @@
 								'background-repeat': 'no-repeat',
 							}"
 						></div>
-						<!-- <div class="slider-block-id">#{{ slide.order }}</div> -->
-						<div class="slider-block-info">
+
+						<div class="slider__block-info">
 							<article>
 								<VueIcon
 									:name="'user-card'"
@@ -680,6 +680,7 @@ export default {
 
 						slideCurrent.name = this.currentSlide.data.name.value;
 						slideCurrent.link = this.currentSlide.data.link.value;
+						slideCurrent.hide = this.currentSlide.data.hide.value;
 
 						this.$refs.modal.close();
 					})
@@ -700,6 +701,7 @@ export default {
 
 				slideCurrent.name = this.currentSlide.data.name.value;
 				slideCurrent.link = this.currentSlide.data.link.value;
+				slideCurrent.hide = this.currentSlide.data.hide.value;
 
 				this.$refs.modal.close();
 			}
@@ -845,7 +847,7 @@ export default {
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
-.slider-block {
+.slider__block {
 	cursor: pointer;
 	display: flex;
 	flex-direction: column;
@@ -859,17 +861,17 @@ export default {
 	transition: all 0.2s;
 }
 
-.slider-block:hover {
+.slider__block:hover {
 	border: var(--input-border-focus);
 	background-color: var(--item-background-color-active);
 }
 
-.slider-block > .head {
+.slider__block > .slider__block-head {
 	display: flex;
 	gap: 10px;
 }
 
-.slider-block > .head > div {
+.slider__block > .slider__block-head > div {
 	padding: 5px 10px;
 	border-radius: calc(var(--input-border-radius) / 2);
 	border: var(--input-border);
@@ -877,65 +879,65 @@ export default {
 	transition: all 0.2s;
 }
 
-.slider-block:hover > .head > div {
+.slider__block:hover > .slider__block-head > div {
 	border: var(--input-border-focus);
 }
 
-.slider-block.create > .head > div {
-	border: var(--input-create-border-focus);
-}
-
-.slider-block.delete > .head > div {
-	border: var(--input-delete-border);
-}
-
-.slider-block.hide {
+.slider__block--hide {
 	border: 1px solid rgb(210, 210, 210);
 	background-color: rgb(240, 240, 240);
 }
 
-.slider-block.create {
+.slider__block--hide:hover {
+	border: var(--input-border-focus);
+}
+
+.slider__block--create {
 	border: var(--input-create-border);
 }
 
-.slider-block.create:hover {
+.slider__block--create:hover {
 	background-color: var(--input-create-background-color-hover);
 	border: var(--input-create-border);
 }
 
-.slider-block.delete {
+.slider__block--create > .slider__block-head > div {
+	border: var(--input-create-border-focus);
+}
+
+.slider__block--delete {
 	border: var(--input-delete-border);
 }
 
-.slider-block.delete:hover {
+.slider__block--delete:hover {
 	border: var(--input-delete-border);
 	background-color: var(--input-delete-background-color-hover);
 }
 
-.slider-block-id {
-	position: absolute;
+.slider__block--delete > .slider__block-head > div {
+	border: var(--input-delete-border);
 }
 
-.slider-block > img {
+.slider__block > img {
 	border-radius: 10px;
 	width: 200px;
 	align-self: center;
 }
 
-.slider-block-info {
+.slider__block-info {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
 }
 
-.slider-block-info > article {
+.slider__block-info > article {
 	display: grid;
 	grid-template-columns: 30px 1fr;
 	align-items: center;
 	gap: 10px;
 }
 
-.slider-block-info > article > label {
+.slider__block-info > article > label {
 	cursor: pointer;
 	word-break: break-all;
 }
@@ -996,11 +998,11 @@ export default {
 }
 
 @media screen and (max-width: 600px) {
-	.slider-block {
+	.slider__block {
 		flex-direction: column;
 	}
 
-	.slider-block > img {
+	.slider__block > img {
 		flex-basis: 100px;
 		width: 60%;
 		margin-bottom: 10px;

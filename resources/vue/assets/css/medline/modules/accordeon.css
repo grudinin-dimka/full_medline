@@ -1,0 +1,29 @@
+:root {
+   --accordeon-border: var(--default-border);
+   --accordeon-border-radius: calc(var(--default-border-radius) / 2);
+   --accordeon-padding: 0px;
+   --accordeon-margin: 0px;
+
+   --accordeon-background-color: white;
+
+   /* head */
+   --accordeon-head-border: 0px;
+   --accordeon-head-border-radius: var(--default-border-radius);
+   --accordeon-head-padding: 0px 20px;
+
+   --accordeon-head-gap: calc(var(--default-gap) / 2);
+   --accordeon-head-name-padding: 0px 0px;
+   --accordeon-head-name-border: 0px;
+   --accordeon-head-name-border-radius: var(--accordeon-border-radius);
+   --accordeon-head-name-background-color: rgba(0, 0, 0, 0);
+
+   --accordeon-head-button-padding: 0px 10px;
+   --accordeon-head-button-border: var(--default-border);
+   --accordeon-head-button-border-radius: 100%;
+   --accordeon-head-button-background-color: white;
+
+   --accordeon-head-name-border-hover: var(--default-border-active);
+   --accordeon-head-name-hover-background-color: var(--item-background-color-active);
+
+   --accordeon-head-button-hover-background-color: white;
+}

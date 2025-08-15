@@ -37,6 +37,7 @@ class TravelsController extends Controller
          foreach ($travels as $key => $value) {
             $value->path = $value->path();
             $value->services = $value->services;
+            $value->url = $this->makeUrl($value->title);
 
             $groupedPrices = [];
 
@@ -97,6 +98,63 @@ class TravelsController extends Controller
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                      POST                         |*/
    /* |___________________________________________________|*/
+   /* Получение всех новостей */
+   public function getTravelsOnce(Request $request)
+   {
+      try {
+         // Валидация
+         $validated = Validator::make($request->all(), [
+            'url' => 'required',
+         ], [
+            'url.required' => 'Поле url обязательно для заполнения.',
+         ]);
+
+         if ($validated->fails()) {
+            return response()->json([
+               "success" => false,
+               "debug" => true,
+               "errors" => $validated->errors(),
+               "message" => "Ошибка валидации входных данных.",
+               "result" => null,
+            ], 422);
+         };
+
+         $travels = Travels::all();
+
+         foreach ($travels as $key => $value) {
+            $stringTransliterate = $this->makeUrl($value->title);
+
+            if ($request->url == $stringTransliterate) {
+               if ($value->hide) {
+                  return response()->json([
+                     "success" => false,
+                     "debug" => true,
+                     "message" => "Специалист не найден.",
+                     "result" => null,
+                  ], 500);
+               };
+
+               $value->url = $this->makeUrl($value->title);
+               $value->path = $value->path();
+               $value->services = $value->services;
+
+               return response()->json([
+                  "success" => true,
+                  "debug" => false,
+                  "message" => "Данные получены.",
+                  "result" => $value,
+               ], 200);
+            };
+         };
+      } catch (Throwable $th) {
+         return response()->json([
+            "success" => false,
+            "debug" => true,
+            "message" => "Не удалось получить данные.",
+            "result" => null,
+         ], 500);
+      }
+   }
    /* Сохранение содержимого всех слайдов */
    public function saveTravelsChanges(Request $request)
    {
@@ -243,7 +301,7 @@ class TravelsController extends Controller
             "success" => true,
             "debug" => true,
             "message" => "Данные обновлены.",
-            "result" => $arrayID ?? [],
+            "result" => $request->travels,
          ], 200);
       } catch (Throwable $th) {
          DB::rollBack();

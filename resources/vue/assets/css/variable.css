@@ -5,6 +5,7 @@
 @import url("./medline/defualt.css");
 
 /* Модули */
+@import url("./medline/modules/accordeon.css");
 @import url("./medline/modules/debugger.css");
 @import url("./medline/modules/pagination.css");
 @import url("./medline/modules/modal.css");

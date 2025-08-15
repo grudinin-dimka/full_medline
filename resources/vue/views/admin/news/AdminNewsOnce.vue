@@ -189,7 +189,7 @@
 						:editable="true"
 						:limit="10_000"
 						:minHeight="300"
-						:options="['format', 'align', 'list', 'link', 'image']"
+						:options="['heading', 'format', 'align', 'list', 'link', 'image']"
 						:placeholder="'Текст новости'"
 						:error="currentNews.errors.description.status"
 					>

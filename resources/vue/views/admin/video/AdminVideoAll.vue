@@ -77,7 +77,7 @@
 				:editable="true"
 				:limit="10_000"
 				:minHeight="200"
-				:options="['format', 'align', 'list', 'link']"
+				:options="['heading', 'format', 'align', 'list', 'link']"
 				:placeholder="'Текст новости'"
 				:error="currentVideo.errors.description.status"
 			>

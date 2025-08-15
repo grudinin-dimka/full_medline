@@ -136,6 +136,7 @@ Route::post('/make-prices-files', [PricesController::class, 'makePricesFiles'])-
 Route::get('/get-travels', [TravelsController::class, 'getTravels']);
 Route::get('/get-travels-all', [TravelsController::class, 'getTravelsAll'])->middleware(['auth:sanctum', 'admin-or-creator']);
 
+Route::post('/get-travels-once', [TravelsController::class, 'getTravelsOnce']);
 Route::post('/save-travels-changes', [TravelsController::class, 'saveTravelsChanges'])->middleware(['auth:sanctum', 'admin-or-creator']);
 
 /* _____________________________________________________*/

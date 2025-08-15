@@ -39,14 +39,14 @@
 			"
 		>
 			<VueIcon
-				v-if="currentTravel.data.hide.value"
+				v-if="!currentTravel.data.hide.value"
 				:name="'Visibility'"
 				:fill="'var(--primary-color)'"
 				:hover="'var(--primary-color-hover)'"
 				:cursor="'pointer'"
 				:width="'26px'"
 				:height="'26px'"
-				@click="currentTravel.data.hide.value = false"
+				@click="currentTravel.data.hide.value = true"
 			/>
 			<VueIcon
 				v-else
@@ -56,7 +56,7 @@
 				:cursor="'pointer'"
 				:width="'26px'"
 				:height="'26px'"
-				@click="currentTravel.data.hide.value = true"
+				@click="currentTravel.data.hide.value = false"
 			/>
 		</template>
 
@@ -110,19 +110,20 @@
 				</template>
 			</VueInput>
 
-			<VueInput
+			<VueTiptap
+				ref="tiptapDescription"
 				v-model="currentTravel.data.description.value"
+				:editable="true"
+				:limit="1_000"
+				:minHeight="150"
+				:options="['format', 'align', 'link']"
 				:placeholder="'Введите описание'"
-				:type="'textarea'"
 				:error="currentTravel.errors.description.status"
-				:rows="5"
-				:resize="'none'"
 			>
-				<template #label> ОПИСАНИЕ </template>
 				<template #error>
 					{{ currentTravel.errors.description.message }}
 				</template>
-			</VueInput>
+			</VueTiptap>
 
 			<VueModalList
 				:list="currentTravel.data.services.value"
@@ -196,7 +197,7 @@
 					Обновить
 				</VueButton>
 
-				<VueButton @click="console.log('restore')" v-if="currentTravel.data.delete.value">
+				<VueButton @click="deleteTravel" v-if="currentTravel.data.delete.value">
 					<VueIcon
 						:name="'Restore From Trash'"
 						:fill="'white'"
@@ -228,17 +229,20 @@
 				</template>
 			</VueInput>
 
-			<VueInput
-				:placeholder="'Введите заголовок'"
-				:type="'textarea'"
+			<VueTiptap
+				ref="tiptapDescription"
 				v-model="currentTravelService.data.description.value"
+				:editable="true"
+				:limit="500"
+				:minHeight="150"
+				:options="[]"
+				:placeholder="'Введите описание'"
 				:error="currentTravelService.errors.description.status"
 			>
-				<template #label> ОПИСАНИЕ </template>
 				<template #error>
 					{{ currentTravelService.errors.description.message }}
 				</template>
-			</VueInput>
+			</VueTiptap>
 		</template>
 
 		<template #footer>
@@ -362,14 +366,17 @@
 						class="etravels__item"
 						v-for="travel in travels"
 						:class="{
+							'etravels__item--hide': travel.hide,
 							'etravels__item--create': travel.create,
 							'etravels__item--delete': travel.delete,
 						}"
 						@click="openTravelEdite(travel)"
 					>
 						<div class="etravels__item-header">
-							<div class="etravels__item-id">id: {{ travel.create ? "?" : travel.id }}</div>
-							<div class="etravels__item-order">order: {{ travel.order }}</div>
+							<div class="etravels__header-item">
+								id: {{ travel.create ? "?" : travel.id }}
+							</div>
+							<div class="etravels__header-item">order: {{ travel.order }}</div>
 						</div>
 						<div class="etravels__item-body">
 							<div class="etravels__item-title">{{ travel.title }}</div>
@@ -388,7 +395,7 @@
 										{{ travel.duration }}
 									</div>
 									<div class="etravels__item-description">
-										{{ travel.description }}
+										<VueTiptap :editable="false" :limit="1_000" v-model="travel.description" />
 									</div>
 								</div>
 							</div>
@@ -423,6 +430,7 @@ import VueModal from "../../../components/modules/modal/VueModal.vue";
 import VueModalList from "../../../components/modules/modal/VueModalList.vue";
 import VueTable from "../../../components/modules/table/VueTable.vue";
 import VueInput from "../../../components/modules/input/VueInput.vue";
+import VueTiptap from "../../../components/modules/VueTiptap.vue";
 import Empty from "../../../components/modules/Empty.vue";
 
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
@@ -437,6 +445,7 @@ import api from "../../../mixin/api";
 import validate from "../../../services/validate";
 import shared from "../../../services/shared";
 import files from "../../../services/files";
+import { rowIsHeader } from "@tiptap/pm/tables";
 
 export default {
 	components: {
@@ -444,6 +453,7 @@ export default {
 		VueModalList,
 		VueTable,
 		VueInput,
+		VueTiptap,
 		Empty,
 
 		InfoBar,
@@ -724,6 +734,7 @@ export default {
 		openTravelEdite(value) {
 			shared.clearObjectFull(this.currentTravel);
 			shared.setData(value, this.currentTravel);
+			this.$refs.fileImage.clear();
 
 			this.openModal("modalTravels", "ПУТЕВКА", "default");
 		},
@@ -1321,7 +1332,7 @@ export default {
 
 .etravels {
 	display: grid;
-	grid-template-columns: repeat(3, 1fr);
+	grid-template-columns: repeat(2, 1fr);
 	gap: var(--default-gap);
 
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
@@ -1339,9 +1350,22 @@ export default {
 	transition: all 0.2s ease-in-out;
 }
 
+.etravels__item--hide {
+	border: 1px solid rgb(210, 210, 210);
+	background-color: rgb(240, 240, 240);
+}
+
 .etravels__item:hover {
 	border: var(--default-border-active);
 	background-color: var(--item-background-color-active);
+}
+
+.etravels__header-item {
+	transition: all 0.2s ease-in-out;
+}
+
+.etravels__item:hover > .etravels__item-header > .etravels__header-item {
+	border: var(--default-border-active);
 }
 
 .etravels__item--create {
@@ -1367,17 +1391,17 @@ export default {
 	gap: calc(var(--default-gap) / 4);
 }
 
-:is(.etravels__item-id, .etravels__item-order) {
+:is(.etravels__header-item, .etravels__header-item) {
 	border: var(--default-border);
 	border-radius: calc(var(--default-border-radius) / 1.75);
 	padding: 5px 10px;
 }
 
-.etravels__item--create :is(.etravels__item-id, .etravels__item-order) {
+.etravels__item--create :is(.etravels__header-item, .etravels__header-item) {
 	border: var(--input-create-border);
 }
 
-.etravels__item--delete :is(.etravels__item-id, .etravels__item-order) {
+.etravels__item--delete :is(.etravels__header-item, .etravels__header-item) {
 	border: var(--input-delete-border);
 }
 
@@ -1402,7 +1426,7 @@ export default {
 .etravels__item-image {
 	border-radius: calc(var(--default-border-radius) / 1.5);
 	object-fit: contain;
-	height: 200px;
+	height: 300px;
 
 	aspect-ratio: 1 / 1.2;
 }
@@ -1424,7 +1448,7 @@ export default {
 	font-size: 1.125rem;
 	overflow: hidden;
 
-	height: 155px;
+	height: 250px;
 	text-align: justify;
 }
 

@@ -26,7 +26,7 @@
 		<div v-if="editor && editable" class="tiptap__buttons">
 			<div class="tiptap__buttons-body">
 				<!-- Заголовки -->
-				<div class="tiptap__buttons-item">
+				<div class="tiptap__buttons-item" v-if="options.includes('heading')">
 					<button
 						@click="editor.chain().focus().toggleHeading({ level: 1 }).run()"
 						:class="{ 'is-active': editor.isActive('heading', { level: 1 }) }"

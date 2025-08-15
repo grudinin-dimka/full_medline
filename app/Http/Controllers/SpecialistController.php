@@ -123,7 +123,7 @@ class SpecialistController extends Controller
          $stringTransliterate = $this->makeUrl($value->family . " " . $value->name . " " . $value->surname);
 
          if ($request->url == $stringTransliterate) {
-            if ($value->hide == true) {
+            if ($value->hide) {
                return response()->json([
                   "success" => false,
                   "debug" => true,

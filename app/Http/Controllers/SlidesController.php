@@ -108,7 +108,8 @@ class SlidesController extends Controller
 
          // Обновление
          $slide = Slide::find($value['id']);
-         $slideUpdate = $slide->update([
+         
+         $slide->update([
             'name' => $value['name'],
             'link' => $value['link'],
             'filename' => $value['filename'],

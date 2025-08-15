@@ -171,7 +171,7 @@
 				:editable="true"
 				:limit="500"
 				:minHeight="100"
-				:options="['format', 'align']"
+				:options="['heading', 'format', 'align']"
 				:placeholder="'Заголовок'"
 			/>
 
@@ -181,7 +181,7 @@
 				:editable="true"
 				:limit="10_000"
 				:minHeight="200"
-				:options="['format', 'align', 'list', 'link']"
+				:options="['heading', 'format', 'align', 'list', 'link']"
 				:placeholder="'Заголовок'"
 			/>
 		</template>

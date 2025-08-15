@@ -11,6 +11,7 @@
 				class="travels__item"
 				v-for="travel in travels"
 				:class="{ 'skeleton': loading.loader.travels }"
+				@click="pushTravel(travel)"
 			>
 				<div class="travels__item__header">
 					<div class="travels__item-title">
@@ -22,22 +23,24 @@
 						<img v-if="travel.path" :src="travel.path" loading="lazy" alt="Картинка" />
 					</div>
 					<div class="travels__item-other">
-						<div class="travels__item-info">
-							<div class="travels__item-range">
-								<template v-if="travel.duration">
-									<VueIcon
-										:name="'Calendar Month'"
-										:fill="'var(--primary-color)'"
-										:width="'26px'"
-										:height="'26px'"
-									/>
-									{{ travel.duration }}
-								</template>
+						<div class="travels__item-other-info">
+							<div class="travels__item-info">
+								<div class="travels__item-range">
+									<template v-if="travel.duration">
+										<VueIcon
+											:name="'Calendar Month'"
+											:fill="'var(--primary-color)'"
+											:width="'26px'"
+											:height="'26px'"
+										/>
+										{{ travel.duration }}
+									</template>
+								</div>
 							</div>
-						</div>
 
-						<div class="travels__item-description">
-							{{ travel.description }}
+							<div class="travels__item-description">
+								<VueTiptap :editable="false" :limit="1_000" v-model="travel.description" />
+							</div>
 						</div>
 
 						<div class="travels__item-price">
@@ -87,6 +90,7 @@ import VueInput from "../../../components/modules/input/VueInput.vue";
 import VueLoader from "../../../components/modules/VueLoader.vue";
 import VueIcon from "../../../components/modules/icon/VueIcon.vue";
 import VueSelector from "../../../components/modules/VueSelector.vue";
+import VueTiptap from "../../../components/modules/VueTiptap.vue";
 
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import Block from "../../../components/ui/main/Block.vue";
@@ -103,6 +107,7 @@ export default {
 		VueLoader,
 		VueIcon,
 		VueSelector,
+		VueTiptap,
 
 		InfoBar,
 		Block,
@@ -174,6 +179,13 @@ export default {
 				return 0;
 			});
 		},
+
+		pushTravel(travel) {
+			this.$router.push({
+				name: "travels-once",
+				params: { name: travel.url },
+			});
+		},
 	},
 	created() {
 		fakeDelay(this.$store.getters.timeout, () =>
@@ -185,11 +197,10 @@ export default {
 			if (!response) return;
 
 			try {
-				console.log(response.data.result);
-
 				for (let i = 0; i < response.data.result.length; i++) {
 					this.travels[i] = response.data.result[i];
 				}
+
 				this.travels.splice(response.data.result.length, this.travels.length);
 				this.loading.loader.travels = false;
 			} catch (error) {
@@ -305,6 +316,8 @@ export default {
 	font-weight: 500;
 
 	color: var(--primary-color);
+
+	min-height: 28px;
 }
 
 :is(.travels__item-range, .travels__item-food) {
@@ -375,14 +388,22 @@ export default {
 	display: flex;
 	flex-direction: column;
 	gap: calc(var(--default-gap) / 2);
+	justify-content: space-between;
 
 	width: 100%;
+}
+
+.travels__item-other-info {
+	display: flex;
+	flex-direction: column;
 }
 
 .travels__item-info {
 	display: flex;
 	gap: 10px;
 	justify-content: space-between;
+
+	min-height: 30px;
 }
 
 .travels__item-image {
@@ -397,6 +418,8 @@ export default {
 	height: 100%;
 	border-radius: calc(var(--default-border-radius) / 1.5);
 	object-fit: cover;
+
+	animation: show 0.5s ease-in-out;
 }
 
 .travels__item-description {
@@ -447,6 +470,8 @@ export default {
 	display: flex;
 	justify-content: flex-end;
 	gap: 5px;
+
+	min-height: 30px;
 }
 
 .travels__price-food-name {

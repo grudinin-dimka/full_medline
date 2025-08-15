@@ -90,6 +90,7 @@ const router = createRouter({
 					meta: { title: "Пластическая хирургия" },
 					component: () => import("../views/main/plastic/MainPlastic.vue"),
 				},
+				// NOTE: Заблокировать страницу "Путевки"
 				{
 					path: "travels",
 					name: "travels",
