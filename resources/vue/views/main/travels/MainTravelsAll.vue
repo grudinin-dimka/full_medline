@@ -13,6 +13,10 @@
 				:class="{ 'skeleton': loading.loader.travels }"
 				@click="pushTravel(travel)"
 			>
+				<!-- <div>
+					
+				</div> -->
+
 				<div class="travels__item__header">
 					<div class="travels__item-title">
 						{{ travel.title }}
@@ -49,17 +53,21 @@
 								v-for="(prices, key) in travel.food"
 								:class="{ 'travels__price-food--disabled': false }"
 							>
+								<div class="travels__price-food-line">
+									{{ key }}
+								</div>
+
 								<div class="travels__price-food-name">
 									<VueIcon
 										v-if="key === 'С питанием'"
-										:name="'Fastfood'"
+										:name="'Restaurant'"
 										:fill="'var(--primary-color)'"
 										:width="'26px'"
 										:height="'26px'"
 									/>
 									<VueIcon
 										v-if="key === 'Без питания'"
-										:name="'No Food'"
+										:name="'No Meals'"
 										:fill="'var(--primary-color)'"
 										:width="'26px'"
 										:height="'26px'"
@@ -98,7 +106,7 @@ import Empty from "../../../components/modules/Empty.vue";
 import LoadText from "../../../components/ui/main/LoadText.vue";
 
 import api from "../../../mixin/api";
-
+import sorted from "../../../services/sorted";
 import fakeDelay from "../../../mixin/fake-delay";
 
 export default {
@@ -181,6 +189,8 @@ export default {
 		},
 
 		pushTravel(travel) {
+			if (!travel.url) return;
+
 			this.$router.push({
 				name: "travels-once",
 				params: { name: travel.url },
@@ -202,6 +212,7 @@ export default {
 				}
 
 				this.travels.splice(response.data.result.length, this.travels.length);
+
 				this.loading.loader.travels = false;
 			} catch (error) {
 				this.$store.commit("addDebugger", {
@@ -454,12 +465,45 @@ export default {
 }
 
 .travels__price-food {
+	position: relative;
 	display: flex;
 	justify-content: space-between;
 	gap: 5px;
 
 	border-radius: calc(var(--default-border-radius) / 1.5);
 	padding: 5px 10px;
+
+	transition: all 0.2s ease-in-out;
+}
+
+.travels__price-food-line {
+	overflow: hidden;
+	opacity: 0;
+	position: absolute;
+	top: -21px;
+	left: 0px;
+	right: 0px;
+	width: calc();
+	text-align: left;
+	
+	padding: 1px 7px;
+	border-radius: calc(var(--default-border-radius) / 1.5) calc(var(--default-border-radius) / 1.5) 0px 0px;
+	font-size: 1rem;
+
+	background-color: rgba(0, 0, 0, 0.3);
+	color: white;
+
+	transition: all 0.2s ease-in-out;
+}
+
+.travels__price-food:hover {
+	background-color: rgba(0, 0, 0, 0.1);
+	border-radius: 0px 0px calc(var(--default-border-radius) / 1.5) calc(var(--default-border-radius) / 1.5);
+}
+
+.travels__price-food:hover .travels__price-food-line {
+	overflow: visible;
+	opacity: 1;
 }
 
 .travels__price-food--disabled {
@@ -477,5 +521,23 @@ export default {
 .travels__price-food-name {
 	font-size: 1.125rem;
 	color: black;
+}
+
+@media screen and (max-width: 1450px) {
+	.travels {
+		width: 100%;
+	}
+}
+
+@media screen and (max-width: 1250px) {
+	.travels {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media screen and (max-width: 700px) {
+	.travels__item__body {
+		grid-template-columns: 1fr;
+	}
 }
 </style>

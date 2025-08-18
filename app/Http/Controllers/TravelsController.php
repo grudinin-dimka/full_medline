@@ -32,7 +32,8 @@ class TravelsController extends Controller
    public function getTravels(Request $request)
    {
       try {
-         $travels = Travels::all()->where('hide', '=', false);
+         $travels = Travels::all()->where('hide', '=', false)->sortBy('order')
+            ->values()->all();
 
          foreach ($travels as $key => $value) {
             $value->path = $value->path();
@@ -138,6 +139,17 @@ class TravelsController extends Controller
                $value->path = $value->path();
                $value->services = $value->services;
 
+               $groupedPrices = [];
+               
+               // Группировка цен по типу
+               foreach ($value->prices as $priceKey => $priceValue) {
+                  $groupedPrices[$priceValue->type][] = $priceValue;
+               }
+
+               ksort($groupedPrices);
+
+               $value->food = $groupedPrices;
+
                return response()->json([
                   "success" => true,
                   "debug" => false,
@@ -155,6 +167,7 @@ class TravelsController extends Controller
          ], 500);
       }
    }
+
    /* Сохранение содержимого всех слайдов */
    public function saveTravelsChanges(Request $request)
    {
@@ -283,7 +296,7 @@ class TravelsController extends Controller
                   $str = str_replace('public/travels/', '', $fileValue);
 
                   /* Проверка значения названия файла на совпадение */
-                  if ($travelValue->filename == $str) {
+                  if ($travelValue->image == $str) {
                      $useFile = true;
                   };
                };
@@ -301,7 +314,7 @@ class TravelsController extends Controller
             "success" => true,
             "debug" => true,
             "message" => "Данные обновлены.",
-            "result" => $request->travels,
+            "result" => $arrayID,
          ], 200);
       } catch (Throwable $th) {
          DB::rollBack();

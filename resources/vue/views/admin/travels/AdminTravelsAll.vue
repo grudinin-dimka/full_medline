@@ -147,7 +147,7 @@
 			</VueModalList>
 
 			<VueModalList
-				:list="currentTravel.data.prices.value"
+				:list="getSortedTravelPrices"
 				:keys="{
 					value: 'id',
 					label: ['type', 'subtype', 'price'],
@@ -235,7 +235,7 @@
 				:editable="true"
 				:limit="500"
 				:minHeight="150"
-				:options="[]"
+				:options="['align', 'format']"
 				:placeholder="'Введите описание'"
 				:error="currentTravelService.errors.description.status"
 			>
@@ -395,7 +395,11 @@
 										{{ travel.duration }}
 									</div>
 									<div class="etravels__item-description">
-										<VueTiptap :editable="false" :limit="1_000" v-model="travel.description" />
+										<VueTiptap
+											:editable="false"
+											:limit="1_000"
+											v-model="travel.description"
+										/>
 									</div>
 								</div>
 							</div>
@@ -446,6 +450,7 @@ import validate from "../../../services/validate";
 import shared from "../../../services/shared";
 import files from "../../../services/files";
 import { rowIsHeader } from "@tiptap/pm/tables";
+import sorted from "../../../services/sorted";
 
 export default {
 	components: {
@@ -702,6 +707,12 @@ export default {
 				},
 			];
 		},
+
+		getSortedTravelPrices() {
+			return this.currentTravel.data.prices.value.toSorted((a, b) =>
+				a.type.localeCompare(b.type)
+			);
+		},
 	},
 	methods: {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -814,8 +825,8 @@ export default {
 				let formData = new FormData();
 				formData.append("file", this.$refs.fileImage.files()[0]);
 				formData.append("type", "travels");
-				formData.append("maxWidth", "500");
-				formData.append("maxHeight", "600");
+				formData.append("maxWidth", "1000");
+				formData.append("maxHeight", "1200");
 				formData.append("formats", ["jpg", "jpeg", "png", "webp"]);
 
 				this.disabled.travels.create = true;
@@ -1173,7 +1184,7 @@ export default {
 
 					return;
 				}
-
+				
 				this.currentTravel.data.prices.value.push({
 					id: shared.getMaxId(this.currentTravel.data.prices.value) + 1,
 					type: this.currentTravelPrice.data.type.value,
@@ -1230,7 +1241,7 @@ export default {
 				}
 
 				let price = this.currentTravel.data.prices.value.find(
-					(item) => item.id === this.currentTravelService.data.id.value
+					(item) => item.id === this.currentTravelPrice.data.id.value
 				);
 
 				price.type = this.currentTravelPrice.data.type.value;

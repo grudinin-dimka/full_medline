@@ -38,6 +38,40 @@
 					<div class="travels__once-description" :class="{ skeleton: loading.loader.travel }">
 						<VueTiptap :editable="false" :limit="1_000" v-model="travel.description" />
 					</div>
+
+					<div class="travels__once-price" :class="{ skeleton: loading.loader.travel }">
+						<div
+							class="travels__once-price-food"
+							v-for="(prices, key) in travel.food"
+							:class="{ 'travels__once-price-food--disabled': false }"
+						>
+							<div class="travels__once-price-food-name">
+								<VueIcon
+									v-if="key === 'С питанием'"
+									:name="'Fastfood'"
+									:fill="'var(--primary-color)'"
+									:width="'26px'"
+									:height="'26px'"
+								/>
+								<VueIcon
+									v-if="key === 'Без питания'"
+									:name="'No Food'"
+									:fill="'var(--primary-color)'"
+									:width="'26px'"
+									:height="'26px'"
+								/>
+							</div>
+							<div class="travels__once-price-food-value">
+								<div
+									class="travels__food-value"
+									v-for="price in sortPrices(prices)"
+									:class="{ 'travels__food-value--before': price.subtype === 'До' }"
+								>
+									{{ formatPrice(price.price) }} ₽
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 
@@ -54,7 +88,11 @@
 								<template #body>
 									<VueAccordeonBlock>
 										<div class="travels__once-description-block">
-											{{ service.description }}
+											<VueTiptap
+												:editable="false"
+												:limit="1_000"
+												v-model="service.description"
+											/>
 										</div>
 									</VueAccordeonBlock>
 								</template>
@@ -114,7 +152,19 @@ export default {
 			},
 		};
 	},
-	methods: {},
+	methods: {
+		formatPrice(price) {
+			return price.toLocaleString("ru-RU");
+		},
+
+		sortPrices(food) {
+			return food.sort((a, b) => {
+				if (a.subtype === "До") return 1;
+				if (a.subtype === "После") return -1;
+				return 0;
+			});
+		},
+	},
 	mounted() {
 		fakeDelay(this.$store.getters.timeout, () =>
 			api({
@@ -223,6 +273,47 @@ export default {
 	border-radius: var(--default-border-radius);
 }
 
+.travels__once-price {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+
+	color: var(--primary-color);
+	font-size: 1.5rem;
+	font-weight: 500;
+}
+
+.travels__once-price.skeleton {
+	min-height: 90px;
+	border-radius: var(--default-border-radius);
+}
+
+.travels__once-price-food {
+	display: flex;
+	justify-content: space-between;
+	gap: 5px;
+
+	align-self: flex-end;
+
+	border-radius: calc(var(--default-border-radius) / 1.5);
+	padding: 5px 10px;
+
+	width: max(50%, 300px);
+}
+
+.travels__food-value--before {
+	color: rgba(0, 0, 0, 0.3);
+	text-decoration: line-through;
+}
+
+.travels__once-price-food-value {
+	display: flex;
+	justify-content: flex-end;
+	gap: 5px;
+
+	min-height: 30px;
+}
+
 .travels__once-services {
 	display: flex;
 	flex-direction: column;
@@ -236,7 +327,45 @@ export default {
 }
 
 .travels__once-services-item {
-	height: 62px;
+	height: 64px;
 	border-radius: var(--accordeon-head-border-radius);
+}
+
+@media screen and (max-width: 1450px) {
+	.travels__once {
+		width: 100%;
+	}
+}
+
+@media screen and (max-width: 900px) {
+	.travels__once-header {
+		flex-direction: column;
+	}
+}
+
+@media screen and (max-width: 700px) {
+	.travels__item__body {
+		grid-template-columns: 1fr;
+	}
+
+	.travels__once-image {
+		height: auto;
+		width: 100%;
+
+		aspect-ratio: 1 / 1.2;
+	}
+
+	.travels__once-image > img {
+		width: 100%;
+		height: 100%;
+		border-radius: var(--default-border-radius);
+
+		animation: show 0.5s ease-in-out;
+	}
+
+	.travels__once-price-food {
+		width: 100%;
+		padding: 0px;
+	}
 }
 </style>

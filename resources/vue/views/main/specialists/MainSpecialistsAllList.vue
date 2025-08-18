@@ -137,7 +137,7 @@ export default {
 
 			this.$router.push({
 				name: "specialists-profile",
-				params: { name: specialist.url, category: null },
+				params: { name: specialist.url },
 			});
 		},
 	},

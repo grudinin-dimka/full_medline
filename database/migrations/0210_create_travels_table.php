@@ -17,7 +17,7 @@ return new class extends Migration
          $table->string('duration');
          $table->text('description');
          $table->string('image');
-         $table->string('order');
+         $table->integer('order');
          $table->boolean('hide')->default(false);
          $table->timestamps();
       });
