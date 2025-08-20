@@ -13,9 +13,9 @@
 				:class="{ 'skeleton': loading.loader.travels }"
 				@click="pushTravel(travel)"
 			>
-				<!-- <div>
-					
-				</div> -->
+				<div class="travels__item__hit" v-if="travel.hit">
+					Хит продаж!
+				</div>
 
 				<div class="travels__item__header">
 					<div class="travels__item-title">
@@ -437,7 +437,7 @@ export default {
 	font-size: 1.125rem;
 	overflow: hidden;
 
-	height: 190px;
+	max-height: 190px;
 }
 
 .travels__item-price {

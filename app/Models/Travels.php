@@ -13,7 +13,7 @@ class Travels extends Model
     use HasFactory;
 
     protected $table = 'travels';
-    protected $fillable = ['title', 'duration', 'description', 'image', 'order', 'hide'];
+    protected $fillable = ['title', 'duration', 'description', 'image', 'hit', 'order', 'hide'];
     protected $guarded = ['id'];
     protected $hidden = ['created_at', 'updated_at'];
 

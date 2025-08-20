@@ -125,6 +125,36 @@
 				</template>
 			</VueTiptap>
 
+			<VueInput
+				v-model="currentTravel.data.hit.value"
+				:options="[
+					{
+						default: true,
+						disabled: true,
+						value: '',
+						label: 'Выберите статус',
+					},
+					{
+						default: false,
+						disabled: false,
+						value: 0,
+						label: 'Нет',
+					},
+					{
+						default: false,
+						value: 1,
+						label: 'Да',
+					},
+				]"
+				:type="'select'"
+				:error="currentTravel.errors.hit.status"
+			>
+				<template #label> ХИТ ПРОДАЖ </template>
+				<template #error>
+					{{ currentTravel.errors.hit.message }}
+				</template>
+			</VueInput>
+
 			<VueModalList
 				:list="currentTravel.data.services.value"
 				:keys="{
@@ -538,6 +568,10 @@ export default {
 						message: "",
 						status: false,
 					},
+					hit: {
+						message: "",
+						status: false,
+					},
 				},
 				data: {
 					id: {
@@ -573,6 +607,10 @@ export default {
 						edited: false,
 					},
 					description: {
+						value: "",
+						edited: false,
+					},
+					hit: {
 						value: "",
 						edited: false,
 					},
@@ -817,6 +855,10 @@ export default {
 							key: "description",
 							type: "text",
 						},
+						{
+							key: "hit",
+							type: "boolean",
+						},
 					])
 				)
 					return;
@@ -848,6 +890,7 @@ export default {
 							duration: this.currentTravel.data.duration.value,
 							description: this.currentTravel.data.description.value,
 							image: files.basename(response.data.result),
+							hit: this.currentTravel.data.hit.value,
 							services: this.currentTravel.data.services.value,
 							prices: this.currentTravel.data.prices.value,
 							path: response.data.result,
@@ -896,6 +939,10 @@ export default {
 						{
 							key: "description",
 							type: "text",
+						},
+						{
+							key: "hit",
+							type: "boolean",
 						},
 					])
 				)
@@ -949,6 +996,7 @@ export default {
 							travelCurrent.title = this.currentTravel.data.title.value;
 							travelCurrent.description = this.currentTravel.data.description.value;
 							travelCurrent.duration = this.currentTravel.data.duration.value;
+							travelCurrent.hit = this.currentTravel.data.hit.value;
 							travelCurrent.hide = this.currentTravel.data.hide.value;
 							travelCurrent.prices = this.currentTravel.data.prices.value;
 							travelCurrent.services = this.currentTravel.data.services.value;
@@ -973,6 +1021,7 @@ export default {
 					travelCurrent.title = this.currentTravel.data.title.value;
 					travelCurrent.description = this.currentTravel.data.description.value;
 					travelCurrent.duration = this.currentTravel.data.duration.value;
+					travelCurrent.hit = this.currentTravel.data.hit.value;
 					travelCurrent.hide = this.currentTravel.data.hide.value;
 					travelCurrent.prices = this.currentTravel.data.prices.value;
 					travelCurrent.services = this.currentTravel.data.services.value;
@@ -1184,7 +1233,7 @@ export default {
 
 					return;
 				}
-				
+
 				this.currentTravel.data.prices.value.push({
 					id: shared.getMaxId(this.currentTravel.data.prices.value) + 1,
 					type: this.currentTravelPrice.data.type.value,
@@ -1469,5 +1518,17 @@ export default {
 	gap: calc(var(--default-gap) / 2);
 
 	font-size: 1.125rem;
+}
+
+@media screen and (width <= 1500px) {
+	.etravels {
+		grid-template-columns: 1fr;
+	}	
+}
+
+@media screen and (width <= 600px) {
+	.etravels__item-other {
+		flex-direction: column;
+	}	
 }
 </style>

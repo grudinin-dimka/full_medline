@@ -325,10 +325,6 @@
 
 	<!-- Кнопки -->
 	<div class="main__buttons">
-		<button class="main__buttons-button" @click="openModalPointsEdite">
-			<VueIcon :name="'credit-card'" :fill="'white'" :width="'26px'" :height="'26px'" />
-		</button>
-
 		<button class="main__buttons-button" @click="openModalRequestEdite">
 			<VueIcon :name="'Phone Enabled'" :fill="'white'" :width="'30px'" :height="'30px'" />
 		</button>

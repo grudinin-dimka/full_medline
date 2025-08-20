@@ -48,14 +48,14 @@
 							<div class="travels__once-price-food-name">
 								<VueIcon
 									v-if="key === 'С питанием'"
-									:name="'Fastfood'"
+									:name="'Restaurant'"
 									:fill="'var(--primary-color)'"
 									:width="'26px'"
 									:height="'26px'"
 								/>
 								<VueIcon
 									v-if="key === 'Без питания'"
-									:name="'No Food'"
+									:name="'No Meals'"
 									:fill="'var(--primary-color)'"
 									:width="'26px'"
 									:height="'26px'"

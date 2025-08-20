@@ -47,15 +47,6 @@
 
 			<a
 				class="element"
-				:class="{ active: isActive('/prices/travels') }"
-				href="/travels"
-				@click.prevent="$router.push({ name: `travels` })"
-			>
-				Путевки
-			</a>
-
-			<a
-				class="element"
 				:class="{ active: isActive('/plastic') }"
 				href="/plastic"
 				@click.prevent="$router.push({ name: `plastic` })"
@@ -181,7 +172,7 @@ nav {
 
 .nav__list {
 	display: grid;
-	grid-template-columns: repeat(6, auto);
+	grid-template-columns: repeat(5, auto);
 	gap: 10px;
 
 	background-color: var(--primary-color);

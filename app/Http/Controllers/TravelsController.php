@@ -130,7 +130,7 @@ class TravelsController extends Controller
                   return response()->json([
                      "success" => false,
                      "debug" => true,
-                     "message" => "Специалист не найден.",
+                     "message" => "Путевка не найдена.",
                      "result" => null,
                   ], 500);
                };
@@ -140,7 +140,7 @@ class TravelsController extends Controller
                $value->services = $value->services;
 
                $groupedPrices = [];
-               
+
                // Группировка цен по типу
                foreach ($value->prices as $priceKey => $priceValue) {
                   $groupedPrices[$priceValue->type][] = $priceValue;
@@ -207,6 +207,7 @@ class TravelsController extends Controller
                   'duration' => $value['duration'],
                   'description' => $value['description'],
                   'image' => $value['image'],
+                  'hit' => $value['hit'],
                   'order' => $value['order'],
                ]);
 
@@ -246,6 +247,7 @@ class TravelsController extends Controller
                'description' => $value['description'],
                'hide' => $value['hide'],
                'image' => $value['image'],
+               'hit' => $value['hit'],
                'order' => $value['order'],
             ]);
 
