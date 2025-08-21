@@ -56,6 +56,9 @@ class TrackLoad
          case 'about':
             $result = $this->getAbout($request);
             break;
+         case 'travels':
+            $result = $this->getTravels($request);
+            break;
          default:
             $result = (object) [
                "type" => "not defined",
@@ -254,6 +257,14 @@ class TrackLoad
       return (object) [
          "type" => "О нас",
          "meta" => "Раздел с информацией о нас",
+      ];
+   }
+
+   private function getTravels(Request $request)
+   {
+      return (object) [
+         "type" => "Путевки",
+         "meta" => "Раздел с путевками",
       ];
    }
 }

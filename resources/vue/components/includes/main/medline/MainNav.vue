@@ -2,7 +2,7 @@
 	<nav :class="{ active: $store.getters.burgerMainStatus }">
 		<div class="nav__list">
 			<a
-				class="element"
+				class="nav__list-item"
 				:class="{ active: isActive('/specialists') }"
 				href="/specialists"
 				@click.prevent="$router.push({ name: `specialists-all` })"
@@ -10,8 +10,8 @@
 				Специалисты
 			</a>
 
-			<div class="dropdown">
-				<div class="dropdown-title element">
+			<div class="nav__dropdown">
+				<div class="nav__dropdown-title nav__list-item">
 					Цены
 					<VueIcon
 						class="item-arrow"
@@ -22,10 +22,10 @@
 						:rotate="180"
 					/>
 				</div>
-				<div class="dropdown-body">
-					<div class="dropdown-body__list">
+				<div class="nav__dropdown-body">
+					<div class="nav__dropdown__body-list">
 						<a
-							class="element"
+							class="nav__list-item"
 							:class="{ active: isActive('/prices') }"
 							href="/prices"
 							@click.prevent="$router.push({ name: `prices-all` })"
@@ -34,7 +34,7 @@
 						</a>
 
 						<a
-							class="element"
+							class="nav__list-item"
 							:class="{ active: isActive('/clinics') }"
 							href="/prices"
 							@click.prevent="$router.push({ name: `prices-clinics` })"
@@ -45,17 +45,52 @@
 				</div>
 			</div>
 
+			<div class="nav__dropdown">
+				<div class="nav__dropdown-title nav__list-item">
+					Услуги
+					<VueIcon
+						class="item-arrow"
+						:name="'arrow'"
+						:fill="'white'"
+						:width="'20px'"
+						:height="'20px'"
+						:rotate="180"
+					/>
+				</div>
+				<div class="nav__dropdown-body">
+					<div class="nav__dropdown__body-list">
+						<a
+							class="nav__list-item"
+							:class="{ active: isActive('/plastic') }"
+							href="/plastic"
+							@click.prevent="$router.push({ name: `plastic` })"
+						>
+							Пластика
+						</a>
+
+						<a
+							class="nav__list-item"
+							:class="{ active: isActive('/travels') }"
+							href="/schedule"
+							@click.prevent="$router.push({ name: `travels-all` })"
+						>
+							Путевки
+						</a>
+					</div>
+				</div>
+			</div>
+
 			<a
-				class="element"
-				:class="{ active: isActive('/plastic') }"
-				href="/plastic"
-				@click.prevent="$router.push({ name: `plastic` })"
+				class="nav__list-item"
+				:class="{ active: isActive('/vacancies') }"
+				href="/vacancies"
+				@click.prevent="$router.push({ name: `vacancies` })"
 			>
-				ПЛАСТИКА
+				Вакансии
 			</a>
 
 			<a
-				class="element"
+				class="nav__list-item"
 				:class="{ active: isActive('/schedule') }"
 				href="/schedule"
 				@click.prevent="$router.push({ name: `schedule-all` })"
@@ -63,8 +98,8 @@
 				Расписание
 			</a>
 
-			<div class="dropdown">
-				<div class="dropdown-title element">
+			<div class="nav__dropdown">
+				<div class="nav__dropdown-title nav__list-item">
 					Информация
 					<VueIcon
 						class="item-arrow"
@@ -75,10 +110,10 @@
 						:rotate="180"
 					/>
 				</div>
-				<div class="dropdown-body">
-					<div class="dropdown-body__list">
+				<div class="nav__dropdown-body">
+					<div class="nav__dropdown__body-list">
 						<a
-							class="element"
+							class="nav__list-item"
 							:class="{ active: isActive('/news') }"
 							href="/news"
 							@click.prevent="$router.push({ name: `news-all` })"
@@ -87,7 +122,7 @@
 						</a>
 
 						<a
-							class="element"
+							class="nav__list-item"
 							:class="{ active: isActive('/videos') }"
 							href="/videos"
 							@click.prevent="$router.push({ name: `videos-all` })"
@@ -96,7 +131,7 @@
 						</a>
 
 						<a
-							class="element"
+							class="nav__list-item"
 							:class="{ active: isActive('/contacts') }"
 							href="/contacts"
 							@click.prevent="$router.push({ name: `contacts` })"
@@ -105,7 +140,7 @@
 						</a>
 
 						<a
-							class="element"
+							class="nav__list-item"
 							:class="{ active: isActive('/about') }"
 							href="/contacts"
 							@click.prevent="$router.push({ name: `about` })"
@@ -172,7 +207,7 @@ nav {
 
 .nav__list {
 	display: grid;
-	grid-template-columns: repeat(5, auto);
+	grid-template-columns: repeat(6, auto);
 	gap: 10px;
 
 	background-color: var(--primary-color);
@@ -198,18 +233,18 @@ nav {
 	background-color: rgba(255, 255, 255, 0.15);
 }
 
-.element {
+.nav__list-item {
 	text-transform: uppercase;
 
 	cursor: pointer;
 }
 
 /* Дропдаун */
-.nav__list > .dropdown {
+.nav__list > .nav__dropdown {
 	position: relative;
 }
 
-.dropdown-title {
+.nav__dropdown-title {
 	position: relative;
 	padding: 18px 0px;
 	border-radius: calc(var(--default-border-radius) / 1.5);
@@ -222,12 +257,12 @@ nav {
 	transition: all 0.15s ease-in-out;
 }
 
-.dropdown-title:hover {
+.nav__dropdown-title:hover {
 	cursor: pointer;
 	background-color: rgba(255, 255, 255, 0.15);
 }
 
-.dropdown-body {
+.nav__dropdown-body {
 	visibility: hidden;
 	opacity: 0;
 
@@ -241,13 +276,13 @@ nav {
 	transition: all 0.2s ease-in-out;
 }
 
-.dropdown:hover .dropdown-body {
+.nav__dropdown:hover .nav__dropdown-body {
 	visibility: visible;
 	opacity: 1;
 	top: 100%;
 }
 
-.dropdown-body__list {
+.nav__dropdown__body-list {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
@@ -345,7 +380,7 @@ nav {
 		bottom: 0;
 	}
 
-	.dropdown-body {
+	.nav__dropdown-body {
 		position: static;
 		top: 0px;
 
@@ -355,11 +390,11 @@ nav {
 		display: none;
 	}
 
-	.dropdown:hover .dropdown-body {
+	.nav__dropdown:hover .nav__dropdown-body {
 		display: block;
 	}
 
-	.dropdown-body__list {
+	.nav__dropdown__body-list {
 		min-width: calc(100% - 20px);
 
 		margin-top: 10px;
