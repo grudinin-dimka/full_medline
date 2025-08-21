@@ -12,17 +12,23 @@
 	<aside :class="{ active: $store.getters.burgerAdminStatus }">
 		<div class="aside__body">
 			<div class="aside__item" :class="{ active: isActive('/admin/profile') }">
-				<a class="aside__item-title" href="#" @click.prevent="insertPage(links.profile)">
+				<a
+					class="aside__item-title"
+					href="#"
+					@click.prevent="$router.push({ name: 'profile' })"
+				>
 					<VueIcon :name="'Account Circle'" :fill="'white'" :width="'26px'" :height="'26px'" />
 					ПРОФИЛЬ
 				</a>
 			</div>
 
-			<template
-				v-if="$store.getters.userRights === 'admin' || $store.getters.userRights === 'creator'"
-			>
+			<template v-if="isCreator || isAdmin">
 				<div class="aside__item" :class="{ active: isActive('/admin/ehome') }">
-					<a class="aside__item-title" href="#" @click.prevent="insertPage(links.home)">
+					<a
+						class="aside__item-title"
+						href="/admin/ehome"
+						@click.prevent="$router.push({ name: 'ehome' })"
+					>
 						<VueIcon :name="'Home'" :fill="'white'" :width="'26px'" :height="'26px'" />
 						ГЛАВНАЯ
 					</a>
@@ -31,12 +37,11 @@
 				<div class="aside__item">
 					<a
 						class="aside__item-title"
-						:class="{ active: links.specialists.status }"
+						:class="{ active: lists.specialists.status }"
 						href="#"
 						@click.prevent="openList('specialists')"
 					>
 						<VueIcon :name="'Ecg Heart'" :fill="'white'" :width="'26px'" :height="'26px'" />
-
 						<VueIcon
 							class="item-arrow"
 							:name="'arrow'"
@@ -47,31 +52,30 @@
 						/>
 						СПЕЦИАЛИСТЫ
 					</a>
+
 					<div
 						class="item-list"
 						ref="especialists"
-						:class="{ active: links.specialists.status }"
+						:class="{ active: lists.specialists.status }"
 					>
 						<a
 							href="#"
 							:class="{ active: isActive('/admin/especialists') }"
-							@click.prevent="insertPage(links.specialists, links.specialists.list.all)"
+							@click.prevent="$router.push({ name: `especialists-all` })"
 						>
 							СПИСОК
 						</a>
 						<a
 							href="#"
 							:class="{ active: isActive('/admin/especialists/specializations') }"
-							@click.prevent="
-								insertPage(links.specialists, links.specialists.list.specialization)
-							"
+							@click.prevent="$router.push({ name: `especialists-specializations` })"
 						>
 							СПЕЦИАЛИЗАЦИИ
 						</a>
 						<a
 							href="#"
 							:class="{ active: isActive('/admin/especialists/clinics') }"
-							@click.prevent="insertPage(links.specialists, links.specialists.list.clinic)"
+							@click.prevent="$router.push({ name: `especialists-clinics` })"
 						>
 							КЛИНИКИ
 						</a>
@@ -81,7 +85,7 @@
 				<div class="aside__item">
 					<a
 						class="aside__item-title"
-						:class="{ active: links.prices.status }"
+						:class="{ active: lists.prices.status }"
 						href="#"
 						@click.prevent="openList('prices')"
 					>
@@ -97,18 +101,19 @@
 						/>
 						ЦЕНЫ
 					</a>
-					<div class="item-list" ref="eprices" :class="{ active: links.prices.status }">
+					<div class="item-list" ref="eprices" :class="{ active: lists.prices.status }">
 						<a
-							href="#"
+							href="/admin/eprices"
 							:class="{ active: isActive('/admin/eprices') }"
-							@click.prevent="insertPage(links.prices, links.prices.list.all)"
+							@click.prevent="$router.push({ name: 'eprices-all' })"
 						>
 							СПИСОК ЦЕН
 						</a>
+
 						<a
-							href="#"
+							href="/admin/eprices/rules"
 							:class="{ active: isActive('/admin/eprices/rules') }"
-							@click.prevent="insertPage(links.prices, links.prices.list.template)"
+							@click.prevent="$router.push({ name: 'eprices-template' })"
 						>
 							ШАБЛОН
 						</a>
@@ -116,22 +121,55 @@
 				</div>
 
 				<div class="aside__item" :class="{ active: isActive('/admin/travels') }">
-					<a class="aside__item-title" href="#" @click.prevent="insertPage(links.travels)">
+					<a
+						class="aside__item-title"
+						href="/admin/travels"
+						@click.prevent="$router.push({ name: 'etravels' })"
+					>
 						<VueIcon :name="'travel'" :fill="'white'" :width="'28px'" :height="'28px'" />
 						ПУТЕВКИ
 					</a>
 				</div>
 
+				<div class="aside__item" :class="{ active: isActive('/admin/vacancies') }">
+					<a
+						class="aside__item-title"
+						href="/admin/vacancies"
+						@click.prevent="$router.push({ name: 'evacancies' })"
+					>
+						<VueIcon :name="'Badge'" :fill="'white'" :width="'28px'" :height="'28px'" />
+						ВАКАНСИИ
+					</a>
+				</div>
+
 				<div class="aside__item" :class="{ active: isActive('/admin/eschedule') }">
-					<a class="aside__item-title" href="#" @click.prevent="insertPage(links.schedule)">
-						<VueIcon :name="'Calendar Month'" :fill="'white'" :width="'26px'" :height="'26px'" />
+					<a
+						class="aside__item-title"
+						href="/admin/eschedule"
+						@click.prevent="$router.push({ name: 'eschedule' })"
+					>
+						<VueIcon
+							:name="'Calendar Month'"
+							:fill="'white'"
+							:width="'26px'"
+							:height="'26px'"
+						/>
 						РАСПИСАНИЕ
 					</a>
 				</div>
 
 				<div class="aside__item" :class="{ active: isActive('/admin/eclients') }">
-					<a class="aside__item-title" href="#" @click.prevent="insertPage(links.clients)">
-						<VueIcon :name="'Patient List'" :fill="'white'" :width="'26px'" :height="'26px'" />
+					<a
+						class="aside__item-title"
+						href="/admin/eclients"
+						@click.prevent="$router.push({ name: 'eclients' })"
+					>
+						<VueIcon
+							:name="'Patient List'"
+							:fill="'white'"
+							:width="'26px'"
+							:height="'26px'"
+						/>
 						КЛИЕНТЫ
 					</a>
 				</div>
@@ -139,12 +177,11 @@
 				<div class="aside__item">
 					<a
 						class="aside__item-title"
-						:class="{ active: links.info.status }"
+						:class="{ active: lists.info.status }"
 						href="#"
 						@click.prevent="openList('info')"
 					>
 						<VueIcon :name="'Info'" :fill="'white'" :width="'26px'" :height="'26px'" />
-
 						<VueIcon
 							class="item-arrow"
 							:name="'arrow'"
@@ -155,32 +192,36 @@
 						/>
 						ИНФОРМАЦИЯ
 					</a>
-					<div class="item-list" ref="einfo" :class="{ active: links.info.status }">
+
+					<div class="item-list" ref="einfo" :class="{ active: lists.info.status }">
 						<a
-							href="#"
+							href="/admin/enews"
 							:class="{ active: isActive('/admin/enews') }"
-							@click.prevent="insertPage(links.info, links.info.list.news)"
+							@click.prevent="$router.push({ name: 'enews' })"
 						>
 							НОВОСТИ
 						</a>
+
 						<a
-							href="#"
+							href="/admin/evideo"
 							:class="{ active: isActive('/admin/evideo') }"
-							@click.prevent="insertPage(links.info, links.info.list.video)"
+							@click.prevent="$router.push({ name: 'evideo' })"
 						>
 							ВИДЕО
 						</a>
+
 						<a
-							href="#"
+							href="/admin/econtacts"
 							:class="{ active: isActive('/admin/econtacts') }"
-							@click.prevent="insertPage(links.info, links.info.list.contacts)"
+							@click.prevent="$router.push({ name: 'econtacts' })"
 						>
 							КОНТАКТЫ
 						</a>
+
 						<a
-							href="#"
+							href="/admin/eabout"
 							:class="{ active: isActive('/admin/eabout') }"
-							@click.prevent="insertPage(links.info, links.info.list.about)"
+							@click.prevent="$router.push({ name: 'eabout' })"
 						>
 							О НАС
 						</a>
@@ -190,12 +231,11 @@
 				<div class="aside__item">
 					<a
 						class="aside__item-title"
-						:class="{ active: links.statistics.status }"
+						:class="{ active: lists.statistics.status }"
 						href="#"
 						@click.prevent="openList('statistics')"
 					>
 						<VueIcon :name="'Monitoring'" :fill="'white'" :width="'26px'" :height="'26px'" />
-
 						<VueIcon
 							class="item-arrow"
 							:name="'arrow'"
@@ -206,18 +246,20 @@
 						/>
 						СТАТИСТИКА
 					</a>
-					<div class="item-list" ref="einfo" :class="{ active: links.statistics.status }">
+
+					<div class="item-list" ref="einfo" :class="{ active: lists.statistics.status }">
 						<a
-							href="#"
+							href="/admin/statistics/graphs"
 							:class="{ active: isActive('/admin/statistics/graphs') }"
-							@click.prevent="insertPage(links.statistics, links.statistics.list.graphs)"
+							@click.prevent="$router.push({ name: 'statistics-graph' })"
 						>
 							ГРАФИКИ
 						</a>
+
 						<a
-							href="#"
+							href="/admin/statistics/list"
 							:class="{ active: isActive('/admin/statistics/list') }"
-							@click.prevent="insertPage(links.statistics, links.statistics.list.lists)"
+							@click.prevent="$router.push({ name: 'statistics-list' })"
 						>
 							СПИСОК
 						</a>
@@ -225,15 +267,20 @@
 				</div>
 			</template>
 
-			<template v-if="$store.getters.userRights === 'creator'">
+			<template v-if="isCreator">
 				<div class="aside__item" :class="{ active: isActive('/admin/users') }">
-					<a class="aside__item-title" href="#" @click.prevent="insertPage(links.users)">
+					<a
+						class="aside__item-title"
+						href="/admin/users"
+						@click.prevent="$router.push({ name: 'users' })"
+					>
 						<VueIcon :name="'Group'" :fill="'white'" :width="'26px'" :height="'26px'" />
 						ПОЛЬЗОВАТЕЛИ
 					</a>
 				</div>
 			</template>
 		</div>
+
 		<div class="aside__footer">
 			<button class="aside__close" @click="openModal('modalExit', 'Выход', 'default')">
 				Выйти
@@ -280,127 +327,37 @@ export default {
 			},
 
 			/* Ссылки */
-			links: {
-				profile: {
-					name: "profile",
-					status: false,
-					list: null,
-				},
-
-				home: {
-					name: "ehome",
-					status: false,
-					list: null,
-				},
-
+			lists: {
 				specialists: {
-					name: "especialists",
+					root: "/admin/especialists",
 					status: false,
-					list: {
-						all: {
-							name: "especialists-all",
-							status: false,
-							list: null,
-						},
-						specialization: {
-							name: "especialists-specializations",
-							status: false,
-							list: null,
-						},
-						clinic: {
-							name: "especialists-clinics",
-							status: false,
-							list: null,
-						},
-					},
 				},
 
 				prices: {
-					name: "eprices",
+					root: "/admin/eprices",
 					status: false,
-					list: {
-						all: {
-							name: "eprices-all",
-							status: false,
-							list: null,
-						},
-						template: {
-							name: "eprices-template",
-							status: false,
-							list: null,
-						},
-					},
-				},
-
-				travels: {
-					name: "etravels",
-					status: false,
-					list: null,
-				},
-
-				schedule: {
-					name: "eschedule",
-					status: false,
-					list: null,
-				},
-
-				clients: {
-					name: "eclients",
-					status: false,
-					list: null,
 				},
 
 				info: {
-					name: "einfo",
+					root: ["/admin/enews", "/admin/evideo", "/admin/econtacts", "/admin/eabout"],
 					status: false,
-					list: {
-						news: {
-							name: "enews",
-							status: false,
-							list: null,
-						},
-						video: {
-							name: "evideo",
-							status: false,
-							list: null,
-						},
-						contacts: {
-							name: "econtacts",
-							status: false,
-							list: null,
-						},
-						about: {
-							name: "eabout",
-							status: false,
-							list: null,
-						},
-					},
-				},
-
-				users: {
-					name: "users",
-					status: false,
-					list: null,
 				},
 
 				statistics: {
-					name: "statistics",
+					root: "/admin/statistics",
 					status: false,
-					list: {
-						graphs: {
-							name: "statistics-graph",
-							status: false,
-							list: null,
-						},
-						lists: {
-							name: "statistics-list",
-							status: false,
-							list: null,
-						},
-					},
 				},
 			},
 		};
+	},
+	computed: {
+		isCreator() {
+			return this.$store.getters.userRights === "creator";
+		},
+
+		isAdmin() {
+			return this.$store.getters.userRights === "admin";
+		},
 	},
 	methods: {
 		/* Активная ссылка */
@@ -410,28 +367,13 @@ export default {
 
 		/* Открыть список специалистов */
 		openList(page) {
-			this.links[page].status = !this.links[page].status;
+			this.lists[page].status = !this.lists[page].status;
 
-			for (let key in this.links) {
+			for (let key in this.lists) {
 				if (key != page) {
-					this.links[key].status = false;
+					this.lists[key].status = false;
 				}
 			}
-		},
-
-		/* Переход на страницу */
-		insertPage(parent, child = null) {
-			if (!child) {
-				for (let key in this.links) {
-					this.links[key].status = false;
-				}
-
-				this.$router.push({ name: `${parent.name}` });
-			} else {
-				this.$router.push({ name: `${child.name}` });
-			}
-
-			this.$store.commit("closeBurgerAdmin");
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -444,6 +386,23 @@ export default {
 
 			this.$refs[name].open();
 		},
+	},
+	mounted() {
+		for (let key in this.lists) {
+			if (Array.isArray(this.lists[key].root)) {
+				for (let i = 0; i < this.lists[key].root.length; i++) {
+					if (window.location.pathname.includes(this.lists[key].root[i])) {
+						this.lists[key].status = true;
+					}
+				}
+
+				continue;
+			}
+
+			if (window.location.pathname.includes(this.lists[key].root)) {
+				this.lists[key].status = true;
+			}
+		}
 	},
 };
 </script>

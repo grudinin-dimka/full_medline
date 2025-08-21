@@ -111,6 +111,20 @@ const router = createRouter({
 					],
 				},
 				{
+					path: "vacancies",
+					name: "vacancies",
+					meta: { title: "Вакансии" },
+					component: () => import("../views/main/vacancies/MainVacancies.vue"),
+					redirect: { name: "vacancies-all" },
+					children: [
+						{
+							path: "",
+							name: "vacancies-all",
+							component: () => import("../views/main/vacancies/MainVacanciesAll.vue"),
+						},
+					],
+				},
+				{
 					path: "schedule",
 					name: "schedule",
 					meta: { title: "Расписание" },

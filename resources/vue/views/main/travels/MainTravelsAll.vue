@@ -94,10 +94,7 @@
 </template>
 
 <script>
-import VueInput from "../../../components/modules/input/VueInput.vue";
-import VueLoader from "../../../components/modules/VueLoader.vue";
 import VueIcon from "../../../components/modules/icon/VueIcon.vue";
-import VueSelector from "../../../components/modules/VueSelector.vue";
 import VueTiptap from "../../../components/modules/VueTiptap.vue";
 
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
@@ -111,10 +108,7 @@ import fakeDelay from "../../../mixin/fake-delay";
 
 export default {
 	components: {
-		VueInput,
-		VueLoader,
 		VueIcon,
-		VueSelector,
 		VueTiptap,
 
 		InfoBar,
@@ -128,13 +122,6 @@ export default {
 				loader: {
 					travels: true,
 				},
-			},
-
-			/* Фильтры */
-			filters: {
-				name: "",
-				address: "",
-				category: "",
 			},
 
 			/* Данные */
@@ -227,44 +214,6 @@ export default {
 </script>
 
 <style scoped>
-.filters {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
-
-	margin: 0 auto;
-
-	width: 1350px;
-}
-
-.filters__item {
-	display: flex;
-	gap: 10px;
-}
-
-.filters__item-button {
-	cursor: pointer;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	gap: var(--button-gap);
-
-	padding: var(--button-padding);
-	border: var(--button-border);
-	border-radius: var(--input-border-radius);
-
-	font-size: var(--button-font-size);
-	color: var(--button-font-color);
-	background-color: var(--button-background-color);
-
-	transition: all 0.2s;
-}
-
-.filters__item-button:hover {
-	color: var(--button-font-color-hover);
-	background-color: var(--button-background-color-hover);
-}
-
 .travels {
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
