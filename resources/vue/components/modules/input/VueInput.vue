@@ -39,6 +39,7 @@
 				:min="min"
 				:max="max"
 				:placeholder="placeholder"
+				:inputmode="inputmode"
 				:autocomplete="autocomplete"
 				@input.prevent="guardInput('number', $event.target.value.trim())"
 			/>
@@ -49,6 +50,7 @@
 				:type="hide ? 'password' : 'text'"
 				:value="modelValue"
 				:placeholder="placeholder"
+				:inputmode="inputmode"
 				autocomplete="off"
 				@input="$emit('update:modelValue', $event.target.value.trim())"
 			/>
@@ -86,6 +88,7 @@
 				placeholder="+7(___)-___-__-__"
 				v-mask="'+7(###)-###-##-##'"
 				:value="modelValue"
+				:inputmode="inputmode"
 				autocomplete="off"
 				@input="$emit('update:modelValue', $event.target.value.trim())"
 			/>
@@ -97,6 +100,7 @@
 				:placeholder="placeholder"
 				v-mask="mask"
 				:value="modelValue"
+				:inputmode="inputmode"
 				autocomplete="off"
 				@input="$emit('update:modelValue', $event.target.value.trim())"
 			/>
@@ -107,6 +111,7 @@
 				:type="'search'"
 				:value="modelValue"
 				:placeholder="placeholder"
+				:inputmode="inputmode"
 				autocomplete="off"
 				@input="$emit('update:modelValue', $event.target.value.trim())"
 			/>
@@ -192,6 +197,7 @@
 				:type="type"
 				:value="modelValue"
 				:placeholder="placeholder"
+				:inputmode="inputmode"
 				autocomplete="off"
 				@input="$emit('update:modelValue', $event.target.value.trim())"
 			/>
@@ -217,6 +223,10 @@ export default {
 			required: false,
 		},
 		type: {
+			type: String,
+			default: "text",
+		},
+		inputmode: {
 			type: String,
 			default: "text",
 		},

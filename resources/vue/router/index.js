@@ -320,6 +320,20 @@ const router = createRouter({
 					],
 				},
 				{
+					path: "evacancies",
+					name: "evacancies",
+					meta: { title: "(e) Вакансии" },
+					component: () => import("../views/admin/vacancies/AdminVacancies.vue"),
+					redirect: { name: "evacancies-all" },
+					children: [
+						{
+							path: "",
+							name: "evacancies-all",
+							component: () => import("../views/admin/vacancies/AdminVacanciesAll.vue"),
+						},
+					],
+				},
+				{
 					path: "econtacts",
 					name: "econtacts",
 					meta: { title: "(e) Контакты" },

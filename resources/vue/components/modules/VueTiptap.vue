@@ -890,7 +890,7 @@ export default {
 }
 
 .tiptap p:is(:first-child, :last-child) {
-	margin: 0px 0px;
+	margin: 0px 0px 10px 0px;
 }
 
 .tiptap p.is-editor-empty:first-child::before {
@@ -934,12 +934,12 @@ export default {
 	height: 500px;
 }
 
-.tiptap ul {
-	margin-left: 20px;
+.tiptap :is(ul, ol) {
+	font-size: 1.125rem;
+	margin: 0px;
 }
 
 .tiptap li {
-	margin-top: 10px;
 	margin-bottom: 10px;
 }
 
