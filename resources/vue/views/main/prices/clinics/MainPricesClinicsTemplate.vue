@@ -507,6 +507,8 @@ export default {
 			if (!response) return;
 
 			try {
+				document.title = response.data.result.address.name + " | Цены";
+
 				this.filters.address = response.data.result.address;
 				this.categories = response.data.result.categories;
 				this.categoriesList = response.data.result.categoriesList;

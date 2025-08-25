@@ -54,11 +54,13 @@ const router = createRouter({
 						{
 							path: "",
 							name: "prices-all",
+							meta: { title: "Цены" },
 							component: () => import("../views/main/prices/MainPricesAll.vue"),
 						},
 						{
 							path: "clinics",
 							name: "prices-clinics",
+							meta: { title: "Клиники" },
 							component: () => import("../views/main/prices/clinics/MainPricesClinics.vue"),
 							redirect: { name: "prices-clinics-all" },
 							children: [

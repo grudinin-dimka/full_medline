@@ -467,9 +467,10 @@
 							</VueInput>
 
 							<VueInput
-								:placeholder="'Введите ссылку'"
-								:type="'text'"
 								v-model="specialist.profile.data.link.value"
+								:type="'text'"
+								:placeholder="'Введите ссылку'"
+								:inputmode="'url'"
 								:error="specialist.profile.errors.link.status"
 							>
 								<template #label> ССЫЛКА НА ПРОДОКТОРОВ </template>
@@ -603,9 +604,10 @@
 					<template #legend> НАЧАЛО КАРЪЕРЫ </template>
 					<template #inputs>
 						<VueInput
-							:placeholder="'Введите дату'"
-							:type="'date'"
 							v-model="specialist.profile.data.startWorkAge.value"
+							:type="'date'"
+							:placeholder="'Введите дату'"
+							:inputmode="'numeric'"
 							:error="specialist.profile.errors.startWorkAge.status"
 						>
 							<template #label>
@@ -704,6 +706,7 @@
 							:min="0"
 							:max="18"
 							:placeholder="'Введите возраст'"
+							:inputmode="'numeric'"
 							:error="specialist.profile.errors.childrenDoctorAge.status"
 						>
 							<template #label> ДЕТСКИЙ ВОЗРАСТ (от 0 до 18 лет) </template>

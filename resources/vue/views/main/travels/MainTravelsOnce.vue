@@ -178,6 +178,8 @@ export default {
 			if (!response) return;
 
 			try {
+				document.title = response.data.result.title + " | Путевки";
+
 				this.travel = response.data.result;
 
 				this.loading.loader.travel = false;

@@ -30,7 +30,7 @@
 							href="/prices"
 							@click.prevent="$router.push({ name: `prices-all` })"
 						>
-							Список
+							Список цен
 						</a>
 
 						<a

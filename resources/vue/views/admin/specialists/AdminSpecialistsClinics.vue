@@ -86,6 +86,7 @@
 						:type="'mask'"
 						:mask="'######'"
 						:placeholder="'______'"
+						:inputmode="'numeric'"
 						:error="currentClinic.errors.index.status"
 					>
 						<template #label> ИНДЕКС </template>
@@ -104,6 +105,7 @@
 						:type="'mask'"
 						:mask="'##.######'"
 						:placeholder="'00.000000'"
+						:inputmode="'decimal'"
 						:error="currentClinic.errors.geoWidth.status"
 					>
 						<template #label> ШИРИНА </template>
@@ -117,6 +119,7 @@
 						:type="'mask'"
 						:mask="'##.######'"
 						:placeholder="'00.000000'"
+						:inputmode="'decimal'"
 						:error="currentClinic.errors.geoLongitude.status"
 					>
 						<template #label> ДОЛГОТА </template>
