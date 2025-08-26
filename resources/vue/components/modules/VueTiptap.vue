@@ -1,23 +1,23 @@
 <template>
-	<bubble-menu :editor="editor" :tippy-options="{ duration: 100 }" v-if="false">
+	<bubble-menu :editor="editor" :tippy-options="{ duration: 100 }" v-if="editor">
 		<div class="bubble__menu">
 			<button
 				@click="editor.chain().focus().toggleBold().run()"
 				:class="{ 'is-active': editor.isActive('bold') }"
 			>
-				Bold
+				Жирный
 			</button>
 			<button
 				@click="editor.chain().focus().toggleItalic().run()"
 				:class="{ 'is-active': editor.isActive('italic') }"
 			>
-				Italic
+				Курсив
 			</button>
 			<button
 				@click="editor.chain().focus().toggleStrike().run()"
 				:class="{ 'is-active': editor.isActive('strike') }"
 			>
-				Strike
+				Зачеркнутый
 			</button>
 		</div>
 	</bubble-menu>
@@ -806,7 +806,15 @@ export default {
 	flex-wrap: wrap;
 	gap: 10px;
 
-	margin-bottom: 10px;
+	border-top: var(--default-border-width);
+	border-right: var(--default-border-width);
+	border-left: var(--default-border-width);
+	border-bottom: 0px;
+	border-style: var(--default-border-style);
+	border-color: var(--default-border-color);
+	border-radius: calc(var(--default-border-radius) / 1.5) calc(var(--default-border-radius) / 1.5) 0px 0px;
+
+	padding: calc(var(--default-padding) / 2);
 }
 
 .tiptap__buttons-body {
@@ -842,10 +850,12 @@ export default {
 	background-color: var(--secondary-background-color-hover);
 
 	transition: all 0.2s;
+	outline: 0px solid rgba(0, 0, 0, 0.2);
 }
 
-.tiptap__buttons-item button.is-active {
+.tiptap__buttons-item :is(button.is-active, button:hover, button:focus) {
 	border: var(--input-border-focus);
+	background-color: var(--item-background-color-active);
 }
 
 .tiptap__buttons-item button svg {
@@ -855,8 +865,13 @@ export default {
 /* Редактор */
 .tiptap__editor {
 	position: relative;
-	border: var(--input-border);
-	border-radius: var(--input-border-radius);
+	border-top: var(--default-border-width);
+	border-right: var(--default-border-width);
+	border-left: var(--default-border-width);
+	border-bottom: var(--default-border-width);
+	border-style: var(--default-border-style);
+	border-color: var(--default-border-color);
+	border-radius: 0px 0px calc(var(--default-border-radius) / 1.5) calc(var(--default-border-radius) / 1.5);
 	padding: 10px;
 	outline: 0px solid rgba(0, 0, 0, 0.2);
 
@@ -889,8 +904,8 @@ export default {
 	font-size: 1.125rem;
 }
 
-.tiptap p:is(:first-child, :last-child) {
-	margin: 0px 0px 10px 0px;
+.tiptap p:is(:first-child) {
+	margin: 0px 0px 0px 0px;
 }
 
 .tiptap p.is-editor-empty:first-child::before {
@@ -926,6 +941,11 @@ export default {
 
 .tiptap a {
 	color: var(--primary-color);
+	text-decoration: none;
+}
+
+.tiptap a:hover {
+	text-decoration: underline;
 }
 
 .tiptap img {
@@ -936,7 +956,7 @@ export default {
 
 .tiptap :is(ul, ol) {
 	font-size: 1.125rem;
-	margin: 0px;
+	margin: 10px 0px 10px 0px;
 }
 
 .tiptap li {
@@ -956,7 +976,7 @@ export default {
 	background-color: white;
 	border: 0px solid gray;
 	border-radius: 0.7rem;
-	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+	box-shadow: 0 5px 10px 2.5px rgba(0, 0, 0, 0.1);
 	display: flex;
 	gap: 5px;
 	padding: 5px;
@@ -972,15 +992,17 @@ export default {
 }
 
 .bubble__menu button:hover {
-	background-color: rgba(0, 0, 0, 0.1);
+	background-color: rgba(0, 0, 0, 0.05);
 }
 
 .bubble__menu button.is-active {
-	background-color: rgba(0, 0, 0, 0.1);
+	color: white;
+	background-color: var(--primary-color);
 }
 
 .bubble__menu button.is-active:hover {
-	background-color: rgba(0, 0, 0, 0.1);
+	color: white;
+	background-color: var(--primary-color);
 }
 
 .tiptap__toolbar {

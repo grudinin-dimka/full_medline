@@ -74,6 +74,9 @@ export default {
 			case "phone":
 				logs = this.checkInputPhone(obj.data[keys["key"]].value ?? null);
 				break;
+			case "mask":
+				logs = this.checkInputMask(obj.data[keys["key"]].value ?? null, keys["mask"] ?? null);
+				break;
 			case "file":
 				logs = this.checkInputFile(keys["value"] ?? null, keys["formats"] ?? []);
 				break;
@@ -267,6 +270,42 @@ export default {
 			return {
 				status: true,
 				message: "Некорректный телефон.",
+			};
+		}
+
+		return {
+			status: false,
+			message: "Ошибок нет.",
+		};
+	},
+
+	checkInputMask(value, mask) {
+		// Проверка на пустую строку
+		if (this.isEmpty(value)) {
+			return {
+				status: true,
+				message: "Пустое поле.",
+			};
+		}
+
+		if (!value) {
+			return {
+				status: true,
+				message: "Введите значение.",
+			};
+		}
+
+		if (!mask) {
+			return {
+				status: true,
+				message: "Отсутствует маска.",
+			};
+		}
+
+		if (!String(value).match(mask)) {
+			return {
+				status: true,
+				message: "Значение не соответствует маске.",
 			};
 		}
 

@@ -19,6 +19,7 @@ use App\Http\Controllers\VideoController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\StatisticController;
 use App\Http\Controllers\TravelsController;
+use App\Http\Controllers\VacanciesController;
 
 use App\Http\Middleware\TrackLoad;
 
@@ -136,8 +137,16 @@ Route::post('/make-prices-files', [PricesController::class, 'makePricesFiles'])-
 Route::get('/get-travels', [TravelsController::class, 'getTravels'])->middleware(TrackLoad::class . ':travels,Путевки');
 Route::get('/get-travels-all', [TravelsController::class, 'getTravelsAll'])->middleware(['auth:sanctum', 'admin-or-creator']);
 
-Route::post('/get-travels-once', [TravelsController::class, 'getTravelsOnce'])->middleware(TrackLoad::class . ':travels,Путевки');
+Route::post('/get-travels-once', [TravelsController::class, 'getTravelsOnce'])->middleware(TrackLoad::class . ':travels,Раздел');
 Route::post('/save-travels-changes', [TravelsController::class, 'saveTravelsChanges'])->middleware(['auth:sanctum', 'admin-or-creator']);
+
+/* _____________________________________________________*/
+/* Вакансии                                             */
+/* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
+Route::get('/get-vacancies', [VacanciesController::class, 'getVacancies'])->middleware(TrackLoad::class . ':vacancies,Раздел');
+Route::get('/get-vacancies-all', [VacanciesController::class, 'getVacanciesAll'])->middleware(['auth:sanctum', 'admin-or-creator']);
+
+Route::post('/save-vacancies-changes', [VacanciesController::class, 'saveVacanciesChanges'])->middleware(['auth:sanctum', 'admin-or-creator']);
 
 /* _____________________________________________________*/
 /* Расписание                                           */

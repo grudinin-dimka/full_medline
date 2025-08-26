@@ -34,14 +34,14 @@
 
 		<template v-if="type == 'number'">
 			<input
-				v-model="currentNumber"
 				type="number"
 				:min="min"
 				:max="max"
 				:placeholder="placeholder"
 				:inputmode="inputmode"
 				:autocomplete="autocomplete"
-				@input.prevent="guardInput('number', $event.target.value.trim())"
+				:value="modelValue"
+				@input="$emit('update:modelValue', $event.target.value.trim())"
 			/>
 		</template>
 
@@ -281,7 +281,6 @@ export default {
 			fileName: "",
 			hasFile: false,
 
-			currentNumber: this.modelValue,
 			currentOption: this.modelValue, // инициализируем значением modelValue
 			currentCheckbox: this.modelValue,
 		};
@@ -296,10 +295,6 @@ export default {
 				case "checkbox":
 					this.currentCheckbox = newValue;
 					break;
-
-				case "number":
-					this.currentNumber = newValue;
-					break;
 			}
 		},
 
@@ -307,16 +302,8 @@ export default {
 			this.$emit("update:modelValue", newValue);
 		},
 
-		currentNumber(newValue) {
+		currentCheckbox(newValue) {
 			this.$emit("update:modelValue", newValue);
-		},
-	},
-	selectedValues: {
-		get() {
-			return this.modelValue;
-		},
-		set(value) {
-			this.$emit("update:modelValue", value);
 		},
 	},
 	methods: {
@@ -354,41 +341,56 @@ export default {
 		/* |                     ПРОФИЛЬ                       |*/
 		/* |___________________________________________________|*/
 		guardInput(type, value) {
-			if (type == "number") {
-				if (this.min || this.max) {
-					this.currentNumber = this.guardInputNumber(value);
-				} else {
-					this.currentNumber = value;
-				}
+			switch (type) {
+				case "number":
+					this.$emit("update:modelValue", this.guardInputNumber(value));
+					break;
+
+				default:
+					break;
 			}
 		},
 
 		guardInputNumber(value) {
-			if (this.min && this.max) {
-				if (value > this.max) {
-					return this.max;
-				} else if (value < this.min) {
-					return this.min;
-				}
+			let string = String(value);
 
-				return value;
+			if (Number.isNaN(Number(value))) {
+				return this.modelValue;
 			}
 
-			if (this.min) {
-				if (value < this.min) {
-					return this.min;
-				}
+			// for (let i = 0; i < string.length; i++) {
+			// 	if (!/[0-9]/.test(string[i])) {
+			// 		return string.slice(0, i);
+			// 	}
+			// }
 
-				return value;
-			}
+			return value;
 
-			if (this.max) {
-				if (value > this.max) {
-					return this.max;
-				}
+			// if (this.min && this.max) {
+			// 	if (value > this.max) {
+			// 		return this.max;
+			// 	} else if (value < this.min) {
+			// 		return this.min;
+			// 	}
 
-				return value;
-			}
+			// 	return value;
+			// }
+
+			// if (this.min) {
+			// 	if (value < this.min) {
+			// 		return this.min;
+			// 	}
+
+			// 	return value;
+			// }
+
+			// if (this.max) {
+			// 	if (value > this.max) {
+			// 		return this.max;
+			// 	}
+
+			// 	return value;
+			// }
 		},
 	},
 };
@@ -617,6 +619,8 @@ export default {
 	border-radius: var(--select-border-radius);
 
 	padding: var(--select-padding);
+
+	height: 62px;
 
 	color: var(--select-color);
 	font-size: 1.25rem;

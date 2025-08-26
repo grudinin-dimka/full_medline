@@ -2017,10 +2017,8 @@ export default {
 				.then((response) => {
 					if (!response) return;
 
-					shared.clearObjectSelective(this.specialist.profile, "data", ["edited"]);
 					this.$refs.fileImage.clear();
 
-					//
 					this.disabled.profile.create = false;
 
 					this.specialist.profile.data.id.value = response.data.result.id;
@@ -2160,11 +2158,8 @@ export default {
 				.then((response) => {
 					if (!response) return;
 
-					shared.clearObjectSelective(this.specialist.profile, "data", ["edited"]);
-
 					// Замена изображения профиля
 					if (response.data.result.imagePath != null) {
-						shared.clearObjectSelective(this.specialist.profile, "data", ["edited"]);
 						this.$refs.fileImage.clear();
 
 						this.specialist.profile.data.path.value = response.data.result.imagePath;

@@ -1,13 +1,11 @@
 export default {
 	state: {
-		timeout: 350, 
-		modal: {
-			title: "",
-			status: false,
-		},
+		timeout: 350,
+
 		axios: {
 			urlApi: "/api/",
 		},
+
 		burger: {
 			admin: {
 				status: false,
@@ -18,6 +16,10 @@ export default {
 		},
 	},
 	mutations: {
+		openModal() {
+
+		},
+
 		/* Изменение меню навигации (главная) */
 		setBurgerMain(state) {
 			if (state.burger.main.status) {
@@ -34,7 +36,7 @@ export default {
 			document.body.classList.remove("modal-open");
 			state.burger.main.status = false;
 		},
-		
+
 		/* Изменение меню навигации (админка) */
 		setBurgerAdmin(state) {
 			if (state.burger.admin.status) {

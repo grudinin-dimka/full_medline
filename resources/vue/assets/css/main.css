@@ -7,6 +7,9 @@
 /* Импорт переменных */
 @import url("./variable.css");
 
+/* Импорт стилей */
+@import url("./shared.css");
+
 * {
 	font-family: "Rubik", sans-serif;
 	-webkit-tap-highlight-color: transparent;

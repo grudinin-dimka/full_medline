@@ -16,7 +16,7 @@
 						<ul>
 							<li v-for="phone in contact.phones" v-if="contact.phones.length > 0">
 								<VueIcon :name="'Phone Enabled'" :fill="'black'" :width="'24px'" :height="'24px'" />
-								<a :href="`tel:${phone.name}`" :key="phone.id">{{ phone.name }}</a>
+								<a class="link" :href="`tel:${phone.name}`" :key="phone.id">{{ phone.name }}</a>
 							</li>
 							<li v-else>
 								<VueIcon :name="'Phone Enabled'" :fill="'black'" :width="'24px'" :height="'24px'" />
@@ -30,7 +30,7 @@
 						<ul>
 							<li v-for="mail in contact.mails" v-if="contact.mails.length > 0">
 								<VueIcon :name="'Alternate Email'" :fill="'black'" :width="'24px'" :height="'24px'" />
-								<a :href="`mailto:${mail.name}`">{{ mail.name }}</a>
+								<a class="link" :href="`mailto:${mail.name}`">{{ mail.name }}</a>
 							</li>
 							<li v-else>
 								<VueIcon :name="'Alternate Email'" :fill="'black'" :width="'24px'" :height="'24px'" />
@@ -255,20 +255,6 @@ export default {
 
 :is(.contacts__mails, .contacts__phones, .contacts__address) > ul > li > svg {
 	flex: 0 0 auto;
-}
-
-:is(.contacts__mails, .contacts__phones, .contacts__address) > ul > li > a {
-	text-decoration: none;
-	text-decoration-color: white;
-	color: black;
-
-	transition: all 0.2s;
-}
-
-:is(.contacts__mails, .contacts__phones, .contacts__address) > ul > li > a:hover {
-	text-decoration: underline;
-	text-decoration-thickness: 1.5px;
-	text-decoration-color: var(--primary-color);
 }
 
 ul::-webkit-scrollbar {

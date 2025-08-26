@@ -72,31 +72,6 @@
 				</template>
 			</VueInput>
 
-			<VueInput
-				:placeholder="'Введите почту'"
-				:type="'text'"
-				:inputmode="'email'"
-				v-model="currentVacancy.data.email.value"
-				:error="currentVacancy.errors.email.status"
-			>
-				<template #label> ПОЧТА (ДЛЯ РЕЗЮМЕ) </template>
-				<template #error>
-					{{ currentVacancy.errors.email.message }}
-				</template>
-			</VueInput>
-
-			<VueInput
-				:placeholder="'Введите телефон'"
-				:type="'text'"
-				v-model="currentVacancy.data.phone.value"
-				:error="currentVacancy.errors.phone.status"
-			>
-				<template #label> ТЕЛЕФОН (ДЛЯ ВОПРОСОВ) </template>
-				<template #error>
-					{{ currentVacancy.errors.phone.message }}
-				</template>
-			</VueInput>
-
 			<VueTiptap
 				ref="tiptapRequirements"
 				v-model="currentVacancy.data.requirements.value"
@@ -127,6 +102,21 @@
 				</template>
 			</VueTiptap>
 
+			<VueTiptap
+				ref="tiptapDescription"
+				v-model="currentVacancy.data.description.value"
+				:editable="true"
+				:limit="1_000"
+				:minHeight="150"
+				:options="['align', 'format', 'list']"
+				:placeholder="'Введите описание'"
+				:error="currentVacancy.errors.description.status"
+			>
+				<template #error>
+					{{ currentVacancy.errors.description.message }}
+				</template>
+			</VueTiptap>
+
 			<VueInput
 				:placeholder="'Введите зарплату'"
 				:type="'number'"
@@ -152,15 +142,6 @@
 			</VueButton>
 
 			<template v-else>
-				<VueButton
-					:look="'delete'"
-					@click="deleteVacancy"
-					v-if="!currentVacancy.data.delete.value && !currentVacancy.data.create.value"
-				>
-					<VueIcon :name="'Delete'" :fill="'white'" :width="'28px'" :height="'28px'" />
-					Удалить
-				</VueButton>
-
 				<VueButton
 					@click="updateTravel"
 					v-if="!currentVacancy.data.delete.value"
@@ -241,7 +222,19 @@
 
 		<template #body>
 			<template v-if="loading.sections.vacancies">
-				<div class="evacancies" v-if="vacancies.length">
+				<VueTable
+					:table="table"
+					@create="openVacancyCreate"
+					@edite="openVacancyEdite"
+					@delete="setVacancyDelete"
+				>
+					<template v-slot:hide="{ row }">
+						<div class="table__hide" v-if="row.hide" @click="setVacancyHide(row)">Да</div>
+						<div class="table__hide" v-else @click="setVacancyHide(row)">Нет</div>
+					</template>
+				</VueTable>
+
+				<!-- <div class="evacancies" v-if="vacancies.length">
 					<div
 						class="evacancies__item"
 						v-for="vacancy in vacancies"
@@ -251,11 +244,43 @@
 							'evacancies__item--delete': vacancy.delete,
 						}"
 						@click="openVacancyEdite(vacancy)"
-					></div>
-				</div>
+					>
+						<div class="evacancies__item-header">
+							<div class="evacancies__header-item">id: {{ vacancy.id }}</div>
+						</div>
+						<div class="evacancies__item-body">
+							<div class="evacancies__body-title">{{ vacancy.title }}</div>
+							<div class="evacancies__body-address">
+								Адрес: {{ vacancy.address || "Не указан" }}
+							</div>
+							<div class="evacancies__body-schedule">График: {{ vacancy.schedule }}</div>
+							<div class="evacancies__body-requirements">
+								<div class="evacancies__requirements-title">Требования:</div>
+								<div class="evacancies__requirements-body">
+									{{ vacancy.requirements }}
+								</div>
+							</div>
+							<div class="evacancies__body-conditions">
+								<div class="evacancies__conditions-title">Условия:</div>
+								<div class="evacancies__conditions-body">
+									{{ vacancy.conditions }}
+								</div>
+							</div>
+							<div class="evacancies__body-salary">
+								<VueIcon
+									:name="'Payments'"
+									:fill="'var(--primary-color)'"
+									:width="'26px'"
+									:height="'26px'"
+								/>
+								{{ vacancy.salary }}
+							</div>
+						</div>
+					</div>
+				</div> -->
 
 				<!-- Элемент пустой страницы -->
-				<empty :minHeight="300" v-if="vacancies.length == 0" />
+				<!-- <empty :minHeight="300" v-if="vacancies.length == 0" /> -->
 			</template>
 
 			<!-- Загрузка слайдов -->
@@ -267,12 +292,12 @@
 			/>
 		</template>
 
-		<template #buttons>
+		<!-- <template #buttons>
 			<VueButton @click="openVacancyCreate" :disabled="disabled.vacancies.create">
 				<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
 				Добавить
 			</VueButton>
-		</template>
+		</template> -->
 	</block-once>
 </template>
 
@@ -372,19 +397,15 @@ export default {
 						message: "",
 						status: false,
 					},
-					email: {
-						message: "",
-						status: false,
-					},
-					phone: {
-						message: "",
-						status: false,
-					},
 					requirements: {
 						message: "",
 						status: false,
 					},
 					conditions: {
+						message: "",
+						status: false,
+					},
+					description: {
 						message: "",
 						status: false,
 					},
@@ -410,19 +431,15 @@ export default {
 						value: "",
 						edited: false,
 					},
-					email: {
-						value: "",
-						edited: false,
-					},
-					phone: {
-						value: "",
-						edited: false,
-					},
 					requirements: {
 						value: "",
 						edited: false,
 					},
 					conditions: {
+						value: "",
+						edited: false,
+					},
+					description: {
 						value: "",
 						edited: false,
 					},
@@ -445,8 +462,111 @@ export default {
 				},
 			},
 
+			/* Таблица */
+			table: {
+				// Настройки
+				options: {
+					create: true,
+					delete: true,
+					update: true,
+					report: false,
+				},
+
+				// Колонки
+				head: [
+					{
+						name: "id",
+						title: "ID",
+						type: "id",
+						hide: true,
+					},
+					{
+						name: "title",
+						title: "Заголовок",
+						type: "string",
+						options: {
+							column: {
+								style: {
+									width: "300px",
+								},
+							},
+						},
+					},
+					{
+						name: "address",
+						title: "Адрес",
+						type: "string",
+						options: {
+							column: {
+								style: {
+									width: "100px",
+								},
+							},
+						},
+					},
+					{
+						name: "schedule",
+						title: "График",
+						type: "string",
+						options: {
+							column: {
+								style: {
+									width: "100px",
+								},
+							},
+						},
+					},
+					{
+						name: "salary",
+						title: "Зарплата",
+						type: "number",
+						options: {
+							column: {
+								style: {
+									width: "300px",
+								},
+							},
+						},
+					},
+					{
+						name: "hide",
+						title: "Скрытие",
+						type: "slot",
+						options: {
+							column: {
+								style: {
+									width: "100px",
+								},
+							},
+							data: {
+								style: {
+									justifyContent: "center",
+								},
+							},
+						},
+					},
+				],
+
+				// Элементы
+				body: [],
+			},
+
 			/* Данные */
-			vacancies: [],
+			vacancies: [
+				{
+					id: 1,
+					title: "АКУШЕР",
+					address: "г. Москва, ул. Пушкина, д. 10",
+					schedule: "Сменный",
+					requirements: "",
+					conditions: "",
+					description: "",
+					salary: 50_000,
+					hide: false,
+					create: false,
+					delete: false,
+				},
+			],
 		};
 	},
 	methods: {
@@ -510,11 +630,11 @@ export default {
 							type: "text",
 						},
 						{
-							key: "email",
+							key: "address",
 							type: "text",
 						},
 						{
-							key: "phone",
+							key: "schedule",
 							type: "text",
 						},
 						{
@@ -526,6 +646,10 @@ export default {
 							type: "text",
 						},
 						{
+							key: "description",
+							type: "text",
+						},
+						{
 							key: "salary",
 							type: "number",
 						},
@@ -533,21 +657,19 @@ export default {
 				)
 					return;
 
-				// this.vacancies.push({
-				// 	id: shared.getMaxId(this.vacancies) + 1,
-				// 	title: this.currentVacancy.data.title.value,
-				// 	duration: this.currentVacancy.data.duration.value,
-				// 	description: this.currentVacancy.data.description.value,
-				// 	image: files.basename(response.data.result),
-				// 	hit: this.currentVacancy.data.hit.value,
-				// 	services: this.currentVacancy.data.services.value,
-				// 	prices: this.currentVacancy.data.prices.value,
-				// 	path: response.data.result,
-				// 	order: shared.getMaxOrder(this.vacancies) + 1,
-				// 	hide: false,
-				// 	create: true,
-				// 	delete: false,
-				// });
+				this.table.body.push({
+					id: shared.getMaxId(this.vacancies) + 1,
+					title: this.currentVacancy.data.title.value,
+					address: this.currentVacancy.data.address.value,
+					schedule: this.currentVacancy.data.schedule.value,
+					requirements: this.currentVacancy.data.requirements.value,
+					conditions: this.currentVacancy.data.conditions.value,
+					description: this.currentVacancy.data.description.value,
+					salary: this.currentVacancy.data.salary.value,
+					hide: false,
+					create: true,
+					delete: false,
+				});
 
 				this.$refs.modalVacancy.close();
 			} catch (error) {
@@ -569,7 +691,19 @@ export default {
 							type: "text",
 						},
 						{
-							key: "duration",
+							key: "address",
+							type: "text",
+						},
+						{
+							key: "schedule",
+							type: "text",
+						},
+						{
+							key: "requirements",
+							type: "text",
+						},
+						{
+							key: "conditions",
 							type: "text",
 						},
 						{
@@ -577,27 +711,25 @@ export default {
 							type: "text",
 						},
 						{
-							key: "hit",
-							type: "boolean",
+							key: "salary",
+							type: "number",
 						},
 					])
 				)
 					return;
 
-				let travelCurrent = this.vacancies.find(
-					(travel) => travel.order === this.currentVacancy.data.order.value
+				let vacancy = this.table.body.find(
+					(item) => item.id === this.currentVacancy.data.id.value
 				);
 
-				travelCurrent.path = response.data.result;
-				travelCurrent.image = files.basename(response.data.result);
-
-				travelCurrent.title = this.currentVacancy.data.title.value;
-				travelCurrent.description = this.currentVacancy.data.description.value;
-				travelCurrent.duration = this.currentVacancy.data.duration.value;
-				travelCurrent.hit = this.currentVacancy.data.hit.value;
-				travelCurrent.hide = this.currentVacancy.data.hide.value;
-				travelCurrent.prices = this.currentVacancy.data.prices.value;
-				travelCurrent.services = this.currentVacancy.data.services.value;
+				vacancy.title = this.currentVacancy.data.title.value;
+				vacancy.address = this.currentVacancy.data.address.value;
+				vacancy.schedule = this.currentVacancy.data.schedule.value;
+				vacancy.requirements = this.currentVacancy.data.requirements.value;
+				vacancy.conditions = this.currentVacancy.data.conditions.value;
+				vacancy.description = this.currentVacancy.data.description.value;
+				vacancy.salary = this.currentVacancy.data.salary.value;
+				vacancy.hide = this.currentVacancy.data.hide.value;
 
 				this.$refs.modalVacancy.close();
 			} catch (error) {
@@ -609,300 +741,63 @@ export default {
 			}
 		},
 
-		deleteVacancy() {
-			let vacancy = this.vacancies.find(
-				(item) => item.order === this.currentVacancy.data.id.value
-			);
+		/* Удаление */
+		setVacancyDelete(vacancy) {
+			vacancy.delete = !vacancy.delete;
+		},
 
-			vacancy.delete = !travel.vacancy;
-
-			this.$refs.modalVacancy.close();
+		/* Скрытие */
+		setVacancyHide(vacancy) {
+			vacancy.hide = !vacancy.hide;
 		},
 
 		/* Сохранение изменений в базе данных */
 		saveVacanciesChanges() {
 			this.disabled.vacancies.save = true;
 
-			// api({
-			// 	method: "post",
-			// 	url: this.$store.getters.urlApi + `save-travels-changes`,
-			// 	headers: {
-			// 		Accept: "application/json",
-			// 	},
-			// 	data: {
-			// 		travels: this.vacancies,
-			// 	},
-			// })
-			// 	.then((response) => {
-			// 		if (!response) return;
+			api({
+				method: "post",
+				url: this.$store.getters.urlApi + `save-vacancies-changes`,
+				headers: {
+					Accept: "application/json",
+				},
+				data: {
+					vacancies: this.table.body,
+				},
+			})
+				.then((response) => {
+					if (!response) return;
 
-			// 		shared.updateId(this.vacancies, response.data.result);
-			// 		shared.clearDeletes(this.vacancies);
-			// 		shared.clearFlags(this.vacancies);
-			// 		shared.updateOrders(this.vacancies);
-			// 	})
-			// 	.catch((error) => {
-			// 		this.$store.commit("addDebugger", {
-			// 			title: "Ошибка",
-			// 			body: error,
-			// 			type: "error",
-			// 		});
-			// 	})
-			// 	.finally(() => {
-			// 		this.disabled.vacancies.save = false;
-			// 	});
-		},
-
-		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                 Путевки (Услуги)                  |*/
-		/* |___________________________________________________|*/
-		addTravelService() {
-			try {
-				if (
-					validate.checkInputsAll(this.currentTravelService, [
-						{
-							key: "title",
-							type: "text",
-						},
-						{
-							key: "description",
-							type: "text",
-						},
-					])
-				)
-					return;
-
-				if (
-					this.currentVacancy.data.services.value.some(
-						(item) => item.title === this.currentTravelService.data.title.value
-					)
-				) {
+					shared.updateId(this.table.body, response.data.result);
+					shared.clearDeletes(this.table.body);
+					shared.clearFlags(this.table.body);
+					shared.updateOrders(this.table.body);
+				})
+				.catch((error) => {
 					this.$store.commit("addDebugger", {
 						title: "Ошибка",
-						body: "Услуга с таким названием уже существует",
+						body: error,
 						type: "error",
 					});
-
-					return;
-				}
-
-				this.currentVacancy.data.services.value.push({
-					id: shared.getMaxId(this.currentVacancy.data.services.value) + 1,
-					title: this.currentTravelService.data.title.value,
-					description: this.currentTravelService.data.description.value,
+				})
+				.finally(() => {
+					this.disabled.vacancies.save = false;
 				});
-
-				this.$refs.modalTravelServices.close();
-			} catch (error) {
-				this.$store.commit("addDebugger", {
-					title: "Ошибка",
-					body: error,
-					type: "error",
-				});
-			}
-		},
-
-		updateTravelService() {
-			try {
-				if (
-					validate.checkInputsAll(this.currentTravelService, [
-						{
-							key: "title",
-							type: "text",
-						},
-						{
-							key: "description",
-							type: "text",
-						},
-					])
-				)
-					return;
-
-				if (
-					this.currentVacancy.data.services.value.some((item) => {
-						return (
-							item.title === this.currentTravelService.data.title.value &&
-							item.id !== this.currentTravelService.data.id.value
-						);
-					})
-				) {
-					this.$store.commit("addDebugger", {
-						title: "Ошибка",
-						body: "Услуга с таким названием уже существует",
-						type: "error",
-					});
-
-					return;
-				}
-
-				let service = this.currentVacancy.data.services.value.find(
-					(item) => item.id === this.currentTravelService.data.id.value
-				);
-
-				service.title = this.currentTravelService.data.title.value;
-				service.description = this.currentTravelService.data.description.value;
-
-				this.$refs.modalTravelServices.close();
-			} catch (error) {
-				this.$store.commit("addDebugger", {
-					title: "Ошибка",
-					body: error,
-					type: "error",
-				});
-			}
-		},
-
-		deleteTravelService(value) {
-			try {
-				this.currentVacancy.data.services.value =
-					this.currentVacancy.data.services.value.filter((item) => item !== value);
-			} catch (error) {
-				this.$store.commit("addDebugger", {
-					title: "Ошибка",
-					body: error,
-					type: "error",
-				});
-			}
-		},
-
-		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                   Путевки (Цены)                  |*/
-		/* |___________________________________________________|*/
-		addTravelPrice() {
-			try {
-				if (
-					validate.checkInputsAll(this.currentTravelPrice, [
-						{
-							key: "type",
-							type: "text",
-						},
-						{
-							key: "subtype",
-							type: "text",
-						},
-						{
-							key: "price",
-							type: "number",
-						},
-					])
-				)
-					return;
-
-				if (
-					this.currentVacancy.data.prices.value.some((item) => {
-						return (
-							item.type === this.currentTravelPrice.data.type.value &&
-							item.subtype === this.currentTravelPrice.data.subtype.value
-						);
-					})
-				) {
-					this.$store.commit("addDebugger", {
-						title: "Ошибка",
-						body: "Цена с таким типом и подтипом уже существует",
-						type: "error",
-					});
-
-					return;
-				}
-
-				this.currentVacancy.data.prices.value.push({
-					id: shared.getMaxId(this.currentVacancy.data.prices.value) + 1,
-					type: this.currentTravelPrice.data.type.value,
-					subtype: this.currentTravelPrice.data.subtype.value,
-					price: this.currentTravelPrice.data.price.value,
-				});
-
-				this.$refs.modalTravelPrices.close();
-			} catch (error) {
-				this.$store.commit("addDebugger", {
-					title: "Ошибка",
-					body: error,
-					type: "error",
-				});
-			}
-		},
-
-		updateTravelPrice() {
-			try {
-				if (
-					validate.checkInputsAll(this.currentTravelPrice, [
-						{
-							key: "type",
-							type: "text",
-						},
-						{
-							key: "subtype",
-							type: "text",
-						},
-						{
-							key: "price",
-							type: "number",
-						},
-					])
-				)
-					return;
-
-				if (
-					this.currentVacancy.data.prices.value.some((item) => {
-						return (
-							item.type === this.currentTravelPrice.data.type.value &&
-							item.subtype === this.currentTravelPrice.data.subtype.value &&
-							item.id !== this.currentTravelPrice.data.id.value
-						);
-					})
-				) {
-					this.$store.commit("addDebugger", {
-						title: "Ошибка",
-						body: "Цена с таким типом и подтипом уже существует",
-						type: "error",
-					});
-
-					return;
-				}
-
-				let price = this.currentVacancy.data.prices.value.find(
-					(item) => item.id === this.currentTravelPrice.data.id.value
-				);
-
-				price.type = this.currentTravelPrice.data.type.value;
-				price.subtype = this.currentTravelPrice.data.subtype.value;
-				price.price = this.currentTravelPrice.data.price.value;
-
-				this.$refs.modalTravelPrices.close();
-			} catch (error) {
-				this.$store.commit("addDebugger", {
-					title: "Ошибка",
-					body: error,
-					type: "error",
-				});
-			}
-		},
-
-		deleteTravelPrice(value) {
-			try {
-				this.currentVacancy.data.prices.value = this.currentVacancy.data.prices.value.filter(
-					(item) => item !== value
-				);
-			} catch (error) {
-				this.$store.commit("addDebugger", {
-					title: "Ошибка",
-					body: error,
-					type: "error",
-				});
-			}
 		},
 	},
 	mounted() {
+		this.loading.loader.vacancies = false;
+
 		api({
 			method: "get",
-			url: this.$store.getters.urlApi + `get-travels-all`,
+			url: this.$store.getters.urlApi + `get-vacancies-all`,
 		})
 			.then((response) => {
 				if (!response) return;
 
-				this.vacancies = response.data.result;
+				this.table.body = response.data.result;
 
-				this.vacancies.forEach((item) => {
+				this.table.body.forEach((item) => {
 					item.create = false;
 					item.delete = false;
 				});
@@ -922,184 +817,13 @@ export default {
 </script>
 
 <style scoped>
-.modal__info {
-	display: flex;
-	flex-direction: column;
-	gap: var(--default-gap);
-}
-
-.modal__info-image {
-	box-sizing: border-box;
-
-	display: flex;
-	justify-content: center;
-	flex-wrap: wrap;
-	border-radius: var(--default-border-radius);
-
-	background-color: var(--item-background-color);
-	padding: var(--default-padding);
-	border: var(--default-border);
-}
-
-.modal__info-image > img {
-	object-fit: cover;
-	margin: auto;
-
-	border: var(--default-border);
-	border-radius: calc(var(--default-border-radius) / 1.5);
-
-	width: 400px;
-	background-color: white;
-	aspect-ratio: 1 / 1.2;
-}
-
-.modal__info-form {
-	display: flex;
-	flex-direction: column;
-	gap: calc(var(--default-gap) / 2);
-
-	width: 100%;
-}
-
-.evacancies {
-	display: grid;
-	grid-template-columns: repeat(2, 1fr);
-	gap: var(--default-gap);
-
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
-}
-
-.etravels__item {
+/* Таблица */
+.table__hide {
+	user-select: none;
 	cursor: pointer;
-	display: flex;
-	flex-direction: column;
-	gap: calc(var(--default-gap) / 2);
-	border: var(--default-border);
-	border-radius: calc(var(--default-border-radius) / 1.5);
-	padding: calc(var(--default-gap) / 2);
-
-	transition: all 0.2s ease-in-out;
 }
 
-.etravels__item--hide {
-	border: 1px solid rgb(210, 210, 210);
-	background-color: rgb(240, 240, 240);
-}
-
-.etravels__item:hover {
-	border: var(--default-border-active);
-	background-color: var(--item-background-color-active);
-}
-
-.etravels__header-item {
-	transition: all 0.2s ease-in-out;
-}
-
-.etravels__item:hover > .etravels__item-header > .etravels__header-item {
-	border: var(--default-border-active);
-}
-
-.etravels__item--create {
-	border: var(--input-create-border);
-}
-
-.etravels__item--create:hover {
-	background-color: var(--input-create-background-color-hover);
-	border: var(--input-create-border);
-}
-
-.etravels__item--delete {
-	border: var(--input-delete-border);
-}
-
-.etravels__item--delete:hover {
-	border: var(--input-delete-border);
-	background-color: var(--input-delete-background-color-hover);
-}
-
-.etravels__item-header {
-	display: flex;
-	gap: calc(var(--default-gap) / 4);
-}
-
-:is(.etravels__header-item, .etravels__header-item) {
-	border: var(--default-border);
-	border-radius: calc(var(--default-border-radius) / 1.75);
-	padding: 5px 10px;
-}
-
-.etravels__item--create :is(.etravels__header-item, .etravels__header-item) {
-	border: var(--input-create-border);
-}
-
-.etravels__item--delete :is(.etravels__header-item, .etravels__header-item) {
-	border: var(--input-delete-border);
-}
-
-.etravels__item-body {
-	display: flex;
-	flex-direction: column;
-	gap: calc(var(--default-gap) / 2);
-}
-
-.etravels__item-other {
-	display: flex;
-	gap: calc(var(--default-gap) / 2);
-}
-
-.etravels__item-title {
-	font-size: 1.5rem;
-	font-weight: 500;
-
+.table__hide:hover {
 	color: var(--primary-color);
-}
-
-.etravels__item-image {
-	border-radius: calc(var(--default-border-radius) / 1.5);
-	object-fit: contain;
-	height: 300px;
-
-	aspect-ratio: 1 / 1.2;
-}
-
-.etravels__item-image > img {
-	object-fit: cover;
-	height: 100%;
-	width: 100%;
-	border-radius: calc(var(--default-border-radius) / 1.5);
-}
-
-.etravels__item-range {
-	display: flex;
-	align-items: center;
-	gap: 5px;
-}
-
-.etravels__item-description {
-	font-size: 1.125rem;
-	overflow: hidden;
-
-	height: 250px;
-	text-align: justify;
-}
-
-.etravels__item-info {
-	display: flex;
-	flex-direction: column;
-	gap: calc(var(--default-gap) / 2);
-
-	font-size: 1.125rem;
-}
-
-@media screen and (width <= 1500px) {
-	.evacancies {
-		grid-template-columns: 1fr;
-	}
-}
-
-@media screen and (width <= 600px) {
-	.etravels__item-other {
-		flex-direction: column;
-	}
 }
 </style>

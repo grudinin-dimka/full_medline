@@ -35,9 +35,7 @@
 			</VueInput>
 
 			<div class="buttons">
-				<VueButton @click="loginUser" :disabled="disabled.login.update">
-					Войти
-				</VueButton>
+				<VueButton @click="loginUser" :disabled="disabled.login.update"> Войти </VueButton>
 			</div>
 		</form>
 	</div>
@@ -125,7 +123,7 @@ export default {
 					errorLog = validate.checkInputEmail(this[currentName].data[dataKey].body);
 					break;
 				case "phone":
-					errorLog = validate.checkInputPhone(this[currentName].data[dataKey].body);
+					errorLog = validate.checkInputMask(this[currentName].data[dataKey].body);
 					break;
 				case "file":
 					errorLog = this.chekInputFile();

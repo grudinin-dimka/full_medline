@@ -1,0 +1,16 @@
+.skeleton {
+	background-image: linear-gradient(120deg, var(--skeleton-background-color) 50%, var(--skeleton-line-color) 60%, var(--skeleton-line-color) 61%, var(--skeleton-background-color) 70%);
+	background-size: 200%;
+	background-position: 100% 0;
+
+	animation: waves 2s linear infinite;
+}
+
+.link {
+   color: var(--primary-color);
+   text-decoration: none;
+}
+
+.link:hover {
+   text-decoration: underline;
+}

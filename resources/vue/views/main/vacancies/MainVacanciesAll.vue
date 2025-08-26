@@ -8,39 +8,46 @@
 	<Block :minHeight="100">
 		<div class="vacancies" v-if="vacancies.length > 0">
 			<div class="vacancies__item" v-for="vacancy in vacancies" :class="{ 'skeleton': false }">
-				<div class="vacancies__item-title">
-					{{ vacancy.title }}
-				</div>
-				<div class="vacancies__item-address">Адресс: {{ vacancy.address }}</div>
-				<div class="vacancies__item-schedule">График: {{ vacancy.schedule }}</div>
-				<div class="vacancies__item-requirements">
-					<div class="vacancies__requirements-title">Требования</div>
-					<div class="vacancies__requirements-body">
-						<ol>
-							<li>{{ vacancy.requirements }}</li>
-							<li>{{ vacancy.requirements }}</li>
-							<li>{{ vacancy.requirements }}</li>
-							<li>{{ vacancy.requirements }}</li>
-							<li>{{ vacancy.requirements }}</li>
-						</ol>
+				<div class="vacancies__item-header">
+					<div class="vacancies__item-title">
+						{{ vacancy.title }}
+					</div>
+
+					<div class="vacancies__item-salary">
+						<VueIcon
+							:name="'Payments'"
+							:fill="'var(--primary-color)'"
+							:width="'26px'"
+							:height="'26px'"
+						/>
+						{{ vacancy.salary }} ₽
 					</div>
 				</div>
-				<div class="vacancies__item-conditions">
-					<div class="vacancies__conditions-title">Условия</div>
-					<div class="vacancies__conditions-body">
-						{{ vacancy.conditions }}
+				<div class="vacancies__item-body">
+					<div class="vacancies__item-address">Адресс: {{ vacancy.address }}</div>
+					<div class="vacancies__item-schedule">График: {{ vacancy.schedule }}</div>
+					<div class="vacancies__item-info">
+						<div class="vacancies__item-requirements">
+							<div class="vacancies__requirements-title">Требования:</div>
+							<div class="vacancies__requirements-body">
+								<VueTiptap
+									:editable="false"
+									:limit="1_000"
+									v-model="vacancy.requirements"
+								/>
+							</div>
+						</div>
+						<div class="vacancies__item-conditions">
+							<div class="vacancies__conditions-title">Условия:</div>
+							<div class="vacancies__conditions-body">
+								<VueTiptap :editable="false" :limit="1_000" v-model="vacancy.conditions" />
+							</div>
+						</div>
 					</div>
-				</div>
-				<div class="vacancies__item-email">Почта (для резюме): {{ vacancy.email }}</div>
-				<div class="vacancies__item-phone">Телефон (для вопросов): {{ vacancy.phone }}</div>
-				<div class="vacancies__item-salary">
-					<VueIcon
-						:name="'Payments'"
-						:fill="'var(--primary-color)'"
-						:width="'26px'"
-						:height="'26px'"
-					/>
-					{{ vacancy.salary }}
+
+					<div class="vacancies__item-description">
+						<VueTiptap :editable="false" :limit="1_000" v-model="vacancy.description" />
+					</div>
 				</div>
 			</div>
 		</div>
@@ -52,6 +59,7 @@
 <script>
 import VueIcon from "../../../components/modules/icon/VueIcon.vue";
 import VueTiptap from "../../../components/modules/VueTiptap.vue";
+import VueButton from "../../../components/ui/VueButton.vue";
 
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import Block from "../../../components/ui/main/Block.vue";
@@ -66,6 +74,7 @@ export default {
 	components: {
 		VueIcon,
 		VueTiptap,
+		VueButton,
 
 		InfoBar,
 		Block,
@@ -84,25 +93,57 @@ export default {
 			vacancies: [
 				{
 					id: 1,
-					title: "АКУШЕР ГИНЕКОЛОГ",
-					address: "Адрес 1",
-					schedule: "График 1",
-					email: "Email 1",
-					phone: "Телефон 1",
-					requirements: "Требования 1",
-					conditions: "Условия 1",
-					salary: "Зарплата 1",
+					title: "Врач травматолог-ортопед",
+					address: "г. Москва: ул. Угрешская, д.2, стр.7",
+					schedule: "Сменный",
+					requirements: `
+						<p>Оказание квалифицированной медицинской помощи по своей специальности, используя современные методы диагностики и лечения, разрешенные для применения в медицинской практике.</p>
+						<p>В качестве требований предлагаются:</p>
+						<ul>
+							<li>Требования 1</li>	
+							<li>Требования 1</li>	
+							<li>Требования 1</li>	
+							<li>Требования 1</li>	
+						</ul>
+					`,
+					conditions: `
+						<p>Оказание квалифицированной медицинской помощи по своей специальности, используя современные методы диагностики и лечения, разрешенные для применения в медицинской практике.</p>
+						<p>В качестве требований предлагаются:</p>
+						<ul>
+							<li>Требования 1</li>	
+							<li>Требования 1</li>	
+						</ul>
+					`,
+					description: `
+						<p style="text-align: right;">
+							Почта (для резюме):
+							<a href="mailto:vlasovpa@medline45.ru">vlasovpa@medline45.ru</a>
+						</p>
+						<p style="text-align: right;">
+							Телефон (для вопросов):
+							<a href="tel:+7 963 007 00 13">+7 963 007 00 13</a>
+						</p>
+					`,
+					salary: 45_000,
 				},
 				{
 					id: 2,
-					title: "АКУШЕР ГИНЕКОЛОГ",
+					title: "Врач онкогинеколог",
 					address: "Адрес 1",
 					schedule: "График 1",
-					email: "Email 1",
-					phone: "Телефон 1",
-					requirements: "Требования 1",
+					requirements: "<p>Требования 2</p>",
 					conditions: "Условия 1",
-					salary: "Зарплата 1",
+					description: `
+						<p style="text-align: right;">
+							Почта (для резюме):
+							<a href="mailto:vlasovpa@medline45.ru">vlasovpa@medline45.ru</a>
+						</p>
+						<p style="text-align: right;">
+							Телефон (для вопросов):
+							<a href="tel:+7 963 007 00 13">+7 963 007 00 13</a>
+						</p>
+					`,
+					salary: 50_000,
 				},
 			],
 		};
@@ -136,8 +177,8 @@ export default {
 <style scoped>
 .vacancies {
 	display: grid;
-	grid-template-columns: repeat(2, 1fr);
-	gap: 10px;
+	grid-template-columns: repeat(1, 1fr);
+	gap: var(--default-gap);
 
 	margin: 0 auto;
 
@@ -150,11 +191,22 @@ export default {
 	gap: calc(var(--default-gap) / 2);
 
 	padding: var(--default-padding);
+	border-radius: var(--default-border-radius);
 
 	font-size: 1.125rem;
 
 	background-color: var(--skeleton-background-color);
-	border-radius: var(--default-border-radius);
+}
+
+.vacancies__item-header {
+	display: flex;
+	justify-content: space-between;
+	gap: 20px;
+}
+
+.vacancies__item-info {
+	display: flex;
+	gap: calc(var(--default-gap) / 2);
 }
 
 .vacancies__item-title {
@@ -164,28 +216,34 @@ export default {
 	color: var(--primary-color);
 }
 
+.vacancies__item-salary {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: min(100%, 150px);
+	align-self: flex-end;
+
+	color: var(--primary-color);
+	font-size: 1.5rem;
+	font-weight: 500;
+}
+
+.vacancies__item-body {
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--default-gap) / 2);
+}
+
 :is(.vacancies__item-requirements, .vacancies__item-conditions) {
+	flex-grow: 1;
 	display: grid;
-	grid-template-columns: max(100px, 30%) 1fr;
+	grid-template-columns: 150px 1fr;
 	gap: calc(var(--default-gap) / 2);
 
 	padding: calc(var(--default-padding) / 2);
 	border-radius: calc(var(--default-border-radius) / 2);
 
 	background-color: white;
-}
-
-.vacancies__item-salary {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	width: min(100%, 350px);
-	align-self: flex-end;
-	
-
-	color: var(--primary-color);
-	font-size: 1.5rem;
-	font-weight: 500;
 }
 
 @media screen and (max-width: 1450px) {
