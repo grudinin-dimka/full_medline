@@ -187,7 +187,7 @@
 			<VueInput
 				v-model="currentCertificate.data.endEducation.value"
 				:placeholder="'Введите дату'"
-				:type="'text'"
+				:type="'date'"
 				:error="currentCertificate.errors.endEducation.status"
 			>
 				<template #label> ОКОНЧАНИЕ ОБУЧЕНИЯ </template>

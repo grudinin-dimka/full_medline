@@ -408,53 +408,68 @@ class SpecialistController extends Controller
    /* Модульное сохранение */
    public function saveSpecialistModular(Request $request)
    {
-      // Сохранение профиля
-      $saveProfile = $this->saveSpecialistProfile($request);
-      if (!$saveProfile['object']->success) {
-         return response()->json($saveProfile['object'], $saveProfile['status']);
-      };
+      DB::beginTransaction();
 
-      // Сохранение специализаций
-      $saveSpecializations = $this->saveSpecialistSpecializations($request);
-      if (!$saveSpecializations['object']->success) {
-         return response()->json($saveSpecializations['object'], $saveSpecializations['status']);
-      };
+      try {
+         // Сохранение профиля
+         $saveProfile = $this->saveSpecialistProfile($request);
+         if (!$saveProfile['object']->success) {
+            return response()->json($saveProfile['object'], $saveProfile['status']);
+         };
 
-      // Сохранение клиник
-      $saveClinic = $this->saveSpecialistClinics($request);
-      if (!$saveClinic['object']->success) {
-         return response()->json($saveClinic['object'], $saveClinic['status']);
-      };
+         // Сохранение специализаций
+         $saveSpecializations = $this->saveSpecialistSpecializations($request);
+         if (!$saveSpecializations['object']->success) {
+            return response()->json($saveSpecializations['object'], $saveSpecializations['status']);
+         };
 
-      // Сохранение сертификатов
-      $saveClinic = $this->saveSpecialistCertificates($request);
-      if (!$saveClinic['object']->success) {
-         return response()->json($saveClinic['object'], $saveClinic['status']);
-      };
+         // Сохранение клиник
+         $saveClinic = $this->saveSpecialistClinics($request);
+         if (!$saveClinic['object']->success) {
+            return response()->json($saveClinic['object'], $saveClinic['status']);
+         };
 
-      // Сохранение образований
-      $saveEducation = $this->saveSpecialistEducations($request);
-      if (!$saveEducation['object']->success) {
-         return response()->json($saveEducation['object'], $saveEducation['status']);
-      };
+         // Сохранение сертификатов
+         $saveCertificates = $this->saveSpecialistCertificates($request);
+         if (!$saveCertificates['object']->success) {
+            return response()->json($saveCertificates['object'], $saveCertificates['status']);
+         };
 
-      // Сохранение работ
-      $saveWork = $this->saveSpecialistWorks($request);
-      if (!$saveWork['object']->success) {
-         return response()->json($saveWork['object'], $saveWork['status']);
-      };
+         // Сохранение образований
+         $saveEducation = $this->saveSpecialistEducations($request);
+         if (!$saveEducation['object']->success) {
+            return response()->json($saveEducation['object'], $saveEducation['status']);
+         };
 
-      return response()->json([
-         "success" => true,
-         "debug" => true,
-         "message" => "Все данные специалиста сохранены.",
-         "result" => [
-            "imagePath" => $saveProfile['object']->result,
-            "certificates" => $saveClinic['object']->result,
-            "educations" => $saveEducation['object']->result,
-            "works" => $saveWork['object']->result,
-         ],
-      ]);
+         // Сохранение работ
+         $saveWork = $this->saveSpecialistWorks($request);
+         if (!$saveWork['object']->success) {
+            return response()->json($saveWork['object'], $saveWork['status']);
+         };
+
+         DB::commit();
+
+         return response()->json([
+            "success" => true,
+            "debug" => true,
+            "message" => "Все данные специалиста сохранены.",
+            "result" => [
+               "imagePath" => $saveProfile['object']->result,
+               "certificates" => $saveCertificates['object']->result,
+               "educations" => $saveEducation['object']->result,
+               "works" => $saveWork['object']->result,
+            ],
+         ]);
+      } catch (Throwable $th) {
+         DB::rollBack();
+
+         return response()->json([
+            "success" => false,
+            "debug" => true,
+            "message" => $th->getMessage(),
+            "result" => null,
+         ], 500);
+      }
    }
 
    /* Модуль: Сохранение профиля */
@@ -617,12 +632,15 @@ class SpecialistController extends Controller
             ];
          };
       } catch (Throwable $th) {
-         return response()->json([
-            "success" => false,
-            "debug" => true,
-            "message" => $th->getMessage(),
-            "result" => null,
-         ], 500);
+         return [
+            "object" => (object) [
+               "success" => false,
+               "debug" => true,
+               "message" => $th->getMessage(),
+               "result" => null,
+            ],
+            "status" => 500,
+         ];
       };
    }
 
@@ -675,12 +693,15 @@ class SpecialistController extends Controller
             "status" => 200,
          ];
       } catch (Throwable $th) {
-         return response()->json([
-            "success" => false,
-            "debug" => true,
-            "message" => $th->getMessage(),
-            "result" => null,
-         ], 500);
+         return [
+            "object" => (object) [
+               "success" => false,
+               "debug" => true,
+               "message" => $th->getMessage(),
+               "result" => null,
+            ],
+            "status" => 500,
+         ];
       };
    }
 
@@ -688,7 +709,6 @@ class SpecialistController extends Controller
    public function saveSpecialistCertificates(Request $request)
    {
       try {
-
          $certificates = json_decode($request->certificates);
          $id = json_decode($request->id);
 
@@ -701,6 +721,28 @@ class SpecialistController extends Controller
                continue;
             }
 
+            $validator = Validator::make(get_object_vars($value), [
+               'name' => 'required',
+               'organization' => 'required',
+               'endEducation' => 'required|date',
+            ], [
+               'required' => 'Поле :attribute обязательно для заполнения.',
+               'date' => 'Поле "Конец обучения" в сертификате должно быть датой.',
+            ]);
+
+            if ($validator->fails()) {
+               return [
+                  "object" => (object) [
+                     "success" => false,
+                     "debug" => true,
+                     "errors" => $validator->errors(),
+                     "message" => "Некорректные данные.",
+                     "result" => null,
+                  ],
+                  "status" => 500,
+               ];
+            };
+
             // Создание
             if ($value->create === true) {
                $certificateCreate = Certificate::create([
@@ -709,12 +751,10 @@ class SpecialistController extends Controller
                   "endEducation" => $value->endEducation,
                ]);
 
-               if ($certificateCreate) {
-                  SpecialistCertificate::create([
-                     'id_specialist' => $id,
-                     'id_certificate' => $certificateCreate->id,
-                  ]);
-               }
+               SpecialistCertificate::create([
+                  'id_specialist' => $id,
+                  'id_certificate' => $certificateCreate->id,
+               ]);
 
                $arrayID[] = (object) [
                   // Прошлый id
@@ -727,23 +767,12 @@ class SpecialistController extends Controller
 
             // Обновление
             $certificate = Certificate::find($value->id);
+
             $certificateUpdate = $certificate->update([
                "name" => $value->name,
                "organization" => $value->organization,
                "endEducation" => $value->endEducation,
             ]);
-
-            if (!$certificateUpdate) {
-               return [
-                  "object" => (object) [
-                     "success" => false,
-                     "debug" => true,
-                     "message" => "Не удалось обновить значение.",
-                     "result" => null,
-                  ],
-                  "status" => 500,
-               ];
-            }
          };
 
          return [
@@ -756,12 +785,15 @@ class SpecialistController extends Controller
             "status" => 200,
          ];
       } catch (Throwable $th) {
-         return response()->json([
-            "success" => false,
-            "debug" => true,
-            "message" => $th->getMessage(),
-            "result" => null,
-         ], 500);
+         return [
+            "object" => (object) [
+               "success" => false,
+               "debug" => true,
+               "message" => $th->getMessage(),
+               "result" => null,
+            ],
+            "status" => 500,
+         ];
       };
    }
 
@@ -781,6 +813,29 @@ class SpecialistController extends Controller
                $education->delete();
                continue;
             }
+
+            $validator = Validator::make(get_object_vars($value), [
+               'name' => 'required',
+               'organization' => 'required',
+               'date' => 'required|date',
+               'speсialization' => 'required',
+            ], [
+               'required' => 'Поле :attribute обязательно для заполнения.',
+               'date' => 'Поле "Дата получения" в образовании должно быть датой.',
+            ]);
+
+            if ($validator->fails()) {
+               return [
+                  "object" => (object) [
+                     "success" => false,
+                     "debug" => true,
+                     "errors" => $validator->errors(),
+                     "message" => "Некорректные данные.",
+                     "result" => null,
+                  ],
+                  "status" => 500,
+               ];
+            };
 
             // Создание
             if ($value->create === true) {
@@ -839,12 +894,15 @@ class SpecialistController extends Controller
             "status" => 200,
          ];
       } catch (Throwable $th) {
-         return response()->json([
-            "success" => false,
-            "debug" => true,
-            "message" => $th->getMessage(),
-            "result" => null,
-         ], 500);
+         return [
+            "object" => (object) [
+               "success" => false,
+               "debug" => true,
+               "message" => $th->getMessage(),
+               "result" => null,
+            ],
+            "status" => 500,
+         ];
       };
    }
 
@@ -864,6 +922,30 @@ class SpecialistController extends Controller
                $work->delete();
                continue;
             }
+
+            $validator = Validator::make(get_object_vars($value), [
+               'name' => 'required',
+               'organization' => 'required',
+               'startWork' => 'required|date',
+               'endWork' => 'required|date',
+            ], [
+               'required' => 'Поле :attribute обязательно для заполнения.',
+               'startWork.date' => 'Поле "Дата начала" в работе должно быть датой.',
+               'endWork.date' => 'Поле "Дата окончания" в работе должно быть датой.',
+            ]);
+
+            if ($validator->fails()) {
+               return [
+                  "object" => (object) [
+                     "success" => false,
+                     "debug" => true,
+                     "errors" => $validator->errors(),
+                     "message" => "Некорректные данные.",
+                     "result" => null,
+                  ],
+                  "status" => 500,
+               ];
+            };
 
             // Создание
             if ($value->create === true) {
@@ -922,12 +1004,15 @@ class SpecialistController extends Controller
             "status" => 200,
          ];
       } catch (Throwable $th) {
-         return response()->json([
-            "success" => false,
-            "debug" => true,
-            "message" => $th->getMessage(),
-            "result" => null,
-         ], 500);
+         return [
+            "object" => (object) [
+               "success" => false,
+               "debug" => true,
+               "message" => $th->getMessage(),
+               "result" => null,
+            ],
+            "status" => 500,
+         ];
       };
    }
 
@@ -1003,7 +1088,7 @@ class SpecialistController extends Controller
          ], 200);
       } catch (Throwable $th) {
          DB::rollBack();
-         
+
          return response()->json([
             "success" => false,
             "debug" => true,

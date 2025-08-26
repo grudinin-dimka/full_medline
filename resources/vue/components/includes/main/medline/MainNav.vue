@@ -68,26 +68,26 @@
 							Пластика
 						</a>
 
-						<a
+						<!-- <a
 							class="nav__list-item"
 							:class="{ active: isActive('/travels') }"
 							href="/schedule"
 							@click.prevent="$router.push({ name: `travels-all` })"
 						>
 							Путевки
-						</a>
+						</a> -->
 					</div>
 				</div>
 			</div>
 
-			<a
+			<!-- <a
 				class="nav__list-item"
 				:class="{ active: isActive('/vacancies') }"
 				href="/vacancies"
 				@click.prevent="$router.push({ name: `vacancies` })"
 			>
 				Вакансии
-			</a>
+			</a> -->
 
 			<a
 				class="nav__list-item"
@@ -207,7 +207,7 @@ nav {
 
 .nav__list {
 	display: grid;
-	grid-template-columns: repeat(6, auto);
+	grid-template-columns: repeat(5, auto);
 	gap: 10px;
 
 	background-color: var(--primary-color);
