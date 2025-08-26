@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\File;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 
 /* Ошибки */
 use Throwable;
@@ -459,103 +460,111 @@ class SpecialistController extends Controller
    /* Модуль: Сохранение профиля */
    public function saveSpecialistProfile(Request $request)
    {
-      $profile = json_decode($request->profile);
+      try {
+         $profile = json_decode($request->profile);
 
-      $path = null;
-      if ($request->hasFile('image')) {
-         $validated = validator($request->all(), [
-            'image' => [
-               'required',
-               File::image()
-                  ->types(['png', 'webp'])
-                  ->max(5 * 1024)
-                  ->dimensions(Rule::dimensions()->maxWidth(1500)->maxHeight(1500)),
-            ],
-         ], [
-            'image.required' => 'Файл обязательно.',
-            'image.image' => 'Файл должен быть изображением.',
-            'image.max' => 'Файл не должен быть больше 5МБ.',
-            'image.dimensions' => 'Размер изображения не должен превышать 1500x1500px.',
-         ]);
+         $path = null;
+         if ($request->hasFile('image')) {
+            $validated = validator($request->all(), [
+               'image' => [
+                  'required',
+                  File::image()
+                     ->types(['png', 'webp'])
+                     ->max(5 * 1024)
+                     ->dimensions(Rule::dimensions()->maxWidth(1500)->maxHeight(1500)),
+               ],
+            ], [
+               'image.required' => 'Файл обязательно.',
+               'image.image' => 'Файл должен быть изображением.',
+               'image.max' => 'Файл не должен быть больше 5МБ.',
+               'image.dimensions' => 'Размер изображения не должен превышать 1500x1500px.',
+            ]);
 
-         if ($validated->fails()) return [
-            "object" => (object) [
-               "success" => false,
-               "debug" => true,
-               "errors" => $validated->errors(),
-               "message" => "Файл не прошёл проверку.",
-               "result" => null,
-            ],
-            "status" => 422,
-         ];
+            if ($validated->fails()) return [
+               "object" => (object) [
+                  "success" => false,
+                  "debug" => true,
+                  "errors" => $validated->errors(),
+                  "message" => "Файл не прошёл проверку.",
+                  "result" => null,
+               ],
+               "status" => 422,
+            ];
 
-         $path = $request->file('image')->store(
-            'public/specialists'
-         );
+            $path = $request->file('image')->store(
+               'public/specialists'
+            );
 
-         if (!$path) {
+            if (!$path) {
+               return [
+                  "object" => (object) [
+                     "success" => false,
+                     "debug" => true,
+                     "message" => "Не удалось сохранить изображение.",
+                     "result" => null,
+                  ],
+                  "status" => 500,
+               ];
+            }
+         };
+
+         $specialist = Specialist::find($profile->id->value);
+         if ($specialist) {
+            $specialist->update([
+               'link' => $profile->link->value,
+               'family' => $profile->family->value,
+               'name' => $profile->name->value,
+               'surname' => $profile->surname->value,
+               'description' => $profile->description->value,
+               'category' => $profile->category->value,
+               'degree' => $profile->degree->value,
+               'rank' => $profile->rank->value,
+               'startWorkAge' => $profile->startWorkAge->value ? $profile->startWorkAge->value : null,
+               'startWorkCity' => $profile->startWorkCity->value,
+               'adultDoctor' => $profile->adultDoctor->value,
+               'childrenDoctor' => $profile->childrenDoctor->value,
+               'childrenDoctorAge' => $profile->childrenDoctor->value ? $profile->childrenDoctorAge->value : 0,
+            ]);
+
+            if ($path) $specialist->update(['filename' => str_replace("public/specialists/", "", $path)]);
+
+            return [
+               "object" => (object) [
+                  "success" => true,
+                  "debug" => true,
+                  "message" => "Данные о профиле специалиста обновлены.",
+                  "result" => $path ? Storage::url($path) : null,
+               ],
+               "status" => 200,
+            ];
+         } else {
             return [
                "object" => (object) [
                   "success" => false,
                   "debug" => true,
-                  "message" => "Не удалось сохранить изображение.",
+                  "message" => "Специалист не найден.",
                   "result" => null,
                ],
                "status" => 500,
             ];
-         }
-      };
-
-      $specialist = Specialist::find($profile->id->value);
-      if ($specialist) {
-         $specialist->update([
-            'link' => $profile->link->value,
-            'family' => $profile->family->value,
-            'name' => $profile->name->value,
-            'surname' => $profile->surname->value,
-            'description' => $profile->description->value,
-            'category' => $profile->category->value,
-            'degree' => $profile->degree->value,
-            'rank' => $profile->rank->value,
-            'startWorkAge' => $profile->startWorkAge->value ? $profile->startWorkAge->value : null,
-            'startWorkCity' => $profile->startWorkCity->value,
-            'adultDoctor' => $profile->adultDoctor->value,
-            'childrenDoctor' => $profile->childrenDoctor->value,
-            'childrenDoctorAge' => $profile->childrenDoctor->value ? $profile->childrenDoctorAge->value : 0,
-         ]);
-
-         if ($path) $specialist->update(['filename' => str_replace("public/specialists/", "", $path)]);
-
-         return [
-            "object" => (object) [
-               "success" => true,
-               "debug" => true,
-               "message" => "Данные о профиле специалиста обновлены.",
-               "result" => $path ? Storage::url($path) : null,
-            ],
-            "status" => 200,
-         ];
-      } else {
-         return [
-            "object" => (object) [
-               "success" => false,
-               "debug" => true,
-               "message" => "Специалист не найден.",
-               "result" => null,
-            ],
-            "status" => 500,
-         ];
+         };
+      } catch (Throwable $th) {
+         return response()->json([
+            "success" => false,
+            "debug" => true,
+            "message" => $th->getMessage(),
+            "result" => null,
+         ], 500);
       };
    }
 
    /* Модуль: Сохранение специализации */
    public function saveSpecialistSpecializations(Request $request)
    {
-      $specializations = json_decode($request->specializations);
-      $id = json_decode($request->id);
+      try {
+         $specializations = json_decode($request->specializations);
+         $id = json_decode($request->id);
 
-      $specialist = Specialist::find($id);
-      if ($specialist) {
          // Поиск или добавление 
          foreach ($specializations as $key => $value) {
             SpecialistSpecialization::firstOrCreate([
@@ -607,28 +616,23 @@ class SpecialistController extends Controller
                "status" => 500,
             ];
          };
-      } else {
-         return [
-            "object" => (object) [
-               "success" => false,
-               "debug" => true,
-               "message" => "Специалист не найден.",
-               "result" => null,
-            ],
-            "status" => 500,
-         ];
-      }
+      } catch (Throwable $th) {
+         return response()->json([
+            "success" => false,
+            "debug" => true,
+            "message" => $th->getMessage(),
+            "result" => null,
+         ], 500);
+      };
    }
 
    /* Модуль: Сохранение клиник */
    public function saveSpecialistClinics(Request $request)
    {
-      $clinics = json_decode($request->clinics);
-      $id = json_decode($request->id);
+      try {
+         $clinics = json_decode($request->clinics);
+         $id = json_decode($request->id);
 
-      $specialist = Specialist::find($id);
-
-      if ($specialist) {
          // Поиск или добавление 
          foreach ($clinics as $key => $value) {
             SpecialistClinic::firstOrCreate([
@@ -670,27 +674,24 @@ class SpecialistController extends Controller
             ],
             "status" => 200,
          ];
-      } else {
-         return [
-            "object" => (object) [
-               "success" => false,
-               "debug" => true,
-               "message" => "Специалист не найден.",
-               "result" => null,
-            ],
-            "status" => 500,
-         ];
+      } catch (Throwable $th) {
+         return response()->json([
+            "success" => false,
+            "debug" => true,
+            "message" => $th->getMessage(),
+            "result" => null,
+         ], 500);
       };
    }
 
    /* Модуль: Сохранение сертификатов */
    public function saveSpecialistCertificates(Request $request)
    {
-      $certificates = json_decode($request->certificates);
-      $id = json_decode($request->id);
+      try {
 
-      $specialist = Specialist::find($id);
-      if ($specialist) {
+         $certificates = json_decode($request->certificates);
+         $id = json_decode($request->id);
+
          $arrayID = [];
          foreach ($certificates as $key => $value) {
             // Удаление
@@ -754,27 +755,23 @@ class SpecialistController extends Controller
             ],
             "status" => 200,
          ];
-      } else {
-         return [
-            "object" => (object) [
-               "success" => false,
-               "debug" => true,
-               "message" => "Специалист не найден.",
-               "result" => null,
-            ],
-            "status" => 500,
-         ];
-      }
+      } catch (Throwable $th) {
+         return response()->json([
+            "success" => false,
+            "debug" => true,
+            "message" => $th->getMessage(),
+            "result" => null,
+         ], 500);
+      };
    }
 
    /* Модуль: Сохранение образований */
    public function saveSpecialistEducations(Request $request)
    {
-      $educations = json_decode($request->educations);
-      $id = json_decode($request->id);
+      try {
+         $educations = json_decode($request->educations);
+         $id = json_decode($request->id);
 
-      $specialist = Specialist::find($id);
-      if ($specialist) {
          $arrayID = [];
 
          foreach ($educations as $key => $value) {
@@ -841,27 +838,23 @@ class SpecialistController extends Controller
             ],
             "status" => 200,
          ];
-      } else {
-         return [
-            "object" => (object) [
-               "success" => false,
-               "debug" => true,
-               "message" => "Специалист не найден.",
-               "result" => null,
-            ],
-            "status" => 500,
-         ];
-      }
+      } catch (Throwable $th) {
+         return response()->json([
+            "success" => false,
+            "debug" => true,
+            "message" => $th->getMessage(),
+            "result" => null,
+         ], 500);
+      };
    }
 
    /* Модуль: Сохранение прошлых работ */
    public function saveSpecialistWorks(Request $request)
    {
-      $works = json_decode($request->works);
-      $id = json_decode($request->id);
+      try {
+         $works = json_decode($request->works);
+         $id = json_decode($request->id);
 
-      $specialist = Specialist::find($id);
-      if ($specialist) {
          $arrayID = [];
 
          foreach ($works as $key => $value) {
@@ -928,16 +921,13 @@ class SpecialistController extends Controller
             ],
             "status" => 200,
          ];
-      } else {
-         return [
-            "object" => (object) [
-               "success" => false,
-               "debug" => true,
-               "message" => "Специалист не найден.",
-               "result" => null,
-            ],
-            "status" => 500,
-         ];
+      } catch (Throwable $th) {
+         return response()->json([
+            "success" => false,
+            "debug" => true,
+            "message" => $th->getMessage(),
+            "result" => null,
+         ], 500);
       };
    }
 
@@ -961,51 +951,66 @@ class SpecialistController extends Controller
          ], 422);
       };
 
-      // Удаление помеченных
-      foreach ($request->specialists as $key => $value) {
-         if ($value['delete'] === true) {
+      DB::beginTransaction();
+
+      try {
+         // Удаление помеченных
+         foreach ($request->specialists as $key => $value) {
+            if ($value['delete'] === true) {
+               $specialist = Specialist::find($value['id']);
+               $specialist->delete();
+               continue;
+            };
+
             $specialist = Specialist::find($value['id']);
-            $specialist->delete();
-            continue;
+            $specialist->update([
+               'hide' => $value['hide'],
+            ]);
          };
 
-         $specialist = Specialist::find($value['id']);
-         $specialist->update([
-            'hide' => $value['hide'],
-         ]);
-      };
+         $specialists = Specialist::all();
 
-      $specialists = Specialist::all();
+         // Получение всех файлов
+         $filesSpecialists = Storage::files('public/specialists');
 
-      // Получение всех файлов
-      $filesSpecialists = Storage::files('public/specialists');
+         if ($filesSpecialists) {
+            foreach ($filesSpecialists as $fileKey => $fileValue) {
+               $useFile = false;
+               /* Проверка на использование файла */
+               foreach ($specialists as $specialistKey => $specialistValue) {
+                  /* Обрезание значения $fileValue до названия файла */
+                  $str = str_replace('public/specialists/', '', $fileValue);
+                  /* Проверка значения названия файла на совпадение */
+                  if ($specialistValue->filename == $str) {
+                     $useFile = true;
+                  };
+               };
 
-      if ($filesSpecialists) {
-         foreach ($filesSpecialists as $fileKey => $fileValue) {
-            $useFile = false;
-            /* Проверка на использование файла */
-            foreach ($specialists as $specialistKey => $specialistValue) {
-               /* Обрезание значения $fileValue до названия файла */
-               $str = str_replace('public/specialists/', '', $fileValue);
-               /* Проверка значения названия файла на совпадение */
-               if ($specialistValue->filename == $str) {
-                  $useFile = true;
+               /* Удаление файла, если не используется */
+               if (!$useFile) {
+                  Storage::delete($fileValue);
                };
             };
-
-            /* Удаление файла, если не используется */
-            if (!$useFile) {
-               Storage::delete($fileValue);
-            };
          };
-      };
 
-      return response()->json([
-         "success" => true,
-         "debug" => true,
-         "message" => "Данные обновлены.",
-         "result" => null,
-      ], 200);
+         DB::commit();
+
+         return response()->json([
+            "success" => true,
+            "debug" => true,
+            "message" => "Данные обновлены.",
+            "result" => null,
+         ], 200);
+      } catch (Throwable $th) {
+         DB::rollBack();
+         
+         return response()->json([
+            "success" => false,
+            "debug" => true,
+            "message" => $th->getMessage(),
+            "result" => null,
+         ], 500);
+      };
    }
 
    /* Добавление нового специалиста */
