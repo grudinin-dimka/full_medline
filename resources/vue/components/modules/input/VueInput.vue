@@ -612,6 +612,8 @@ export default {
 
 /* select */
 .input :is(select) {
+	display: flex;
+	align-items: center;
 	cursor: pointer;
 	box-sizing: border-box;
 
@@ -619,7 +621,6 @@ export default {
 	border-radius: var(--select-border-radius);
 
 	padding: var(--select-padding);
-
 	height: 62px;
 
 	color: var(--select-color);

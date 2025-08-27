@@ -307,6 +307,7 @@ const router = createRouter({
 						},
 					],
 				},
+				/* NOTE: Заблокировать */
 				{
 					path: "etravels",
 					name: "etravels",

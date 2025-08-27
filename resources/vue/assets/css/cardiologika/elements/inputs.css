@@ -24,7 +24,7 @@
 	--select-top: calc(anchor(bottom) + 5px);
 	--select-border: var(--input-border);
 	--select-border-radius: calc(var(--default-border-radius) / 1.5);
-	--select-padding: var(--default-padding);
+	--select-padding: 0px var(--default-padding);
 	--select-color: var(--default-font-color);
 	--select-background-color: white;
 	--select-background-color-hover: white;

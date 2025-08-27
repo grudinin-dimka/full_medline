@@ -42,7 +42,7 @@
 						<div class="contacts__address-title">Адрес:</div>
 						<ul>
 							<li>
-								<VueIcon :name="'Home'" :fill="'black'" :width="'24px'" :height="'24px'" />
+								<VueIcon :name="'Location On'" :fill="'black'" :width="'24px'" :height="'24px'" />
 								{{
 									`г. ${contact.clinic.city}, ул. ${contact.clinic.street}, д. ${contact.clinic.home}`
 								}}

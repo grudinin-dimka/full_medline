@@ -374,8 +374,8 @@
 				:look="'inverse'"
 				@click="
 					$store.commit('openWiki', {
-						title: 'СПИСОК ЦЕН',
-						component: 'PricesAll',
+						title: 'ПУТЕВКИ',
+						component: 'TravelsAll',
 					})
 				"
 				:minWidth="'30px'"

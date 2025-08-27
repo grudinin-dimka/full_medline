@@ -43,6 +43,8 @@ import VideoAll from "./components/video/VideoAll.vue";
 import ContactsAll from "./components/contacts/ContactsAll.vue";
 import AboutAll from "./components/about/AboutAll.vue";
 import AboutFiles from "./components/about/AboutFiles.vue";
+import VacanciesAll from "./components/vacancies/VacanciesAll.vue";
+import TravelsAll from "./components/travels/TravelsAll.vue";
 
 import VueIcon from "../icon/VueIcon.vue";
 
@@ -62,6 +64,8 @@ export default {
 		ContactsAll,
 		AboutAll,
 		AboutFiles,
+		VacanciesAll,
+		TravelsAll,
 
 		VueIcon,
 	},

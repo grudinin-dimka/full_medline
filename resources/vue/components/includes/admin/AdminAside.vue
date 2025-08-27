@@ -120,6 +120,7 @@
 					</div>
 				</div>
 
+				<!-- NOTE: Заблокировать страницу "Путевки" -->
 				<div class="aside__item" :class="{ active: isActive('/admin/travels') }">
 					<a
 						class="aside__item-title"

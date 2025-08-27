@@ -108,7 +108,7 @@
 				:editable="true"
 				:limit="1_000"
 				:minHeight="150"
-				:options="['align', 'format', 'list']"
+				:options="['align', 'format', 'list', 'link']"
 				:placeholder="'Введите описание'"
 				:error="currentVacancy.errors.description.status"
 			>
@@ -179,8 +179,8 @@
 	<!--|                    ПУТЕВКИ                        |-->
 	<!--|___________________________________________________|-->
 	<info-bar>
-		<template v-slot:title>Путевки</template>
-		<template v-slot:addreas>travels</template>
+		<template v-slot:title>Вакансии</template>
+		<template v-slot:addreas>vacancies</template>
 	</info-bar>
 
 	<block-once :minHeight="200">
@@ -205,8 +205,8 @@
 				:look="'inverse'"
 				@click="
 					$store.commit('openWiki', {
-						title: 'СПИСОК ЦЕН',
-						component: 'PricesAll',
+						title: 'ВАКАНСИИ',
+						component: 'VacanciesAll',
 					})
 				"
 				:minWidth="'30px'"
