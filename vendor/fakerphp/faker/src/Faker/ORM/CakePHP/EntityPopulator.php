@@ -119,6 +119,8 @@ class EntityPopulator
             };
         }
 
+        // TODO check if TreeBehavior attached to modify lft/rgt cols
+
         return $modifiers;
     }
 

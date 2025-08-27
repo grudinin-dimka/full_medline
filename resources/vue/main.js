@@ -21,7 +21,7 @@ import VueApexCharts from "vue3-apexcharts";
 import VueJsBarcode from 'vue-jsbarcode';
 
 const app = createApp(App);
-цй
+
 app.use(store);
 app.use(router);
 app.use(VueTheMask);
