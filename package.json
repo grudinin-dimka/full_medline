@@ -6,9 +6,10 @@
         "build": "vite build"
     },
     "devDependencies": {
+        "@vitejs/plugin-vue": "^6.0.1",
         "axios": "^1.6.4",
-        "laravel-vite-plugin": "^1.0",
-        "vite": "^5.0"
+        "laravel-vite-plugin": "^2.0.1",
+        "vite": "^7.1.3"
     },
     "dependencies": {
         "@tiptap/extension-bubble-menu": "^2.11.7",
@@ -23,7 +24,6 @@
         "@tiptap/pm": "^2.11.7",
         "@tiptap/starter-kit": "^2.11.7",
         "@tiptap/vue-3": "^2.11.7",
-        "@vitejs/plugin-vue": "^5.1.2",
         "apexcharts": "^4.7.0",
         "jsbarcode": "^3.12.1",
         "vue-jsbarcode": "^1.0.2",

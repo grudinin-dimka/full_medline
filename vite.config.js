@@ -1,7 +1,7 @@
-import { defineConfig } from "vite";
-import laravel from "laravel-vite-plugin";
+import { defineConfig } from "vite"
+
+import laravel from 'laravel-vite-plugin'
 import vue from "@vitejs/plugin-vue";
-import { fileURLToPath } from "url";
 
 export default defineConfig({
 	/* Плагины */
@@ -13,11 +13,12 @@ export default defineConfig({
 		}),
 	],
 
-	/* Алиасы */
-	resolve: {
-		alias: {
-			"@": fileURLToPath(new URL("/resources/vue/", import.meta.url)),
-		},
+	/* Настройка локального сервера */
+	server: {
+		cors: {
+         origin: "https://medline.local",
+         methods: ["GET", "POST", "PUT", "DELETE"],
+      },
 	},
 
 	/* Настройка сборки */
