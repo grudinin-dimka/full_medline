@@ -44,7 +44,7 @@ class Store implements StoreInterface
         private array $options = [],
     ) {
         if (!is_dir($this->root) && !@mkdir($this->root, 0777, true) && !is_dir($this->root)) {
-            throw new \RuntimeException(sprintf('Unable to create the store directory (%s).', $this->root));
+            throw new \RuntimeException(\sprintf('Unable to create the store directory (%s).', $this->root));
         }
         $this->keyCache = new \SplObjectStorage();
         $this->options['private_headers'] ??= ['Set-Cookie'];
@@ -161,7 +161,7 @@ class Store implements StoreInterface
             return $this->restoreResponse($headers, $path);
         }
 
-        // todo the metaStore referenced an entity that doesn't exist in
+        // TODO the metaStore referenced an entity that doesn't exist in
         // the entityStore. We definitely want to return nil but we should
         // also purge the entry from the meta-store when this is detected.
         return null;

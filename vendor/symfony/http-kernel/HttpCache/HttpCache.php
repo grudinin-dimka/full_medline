@@ -17,6 +17,7 @@
 
 namespace Symfony\Component\HttpKernel\HttpCache;
 
+use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -87,7 +88,6 @@ class HttpCache implements HttpKernelInterface, TerminableInterface
         private ?SurrogateInterface $surrogate = null,
         array $options = [],
     ) {
-
         // needed in case there is a fatal error because the backend is too slow to respond
         register_shutdown_function($this->store->cleanup(...));
 
@@ -149,7 +149,7 @@ class HttpCache implements HttpKernelInterface, TerminableInterface
     {
         $log = [];
         foreach ($this->traces as $request => $traces) {
-            $log[] = sprintf('%s: %s', $request, implode(', ', $traces));
+            $log[] = \sprintf('%s: %s', $request, implode(', ', $traces));
         }
 
         return implode('; ', $log);
@@ -183,6 +183,7 @@ class HttpCache implements HttpKernelInterface, TerminableInterface
 
     public function handle(Request $request, int $type = HttpKernelInterface::MAIN_REQUEST, bool $catch = true): Response
     {
+        // FIXME: catch exceptions and implement a 500 error page here? -> in Varnish, there is a built-in error page mechanism
         if (HttpKernelInterface::MAIN_REQUEST === $type) {
             $this->traces = [];
             // Keep a clone of the original request for surrogates so they can access it.
@@ -209,7 +210,13 @@ class HttpCache implements HttpKernelInterface, TerminableInterface
             $this->record($request, 'reload');
             $response = $this->fetch($request, $catch);
         } else {
-            $response = $this->lookup($request, $catch);
+            $response = null;
+            do {
+                try {
+                    $response = $this->lookup($request, $catch);
+                } catch (CacheWasLockedException) {
+                }
+            } while (null === $response);
         }
 
         $this->restoreResponseBody($request, $response);
@@ -228,7 +235,9 @@ class HttpCache implements HttpKernelInterface, TerminableInterface
 
         $response->prepare($request);
 
-        $response->isNotModified($request);
+        if (HttpKernelInterface::MAIN_REQUEST === $type) {
+            $response->isNotModified($request);
+        }
 
         return $response;
     }
@@ -557,15 +566,7 @@ class HttpCache implements HttpKernelInterface, TerminableInterface
 
         // wait for the lock to be released
         if ($this->waitForLock($request)) {
-            // replace the current entry with the fresh one
-            $new = $this->lookup($request);
-            $entry->headers = $new->headers;
-            $entry->setContent($new->getContent());
-            $entry->setStatusCode($new->getStatusCode());
-            $entry->setProtocolVersion($new->getProtocolVersion());
-            foreach ($new->headers->getCookies() as $cookie) {
-                $entry->headers->setCookie($cookie);
-            }
+            throw new CacheWasLockedException(); // unwind back to handle(), try again
         } else {
             // backend is slow as hell, send a 503 response (to avoid the dog pile effect)
             $entry->setStatusCode(503);
@@ -702,7 +703,11 @@ class HttpCache implements HttpKernelInterface, TerminableInterface
             $path .= '?'.$qs;
         }
 
-        return $request->getMethod().' '.$path;
+        try {
+            return $request->getMethod().' '.$path;
+        } catch (SuspiciousOperationException) {
+            return '_BAD_METHOD_ '.$path;
+        }
     }
 
     /**

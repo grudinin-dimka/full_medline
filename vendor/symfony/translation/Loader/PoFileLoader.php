@@ -85,7 +85,7 @@ class PoFileLoader extends FileLoader
                 $flags = array_map('trim', explode(',', substr($line, 2)));
             } elseif (str_starts_with($line, 'msgid "')) {
                 // We start a new msg so save previous
-                // todo: this fails when comments or contexts are added
+                // TODO: this fails when comments or contexts are added
                 $this->addMessage($messages, $item);
                 $item = $defaults;
                 $item['ids']['singular'] = substr($line, 7, -1);
