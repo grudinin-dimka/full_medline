@@ -178,7 +178,17 @@ export default {
 			if (!response) return;
 
 			try {
-				document.title = response.data.result.title + " | Путевки";
+				let element = document.createElement("div");
+				element.innerHTML = response.data.result.title;
+
+				// Изменение заголовка
+				this.$store.commit("setDocumentTitle", element.textContent + " | Путевки");
+
+				// Изменение ключевых слов
+				this.$store.commit("setDocumentMeta", {
+					name: "keywords",
+					value: element.textContent,
+				});
 
 				this.travel = response.data.result;
 

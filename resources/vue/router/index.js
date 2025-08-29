@@ -5,6 +5,8 @@ import Admin from "../views/Admin.vue";
 import Login from "../views/Login.vue";
 import NotFound from "../views/NotFound.vue";
 
+import store from "../store/index.js";
+
 const router = createRouter({
 	history: createWebHistory(import.meta.env.VITE_BASE_URL || "/"),
 	routes: [
@@ -23,13 +25,25 @@ const router = createRouter({
 				{
 					path: "about",
 					name: "about",
-					meta: { title: "О нас" },
+					meta: {
+						title: "О нас",
+						description: `История создания медицинского центра ${
+							import.meta.env.VITE_MC_NAME
+						}, а также другая информация о нас.`,
+						keywords: "О нас, о нас, история",
+					},
 					component: () => import("../views/main/about/MainAbout.vue"),
 				},
 				{
 					path: "specialists",
 					name: "specialists",
-					meta: { title: "Специалисты" },
+					meta: {
+						title: "Специалисты",
+						description: `Список специалистов, работающих в медицинском центре ${
+							import.meta.env.VITE_MC_NAME
+						}.`,
+						keywords: "специалист, специалисты, врач, врачи",
+					},
 					component: () => import("../views/main/specialists/MainSpecialists.vue"),
 					children: [
 						{
@@ -47,7 +61,14 @@ const router = createRouter({
 				{
 					path: "prices",
 					name: "prices",
-					meta: { title: "Цены" },
+					meta: {
+						title: "Цены",
+						description: `Список услуг с ценами в медицинской клинике ${
+							import.meta.env.VITE_MC_NAME
+						}. Мы стараемся подобрать лучшие цены, чтобы вы могли получать качественную медицинскую помощь за адекватную цену.`,
+						keywords:
+							"цена, список цен, список, прайс, услуги, цены на услуги, цена на прайс, услуга, стоимость услуги, стоимость услуг, стоимость, стоимости",
+					},
 					redirect: { name: "prices-all" },
 					component: () => import("../views/main/prices/MainPrices.vue"),
 					children: [
@@ -60,7 +81,13 @@ const router = createRouter({
 						{
 							path: "clinics",
 							name: "prices-clinics",
-							meta: { title: "Клиники" },
+							meta: {
+								title: "Клиники",
+								description: `Филиалы и клиники медицинского центра  ${
+									import.meta.env.VITE_MC_NAME
+								}. Мы расположены в городах: Шадринск, Каргополье, Долматово, Катайск.`,
+								keywords: "клиники, филиалы, клиника, клиники медицинского центра",
+							},
 							component: () => import("../views/main/prices/clinics/MainPricesClinics.vue"),
 							redirect: { name: "prices-clinics-all" },
 							children: [
@@ -89,14 +116,26 @@ const router = createRouter({
 				{
 					path: "plastic",
 					name: "plastic",
-					meta: { title: "Пластическая хирургия" },
+					meta: {
+						title: "Пластическая хирургия",
+						description: `Наша клиника предоставляет услуги пластической хирургии, а именно: Блефаропластика верхних век, Блефаропластика нижних век, Булхорн.`,
+						keywords:
+							"пластика, пластическая операция, операция, пластическая хирургия, хирургия, блефаропластика верхних век, блефаропластика нижних век, блефаропластика, булхорн",
+					},
 					component: () => import("../views/main/plastic/MainPlastic.vue"),
 				},
 				// NOTE: Заблокировать страницу "Путевки"
 				{
 					path: "travels",
 					name: "travels",
-					meta: { title: "Путевки" },
+					meta: {
+						title: "Путевки",
+						description: `Доступные путевки, программы и комплексы медицинского центра ${
+							import.meta.env.VITE_MC_NAME
+						}. Путевки доступны как и с питанием, так и без него, что влияет на итоговую стоимость`,
+						keywords:
+							"путевки, программы, комплекс, комплексы, лечение, путевка, программы медицинского центра, путевки медицинского центра",
+					},
 					component: () => import("../views/main/travels/MainTravels.vue"),
 					redirect: { name: "travels-all" },
 					children: [
@@ -115,7 +154,14 @@ const router = createRouter({
 				{
 					path: "vacancies",
 					name: "vacancies",
-					meta: { title: "Вакансии" },
+					meta: {
+						title: "Вакансии",
+						description: `Доступные вакансии для нашего медицинского центра ${
+							import.meta.env.VITE_MC_NAME
+						}. Мы открыты к кандидатам, которые хотят работать у нас.`,
+						keywords:
+							"вакансии, вакансия, вакансия медицинского центра, вакансии медицинского центра, устроиться, работа, работа в медицинском центре, ищу работу",
+					},
 					component: () => import("../views/main/vacancies/MainVacancies.vue"),
 					redirect: { name: "vacancies-all" },
 					children: [
@@ -129,7 +175,14 @@ const router = createRouter({
 				{
 					path: "schedule",
 					name: "schedule",
-					meta: { title: "Расписание" },
+					meta: {
+						title: "Расписание",
+						description: `Расписание приемов в медицинском центре ${
+							import.meta.env.VITE_MC_NAME
+						}. Временные промежутки для каждого врача в конкретные дни во всех клиниках.`,
+						keywords:
+							"Расписание, расписание, Расписание врачей, расписание врачей, запись к врачу на прием, запись на прием, запись, прием",
+					},
 					component: () => import("../views/main/shedule/MainSchedule.vue"),
 					children: [
 						{
@@ -142,13 +195,27 @@ const router = createRouter({
 				{
 					path: "contacts",
 					name: "contacts",
-					meta: { title: "Контакты" },
+					meta: {
+						title: "Контакты",
+						description: `Контакты медицинского центра ${
+							import.meta.env.VITE_MC_NAME
+						}. Адреса, телефоны, электронная почта и расположение на карте.`,
+						keywords:
+							"Контакты, адреса, адрес, телефон, телефоны, почта, электронная почта, карта, расположение, как добраться, как проехать",
+					},
 					component: () => import("../views/main/contacts/MainContacts.vue"),
 				},
 				{
 					path: "news",
 					name: "news",
-					meta: { title: "Новости" },
+					meta: {
+						title: "Новости",
+						description: `Актуальные новости о нашем медицинском центре ${
+							import.meta.env.VITE_MC_NAME
+						}. Скидки, объявления и многое другое, что может быть полезно для наших пациентов.`,
+						keywords:
+							"Новости, новости, акции, скидки, скидка, акция, объявления, объявления медицинского центра",
+					},
 					redirect: { name: "news-all" },
 					component: () => import("../views/main/news/MainNews.vue"),
 					children: [
@@ -435,8 +502,28 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-	// NOTE: Заголовок документа
-	document.title = `${to.meta.title} | Медицинский центр «Медлайн»`;
+	// Изменение заголовка
+	if (to.meta.title) {
+		store.commit(
+			"setDocumentTitle",
+			`${to.meta.title} | Медицинский центр ${import.meta.env.VITE_MC_NAME}`
+		);
+	} else {
+		store.commit("setDocumentTitle", `Медицинский центр ${import.meta.env.VITE_MC_NAME}`);
+	}
+
+	// Изменение описания
+	store.commit("setDocumentMeta", {
+		name: "description",
+		value: to.meta.description,
+	});
+
+	// Изменение ключевых слов
+	store.commit("setDocumentMeta", {
+		name: "keywords",
+		value: to.meta.keywords,
+	});
+
 	next();
 });
 

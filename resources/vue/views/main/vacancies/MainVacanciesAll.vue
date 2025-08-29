@@ -268,6 +268,8 @@ export default {
 	border-radius: calc(var(--default-border-radius) / 2);
 
 	background-color: white;
+
+	animation: show 0.5s ease;
 }
 
 @media screen and (max-width: 1450px) {

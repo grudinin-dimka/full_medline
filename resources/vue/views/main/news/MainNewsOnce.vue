@@ -88,6 +88,18 @@ export default {
 			try {
 				if (!response) return;
 
+				let element = document.createElement("div");
+				element.innerHTML = response.data.result.title;
+
+				// Изменение заголовка
+				this.$store.commit("setDocumentTitle", element.textContent + " | Новости");
+
+				// Изменение ключевых слов
+				this.$store.commit("setDocumentMeta", {
+					name: "keywords",
+					value: element.textContent,
+				});
+
 				this.title = response.data.result.title;
 				this.description = response.data.result.description;
 				this.path = response.data.result.path;

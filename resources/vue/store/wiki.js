@@ -11,13 +11,13 @@ export default {
          state.wiki.show = show;
       },
 
-      openWiki(state, options) {
+      openWiki(state, { title, component }) {
          document.body.classList.add("wiki-open");
 
          state.wiki.show = true;
 
-         state.wiki.title = options.title;
-         state.wiki.component = options.component;
+         state.wiki.title = title;
+         state.wiki.component = component;
       },
 
       closeWiki(state) {

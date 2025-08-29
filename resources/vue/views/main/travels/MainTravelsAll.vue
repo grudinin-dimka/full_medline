@@ -159,6 +159,17 @@ export default {
 					prices: "",
 					services: "",
 				},
+				{
+					id: 4,
+					title: "",
+					duration: "",
+					description: "",
+					order: "",
+					image: "",
+					path: "",
+					prices: "",
+					services: "",
+				},
 			],
 		};
 	},

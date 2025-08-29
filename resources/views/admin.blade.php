@@ -11,16 +11,16 @@
       <meta name="theme-color" content="var(--primary-color)">
 
       <!-- SEO -->
-      <meta name="keywords" content="медлайн, МЕДЛАЙН, МедЛайн, медициниский центр, клиника, клиника медицинского центра, медецинская клиника, медицинский центр в г. Шадринск">
-      <meta name="description" content="«МедЛайн» в Шадринске: врачебные приёмы, анализы, УЗИ, процедурный кабинет. Ваше здоровье – наша забота! Доступные цены, отличный сервис!">
-      <meta name="author" content="«МедЛайн»">
+      <meta name="keywords" content="{{ env('VITE_MC_KEYWORDS', '') }}">
+      <meta name="description" content="{{ env('VITE_MC_DESCRIPTION', '') }}">
+      <meta name="author" content="{{ env('VITE_MC_AUTHOR', '') }}">
    
       <!-- Open Graph -->
-      <meta property="og:url" content="https://medlinegroup.ru/">
-      <meta property="og:type" content="website" />
-      <meta property="og:title" content="«МедЛайн» - врачебные приёмы, анализы, УЗИ, процедурный кабинет">
-      <meta property="og:description" content="Мы предлагаем врачебные приёмы, анализы, УЗИ, процедурный кабинет в Шадринске. Доступные цены, отличный сервис!">
-      <meta property="og:image" content="https://medlinegroup.ru/storage/img/logo.webp">
+      <meta property="og:url" content="{{ env('VITE_MC_OG_URL', '') }}">
+      <meta property="og:type" content="{{  env('VITE_MC_OG_TYPE', '') }}" />
+      <meta property="og:title" content="{{ env('VITE_MC_OG_TITLE', '') }}">
+      <meta property="og:description" content="{{ env('VITE_MC_OG_DESCRIPTION', '') }}">
+      <meta property="og:image" content="{{ env('VITE_MC_OG_IMAGE', '') }}">
 
       <link rel="shortcut icon" href="{{ asset('favicon.png') }}" type="image/png" size="48x48">
       

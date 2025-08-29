@@ -16,11 +16,7 @@ export default {
 		},
 	},
 	mutations: {
-		openModal() {
-
-		},
-
-		/* Изменение меню навигации (главная) */
+		/* Главная: Изменение меню навигации */
 		setBurgerMain(state) {
 			if (state.burger.main.status) {
 				document.body.classList.remove("modal-open");
@@ -31,13 +27,13 @@ export default {
 			}
 		},
 
-		/* Закрытие меню навигации */
+		/* Главная: Закрытие меню навигации */
 		closeBurgerMain(state) {
 			document.body.classList.remove("modal-open");
 			state.burger.main.status = false;
 		},
 
-		/* Изменение меню навигации (админка) */
+		/* Админка: Изменение меню навигации */
 		setBurgerAdmin(state) {
 			if (state.burger.admin.status) {
 				document.body.classList.remove("modal-open");
@@ -47,6 +43,8 @@ export default {
 				state.burger.admin.status = true;
 			}
 		},
+
+		/* Админка: Закрытие меню навигации */
 		closeBurgerAdmin(state) {
 			document.body.classList.remove("modal-open");
 			state.burger.admin.status = false;

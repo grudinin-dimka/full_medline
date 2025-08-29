@@ -288,6 +288,34 @@ export default {
 				this.specialist.educations = response.data.result.educations;
 				this.specialist.certificates = response.data.result.certificates;
 
+				if (this.specialist.profile.family && this.specialist.profile.name) {
+					let title = this.specialist.profile.family + " " + this.specialist.profile.name;
+
+					if (this.specialist.profile.surname) {
+						title += " " + this.specialist.profile.surname;
+					}
+
+					title += " | Специалисты";
+
+					// Изменение заголовка
+					this.$store.commit("setDocumentTitle", title);
+
+					// Изменение ключевых слов
+					this.$store.commit("setDocumentMeta", {
+						name: "keywords",
+						value:
+							this.getSpecializations +
+							", " +
+							this.specialist.profile.family +
+							" " +
+							this.specialist.profile.name +
+							" " +
+							this.specialist.profile.surname +
+							" " +
+							"| Специалисты",
+					});
+				}
+
 				this.loading.loader.profile = false;
 			} catch (error) {
 				this.$store.commit("addDebugger", {

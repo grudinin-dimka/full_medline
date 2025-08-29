@@ -507,7 +507,14 @@ export default {
 			if (!response) return;
 
 			try {
-				document.title = response.data.result.address.name + " | Цены";
+				// Изменение заголовка
+				this.$store.commit("setDocumentTitle", response.data.result.address.name + " | Цены");
+
+				// Изменение ключевых слов
+				this.$store.commit("setDocumentMeta", {
+					name: "keywords",
+					value: response.data.result.address.name,
+				});
 
 				this.filters.address = response.data.result.address;
 				this.categories = response.data.result.categories;

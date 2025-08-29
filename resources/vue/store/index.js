@@ -6,6 +6,7 @@ import other from "./other.js";
 import debug from "./debug.js";
 import modal from "./modal.js";
 import wiki from "./wiki.js";
+import site from "./site.js";
 
 /* Создание хранилища */
 const store = createStore({
@@ -15,6 +16,7 @@ const store = createStore({
 		debug,
 		modal,
 		wiki,
+		site,
 	},
 });
 
