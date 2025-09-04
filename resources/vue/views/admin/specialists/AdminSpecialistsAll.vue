@@ -213,6 +213,7 @@ export default {
 			modal: {
 				thin: false,
 				clamped: false,
+				touch: true,
 				values: {
 					title: "",
 					look: "default",

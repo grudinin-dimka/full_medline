@@ -447,6 +447,7 @@ export default {
 			modal: {
 				thin: false,
 				clamped: false,
+				touch: false,
 				values: {
 					title: "",
 					look: "default",
@@ -456,6 +457,7 @@ export default {
 			modalPassword: {
 				thin: true,
 				clamped: false,
+				touch: false,
 				values: {
 					title: "",
 					look: "default",
@@ -465,6 +467,7 @@ export default {
 			modalBlock: {
 				thin: true,
 				clamped: false,
+				touch: true,
 				values: {
 					title: "",
 					look: "default",
@@ -474,6 +477,7 @@ export default {
 			modalDelete: {
 				thin: true,
 				clamped: false,
+				touch: true,
 				values: {
 					title: "",
 					look: "default",

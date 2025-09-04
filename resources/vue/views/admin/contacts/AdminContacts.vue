@@ -336,6 +336,7 @@ export default {
 			modal: {
 				thin: false,
 				clamped: false,
+				touch: true,
 				values: {
 					title: "",
 					look: "default",
@@ -345,6 +346,7 @@ export default {
 			modalPhone: {
 				thin: true,
 				clamped: false,
+				touch: true,
 				values: {
 					title: "",
 					look: "default",
@@ -354,6 +356,7 @@ export default {
 			modalMail: {
 				thin: true,
 				clamped: false,
+				touch: true,
 				values: {
 					title: "",
 					look: "default",

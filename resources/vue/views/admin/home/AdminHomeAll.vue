@@ -389,6 +389,7 @@ export default {
 			modal: {
 				thin: false,
 				clamped: false,
+				touch: true,
 				values: {
 					title: "",
 					look: "default",
@@ -498,6 +499,17 @@ export default {
 			this[name].values.look = look;
 
 			this.$refs[name].open();
+		},
+
+		touchModal() {
+			switch (this.modal.values.look) {
+				case "create":
+					this.addSlide();
+					break;
+				default:
+					this.updateSlide();
+					break;
+			}
 		},
 
 		/* Открытие модального окна для добавления */

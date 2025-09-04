@@ -11,7 +11,7 @@
 					unclamped: !settings.clamped,
 				}"
 				ref="modal"
-				@click.self="close"
+				@click.self="settings.touch ? $emit('touch') : close()"
 			>
 				<transition name="modal-container">
 					<div class="modal__container" :class="{ thin: settings.thin }" v-show="isOpen">
@@ -57,7 +57,7 @@
 
 <script>
 export default {
-	emits: ["enter"],
+	emits: ["touch"],
 	props: {
 		/* 
 			settings: {
@@ -91,6 +91,7 @@ export default {
 
 			document.body.classList.add("modal-open");
 		},
+
 		close() {
 			this.isOpen = false;
 

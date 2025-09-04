@@ -8,6 +8,9 @@
 	<!-- Навигация -->
 	<MainNav ref="mainNav" />
 
+	<!-- События -->
+	<MainActions ref="mainActions" />
+
 	<!-- Содержимое -->
 	<RouterView />
 
@@ -23,6 +26,7 @@ import VueIcon from "../components/modules/icon/VueIcon.vue";
 import MainHeader from "../components/includes/main/medline/MainHeader.vue";
 import MainNav from "../components/includes/main/medline/MainNav.vue";
 import MainFooter from "../components/includes/main/medline/MainFooter.vue";
+import MainActions from "../components/includes/main/medline/MainActions.vue";
 
 export default {
 	data() {
@@ -40,6 +44,7 @@ export default {
 		MainHeader,
 		MainNav,
 		MainFooter,
+		MainActions,
 	},
 };
 </script>

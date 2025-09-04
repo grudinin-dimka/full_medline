@@ -1105,6 +1105,7 @@ export default {
 			modalSpecializations: {
 				thin: false,
 				clamped: true,
+				touch: true,
 				values: {
 					title: "",
 					look: "default",
@@ -1114,6 +1115,7 @@ export default {
 			modalClinics: {
 				thin: false,
 				clamped: true,
+				touch: true,
 				values: {
 					title: "",
 					look: "default",
@@ -1123,6 +1125,7 @@ export default {
 			modalCertificates: {
 				thin: false,
 				clamped: false,
+				touch: true,
 				values: {
 					title: "",
 					look: "default",
@@ -1132,6 +1135,7 @@ export default {
 			modalEducations: {
 				thin: false,
 				clamped: false,
+				touch: true,
 				values: {
 					title: "",
 					look: "default",
@@ -1141,6 +1145,7 @@ export default {
 			modalWorks: {
 				thin: false,
 				clamped: false,
+				touch: true,
 				values: {
 					title: "",
 					look: "default",

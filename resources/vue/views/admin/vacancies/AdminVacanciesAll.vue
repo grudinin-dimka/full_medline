@@ -233,54 +233,6 @@
 						<div class="table__hide" v-else @click="setVacancyHide(row)">Нет</div>
 					</template>
 				</VueTable>
-
-				<!-- <div class="evacancies" v-if="vacancies.length">
-					<div
-						class="evacancies__item"
-						v-for="vacancy in vacancies"
-						:class="{
-							'evacancies__item--hide': vacancy.hide,
-							'evacancies__item--create': vacancy.create,
-							'evacancies__item--delete': vacancy.delete,
-						}"
-						@click="openVacancyEdite(vacancy)"
-					>
-						<div class="evacancies__item-header">
-							<div class="evacancies__header-item">id: {{ vacancy.id }}</div>
-						</div>
-						<div class="evacancies__item-body">
-							<div class="evacancies__body-title">{{ vacancy.title }}</div>
-							<div class="evacancies__body-address">
-								Адрес: {{ vacancy.address || "Не указан" }}
-							</div>
-							<div class="evacancies__body-schedule">График: {{ vacancy.schedule }}</div>
-							<div class="evacancies__body-requirements">
-								<div class="evacancies__requirements-title">Требования:</div>
-								<div class="evacancies__requirements-body">
-									{{ vacancy.requirements }}
-								</div>
-							</div>
-							<div class="evacancies__body-conditions">
-								<div class="evacancies__conditions-title">Условия:</div>
-								<div class="evacancies__conditions-body">
-									{{ vacancy.conditions }}
-								</div>
-							</div>
-							<div class="evacancies__body-salary">
-								<VueIcon
-									:name="'Payments'"
-									:fill="'var(--primary-color)'"
-									:width="'26px'"
-									:height="'26px'"
-								/>
-								{{ vacancy.salary }}
-							</div>
-						</div>
-					</div>
-				</div> -->
-
-				<!-- Элемент пустой страницы -->
-				<!-- <empty :minHeight="300" v-if="vacancies.length == 0" /> -->
 			</template>
 
 			<!-- Загрузка слайдов -->
@@ -291,13 +243,6 @@
 				@afterLeave="loaderChildAfterLeave"
 			/>
 		</template>
-
-		<!-- <template #buttons>
-			<VueButton @click="openVacancyCreate" :disabled="disabled.vacancies.create">
-				<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
-				Добавить
-			</VueButton>
-		</template> -->
 	</block-once>
 </template>
 
@@ -320,9 +265,6 @@ import VueButton from "../../../components/ui/VueButton.vue";
 import api from "../../../mixin/api";
 import validate from "../../../services/validate";
 import shared from "../../../services/shared";
-import files from "../../../services/files";
-import { rowIsHeader } from "@tiptap/pm/tables";
-import sorted from "../../../services/sorted";
 
 export default {
 	components: {
@@ -367,6 +309,7 @@ export default {
 			modalVacancy: {
 				thin: false,
 				clamped: false,
+				touch: true,
 				values: {
 					title: "",
 					look: "default",
@@ -376,6 +319,7 @@ export default {
 			modalVacancyRequirement: {
 				thin: true,
 				clamped: false,
+				touch: true,
 				values: {
 					title: "",
 					look: "default",

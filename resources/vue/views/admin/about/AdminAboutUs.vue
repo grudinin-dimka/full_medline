@@ -500,6 +500,7 @@ export default {
 			modal: {
 				thin: false,
 				clamped: false,
+				touch: true,
 				values: {
 					title: "",
 					look: "default",
@@ -509,6 +510,7 @@ export default {
 			modalImage: {
 				thin: true,
 				clamped: false,
+				touch: true,
 				values: {
 					title: "",
 					look: "default",
@@ -518,6 +520,7 @@ export default {
 			modalFiles: {
 				thin: true,
 				clamped: false,
+				touch: true,
 				values: {
 					title: "",
 					look: "default",

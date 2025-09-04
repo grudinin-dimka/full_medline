@@ -297,6 +297,7 @@ export default {
 			modalVideo: {
 				thin: false,
 				clamped: false,
+				touch: true,
 				values: {
 					title: "",
 					look: "default",
@@ -306,6 +307,7 @@ export default {
 			modalVideoUpload: {
 				thin: true,
 				clamped: false,
+				touch: true,
 				values: {
 					title: "",
 					look: "default",

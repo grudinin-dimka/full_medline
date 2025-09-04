@@ -525,6 +525,7 @@ export default {
 			modalTravels: {
 				thin: false,
 				clamped: false,
+				touch: true,
 				values: {
 					title: "",
 					look: "default",
@@ -534,6 +535,7 @@ export default {
 			modalTravelServices: {
 				thin: true,
 				clamped: false,
+				touch: true,
 				values: {
 					title: "",
 					look: "default",
@@ -543,6 +545,7 @@ export default {
 			modalTravelPrices: {
 				thin: true,
 				clamped: false,
+				touch: true,
 				values: {
 					title: "",
 					look: "default",
