@@ -4,8 +4,7 @@
 		<Empty :minHeight="400" v-else />
 
 		<div class="section-info">
-			<!-- NOTE: Название клиники -->
-			<p class="section-info-title">Добро Пожаловать в "Медлайн"</p>
+			<p class="section-info-title">Добро Пожаловать в {{ name }}</p>
 			<p class="section-info-sub-title">Индивидуальный подход и лучшие врачи</p>
 		</div>
 	</block>
@@ -58,6 +57,8 @@ export default {
 					news: false,
 				},
 			},
+
+			name: import.meta.env.VITE_MC_NAME,
 
 			/* Данные */
 			slides: [

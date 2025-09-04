@@ -5,7 +5,7 @@
 				class="nav__list-item"
 				:class="{ active: isActive('/specialists') }"
 				href="/specialists"
-				@click.prevent="$router.push({ name: `specialists-all` })"
+				@click.prevent="insertPage({ name: `specialists-all` })"
 			>
 				Специалисты
 			</a>
@@ -28,7 +28,7 @@
 							class="nav__list-item"
 							:class="{ active: isActive('/prices') }"
 							href="/prices"
-							@click.prevent="$router.push({ name: `prices-all` })"
+							@click.prevent="insertPage({ name: `prices-all` })"
 						>
 							Список цен
 						</a>
@@ -37,7 +37,7 @@
 							class="nav__list-item"
 							:class="{ active: isActive('/clinics') }"
 							href="/prices"
-							@click.prevent="$router.push({ name: `prices-clinics` })"
+							@click.prevent="insertPage({ name: `prices-clinics` })"
 						>
 							Клиники
 						</a>
@@ -63,37 +63,37 @@
 							class="nav__list-item"
 							:class="{ active: isActive('/plastic') }"
 							href="/plastic"
-							@click.prevent="$router.push({ name: `plastic` })"
+							@click.prevent="insertPage({ name: `plastic` })"
 						>
 							Пластика
 						</a>
 
-						<!-- <a
+						<a
 							class="nav__list-item"
 							:class="{ active: isActive('/travels') }"
 							href="/schedule"
-							@click.prevent="$router.push({ name: `travels-all` })"
+							@click.prevent="insertPage({ name: `travels-all` })"
 						>
 							Путевки
-						</a> -->
+						</a>
 					</div>
 				</div>
 			</div>
 
-			<!-- <a
+			<a
 				class="nav__list-item"
 				:class="{ active: isActive('/vacancies') }"
 				href="/vacancies"
-				@click.prevent="$router.push({ name: `vacancies` })"
+				@click.prevent="insertPage({ name: `vacancies` })"
 			>
 				Вакансии
-			</a> -->
+			</a>
 
 			<a
 				class="nav__list-item"
 				:class="{ active: isActive('/schedule') }"
 				href="/schedule"
-				@click.prevent="$router.push({ name: `schedule-all` })"
+				@click.prevent="insertPage({ name: `schedule-all` })"
 			>
 				Расписание
 			</a>
@@ -116,7 +116,7 @@
 							class="nav__list-item"
 							:class="{ active: isActive('/news') }"
 							href="/news"
-							@click.prevent="$router.push({ name: `news-all` })"
+							@click.prevent="insertPage({ name: `news-all` })"
 						>
 							Новости
 						</a>
@@ -125,7 +125,7 @@
 							class="nav__list-item"
 							:class="{ active: isActive('/videos') }"
 							href="/videos"
-							@click.prevent="$router.push({ name: `videos-all` })"
+							@click.prevent="insertPage({ name: `videos-all` })"
 						>
 							Видео
 						</a>
@@ -134,7 +134,7 @@
 							class="nav__list-item"
 							:class="{ active: isActive('/contacts') }"
 							href="/contacts"
-							@click.prevent="$router.push({ name: `contacts` })"
+							@click.prevent="insertPage({ name: `contacts` })"
 						>
 							Контакты
 						</a>
@@ -143,7 +143,7 @@
 							class="nav__list-item"
 							:class="{ active: isActive('/about') }"
 							href="/contacts"
-							@click.prevent="$router.push({ name: `about` })"
+							@click.prevent="insertPage({ name: `about` })"
 						>
 							О нас
 						</a>
@@ -161,14 +161,6 @@ export default {
 	components: {
 		VueIcon,
 	},
-	data() {
-		return {};
-	},
-	watch: {
-		$route() {
-			this.$store.commit("closeBurgerMain");
-		},
-	},
 	methods: {
 		/* Активная ссылка */
 		isActive(route) {
@@ -176,11 +168,7 @@ export default {
 		},
 
 		insertPage(page) {
-			if (page.params !== null) {
-				this.$router.push({ name: `${page.name}`, params: page.params });
-			} else {
-				this.$router.push({ name: `${page.name}` });
-			}
+			this.$router.push(page);
 
 			this.$store.commit("closeBurgerMain");
 		},
@@ -207,7 +195,7 @@ nav {
 
 .nav__list {
 	display: grid;
-	grid-template-columns: repeat(5, auto);
+	grid-template-columns: repeat(6, auto);
 	gap: 10px;
 
 	background-color: var(--primary-color);

@@ -818,7 +818,7 @@ export default {
 
 	color: var(--main-font-color);
 
-	animation: show-bottom-to-top-15 0.5s ease-in-out;
+	animation: var(--table-animation);
 }
 
 /* Компонент: Шапка */

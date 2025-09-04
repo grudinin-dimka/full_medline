@@ -230,6 +230,9 @@ export default {
 }
 
 .travels__once-image > img {
+	object-fit: cover;
+	height: 100%;
+	aspect-ratio: 1 / 1.2;
 	border-radius: var(--default-border-radius);
 
 	animation: show 0.5s ease-in-out;

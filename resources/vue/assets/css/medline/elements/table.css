@@ -6,6 +6,8 @@
 	--table-td-odd-background-color: rgba(0, 0, 0, 0.05);
 	--table-td-even-background-color: rgba(0, 0, 0, 0);
 
+	--table-animation: show-bottom-to-top-15 0.5s ease-in-out;
+
 	/* пагинация */
 	--table-pagination-gap: 10px;
 
