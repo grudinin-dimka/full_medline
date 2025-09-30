@@ -1131,6 +1131,8 @@ class PricesController extends Controller
                $xw->text($categoryValue->id);
                $xw->endAttribute();
 
+               $xw->text($categoryValue->name);
+
                // yml_catalog -> shop -> categories -> category
                $xw->endElement();
             };
