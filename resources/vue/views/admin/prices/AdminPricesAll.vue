@@ -43,8 +43,8 @@
 
 		<template #options>
 			<VueButton
-				@click.prevent="downloadPricesFiles"
-				:disabled="disabled.prices.download"
+				@click.prevent="downloadPricesXML"
+				:disabled="disabled.prices.xml"
 				:look="'inverse'"
 			>
 				<VueIcon
@@ -53,7 +53,21 @@
 					:width="'28px'"
 					:height="'28px'"
 				/>
-				Выгрузить
+				Выгрузить (.XML)
+			</VueButton>
+
+			<VueButton
+				@click.prevent="downloadPricesXLSX"
+				:disabled="disabled.prices.xlsx"
+				:look="'inverse'"
+			>
+				<VueIcon
+					:name="'Download 2'"
+					:fill="'var(--primary-color)'"
+					:width="'28px'"
+					:height="'28px'"
+				/>
+				Выгрузить (.XLSX)
 			</VueButton>
 
 			<VueButton
@@ -149,7 +163,8 @@ export default {
 				prices: {
 					save: false,
 					create: false,
-					download: false,
+					xlsx: false,
+					xml: false,
 				},
 			},
 
@@ -392,19 +407,19 @@ export default {
 				});
 		},
 
-		/* Выгрузка */
-		downloadPricesFiles() {
-			this.disabled.prices.download = true;
+		/* Выгрузка: XML */
+		downloadPricesXML() {
+			this.disabled.prices.xml = true;
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `make-prices-files`,
+				url: this.$store.getters.urlApi + `make-prices-files/xml`,
 			})
 				.then((response) => {
 					if (!response) return;
 
 					// Перенаправляем пользователя на ссылку для скачивания архива
-					window.location.href = `/api/download-prices-archive`;
+					window.location.href = response.data.result;
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
@@ -414,7 +429,33 @@ export default {
 					});
 				})
 				.finally(() => {
-					this.disabled.prices.download = false;
+					this.disabled.prices.xml = false;
+				});
+		},
+
+		/* Выгрузка: XLSX */
+		downloadPricesXLSX() {
+			this.disabled.prices.xlsx = true;
+
+			api({
+				method: "post",
+				url: this.$store.getters.urlApi + `make-prices-files/xlsx`,
+			})
+				.then((response) => {
+					if (!response) return;
+
+					// Перенаправляем пользователя на ссылку для скачивания архива
+					window.location.href = response.data.result;
+				})
+				.catch((error) => {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка.",
+						body: error,
+						type: "error",
+					});
+				})
+				.finally(() => {
+					this.disabled.prices.xlsx = false;
 				});
 		},
 	},

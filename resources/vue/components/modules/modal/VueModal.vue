@@ -102,6 +102,11 @@ export default {
 			this.$store.commit("unregisterModal", this);
 		},
 	},
+	mounted() {
+		if (this.settings.zIndex) {
+			this.$refs.modal.style.zIndex = this.settings.zIndex;
+		}
+	},
 };
 </script>
 

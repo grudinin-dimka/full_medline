@@ -70,8 +70,6 @@ export default {
 	justify-content: flex-end;
 	flex-wrap: wrap;
 	gap: 10px;
-
-	flex: 1 0 300px;
 }
 
 .block-once__body {
@@ -87,7 +85,5 @@ export default {
 .block-once__title {
 	font-size: 24px;
 	font-weight: 500;
-	
-	flex: 1 0 300px;
 }
 </style>

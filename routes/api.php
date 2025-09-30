@@ -125,11 +125,11 @@ Route::post('/get-prices-manual', [PricesController::class, 'getPricesManual'])-
 Route::post('/get-prices-complecte', [PricesController::class, 'getPricesComplecte'])->middleware(TrackLoad::class . ':prices,Список клиник');
 Route::get('/get-prices-addresses-list', [PricesController::class, 'getPricesAddressesList']);
 Route::get('/get-prices-categories-list', [PricesController::class, 'getPricesCategoriesList']);
-Route::get('/download-prices-archive', [PricesController::class, 'downloadPricesArchive']);
+Route::get('/download-prices-archive/{type}', [PricesController::class, 'downloadPricesArchive']);
 
 Route::get('/get-prices-files-all', [PricesController::class, 'getPricesFilesAll'])->middleware(['auth:sanctum', 'admin-or-creator']);
 Route::post('/save-prices-changes', [PricesController::class, 'savePricesChanges'])->middleware(['auth:sanctum', 'admin-or-creator']);
-Route::post('/make-prices-files', [PricesController::class, 'makePricesFiles'])->middleware(['auth:sanctum', 'admin-or-creator']);
+Route::post('/make-prices-files/{type}', [PricesController::class, 'makePricesFiles'])->middleware(['auth:sanctum', 'admin-or-creator']);
 
 /* _____________________________________________________*/
 /* Путевки                                              */

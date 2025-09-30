@@ -212,7 +212,7 @@ class PricesController extends Controller
 
          // Текущий адрес
          $currentAddress = PriceAddress::where('name', 'like', '%Комсомольская%')->first();
-         
+
          if (!isset($currentAddress)) {
             $currentAddress = PriceAddress::all()->first();
          };
@@ -850,17 +850,70 @@ class PricesController extends Controller
    }
 
    /* Получение файла и удаление */
-   public function downloadPricesArchive()
+   public function downloadPricesArchive($type)
+   {
+      if (empty($type)) {
+         return response()->json([
+            "success" => false,
+            "debug" => true,
+            "message" => "Тип файла не указан.",
+            "result" => null,
+         ], 422);
+      };
+
+      switch ($type) {
+         case 'xlsx':
+            return $this->downloadPricesArchiveXLSX($type);
+            break;
+         case 'xml':
+            return  $this->downloadPricesArchiveXML($type);
+            break;
+      };
+   }
+
+   /* Выгрузка: XLSX */
+   public function downloadPricesArchiveXLSX($type)
    {
       // Получаем список файлов без полных путей
-      $files = Storage::disk('public')->files('reports');
+      $files = Storage::disk('public')->files('reports/xlsx');
 
       if (empty($files)) {
          return response()->json(['message' => 'No files to download'], 404);
       }
 
       $zip = new ZipArchive;
-      $zipFileName = 'prices' . time() . '.zip';
+      $zipFileName = 'prices-xlsx-' . time() . '.zip';
+      $zipPath = storage_path('app/public/' . $zipFileName);
+
+      if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
+         foreach ($files as $file) {
+            // Получаем только имя файла без директории
+            $fileName = basename($file);
+
+            // Добавляем файл в архив с указанием правильного пути
+            $zip->addFile(storage_path('app/public/' . $file), $fileName);
+         }
+
+         $zip->close();
+      } else {
+         return response()->json(['message' => 'Failed to create zip archive'], 500);
+      }
+
+      return response()->download($zipPath)->deleteFileAfterSend(true);
+   }
+
+   /* Выгрузка: XML */
+   public function downloadPricesArchiveXML()
+   {
+      // Получаем список файлов без полных путей
+      $files = Storage::disk('public')->files('reports/xml');
+
+      if (empty($files)) {
+         return response()->json(['message' => 'No files to download'], 404);
+      }
+
+      $zip = new ZipArchive;
+      $zipFileName = 'prices-xml-' . time() . '.zip';
       $zipPath = storage_path('app/public/' . $zipFileName);
 
       if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
@@ -881,16 +934,39 @@ class PricesController extends Controller
    }
 
    /* Создание файлов с ценами */
-   public function makePricesFiles(Request $request)
+   public function makePricesFiles($type, Request $request)
+   {
+      // Проверка наличия типа
+      if (empty($type)) {
+         return response()->json([
+            "success" => false,
+            "debug" => true,
+            "message" => "Тип не указан.",
+            "result" => null,
+         ], 422);
+      };
+
+      switch ($type) {
+         case 'xlsx':
+            return $this->makePricesFilesXLSX($request);
+            break;
+         case 'xml':
+            return $this->makePricesFilesXML($request);
+            break;
+      };
+   }
+
+   /* Создание файлов с ценами */
+   public function makePricesFilesXLSX()
    {
       try {
          // Проверка наличия директории
-         if (!Storage::exists('public/reports')) {
-            Storage::makeDirectory('public/reports');
+         if (!Storage::exists('public/reports/xlsx')) {
+            Storage::makeDirectory('public/reports/xlsx');
          };
 
          // Удаление старых файлов
-         $files = Storage::disk('public')->allFiles('reports');
+         $files = Storage::disk('public')->allFiles('reports/xlsx');
          Storage::disk('public')->delete($files);
 
          $fields = [
@@ -968,7 +1044,7 @@ class PricesController extends Controller
             $files[] = $fileName;
 
             $writer = new Xlsx($spreadsheet);
-            $filePath = storage_path('app/public/reports/' . $fileName);
+            $filePath = storage_path('app/public/reports/xlsx/' . $fileName);
             $writer->save($filePath);
          }
 
@@ -976,7 +1052,162 @@ class PricesController extends Controller
             "success" => true,
             "debug" => true,
             "message" => 'Файл успешно создан.',
-            "result" => $files,
+            "result" => '/api/download-prices-archive/xlsx',
+         ], 200);
+      } catch (Throwable $e) {
+         return response()->json([
+            "success" => false,
+            "debug" => true,
+            "message" => "Не удалось создать файл.",
+            "result" => null,
+         ], 500);
+      };
+   }
+
+   /* Создание файлов с ценами */
+   public function makePricesFilesXML(Request $request)
+   {
+      try {
+         // Проверка наличия директории
+         if (!Storage::exists('public/reports/xml')) {
+            Storage::makeDirectory('public/reports/xml');
+         };
+
+         // Удаление старых файлов
+         $files = Storage::disk('public')->allFiles('reports/xml');
+         Storage::disk('public')->delete($files);
+
+         $addressesAll = PriceAddress::all();
+
+         if (count($addressesAll) === 0) {
+            return response()->json([
+               "success" => false,
+               "debug" => true,
+               "message" => "Список адресов пуст.",
+               "result" => null,
+            ], 500);
+         };
+
+         $categoriesAll = PriceCategory::all()->groupBy('addressId');
+         $pricesAll = PriceValue::all();
+
+         if (count($categoriesAll) === 0) {
+            return response()->json([
+               "success" => false,
+               "debug" => true,
+               "message" => "Список категорий пуст.",
+               "result" => null,
+            ], 500);
+         };
+
+         foreach ($addressesAll as $key => $value) {
+            $categories = $categoriesAll[$value->id];
+            
+            $prices = $pricesAll->whereIn(
+               'categoryId',
+               $categories->pluck('id')->toArray()
+            );
+
+            // Создание XML
+            $xw = new XMLWriter();
+            $xw->openMemory();
+
+            // Начало документа
+            $xw->startDocument("1.0");
+
+            // yml_catalog
+            $xw->startElement("yml_catalog");
+
+            // yml_catalog -> shop
+            $xw->startElement("shop");
+
+            // yml_catalog -> shop -> categories
+            $xw->startElement("categories");
+            // yml_catalog -> shop -> categories -> category
+            foreach ($categories as $categoryKey => $categoryValue) {
+               $xw->startElement("category");
+
+               $xw->startAttribute("id");
+               $xw->text($categoryValue->id);
+               $xw->endAttribute();
+
+               // yml_catalog -> shop -> categories -> category
+               $xw->endElement();
+            };
+            // yml_catalog -> shop -> categories
+            $xw->endElement();
+
+            // yml_catalog -> shop -> offers
+            $xw->startElement("offers");
+            // yml_catalog -> shop -> offers -> offer
+            foreach ($prices as $priceKey => $priceValue) {
+               $xw->startElement("offer");
+
+               $xw->startAttribute("id");
+               $xw->text($priceValue->id);
+               $xw->endAttribute();
+
+               // yml_catalog -> shop -> offers -> offer -> name
+               $xw->startElement("name");
+               $xw->text($priceValue->name);
+               $xw->endElement();
+
+               // yml_catalog -> shop -> offers -> offer -> price
+               $xw->startElement("price");
+               $xw->text($priceValue->price);
+               $xw->endElement();
+
+               // yml_catalog -> shop -> offers -> offer -> currencyId
+               $xw->startElement("currencyId");
+               $xw->text("RUR");
+               $xw->endElement();
+
+               // yml_catalog -> shop -> offers -> offer -> categoryId
+               $xw->startElement("categoryId");
+               $xw->text($priceValue->categoryId);
+               $xw->endElement();
+
+               // yml_catalog -> shop -> offers -> offer -> picture
+               $xw->startElement("picture");
+               $xw->text($request->root() . '/storage/img/logo.webp');
+               $xw->endElement();
+
+               // yml_catalog -> shop -> offers -> offer -> url
+               $xw->startElement("url");
+               $xw->text($request->root() . '/prices');
+               $xw->endElement();
+
+               // yml_catalog -> shop -> categories -> category
+               $xw->endElement();
+            };
+
+            // yml_catalog -> shop -> categories
+            $xw->endElement();
+
+            // yml_catalog -> shop
+            $xw->endElement();
+
+            // yml_catalog
+            $xw->endElement();
+
+            // Конец документа
+            $xw->endDocument();
+
+            if (!Storage::put('public/reports/xml/' . $value->name . '.xml', $xw->outputMemory())) {
+               return response()->json([
+                  "success" => false,
+                  "debug" => true,
+                  "message" => "Не удалось записать файл.",
+                  "result" => null,
+               ], 500);
+            };
+         };
+
+         return response()->json([
+            "success" => true,
+            "debug" => true,
+            "message" => "XML-файлы созданы.",
+            "result" => '/api/download-prices-archive/xml',
          ], 200);
       } catch (Throwable $e) {
          return response()->json([

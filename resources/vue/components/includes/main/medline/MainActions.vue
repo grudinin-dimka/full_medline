@@ -1,8 +1,8 @@
 <template>
 	<!-- Модальное окно: Баллы -->
-	<VueModal ref="modalPoints" :settings="modalPoints">
+	<VueModal ref="modalPersonal" :settings="modalPersonal">
 		<template #title>
-			{{ modalPoints.values.title }}
+			{{ modalPersonal.values.title }}
 		</template>
 
 		<template #body>
@@ -123,6 +123,21 @@
 				<VueIcon :name="'credit-card'" :fill="'white'" :width="'26px'" :height="'26px'" />
 				Узнать баланс
 			</VueButton>
+		</template>
+	</VueModal>
+
+	<!-- Модальное окно: Информация о персональных данных -->
+	<VueModal ref="modalPersonal" :settings="modalPersonal">
+		<template #title>
+			{{ modalPersonal.values.title }}
+		</template>
+
+		<template #body>
+			<VueTiptap :editable="false" :limit="10_000" v-model="personalText" />
+		</template>
+
+		<template #footer>
+			<VueButton @click="this.$refs.modalPersonal.close()"> Закрыть </VueButton>
 		</template>
 	</VueModal>
 
@@ -263,10 +278,13 @@
 				:type="'checkbox'"
 				:error="modalRequestForm.errors.checkbox.status"
 			>
-				<template #label
-					>Согласие на обработку указанных персональных данных в соответствии с
-					законодательством Российской Федерации.</template
-				>
+				<template #label>
+					Согласие на обработку указанных
+					<a class="link" href="#" @click.prevent="openModalPersonalEdite">
+						персональных данных
+					</a>
+					в соответствии с законодательством Российской Федерации.
+				</template>
 			</VueInput>
 		</template>
 
@@ -294,6 +312,7 @@
 import VueModal from "../../../modules/modal/VueModal.vue";
 import VueInput from "../../../modules/input/VueInput.vue";
 import VueInputContainer from "../../../modules/input/VueInputContainer.vue";
+import VueTiptap from "../../../modules/VueTiptap.vue";
 
 import Captcha from "../../../modules/Captcha.vue";
 import VueIcon from "../../../modules/icon/VueIcon.vue";
@@ -308,6 +327,7 @@ export default {
 		VueModal,
 		VueInput,
 		VueInputContainer,
+		VueTiptap,
 
 		Captcha,
 		VueButton,
@@ -328,7 +348,7 @@ export default {
 			},
 
 			/* Модальное окно */
-			modalPoints: {
+			modalPersonal: {
 				thin: false,
 				clamped: true,
 				touch: true,
@@ -341,7 +361,18 @@ export default {
 			modalRequest: {
 				thin: false,
 				clamped: true,
-				touch: true,
+				touch: false,
+				values: {
+					title: "",
+					look: "default",
+				},
+			},
+
+			modalPersonal: {
+				zIndex: 501,
+				thin: true,
+				clamped: true,
+				touch: false,
 				values: {
 					title: "",
 					look: "default",
@@ -466,6 +497,17 @@ export default {
 			/* Данные */
 			barcodes: [],
 			captcha: "",
+
+			personalText: `
+				<p style="text-align: justify">Настоящим субъект персональных данных, именуемый в дальнейшем «Пользователь», в соответствии с Федеральным законом от 27.07.2006 №152-ФЗ «О персональных данных», отправляя сообщение через форму обратной связи на интернет-сайте <a href='https://medlinegroup.ru/'>https://medlinegroup.ru/</a>, указывая сведения о своих персональных данных и проставляя отметку «✓» (или аналогичную) в соответствующем чек-боксе, действуя свободно, своей волей и в своем интересе, а также подтверждая свою дееспособность, дает свое на обработку персональных данных (далее – Согласие) ООО «Медицинская линия», (далее - Оператор) расположенному по адресу: г. Шадринск, Комсом 16, оф 311, на обработку своих персональных данных со следующими условиями:</p>
+				<p style="text-align: justify">Данное Согласие дается на обработку персональных данных, как без использования средств автоматизации, так и с их использованием.</p>
+				<p style="text-align: justify">Согласие дается на обработку следующих персональных данных не являющиеся специальными или биометрическими: фамилия, имя, отчество; номера контактных телефонов.</p>
+				<p style="text-align: justify">Персональные данные не являются общедоступными.</p>
+				<p style="text-align: justify">Цель обработки персональных данных: осуществление звонков по запросу обратного звонка.</p>
+				<p style="text-align: justify">В ходе обработки с персональными данными будут совершены следующие действия: сбор; запись; систематизация; накопление; хранение; уточнение (обновление, изменение); извлечение; использование; передача (распространение, предоставление, доступ); блокирование; удаление; уничтожение.</p>
+				<p style="text-align: justify">Согласие может быть отозвано Пользователем или его представителем путем направления письменного заявления ООО «Медицинская линия» или его представителю по адресу, указанному в начале данного Согласия.</p>
+				<p style="text-align: justify">Пользователь уведомлен, что в случае отзыва Согласия Оператор вправе продолжить обработку персональных данных без согласия Пользователя в случае, если это предусмотрено законодательством Российской Федерации.</p>
+			`,
 		};
 	},
 	computed: {
@@ -561,6 +603,11 @@ export default {
 			this.reloadCaptcha();
 
 			this.openModal("modalRequest", "ЗАКАЗАТЬ ЗВОНОК", "default");
+		},
+
+		/* Открытие модального окна заявки */
+		openModalPersonalEdite() {
+			this.openModal("modalPersonal", "ИНФОРМАЦИЯ", "default");
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
