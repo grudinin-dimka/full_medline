@@ -37,12 +37,21 @@
 				Контакты
 			</a>
 
+			<a
+				class="element"
+				:class="{ active: isActive('/vacancies') }"
+				href="/vacancies"
+				@click.prevent="insertPage({ name: `vacancies` })"
+			>
+				Вакансии
+			</a>
+
 			<div class="dropdown">
 				<div class="dropdown-title element">
 					Информация
 					<VueIcon
 						class="item-arrow"
-						:name="'arrow'"
+						:name="'Arrow'"
 						:fill="'white'"
 						:width="'20px'"
 						:height="'20px'"
@@ -148,7 +157,7 @@ nav::-webkit-scrollbar-thumb:hover {
 
 .nav__list {
 	display: grid;
-	grid-template-columns: repeat(5, auto);
+	grid-template-columns: repeat(6, auto);
 	gap: 10px;
 
 	background-color: var(--primary-color);

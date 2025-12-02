@@ -5,12 +5,7 @@
 			<!-- Блок с платёжными системами -->
 			<div class="pay">
 				<a href="/">
-					<img
-						src="../../../../assets/svg/medline/logo-full.svg"
-						width="250"
-						height="150"
-						alt="логотип"
-					/>
+					<img src="../../../../assets/svg/medline/logo-full.svg" width="250" height="150" alt="логотип" />
 				</a>
 				<p>Мы принимаем к оплате</p>
 				<div class="pay-cards">
@@ -30,19 +25,9 @@
 			</div>
 			<!-- Блок с кнопками -->
 			<div class="buttons">
-				<a @click.prevent="$router.push({ name: `news` })" :href="`/news`" alt="контакты">
-					Новости
-				</a>
-				<a @click.prevent="$router.push({ name: `about` })" :href="`/about`" alt="о нас">
-					О нас
-				</a>
-				<a
-					@click.prevent="$router.push({ name: `contacts` })"
-					:href="`/contacts`"
-					alt="контакты"
-				>
-					Контакты
-				</a>
+				<a @click.prevent="$router.push({ name: `news` })" :href="`/news`" alt="контакты"> Новости </a>
+				<a @click.prevent="$router.push({ name: `about` })" :href="`/about`" alt="о нас"> О нас </a>
+				<a @click.prevent="$router.push({ name: `contacts` })" :href="`/contacts`" alt="контакты"> Контакты </a>
 			</div>
 			<!-- Блок доп. информации -->
 			<div class="more">
@@ -95,18 +80,15 @@
 
 <script>
 import Empty from "../../../modules/Empty.vue";
-import VueTiptap from "../../../modules/VueTiptap.vue";
 
 import IconVisa from "../../../icons/IconVisa.vue";
 import IconMasterCard from "../../../icons/IconMasterCard.vue";
 import IconMir from "../../../icons/IconMir.vue";
 
-import axios from "axios";
 import api from "../../../../mixin/api";
 
 export default {
 	components: {
-		VueTiptap,
 		Empty,
 
 		IconVisa,

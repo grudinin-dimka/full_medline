@@ -9,7 +9,7 @@
 				@click.prevent="getApexAttendanceWeek"
 			>
 				<VueIcon
-					:name="'update'"
+					:name="'Update'"
 					:fill="'var(--icon-edit-fill)'"
 					:width="'36px'"
 					:height="'36px'"
@@ -44,7 +44,7 @@
 				@click.prevent="getApexRecordPriem"
 			>
 				<VueIcon
-					:name="'update'"
+					:name="'Update'"
 					:fill="'var(--icon-edit-fill)'"
 					:width="'36px'"
 					:height="'36px'"
@@ -81,7 +81,7 @@
 				@click.prevent="getApexClinics"
 			>
 				<VueIcon
-					:name="'update'"
+					:name="'Update'"
 					:fill="'var(--icon-edit-fill)'"
 					:width="'36px'"
 					:height="'36px'"
@@ -116,7 +116,7 @@
 				@click.prevent="getApexSources"
 			>
 				<VueIcon
-					:name="'update'"
+					:name="'Update'"
 					:fill="'var(--icon-edit-fill)'"
 					:width="'36px'"
 					:height="'36px'"
@@ -153,7 +153,7 @@
 				@click.prevent="getApexAttendanceAll"
 			>
 				<VueIcon
-					:name="'update'"
+					:name="'Update'"
 					:fill="'var(--icon-edit-fill)'"
 					:width="'36px'"
 					:height="'36px'"
@@ -212,10 +212,6 @@ import VueInputContainer from "../../../components/modules/input/VueInputContain
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTwo from "../../../components/ui/admin/blocks/BlockTwo.vue";
 
-import VueLoader from "../../../components/modules/VueLoader.vue";
-import VueIcon from "../../../components/modules/icon/VueIcon.vue";
-import VueButton from "../../../components/ui/VueButton.vue";
-
 import api from "../../../mixin/api";
 import validate from "../../../services/validate";
 
@@ -228,10 +224,6 @@ export default {
 
 		BlockOnce,
 		BlockTwo,
-
-		VueLoader,
-		VueIcon,
-		VueButton,
 	},
 	data() {
 		return {

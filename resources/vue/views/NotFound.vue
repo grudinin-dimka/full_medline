@@ -249,18 +249,12 @@
 </template>
 
 <script>
-import VueButton from "../components/ui/VueButton.vue";
-import VueIcon from "../components/modules/icon/VueIcon.vue";
-
 // NOTE : Not Found
 import MainNav from "../components/includes/main/medline/MainNav.vue";
 import MainHeader from "../components/includes/main/medline/MainHeader.vue";
 
 export default {
 	components: {
-		VueButton,
-		VueIcon,
-
 		MainNav,
 		MainHeader,
 	},

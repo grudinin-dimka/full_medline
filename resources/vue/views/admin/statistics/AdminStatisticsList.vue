@@ -21,21 +21,13 @@
 </template>
 
 <script>
-import VueTable from "../../../components/modules/table/VueTable.vue";
-
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
-
-import VueLoader from "../../../components/modules/VueLoader.vue";
 
 import api from "../../../mixin/api";
 
 export default {
 	components: {
-		VueTable,
-
 		BlockOnce,
-
-		VueLoader,
 	},
 	data() {
 		return {

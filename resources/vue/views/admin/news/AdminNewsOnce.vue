@@ -57,7 +57,7 @@
 
 				<VueButton look="inverse" :disabled="disabled.news.save" @click="saveNews">
 					<VueIcon
-						:name="'save'"
+						:name="'Save'"
 						:fill="'var(--primary-color)'"
 						:width="'28px'"
 						:height="'28px'"
@@ -211,28 +211,16 @@
 </template>
 
 <script>
-import VueTiptap from "../../../components/modules/VueTiptap.vue";
-
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
-
-import VueLoader from "../../../components/modules/VueLoader.vue";
-import VueIcon from "../../../components/modules/icon/VueIcon.vue";
-import VueButton from "../../../components/ui/VueButton.vue";
 
 import api from "../../../mixin/api";
 import validate from "../../../services/validate";
 
 export default {
 	components: {
-		VueTiptap,
-
 		InfoBar,
 		BlockOnce,
-
-		VueLoader,
-		VueIcon,
-		VueButton,
 	},
 	data() {
 		return {

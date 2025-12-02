@@ -15,7 +15,7 @@
 					Цены
 					<VueIcon
 						class="item-arrow"
-						:name="'arrow'"
+						:name="'Arrow'"
 						:fill="'white'"
 						:width="'20px'"
 						:height="'20px'"
@@ -50,7 +50,7 @@
 					Услуги
 					<VueIcon
 						class="item-arrow"
-						:name="'arrow'"
+						:name="'Arrow'"
 						:fill="'white'"
 						:width="'20px'"
 						:height="'20px'"
@@ -103,7 +103,7 @@
 					Информация
 					<VueIcon
 						class="item-arrow"
-						:name="'arrow'"
+						:name="'Arrow'"
 						:fill="'white'"
 						:width="'20px'"
 						:height="'20px'"
@@ -155,12 +155,7 @@
 </template>
 
 <script>
-import VueIcon from "../../../modules/icon/VueIcon.vue";
-
 export default {
-	components: {
-		VueIcon,
-	},
 	methods: {
 		/* Активная ссылка */
 		isActive(route) {

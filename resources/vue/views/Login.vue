@@ -42,20 +42,14 @@
 </template>
 
 <script>
-import VueDebugger from "../components/modules/VueDebugger.vue";
-import VueLoader from "../components/modules/VueLoader.vue";
 import VueInput from "../components/modules/input/VueInput.vue";
-import VueButton from "../components/ui/VueButton.vue";
 
 import axios from "axios";
 import validate from "../services/validate";
 
 export default {
 	components: {
-		VueDebugger,
-		VueLoader,
 		VueInput,
-		VueButton,
 
 		axios,
 		validate,

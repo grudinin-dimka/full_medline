@@ -11,24 +11,16 @@
 
 <script>
 import { RouterLink, RouterView } from "vue-router";
-import VueDebugger from "../components/modules/VueDebugger.vue";
-import VueWiki from "../components/modules/wiki/VueWiki.vue";
-import VueLoader from "../components/modules/VueLoader.vue";
 
 // NOTE: Модули в админке
 import AdminHeader from "../components/includes/admin/medline/AdminHeader.vue";
 import AdminAside from "../components/includes/admin/AdminAside.vue";
 import AdminContent from "../components/includes/admin/AdminContent.vue";
-import { compile } from "vue";
 
 import axios from "axios";
 
 export default {
 	components: {
-		VueLoader,
-		VueWiki,
-		VueDebugger,
-
 		AdminHeader,
 		AdminAside,
 		AdminContent,

@@ -57,18 +57,7 @@
 </template>
 
 <script>
-import VueIcon from "../../../modules/icon/VueIcon.vue";
-import VueButton from "../../../ui/VueButton.vue";
-
-import api from "../../../../mixin/api";
-import validate from "../../../../services/validate";
-import shared from "../../../../services/shared";
-
 export default {
-	components: {
-		VueButton,
-		VueIcon,
-	},
 	data() {
 		return {
 			countPoints: 0,

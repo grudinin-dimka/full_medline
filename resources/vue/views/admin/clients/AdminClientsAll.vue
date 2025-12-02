@@ -14,7 +14,7 @@
 				:look="'inverse'"
 			>
 				<VueIcon
-					:name="'save'"
+					:name="'Save'"
 					:fill="'var(--primary-color)'"
 					:width="'28px'"
 					:height="'28px'"
@@ -41,12 +41,6 @@ import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTitle from "../../../components/ui/admin/blocks/BlockTitle.vue";
 
-import VueTable from "../../../components/modules/table/VueTable.vue";
-
-import VueLoader from "../../../components/modules/VueLoader.vue";
-import VueIcon from "../../../components/modules/icon/VueIcon.vue";
-import VueButton from "../../../components/ui/VueButton.vue";
-
 import api from "../../../mixin/api";
 
 export default {
@@ -54,12 +48,6 @@ export default {
 		InfoBar,
 		BlockOnce,
 		BlockTitle,
-
-		VueTable,
-
-		VueLoader,
-		VueIcon,
-		VueButton,
 	},
 	data() {
 		return {

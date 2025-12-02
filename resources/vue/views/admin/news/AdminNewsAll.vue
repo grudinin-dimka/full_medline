@@ -11,7 +11,7 @@
 		<template #options>
 			<VueButton @click.prevent="saveNewsAll" :disabled="disabled.news.save" :look="'inverse'">
 				<VueIcon
-					:name="'save'"
+					:name="'Save'"
 					:fill="'var(--primary-color)'"
 					:width="'28px'"
 					:height="'28px'"
@@ -71,28 +71,16 @@
 </template>
 
 <script>
-import VueTable from "../../../components/modules/table/VueTable.vue";
-
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
-
-import VueLoader from "../../../components/modules/VueLoader.vue";
-import VueIcon from "../../../components/modules/icon/VueIcon.vue";
-import VueButton from "../../../components/ui/VueButton.vue";
 
 import shared from "../../../services/shared";
 import api from "../../../mixin/api";
 
 export default {
 	components: {
-		VueTable,
-
 		InfoBar,
 		BlockOnce,
-
-		VueLoader,
-		VueIcon,
-		VueButton,
 	},
 	data() {
 		return {

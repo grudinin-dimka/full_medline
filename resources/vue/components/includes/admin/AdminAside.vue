@@ -44,7 +44,7 @@
 						<VueIcon :name="'Ecg Heart'" :fill="'white'" :width="'26px'" :height="'26px'" />
 						<VueIcon
 							class="item-arrow"
-							:name="'arrow'"
+							:name="'Arrow'"
 							:fill="'white'"
 							:width="'20px'"
 							:height="'20px'"
@@ -93,7 +93,7 @@
 
 						<VueIcon
 							class="item-arrow"
-							:name="'arrow'"
+							:name="'Arrow'"
 							:fill="'white'"
 							:width="'20px'"
 							:height="'20px'"
@@ -120,17 +120,6 @@
 					</div>
 				</div>
 
-				<!-- NOTE: Заблокировать страницу "Путевки" -->
-				<div class="aside__item" :class="{ active: isActive('/admin/travels') }">
-					<a
-						class="aside__item-title"
-						href="/admin/travels"
-						@click.prevent="$router.push({ name: 'etravels' })"
-					>
-						<VueIcon :name="'travel'" :fill="'white'" :width="'28px'" :height="'28px'" />
-						ПУТЕВКИ
-					</a>
-				</div>
 
 				<div class="aside__item" :class="{ active: isActive('/admin/vacancies') }">
 					<a
@@ -185,7 +174,7 @@
 						<VueIcon :name="'Info'" :fill="'white'" :width="'26px'" :height="'26px'" />
 						<VueIcon
 							class="item-arrow"
-							:name="'arrow'"
+							:name="'Arrow'"
 							:fill="'white'"
 							:width="'20px'"
 							:height="'20px'"
@@ -239,7 +228,7 @@
 						<VueIcon :name="'Monitoring'" :fill="'white'" :width="'26px'" :height="'26px'" />
 						<VueIcon
 							class="item-arrow"
-							:name="'arrow'"
+							:name="'Arrow'"
 							:fill="'white'"
 							:width="'20px'"
 							:height="'20px'"
@@ -291,23 +280,9 @@
 </template>
 
 <script>
-import VueModal from "../../modules/modal/VueModal.vue";
-
-import VueButton from "../../ui/VueButton.vue";
-
-import VueIcon from "../../modules/icon/VueIcon.vue";
-
 import axios from "axios";
 
 export default {
-	components: {
-		VueModal,
-
-		VueIcon,
-		VueButton,
-
-		axios,
-	},
 	data() {
 		return {
 			/* Загрузка */

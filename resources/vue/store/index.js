@@ -4,7 +4,7 @@ import { createStore } from "vuex";
 import user from "./user.js";	
 import other from "./other.js";
 import debug from "./debug.js";
-import modal from "./modal.js";
+import modals from "./modals.js";
 import wiki from "./wiki.js";
 import site from "./site.js";
 
@@ -14,7 +14,7 @@ const store = createStore({
 		user,
 		other,
 		debug,
-		modal,
+		modals,
 		wiki,
 		site,
 	},

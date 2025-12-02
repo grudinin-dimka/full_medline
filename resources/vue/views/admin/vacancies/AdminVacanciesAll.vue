@@ -193,7 +193,7 @@
 				@click="saveVacanciesChanges"
 			>
 				<VueIcon
-					:name="'save'"
+					:name="'Save'"
 					:fill="'var(--primary-color)'"
 					:width="'28px'"
 					:height="'28px'"
@@ -247,20 +247,12 @@
 </template>
 
 <script>
-import VueModal from "../../../components/modules/modal/VueModal.vue";
-import VueModalList from "../../../components/modules/modal/VueModalList.vue";
-import VueTable from "../../../components/modules/table/VueTable.vue";
 import VueInput from "../../../components/modules/input/VueInput.vue";
-import VueTiptap from "../../../components/modules/VueTiptap.vue";
 import Empty from "../../../components/modules/Empty.vue";
 
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTitle from "../../../components/ui/admin/blocks/BlockTitle.vue";
-
-import VueLoader from "../../../components/modules/VueLoader.vue";
-import VueIcon from "../../../components/modules/icon/VueIcon.vue";
-import VueButton from "../../../components/ui/VueButton.vue";
 
 import api from "../../../mixin/api";
 import validate from "../../../services/validate";
@@ -268,20 +260,12 @@ import shared from "../../../services/shared";
 
 export default {
 	components: {
-		VueModal,
-		VueModalList,
-		VueTable,
 		VueInput,
-		VueTiptap,
 		Empty,
 
 		InfoBar,
 		BlockOnce,
 		BlockTitle,
-
-		VueLoader,
-		VueIcon,
-		VueButton,
 	},
 	data() {
 		return {

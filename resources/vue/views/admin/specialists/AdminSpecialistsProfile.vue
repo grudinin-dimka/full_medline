@@ -56,13 +56,6 @@
 					</div>
 				</label>
 			</div>
-
-			<!-- Пагинация -->
-			<!-- <Pagination
-				:settings="paginationSpecializations"
-				:arrayLength="sections.specializations.length"
-				@changePage="changePageSpecializations"
-			/> -->
 		</template>
 
 		<template #footer>
@@ -136,13 +129,6 @@
 					</select>
 				</div>
 			</div>
-
-			<!-- Пагинация -->
-			<!-- <Pagination
-				:settings="paginationClinics"
-				:arrayLength="sections.clinics.length"
-				@changePage="changePageClinics"
-			/> -->
 		</template>
 
 		<template #footer>
@@ -402,7 +388,7 @@
 					:look="'inverse'"
 				>
 					<VueIcon
-						:name="'save'"
+						:name="'Save'"
 						:fill="'var(--primary-color)'"
 						:width="'28px'"
 						:height="'28px'"
@@ -1045,22 +1031,13 @@
 </template>
 
 <script>
-import VueModal from "../../../components/modules/modal/VueModal.vue";
-import VueTable from "../../../components/modules/table/VueTable.vue";
-import VueTiptap from "../../../components/modules/VueTiptap.vue";
 import VueSelector from "../../../components/modules/VueSelector.vue";
 import VueInput from "../../../components/modules/input/VueInput.vue";
 import VueInputContainer from "../../../components/modules/input/VueInputContainer.vue";
 
-import Pagination from "../../../components/modules/Pagination.vue";
-
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTwo from "../../../components/ui/admin/blocks/BlockTwo.vue";
-
-import VueLoader from "../../../components/modules/VueLoader.vue";
-import VueIcon from "../../../components/modules/icon/VueIcon.vue";
-import VueButton from "../../../components/ui/VueButton.vue";
 
 import api from "../../../mixin/api";
 import validate from "../../../services/validate";
@@ -1072,22 +1049,13 @@ import { RouterView, RouterLink } from "vue-router";
 
 export default {
 	components: {
-		VueModal,
-		VueTable,
-		VueTiptap,
 		VueSelector,
 		VueInput,
 		VueInputContainer,
 
-		Pagination,
-
 		InfoBar,
 		BlockOnce,
 		BlockTwo,
-
-		VueLoader,
-		VueIcon,
-		VueButton,
 
 		RouterView,
 		RouterLink,

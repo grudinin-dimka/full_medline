@@ -9,34 +9,31 @@
 					hidden: !isOpen,
 					clamped: settings.clamped,
 					unclamped: !settings.clamped,
+					fullscreen: settings.fullscreen,
 				}"
 				ref="modal"
 				@click.self="settings.touch ? $emit('touch') : close()"
 			>
 				<transition name="modal-container">
-					<div class="modal__container" :class="{ thin: settings.thin }" v-show="isOpen">
+					<div
+						class="modal__container"
+						:class="{
+							thin: settings.thin,
+						}"
+						v-show="isOpen"
+					>
 						<!-- Верхняя часть окна -->
-						<div class="modal__head">
+						<div class="modal__header">
 							<!-- Заголовок -->
-							<div class="modal__head-title" v-if="$slots.title">
+							<div class="modal__header-title" v-if="$slots.title">
 								<slot name="title"></slot>
 							</div>
 							<!-- Кнопки -->
-							<div class="modal__head-buttons">
+							<div class="modal__header-buttons">
 								<slot name="buttons" v-if="$slots.buttons"></slot>
-								<button @click.prevent="close">
-									<svg
-										data-v-05b9c86b=""
-										xmlns="http://www.w3.org/2000/svg"
-										width="16"
-										height="16"
-										viewBox="0 0 14 14"
-									>
-										<path
-											data-v-05b9c86b=""
-											d="M1.4 14L0 12.6L5.6 7L0 1.4L1.4 0L7 5.6L12.6 0L14 1.4L8.4 7L14 12.6L12.6 14L7 8.4L1.4 14Z"
-										></path>
-									</svg>
+
+								<button class="modal__header-close" @click.prevent="close">
+									<VueIcon name="Close" :width="'24px'" :height="'24px'"/>
 								</button>
 							</div>
 						</div>
@@ -56,8 +53,13 @@
 </template>
 
 <script>
+import VueIcon from "../../ui/VueIcon.vue";
+
 export default {
 	emits: ["touch"],
+	components: {
+		VueIcon
+	},
 	props: {
 		/* 
 			settings: {
@@ -102,11 +104,6 @@ export default {
 			this.$store.commit("unregisterModal", this);
 		},
 	},
-	mounted() {
-		if (this.settings.zIndex) {
-			this.$refs.modal.style.zIndex = this.settings.zIndex;
-		}
-	},
 };
 </script>
 
@@ -135,7 +132,7 @@ export default {
 .modal {
 	box-sizing: border-box;
 	position: fixed;
-	z-index: 500;
+	z-index: var(--modal-z-index);
 	top: 0px;
 	left: 0px;
 
@@ -143,8 +140,8 @@ export default {
 	border-radius: var(--modal-border-radius);
 	padding: 20px;
 
-	width: 100%;
-	height: 100%;
+	width: var(--modal-width);
+	height: var(--modal-height);
 
 	background: var(--modal-background-color);
 }
@@ -166,6 +163,12 @@ export default {
 	overflow: hidden;
 }
 
+.modal.fullscreen {
+	border-radius: 0px;
+
+	padding: 0px;
+}
+
 .modal__container {
 	box-sizing: border-box;
 	display: flex;
@@ -176,102 +179,139 @@ export default {
 
 	background: var(--modal-container-background-color);
 	border-radius: var(--modal-container-border-radius);
-	width: 100%;
-	max-width: 1000px;
+	width: var(--modal-container-width);
+	max-width: var(--modal-container-max-width);
 }
 
 .modal.clamped > .modal__container {
-	max-height: calc(100dvh - 60px);
-	overflow-y: auto;
+	margin: var(--modal-clamped-container-margin);
+
+	max-height: var(--modal-clamped-container-max-height);
 }
 
 .modal.unclamped > .modal__container {
-	margin: auto;
+	margin: var(--modal-unclamped-container-margin);
 }
 
 .modal__container.thin {
-	max-width: 600px;
+	max-width: var(--modal-container-thin-max-width);
+}
+
+.modal.fullscreen > .modal__container {
+	border-radius: var(--modal-fullscreen-container-border-radius);
+
+	width: var(--modal-fullscreen-container-width);
+	height: var(--modal-fullscreen-container-height);
+
+	max-width: var(--modal-fullscreen-container-max-width);
+	max-height: var(--modal-fullscreen-container-max-height);
+
+	margin: var(--modal-fullscreen-container-margin);
+}
+
+.modal.fullscreen > .modal__container > .modal__header {
+	border-radius: var(--modal-fullscreen-header-border-radius);
+}
+
+.modal.fullscreen > .modal__container > .modal__footer {
+	border-radius: var(--modal-fullscreen-footer-border-radius);
+}
+
+.modal.fullscreen > .modal__container > .modal__body {
+	height: var(--modal-fullscreen-body-height);
 }
 
 /* Голова */
-.modal__head {
+.modal__header {
 	display: flex;
-	justify-content: space-between;
-	margin-bottom: 10px;
+	flex-direction: var(--modal-header-flex-direction);
+	justify-content: var(--modal-header-justify-content);
+	align-items: var(--modal-header-align-items);
+	gap: var(--modal-header-gap);
+
+	border-radius: var(--modal-header-border-radius);
+	border-top: var(--modal-header-border-top);
+	border-right: var(--modal-header-border-right);
+	border-bottom: var(--modal-header-border-bottom);
+	border-left: var(--modal-header-border-left);
+	border-style: var(--modal-header-border-style);
+	border-color: var(--modal-header-border-color);
+
+	padding: var(--modal-header-padding);
 }
 
-.modal__head-title {
-	user-select: none;
+.modal__header-title {
 	display: flex;
 	align-items: center;
 	gap: 5px;
 	font-size: 22px;
 	margin: 0px;
 	padding: 0px;
-
-	color: var(--primary-color);
 }
 
-.modal__head-buttons {
+.modal__header-buttons {
 	display: flex;
 	justify-content: flex-end;
-	gap: 5px;
+	gap: 10px;
 }
 
-.modal__head-buttons > button {
+.modal__header-close {
 	cursor: pointer;
-	background-color: rgba(255, 255, 255, 0);
-	border: 0px;
-	border-radius: 100px;
-	padding: 0px;
+	background-color: var(--modal-header-close-background-color);
+	border: var(--modal-header-close-border);
+	border-radius: var(--modal-header-close-border-radius);
+	padding: var(--modal-header-close-padding);
 
-	width: 30px;
-	height: 30px;
-
-	transition: all 0.2s ease;
+	transition: var(--modal-header-close-transition);
 }
 
-.modal__head-buttons button > svg {
-	fill: rgb(150, 150, 150);
+.modal__header-close:hover {
+	border: var(--modal-header-close-border-hover);
+	background-color: var(--modal-header-close-background-color-hover);
 }
 
-.modal__head-buttons button:hover > svg {
-	fill: rgb(0, 0, 0);
+.modal__header-close:hover svg {
+	fill: var(--modal-header-close-icon-fill-hover);
 }
 
 /* Тело */
 .modal__body {
 	display: flex;
-	flex-direction: column;
-	gap: 10px;
+	flex-direction: var(--modal-body-flex-direction);
+	justify-content: var(--modal-body-justify-content);
+	align-items: var(--modal-body-align-items);
+	gap: var(--modal-body-gap);
+
+	border-radius: var(--modal-body-border-radius);
+	border-top: var(--modal-body-border-top);
+	border-right: var(--modal-body-border-right);
+	border-bottom: var(--modal-body-border-bottom);
+	border-left: var(--modal-body-border-left);
+	border-style: var(--modal-body-border-style);
+	border-color: var(--modal-body-border-color);
+
+	padding: var(--modal-body-padding);
+}
+
+.modal.clamped .modal__body {
 	overflow: auto;
-}
-
-.modal__body::-webkit-scrollbar {
-	width: 20px;
-}
-
-.modal__body::-webkit-scrollbar-track {
-	background-color: rgb(255, 255, 255);
-}
-
-.modal__body::-webkit-scrollbar-thumb {
-	background-color: rgb(220, 220, 220);
-	border-left: 10px;
-	border-color: rgb(255, 255, 255);
-	border-style: solid;
-}
-
-.modal__body::-webkit-scrollbar-thumb:hover {
-	background-color: rgb(230, 230, 230);
-	cursor: all-scroll;
 }
 
 /* Футер */
 .modal__footer {
 	display: flex;
 	justify-content: flex-end;
-	gap: 10px;
+	gap: var(--modal-footer-gap);
+
+	border-radius: var(--modal-footer-border-radius);
+	border-top: var(--modal-footer-border-top);
+	border-right: var(--modal-footer-border-right);
+	border-bottom: var(--modal-footer-border-bottom);
+	border-left: var(--modal-footer-border-left);
+	border-style: var(--modal-footer-border-style);
+	border-color: var(--modal-footer-border-color);
+
+	padding: var(--modal-footer-padding);
 }
 
 @media screen and (max-width: 1000px) {
@@ -298,10 +338,6 @@ export default {
 }
 
 @media screen and (max-width: 500px) {
-	.modal {
-		padding: 0px;
-	}
-
 	.modal__body {
 		height: 100%;
 	}
@@ -312,11 +348,6 @@ export default {
 		height: 100%;
 		border-radius: 0px;
 		max-height: 100%;
-	}
-
-	.modal.clamped > .modal__container {
-		max-height: 100dvh;
-		overflow-y: auto;
 	}
 }
 </style>

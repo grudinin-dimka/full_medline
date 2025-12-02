@@ -39,7 +39,7 @@
 	<!-- Кнопки -->
 	<div class="main__buttons">
 		<button class="main__buttons-button" @click="topFunction">
-			<VueIcon :name="'arrow'" :fill="'white'" :width="'26px'" :height="'26px'" />
+			<VueIcon :name="'Arrow'" :fill="'white'" :width="'26px'" :height="'26px'" />
 		</button>
 	</div>
 

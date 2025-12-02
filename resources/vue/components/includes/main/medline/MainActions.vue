@@ -120,7 +120,7 @@
 
 		<template #footer>
 			<VueButton @click="sendClientPoints" :disabled="disabled.modalPoints.request">
-				<VueIcon :name="'credit-card'" :fill="'white'" :width="'26px'" :height="'26px'" />
+				<!-- <VueIcon :name="'credit-card'" :fill="'white'" :width="'26px'" :height="'26px'" /> -->
 				Узнать баланс
 			</VueButton>
 		</template>
@@ -279,11 +279,17 @@
 				:error="modalRequestForm.errors.checkbox.status"
 			>
 				<template #label>
-					Согласие на обработку указанных
+					Я солгасен(на) на обработку моих
 					<a class="link" href="#" @click.prevent="openModalPersonalEdite">
-						персональных данных
+						персональных данных </a
+					>. С
+					<a
+						class="link"
+						:href="`/storage/other/politic.docx`"
+					>
+						политикой
 					</a>
-					в соответствии с законодательством Российской Федерации.
+					в отношении обработки персональных данных ознакомлен(на) и согласен(на).
 				</template>
 			</VueInput>
 		</template>
@@ -303,20 +309,16 @@
 		</button>
 
 		<button class="main__buttons-button" @click="topFunction">
-			<VueIcon :name="'arrow'" :fill="'white'" :width="'26px'" :height="'26px'" />
+			<VueIcon :name="'Arrow'" :fill="'white'" :width="'26px'" :height="'26px'" />
 		</button>
 	</div>
 </template>
 
 <script>
-import VueModal from "../../../modules/modal/VueModal.vue";
 import VueInput from "../../../modules/input/VueInput.vue";
 import VueInputContainer from "../../../modules/input/VueInputContainer.vue";
-import VueTiptap from "../../../modules/VueTiptap.vue";
 
 import Captcha from "../../../modules/Captcha.vue";
-import VueIcon from "../../../modules/icon/VueIcon.vue";
-import VueButton from "../../../ui/VueButton.vue";
 
 import api from "../../../../mixin/api";
 import validate from "../../../../services/validate";
@@ -324,14 +326,10 @@ import shared from "../../../../services/shared";
 
 export default {
 	components: {
-		VueModal,
 		VueInput,
 		VueInputContainer,
-		VueTiptap,
 
 		Captcha,
-		VueButton,
-		VueIcon,
 	},
 	data() {
 		return {

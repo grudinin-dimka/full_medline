@@ -77,16 +77,12 @@
 </template>
 
 <script>
-import VueLoader from "../../../components/modules/VueLoader.vue";
-
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 
 import api from "../../../mixin/api";
 
 export default {
 	components: {
-		VueLoader,
-
 		BlockOnce,
 	},
 	data() {

@@ -3,7 +3,7 @@
 	<VueModal ref="modal" :settings="modal">
 		<template #title v-if="modal.values.look == 'default' && !currentInfoBlock.data.delete.value">
 			<VueIcon
-				:name="'arrow'"
+				:name="'Arrow'"
 				:fill="'var(--icon-multi-fill)'"
 				:hover="'var(--icon-nulti-fill-hover)'"
 				:width="'16px'"
@@ -14,7 +14,7 @@
 			/>
 			#{{ currentInfoBlock.data.order.value }}
 			<VueIcon
-				:name="'arrow'"
+				:name="'Arrow'"
 				:fill="'var(--icon-multi-fill)'"
 				:hover="'var(--icon-nulti-fill-hover)'"
 				:width="'16px'"
@@ -308,7 +308,7 @@
 				:look="'inverse'"
 			>
 				<VueIcon
-					:name="'save'"
+					:name="'Save'"
 					:fill="'var(--primary-color)'"
 					:width="'28px'"
 					:height="'28px'"
@@ -374,7 +374,7 @@
 				:look="'inverse'"
 			>
 				<VueIcon
-					:name="'save'"
+					:name="'Save'"
 					:fill="'var(--primary-color)'"
 					:width="'28px'"
 					:height="'28px'"
@@ -421,10 +421,7 @@
 </template>
 
 <script>
-import VueModal from "../../../components/modules/modal/VueModal.vue";
-import VueTiptap from "../../../components/modules/VueTiptap.vue";
 import VueInput from "../../../components/modules/input/VueInput.vue";
-import VueTable from "../../../components/modules/table/VueTable.vue";
 
 import AdminAboutUsList from "./AdminAboutUsList.vue";
 
@@ -432,10 +429,6 @@ import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTwo from "../../../components/ui/admin/blocks/BlockTwo.vue";
 import Empty from "../../../components/modules/Empty.vue";
-
-import VueLoader from "../../../components/modules/VueLoader.vue";
-import VueIcon from "../../../components/modules/icon/VueIcon.vue";
-import VueButton from "../../../components/ui/VueButton.vue";
 
 import api from "../../../mixin/api";
 import shared from "../../../services/shared";
@@ -445,18 +438,11 @@ import validate from "../../../services/validate";
 
 export default {
 	components: {
-		VueModal,
-		VueTiptap,
-		VueTable,
 		VueInput,
 
 		InfoBar,
 		BlockOnce,
 		BlockTwo,
-
-		VueLoader,
-		VueIcon,
-		VueButton,
 
 		Empty,
 		AdminAboutUsList,

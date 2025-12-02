@@ -4,7 +4,7 @@
 		<template #title>
 			<template v-if="modal.values.look == 'default' && !currentContact.data.delete.value">
 				<VueIcon
-					:name="'arrow'"
+					:name="'Arrow'"
 					:fill="'var(--icon-multi-fill)'"
 					:hover="'var(--icon-nulti-fill-hover)'"
 					:width="'16px'"
@@ -15,7 +15,7 @@
 				/>
 				#{{ currentContact.data.order.value }}
 				<VueIcon
-					:name="'arrow'"
+					:name="'Arrow'"
 					:fill="'var(--icon-multi-fill)'"
 					:hover="'var(--icon-nulti-fill-hover)'"
 					:width="'16px'"
@@ -219,7 +219,7 @@
 				:look="'inverse'"
 			>
 				<VueIcon
-					:name="'save'"
+					:name="'Save'"
 					:fill="'var(--primary-color)'"
 					:width="'28px'"
 					:height="'28px'"
@@ -278,8 +278,6 @@
 </template>
 
 <script>
-import VueModal from "../../../components/modules/modal/VueModal.vue";
-import VueModalList from "../../../components/modules/modal/VueModalList.vue";
 import VueInput from "../../../components/modules/input/VueInput.vue";
 
 import AdminContactsList from "./AdminContactsList.vue";
@@ -288,10 +286,6 @@ import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import Empty from "../../../components/modules/Empty.vue";
 
-import VueLoader from "../../../components/modules/VueLoader.vue";
-import VueIcon from "../../../components/modules/icon/VueIcon.vue";
-import VueButton from "../../../components/ui/VueButton.vue";
-
 import api from "../../../mixin/api.js";
 import shared from "../../../services/shared.js";
 import validate from "../../../services/validate.js";
@@ -299,8 +293,6 @@ import sorted from "../../../services/sorted.js";
 
 export default {
 	components: {
-		VueModal,
-		VueModalList,
 		VueInput,
 
 		AdminContactsList,
@@ -308,10 +300,6 @@ export default {
 		InfoBar,
 		BlockOnce,
 		Empty,
-
-		VueLoader,
-		VueIcon,
-		VueButton,
 	},
 	data() {
 		return {
