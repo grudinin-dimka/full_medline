@@ -1,0 +1,39 @@
+:root {
+	--switch-gap: 10px;
+
+	/* switch: label */
+	--switch-label-height: 40px;
+	--switch-label-padding: 10px;
+
+	--switch-label-font-size: var(--input-font-size);
+	--switch-label-font-family: var(--input-font-family);
+
+	/* switch: button */
+	--switch-button-border-radius: 100px;
+	--switch-button-border: 0px;
+
+	--switch-button-width: 60px;
+	--switch-button-height: 30px;
+
+	--switch-button-background-color: rgba(0, 0, 0, 0.2);
+
+	--switch-button-transition: all 0.2s ease;
+
+	/* switch: button.active */
+	--switch-button-background-color--active: var(--primary-color);
+
+	/* switch: circle */
+	--switch-circle-top: 3px;
+	--switch-circle-left: 3px;
+
+	--switch-circle-width: 24px;
+	--switch-circle-height: 24px;
+
+	--switch-circle-background-color: white;
+	--switch-circle-border-radius: 100px;
+
+	--switch-circle-transition: all 0.2s ease;
+
+	/* switch: circle.active */
+	--switch-circle-transform--active: translateX(30px);
+}

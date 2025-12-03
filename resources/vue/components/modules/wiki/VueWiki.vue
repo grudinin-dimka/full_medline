@@ -46,8 +46,6 @@ import AboutFiles from "./components/about/AboutFiles.vue";
 import VacanciesAll from "./components/vacancies/VacanciesAll.vue";
 import TravelsAll from "./components/travels/TravelsAll.vue";
 
-import VueIcon from "../icon/VueIcon.vue";
-
 export default {
 	components: {
 		HomeFooter,
@@ -66,8 +64,6 @@ export default {
 		AboutFiles,
 		VacanciesAll,
 		TravelsAll,
-
-		VueIcon,
 	},
 };
 </script>

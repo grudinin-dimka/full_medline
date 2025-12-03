@@ -17,4 +17,7 @@
 @import url("./medline/elements/icons.css");
 @import url("./medline/elements/buttons.css");
 @import url("./medline/elements/table.css");
-@import url("./medline/elements/inputs.css");
+@import url("./medline/elements/inputs/inputs.css");
+
+/* Страницы */
+@import url("./medline/pages/main.css");

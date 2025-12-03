@@ -6,16 +6,19 @@
 		<span class="link-arrow"> / </span>
 		<router-link to="/prices/clinics">Клиники</router-link>
 		<span class="link-arrow"> / </span>
-		<router-link
-			:to="`/prices/clinics/${$route.params.city}/${$route.params.street}/${$route.params.house}`"
-		>
+		<router-link :to="`/prices/clinics/${$route.params.city}/${$route.params.street}/${$route.params.house}`">
 			<span class="address-name" v-if="!loading.loader.prices">{{ filters.address.name }}</span>
 		</router-link>
 	</info-bar>
 
 	<Block :minHeight="700">
 		<div class="filter_blocks">
-			<VueInput v-model="filters.name" :type="'search'" :placeholder="'Введите услугу'" />
+			<VueValues v-model.trim="filters.name" :type="'search'" :placeholder="'Введите услугу'">
+				<template #label>
+					<VueIcon :name="'Id Card'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+					УСЛУГА
+				</template>
+			</VueValues>
 
 			<!-- Фильтры -->
 			<div class="filter_blocks-item">
@@ -28,13 +31,7 @@
 					@selectAll="filters.category.all = !filters.category.all"
 				>
 					<template #title>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							height="24px"
-							viewBox="0 -960 960 960"
-							width="24px"
-							fill="black"
-						>
+						<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="black">
 							<path
 								d="m260-520 220-360 220 360H260ZM700-80q-75 0-127.5-52.5T520-260q0-75 52.5-127.5T700-440q75 0 127.5 52.5T880-260q0 75-52.5 127.5T700-80Zm-580-20v-320h320v320H120Zm580-60q42 0 71-29t29-71q0-42-29-71t-71-29q-42 0-71 29t-29 71q0 42 29 71t71 29Zm-500-20h160v-160H200v160Zm202-420h156l-78-126-78 126Zm78 0ZM360-340Zm340 80Z"
 							/>
@@ -49,19 +46,10 @@
 			</div>
 
 			<!-- Субъекты фильтров -->
-			<div
-				class="filter_blocks-item"
-				v-if="filters.category.selected.length > 0 || filters.name"
-			>
+			<div class="filter_blocks-item" v-if="filters.category.selected.length > 0 || filters.name">
 				<div class="filter__subject" @click="filters.name = ''" v-if="filters.name">
 					<div class="prices__address-title">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							height="22px"
-							viewBox="0 -960 960 960"
-							width="22px"
-							fill="white"
-						>
+						<svg xmlns="http://www.w3.org/2000/svg" height="22px" viewBox="0 -960 960 960" width="22px" fill="white">
 							<path
 								d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"
 							/>
@@ -69,13 +57,7 @@
 						{{ filters.name }}
 					</div>
 					<div class="close">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="16px"
-							height="16px"
-							viewBox="0 -960 960 960"
-							fill="white"
-						>
+						<svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 -960 960 960" fill="white">
 							<path
 								d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
 							/>
@@ -92,13 +74,7 @@
 					@click="changeSelectedItemChild(filter, 'category')"
 				>
 					<div class="prices__address-title">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							height="24px"
-							viewBox="0 -960 960 960"
-							width="24px"
-							fill="white"
-						>
+						<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="white">
 							<path
 								d="m260-520 220-360 220 360H260ZM700-80q-75 0-127.5-52.5T520-260q0-75 52.5-127.5T700-440q75 0 127.5 52.5T880-260q0 75-52.5 127.5T700-80Zm-580-20v-320h320v320H120Zm580-60q42 0 71-29t29-71q0-42-29-71t-71-29q-42 0-71 29t-29 71q0 42 29 71t71 29Zm-500-20h160v-160H200v160Zm202-420h156l-78-126-78 126Zm78 0ZM360-340Zm340 80Z"
 							/>
@@ -106,13 +82,7 @@
 						{{ filter.name }}
 					</div>
 					<div class="close">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="16px"
-							height="16px"
-							viewBox="0 -960 960 960"
-							fill="white"
-						>
+						<svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 -960 960 960" fill="white">
 							<path
 								d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
 							/>
@@ -122,13 +92,7 @@
 				<div class="filter__subject" @click="clearSelectedItems(['category'])">
 					<div class="prices__address-title">Сбросить фильтры</div>
 					<div class="close">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="16px"
-							height="16px"
-							viewBox="0 -960 960 960"
-							fill="black"
-						>
+						<svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 -960 960 960" fill="black">
 							<path
 								d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
 							/>
@@ -144,40 +108,15 @@
 				<template v-if="loading.loader.prices">
 					<div class="prices__category" v-for="category in 3" :key="category">
 						<div class="prices__address-title">
-							<div
-								class="prices__address-title-icon"
-								:class="{ skeleton: loading.loader.prices }"
-							>
-								&nbsp;
-							</div>
-							<div
-								class="prices__address-title-name"
-								:class="{ skeleton: loading.loader.prices }"
-							>
-								&nbsp;
-							</div>
+							<div class="prices__address-title-icon" :class="{ skeleton: loading.loader.prices }">&nbsp;</div>
+							<div class="prices__address-title-name" :class="{ skeleton: loading.loader.prices }">&nbsp;</div>
 						</div>
 						<ol class="prices__values">
 							<li v-for="price in 5" :key="price" :class="{ load: true }">
 								<div class="prices__values-item">
-									<div
-										class="prices__values-name"
-										:class="{ skeleton: loading.loader.prices }"
-									>
-										&nbsp;
-									</div>
-									<div
-										class="prices__values-price"
-										:class="{ skeleton: loading.loader.prices }"
-									>
-										&nbsp;
-									</div>
-									<div
-										class="prices__values-valute"
-										:class="{ skeleton: loading.loader.prices }"
-									>
-										&nbsp;
-									</div>
+									<div class="prices__values-name" :class="{ skeleton: loading.loader.prices }">&nbsp;</div>
+									<div class="prices__values-price" :class="{ skeleton: loading.loader.prices }">&nbsp;</div>
+									<div class="prices__values-valute" :class="{ skeleton: loading.loader.prices }">&nbsp;</div>
 								</div>
 							</li>
 						</ol>
@@ -196,12 +135,7 @@
 					>
 						<div class="prices__address-title">
 							<div class="prices__address-title-icon">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									height="30px"
-									viewBox="0 -960 960 960"
-									width="30px"
-								>
+								<svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px">
 									<path
 										d="m260-520 220-360 220 360H260ZM700-80q-75 0-127.5-52.5T520-260q0-75 52.5-127.5T700-440q75 0 127.5 52.5T880-260q0 75-52.5 127.5T700-80Zm-580-20v-320h320v320H120Zm580-60q42 0 71-29t29-71q0-42-29-71t-71-29q-42 0-71 29t-29 71q0 42 29 71t71 29Zm-500-20h160v-160H200v160Zm202-420h156l-78-126-78 126Zm78 0ZM360-340Zm340 80Z"
 									/>

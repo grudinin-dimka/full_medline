@@ -250,7 +250,8 @@ export default {
 	gap: 10px;
 
 	padding: 10px;
-	border-radius: 15px;
+	border-radius: var(--default-border-radius);
+	border: var(--input-border);
 	min-width: 400px;
 	max-width: 650px;
 
@@ -284,7 +285,7 @@ export default {
 	outline: none;
 	padding: 15px;
 	border: var(--input-border);
-	border-radius: var(--input-border-radius);
+	border-radius: calc(var(--default-border-radius) / 1.5);;
 
 	font-size: 1.125rem;
 }
@@ -377,29 +378,6 @@ export default {
 	padding: 0px;
 	margin: 0px;
 }
-
-/* Скролбар блока с контентом. */
-.filter > .filter-body > ol::-webkit-scrollbar {
-	width: 20px;
-}
-
-.filter > .filter-body > ol::-webkit-scrollbar-track {
-	background-color: rgb(255, 255, 255);
-	border-radius: 10px;
-	margin: 2px;
-}
-
-.filter > .filter-body > ol::-webkit-scrollbar-thumb {
-	background-color: rgb(220, 220, 220);
-	border: 6px solid rgb(255, 255, 255);
-	border-radius: 10px;
-}
-
-.filter > .filter-body > ol::-webkit-scrollbar-thumb:hover {
-	background-color: rgb(230, 230, 230);
-	cursor: all-scroll;
-}
-/* Конец. */
 
 .filter > .filter-body > ol > li {
 	user-select: none;

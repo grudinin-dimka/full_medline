@@ -106,8 +106,6 @@
 </template>
 
 <script>
-import VueTiptap from "../../../components/modules/VueTiptap.vue";
-import VueIcon from "../../../components/modules/icon/VueIcon.vue";
 import VueAccordeon from "../../../components/modules/accordeon/VueAccordeon.vue";
 import VueAccordeonBlock from "../../../components/modules/accordeon/VueAccordeonBlock.vue";
 
@@ -116,14 +114,10 @@ import Block from "../../../components/ui/main/Block.vue";
 import LoadText from "../../../components/ui/main/LoadText.vue";
 
 import api from "../../../mixin/api";
-import sorted from "../../../services/sorted";
-
 import fakeDelay from "../../../mixin/fake-delay";
 
 export default {
 	components: {
-		VueTiptap,
-		VueIcon,
 		VueAccordeon,
 		VueAccordeonBlock,
 

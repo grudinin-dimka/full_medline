@@ -229,7 +229,7 @@ nav {
 
 .nav__dropdown-title {
 	position: relative;
-	padding: 18px 0px;
+	padding: 20px 0px;
 	border-radius: calc(var(--default-border-radius) / 1.5);
 
 	text-align: center;
@@ -254,7 +254,6 @@ nav {
 	top: calc(100% - 15px);
 
 	z-index: 10;
-	left: -10px;
 
 	transition: all 0.2s ease-in-out;
 }

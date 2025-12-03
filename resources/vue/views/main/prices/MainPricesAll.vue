@@ -8,18 +8,17 @@
 	<Block>
 		<div class="filters">
 			<form @submit.prevent class="filters__item">
-				<VueInput v-model="filters.name" :type="'search'" :placeholder="'Введите услугу'" />
+				<VueValues v-model.trim="filters.name" :type="'search'" :placeholder="'Введите услугу'">
+					<template #label>
+						<VueIcon :name="'Design Services'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+						УСЛУГА
+					</template>
+				</VueValues>
 
 				<button class="filters__item-button" @click="getPrices" :disabled="disabled.prices.get">
 					<span class="loader" v-if="disabled.prices.get"></span>
 					<div class="content" :class="{ disabled: disabled.prices.get }">
-						<VueIcon
-							:name="'search'"
-							:width="'24px'"
-							:height="'24px'"
-							:fill="'white'"
-							:cursor="'pointer'"
-						/>
+						<VueIcon :name="'Search'" :width="'30px'" :height="'30px'" :fill="'white'" :cursor="'pointer'" />
 						Поиск
 					</div>
 				</button>
@@ -27,18 +26,30 @@
 
 			<div class="filters__item">
 				<VueSelector
-					v-model="filters.address"
-					:placeholder="'Выберите адрес'"
-					:cleared="false"
+					v-model.trim="filters.address"
 					:list="getAdressesList"
-				/>
+					:size="6"
+					:isSearch="true"
+					:isClear="false"
+				>
+					<template #label>
+						<VueIcon :name="'Location On'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+						АДРЕС
+					</template>
+				</VueSelector>
 
 				<VueSelector
-					v-model="filters.category"
-					:placeholder="'Выберите категорию'"
-					:cleared="true"
+					v-model.trim="filters.category"
 					:list="getCategoriesList"
-				/>
+					:size="6"
+					:isSearch="true"
+					:isClear="true"
+				>
+					<template #label>
+						<VueIcon :name="'Category'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+						КАТЕГОРИЯ
+					</template>
+				</VueSelector>
 			</div>
 		</div>
 
@@ -48,40 +59,15 @@
 				<template v-if="loading.loader.prices">
 					<div class="prices__category" v-for="category in 3" :key="category">
 						<div class="prices__address-title">
-							<div
-								class="prices__address-title-icon"
-								:class="{ skeleton: loading.loader.prices }"
-							>
-								&nbsp;
-							</div>
-							<div
-								class="prices__address-title-name"
-								:class="{ skeleton: loading.loader.prices }"
-							>
-								&nbsp;
-							</div>
+							<div class="prices__address-title-icon" :class="{ skeleton: loading.loader.prices }">&nbsp;</div>
+							<div class="prices__address-title-name" :class="{ skeleton: loading.loader.prices }">&nbsp;</div>
 						</div>
 						<ol class="prices__values">
 							<li v-for="price in 5" :key="price" :class="{ load: loading.loader.prices }">
 								<div class="prices__values-item">
-									<div
-										class="prices__values-name"
-										:class="{ skeleton: loading.loader.prices }"
-									>
-										&nbsp;
-									</div>
-									<div
-										class="prices__values-price"
-										:class="{ skeleton: loading.loader.prices }"
-									>
-										&nbsp;
-									</div>
-									<div
-										class="prices__values-valute"
-										:class="{ skeleton: loading.loader.prices }"
-									>
-										&nbsp;
-									</div>
+									<div class="prices__values-name" :class="{ skeleton: loading.loader.prices }">&nbsp;</div>
+									<div class="prices__values-price" :class="{ skeleton: loading.loader.prices }">&nbsp;</div>
+									<div class="prices__values-valute" :class="{ skeleton: loading.loader.prices }">&nbsp;</div>
 								</div>
 							</li>
 						</ol>
@@ -100,12 +86,7 @@
 					>
 						<div class="prices__address-title">
 							<div class="prices__address-title-icon">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									height="30px"
-									viewBox="0 -960 960 960"
-									width="30px"
-								>
+								<svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px">
 									<path
 										d="m260-520 220-360 220 360H260ZM700-80q-75 0-127.5-52.5T520-260q0-75 52.5-127.5T700-440q75 0 127.5 52.5T880-260q0 75-52.5 127.5T700-80Zm-580-20v-320h320v320H120Zm580-60q42 0 71-29t29-71q0-42-29-71t-71-29q-42 0-71 29t-29 71q0 42 29 71t71 29Zm-500-20h160v-160H200v160Zm202-420h156l-78-126-78 126Zm78 0ZM360-340Zm340 80Z"
 									/>
@@ -141,16 +122,10 @@
 </template>
 
 <script>
-import VueLoader from "../../../components/modules/VueLoader.vue";
-import VueSelector from "../../../components/modules/VueSelector.vue";
-import VueInput from "../../../components/modules/input/VueInput.vue";
-
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import Block from "../../../components/ui/main/Block.vue";
 import LoadText from "../../../components/ui/main/LoadText.vue";
 import Empty from "../../../components/modules/Empty.vue";
-
-import VueIcon from "../../../components/modules/icon/VueIcon.vue";
 
 import api from "../../../mixin/api.js";
 import sorted from "../../../services/sorted.js";
@@ -159,16 +134,10 @@ import fakeDelay from "../../../mixin/fake-delay.js";
 
 export default {
 	components: {
-		VueLoader,
-		VueSelector,
-		VueInput,
-
 		InfoBar,
 		Block,
 		LoadText,
 		Empty,
-
-		VueIcon,
 	},
 	data() {
 		return {
@@ -303,17 +272,13 @@ export default {
 			};
 
 			if (isAddress) {
-				values.address = this.addresses.find(
-					(address) => address.id == this.filters.address
-				)?.name;
+				values.address = this.addresses.find((address) => address.id == this.filters.address)?.name;
 			} else {
 				values.address = null;
 			}
 
 			if (isCategory) {
-				values.category = this.categories.find(
-					(category) => category.id == this.filters.category
-				)?.name;
+				values.category = this.categories.find((category) => category.id == this.filters.category)?.name;
 			} else {
 				values.category = null;
 				this.filters.category = "";
@@ -386,7 +351,7 @@ export default {
 .filters {
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: var(--default-gap);
 
 	margin: 0 auto;
 

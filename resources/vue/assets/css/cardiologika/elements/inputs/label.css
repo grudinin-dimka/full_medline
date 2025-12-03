@@ -1,0 +1,14 @@
+:root {
+	/* label */
+	--input-label-z-index: 1;
+	--input-label-top: -10px;
+	--input-label-left: 10px;
+
+	--input-label-border-radius: 20px;
+	--input-label-padding: 2.5px 7.5px;
+	--input-label-background-color: white;
+
+	--input-label-font-weight: 500;
+	--input-label-color: var(--primary-color);
+	--input-label-font-size: 0.85rem;
+}

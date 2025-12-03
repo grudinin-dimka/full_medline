@@ -1,0 +1,23 @@
+:root {
+	--input-number-gap: 10px;
+
+	/* buttons */
+	--input-number-buttons-gap: 5px;
+	--input-number-buttons-margin: 0px 15px 0px 0px;
+
+	/* buttons: button */
+	--input-number-button-border: var(--default-border);
+	--input-number-button-border-radius: 100px;
+
+	--input-number-button-height: 30px;
+	--input-number-button-width: 30px;
+	--input-number-button-background-color: white;
+
+	--input-number-button-transition: all 0.2s ease;
+
+	--input-number-button-border-hover: var(--default-border-active);
+	--input-number-button-background-color-hover: var(--item-background-color-active);
+
+	--input-number-button-svg-fill: rgba(0, 0, 0, 0.5);
+	--input-number-button-svg-fill-hover: rgba(0, 0, 0, 1);
+}

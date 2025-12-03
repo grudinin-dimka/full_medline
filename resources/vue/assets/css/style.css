@@ -11,19 +11,28 @@
 @import url("./shared.css");
 
 * {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+
 	font-family: "Rubik", sans-serif;
 	-webkit-tap-highlight-color: transparent;
 
 	outline: var(--default-outline);
-
 	color-scheme: only light;
 }
 
 body {
-	margin: 0;
-	padding: 0;
-	background-color: #ffffff;
+	font-size: var(--default-font-size);
+	font-family: var(--default-font-family);
+
+	margin: var(--main-margin);
+	padding: var(--main-padding);
+
+	color: var(--main-font-color);
+	background-color: var(--main-background-color);
 }
+
 
 html,
 body,

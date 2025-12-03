@@ -426,8 +426,6 @@
 </template>
 
 <script>
-import VueIcon from "../icon/VueIcon.vue";
-
 import VueTablePagination from "./VueTablePagination.vue";
 import VueTableButton from "./VueTableButton.vue";
 import VueTableButtonHead from "./VueTableButtonHead.vue";
@@ -436,8 +434,6 @@ import sorted from "../../../services/sorted";
 
 export default {
 	components: {
-		VueIcon,
-
 		VueTablePagination,
 		VueTableButton,
 		VueTableButtonHead,

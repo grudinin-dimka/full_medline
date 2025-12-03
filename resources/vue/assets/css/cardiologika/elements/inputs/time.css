@@ -1,0 +1,80 @@
+:root {
+	/* month: label */
+	--time-label-z-index: 0;
+	--time-label-left: 15px;
+
+	--time-label-border: 0px;
+	--time-label-border-radius: var(--input-border-radius);
+	--time-label-border-focus: 0px;
+	--time-label-caret-color: var(--input-caret-color);
+
+	--time-label-font: var(--input-font-size) var(--input-font-family);
+	--time-label-background-color: var(--input-background-color);
+
+	--time-label-width: calc(100% - 20px);
+	--time-label-height: calc(100% - var(--input-border-width) * 2);
+
+	/* month: year -> controls */
+	--time-year-controls-gap: 10px;
+
+	/* month: year -> button */
+	--time-year-button-border: var(--button-inverse-border);
+	--time-year-button-border-radius: 50%;
+
+	--time-year-button-width: auto;
+	--time-year-button-height: 28px;
+	--time-year-button-background-color: var(--button-inverse-background-color);
+	--time-year-button-color: black;
+
+	--time-year-button-transition: all 0.2s ease;
+
+	/* month: year -> button:hover */
+	--time-year-button-border--hover: var(--button-inverse-border-hover);
+	--time-year-button-background-color--hover: var(--button-inverse-background-color-hover);
+
+	--time-year-button-color--hover: white;
+
+	/* month: dropdown */
+	--time-dropdown-gap: 10px;
+	--time-dropdown-z-index: 10;
+	--time-dropdown-top: calc(100% + 5px);
+	--time-dropdown-padding: var(--default-padding);
+	--time-dropdown-border: var(--default-border);
+	--time-dropdown-border-radius: var(--input-border-radius);
+	--time-dropdown-width: 190px;
+	--time-dropdown-background-color: white;
+	--time-dropdown-box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+	--time-dropdown-animation: fadeIn 0.2s ease;
+
+   /* month: dropdown -> grid */
+	--time-grid-gap: calc(var(--default-gap) / 2);
+
+   /* month: dropdown -> grid -> item */
+	--time-grid-item-gap: calc(var(--default-gap) / 2);
+
+	/* month: dropdown -> button */
+	--time-button-border: var(--button-inverse-border);
+	--time-button-border-radius: var(--button-border-radius);
+	--time-button-padding: 5px 0px;
+	--time-button-background-color: var(--button-inverse-background-color);
+	--time-button-color: var(--button-inverse-font-color);
+	--time-button-font-size: 1rem;
+	--time-button-transition: all 0.2s ease;
+	--time-button-border-hover: var(--button-inverse-border-hover);
+   --time-button-width: 100%;
+   --time-button-height: 33px;
+	--time-button-background-color-hover: var(--button-inverse-background-color-hover);
+	--time-button-active-border: 1px solid var(--primary-color);
+	--time-button-active-background-color: var(--primary-color);
+	--time-button-active-color: white;
+
+	/* month: dropdown -> subbutton */
+	--time-subbutton-border: var(--button-border);
+	--time-subbutton-border-radius: var(--button-border-radius);
+	--time-subbutton-padding: 5px 10px;
+	--time-subbutton-color: var(--primary-color);
+	--time-subbutton-background-color: white;
+	--time-subbutton-font-size: 0.85rem;
+	--time-subbutton-transition: all 0.2s ease;
+	--time-subbutton-background-color-hover: var(--button-inverse-background-color-hover);
+}

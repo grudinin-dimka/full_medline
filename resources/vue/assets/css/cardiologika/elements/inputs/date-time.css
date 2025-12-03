@@ -1,0 +1,137 @@
+:root {
+	/* datetime: label */
+	--datetime-label-z-index: 0;
+	--datetime-label-left: 15px;
+
+	--datetime-label-border: 0px;
+	--datetime-label-border-radius: var(--input-border-radius);
+	--datetime-label-border-focus: 0px;
+	--datetime-label-caret-color: var(--input-caret-color);
+
+	--datetime-label-font: var(--input-font-size) var(--input-font-family);
+	--datetime-label-background-color: var(--input-background-color);
+
+	--datetime-label-width: calc(100% - 20px);
+	--datetime-label-height: calc(100% - var(--input-border-width) * 2);
+
+	/* datetime: year -> controls */
+	--datetime-year-controls-gap: 10px;
+
+	/* datetime: year -> controls -> buttons */
+	--datetime-year-buttons-gap: 5px;
+
+	/* datetime: year -> button */
+	--datetime-year-button-border: var(--button-inverse-border);
+	--datetime-year-button-border-radius: 50%;
+
+	--datetime-year-button-width: var(--date-year-button-width);
+	--datetime-year-button-height: var(--date-year-button-height);
+	--datetime-year-button-background-color: var(--button-inverse-background-color);
+	--datetime-year-button-color: black;
+
+	--datetime-year-button-transition: all 0.2s ease;
+
+	/* datetime: year -> button:hover */
+	--datetime-year-button-border--hover: var(--button-inverse-border-hover);
+	--datetime-year-button-background-color--hover: var(--button-inverse-background-color-hover);
+
+	--datetime-year-button-color--hover: white;
+
+	/* datetime: dropdown */
+	--datetime-dropdown-gap: var(--default-gap);
+	--datetime-dropdown-z-index: 10;
+	--datetime-dropdown-top: calc(100% + 5px);
+	--datetime-dropdown-padding: var(--default-padding);
+	--datetime-dropdown-border: var(--default-border);
+	--datetime-dropdown-border-radius: var(--input-border-radius);
+	--datetime-dropdown-width: auto;
+	--datetime-dropdown-background-color: white;
+	--datetime-dropdown-box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+	--datetime-dropdown-animation: fadeIn 0.2s ease;
+
+	--datetime-grid-gap: calc(var(--default-gap) / 2);
+
+	/* datetime: dropdown -> date */
+   --datetime-date-gap: 10px;
+   --datetime-date-width: calc(var(--month-dropdown-width) - (var(--datetime-dropdown-padding) * 2));
+   
+	/* datetime: dropdown -> time */
+   --datetime-time-gap: 10px;
+   --datetime-time-width: calc(var(--time-dropdown-width) - var(--datetime-dropdown-padding));
+   
+   /* datetime: dropdown -> button */
+	--datetime-button-border: var(--button-inverse-border);
+	--datetime-button-border-radius: var(--button-border-radius);
+	--datetime-button-padding: 5px 0px;
+	--datetime-button-background-color: var(--button-inverse-background-color);
+	--datetime-button-color: var(--button-inverse-font-color);
+	--datetime-button-font-size: 1rem;
+	--datetime-button-transition: all 0.2s ease;
+	--datetime-button-border-hover: var(--button-inverse-border-hover);
+	--datetime-button-background-color-hover: var(--button-inverse-background-color-hover);
+	--datetime-button-active-border: 1px solid var(--primary-color);
+	--datetime-button-active-background-color: var(--primary-color);
+	--datetime-button-active-color: white;
+
+   /* datetime: dropdown -> subbutton */
+	--datetime-subbutton-border: var(--button-border);
+	--datetime-subbutton-border-radius: var(--button-border-radius);
+	--datetime-subbutton-padding: 5px 10px;
+	--datetime-subbutton-color: var(--primary-color);
+	--datetime-subbutton-background-color: white;
+	--datetime-subbutton-font-size: 0.85rem;
+	--datetime-subbutton-transition: all 0.2s ease;
+	--datetime-subbutton-background-color-hover: var(--button-inverse-background-color-hover);
+
+	/* datetime: calendar */
+	--datetime-calendar-gap: 5px;
+
+	/* datetime: calendar -> tr */
+	--datetime-calendar-tr-gap: 5px;
+
+	/* datetime: calendar -> tr -> th */
+	--datetime-calendar-th-width: var(--datetime-button-width);
+	--datetime-calendar-th-height: var(--datetime-button-height);
+
+	--datetime-calendar-th-color: black;
+	--datetime-calendar-th-font: 1rem var(--input-font-family);
+
+	/* datetime: calendar -> tr -> th.weekend */
+	--datetime-calendar-th-weekend-color: #007be0;
+
+	/* datetime: button */
+	--datetime-button-border: var(--input-border);
+	--datetime-button-border-radius: 100px;
+	--datetime-button-padding: none;
+	--datetime-button-width: 100%;
+	--datetime-button-height: 32px;
+
+	--datetime-button-color: black;
+	--datetime-button-background-color: rgba(0, 0, 0, 0);
+	--datetime-button-font: 1rem var(--input-font-family);
+
+	--datetime-button-transition: all 0.2s ease;
+
+	/* datetime: button:hover */
+	--datetime-button-border--hover: var(--button-inverse-border-hover);
+	--datetime-button-color--hover: var(--button-inverse-font-color);
+	--datetime-button-background-color--hover: var(--button-inverse-background-color-hover);
+
+	/* datetime: button.active */
+	--datetime-button-border--active: 0px;
+	--datetime-button-color--active: white;
+	--datetime-button-background-color--active: var(--primary-color);
+
+	/* datetime: button.active:hover */
+	--datetime-button-border--active--hover: 0px;
+	--datetime-button-color--active--hover: white;
+	--datetime-button-background-color--active--hover: var(--primary-color);
+
+	/* datetime: button.empty */
+	--datetime-button-border--empty: var(--button-inverse-border);
+	--datetime-button-background-color--empty: rgba(0, 0, 0, 0.1);
+
+	/* datetime: button.empty:hover */
+	--datetime-button-border--empty--hover: var(--button-inverse-border);
+	--datetime-button-background-color--empty--hover: rgba(0, 0, 0, 0.1);
+}

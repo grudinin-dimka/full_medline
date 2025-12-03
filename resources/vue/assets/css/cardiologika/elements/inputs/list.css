@@ -1,0 +1,180 @@
+:root {
+	/* list */
+	--list-background-color: rgba(0, 0, 0, 0);
+	--list-gap: calc(var(--default-gap) / 4);
+	--list-border-radius: var(--default-border-radius);
+
+	/* list: head */
+	--list-head-gap: var(--default-gap);
+
+	--list-head-border: var(--default-border);
+	--list-head-border-radius: calc(var(--default-border-radius) / 1.5)
+		calc(var(--default-border-radius) / 1.5) 0px 0px;
+	--list-head-padding: var(--input-padding);
+
+	--list-head-height: var(--input-height);
+	--list-head-font: var(--input-font-size) var(--input-font-family);
+	--list-head-font-weight: 500;
+	--list-head-color: black;
+
+	--list-head-background-color: white;
+
+	/* list: head -> search */
+	--list-head-search-border: var(--table-search-border);
+	--list-head-search-border-radius: var(--table-search-border-radius);
+	--list-head-search-padding: var(--table-search-padding);
+
+	--list-head-search-width: 40px;
+	--list-head-search-height: 40px;
+
+	--list-head-search-background-color: white;
+
+	--list-head-search-width-hover: min(100%, 300px);
+	--list-head-search-height-hover: 40px;
+	--list-head-search-background-color-hover: white;
+	--list-head-search-border-focus: var(--input-border-focus);
+
+	--list-head-search-transition: all 0.35s ease;
+	--list-head-search-font: 1.125rem var(--input-font-family);
+
+	/* list: head -> search -> icon */
+	--list-head-search-icon-left: 0px;
+	--list-head-search-icon-top: 0px;
+
+	--list-head-search-icon-width: 38px;
+	--list-head-search-icon-height: 38px;
+
+	--list-head-search-icon-background-color: rgba(255, 255, 255, 0);
+
+	--list-head-search-icon-svg-width: 25px;
+	--list-head-search-icon-svg-height: 25px;
+	--list-head-search-icon-svg-fill: rgba(0, 0, 0, 0.5);
+	--list-head-search-icon-svg-fill-hover: rgba(0, 0, 0, 1);
+
+	/* list: head -> search -> input */
+	--list-head-search-input-margin-left: 30px;
+	--list-head-search-input-font: 1.125rem var(--input-font-family);
+	--list-head-search-input-width: calc(100% - 30px);
+
+	--list-head-search-input-background-color: rgba(255, 255, 255, 0);
+	--list-head-search-input-border: 0px;
+
+	/* list: body */
+	--list-body-gap: 10px;
+	--list-body-padding: 10px;
+
+	--list-body-border-top: 0px;
+	--list-body-border-right: var(--default-border-width);
+	--list-body-border-bottom: var(--default-border-width);
+	--list-body-border-left: var(--default-border-width);
+	--list-body-border-style: var(--default-border-style);
+	--list-body-border-color: var(--default-border-color);
+	--list-body-border-radius: 0px;
+
+	--list-body-background-color: var(--default-background-color);
+
+	/* list: body */
+	--list-body-padding--radial: 0px;
+
+	--list-body-border-top--radial: 0px;
+	--list-body-border-right--radial: 0px;
+	--list-body-border-bottom--radial: 0px;
+	--list-body-border-left--radial: 0px;
+	--list-body-border-style--radial: 0px;
+	--list-body-border-color--radial: 0px;
+	--list-body-border-radius--radial: 0px;
+
+	--list-body-background-color--radial: rgba(255, 255, 255, 0);
+
+	/* list: body -> item */
+	--list-item-gap: 10px;
+	--list-item-border: var(--input-border);
+
+	--list-item-border-radius: calc(var(--default-border-radius) / 2);
+	--list-item-padding: 12.5px;
+
+	--list-item-height: 50px;
+	--list-item-width: 100%;
+
+	--list-item-color: black;
+
+	--list-item-font: 1.125rem var(--input-font-family);
+	--list-item-background-color: white;
+
+	--list-item-transition: all 0.2s ease;
+
+	/* list: body -> item:hover */
+	--list-item-border-hover: var(--input-border-focus);
+	--list-item-background-color-hover: var(--button-inverse-background-color-hover);
+
+	/* list: body -> item.selected */
+	background-color: var(--primary-color);
+	color: white;
+
+	/* list: body -> checkbox */
+	--list-checkbox-border: var(--default-border);
+	--list-checkbox-border-radius: calc(var(--default-border-radius) / 2);
+	--list-checkbox-padding: 10px 10px;
+	--list-checkbox-background-color: var(--default-background-color);
+
+	/* list: body -> checkbox -> input */
+	--list-checkbox-input-border-radius: 7.5px;
+	--list-checkbox-input-border: var(--input-border);
+
+	--list-checkbox-input-width: 30px;
+	--list-checkbox-input-height: 30px;
+
+	--list-checkbox-input-transition: all 0.2s ease;
+
+	/* list: body -> checkbox -> input:hover */
+	--list-checkbox-input-border--hover: var(--input-border-focus);
+	--list-checkbox-input-background-color--hover: var(--button-inverse-background-color-hover);
+
+	/* list: body -> checkbox -> input.checked */
+	--list-checkbox-input-border--checked: var(--input-border-focus);
+	--list-checkbox-input-background-color--checked: white;
+	
+	/* list: body -> checkbox -> icon */
+	--list-checkbox-icon-top: 12px;
+	--list-checkbox-icon-right: 12px;
+
+	--list-checkbox-icon-width: 30px;
+	--list-checkbox-icon-height: 30px;
+	--list-checkbox-icon-padding: 3px;
+
+	--list-checkbox-icon-border: 0px;
+	--list-checkbox-icon-border-radius: var(--input-border-radius);
+	
+	--list-checkbox-icon-fill: var(--primary-color);
+
+	/* list: footer */
+	--list-footer-gap: 10px;
+	--list-footer-padding: calc(var(--default-padding) / 2);
+
+	--list-footer-border-top: 0px;
+	--list-footer-border-right: var(--default-border-width);
+	--list-footer-border-bottom: var(--default-border-width);
+	--list-footer-border-left: var(--default-border-width);
+	--list-footer-border-style: var(--default-border-style);
+	--list-footer-border-color: var(--default-border-color);
+	--list-footer-border-radius: 0px 0px calc(var(--default-border-radius) / 1.5)
+		calc(var(--default-border-radius) / 1.5);
+
+	--list-footer-height: var(--list-head-height);
+	--list-footer-background-color: white;
+
+	/* list: footer.checkbox */
+	--list-footer-gap--checkbox: 10px;
+	--list-footer-padding--checkbox: calc(var(--default-padding) / 2);
+
+	--list-footer-border-top--checkbox: 0px;
+	--list-footer-border-right--checkbox: 0px;
+	--list-footer-border-bottom--checkbox: 0px;
+	--list-footer-border-left--checkbox: 0px;
+	--list-footer-border-style--checkbox: var(--default-border-style);
+	--list-footer-border-color--checkbox: var(--default-border-color);
+	--list-footer-border-radius--checkbox: 0px;
+
+	--list-footer-height--checkbox: var(--list-head-height);
+	--list-footer-background-color--checkbox: white;
+}

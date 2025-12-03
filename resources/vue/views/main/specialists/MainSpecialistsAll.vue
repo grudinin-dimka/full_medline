@@ -8,19 +8,40 @@
 	<block :minHeight="500">
 		<div class="filters">
 			<div class="filters__item filters__item--default">
-				<VueInput v-model="filters.name" :type="'search'" :placeholder="'Введите ФИО'" />
+				<VueValues v-model.trim="filters.name" :type="'search'" :placeholder="'Введите ФИО'">
+					<template #label>
+						<VueIcon :name="'Id Card'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+						ФИО
+					</template>
+				</VueValues>
 			</div>
 			<div class="filters__item filters__item--block">
+				<VueSelector v-model="filters.clinic" :list="calcClinics" :size="4" :isSearch="true" :isClear="true">
+					<template #label>
+						<VueIcon :name="'Location On'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+						КЛИНИКА
+					</template>
+				</VueSelector>
+
 				<VueSelector
-					v-model="filters.clinic"
-					:placeholder="'Выберите клинику'"
-					:list="calcClinics"
-				/>
+					v-model="filters.specialization"
+					:list="calcSpecializations"
+					:size="4"
+					:isSearch="true"
+					:isClear="true"
+				>
+					<template #label>
+						<VueIcon :name="'Category'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+						СПЕЦИАЛИЗАЦИЯ
+					</template>
+				</VueSelector>
+
+				<!-- <VueSelector v-model="filters.clinic" :placeholder="'Выберите клинику'" :list="calcClinics" />
 				<VueSelector
 					v-model="filters.specialization"
 					:placeholder="'Выберите специализацию'"
 					:list="calcSpecializations"
-				/>
+				/> -->
 			</div>
 		</div>
 
@@ -40,9 +61,6 @@
 </template>
 
 <script>
-import VueSelector from "../../../components/modules/VueSelector.vue";
-import VueInput from "../../../components/modules/input/VueInput.vue";
-
 import SpecialistsList from "./MainSpecialistsAllList.vue";
 
 import Block from "../../../components/ui/main/Block.vue";
@@ -58,9 +76,6 @@ import fakeDelay from "../../../mixin/fake-delay";
 
 export default {
 	components: {
-		VueSelector,
-		VueInput,
-
 		SpecialistsList,
 
 		Block,
@@ -188,10 +203,7 @@ export default {
 							}
 						}
 
-						if (
-							specialist.specialization !== "" &&
-							typeof specialist.specialization == "object"
-						) {
+						if (specialist.specialization !== "" && typeof specialist.specialization == "object") {
 							return specialist.specialization.name == this.filters.specialization;
 						}
 					});
@@ -241,10 +253,7 @@ export default {
 					return;
 				}
 
-				if (
-					specialist.specialization !== null &&
-					typeof specialist.specialization == "object"
-				) {
+				if (specialist.specialization !== null && typeof specialist.specialization == "object") {
 					specalizations.push({
 						value: specialist.specialization.name,
 						label: specialist.specialization.name,
@@ -330,7 +339,7 @@ export default {
 .filters {
 	display: flex;
 	flex-direction: column;
-	gap: calc(var(--default-gap) / 2);
+	gap: var(--default-gap);
 }
 
 .filters__item {

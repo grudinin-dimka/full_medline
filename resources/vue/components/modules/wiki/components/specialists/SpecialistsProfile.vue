@@ -75,10 +75,8 @@ import VueWikiParagraph from "../../VueWikiParagraph.vue";
 
 import General from "../General.vue";
 
-import VueIcon from "../../../icon/VueIcon.vue";
-
 export default {
-	components: { VueWikiTitle, VueWikiParagraph, General, VueIcon },
+	components: { VueWikiTitle, VueWikiParagraph, General },
 };
 </script>
 

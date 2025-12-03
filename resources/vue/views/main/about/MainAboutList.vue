@@ -59,8 +59,6 @@
 </template>
 
 <script>
-import VueTiptap from "../../../components/modules/VueTiptap.vue";
-
 export default {
 	props: {
 		abouts: {
@@ -68,9 +66,6 @@ export default {
 			required: true,
 			default: [],
 		},
-	},
-	components: {
-		VueTiptap,
 	},
 };
 </script>

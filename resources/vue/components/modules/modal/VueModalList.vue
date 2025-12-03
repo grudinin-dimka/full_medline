@@ -6,7 +6,7 @@
 			</div>
 			<div class="buttons">
 				<div class="icon create" @click="$emit('create', item)">
-					<Icon
+					<VueIcon
 						:name="'Add'"
 						:fill="'var(--icon-create-fill)'"
 						:width="'24px'"
@@ -19,7 +19,7 @@
 			<div class="content">{{ getContent(item) }}</div>
 			<div class="buttons">
 				<div class="icon edit" @click="$emit('edit', item)">
-					<Icon
+					<VueIcon
 						:name="'Edit'"
 						:fill="'var(--icon-edit-fill)'"
 						:width="'24px'"
@@ -27,7 +27,7 @@
 					/>
 				</div>
 				<div class="icon delete" @click="$emit('delete', item)">
-					<Icon
+					<VueIcon
 						:name="'Delete'"
 						:fill="'var(--delete-secondary-color)'"
 						:width="'24px'"
@@ -40,13 +40,8 @@
 </template>
 
 <script>
-import Icon from "../icon/VueIcon.vue";
-
 export default {
 	emits: ["create", "edit", "delete"],
-	components: {
-		Icon,
-	},
 	props: {
 		type: {
 			type: String,

@@ -6,7 +6,7 @@
 		</template>
 
 		<template #body>
-			<VueInputContainer :direction="'column'" :gap="'10px'">
+			<VueFieldset :count="1" :gap="20">
 				<template #legend> КОНТАКТНЫЕ ДАННЫЕ </template>
 				<template #inputs>
 					<VueInput
@@ -34,9 +34,9 @@
 						</template>
 					</VueInput>
 				</template>
-			</VueInputContainer>
+			</VueFieldset>
 
-			<VueInputContainer :direction="'column'" :gap="'10px'">
+			<VueFieldset :count="1" :gap="20">
 				<template #legend> ПРОВЕРОЧНЫЙ КОД </template>
 				<template #inputs>
 					<div class="captcha">
@@ -50,12 +50,7 @@
 								<div class="content__text-trash"></div>
 							</div>
 							<div class="captcha__content-update" @click="reloadCaptcha">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									height="26px"
-									viewBox="0 -960 960 960"
-									width="26px"
-								>
+								<svg xmlns="http://www.w3.org/2000/svg" height="26px" viewBox="0 -960 960 960" width="26px">
 									<path
 										d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-110h80v280H520v-80h168q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q77 0 139-44t87-116h84q-28 106-114 173t-196 67Z"
 									/>
@@ -76,7 +71,7 @@
 						</VueInput>
 					</div>
 				</template>
-			</VueInputContainer>
+			</VueFieldset>
 
 			<VueInput
 				v-model="modalPointsForm.data.checkbox.value"
@@ -84,8 +79,8 @@
 				:error="modalPointsForm.errors.checkbox.status"
 			>
 				<template #label
-					>Согласие на обработку указанных персональных данных в соответствии с
-					законодательством Российской Федерации.</template
+					>Согласие на обработку указанных персональных данных в соответствии с законодательством Российской
+					Федерации.</template
 				>
 			</VueInput>
 
@@ -126,6 +121,164 @@
 		</template>
 	</VueModal>
 
+	<!-- Модальное окно: Заявка -->
+	<VueModal ref="modalRequest" :settings="modalRequest" @touch="sendRequest">
+		<template #title>
+			{{ modalRequest.values.title }}
+		</template>
+
+		<template #body>
+			<VueFieldset :count="1" :gap="20">
+				<template #legend> КОНТАКТНЫЕ ДАННЫЕ </template>
+				<template #inputs>
+					<VueValues
+						v-model.trim="modalRequestForm.data.name.value"
+						:type="'text'"
+						:placeholder="'Введите ФИО'"
+						:error="modalRequestForm.errors.name.status"
+					>
+						<template #label>
+							<VueIcon :name="'Id Card'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+							ФИО
+						</template>
+						<template #error>
+							{{ modalRequestForm.errors.name.message }}
+						</template>
+					</VueValues>
+
+					<VueValues
+						v-model.trim="modalRequestForm.data.phone.value"
+						:type="'phone'"
+						:placeholder="'Введите телефон'"
+						:error="modalRequestForm.errors.phone.status"
+					>
+						<template #label>
+							<VueIcon :name="'Phone Enabled'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+							ТЕЛЕФОН
+						</template>
+						<template #error>
+							{{ modalRequestForm.errors.phone.message }}
+						</template>
+					</VueValues>
+				</template>
+			</VueFieldset>
+
+			<VueFieldset :count="1" :gap="20">
+				<template #legend> ДРУГАЯ ИНФОРМАЦИЯ </template>
+				<template #inputs>
+					<VueValues
+						v-model.trim="modalRequestForm.data.description.value"
+						:type="'textarea'"
+						:placeholder="'Введите описание'"
+						:error="modalRequestForm.errors.description.status"
+					>
+						<template #label>
+							<VueIcon :name="'Edit'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+							ОПИСАНИЕ
+						</template>
+						<template #error>
+							{{ modalRequestForm.errors.description.message }}
+						</template>
+					</VueValues>
+
+					<VueSelector
+						v-model="modalRequestForm.data.title.value"
+						:list="[
+							{
+								disabled: true,
+								value: '',
+								label: 'Ничего не выбрано',
+							},
+							{
+								value: 'Запись к врачу',
+								label: 'Запись к врачу',
+							},
+							{
+								value: 'Вызов врач на дом',
+								label: 'Вызов врач на дом',
+							},
+							{
+								value: 'Другое',
+								label: 'Другое',
+							},
+						]"
+						:size="4"
+						:isSearch="true"
+						:isClear="true"
+						:error="modalRequestForm.errors.title.status"
+					>
+						<template #label>
+							<VueIcon :name="'Category'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+							ТИП ЗАЯВКИ
+						</template>
+						<template #error>
+							{{ modalRequestForm.errors.title.message }}
+						</template>
+					</VueSelector>
+				</template>
+			</VueFieldset>
+
+			<VueFieldset :count="1" :gap="20">
+				<template #legend> ПРОВЕРОЧНЫЙ КОД </template>
+				<template #inputs>
+					<div class="captcha__content">
+						<div class="captcha__content-text">
+							<span v-for="letter in getCaptchaSplited" :style="getLetterStyle()">
+								{{ letter }}
+							</span>
+
+							<div class="content__text-line" ref="line"></div>
+							<div class="content__text-trash"></div>
+						</div>
+						<div class="captcha__content-update" @click="reloadCaptcha">
+							<svg xmlns="http://www.w3.org/2000/svg" height="26px" viewBox="0 -960 960 960" width="26px">
+								<path
+									d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-110h80v280H520v-80h168q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q77 0 139-44t87-116h84q-28 106-114 173t-196 67Z"
+								/>
+							</svg>
+						</div>
+					</div>
+
+					<VueValues
+						v-model.trim="modalRequestForm.data.captcha.value"
+						:type="'text'"
+						:placeholder="'Введите текст'"
+						:error="modalRequestForm.errors.captcha.status"
+					>
+						<template #label>
+							<VueIcon
+								:name="'Data Loss Prevention'"
+								:fill="'var(--primary-color)'"
+								:width="'20px'"
+								:height="'20px'"
+							/>
+							КОД С КАРТИНКИ
+						</template>
+						<template #error>
+							{{ modalRequestForm.errors.captcha.message }}
+						</template>
+					</VueValues>
+				</template>
+			</VueFieldset>
+
+			<VueSwitch v-model="modalRequestForm.data.switch.value" :error="modalRequestForm.errors.switch.status">
+				<template #label>
+					Я солгасен(на) на обработку моих
+					<a class="link" href="#" @click.prevent="openModalPersonalEdite"> персональных данных </a>. С
+					<a class="link" :href="`/storage/other/politic.docx`"> политикой </a>
+					в отношении обработки персональных данных ознакомлен(на) и согласен(на).
+				</template>
+			</VueSwitch>
+		</template>
+
+		<template #footer>
+			<VueButton @click="sendRequest" :disabled="disabled.modalForm.request">
+				<VueIcon :name="'Phone Enabled'" :fill="'white'" :width="'26px'" :height="'26px'" />
+				Отправить заявку
+			</VueButton>
+		</template>
+	</VueModal>
+
 	<!-- Модальное окно: Информация о персональных данных -->
 	<VueModal ref="modalPersonal" :settings="modalPersonal">
 		<template #title>
@@ -138,167 +291,6 @@
 
 		<template #footer>
 			<VueButton @click="this.$refs.modalPersonal.close()"> Закрыть </VueButton>
-		</template>
-	</VueModal>
-
-	<!-- Модальное окно: Заявка -->
-	<VueModal ref="modalRequest" :settings="modalRequest" @touch="sendRequest">
-		<template #title>
-			{{ modalRequest.values.title }}
-		</template>
-
-		<template #body>
-			<VueInputContainer :direction="'column'" :gap="'10px'">
-				<template #legend> КОНТАКТНЫЕ ДАННЫЕ </template>
-				<template #inputs>
-					<VueInput
-						v-model="modalRequestForm.data.name.value"
-						:type="'text'"
-						:placeholder="'Введите ФИО'"
-						:error="modalRequestForm.errors.name.status"
-					>
-						<template #label> ФИО </template>
-						<template #error>
-							{{ modalRequestForm.errors.name.message }}
-						</template>
-					</VueInput>
-
-					<VueInput
-						v-model="modalRequestForm.data.phone.value"
-						:type="'phone'"
-						:placeholder="'+7 (___) ___-__-__'"
-						:error="modalRequestForm.errors.phone.status"
-					>
-						<template #label> НОМЕР ТЕЛЕФОНА </template>
-						<template #error>
-							{{ modalRequestForm.errors.phone.message }}
-						</template>
-					</VueInput>
-				</template>
-			</VueInputContainer>
-
-			<VueInputContainer :direction="'column'" :gap="'10px'">
-				<template #legend> ДРУГАЯ ИНФОРМАЦИЯ </template>
-				<template #inputs>
-					<VueInput
-						v-model="modalRequestForm.data.description.value"
-						:type="'textarea'"
-						:placeholder="'Введите описание'"
-						:error="modalRequestForm.errors.description.status"
-					>
-						<template #label> ОПИСАНИЕ </template>
-						<template #error>
-							{{ modalRequestForm.errors.description.message }}
-						</template>
-					</VueInput>
-
-					<VueInput
-						v-model="modalRequestForm.data.title.value"
-						:type="'select'"
-						:options="[
-							{
-								default: true,
-								disabled: true,
-								value: '',
-								label: 'Выберите категорию',
-							},
-							{
-								default: false,
-								disabled: false,
-								value: 'Запись к врачу',
-								label: 'Запись к врачу',
-							},
-							{
-								default: false,
-								disabled: false,
-								value: 'Вызов врач на дом',
-								label: 'Вызов врач на дом',
-							},
-							{
-								default: false,
-								disabled: false,
-								value: 'Другое',
-								label: 'Другое',
-							},
-						]"
-						:error="modalRequestForm.errors.title.status"
-					>
-						<template #label> ТИП ЗАЯВКИ </template>
-						<template #error>
-							{{ modalRequestForm.errors.title.message }}
-						</template>
-					</VueInput>
-				</template>
-			</VueInputContainer>
-
-			<VueInputContainer :direction="'column'" :gap="'10px'">
-				<template #legend> ПРОВЕРОЧНЫЙ КОД </template>
-				<template #inputs>
-					<div class="captcha">
-						<div class="captcha__content">
-							<div class="captcha__content-text">
-								<span v-for="letter in getCaptchaSplited" :style="getLetterStyle()">
-									{{ letter }}
-								</span>
-
-								<div class="content__text-line" ref="line"></div>
-								<div class="content__text-trash"></div>
-							</div>
-							<div class="captcha__content-update" @click="reloadCaptcha">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									height="26px"
-									viewBox="0 -960 960 960"
-									width="26px"
-								>
-									<path
-										d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-110h80v280H520v-80h168q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q77 0 139-44t87-116h84q-28 106-114 173t-196 67Z"
-									/>
-								</svg>
-							</div>
-						</div>
-
-						<VueInput
-							v-model="modalRequestForm.data.captcha.value"
-							:type="'text'"
-							:placeholder="'Введите текст'"
-							:error="modalRequestForm.errors.captcha.status"
-						>
-							<template #label> КОД С КАРТИНКИ </template>
-							<template #error>
-								{{ modalRequestForm.errors.captcha.message }}
-							</template>
-						</VueInput>
-					</div>
-				</template>
-			</VueInputContainer>
-
-			<VueInput
-				v-model="modalRequestForm.data.checkbox.value"
-				:type="'checkbox'"
-				:error="modalRequestForm.errors.checkbox.status"
-			>
-				<template #label>
-					Я солгасен(на) на обработку моих
-					<a class="link" href="#" @click.prevent="openModalPersonalEdite">
-						персональных данных </a
-					>. С
-					<a
-						class="link"
-						:href="`/storage/other/politic.docx`"
-					>
-						политикой
-					</a>
-					в отношении обработки персональных данных ознакомлен(на) и согласен(на).
-				</template>
-			</VueInput>
-		</template>
-
-		<template #footer>
-			<VueButton @click="sendRequest" :disabled="disabled.modalForm.request">
-				<VueIcon :name="'Phone Enabled'" :fill="'white'" :width="'26px'" :height="'26px'" />
-				Отправить заявку
-			</VueButton>
 		</template>
 	</VueModal>
 
@@ -316,8 +308,6 @@
 
 <script>
 import VueInput from "../../../modules/input/VueInput.vue";
-import VueInputContainer from "../../../modules/input/VueInputContainer.vue";
-
 import Captcha from "../../../modules/Captcha.vue";
 
 import api from "../../../../mixin/api";
@@ -327,7 +317,6 @@ import shared from "../../../../services/shared";
 export default {
 	components: {
 		VueInput,
-		VueInputContainer,
 
 		Captcha,
 	},
@@ -358,7 +347,7 @@ export default {
 
 			modalRequest: {
 				thin: false,
-				clamped: true,
+				clamped: false,
 				touch: false,
 				values: {
 					title: "",
@@ -451,7 +440,7 @@ export default {
 						status: false,
 						message: "",
 					},
-					checkbox: {
+					switch: {
 						status: false,
 						message: "",
 					},
@@ -462,7 +451,7 @@ export default {
 				},
 				data: {
 					title: {
-						value: "",
+						value: '',
 						edited: false,
 					},
 					name: {
@@ -481,7 +470,7 @@ export default {
 						value: "",
 						edited: false,
 					},
-					checkbox: {
+					switch: {
 						value: false,
 						edited: false,
 					},
@@ -718,7 +707,7 @@ export default {
 						type: "text",
 					},
 					{
-						key: "checkbox",
+						key: "switch",
 						type: "boolean",
 						reference: true,
 					},

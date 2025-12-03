@@ -1,0 +1,133 @@
+:root {
+	/* [date, month]: label */
+	--date-label-z-index: 0;
+	--date-label-left: 15px;
+
+	--date-label-border: 0px;
+	--date-label-border-radius: var(--input-border-radius);
+	--date-label-border-focus: 0px;
+	--date-label-caret-color: var(--input-caret-color);
+
+	--date-label-font: var(--input-font-size) var(--input-font-family);
+	--date-label-background-color: var(--input-background-color);
+
+	--date-label-width: calc(100% - 20px);
+	--date-label-height: calc(100% - var(--input-border-width) * 2);
+
+	/* [date, month]: year -> controls */
+	--date-year-controls-gap: 10px;
+
+	/* date: year -> controls -> buttons */
+	--date-year-buttons-gap: 5px;
+
+	/* [date, month]: year -> button */
+	--date-year-button-border: var(--button-inverse-border);
+	--date-year-button-border-radius: 50%;
+
+	--date-year-button-width: 28px;
+	--date-year-button-height: 28px;
+	--date-year-button-background-color: var(--button-inverse-background-color);
+	--date-year-button-color: black;
+
+	--date-year-button-transition: all 0.2s ease;
+
+	/* [date, month]: year -> button:hover */
+	--date-year-button-border--hover: var(--button-inverse-border-hover);
+	--date-year-button-background-color--hover: var(--button-inverse-background-color-hover);
+
+	--date-year-button-color--hover: white;
+
+	/* month: dropdown */
+	--month-dropdown-gap: 10px;
+	--month-dropdown-z-index: 10;
+	--month-dropdown-top: calc(100% + 5px);
+	--month-dropdown-padding: var(--default-padding);
+	--month-dropdown-border: var(--default-border);
+	--month-dropdown-border-radius: var(--input-border-radius);
+	--month-dropdown-width: 294px;
+	--month-dropdown-background-color: white;
+	--month-dropdown-box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+	--month-dropdown-animation: fadeIn 0.2s ease;
+
+	--month-grid-gap: calc(var(--default-gap) / 2);
+
+	/* month: dropdown -> button */
+	--month-button-border: var(--button-inverse-border);
+	--month-button-border-radius: var(--button-border-radius);
+	--month-button-padding: 5px 0px;
+	--month-button-background-color: var(--button-inverse-background-color);
+	--month-button-color: var(--button-inverse-font-color);
+	--month-button-font-size: 1rem;
+	--month-button-transition: all 0.2s ease;
+	--month-button-border-hover: var(--button-inverse-border-hover);
+	--month-button-background-color-hover: var(--button-inverse-background-color-hover);
+
+	--month-button-width: 100%;
+	--month-button-height: 32px;
+
+	--month-button-active-border: 1px solid var(--primary-color);
+	--month-button-active-background-color: var(--primary-color);
+	--month-button-active-color: white;
+
+	/* month: dropdown -> subbutton */
+	--month-subbutton-border: var(--button-border);
+	--month-subbutton-border-radius: var(--button-border-radius);
+	--month-subbutton-padding: 5px 10px;
+	--month-subbutton-color: var(--primary-color);
+	--month-subbutton-background-color: white;
+	--month-subbutton-font-size: 0.85rem;
+	--month-subbutton-transition: all 0.2s ease;
+	--month-subbutton-background-color-hover: var(--button-inverse-background-color-hover);
+
+	/* date: calendar */
+	--date-calendar-gap: 5px;
+
+	/* date: calendar -> tr */
+	--date-calendar-tr-gap: 5px;
+
+	/* date: calendar -> tr -> th */
+	--date-calendar-th-width: var(--date-button-width);
+	--date-calendar-th-height: var(--date-button-height);
+
+	--date-calendar-th-color: black;
+	--date-calendar-th-font: 1rem var(--input-font-family);
+
+	/* date: calendar -> tr -> th.weekend */
+	--date-calendar-th-weekend-color: #007be0;
+
+	/* date: button */
+	--date-button-border: var(--input-border);
+	--date-button-border-radius: 100px;
+	--date-button-padding: none;
+	--date-button-width: 100%;
+	--date-button-height: 32px;
+
+	--date-button-color: black;
+	--date-button-background-color: rgba(0, 0, 0, 0);
+	--date-button-font: 1rem var(--input-font-family);
+
+	--date-button-transition: all 0.2s ease;
+
+	/* date: button:hover */
+	--date-button-border--hover: var(--button-inverse-border-hover);
+	--date-button-color--hover: var(--button-inverse-font-color);
+	--date-button-background-color--hover: var(--button-inverse-background-color-hover);
+
+	/* date: button.active */
+	--date-button-border--active: 0px;
+	--date-button-color--active: white;
+	--date-button-background-color--active: var(--primary-color);
+
+	/* date: button.active:hover */
+	--date-button-border--active--hover: 0px;
+	--date-button-color--active--hover: white;
+	--date-button-background-color--active--hover: var(--primary-color);
+
+	/* date: button.empty */
+	--date-button-border--empty: var(--button-inverse-border);
+	--date-button-background-color--empty: rgba(0, 0, 0, 0.1);
+
+	/* date: button.empty:hover */
+	--date-button-border--empty--hover: var(--button-inverse-border);
+	--date-button-background-color--empty--hover: rgba(0, 0, 0, 0.1);
+}

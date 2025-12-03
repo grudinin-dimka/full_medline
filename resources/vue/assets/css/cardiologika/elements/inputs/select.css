@@ -1,0 +1,23 @@
+:root {
+	/* select */
+	--select-font-family: var(--default-font-family);
+	--select-font-size: 1.25rem;
+
+	--select-top: calc(anchor(bottom) + 5px);
+	--select-border: var(--input-border);
+	--select-border-radius: calc(var(--default-border-radius) / 1.5);
+	--select-padding: 0px var(--default-padding);
+	--select-color: var(--default-font-color);
+	--select-background-color: white;
+	--select-background-color-hover: white;
+
+	--option-font-color: black;
+	--option-border: var(--default-border);
+	--option-background-color: white;
+	--option-background-color-odd: white;
+	--option-padding: 10px;
+	--option-color-focus: var(--primary-color);
+	--option-color-disabled: rgba(0, 0, 0, 0.5);
+
+	--select-transition: all 0.2s ease;
+}

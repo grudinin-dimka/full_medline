@@ -134,12 +134,7 @@ async function initMap(mapId, coordinates) {
 	});
 }
 
-import VueIcon from "../../../components/modules/icon/VueIcon.vue";
-
 export default {
-	components: {
-		VueIcon,
-	},
 	props: {
 		contacts: {
 			type: Array,

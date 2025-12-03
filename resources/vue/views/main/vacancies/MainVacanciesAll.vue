@@ -343,25 +343,16 @@
 </template>
 
 <script>
-import VueIcon from "../../../components/modules/icon/VueIcon.vue";
-import VueTiptap from "../../../components/modules/VueTiptap.vue";
-import VueButton from "../../../components/ui/VueButton.vue";
-
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import Block from "../../../components/ui/main/Block.vue";
 import Empty from "../../../components/modules/Empty.vue";
 import LoadText from "../../../components/ui/main/LoadText.vue";
 
 import api from "../../../mixin/api";
-import sorted from "../../../services/sorted";
 import fakeDelay from "../../../mixin/fake-delay";
 
 export default {
 	components: {
-		VueIcon,
-		VueTiptap,
-		VueButton,
-
 		InfoBar,
 		Block,
 		Empty,

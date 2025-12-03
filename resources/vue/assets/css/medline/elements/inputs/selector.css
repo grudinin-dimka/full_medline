@@ -1,0 +1,107 @@
+:root {
+	/* menu */
+	--selector-menu-gap: 10px;
+
+	--selector-menu-z-index: 2;
+	--selector-menu-top: 68px;
+	--selector-menu-left: 0px;
+
+	--selector-menu-border-width: var(--default-border-width);
+	--selector-menu-border-top: var(--selector-menu-border-width);
+	--selector-menu-border-right: var(--selector-menu-border-width);
+	--selector-menu-border-bottom: var(--selector-menu-border-width);
+	--selector-menu-border-left: var(--selector-menu-border-width);
+	--selector-menu-border-style: var(--default-border-style);
+	--selector-menu-border-color: var(--default-border-color);
+
+	--selector-menu-border: var(--default-border);
+	--selector-menu-width: 100%;
+	--selector-menu-border-radius: var(--input-border-radius);
+	--selector-menu-padding: 10px;
+
+	--selector-menu-background-color: white;
+
+	--selector-menu-transition: all 0.2s ease;
+	--selector-menu-box-shadow: var(--month-dropdown-box-shadow);
+	--selector-menu-animation: var(--month-dropdown-animation);
+
+	/* menu: input */
+	--selector-menu-input-padding: 0px 15px;
+	--selector-menu-input-border: var(--input-border);
+	--selector-menu-input-border-radius: calc(var(--input-border-radius) / 1.5);
+	--selector-menu-input-border-focus: var(--input-border-focus);
+
+	--selector-menu-input-height: var(--selector-menu-list-item-min-height);
+	--selector-menu-input-width: 100%;
+
+	--selector-menu-input-font: var(--input-font-size) var(--input-font-family);
+	--selector-menu-input-transition: all 0.2s ease;
+
+	/* menu: list */
+	--selector-menu-list-gap: 5px;
+
+	--selector-menu-list-padding: 0px;
+	--selector-menu-list-margin: 0px;
+
+	/* menu: list -> item */
+	--selector-menu-list-item-height: auto;
+	--selector-menu-list-item-min-height: 50px;
+
+	--selector-menu-list-item-border: 0px;
+	--selector-menu-list-item-padding: 10px;
+	--selector-menu-list-item-border-radius: calc(var(--input-border-radius) / 1.5);
+
+	--selector-menu-list-item-font: var(--input-font-size) var(--input-font-family);
+
+	--selector-menu-list-item-background-color: rgba(255, 255, 255, 1);
+	--selector-menu-list-item-background-color-hover: rgb(242, 242, 242);
+
+	/* menu: list -> item.empty */
+	--selector-menu-list-item-empty-border: 0px;
+
+	--selector-menu-list-item-empty-color: rgba(0, 0, 0, 0.5);
+	--selector-menu-list-item-empty-background-color: rgba(255, 255, 255, 0);
+
+	/* menu: list -> item.active */
+	--selector-menu-list-item-active-border: 0px;
+
+	--selector-menu-list-item-active-color: white;
+	--selector-menu-list-item-active-background-color: var(--primary-color);
+
+	/* menu: list -> item.disabled */
+	--selector-menu-list-item-disabled-border: 0px;
+
+	--selector-menu-list-item-disabled-color: rgba(0, 0, 0, 0.5);
+	--selector-menu-list-item-disabled-background-color: rgba(0, 0, 0, 0);
+
+	/* control */
+	--selector-control-gap: 10px;
+
+	--selector-control-border: var(--default-border);
+	--selector-control-border-radius: var(--input-border-radius);
+	--selector-control-border-focus: var(--input-border-focus);
+
+	--selector-control-padding: 10px;
+	--selector-control-height: var(--input-height);
+	--selector-control-caret-color: var(--input-border-color-active);
+	--selector-control-background-color: white;
+	--selector-control-font: var(--input-font-size) var(--input-font-family);
+	--selector-control-transition: all 0.2s ease;
+
+	/* control: label */
+	--selector-control-label-height: var(--input-height);
+	--selector-control-label-width: 100%;
+
+	--selector-control-label-font: var(--input-font-size) var(--input-font-family);
+
+	/* control: button */
+	--selector-control-button-border: 0px;
+	--selector-control-button-border-radius: 100px;
+	--selector-control-button-background-color: rgba(0, 0, 0, 0);
+
+	--selector-control-button-width: 25px;
+	--selector-control-button-height: 25px;
+
+	--selector-control-button-svg-fill: rgba(0, 0, 0, 0.5);
+	--selector-control-button-svg-fill-hover: rgba(0, 0, 0, 1);
+}

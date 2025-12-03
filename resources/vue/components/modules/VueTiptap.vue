@@ -902,6 +902,8 @@ export default {
 .tiptap p {
 	margin: 10px 0px;
 	font-size: 1.125rem;
+
+	color: var(--input-color);
 }
 
 .tiptap p:is(:first-child) {

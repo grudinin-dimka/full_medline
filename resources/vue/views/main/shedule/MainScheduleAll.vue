@@ -31,17 +31,25 @@
 			</div>
 		</div>
 		<div class="filter__blocks">
-			<VueInput
-				v-model="filters.fio.data.body"
-				:type="'search'"
-				:placeholder="'Введите имя специалиста'"
-			/>
+			<VueValues v-model.trim="filters.fio.data.body" :type="'search'" :placeholder="'Введите специалиста'">
+				<template #label>
+					<VueIcon :name="'Id Card'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+					СПЕЦИАЛИСТ
+				</template>
+			</VueValues>
 
 			<VueSelector
-				v-model="filters.specialization.data.body"
-				:placeholder="'Выберите специализацию'"
+				v-model.trim="filters.specialization.data.body"
 				:list="getFormatSpecializations"
-			/>
+				:size="6"
+				:isSearch="true"
+				:isClear="false"
+			>
+				<template #label>
+					<VueIcon :name="'Category'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+					СПЕЦИАЛИЗАЦИЯ
+				</template>
+			</VueSelector>
 		</div>
 	</Block>
 
@@ -70,17 +78,10 @@
 					<td class="shedule__table-td">
 						<div class="shedule__specialist">
 							<div class="shedule__specialist-head">
-								<div
-									class="specialist__head-img"
-									:class="{ skeleton: loading.loader.schedule }"
-								>
+								<div class="specialist__head-img" :class="{ skeleton: loading.loader.schedule }">
 									<template v-if="!loading.loader.schedule">
 										<template
-											v-if="
-												['кт', 'мрт', 'рентген', 'маммограф'].includes(
-													shedule.name.trim().toLowerCase()
-												)
-											"
+											v-if="['кт', 'мрт', 'рентген', 'маммограф'].includes(shedule.name.trim().toLowerCase())"
 										>
 											<img
 												v-if="shedule.name.trim().toLowerCase() === 'кт'"
@@ -198,11 +199,7 @@
 												>
 													<div
 														class="days__item-content"
-														v-for="time in getDayTime(
-															shedule.id,
-															day.date,
-															clinic.id
-														)"
+														v-for="time in getDayTime(shedule.id, day.date, clinic.id)"
 														v-if="getClinicStatus(shedule.id, clinic.id)"
 														:style="getTimeStyle(clinic.id, time)"
 													>
@@ -215,11 +212,7 @@
 												<div class="days__item" v-else>
 													<div
 														class="days__item-content"
-														v-for="time in getDayTime(
-															shedule.id,
-															day.date,
-															activeClinic.id
-														)"
+														v-for="time in getDayTime(shedule.id, day.date, activeClinic.id)"
 														:style="getTimeStyle(activeClinic.id, time)"
 													>
 														{{ time }}
@@ -282,10 +275,6 @@
 </template>
 
 <script>
-import VueSelector from "../../../components/modules/VueSelector.vue";
-import VueInput from "../../../components/modules/input/VueInput.vue";
-import VueLoader from "../../../components/modules/VueLoader.vue";
-
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import Block from "../../../components/ui/main/Block.vue";
 
@@ -296,10 +285,6 @@ import fakeDelay from "../../../mixin/fake-delay.js";
 
 export default {
 	components: {
-		VueSelector,
-		VueInput,
-		VueLoader,
-
 		InfoBar,
 		Block,
 	},
@@ -566,11 +551,7 @@ export default {
 				let keys = shedule.specializations.split(", ");
 
 				keys.forEach((key) => {
-					if (
-						!specializations.find((item) =>
-							item.value.toLowerCase().includes(key.toLowerCase())
-						)
-					) {
+					if (!specializations.find((item) => item.value.toLowerCase().includes(key.toLowerCase()))) {
 						let formatKey = key.slice(0, 1).toUpperCase() + key.slice(1);
 
 						specializations.push({
@@ -593,8 +574,7 @@ export default {
 			let specializations = [];
 
 			this.shedules.forEach((shedule) => {
-				if (!specializations.includes(shedule.specializations))
-					specializations.push(shedule.specializations);
+				if (!specializations.includes(shedule.specializations)) specializations.push(shedule.specializations);
 			});
 
 			sorted.sortString("up", specializations);
@@ -630,9 +610,7 @@ export default {
 					break;
 				default:
 					filteredShedules = this.shedules.filter((item) =>
-						item.weeks.some(
-							(week) => week.clinicId === this.activeClinic.id && week.status === true
-						)
+						item.weeks.some((week) => week.clinicId === this.activeClinic.id && week.status === true)
 					);
 					break;
 			}
@@ -648,11 +626,7 @@ export default {
 			if (this.filters.specialization.status) {
 				if (this.filters.specialization.data.body !== "") {
 					filteredShedules = filteredShedules.filter((item) => {
-						if (
-							item.specializations
-								.toLowerCase()
-								.includes(this.filters.specialization.data.body.toLowerCase())
-						) {
+						if (item.specializations.toLowerCase().includes(this.filters.specialization.data.body.toLowerCase())) {
 							return item;
 						}
 					});

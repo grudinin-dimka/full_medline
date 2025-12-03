@@ -163,9 +163,6 @@
 </template>
 
 <script>
-import VueTiptap from "../../../components/modules/VueTiptap.vue";
-import VueLoader from "../../../components/modules/VueLoader.vue";
-
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import Block from "../../../components/ui/main/Block.vue";
 import LoadText from "../../../components/ui/main/LoadText.vue";
@@ -177,9 +174,6 @@ import fakeDelay from "../../../mixin/fake-delay";
 
 export default {
 	components: {
-		VueTiptap,
-		VueLoader,
-
 		InfoBar,
 		Block,
 		LoadText,

@@ -1,0 +1,7 @@
+:root {
+   /* textarea */
+	--textarea-padding: 15px;
+
+	--textarea-min-height: 150px;
+	--textarea-height: auto;
+}

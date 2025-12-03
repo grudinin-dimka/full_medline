@@ -72,15 +72,11 @@
 </template>
 
 <script>
-import VueLoader from "../../../components/modules/VueLoader.vue";
-
 import MainAboutList from "./MainAboutList.vue";
 
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import Block from "../../../components/ui/main/Block.vue";
 import Empty from "../../../components/modules/Empty.vue";
-
-import VueIcon from "../../../components/modules/icon/VueIcon.vue";
 
 import api from "../../../mixin/api";
 import files from "../../../services/files";
@@ -90,15 +86,11 @@ import sorted from "../../../services/sorted";
 
 export default {
 	components: {
-		VueLoader,
-
 		MainAboutList,
 
 		InfoBar,
 		Block,
 		Empty,
-
-		VueIcon,
 	},
 	methods: {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/

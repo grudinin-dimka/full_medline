@@ -18,10 +18,8 @@
 import VueWikiTitle from "../../VueWikiTitle.vue";
 import VueWikiParagraph from "../../VueWikiParagraph.vue";
 
-import VueIcon from "../../../icon/VueIcon.vue";
-
 export default {
-	components: { VueWikiTitle, VueWikiParagraph, VueIcon },
+	components: { VueWikiTitle, VueWikiParagraph },
 };
 </script>
 

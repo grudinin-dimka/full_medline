@@ -1,0 +1,16 @@
+:root {
+	/* fieldset */
+	--fieldset-border: var(--default-border);
+	--fieldset-grid-template-columns: repeat(1, 1fr);
+	--fieldset-grid-gap: 10px;
+	--fieldset-border-radius: var(--default-border-radius);
+	--fieldset-padding: 10px;
+	--fieldset-background-color: rgba(255, 255, 255, 0.5);
+	--fieldset-transition: all 0.2s ease;
+
+	/* fieldset -> legend */
+	--fieldset-legend-gap: 5px;
+
+	--fieldset-legend-color: black;
+	--fieldset-legend-font-size: 1.25rem;
+}
