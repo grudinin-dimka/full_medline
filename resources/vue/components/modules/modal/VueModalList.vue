@@ -9,8 +9,8 @@
 					<VueIcon
 						:name="'Add'"
 						:fill="'var(--icon-create-fill)'"
-						:width="'24px'"
-						:height="'24px'"
+						:width="'26px'"
+						:height="'26px'"
 					/>
 				</div>
 			</div>
@@ -145,8 +145,9 @@ export default {
 	padding: 10px;
 	border-radius: 100px;
 
-	width: 25px;
-	height: 25px;
+	width: fit-content;
+	height: fit-content;
+	aspect-ratio: 1 / 1;
 }
 
 .modal-list > .item > .buttons > .icon.edit {

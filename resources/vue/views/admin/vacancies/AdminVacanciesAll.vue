@@ -126,7 +126,6 @@
 
 			<VueNumber
 				v-model="currentVacancy.data.salary.value"
-				:type="'number'"
 				:min="0"
 				:max="3_000_000"
 				:placeholder="'Введите зарплату'"

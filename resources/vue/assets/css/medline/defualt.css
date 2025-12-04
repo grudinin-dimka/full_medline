@@ -25,7 +25,7 @@
 
 	--default-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.05);
 
-	--item-background-color: rgb(235, 235, 235);
+	--item-background-color: #f0fafc;
 	--item-background-color-active: #f2feff;
 
 	--skeleton-background-color: rgb(235, 235, 235);

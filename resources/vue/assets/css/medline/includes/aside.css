@@ -15,10 +15,15 @@
 	--aside-background-color: var(--default-background-color);
 	--aside-font-color: var(--default-font-color);
 	--aside-width: 375px;
+	--aside-height: 100%;
+	--aside-max-height: 100dvh;
 
 	--aside-header-gap: var(--default-gap);
 	--aside-body-gap: calc(var(--default-gap) / 2);
 	--aside-footer-gap: var(--default-gap);
+
+	/* aside.hidden */
+	--aside-width--hiden: 100px;
 
 	/* list */
 	--aside-list-gap: 10px;
@@ -27,7 +32,7 @@
 
 	/* link */
 	--aside-link-padding: 10px 20px;
-	--aside-link-height: 70px;
+	--aside-link-height: 60px;
 	--aside-link-width: auto;
 	--aside-link-font-size: 1.25rem;
 
@@ -58,12 +63,18 @@
 	--aside-link-child-background-color-hover: rgba(0, 171, 190, 0.2);
 
 	/* link.hidden */
-	--aside-link-hidden-padding: 10px 20px;
+	--aside-link-hidden-padding: 5px 15px;
 
-	--aside-link-hidden-width: 70px;
-	--aside-link-hidden-height: 70px;
+	--aside-link-hidden-width: 60px;
+	--aside-link-hidden-height: 60px;
 
 	/* link -> .arrow */
+	--aside-arrow-top: none;
+	--aside-arrow-right: 20px;
+
+	--aside-arrow-width: 25px;
+	--aside-arrow-height: 25px;
+
 	--aside-arrow-transition: all 0s ease;
 
 	/* link -> .stage */
@@ -81,7 +92,7 @@
 
 	/* link -> .point */
 	--aside-link-point-left: -4px;
-	--aside-link-point-top: 30px;
+	--aside-link-point-top: 25px;
 
 	--aside-link-point-width: 10px;
 	--aside-link-point-height: 10px;

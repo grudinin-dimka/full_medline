@@ -1,64 +1,50 @@
 <template>
-	<header :class="{ 'header--hidden': false }" ref="header">
+	<header :class="{ 'header--hidden': isHidden }" ref="header">
 		<div class="header__item header__item--left">
-         <slot name="left"></slot>
-      </div>
-
-		<div class="header__item header__item--right">
-         <slot name="right"></slot>
-      </div>
-
-		<div class="header__dropdown" v-if="isShow" ref="headerDropdown">
-			<div class="header__dropdown__body">
-            <slot name="dropdown"></slot>
-         </div>
-
-			<div class="header__dropdown__footer">
-				<div class="header__dropdown__item" @click="logout">
-					<VueIcon :name="'Logout'" :fill="'var(--delete-background-color)'" :width="'24px'" :height="'24px'" />
-					Выход
-				</div>
-			</div>
+			<slot name="left"></slot>
 		</div>
 
-		<!-- <a @click.prevent="$router.push({ name: 'home' })" href="/" alt="Медлайн">
-			<img src="../../../../assets/svg/medline/logo.svg" alt="Медлайн" />
-		</a>
-		<div class="user">
-			<p>{{ $store.getters.userNickname }}</p>
-		</div> -->
-	</header>
+		<div class="header__item header__item--right">
+			<slot name="right"></slot>
+		</div>
 
-	<!-- Кнопка "бургер" -->
-	<!-- <div class="burger" @click="$store.commit('setBurgerAdmin')" :class="{ active: $store.getters.burgerAdminStatus }">
-		<div></div>
-		<div></div>
-		<div></div>
-	</div> -->
+		<div class="header__dropdown" v-if="isShow" ref="headerDropdown">
+			<slot name="dropdown"></slot>
+		</div>
+	</header>
 </template>
 
 <script>
 export default {
+	props: {
+		isHidden: {
+			type: Boolean,
+			default: false,
+		},
+	},
 	data() {
 		return {
 			isShow: false,
 		};
 	},
 	methods: {
-		/* Закрытие месяца */
+		open() {
+			this.isShow = true;
+		},
+
+		close() {
+			this.isShow = false;
+		},
+
 		handleClickOutside(e) {
 			if (this.$refs.header && !this.$refs.header.contains(e.target)) {
-				this.isShow = false;
+				this.close();
 			}
 		},
 
 		logout() {
 			this.$store.commit("logoutOpen");
 			this.close();
-		},
-
-		close() {
-			this.isShow = false;
 		},
 	},
 	mounted() {
@@ -100,40 +86,6 @@ header {
 	gap: var(--default-gap);
 }
 
-.header__user {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	gap: calc(var(--default-gap) / 2);
-}
-
-.header__user-name {
-	font-size: 1.125rem;
-}
-
-.header__user-email {
-	font-size: 1.125rem;
-	color: rgba(0, 0, 0, 0.5);
-}
-
-.header__user-info {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	gap: 5px;
-}
-
-.header__user-icon {
-	cursor: pointer;
-
-	border-radius: 100px;
-
-	width: 50px;
-	height: 50px;
-	background-color: var(--primary-color);
-}
-
 /* Выпадающее меню */
 .header__dropdown {
 	position: absolute;
@@ -143,7 +95,9 @@ header {
 
 	display: flex;
 	flex-direction: column;
+	gap: 5px;
 
+	padding: 10px;
 	width: min(100%, 250px);
 
 	background-color: white;
@@ -152,14 +106,6 @@ header {
 	box-shadow: var(--default-box-shadow);
 
 	animation: fadeIn 0.2s ease;
-}
-
-.header__dropdown__body {
-	display: flex;
-	flex-direction: column;
-	gap: 5px;
-
-	padding: 10px;
 }
 
 .header__dropdown__footer {
@@ -175,24 +121,5 @@ header {
 	border-color: var(--default-border-color);
 
 	padding: 10px;
-}
-
-.header__dropdown__item {
-	user-select: none;
-	cursor: pointer;
-	display: flex;
-	justify-content: flex-start;
-	align-items: center;
-	gap: 10px;
-
-	background-color: white;
-	padding: 10px;
-	border-radius: 10px;
-
-	font: var(--default-font-weight) 1.125rem var(--default-font-family);
-}
-
-.header__dropdown__item:hover {
-	background-color: rgba(0, 0, 0, 0.05);
 }
 </style>

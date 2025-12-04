@@ -109,6 +109,15 @@
 				<span v-if="!$store.getters.getIsHide" class="aside__item-button-label">РАСПИСАНИЕ</span>
 			</VueAsideButton>
 
+			<VueAsideButton
+				:link="'/admin/etravels'"
+				:is-active="isActive('/admin/etravels')"
+				@click.prevent="insertPage('etravels')"
+			>
+				<VueIcon :name="'Travel'" :fill="'black'" :width="'28px'" :height="'28px'" />
+				<span v-if="!$store.getters.getIsHide" class="aside__item-button-label">ПУТЕВКИ</span>
+			</VueAsideButton>
+
 			<VueAsideList :alias="['enews', 'evideo', 'econtacts', 'eabout']">
 				<template #title>
 					<VueIcon :name="'Info'" :fill="'black'" :width="'28px'" :height="'28px'" />
@@ -247,8 +256,8 @@ export default {
 .aside__logo-icon img {
 	fill: var(--primary-color);
 
-	height: 70px;
-	width: 70px;
+	height: 60px;
+	width: 60px;
 }
 
 .aside__logo-label {

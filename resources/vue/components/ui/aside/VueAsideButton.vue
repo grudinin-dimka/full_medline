@@ -96,6 +96,8 @@ a.aside__link.child:is(:hover, .active) svg {
 }
 
 a.aside__link.hidden {
+	padding: var(--aside-link-hidden-padding);
+
 	width: var(--aside-link-hidden-width);
 	height: var(--aside-link-hidden-height);
 }

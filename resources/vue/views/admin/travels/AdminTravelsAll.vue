@@ -32,11 +32,7 @@
 
 		<template
 			#buttons
-			v-if="
-				(modalTravels.values.look == 'default') &
-				!currentTravel.data.delete.value &
-				!currentTravel.data.create.value
-			"
+			v-if="(modalTravels.values.look == 'default') & !currentTravel.data.delete.value & !currentTravel.data.create.value"
 		>
 			<VueIcon
 				v-if="!currentTravel.data.hide.value"
@@ -73,42 +69,51 @@
 				</div>
 			</div>
 
-			<VueInput
+			<VueFile
 				v-model="currentTravel.data.file.value"
-				:placeholder="'Загрузите файл'"
-				:type="'file'"
-				:error="currentTravel.errors.file.status"
 				ref="fileImage"
+				:type="'image'"
+				:placeholder="'Загрузите файл'"
+				:error="currentTravel.errors.file.status"
 			>
-				<template #label> ИЗОБРАЖЕНИЕ (500x600) </template>
+				<template #label>
+					<VueIcon :name="'Image'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+					ИЗОБРАЖЕНИЕ (500x600)
+				</template>
 				<template #error>
 					{{ currentTravel.errors.file.message }}
 				</template>
-			</VueInput>
+			</VueFile>
 
-			<VueInput
-				:placeholder="'Введите заголовок'"
+			<VueValues
+				v-model.trim="currentTravel.data.title.value"
 				:type="'text'"
-				v-model="currentTravel.data.title.value"
+				:placeholder="'Введите заголовок'"
 				:error="currentTravel.errors.title.status"
 			>
-				<template #label> ЗАГОЛОВОК </template>
+				<template #label>
+					<VueIcon :name="'Edit'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+					ЗАГОЛОВОК
+				</template>
 				<template #error>
 					{{ currentTravel.errors.title.message }}
 				</template>
-			</VueInput>
+			</VueValues>
 
-			<VueInput
-				v-model="currentTravel.data.duration.value"
-				:placeholder="'Введите значение'"
+			<VueValues
+				v-model.trim="currentTravel.data.duration.value"
 				:type="'text'"
+				:placeholder="'Введите значение'"
 				:error="currentTravel.errors.duration.status"
 			>
-				<template #label> ДЛИТЕЛЬНОСТЬ </template>
+				<template #label>
+					<VueIcon :name="'Calendar Clock'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+					ДЛИТЕЛЬНОСТЬ
+				</template>
 				<template #error>
 					{{ currentTravel.errors.duration.message }}
 				</template>
-			</VueInput>
+			</VueValues>
 
 			<VueTiptap
 				ref="tiptapDescription"
@@ -125,35 +130,9 @@
 				</template>
 			</VueTiptap>
 
-			<VueInput
-				v-model="currentTravel.data.hit.value"
-				:options="[
-					{
-						default: true,
-						disabled: true,
-						value: '',
-						label: 'Выберите статус',
-					},
-					{
-						default: false,
-						disabled: false,
-						value: 0,
-						label: 'Нет',
-					},
-					{
-						default: false,
-						value: 1,
-						label: 'Да',
-					},
-				]"
-				:type="'select'"
-				:error="currentTravel.errors.hit.status"
-			>
-				<template #label> ХИТ ПРОДАЖ </template>
-				<template #error>
-					{{ currentTravel.errors.hit.message }}
-				</template>
-			</VueInput>
+			<VueSwitch v-model="currentTravel.data.hit.value" :error="currentTravel.errors.hit.status">
+				<template #label> Хит продаж </template>
+			</VueSwitch>
 
 			<VueModalList
 				:list="currentTravel.data.services.value"
@@ -166,12 +145,7 @@
 				@delete="deleteTravelService"
 			>
 				<template #title>
-					<VueIcon
-						:name="'Design Services'"
-						:fill="'var(--primary-color)'"
-						:width="'26px'"
-						:height="'26px'"
-					/>
+					<VueIcon :name="'Design Services'" :fill="'var(--primary-color)'" :width="'26px'" :height="'26px'" />
 					УСЛУГИ
 				</template>
 			</VueModalList>
@@ -187,23 +161,14 @@
 				@delete="deleteTravelPrice"
 			>
 				<template #title>
-					<VueIcon
-						:name="'Payments'"
-						:fill="'var(--primary-color)'"
-						:width="'26px'"
-						:height="'26px'"
-					/>
+					<VueIcon :name="'Payments'" :fill="'var(--primary-color)'" :width="'26px'" :height="'26px'" />
 					ЦЕНЫ
 				</template>
 			</VueModalList>
 		</template>
 
 		<template #footer>
-			<VueButton
-				@click="addTravel"
-				v-if="modalTravels.values.look == 'create'"
-				:disabled="disabled.travels.create"
-			>
+			<VueButton @click="addTravel" v-if="modalTravels.values.look == 'create'" :disabled="disabled.travels.create">
 				<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
 				Добавить
 			</VueButton>
@@ -218,22 +183,13 @@
 					Удалить
 				</VueButton>
 
-				<VueButton
-					@click="updateTravel"
-					v-if="!currentTravel.data.delete.value"
-					:disabled="disabled.travels.update"
-				>
+				<VueButton @click="updateTravel" v-if="!currentTravel.data.delete.value" :disabled="disabled.travels.update">
 					<VueIcon :name="'Edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</VueButton>
 
 				<VueButton @click="deleteTravel" v-if="currentTravel.data.delete.value">
-					<VueIcon
-						:name="'Restore From Trash'"
-						:fill="'white'"
-						:width="'28px'"
-						:height="'28px'"
-					/>
+					<VueIcon :name="'Restore From Trash'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Вернуть
 				</VueButton>
 			</template>
@@ -247,17 +203,20 @@
 		</template>
 
 		<template #body>
-			<VueInput
-				:placeholder="'Введите заголовок'"
+			<VueValues
+				v-model.trim="currentTravelService.data.title.value"
 				:type="'text'"
-				v-model="currentTravelService.data.title.value"
+				:placeholder="'Введите заголовок'"
 				:error="currentTravelService.errors.title.status"
 			>
-				<template #label> ЗАГОЛОВОК </template>
+				<template #label>
+					<VueIcon :name="'Edit'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+					ЗАГОЛОВОК
+				</template>
 				<template #error>
 					{{ currentTravelService.errors.title.message }}
 				</template>
-			</VueInput>
+			</VueValues>
 
 			<VueTiptap
 				ref="tiptapDescription"
@@ -281,10 +240,7 @@
 				Добавить
 			</VueButton>
 
-			<VueButton
-				@click="updateTravelService"
-				v-if="modalTravelServices.values.look == 'default'"
-			>
+			<VueButton @click="updateTravelService" v-if="modalTravelServices.values.look == 'default'">
 				<VueIcon :name="'Edit'" :fill="'white'" :width="'26px'" :height="'26px'" />
 				Обновить
 			</VueButton>
@@ -298,41 +254,74 @@
 		</template>
 
 		<template #body>
-			<VueInput
-				v-model="currentTravelPrice.data.type.value"
-				:options="filteredPricesTypes"
-				:type="'select'"
+			<VueSelector
+				v-model.trim="currentTravelPrice.data.type.value"
+				:is-search="false"
+				:is-clear="false"
+				:list="[
+					{
+						default: false,
+						disabled: false,
+						value: 'С питанием',
+						label: 'С питанием',
+					},
+					{
+						default: false,
+						disabled: false,
+						value: 'Без питания',
+						label: 'Без питания',
+					},
+				]"
 				:error="currentTravelPrice.errors.type.status"
 			>
-				<template #label> ТИП </template>
+				<template #label>
+					<VueIcon :name="'Category'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+					ТИП
+				</template>
 				<template #error>
 					{{ currentTravelPrice.errors.type.message }}
 				</template>
-			</VueInput>
+			</VueSelector>
 
-			<VueInput
+			<VueSelector
 				v-model="currentTravelPrice.data.subtype.value"
-				:options="filteredPricesSubtypes"
-				:type="'select'"
+				:is-search="false"
+				:is-clear="false"
+				:list="[
+					{
+						value: 'До',
+						label: 'До',
+					},
+					{
+						value: 'После',
+						label: 'После',
+					},
+				]"
 				:error="currentTravelPrice.errors.subtype.status"
 			>
-				<template #label> ПОДТИП </template>
+				<template #label>
+					<VueIcon :name="'Category'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+					ПОДТИП
+				</template>
 				<template #error>
 					{{ currentTravelPrice.errors.subtype.message }}
 				</template>
-			</VueInput>
+			</VueSelector>
 
-			<VueInput
-				v-model="currentTravelPrice.data.price.value"
-				:type="'number'"
-				:placeholder="'Введите число'"
+			<VueNumber
+				v-model.number="currentTravelPrice.data.price.value"
+				:min="0"
+				:max="3_000_000"
 				:error="currentTravelPrice.errors.price.status"
 			>
-				<template #label> ЦЕНА </template>
+				<template #label>
+					<VueIcon :name="'Payments'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+					ЦЕНА
+				</template>
 				<template #error>
 					{{ currentTravelPrice.errors.price.message }}
 				</template>
-			</VueInput>
+			</VueNumber>
 		</template>
 
 		<template #footer>
@@ -361,12 +350,7 @@
 
 		<template #options>
 			<VueButton :disabled="disabled.travels.save" :look="'inverse'" @click="saveTravelsChanges">
-				<VueIcon
-					:name="'Save'"
-					:fill="'var(--primary-color)'"
-					:width="'28px'"
-					:height="'28px'"
-				/>
+				<VueIcon :name="'Save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
 			</VueButton>
 
@@ -380,12 +364,7 @@
 				"
 				:minWidth="'30px'"
 			>
-				<VueIcon
-					:name="'Info'"
-					:fill="'var(--primary-color)'"
-					:width="'30px'"
-					:height="'30px'"
-				/>
+				<VueIcon :name="'Info'" :fill="'var(--primary-color)'" :width="'30px'" :height="'30px'" />
 			</VueButton>
 		</template>
 
@@ -403,9 +382,7 @@
 						@click="openTravelEdite(travel)"
 					>
 						<div class="etravels__item-header">
-							<div class="etravels__header-item">
-								id: {{ travel.create ? "?" : travel.id }}
-							</div>
+							<div class="etravels__header-item">id: {{ travel.create ? "?" : travel.id }}</div>
 							<div class="etravels__header-item">order: {{ travel.order }}</div>
 						</div>
 						<div class="etravels__item-body">
@@ -425,11 +402,7 @@
 										{{ travel.duration }}
 									</div>
 									<div class="etravels__item-description">
-										<VueTiptap
-											:editable="false"
-											:limit="1_000"
-											v-model="travel.description"
-										/>
+										<VueTiptap :editable="false" :limit="1_000" v-model="travel.description" />
 									</div>
 								</div>
 							</div>
@@ -460,7 +433,6 @@
 </template>
 
 <script>
-import VueInput from "../../../components/modules/input/VueInput.vue";
 import Empty from "../../../components/modules/Empty.vue";
 
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
@@ -471,12 +443,9 @@ import api from "../../../mixin/api";
 import validate from "../../../services/validate";
 import shared from "../../../services/shared";
 import files from "../../../services/files";
-import { rowIsHeader } from "@tiptap/pm/tables";
-import sorted from "../../../services/sorted";
 
 export default {
 	components: {
-		VueInput,
 		Empty,
 
 		InfoBar,
@@ -598,7 +567,7 @@ export default {
 						edited: false,
 					},
 					hit: {
-						value: "",
+						value: false,
 						edited: false,
 					},
 					services: {
@@ -687,56 +656,8 @@ export default {
 		};
 	},
 	computed: {
-		filteredPricesTypes() {
-			return [
-				{
-					default: true,
-					disabled: true,
-					value: "",
-					label: "Выберите тип",
-				},
-				{
-					default: false,
-					disabled: false,
-					value: "С питанием",
-					label: "С питанием",
-				},
-				{
-					default: false,
-					disabled: false,
-					value: "Без питания",
-					label: "Без питания",
-				},
-			];
-		},
-
-		filteredPricesSubtypes() {
-			return [
-				{
-					default: true,
-					disabled: true,
-					value: "",
-					label: "Выберите подтип",
-				},
-				{
-					default: false,
-					disabled: false,
-					value: "До",
-					label: "До",
-				},
-				{
-					default: false,
-					disabled: false,
-					value: "После",
-					label: "После",
-				},
-			];
-		},
-
 		getSortedTravelPrices() {
-			return this.currentTravel.data.prices.value.toSorted((a, b) =>
-				a.type.localeCompare(b.type)
-			);
+			return this.currentTravel.data.prices.value.toSorted((a, b) => a.type.localeCompare(b.type));
 		},
 	},
 	methods: {
@@ -973,9 +894,7 @@ export default {
 						.then((response) => {
 							if (!response) return;
 
-							let travelCurrent = this.travels.find(
-								(travel) => travel.order === this.currentTravel.data.order.value
-							);
+							let travelCurrent = this.travels.find((travel) => travel.order === this.currentTravel.data.order.value);
 
 							travelCurrent.path = response.data.result;
 							travelCurrent.image = files.basename(response.data.result);
@@ -1001,9 +920,7 @@ export default {
 							this.disabled.travels.update = false;
 						});
 				} else {
-					let travelCurrent = this.travels.find(
-						(travel) => travel.order === this.currentTravel.data.order.value
-					);
+					let travelCurrent = this.travels.find((travel) => travel.order === this.currentTravel.data.order.value);
 
 					travelCurrent.title = this.currentTravel.data.title.value;
 					travelCurrent.description = this.currentTravel.data.description.value;
@@ -1025,9 +942,7 @@ export default {
 		},
 
 		deleteTravel() {
-			let travel = this.travels.find(
-				(item) => item.order === this.currentTravel.data.order.value
-			);
+			let travel = this.travels.find((item) => item.order === this.currentTravel.data.order.value);
 
 			travel.delete = !travel.delete;
 
@@ -1169,9 +1084,7 @@ export default {
 
 		deleteTravelService(value) {
 			try {
-				this.currentTravel.data.services.value = this.currentTravel.data.services.value.filter(
-					(item) => item !== value
-				);
+				this.currentTravel.data.services.value = this.currentTravel.data.services.value.filter((item) => item !== value);
 			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка",
@@ -1296,9 +1209,7 @@ export default {
 
 		deleteTravelPrice(value) {
 			try {
-				this.currentTravel.data.prices.value = this.currentTravel.data.prices.value.filter(
-					(item) => item !== value
-				);
+				this.currentTravel.data.prices.value = this.currentTravel.data.prices.value.filter((item) => item !== value);
 			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка",
@@ -1510,12 +1421,12 @@ export default {
 @media screen and (width <= 1500px) {
 	.etravels {
 		grid-template-columns: 1fr;
-	}	
+	}
 }
 
 @media screen and (width <= 600px) {
 	.etravels__item-other {
 		flex-direction: column;
-	}	
+	}
 }
 </style>

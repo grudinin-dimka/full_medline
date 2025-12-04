@@ -1,7 +1,7 @@
 import { createStore } from "vuex";
 
 /* Импорт модулей */
-import user from "./user.js";	
+import autorization from "./autorization.js";	
 import other from "./other.js";
 import debug from "./debug.js";
 import modals from "./modals.js";
@@ -12,7 +12,7 @@ import shared from "./shared.js";
 /* Создание хранилища */
 const store = createStore({
 	modules: {
-		user,
+		autorization,
 		other,
 		debug,
 		modals,

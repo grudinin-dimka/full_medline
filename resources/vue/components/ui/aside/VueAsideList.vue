@@ -89,16 +89,16 @@ export default {
 
 .aside__list-arrow {
 	position: absolute;
-	top: 22px;
-	right: 20px;
+	top: var(--aside-arrow-top);
+	right: var(--aside-arrow-right);
 	display: flex;
 	justify-content: center;
 	align-items: center;
 
 	border-radius: 50%;
 
-	width: 24px;
-	height: 24px;
+	width: var(--aside-arrow-width);
+	height: var(--aside-arrow-height);
 	rotate: 180deg;
 
 	transition: var(--aside-arrow-transition);

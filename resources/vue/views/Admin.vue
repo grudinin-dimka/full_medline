@@ -1,4 +1,16 @@
 <template>
+	<VueModal ref="modalExit" :settings="modalExit">
+		<template #title>{{ modalExit.values.title }}</template>
+		<template #body>Вы уверены, что хотите выйти из системы?</template>
+		<template #footer>
+			<VueButton :wide="true" :look="'secondary'" @click="$refs.modalExit.close()"> Отменить </VueButton>
+
+			<VueButton :wide="true" :disabled="$store.getters.getLogoutStatus" @click="$store.dispatch('logout')">
+				Выход
+			</VueButton>
+		</template>
+	</VueModal>
+
 	<!-- Дебагер -->
 	<VueDebugger />
 	<!-- Вики -->
@@ -26,7 +38,7 @@ import { RouterLink, RouterView } from "vue-router";
 // NOTE: Модули в админке
 import AdminHeader from "../components/includes/admin/medline/AdminHeader.vue";
 import AdminContent from "../components/includes/admin/AdminContent.vue";
-import AdminAside from "../components/includes/admin/AdminAside.vue"
+import AdminAside from "../components/includes/admin/AdminAside.vue";
 
 import axios from "axios";
 
@@ -47,7 +59,43 @@ export default {
 				loading: true,
 				other: false,
 			},
+
+			/* Модальные окна */
+			modalExit: {
+				thin: true,
+				values: {
+					title: "Выход",
+					look: "default",
+				},
+				options: {
+					head: true,
+					body: true,
+					footer: true,
+				},
+			},
 		};
+	},
+	watch: {
+		"$store.getters.getLogoutCount": {
+			handler() {
+				if (this.$store.getters.getLogoutCount) {
+					this.$refs.modalExit.open();
+				}
+			},
+			deep: true,
+		},
+	},
+	methods: {
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                 Модальное окно                    |*/
+		/* |___________________________________________________|*/
+		/* Открытие модального окна */
+		openModal(name, title, look) {
+			this[name].values.title = title;
+			this[name].values.look = look;
+
+			this.$refs[name].open();
+		},
 	},
 	beforeCreate() {
 		// Проверка начилия токена в локальном хранилище

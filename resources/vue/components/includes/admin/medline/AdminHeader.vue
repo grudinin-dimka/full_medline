@@ -1,6 +1,6 @@
 <template>
-	<header :class="{ 'header--hidden': false }" ref="header">
-		<div class="header__item header__item--left">
+	<VueHeader ref="header">
+		<template #left>
 			<div class="header__close" @click="$store.commit('setIsHide')">
 				<VueIcon
 					v-if="$store.getters.getIsHide"
@@ -19,119 +19,53 @@
 					:height="'30px'"
 				/>
 			</div>
-		</div>
+		</template>
 
-		<div class="header__item header__item--right">
-			<div class="header__user">
+		<template #right>
+			<div class="header__user" @click="$refs.header.open()">
 				<span class="header__user-info">
 					<span class="header__user-name"> {{ $store.getters.getUserNickname }} </span>
 					<span class="header__user-email"> {{ $store.getters.getUserEmail }} </span>
 				</span>
 				<div class="header__user-icon">
-					<img :src="$store.getters.getUserImage" alt="">
+					<img :src="$store.getters.getUserImage" alt="" />
 				</div>
 			</div>
-		</div>
+		</template>
 
-		<div class="header__dropdown" v-if="isShow" ref="headerDropdown">
-			<div class="header__dropdown__body">
-				<div class="header__dropdown__item">
-					<VueIcon :name="'Info'" :fill="'var(--primary-color)'" :width="'24px'" :height="'24px'" />
-					О системе
-				</div>
-				<div class="header__dropdown__item">
-					<VueIcon :name="'Settings'" :fill="'var(--primary-color)'" :width="'24px'" :height="'24px'" />
-					Настройки
-				</div>
+		<template #dropdown>
+			<div class="header__dropdown__item">
+				<VueIcon :name="'Info'" :fill="'var(--primary-color)'" :width="'24px'" :height="'24px'" />
+				О системе
+			</div>
+			<div class="header__dropdown__item">
+				<VueIcon :name="'Settings'" :fill="'var(--primary-color)'" :width="'24px'" :height="'24px'" />
+				Настройки
 			</div>
 
-			<div class="header__dropdown__footer">
-				<div class="header__dropdown__item" @click="logout">
-					<VueIcon :name="'Logout'" :fill="'var(--delete-background-color)'" :width="'24px'" :height="'24px'" />
-					Выход
-				</div>
+			<div class="header__dropdown__item" @click="logout">
+				<VueIcon :name="'Logout'" :fill="'var(--delete-background-color)'" :width="'24px'" :height="'24px'" />
+				Выход
 			</div>
-		</div>
-
-		<!-- <a @click.prevent="$router.push({ name: 'home' })" href="/" alt="Медлайн">
-			<img src="../../../../assets/svg/medline/logo.svg" alt="Медлайн" />
-		</a>
-		<div class="user">
-			<p>{{ $store.getters.userNickname }}</p>
-		</div> -->
-	</header>
-
-	<!-- Кнопка "бургер" -->
-	<!-- <div class="burger" @click="$store.commit('setBurgerAdmin')" :class="{ active: $store.getters.burgerAdminStatus }">
-		<div></div>
-		<div></div>
-		<div></div>
-	</div> -->
+		</template>
+	</VueHeader>
 </template>
 
 <script>
-export default {
-	data() {
-		return {
-			isShow: false,
-		};
-	},
-	methods: {
-		/* Закрытие месяца */
-		handleClickOutside(e) {
-			if (this.$refs.header && !this.$refs.header.contains(e.target)) {
-				this.isShow = false;
-			}
-		},
+import VueHeader from "../../../ui/VueHeader.vue";
 
+export default {
+	components: { VueHeader },
+	methods: {
 		logout() {
 			this.$store.commit("logoutOpen");
-			this.close();
+			this.$refs.header.close();
 		},
-
-		close() {
-			this.isShow = false;
-		},
-	},
-	mounted() {
-		document.addEventListener("click", this.handleClickOutside);
-	},
-	beforeUnmount() {
-		document.removeEventListener("click", this.handleClickOutside);
 	},
 };
 </script>
 
 <style scoped>
-header {
-	position: relative;
-	grid-area: header;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-
-	border-top: var(--header-border-top);
-	border-right: var(--header-border-right);
-	border-bottom: var(--header-border-bottom);
-	border-left: var(--header-border-left);
-	border-style: var(--header-border-style);
-	border-color: var(--header-border-color);
-	border-radius: var(--header-border-radius);
-	padding: var(--header-padding);
-	margin: var(--header-margin);
-
-	background-color: var(--header-background-color);
-	height: var(--header-height);
-
-	box-shadow: var(--header-box-shadow);
-}
-
-.header__item {
-	display: flex;
-	align-items: center;
-	gap: var(--default-gap);
-}
-
 .header__user {
 	display: flex;
 	justify-content: center;
@@ -172,49 +106,6 @@ header {
 
 	border-radius: 100px;
 	object-fit: cover;
-}
-
-/* Выпадающее меню */
-.header__dropdown {
-	position: absolute;
-	top: calc(100% + 10px);
-	right: 10px;
-	z-index: 1;
-
-	display: flex;
-	flex-direction: column;
-
-	width: min(100%, 250px);
-
-	background-color: white;
-	border-radius: 10px;
-	border: var(--default-border);
-	box-shadow: var(--default-box-shadow);
-
-	animation: fadeIn 0.2s ease;
-}
-
-.header__dropdown__body {
-	display: flex;
-	flex-direction: column;
-	gap: 5px;
-
-	padding: 10px;
-}
-
-.header__dropdown__footer {
-	display: flex;
-	flex-direction: column;
-	gap: 5px;
-
-	border-top: var(--default-border-width);
-	border-right: 0px;
-	border-bottom: 0px;
-	border-left: 0px;
-	border-style: var(--default-border-style);
-	border-color: var(--default-border-color);
-
-	padding: 10px;
 }
 
 .header__dropdown__item {

@@ -44,8 +44,8 @@ export default {
 	border-style: var(--aside-border-style);
 	border-color: var(--aside-border-color);
 
-	height: 100%;
-	max-height: 100dvh;
+	height: var(--aside-height);
+	max-height: var(--aside-max-height);
 
 	width: var(--aside-width);
 	background-color: var(--aside-background-color);
@@ -55,7 +55,7 @@ export default {
 }
 
 .aside--hiden {
-	width: 110px;
+	width: var(--aside-width--hiden);
 }
 
 .aside--hiden .aside__item {

@@ -3,7 +3,9 @@ import router from "../router";
 
 export default {
 	state: {
+		logoutCount: 0,
 		isLogout: false,
+
 		user: {
 			nickname: null,
 			email: null,
@@ -32,6 +34,10 @@ export default {
 			state.user.status = user.status;
 			state.user.rights = user.rights;
 			state.user.image = user.image;
+		},
+
+		logoutOpen(state) {
+			state.logoutCount++;
 		},
 
 		/* Удаление токена везде */
@@ -65,6 +71,7 @@ export default {
 				},
 			}).finally(() => {
 				state.isLogout = false;
+				state.logoutCount = 0;
 
 				this.commit("removeToken");
 			});
@@ -89,6 +96,10 @@ export default {
 
 		getLogoutStatus(state) {
 			return state.isLogout;
+		},
+
+		getLogoutCount: (state) => {
+			return state.logoutCount;
 		},
 	},
 };
