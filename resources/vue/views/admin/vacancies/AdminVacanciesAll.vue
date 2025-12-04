@@ -8,9 +8,7 @@
 		<template
 			#buttons
 			v-if="
-				(modalVacancy.values.look == 'default') &
-				!currentVacancy.data.delete.value &
-				!currentVacancy.data.create.value
+				(modalVacancy.values.look == 'default') & !currentVacancy.data.delete.value & !currentVacancy.data.create.value
 			"
 		>
 			<VueIcon
@@ -36,41 +34,50 @@
 		</template>
 
 		<template #body>
-			<VueInput
-				:placeholder="'Введите заголовок'"
+			<VueValues
+				v-model.trim="currentVacancy.data.title.value"
 				:type="'text'"
-				v-model="currentVacancy.data.title.value"
+				:placeholder="'Введите заголовок'"
 				:error="currentVacancy.errors.title.status"
 			>
-				<template #label> ЗАГОЛОВОК </template>
+				<template #label>
+					<VueIcon :name="'Edit'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+					ЗАГОЛОВОК
+				</template>
 				<template #error>
 					{{ currentVacancy.errors.title.message }}
 				</template>
-			</VueInput>
+			</VueValues>
 
-			<VueInput
-				:placeholder="'Введите адрес'"
+			<VueValues
+				v-model.trim="currentVacancy.data.address.value"
 				:type="'text'"
-				v-model="currentVacancy.data.address.value"
+				:placeholder="'Введите адрес'"
 				:error="currentVacancy.errors.address.status"
 			>
-				<template #label> АДРЕС </template>
+				<template #label>
+					<VueIcon :name="'Home'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+					АДРЕС
+				</template>
 				<template #error>
 					{{ currentVacancy.errors.address.message }}
 				</template>
-			</VueInput>
+			</VueValues>
 
-			<VueInput
-				:placeholder="'Введите график'"
+			<VueValues
+				v-model.trim="currentVacancy.data.schedule.value"
 				:type="'text'"
-				v-model="currentVacancy.data.schedule.value"
+				:placeholder="'Введите график'"
 				:error="currentVacancy.errors.schedule.status"
 			>
-				<template #label> ГРАФИК </template>
+				<template #label>
+					<VueIcon :name="'Calendar Month'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+					ГРАФИК
+				</template>
 				<template #error>
 					{{ currentVacancy.errors.schedule.message }}
 				</template>
-			</VueInput>
+			</VueValues>
 
 			<VueTiptap
 				ref="tiptapRequirements"
@@ -117,47 +124,38 @@
 				</template>
 			</VueTiptap>
 
-			<VueInput
-				:placeholder="'Введите зарплату'"
-				:type="'number'"
-				:inputmode="'numeric'"
+			<VueNumber
 				v-model="currentVacancy.data.salary.value"
+				:type="'number'"
+				:min="0"
+				:max="3_000_000"
+				:placeholder="'Введите зарплату'"
 				:error="currentVacancy.errors.salary.status"
 			>
-				<template #label> ЗАРПЛАТА </template>
+				<template #label>
+					<VueIcon :name="'Payments'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+					ЗАРПЛАТА
+				</template>
 				<template #error>
 					{{ currentVacancy.errors.salary.message }}
 				</template>
-			</VueInput>
+			</VueNumber>
 		</template>
 
 		<template #footer>
-			<VueButton
-				@click="addVacancy"
-				v-if="modalVacancy.values.look == 'create'"
-				:disabled="disabled.vacancies.create"
-			>
+			<VueButton @click="addVacancy" v-if="modalVacancy.values.look == 'create'" :disabled="disabled.vacancies.create">
 				<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
 				Добавить
 			</VueButton>
 
 			<template v-else>
-				<VueButton
-					@click="updateTravel"
-					v-if="!currentVacancy.data.delete.value"
-					:disabled="disabled.vacancies.update"
-				>
+				<VueButton @click="updateTravel" v-if="!currentVacancy.data.delete.value" :disabled="disabled.vacancies.update">
 					<VueIcon :name="'Edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Обновить
 				</VueButton>
 
 				<VueButton @click="deleteVacancy" v-if="currentVacancy.data.delete.value">
-					<VueIcon
-						:name="'Restore From Trash'"
-						:fill="'white'"
-						:width="'28px'"
-						:height="'28px'"
-					/>
+					<VueIcon :name="'Restore From Trash'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Вернуть
 				</VueButton>
 			</template>
@@ -187,17 +185,8 @@
 		<template #title>СПИСОК</template>
 
 		<template #options>
-			<VueButton
-				:disabled="disabled.vacancies.save"
-				:look="'inverse'"
-				@click="saveVacanciesChanges"
-			>
-				<VueIcon
-					:name="'Save'"
-					:fill="'var(--primary-color)'"
-					:width="'28px'"
-					:height="'28px'"
-				/>
+			<VueButton :disabled="disabled.vacancies.save" :look="'inverse'" @click="saveVacanciesChanges">
+				<VueIcon :name="'Save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
 			</VueButton>
 
@@ -211,23 +200,13 @@
 				"
 				:minWidth="'30px'"
 			>
-				<VueIcon
-					:name="'Info'"
-					:fill="'var(--primary-color)'"
-					:width="'30px'"
-					:height="'30px'"
-				/>
+				<VueIcon :name="'Info'" :fill="'var(--primary-color)'" :width="'30px'" :height="'30px'" />
 			</VueButton>
 		</template>
 
 		<template #body>
 			<template v-if="loading.sections.vacancies">
-				<VueTable
-					:table="table"
-					@create="openVacancyCreate"
-					@edite="openVacancyEdite"
-					@delete="setVacancyDelete"
-				>
+				<VueTable :table="table" @create="openVacancyCreate" @edite="openVacancyEdite" @delete="setVacancyDelete">
 					<template v-slot:hide="{ row }">
 						<div class="table__hide" v-if="row.hide" @click="setVacancyHide(row)">Да</div>
 						<div class="table__hide" v-else @click="setVacancyHide(row)">Нет</div>
@@ -372,7 +351,7 @@ export default {
 						edited: false,
 					},
 					salary: {
-						value: "",
+						value: 0,
 						edited: false,
 					},
 					hide: {
@@ -646,9 +625,7 @@ export default {
 				)
 					return;
 
-				let vacancy = this.table.body.find(
-					(item) => item.id === this.currentVacancy.data.id.value
-				);
+				let vacancy = this.table.body.find((item) => item.id === this.currentVacancy.data.id.value);
 
 				vacancy.title = this.currentVacancy.data.title.value;
 				vacancy.address = this.currentVacancy.data.address.value;

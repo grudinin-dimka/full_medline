@@ -194,10 +194,6 @@ export default {
 			default: "",
 			required: true,
 		},
-		type: {
-			type: String,
-			default: "text",
-		},
 		error: {
 			type: Boolean,
 			default: false,

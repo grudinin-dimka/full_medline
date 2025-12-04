@@ -8,17 +8,20 @@
 		</template>
 
 		<template #body>
-			<VueInput
-				v-model="currentSpecialization.data.name.value"
+			<VueValues
+				v-model.trim="currentSpecialization.data.name.value"
 				:type="'text'"
 				:placeholder="'Введите название'"
 				:error="currentSpecialization.errors.name.status"
 			>
-				<template #label> НАЗВАНИЕ </template>
+				<template #label>
+					<VueIcon :name="'Edit'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+					НАЗВАНИЕ
+				</template>
 				<template #error>
 					{{ currentSpecialization.errors.name.message }}
 				</template>
-			</VueInput>
+			</VueValues>
 		</template>
 
 		<template #footer>
@@ -50,17 +53,8 @@
 		<template #title>СПЕЦИАЛИЗАЦИИ</template>
 
 		<template #options>
-			<VueButton
-				@click.prevent="saveSpecializationsChanges"
-				:disabled="disabled.specializations.save"
-				:look="'inverse'"
-			>
-				<VueIcon
-					:name="'Save'"
-					:fill="'var(--primary-color)'"
-					:width="'28px'"
-					:height="'28px'"
-				/>
+			<VueButton @click.prevent="saveSpecializationsChanges" :disabled="disabled.specializations.save" :look="'inverse'">
+				<VueIcon :name="'Save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
 			</VueButton>
 
@@ -74,12 +68,7 @@
 				"
 				:minWidth="'30px'"
 			>
-				<VueIcon
-					:name="'Info'"
-					:fill="'var(--primary-color)'"
-					:width="'30px'"
-					:height="'30px'"
-				/>
+				<VueIcon :name="'Info'" :fill="'var(--primary-color)'" :width="'30px'" :height="'30px'" />
 			</VueButton>
 		</template>
 
@@ -263,11 +252,7 @@ export default {
 				return;
 
 			try {
-				if (
-					this.table.body.some(
-						(item) => item.name === this.currentSpecialization.data.name.value
-					)
-				) {
+				if (this.table.body.some((item) => item.name === this.currentSpecialization.data.name.value)) {
 					this.$store.commit("addDebugger", {
 						title: "Ошибка.",
 						body: "Такая специализация уже существует.",

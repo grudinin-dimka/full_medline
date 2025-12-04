@@ -176,6 +176,7 @@ export default {
 .profile-info > .item.avatar > .img {
 	width: 400px;
 	height: 400px;
+	aspect-ratio: 1/1;
 	border-radius: 300px;
 	background-size: cover;
 	background-position: center center;
@@ -185,7 +186,9 @@ export default {
 .profile-info > .item:not(.avatar) {
 	flex: 1 0 400px;
 	padding: 20px;
+	
 	background-color: rgb(245, 245, 245);
+	border: var(--default-border);
 	border-radius: calc(var(--default-border-radius) / 1.5);
 }
 

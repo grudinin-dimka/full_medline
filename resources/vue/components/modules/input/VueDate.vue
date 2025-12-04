@@ -245,7 +245,7 @@ export default {
 		},
 		type: {
 			type: String,
-			default: "text",
+			default: "date",
 		},
 		error: {
 			type: Boolean,

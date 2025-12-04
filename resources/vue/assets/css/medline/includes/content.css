@@ -1,0 +1,13 @@
+:root {
+	--content-gap: var(--default-gap);
+
+	--content-padding: var(--default-padding);
+	--content-margin: var(--default-margin);
+
+	--content-max-height: calc(100dvh - var(--header-height));
+
+	--content-font-color: #000;
+	--content-font-size: var(--default-font-size);
+	--content-font-family: var(--default-font-family);
+	--content-background-color: #e1eced;
+}

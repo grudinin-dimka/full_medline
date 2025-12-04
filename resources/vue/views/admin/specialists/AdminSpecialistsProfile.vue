@@ -6,11 +6,7 @@
 		</template>
 
 		<template #body>
-			<VueInput
-				:placeholder="'Введите фамилию'"
-				:type="'search'"
-				v-model="search.specializations"
-			/>
+			<VueValues v-model.trim="search.specializations" :type="'search'" :placeholder="'Введите фамилию'" />
 
 			<!-- Список специализаций -->
 			<div class="specializations-list">
@@ -25,8 +21,7 @@
 							{{
 								index +
 								1 +
-								paginationSpecializations.elements.range *
-									(paginationSpecializations.pages.current - 1) +
+								paginationSpecializations.elements.range * (paginationSpecializations.pages.current - 1) +
 								")"
 							}}
 						</span>
@@ -43,12 +38,7 @@
 
 					<div class="list__checkbox-icon" aria-hidden="true">
 						<div class="list__checkbox-icon--checked">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								height="30px"
-								viewBox="0 -960 960 960"
-								width="30px"
-							>
+							<svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px">
 								<path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z" />
 							</svg>
 						</div>
@@ -73,7 +63,7 @@
 		</template>
 
 		<template #body>
-			<VueInput v-model="search.clinics" :type="'search'" :placeholder="'Введите клинику'" />
+			<VueValues v-model.trim="search.clinics" :type="'search'" :placeholder="'Введите клинику'" />
 
 			<!-- Список специализаций -->
 			<div class="clinics__list">
@@ -83,39 +73,20 @@
 					:key="clinic.id"
 					:class="{ active: cheked.clinics.includes(clinic.id) }"
 				>
-					<label
-						class="list__checkbox-item"
-						:class="{ active: cheked.clinics.includes(clinic.id) }"
-					>
+					<label class="list__checkbox-item" :class="{ active: cheked.clinics.includes(clinic.id) }">
 						<div class="list__checkbox-label">
 							<span>
-								{{
-									index +
-									1 +
-									paginationClinics.elements.range *
-										(paginationClinics.pages.current - 1) +
-									")"
-								}}
+								{{ index + 1 + paginationClinics.elements.range * (paginationClinics.pages.current - 1) + ")" }}
 							</span>
 
 							<span>{{ clinic.name }}</span>
 						</div>
 
-						<input
-							class="list__checkbox-input"
-							type="checkbox"
-							:value="clinic.id"
-							v-model="cheked.clinics"
-						/>
+						<input class="list__checkbox-input" type="checkbox" :value="clinic.id" v-model="cheked.clinics" />
 
 						<div class="list__checkbox-icon" aria-hidden="true">
 							<div class="list__checkbox-icon--checked">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									height="30px"
-									viewBox="0 -960 960 960"
-									width="30px"
-								>
+								<svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px">
 									<path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z" />
 								</svg>
 							</div>
@@ -146,8 +117,8 @@
 		</template>
 
 		<template #body>
-			<VueInput
-				v-model="currentCertificate.data.name.value"
+			<VueValues
+				v-model.trim="currentCertificate.data.name.value"
 				:placeholder="'Введите должность'"
 				:type="'text'"
 				:error="currentCertificate.errors.name.status"
@@ -156,10 +127,10 @@
 				<template #error>
 					{{ currentCertificate.errors.name.message }}
 				</template>
-			</VueInput>
+			</VueValues>
 
-			<VueInput
-				v-model="currentCertificate.data.organization.value"
+			<VueValues
+				v-model.trim="currentCertificate.data.organization.value"
 				:placeholder="'Введите организацию'"
 				:type="'text'"
 				:error="currentCertificate.errors.organization.status"
@@ -168,19 +139,17 @@
 				<template #error>
 					{{ currentCertificate.errors.organization.message }}
 				</template>
-			</VueInput>
+			</VueValues>
 
-			<VueInput
-				v-model="currentCertificate.data.endEducation.value"
-				:placeholder="'Введите дату'"
-				:type="'date'"
+			<VueDate
+				v-model.trim="currentCertificate.data.endEducation.value"
 				:error="currentCertificate.errors.endEducation.status"
 			>
 				<template #label> ОКОНЧАНИЕ ОБУЧЕНИЯ </template>
 				<template #error>
 					{{ currentCertificate.errors.endEducation.message }}
 				</template>
-			</VueInput>
+			</VueDate>
 		</template>
 
 		<template #footer>
@@ -207,8 +176,8 @@
 		</template>
 
 		<template #body>
-			<VueInput
-				v-model="currentEducation.data.name.value"
+			<VueValues
+				v-model.trim="currentEducation.data.name.value"
 				:placeholder="'Введите название'"
 				:type="'text'"
 				:error="currentEducation.errors.name.status"
@@ -217,10 +186,10 @@
 				<template #error>
 					{{ currentEducation.errors.name.message }}
 				</template>
-			</VueInput>
+			</VueValues>
 
-			<VueInput
-				v-model="currentEducation.data.organization.value"
+			<VueValues
+				v-model.trim="currentEducation.data.organization.value"
 				:placeholder="'Введите организацию'"
 				:type="'textarea'"
 				:error="currentEducation.errors.organization.status"
@@ -229,21 +198,17 @@
 				<template #error>
 					{{ currentEducation.errors.organization.message }}
 				</template>
-			</VueInput>
+			</VueValues>
 
-			<VueInput
-				v-model="currentEducation.data.date.value"
-				:type="'date'"
-				:error="currentEducation.errors.date.status"
-			>
+			<VueDate v-model.trim="currentEducation.data.date.value" :error="currentEducation.errors.date.status">
 				<template #label> ДАТА ПОЛУЧЕНИЯ </template>
 				<template #error>
 					{{ currentEducation.errors.date.message }}
 				</template>
-			</VueInput>
+			</VueDate>
 
-			<VueInput
-				v-model="currentEducation.data.speсialization.value"
+			<VueValues
+				v-model.trim="currentEducation.data.speсialization.value"
 				:type="'text'"
 				:placeholder="'Введите специализацию'"
 				:error="currentEducation.errors.speсialization.status"
@@ -252,7 +217,7 @@
 				<template #error>
 					{{ currentEducation.errors.speсialization.message }}
 				</template>
-			</VueInput>
+			</VueValues>
 		</template>
 
 		<template #footer>
@@ -279,8 +244,8 @@
 		</template>
 
 		<template #body>
-			<VueInput
-				v-model="currentWork.data.name.value"
+			<VueValues
+				v-model.trim="currentWork.data.name.value"
 				:type="'text'"
 				:placeholder="'Введите название'"
 				:error="currentWork.errors.name.status"
@@ -289,10 +254,10 @@
 				<template #error>
 					{{ currentWork.errors.name.message }}
 				</template>
-			</VueInput>
+			</VueValues>
 
-			<VueInput
-				v-model="currentWork.data.organization.value"
+			<VueValues
+				v-model.trim="currentWork.data.organization.value"
 				:type="'textarea'"
 				:placeholder="'Введите организацию'"
 				:error="currentWork.errors.organization.status"
@@ -301,34 +266,26 @@
 				<template #error>
 					{{ currentWork.errors.organization.message }}
 				</template>
-			</VueInput>
+			</VueValues>
 
-			<VueInputContainer :direction="'row'" :count="2" :gap="'10px'">
+			<VueFieldset :count="2" :gap="'10px'">
 				<template #legend> НАЧАЛО И ОКОНЧАНИЕ РАБОТЫ </template>
 				<template #inputs>
-					<VueInput
-						v-model="currentWork.data.startWork.value"
-						:type="'date'"
-						:error="currentWork.errors.startWork.status"
-					>
+					<VueDate v-model.trim="currentWork.data.startWork.value" :error="currentWork.errors.startWork.status">
 						<template #label> ДАТА НАЧАЛА </template>
 						<template #error>
 							{{ currentWork.errors.startWork.message }}
 						</template>
-					</VueInput>
+					</VueDate>
 
-					<VueInput
-						v-model="currentWork.data.endWork.value"
-						:type="'date'"
-						:error="currentWork.errors.endWork.status"
-					>
+					<VueDate v-model="currentWork.data.endWork.value" :error="currentWork.errors.endWork.status">
 						<template #label> ДАТА ОКОНЧАНИЯ </template>
 						<template #error>
 							{{ currentWork.errors.endWork.message }}
 						</template>
-					</VueInput>
+					</VueDate>
 				</template>
-			</VueInputContainer>
+			</VueFieldset>
 		</template>
 		<template #footer>
 			<template v-if="modalWorks.values.look == 'create'">
@@ -366,33 +323,15 @@
 
 		<template #options>
 			<template v-if="$route.params.id === 'new'">
-				<VueButton
-					@click.prevent="addSpecialist"
-					:disabled="disabled.profile.create"
-					:look="'inverse'"
-				>
-					<VueIcon
-						:name="'Add'"
-						:fill="'var(--primary-color)'"
-						:width="'26px'"
-						:height="'26px'"
-					/>
+				<VueButton @click.prevent="addSpecialist" :disabled="disabled.profile.create" :look="'inverse'">
+					<VueIcon :name="'Add'" :fill="'var(--primary-color)'" :width="'26px'" :height="'26px'" />
 					Добавить
 				</VueButton>
 			</template>
 
 			<template v-else>
-				<VueButton
-					@click.prevent="saveSpecialistModular('all')"
-					:disabled="disabled.profile.save"
-					:look="'inverse'"
-				>
-					<VueIcon
-						:name="'Save'"
-						:fill="'var(--primary-color)'"
-						:width="'28px'"
-						:height="'28px'"
-					/>
+				<VueButton @click.prevent="saveSpecialistModular('all')" :disabled="disabled.profile.save" :look="'inverse'">
+					<VueIcon :name="'Save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 					Сохранить
 				</VueButton>
 			</template>
@@ -407,12 +346,7 @@
 				"
 				:minWidth="'30px'"
 			>
-				<VueIcon
-					:name="'Info'"
-					:fill="'var(--primary-color)'"
-					:width="'30px'"
-					:height="'30px'"
-				/>
+				<VueIcon :name="'Info'" :fill="'var(--primary-color)'" :width="'30px'" :height="'30px'" />
 			</VueButton>
 		</template>
 
@@ -436,95 +370,103 @@
 				</div>
 				<div class="profile-info">
 					<!-- Аватар и ссылка -->
-					<VueInputContainer :direction="'column'" :gap="'10px'">
+					<VueFieldset :count="1" :gap="'20px'">
 						<template #legend> АВАТАР И ССЫЛКА </template>
 						<template #inputs>
-							<VueInput
-								:placeholder="'Загрузите файл'"
-								:type="'file'"
+							<VueFile
 								v-model="specialist.profile.data.file.value"
-								:error="specialist.profile.errors.file.status"
 								ref="fileImage"
+								:placeholder="'Загрузите файл'"
+								:type="'image'"
+								:error="specialist.profile.errors.file.status"
 							>
-								<template #label> ФОТО ВРАЧА (700x700) </template>
+								<template #label>
+									<VueIcon :name="'Image'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+									ФОТО ВРАЧА (700x700)
+								</template>
 								<template #error>
 									{{ specialist.profile.errors.file.message }}
 								</template>
-							</VueInput>
+							</VueFile>
 
-							<VueInput
-								v-model="specialist.profile.data.link.value"
+							<VueValues
+								v-model.trim="specialist.profile.data.link.value"
 								:type="'text'"
 								:placeholder="'Введите ссылку'"
 								:inputmode="'url'"
 								:error="specialist.profile.errors.link.status"
 							>
-								<template #label> ССЫЛКА НА ПРОДОКТОРОВ </template>
+								<template #label>
+									<VueIcon :name="'Link'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+									ССЫЛКА НА ПРОДОКТОРОВ
+								</template>
 								<template #error>
 									{{ specialist.profile.errors.link.message }}
 								</template>
-							</VueInput>
+							</VueValues>
 						</template>
-					</VueInputContainer>
+					</VueFieldset>
 
 					<!-- ФИО -->
-					<VueInputContainer :direction="'column'" :gap="'10px'">
+					<VueFieldset :count="1" :gap="'20px'">
 						<template #legend> ФИО </template>
 						<template #inputs>
-							<VueInput
-								:placeholder="'Введите фамилию'"
+							<VueValues
+								v-model.trim="specialist.profile.data.family.value"
 								:type="'text'"
-								v-model="specialist.profile.data.family.value"
+								:placeholder="'Введите фамилию'"
 								:error="specialist.profile.errors.family.status"
 							>
-								<template #label> ФАМИЛИЯ </template>
+								<template #label>
+									<VueIcon :name="'Id Card'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+									ФАМИЛИЯ
+								</template>
 								<template #error>
 									{{ specialist.profile.errors.family.message }}
 								</template>
-							</VueInput>
+							</VueValues>
 
-							<VueInput
-								:placeholder="'Введите имя'"
+							<VueValues
+								v-model.trim="specialist.profile.data.name.value"
 								:type="'text'"
-								v-model="specialist.profile.data.name.value"
+								:placeholder="'Введите имя'"
 								:error="specialist.profile.errors.name.status"
 							>
-								<template #label> ИМЯ </template>
+								<template #label>
+									<VueIcon :name="'Id Card'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+									ИМЯ
+								</template>
 								<template #error>
 									{{ specialist.profile.errors.name.message }}
 								</template>
-							</VueInput>
+							</VueValues>
 
-							<VueInput
-								:placeholder="'Введите имя'"
+							<VueValues
+								v-model.trim="specialist.profile.data.surname.value"
 								:type="'text'"
-								v-model="specialist.profile.data.surname.value"
 								:error="specialist.profile.errors.surname.status"
+								:placeholder="'Введите имя'"
 							>
-								<template #label> ОТЧЕСТВО </template>
+								<template #label>
+									<VueIcon :name="'Id Card'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+									ОТЧЕСТВО
+								</template>
 								<template #error>
 									{{ specialist.profile.errors.surname.message }}
 								</template>
-							</VueInput>
+							</VueValues>
 						</template>
-					</VueInputContainer>
+					</VueFieldset>
 				</div>
 			</div>
 			<div class="container-profile-other" v-show="loading.sections.profile">
 				<!-- Звания -->
-				<VueInputContainer :direction="'row'" :count="3" :gap="'10px'">
+				<VueFieldset :count="3" :gap="'20px'">
 					<template #legend> ЗВАНИЯ </template>
 					<template #inputs>
-						<VueInput
+						<VueSelector
 							v-model="specialist.profile.data.category.value"
-							:type="'select'"
-							:options="[
-								{
-									default: true,
-									disabled: true,
-									value: '',
-									label: 'Выберите категорию',
-								},
+							:list="[
 								{
 									default: false,
 									disabled: false,
@@ -550,89 +492,92 @@
 									label: 'Высшая',
 								},
 							]"
+							:is-search="false"
 							:placeholder="'Введите научное образование'"
 							:error="specialist.profile.errors.category.status"
 						>
-							<template #label> НАУЧНОЕ ОБРАЗОВАНИЕ </template>
+							<template #label>
+								<VueIcon :name="'School'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+								НАУЧНОЕ ОБРАЗОВАНИЕ
+							</template>
 							<template #error>
 								{{ specialist.profile.errors.category.message }}
 							</template>
-						</VueInput>
+						</VueSelector>
 
-						<VueInput
-							:placeholder="'Введите степень'"
+						<VueValues
+							v-model.trim="specialist.profile.data.degree.value"
 							:type="'text'"
-							v-model="specialist.profile.data.degree.value"
+							:placeholder="'Введите степень'"
 							:error="specialist.profile.errors.degree.status"
 						>
-							<template #label> СТЕПЕНЬ </template>
+							<template #label>
+								<VueIcon :name="'School'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+								СТЕПЕНЬ
+							</template>
 							<template #error>
 								{{ specialist.profile.errors.degree.message }}
 							</template>
-						</VueInput>
+						</VueValues>
 
-						<VueInput
-							:placeholder="'Введите звание'"
+						<VueValues
+							v-model.trim="specialist.profile.data.rank.value"
 							:type="'text'"
-							v-model="specialist.profile.data.rank.value"
+							:placeholder="'Введите звание'"
 							:error="specialist.profile.errors.rank.status"
 						>
-							<template #label> ЗВАНИЕ </template>
+							<template #label>
+								<VueIcon :name="'School'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+								ЗВАНИЕ
+							</template>
 							<template #error>
 								{{ specialist.profile.errors.rank.message }}
 							</template>
-						</VueInput>
+						</VueValues>
 					</template>
-				</VueInputContainer>
+				</VueFieldset>
 
 				<!-- Начало карьеры -->
-				<VueInputContainer :direction="'row'" :count="2" :gap="'10px'">
+				<VueFieldset :count="2" :gap="'20px'">
 					<template #legend> НАЧАЛО КАРЪЕРЫ </template>
 					<template #inputs>
-						<VueInput
+						<VueDate
 							v-model="specialist.profile.data.startWorkAge.value"
-							:type="'date'"
-							:placeholder="'Введите дату'"
-							:inputmode="'numeric'"
 							:error="specialist.profile.errors.startWorkAge.status"
 						>
 							<template #label>
-								ДАТА НАЧАЛА ({{ getAge(specialist.profile.data.startWorkAge.value) }}
-								лет)
+								<VueIcon :name="'Work'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+								ДАТА НАЧАЛА ({{ getAge(specialist.profile.data.startWorkAge.value) }} лет)
 							</template>
 							<template #error>
 								{{ specialist.profile.errors.startWorkAge.message }}
 							</template>
-						</VueInput>
+						</VueDate>
 
-						<VueInput
-							:placeholder="'Введите город'"
+						<VueValues
+							v-model.trim="specialist.profile.data.startWorkCity.value"
 							:type="'text'"
-							v-model="specialist.profile.data.startWorkCity.value"
+							:placeholder="'Введите город'"
 							:error="specialist.profile.errors.startWorkCity.status"
 						>
-							<template #label> ГОРОД НАЧАЛА </template>
+							<template #label>
+								<VueIcon :name="'Work'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+								ГОРОД НАЧАЛА
+							</template>
 							<template #error>
 								{{ specialist.profile.errors.startWorkCity.message }}
 							</template>
-						</VueInput>
+						</VueValues>
 					</template>
-				</VueInputContainer>
+				</VueFieldset>
 
 				<!-- Статус приёма -->
-				<VueInputContainer :direction="'column'" :gap="'10px'">
+				<VueFieldset :count="2" :gap="'20px'">
 					<template #legend> ПРИЕМ ВРАЧА </template>
 					<template #inputs>
-						<VueInput
+						<VueSelector
 							v-model="specialist.profile.data.adultDoctor.value"
-							:type="'select'"
-							:options="[
-								{
-									default: true,
-									disabled: true,
-									value: '',
-									label: 'Выберите статус',
-								},
+							:list="[
 								{
 									default: false,
 									disabled: false,
@@ -646,62 +591,61 @@
 									label: 'Да',
 								},
 							]"
+							:is-search="false"
+							:is-clear="false"
+							:placeholder="'Выберите статус'"
 							:error="specialist.profile.errors.adultDoctor.status"
 						>
-							<template #label> СТАТУС ПРИЕМА У ВЗРОСЛЫХ </template>
+							<template #label> 
+								<VueIcon :name="'Face'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+								СТАТУС ПРИЕМА У ВЗРОСЛЫХ </template>
 							<template #error>
 								{{ specialist.profile.errors.adultDoctor.message }}
 							</template>
-						</VueInput>
+						</VueSelector>
 
-						<VueInput
+						<VueSelector
 							v-model="specialist.profile.data.childrenDoctor.value"
-							:type="'select'"
-							:options="[
+							:list="[
 								{
-									default: true,
-									disabled: true,
-									value: '',
-									label: 'Выберите статус',
-								},
-								{
-									default: false,
-									disabled: false,
 									value: 0,
 									label: 'Нет',
 								},
 								{
-									default: false,
-									disabled: false,
 									value: 1,
 									label: 'Да',
 								},
 							]"
+							:is-search="false"
+							:is-clear="false"
+							:placeholder="'Выберите статус'"
 							:error="specialist.profile.errors.childrenDoctor.status"
 						>
-							<template #label> СТАТУС ПРИЕМА У ДЕТЕЙ </template>
+							<template #label>
+								<VueIcon :name="'Child Care'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+								СТАТУС ПРИЕМА У ДЕТЕЙ
+							</template>
 							<template #error>
 								{{ specialist.profile.errors.childrenDoctor.message }}
 							</template>
-						</VueInput>
+						</VueSelector>
 
-						<VueInput
+						<VueNumber
 							v-if="specialist.profile.data.childrenDoctor.value === 1"
 							v-model="specialist.profile.data.childrenDoctorAge.value"
 							:type="'number'"
 							:min="0"
 							:max="18"
 							:placeholder="'Введите возраст'"
-							:inputmode="'numeric'"
 							:error="specialist.profile.errors.childrenDoctorAge.status"
 						>
 							<template #label> ДЕТСКИЙ ВОЗРАСТ (от 0 до 18 лет) </template>
 							<template #error>
 								{{ specialist.profile.errors.childrenDoctorAge.message }}
 							</template>
-						</VueInput>
+						</VueNumber>
 					</template>
-				</VueInputContainer>
+				</VueFieldset>
 
 				<VueTiptap
 					ref="tiptapDescription"
@@ -831,9 +775,7 @@
 			<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
 			<template #one-title>
 				СПЕЦИАЛИЗАЦИИ
-				<span v-show="loading.sections.specializations">
-					({{ specialist.connections.specializations.length }})
-				</span>
+				<span v-show="loading.sections.specializations"> ({{ specialist.connections.specializations.length }}) </span>
 			</template>
 
 			<template #one-body>
@@ -847,22 +789,12 @@
 						<div class="clinics__list-head">
 							<div>Название</div>
 						</div>
-						<div
-							class="clinics__list-head"
-							v-for="specialization in sortedConnectionsSpecializations"
-						>
+						<div class="clinics__list-head" v-for="specialization in sortedConnectionsSpecializations">
 							<div class="item-title">
-								{{
-									sections.specializations.filter(
-										(item) => item.id == specialization.id_specialization
-									)[0].name
-								}}
+								{{ sections.specializations.filter((item) => item.id == specialization.id_specialization)[0].name }}
 							</div>
 							<div class="item-priem"></div>
-							<div
-								class="item-close"
-								@click="removeArrValue('specializations', specialization)"
-							>
+							<div class="item-close" @click="removeArrValue('specializations', specialization)">
 								<VueIcon :name="'close'" :fill="'black'" :width="'16px'" :height="'16px'" />
 							</div>
 						</div>
@@ -890,9 +822,7 @@
 			<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
 			<template #two-title>
 				КЛИНИКИ
-				<span v-show="loading.sections.clinics">
-					({{ specialist.connections.clinics.length }})
-				</span>
+				<span v-show="loading.sections.clinics"> ({{ specialist.connections.clinics.length }}) </span>
 			</template>
 
 			<template #two-body>
@@ -908,11 +838,7 @@
 							<div></div>
 						</div>
 						<!-- Если клиники выбраны -->
-						<div
-							class="clinics__list-head"
-							v-for="clinic in specialist.connections.clinics"
-							:key="clinic.id"
-						>
+						<div class="clinics__list-head" v-for="clinic in specialist.connections.clinics" :key="clinic.id">
 							<div class="item-title">
 								{{ sections.clinics.filter((item) => item.id == clinic.id_clinic)[0].name }}
 							</div>
@@ -949,9 +875,7 @@
 		<block-once :minHeight="100">
 			<template #title>
 				СЕРТИФИКАТЫ
-				<span v-show="loading.sections.certificates">
-					({{ tableCertificates.body.length }})
-				</span>
+				<span v-show="loading.sections.certificates"> ({{ tableCertificates.body.length }}) </span>
 			</template>
 
 			<template #body>
@@ -1031,10 +955,6 @@
 </template>
 
 <script>
-import VueSelector from "../../../components/modules/VueSelector.vue";
-import VueInput from "../../../components/modules/input/VueInput.vue";
-import VueInputContainer from "../../../components/modules/input/VueInputContainer.vue";
-
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import BlockTwo from "../../../components/ui/admin/blocks/BlockTwo.vue";
@@ -1049,10 +969,6 @@ import { RouterView, RouterLink } from "vue-router";
 
 export default {
 	components: {
-		VueSelector,
-		VueInput,
-		VueInputContainer,
-
 		InfoBar,
 		BlockOnce,
 		BlockTwo,
@@ -1687,9 +1603,7 @@ export default {
 		},
 
 		getPagesSpecializationsTotal() {
-			return Math.ceil(
-				this.sections.specializations.length / this.paginationSpecializations.elements.range
-			);
+			return Math.ceil(this.sections.specializations.length / this.paginationSpecializations.elements.range);
 		},
 
 		getSortedSpecializations() {
@@ -1851,12 +1765,7 @@ export default {
 		/* Изменение текущей страницы */
 		changePageSpecializations(pageNumber) {
 			// Проверка на превышение количества страниц
-			if (
-				pageNumber >
-				Math.ceil(
-					this.sections.specializations.length / this.paginationSpecializations.elements.range
-				)
-			) {
+			if (pageNumber > Math.ceil(this.sections.specializations.length / this.paginationSpecializations.elements.range)) {
 				return;
 			} else if (pageNumber < 1) {
 				return;
@@ -1868,10 +1777,7 @@ export default {
 		/* Изменение текущей страницы */
 		changePageClinics(pageNumber) {
 			// Проверка на превышение количества страниц
-			if (
-				pageNumber >
-				Math.ceil(this.sections.clinics.length / this.paginationClinics.elements.range)
-			) {
+			if (pageNumber > Math.ceil(this.sections.clinics.length / this.paginationClinics.elements.range)) {
 				return;
 			} else if (pageNumber < 1) {
 				return;
@@ -1997,9 +1903,7 @@ export default {
 					this.specialist.profile.data.id.value = response.data.result.id;
 
 					this.specialist.profile.data.path.value = response.data.result.path;
-					this.specialist.profile.data.filename.value = files.basename(
-						response.data.result.path
-					);
+					this.specialist.profile.data.filename.value = files.basename(response.data.result.path);
 
 					this.$router.push(String(response.data.result.id));
 				})
@@ -2109,10 +2013,7 @@ export default {
 			formData.append("id", JSON.stringify(this.specialist.profile.data.id.value));
 
 			// Данные блока специализаций
-			formData.append(
-				"specializations",
-				JSON.stringify(this.specialist.connections.specializations)
-			);
+			formData.append("specializations", JSON.stringify(this.specialist.connections.specializations));
 
 			formData.append("clinics", JSON.stringify(this.specialist.connections.clinics));
 			formData.append("certificates", JSON.stringify(this.tableCertificates.body));
@@ -2136,9 +2037,7 @@ export default {
 						this.$refs.fileImage.clear();
 
 						this.specialist.profile.data.path.value = response.data.result.imagePath;
-						this.specialist.profile.data.filename.value = files.basename(
-							response.data.result.imagePath
-						);
+						this.specialist.profile.data.filename.value = files.basename(response.data.result.imagePath);
 					}
 
 					shared.updateId(this.tableCertificates.body, response.data.result.certificates);
@@ -2191,10 +2090,7 @@ export default {
 					this.cheked.specializations.forEach((item) => {
 						this.specialist.connections.specializations.push({
 							id: maxId + 1,
-							id_specialist:
-								this.$route.params.id !== "new"
-									? this.specialist.profile.data.id.value
-									: "new",
+							id_specialist: this.$route.params.id !== "new" ? this.specialist.profile.data.id.value : "new",
 							id_specialization: item,
 						});
 
@@ -2244,10 +2140,7 @@ export default {
 							priem: this.sections.clinics.find((clinic) => {
 								return clinic.id == checkClinic;
 							}).priem,
-							id_specialist:
-								this.$route.params.id !== "new"
-									? this.specialist.profile.data.id.value
-									: "new",
+							id_specialist: this.$route.params.id !== "new" ? this.specialist.profile.data.id.value : "new",
 							id_clinic: checkClinic,
 						});
 
@@ -2559,13 +2452,11 @@ export default {
 
 		/* Метод удаления значения из массива */
 		removeArrValue(arrayName, value) {
-			this.specialist.connections[arrayName] = this.specialist.connections[arrayName].filter(
-				(item) => {
-					if (item.id !== value.id) {
-						return item;
-					}
+			this.specialist.connections[arrayName] = this.specialist.connections[arrayName].filter((item) => {
+				if (item.id !== value.id) {
+					return item;
 				}
-			);
+			});
 		},
 	},
 	mounted() {
@@ -2585,8 +2476,7 @@ export default {
 
 					// Заполнение профиля
 					for (let key in response.data.result.specialist.profile) {
-						this.specialist.profile.data[key].value =
-							response.data.result.specialist.profile[key];
+						this.specialist.profile.data[key].value = response.data.result.specialist.profile[key];
 					}
 					// Заполнение секций
 					for (let key in response.data.result.sections) {
@@ -2610,8 +2500,7 @@ export default {
 							continue;
 						}
 
-						this.specialist.connections[key] =
-							response.data.result.specialist.connections[key];
+						this.specialist.connections[key] = response.data.result.specialist.connections[key];
 					}
 
 					// Добавление поля "Прием" в клиниках

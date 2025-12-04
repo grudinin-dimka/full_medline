@@ -1,0 +1,36 @@
+<template>
+	<main>
+		<slot></slot>
+	</main>
+</template>
+
+<style scoped>
+main {
+	display: flex;
+	flex-direction: column;
+	gap: var(--content-gap);
+	grid-area: content;
+
+	padding: var(--content-padding);
+
+	overflow-y: auto;
+	max-height: var(--content-max-height);
+
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+
+	padding: var(--content-padding);
+	gap: var(--content-gap);
+
+	background-color: var(--content-background-color);
+}
+
+@media screen and (max-width: 450px) {
+	main {
+		padding: 10px;
+		gap: 10px;
+	}
+}
+</style>

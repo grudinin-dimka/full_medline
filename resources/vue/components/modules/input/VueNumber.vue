@@ -9,29 +9,19 @@
 			class="vue-input__number-input"
 			type="text"
 			:placeholder="placeholder"
-			:inputmode="inputmode"
+			:inputmode="'numeric'"
 			:autocomplete="autocomplete"
 			ref="inputNumber"
 		/>
 
 		<div class="vue-input__number-buttons">
 			<button class="vue-input__number-button" @click="increment">
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					height="24px"
-					viewBox="0 -960 960 960"
-					width="24px"
-				>
+				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
 					<path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
 				</svg>
 			</button>
 			<button class="vue-input__number-button" @click="decrement">
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					height="24px"
-					viewBox="0 -960 960 960"
-					width="24px"
-				>
+				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
 					<path d="M200-440v-80h560v80H200Z" />
 				</svg>
 			</button>
@@ -55,10 +45,6 @@ export default {
 			type: [Number, String],
 			default: "",
 			required: true,
-		},
-		inputmode: {
-			type: String,
-			default: "text",
 		},
 		min: {
 			type: Number,

@@ -1,12 +1,23 @@
 <template>
+	<!-- Дебагер -->
 	<VueDebugger />
+	<!-- Вики -->
 	<VueWiki />
 
+	<!-- Загрузка -->
 	<VueLoader :isLoading="loader.loading" />
 
-	<AdminHeader v-if="loader.other" />
-	<AdminAside v-if="loader.other" />
-	<AdminContent v-if="loader.other" />
+	<template v-if="!loader.loading">
+		<section id="page">
+			<AdminHeader />
+
+			<AdminAside />
+
+			<AdminContent>
+				<RouterView></RouterView>
+			</AdminContent>
+		</section>
+	</template>
 </template>
 
 <script>
@@ -14,8 +25,8 @@ import { RouterLink, RouterView } from "vue-router";
 
 // NOTE: Модули в админке
 import AdminHeader from "../components/includes/admin/medline/AdminHeader.vue";
-import AdminAside from "../components/includes/admin/AdminAside.vue";
 import AdminContent from "../components/includes/admin/AdminContent.vue";
+import AdminAside from "../components/includes/admin/AdminAside.vue"
 
 import axios from "axios";
 
@@ -77,4 +88,20 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+#page {
+	box-sizing: border-box;
+	padding: 0px 0px 0px 0px;
+
+	display: grid;
+	grid-template-columns: auto 1fr;
+	grid-template-rows: auto 1fr auto;
+	grid-template-areas:
+		"aside header"
+		"aside content"
+		"aside content";
+	gap: 0px;
+
+	min-height: 100dvh;
+}
+</style>

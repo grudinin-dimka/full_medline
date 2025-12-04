@@ -14,7 +14,7 @@
 						class="wiki__header-buttons-button wiki__header-buttons-button--close"
 						@click="$store.commit('closeWiki')"
 					>
-						<VueIcon :name="'close'" :fill="'black'" :width="'20px'" :height="'20px'" />
+						<VueIcon :name="'Close'" :fill="'black'" :hover="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 					</button>
 				</div>
 			</div>

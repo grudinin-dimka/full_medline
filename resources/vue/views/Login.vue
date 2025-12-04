@@ -10,29 +10,34 @@
 				<img src="../assets/svg/medline/logo.svg" alt="логотип" width="130" />
 			</div>
 
-			<VueInput
-				:placeholder="'Введите логин'"
+			<VueValues
+				v-model.trim="currentLogin.data.name.body"
 				:type="'text'"
-				v-model="currentLogin.data.name.body"
+				:placeholder="'Введите логин'"
 				:error="currentLogin.errors.name.status"
 			>
-				<template #label> ЛОГИН </template>
+				<template #label>
+					<VueIcon :name="'Alternate Email'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+					ЛОГИН
+				</template>
 				<template #error>
 					{{ currentLogin.errors.name.message }}
 				</template>
-			</VueInput>
+			</VueValues>
 
-			<VueInput
+			<VuePassword
+				v-model.trim="currentLogin.data.password.body"
 				:placeholder="'Введите пароль'"
-				:type="'password'"
-				v-model="currentLogin.data.password.body"
 				:error="currentLogin.errors.password.status"
 			>
-				<template #label> ПАРОЛЬ </template>
+				<template #label>
+					<VueIcon :name="'Passkey'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+					ПАРОЛЬ
+				</template>
 				<template #error>
 					{{ currentLogin.errors.password.message }}
 				</template>
-			</VueInput>
+			</VuePassword>
 
 			<div class="buttons">
 				<VueButton @click="loginUser" :disabled="disabled.login.update"> Войти </VueButton>
@@ -253,13 +258,14 @@ export default {
 .login {
 	display: flex;
 	flex-direction: column;
+	gap: var(--default-gap);
 
+	border: var(--default-border);
 	border-radius: 20px;
-
 	padding: 40px;
 	margin: 20px;
 
-	width: 500px;
+	width: min(100%, 600px);
 	background: white;
 
 	box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
@@ -274,7 +280,6 @@ form {
 .logo {
 	display: flex;
 	justify-content: center;
-	margin-bottom: 30px;
 }
 
 .block {
@@ -291,8 +296,6 @@ form {
 .buttons {
 	display: flex;
 	justify-content: flex-end;
-
-	margin-top: 20px;
 }
 
 @media screen and (max-width: 620px) {

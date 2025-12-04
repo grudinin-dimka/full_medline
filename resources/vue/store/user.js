@@ -9,6 +9,7 @@ export default {
 			email: null,
 			status: null,
 			rights: null,
+			image: null,
 		},
 	},
 	mutations: {
@@ -30,6 +31,7 @@ export default {
 			state.user.email = user.email;
 			state.user.status = user.status;
 			state.user.rights = user.rights;
+			state.user.image = user.image;
 		},
 
 		/* Удаление токена везде */
@@ -73,8 +75,16 @@ export default {
 			return state.user.rights;
 		},
 
-		userNickname(state) {
+		getUserNickname(state) {
 			return state.user.nickname;
+		},
+
+		getUserEmail(state) {
+			return state.user.email;
+		},
+
+		getUserImage(state) {
+			return state.user.image;
 		},
 
 		getLogoutStatus(state) {

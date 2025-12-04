@@ -185,11 +185,6 @@
 						v-model="modalRequestForm.data.title.value"
 						:list="[
 							{
-								disabled: true,
-								value: '',
-								label: 'Ничего не выбрано',
-							},
-							{
 								value: 'Запись к врачу',
 								label: 'Запись к врачу',
 							},
@@ -203,8 +198,8 @@
 							},
 						]"
 						:size="4"
-						:isSearch="true"
-						:isClear="true"
+						:isSearch="false"
+						:isClear="false"
 						:error="modalRequestForm.errors.title.status"
 					>
 						<template #label>

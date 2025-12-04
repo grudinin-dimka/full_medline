@@ -7,17 +7,35 @@
 		<template #input>
 			<div class="vue-input__wrapper">
 				<label class="vue-input__file-button">
-					<input
-						name="file"
-						type="file"
-						class="vue-input vue-input__file"
-						ref="image"
-						@change="handleFileChange"
-					/>
+					<input name="file" type="file" class="vue-input vue-input__file" ref="image" @change="handleFileChange" />
 
 					<span class="vue-input__file-icon-wrapper" ref="imageWrapper">
 						<span class="vue-input__file-text" ref="imageText">
-							<svg
+							<VueIcon
+								v-if="type === 'image'"
+								class="vue-input__file-icon"
+								:name="'Image'"
+								:width="'26px'"
+								:height="'26px'"
+							/>
+
+							<VueIcon
+								v-else-if="type === 'document'"
+								class="vue-input__file-icon"
+								:name="'Article'"
+								:width="'26px'"
+								:height="'26px'"
+							/>
+
+							<VueIcon
+								v-else
+								class="vue-input__file-icon"
+								:name="'Attach File'"
+								:width="'26px'"
+								:height="'26px'"
+							/>
+
+							<!-- <svg
 								class="vue-input__file-icon"
 								width="20"
 								height="26"
@@ -28,7 +46,7 @@
 								<path
 									d="M7 17H9V12.825L10.6 14.425L12 13L8 9L4 13L5.425 14.4L7 12.825V17ZM2 20C1.45 20 0.979167 19.8042 0.5875 19.4125C0.195833 19.0208 0 18.55 0 18V2C0 1.45 0.195833 0.979167 0.5875 0.5875C0.979167 0.195833 1.45 0 2 0H10L16 6V18C16 18.55 15.8042 19.0208 15.4125 19.4125C15.0208 19.8042 14.55 20 14 20H2ZM9 7V2H2V18H14V7H9Z"
 								/>
-							</svg>
+							</svg> -->
 
 							<template v-if="hasFile">
 								{{ fileName ?? "Файл загружен" }}
@@ -61,7 +79,10 @@ export default {
 			default: "",
 			required: true,
 		},
-
+		type: {
+			type: String,
+			default: "file",
+		},
 		placeholder: {
 			type: String,
 			default: "Введите значение",

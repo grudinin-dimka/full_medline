@@ -8,127 +8,151 @@
 		</template>
 
 		<template #body>
-			<VueInputContainer :direction="'row'" :count="2" :gap="'10px'">
+			<VueFieldset :count="2" :gap="'20px'">
 				<template #legend> НАЗВАНИЕ И ДРУГОЕ </template>
 				<template #inputs>
-					<VueInput
-						v-model="currentClinic.data.name.value"
+					<VueValues
+						v-model.trim="currentClinic.data.name.value"
 						:type="'text'"
 						:placeholder="'Введите название'"
 						:error="currentClinic.errors.name.status"
 					>
-						<template #label> НАЗВАНИЕ </template>
+						<template #label>
+							<VueIcon :name="'Id Card'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+							НАЗВАНИЕ
+						</template>
 						<template #error>
 							{{ currentClinic.errors.name.message }}
 						</template>
-					</VueInput>
+					</VueValues>
 
-					<VueInput
-						v-model="currentClinic.data.other.value"
+					<VueValues
+						v-model.trim="currentClinic.data.other.value"
 						:type="'text'"
 						:placeholder="'Введите другое'"
 						:error="currentClinic.errors.other.status"
 					>
-						<template #label> ДРУГОЕ </template>
+						<template #label>
+							<VueIcon :name="'Edit'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+							ДРУГОЕ
+						</template>
 						<template #error>
 							{{ currentClinic.errors.other.message }}
 						</template>
-					</VueInput>
+					</VueValues>
 				</template>
-			</VueInputContainer>
+			</VueFieldset>
 
-			<VueInputContainer :direction="'row'" :count="2" :gap="'10px'">
+			<VueFieldset :count="2" :gap="'20px'">
 				<template #legend> ГОРОД И УЛИЦА </template>
 				<template #inputs>
-					<VueInput
-						v-model="currentClinic.data.city.value"
+					<VueValues
+						v-model.trim="currentClinic.data.city.value"
 						:type="'text'"
 						:placeholder="'Введите город'"
 						:error="currentClinic.errors.city.status"
 					>
-						<template #label> ГОРОД </template>
+						<template #label>
+							<VueIcon :name="'Home'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+							ГОРОД
+						</template>
 						<template #error>
 							{{ currentClinic.errors.city.message }}
 						</template>
-					</VueInput>
+					</VueValues>
 
-					<VueInput
-						v-model="currentClinic.data.street.value"
+					<VueValues
+						v-model.trim="currentClinic.data.street.value"
 						:type="'text'"
 						:placeholder="'Введите улицу'"
 						:error="currentClinic.errors.street.status"
 					>
-						<template #label> УЛИЦА </template>
+						<template #label>
+							<VueIcon :name="'Home'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+							УЛИЦА
+						</template>
 						<template #error>
 							{{ currentClinic.errors.street.message }}
 						</template>
-					</VueInput>
+					</VueValues>
 				</template>
-			</VueInputContainer>
+			</VueFieldset>
 
-			<VueInputContainer :direction="'row'" :count="2" :gap="'10px'">
+			<VueFieldset :count="2" :gap="'10px'">
 				<template #legend> ДОМ И ИНДЕКС </template>
 				<template #inputs>
-					<VueInput
-						v-model="currentClinic.data.home.value"
+					<VueValues
+						v-model.trim="currentClinic.data.home.value"
 						:type="'text'"
 						:placeholder="'Введите дом'"
 						:error="currentClinic.errors.home.status"
 					>
-						<template #label> ДОМ </template>
+						<template #label>
+							<VueIcon :name="'Home'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+							ДОМ
+						</template>
 						<template #error>
 							{{ currentClinic.errors.home.message }}
 						</template>
-					</VueInput>
+					</VueValues>
 
-					<VueInput
-						v-model="currentClinic.data.index.value"
+					<VueValues
+						v-model.trim="currentClinic.data.index.value"
 						:type="'mask'"
 						:mask="'######'"
 						:placeholder="'______'"
 						:inputmode="'numeric'"
 						:error="currentClinic.errors.index.status"
 					>
-						<template #label> ИНДЕКС </template>
+						<template #label>
+							<VueIcon :name="'Home'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+							ИНДЕКС
+						</template>
 						<template #error>
 							{{ currentClinic.errors.index.message }}
 						</template>
-					</VueInput>
+					</VueValues>
 				</template>
-			</VueInputContainer>
+			</VueFieldset>
 
-			<VueInputContainer :direction="'row'" :count="2" :gap="'10px'">
+			<VueFieldset :count="2" :gap="'20px'">
 				<template #legend> ГЕОГРАФИЧЕСКИЕ КООРДИНАТЫ </template>
 				<template #inputs>
-					<VueInput
-						v-model="currentClinic.data.geoWidth.value"
+					<VueValues
+						v-model.trim="currentClinic.data.geoWidth.value"
 						:type="'mask'"
 						:mask="'##.######'"
 						:placeholder="'00.000000'"
 						:inputmode="'decimal'"
 						:error="currentClinic.errors.geoWidth.status"
 					>
-						<template #label> ШИРИНА </template>
+						<template #label>
+							<VueIcon :name="'Location On'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+							ШИРИНА
+						</template>
 						<template #error>
 							{{ currentClinic.errors.geoWidth.message }}
 						</template>
-					</VueInput>
+					</VueValues>
 
-					<VueInput
-						v-model="currentClinic.data.geoLongitude.value"
+					<VueValues
+						v-model.trim="currentClinic.data.geoLongitude.value"
 						:type="'mask'"
 						:mask="'##.######'"
 						:placeholder="'00.000000'"
 						:inputmode="'decimal'"
 						:error="currentClinic.errors.geoLongitude.status"
 					>
-						<template #label> ДОЛГОТА </template>
+						<template #label>
+							<VueIcon :name="'Location On'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+							ДОЛГОТА
+						</template>
 						<template #error>
 							{{ currentClinic.errors.geoLongitude.message }}
 						</template>
-					</VueInput>
+					</VueValues>
 				</template>
-			</VueInputContainer>
+			</VueFieldset>
 		</template>
 
 		<template #footer>
@@ -157,17 +181,8 @@
 		<template #title>КЛИНИКИ</template>
 
 		<template #options>
-			<VueButton
-				@click.prevent="saveClinicsChanges"
-				:disabled="disabled.clinics.save"
-				:look="'inverse'"
-			>
-				<VueIcon
-					:name="'Save'"
-					:fill="'var(--primary-color)'"
-					:width="'28px'"
-					:height="'28px'"
-				/>
+			<VueButton @click.prevent="saveClinicsChanges" :disabled="disabled.clinics.save" :look="'inverse'">
+				<VueIcon :name="'Save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
 			</VueButton>
 
@@ -181,12 +196,7 @@
 				"
 				:minWidth="'30px'"
 			>
-				<VueIcon
-					:name="'Info'"
-					:fill="'var(--primary-color)'"
-					:width="'30px'"
-					:height="'30px'"
-				/>
+				<VueIcon :name="'Info'" :fill="'var(--primary-color)'" :width="'30px'" :height="'30px'" />
 			</VueButton>
 		</template>
 
@@ -210,9 +220,6 @@
 </template>
 
 <script>
-import VueInput from "../../../components/modules/input/VueInput.vue";
-import VueInputContainer from "../../../components/modules/input/VueInputContainer.vue";
-
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 
@@ -222,9 +229,6 @@ import validate from "../../../services/validate";
 
 export default {
 	components: {
-		VueInput,
-		VueInputContainer,
-
 		InfoBar,
 		BlockOnce,
 	},

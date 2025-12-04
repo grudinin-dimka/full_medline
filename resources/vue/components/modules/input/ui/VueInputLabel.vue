@@ -12,6 +12,7 @@ export default {
 
 <style>
 .vue-input__label {
+	user-select: none;
 	z-index: var(--input-label-z-index);
 	top: var(--input-label-top);
 	left: var(--input-label-left);

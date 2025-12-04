@@ -30,6 +30,7 @@ export default {
 	flex: 1 0 350px;
 
 	padding: 15px 20px;
+	border: var(--default-border);
 	border-radius: var(--default-border-radius);
 
 	font-size: 20px;

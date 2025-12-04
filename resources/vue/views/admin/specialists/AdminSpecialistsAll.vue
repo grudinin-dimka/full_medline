@@ -6,8 +6,8 @@
 		</template>
 
 		<template #body>
-			<VueInput
-				v-model="modalForm.data.name.value"
+			<VueValues
+				v-model.trim="modalForm.data.name.value"
 				:type="'text'"
 				:placeholder="'Введите название'"
 				:error="modalForm.errors.name.status"
@@ -16,10 +16,10 @@
 				<template #error>
 					{{ modalForm.errors.name.message }}
 				</template>
-			</VueInput>
+			</VueValues>
 
-			<VueInput
-				v-model="modalForm.data.company.value"
+			<VueValues
+				v-model.trim="modalForm.data.company.value"
 				:type="'text'"
 				:placeholder="'Введите название'"
 				:error="modalForm.errors.company.status"
@@ -28,10 +28,10 @@
 				<template #error>
 					{{ modalForm.errors.company.message }}
 				</template>
-			</VueInput>
+			</VueValues>
 
-			<VueInput
-				v-model="modalForm.data.url.value"
+			<VueValues
+				v-model.trim="modalForm.data.url.value"
 				:type="'text'"
 				:placeholder="'Введите ссылку'"
 				:error="modalForm.errors.url.status"
@@ -40,10 +40,10 @@
 				<template #error>
 					{{ modalForm.errors.url.message }}
 				</template>
-			</VueInput>
+			</VueValues>
 
-			<VueInput
-				v-model="modalForm.data.email.value"
+			<VueValues
+				v-model.trim="modalForm.data.email.value"
 				:type="'text'"
 				:placeholder="'Введите почту'"
 				:error="modalForm.errors.email.status"
@@ -52,10 +52,10 @@
 				<template #error>
 					{{ modalForm.errors.email.message }}
 				</template>
-			</VueInput>
+			</VueValues>
 
-			<VueInput
-				v-model="modalForm.data.description.value"
+			<VueValues
+				v-model.trim="modalForm.data.description.value"
 				:type="'textarea'"
 				:placeholder="'Введите название'"
 				:error="modalForm.errors.description.status"
@@ -64,7 +64,7 @@
 				<template #error>
 					{{ modalForm.errors.description.message }}
 				</template>
-			</VueInput>
+			</VueValues>
 		</template>
 
 		<template #footer>

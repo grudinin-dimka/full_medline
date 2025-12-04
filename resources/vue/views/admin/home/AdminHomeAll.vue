@@ -9,11 +9,7 @@
 
 		<template
 			#buttons
-			v-if="
-				(modal.values.look == 'default') &
-				!currentSlide.data.delete.value &
-				!currentSlide.data.create.value
-			"
+			v-if="(modal.values.look == 'default') & !currentSlide.data.delete.value & !currentSlide.data.create.value"
 		>
 			<VueIcon
 				v-if="!currentSlide.data.hide.value"
@@ -39,11 +35,7 @@
 
 		<template
 			#title
-			v-if="
-				(modal.values.look == 'default') &
-				!currentSlide.data.delete.value &
-				!currentSlide.data.create.value
-			"
+			v-if="(modal.values.look == 'default') & !currentSlide.data.delete.value & !currentSlide.data.create.value"
 		>
 			<VueIcon
 				:name="'Arrow'"
@@ -86,42 +78,51 @@
 				ref="modalImg"
 			></div>
 
-			<VueInput
+			<VueFile
 				v-model="currentSlide.data.file.value"
 				ref="fileImage"
-				:type="'file'"
+				:type="'image'"
 				:placeholder="'Загрузите картинку'"
 				:error="currentSlide.errors.file.status"
 			>
-				<template #label> ИЗОБРАЖЕНИЕ (820х958) </template>
+				<template #label>
+					<VueIcon :name="'Image'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+					ИЗОБРАЖЕНИЕ (820х958)
+				</template>
 				<template #error>
 					{{ currentSlide.errors.file.message }}
 				</template>
-			</VueInput>
+			</VueFile>
 
-			<VueInput
-				v-model="currentSlide.data.name.value"
+			<VueValues
+				v-model.trim="currentSlide.data.name.value"
 				:type="'text'"
 				:placeholder="'Введите название'"
 				:error="currentSlide.errors.name.status"
 			>
-				<template #label> НАЗВАНИЕ </template>
+				<template #label>
+					<VueIcon :name="'Edit'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+					НАЗВАНИЕ
+				</template>
 				<template #error>
 					{{ currentSlide.errors.name.message }}
 				</template>
-			</VueInput>
+			</VueValues>
 
-			<VueInput
-				v-model="currentSlide.data.link.value"
+			<VueValues
+				v-model.trim="currentSlide.data.link.value"
 				:type="'text'"
-				:placeholder="'Введите название'"
+				:placeholder="'Введите ссылку'"
 				:error="currentSlide.errors.link.status"
 			>
-				<template #label> ССЫЛКА </template>
+				<template #label>
+					<VueIcon :name="'Link'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+					ССЫЛКА
+				</template>
 				<template #error>
 					{{ currentSlide.errors.link.message }}
 				</template>
-			</VueInput>
+			</VueValues>
 		</template>
 
 		<template #footer>
@@ -145,12 +146,7 @@
 				</VueButton>
 
 				<VueButton v-if="currentSlide.data.delete.value" @click.prevent="markDeleteSlide">
-					<VueIcon
-						:name="'Restore From Trash'"
-						:fill="'white'"
-						:width="'28px'"
-						:height="'28px'"
-					/>
+					<VueIcon :name="'Restore From Trash'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Вернуть
 				</VueButton>
 			</template>
@@ -177,12 +173,7 @@
 
 		<template #options>
 			<VueButton :look="'inverse'" :disabled="disabled.slider.save" @click="saveSlidesChanges">
-				<VueIcon
-					:name="'Save'"
-					:fill="'var(--primary-color)'"
-					:width="'28px'"
-					:height="'28px'"
-				/>
+				<VueIcon :name="'Save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
 			</VueButton>
 
@@ -191,12 +182,7 @@
 				@click="$store.commit('openWiki', { title: 'Слайдер', component: 'HomeSlider' })"
 				:minWidth="'30px'"
 			>
-				<VueIcon
-					:name="'Info'"
-					:fill="'var(--primary-color)'"
-					:width="'30px'"
-					:height="'30px'"
-				/>
+				<VueIcon :name="'Info'" :fill="'var(--primary-color)'" :width="'30px'" :height="'30px'" />
 			</VueButton>
 		</template>
 
@@ -230,34 +216,19 @@
 
 						<div class="slider__block-info">
 							<article>
-								<VueIcon
-									:name="'Id Card'"
-									:fill="'var(--primary-color)'"
-									:width="'26px'"
-									:height="'26px'"
-								/>
+								<VueIcon :name="'Id Card'" :fill="'var(--primary-color)'" :width="'26px'" :height="'26px'" />
 								<label>
 									{{ slide.name }}
 								</label>
 							</article>
 							<article>
-								<VueIcon
-									:name="'Link'"
-									:fill="'var(--primary-color)'"
-									:width="'26px'"
-									:height="'26px'"
-								/>
+								<VueIcon :name="'Link'" :fill="'var(--primary-color)'" :width="'26px'" :height="'26px'" />
 								<label>
 									{{ slide.link }}
 								</label>
 							</article>
 							<article>
-								<VueIcon
-									:name="'Folder'"
-									:fill="'var(--primary-color)'"
-									:width="'26px'"
-									:height="'26px'"
-								/>
+								<VueIcon :name="'Folder'" :fill="'var(--primary-color)'" :width="'26px'" :height="'26px'" />
 								<label> {{ slide.path }} </label>
 							</article>
 						</div>
@@ -293,12 +264,7 @@
 
 		<template #options>
 			<VueButton :look="'inverse'" :disabled="disabled.footer.save" @click="saveFooterChanges">
-				<VueIcon
-					:name="'Save'"
-					:fill="'var(--primary-color)'"
-					:width="'28px'"
-					:height="'28px'"
-				/>
+				<VueIcon :name="'Save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
 			</VueButton>
 
@@ -307,12 +273,7 @@
 				@click="$store.commit('openWiki', { title: 'Футер', component: 'HomeFooter' })"
 				:minWidth="'30px'"
 			>
-				<VueIcon
-					:name="'Info'"
-					:fill="'var(--primary-color)'"
-					:width="'30px'"
-					:height="'30px'"
-				/>
+				<VueIcon :name="'Info'" :fill="'var(--primary-color)'" :width="'30px'" :height="'30px'" />
 			</VueButton>
 		</template>
 
@@ -603,9 +564,7 @@ export default {
 
 		/* Пометка на удаление выбранного слайда */
 		markDeleteSlide() {
-			let slide = this.slides.find(
-				(slide) => slide.order === this.currentSlide.data.order.value
-			);
+			let slide = this.slides.find((slide) => slide.order === this.currentSlide.data.order.value);
 
 			if (slide.delete) {
 				slide.delete = false;
@@ -669,9 +628,7 @@ export default {
 					.then((response) => {
 						if (!response) return;
 
-						let slideCurrent = this.slides.find(
-							(slide) => slide.order === this.currentSlide.data.order.value
-						);
+						let slideCurrent = this.slides.find((slide) => slide.order === this.currentSlide.data.order.value);
 
 						this.currentSlide.data.path.value = response.data.result;
 						slideCurrent.path = response.data.result;
@@ -694,9 +651,7 @@ export default {
 						this.disabled.slider.update = false;
 					});
 			} else {
-				let slideCurrent = this.slides.find(
-					(slide) => slide.order === this.currentSlide.data.order.value
-				);
+				let slideCurrent = this.slides.find((slide) => slide.order === this.currentSlide.data.order.value);
 
 				slideCurrent.name = this.currentSlide.data.name.value;
 				slideCurrent.link = this.currentSlide.data.link.value;

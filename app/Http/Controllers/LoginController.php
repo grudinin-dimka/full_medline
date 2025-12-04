@@ -11,6 +11,8 @@ use Illuminate\Validation\ValidationException;
 use App\Models\User\User;
 use App\Models\User\Rights;
 use App\Models\User\Status;
+use Symfony\Component\HttpKernel\HttpCache\Store;
+use Illuminate\Support\Facades\Storage;
 
 class LoginController extends Controller
 {
@@ -46,6 +48,7 @@ class LoginController extends Controller
             "email" => $user->email,
             "status" => Status::find($user->statusId)->name,
             "rights" => Rights::find($user->rightsId)->name,
+            "image" => Storage::url('users/' . $user->filename),
          ],
       ]);
    }

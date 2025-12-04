@@ -8,18 +8,21 @@
 		</template>
 
 		<template #body>
-			<VueInput
+			<VueFile
 				v-model="currentPrice.data.file.value"
 				ref="fileImage"
-				:type="'file'"
+				:type="'document'"
 				:placeholder="'Загрузите табличный файл'"
 				:error="currentPrice.errors.file.status"
 			>
-				<template #label> ФАЙЛ </template>
+				<template #label>
+					<VueIcon :name="'Article'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+					ФАЙЛ
+				</template>
 				<template #error>
 					{{ currentPrice.errors.file.message }}
 				</template>
-			</VueInput>
+			</VueFile>
 		</template>
 
 		<template #footer>
@@ -42,45 +45,18 @@
 		<template #title>СПИСОК ЦЕН</template>
 
 		<template #options>
-			<VueButton
-				@click.prevent="downloadPricesXML"
-				:disabled="disabled.prices.xml"
-				:look="'inverse'"
-			>
-				<VueIcon
-					:name="'Download 2'"
-					:fill="'var(--primary-color)'"
-					:width="'28px'"
-					:height="'28px'"
-				/>
+			<VueButton @click.prevent="downloadPricesXML" :disabled="disabled.prices.xml" :look="'inverse'">
+				<VueIcon :name="'Download 2'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Выгрузить (.XML)
 			</VueButton>
 
-			<VueButton
-				@click.prevent="downloadPricesXLSX"
-				:disabled="disabled.prices.xlsx"
-				:look="'inverse'"
-			>
-				<VueIcon
-					:name="'Download 2'"
-					:fill="'var(--primary-color)'"
-					:width="'28px'"
-					:height="'28px'"
-				/>
+			<VueButton @click.prevent="downloadPricesXLSX" :disabled="disabled.prices.xlsx" :look="'inverse'">
+				<VueIcon :name="'Download 2'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Выгрузить (.XLSX)
 			</VueButton>
 
-			<VueButton
-				@click.prevent="savePricesFiles"
-				:disabled="disabled.prices.save"
-				:look="'inverse'"
-			>
-				<VueIcon
-					:name="'Save'"
-					:fill="'var(--primary-color)'"
-					:width="'28px'"
-					:height="'28px'"
-				/>
+			<VueButton @click.prevent="savePricesFiles" :disabled="disabled.prices.save" :look="'inverse'">
+				<VueIcon :name="'Save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
 			</VueButton>
 
@@ -94,12 +70,7 @@
 				"
 				:minWidth="'30px'"
 			>
-				<VueIcon
-					:name="'Info'"
-					:fill="'var(--primary-color)'"
-					:width="'30px'"
-					:height="'30px'"
-				/>
+				<VueIcon :name="'Info'" :fill="'var(--primary-color)'" :width="'30px'" :height="'30px'" />
 			</VueButton>
 		</template>
 

@@ -1,49 +1,17 @@
 <template>
 	<header :class="{ 'header--hidden': false }" ref="header">
 		<div class="header__item header__item--left">
-			<div class="header__close" @click="$store.commit('setIsHide')">
-				<VueIcon
-					v-if="$store.getters.getIsHide"
-					:name="'Arrow Menu Open'"
-					:fill="'black'"
-					:hover="'var(--primary-color)'"
-					:width="'30px'"
-					:height="'30px'"
-				/>
-				<VueIcon
-					v-else
-					:name="'Arrow Menu Close'"
-					:fill="'black'"
-					:hover="'var(--primary-color)'"
-					:width="'30px'"
-					:height="'30px'"
-				/>
-			</div>
-		</div>
+         <slot name="left"></slot>
+      </div>
 
 		<div class="header__item header__item--right">
-			<div class="header__user">
-				<span class="header__user-info">
-					<span class="header__user-name"> {{ $store.getters.getUserNickname }} </span>
-					<span class="header__user-email"> {{ $store.getters.getUserEmail }} </span>
-				</span>
-				<div class="header__user-icon">
-					<img :src="$store.getters.getUserImage" alt="">
-				</div>
-			</div>
-		</div>
+         <slot name="right"></slot>
+      </div>
 
 		<div class="header__dropdown" v-if="isShow" ref="headerDropdown">
 			<div class="header__dropdown__body">
-				<div class="header__dropdown__item">
-					<VueIcon :name="'Info'" :fill="'var(--primary-color)'" :width="'24px'" :height="'24px'" />
-					О системе
-				</div>
-				<div class="header__dropdown__item">
-					<VueIcon :name="'Settings'" :fill="'var(--primary-color)'" :width="'24px'" :height="'24px'" />
-					Настройки
-				</div>
-			</div>
+            <slot name="dropdown"></slot>
+         </div>
 
 			<div class="header__dropdown__footer">
 				<div class="header__dropdown__item" @click="logout">
@@ -152,7 +120,7 @@ header {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	align-items: flex-end;
+	align-items: center;
 	gap: 5px;
 }
 
@@ -164,14 +132,6 @@ header {
 	width: 50px;
 	height: 50px;
 	background-color: var(--primary-color);
-}
-
-.header__user-icon img {
-	width: 100%;
-	height: 100%;
-
-	border-radius: 100px;
-	object-fit: cover;
 }
 
 /* Выпадающее меню */

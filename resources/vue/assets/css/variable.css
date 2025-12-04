@@ -4,6 +4,11 @@
 @import url("./medline/accents.css");
 @import url("./medline/defualt.css");
 
+/* Интерфейс */
+@import url("./medline/includes/header.css");
+@import url("./medline/includes/aside.css");
+@import url("./medline/includes/content.css");
+
 /* Модули */
 @import url("./medline/modules/accordeon.css");
 @import url("./medline/modules/debugger.css");
@@ -18,6 +23,3 @@
 @import url("./medline/elements/buttons.css");
 @import url("./medline/elements/table.css");
 @import url("./medline/elements/inputs/inputs.css");
-
-/* Страницы */
-@import url("./medline/pages/main.css");
