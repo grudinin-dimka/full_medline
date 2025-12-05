@@ -49,23 +49,13 @@
 				<div class="modal__video-buttons">
 					<template v-if="currentVideo.data.path.value === ''">
 						<div class="modal__buttons-icon create" @click="openVideoUpload">
-							<VueIcon
-								:name="'Add'"
-								:fill="'var(--icon-create-fill)'"
-								:width="'24px'"
-								:height="'24px'"
-							/>
+							<VueIcon :name="'Add'" :fill="'var(--icon-create-fill)'" :width="'24px'" :height="'24px'" />
 						</div>
 					</template>
 
 					<template v-else>
 						<div class="modal__buttons-icon edit" @click="openVideoUpload">
-							<VueIcon
-								:name="'Edit'"
-								:fill="'var(--icon-edit-fill)'"
-								:width="'24px'"
-								:height="'24px'"
-							/>
+							<VueIcon :name="'Edit'" :fill="'var(--icon-edit-fill)'" :width="'24px'" :height="'24px'" />
 						</div>
 					</template>
 				</div>
@@ -120,25 +110,24 @@
 	<VueModal ref="modalVideoUpload" :settings="modalVideoUpload">
 		<template #title>{{ modalVideoUpload.values.title }}</template>
 		<template #body>
-			<VueInput
+			<VueFile
 				v-model="currentVideo.data.file.value"
 				ref="fileVideo"
-				:type="'file'"
+				:type="'video'"
 				:placeholder="'Загрузите видео файл'"
 				:error="currentVideo.errors.file.status"
 			>
-				<template #label> ВИДЕО ФАЙЛ </template>
+				<template #label>
+					<VueIcon :name="'Attach File'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+					ВИДЕО
+				</template>
 				<template #error>
 					{{ currentVideo.errors.file.message }}
 				</template>
-			</VueInput>
+			</VueFile>
 		</template>
 		<template #footer>
-			<VueButton
-				v-if="modalVideoUpload.values.look == 'default'"
-				@click="uploadVideo"
-				:disabled="disabled.video.upload"
-			>
+			<VueButton v-if="modalVideoUpload.values.look == 'default'" @click="uploadVideo" :disabled="disabled.video.upload">
 				<VueIcon :name="'Add'" :fill="'white'" :width="'28px'" :height="'28px'" />
 				Добавить
 			</VueButton>
@@ -160,17 +149,8 @@
 		<template #title>ВИДЕО</template>
 
 		<template #options>
-			<VueButton
-				@click.prevent="saveVideosChanges"
-				:disabled="disabled.video.save"
-				:look="'inverse'"
-			>
-				<VueIcon
-					:name="'Save'"
-					:fill="'var(--primary-color)'"
-					:width="'28px'"
-					:height="'28px'"
-				/>
+			<VueButton @click.prevent="saveVideosChanges" :disabled="disabled.video.save" :look="'inverse'">
+				<VueIcon :name="'Save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
 			</VueButton>
 
@@ -184,12 +164,7 @@
 				"
 				:minWidth="'30px'"
 			>
-				<VueIcon
-					:name="'Info'"
-					:fill="'var(--primary-color)'"
-					:width="'30px'"
-					:height="'30px'"
-				/>
+				<VueIcon :name="'Info'" :fill="'var(--primary-color)'" :width="'30px'" :height="'30px'" />
 			</VueButton>
 		</template>
 
@@ -223,12 +198,7 @@
 				<empty :minHeight="300" v-else />
 			</template>
 
-			<VueLoader
-				:isLoading="loading.loader.video"
-				:isChild="true"
-				:minHeight="300"
-				@afterLeave="loaderChildAfterLeave"
-			/>
+			<VueLoader :isLoading="loading.loader.video" :isChild="true" :minHeight="300" @afterLeave="loaderChildAfterLeave" />
 		</template>
 
 		<template #buttons>
@@ -472,9 +442,7 @@ export default {
 			if (errors > 0) return;
 
 			try {
-				let selectedVideo = this.videos.find(
-					(item, index) => item.id == this.currentVideo.data.id.value
-				);
+				let selectedVideo = this.videos.find((item, index) => item.id == this.currentVideo.data.id.value);
 
 				selectedVideo.order = this.currentVideo.data.order.value;
 				selectedVideo.path = this.currentVideo.data.path.value;
@@ -706,9 +674,6 @@ export default {
 	cursor: pointer;
 	padding: 10px;
 	border-radius: 100px;
-
-	width: 25px;
-	height: 25px;
 }
 
 .modal__buttons-icon.delete {

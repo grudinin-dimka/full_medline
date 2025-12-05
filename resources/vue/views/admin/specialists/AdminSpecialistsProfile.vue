@@ -330,6 +330,18 @@
 			</template>
 
 			<template v-else>
+				<VueButton @click.prevent="hideSpecialist" :disabled="disabled.profile.hide" :look="'inverse'">
+					<template v-if="specialist.profile.data.hide.value">
+						<VueIcon :name="'Publish'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
+						Опубликовать
+					</template>
+
+					<template v-else>
+						<VueIcon :name="'Unpublished'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
+						Снять с публикации
+					</template>
+				</VueButton>
+
 				<VueButton @click.prevent="saveSpecialistModular('all')" :disabled="disabled.profile.save" :look="'inverse'">
 					<VueIcon :name="'Save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 					Сохранить
@@ -376,12 +388,12 @@
 							<VueFile
 								v-model="specialist.profile.data.file.value"
 								ref="fileImage"
-								:placeholder="'Загрузите файл'"
+								:placeholder="'Загрузите картинку'"
 								:type="'image'"
 								:error="specialist.profile.errors.file.status"
 							>
 								<template #label>
-									<VueIcon :name="'Image'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+									<VueIcon :name="'Attach File'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
 									ФОТО ВРАЧА (700x700)
 								</template>
 								<template #error>
@@ -596,9 +608,10 @@
 							:placeholder="'Выберите статус'"
 							:error="specialist.profile.errors.adultDoctor.status"
 						>
-							<template #label> 
+							<template #label>
 								<VueIcon :name="'Face'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
-								СТАТУС ПРИЕМА У ВЗРОСЛЫХ </template>
+								СТАТУС ПРИЕМА У ВЗРОСЛЫХ
+							</template>
 							<template #error>
 								{{ specialist.profile.errors.adultDoctor.message }}
 							</template>
@@ -982,6 +995,7 @@ export default {
 				profile: {
 					save: false,
 					create: false,
+					hide: false,
 				},
 			},
 
@@ -2061,6 +2075,37 @@ export default {
 				})
 				.finally(() => {
 					this.disabled.profile.save = false;
+				});
+		},
+
+		/* Скрытие выбранного доктора */
+		hideSpecialist() {
+			this.disabled.profile.hide = true;
+
+			// Сохранение данных
+			api({
+				method: "post",
+				url: this.$store.getters.urlApi + `hide-specialist`,
+				headers: {
+					Accept: "multipart/form-data",
+				},
+				data: {
+					id: this.specialist.profile.data.id.value,
+				},
+			})
+				.then((response) => {
+					if (!response) return;
+				})
+				.catch((error) => {
+					this.$store.commit("addDebugger", {
+						title: "Ошибка.",
+						body: error,
+						type: "error",
+					});
+				})
+				.finally(() => {
+					this.specialist.profile.data.hide.value = !this.specialist.profile.data.hide.value;
+					this.disabled.profile.hide = false;
 				});
 		},
 

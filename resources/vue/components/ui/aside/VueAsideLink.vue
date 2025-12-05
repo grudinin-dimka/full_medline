@@ -53,6 +53,7 @@ a.aside__link {
 	text-decoration: none;
 	color: var(--aside-link-font-color);
 	background-color: var(--aside-link-background-color);
+	outline: var(--aside-link-outline);
 
 	transition: var(--aside-link-transition);
 }

@@ -30,24 +30,24 @@ export default {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	gap: 5px;
+	gap: var(--table-button-head-gap);
 
-	background-color: white;
-	border: var(--default-border);
-	border-radius: 100px;
-	color: black;
-	height: 50px;
-	min-width: 100px;
-	font-size: var(--button-font-size);
+	background-color: var(--table-button-head-background-color);
+	border: var(--table-button-head-border);
+	border-radius: var(--table-button-head-border-radius);
+	color: var(--table-button-head-color);
+	height: var(--table-button-head-height);
+	min-width: var(--table-button-head-min-width);
+	font-size: var(--table-button-head-font-size);
 
-	padding: 0px 10px;
+	padding: var(--table-button-head-padding);
 
-	transition: all 0.2s;
+	transition: var(--table-button-head-transition);
 }
 
 .table-button-head:hover {
-	border: var(--default-border-active);
-	background-color: var(--item-background-color-active);
+	border: var(--table-button-head-border--hover);
+	background-color: var(--table-button-head-background-color--hover);
 }
 
 .circle {

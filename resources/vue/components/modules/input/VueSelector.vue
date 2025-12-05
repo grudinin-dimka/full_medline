@@ -391,4 +391,10 @@ export default {
 	color: var(--selector-menu-list-item-disabled-color);
 	background-color: var(--selector-menu-list-item-disabled-background-color);
 }
+
+@media screen and (max-width: 500px) {
+	.selector__list-item {
+		text-wrap: balance;
+	}	
+}
 </style>

@@ -32,17 +32,20 @@
 		</template>
 
 		<template #body>
-			<VueInput
-				v-model="currentContact.data.name.value"
+			<VueValues
+				v-model.trim="currentContact.data.name.value"
 				:type="'textarea'"
 				:placeholder="'Введите заголовок'"
 				:error="currentContact.errors.name.status"
 			>
-				<template #label> ЗАГОЛОВОК </template>
+				<template #label>
+					<VueIcon :name="'Title'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+					ЗАГОЛОВОК
+				</template>
 				<template #error>
 					{{ currentContact.errors.name.message }}
 				</template>
-			</VueInput>
+			</VueValues>
 
 			<VueInput
 				v-model="currentContact.data.clinicId.value"
@@ -67,12 +70,7 @@
 				@delete="deleteContactPhone"
 			>
 				<template #title>
-					<VueIcon
-						:name="'Phone Enabled'"
-						:fill="'var(--primary-color)'"
-						:width="'22px'"
-						:height="'22px'"
-					/>
+					<VueIcon :name="'Phone Enabled'" :fill="'var(--primary-color)'" :width="'22px'" :height="'22px'" />
 					ТЕЛЕФОНЫ
 				</template>
 			</VueModalList>
@@ -88,12 +86,7 @@
 				@delete="deleteContactMail"
 			>
 				<template #title>
-					<VueIcon
-						:name="'Alternate Email'"
-						:fill="'var(--primary-color)'"
-						:width="'22px'"
-						:height="'22px'"
-					/>
+					<VueIcon :name="'Alternate Email'" :fill="'var(--primary-color)'" :width="'22px'" :height="'22px'" />
 					ПОЧТА
 				</template>
 			</VueModalList>
@@ -107,11 +100,7 @@
 			</template>
 
 			<template v-if="modal.values.look == 'default' && !currentContact.data.delete.value">
-				<VueButton
-					:look="'delete'"
-					v-if="!currentContact.data.create.value"
-					@click="deleteContact"
-				>
+				<VueButton :look="'delete'" v-if="!currentContact.data.create.value" @click="deleteContact">
 					<VueIcon :name="'Delete'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Удалить
 				</VueButton>
@@ -124,12 +113,7 @@
 
 			<template v-if="modal.values.look == 'default' && currentContact.data.delete.value">
 				<VueButton @click="deleteContact">
-					<VueIcon
-						:name="'Restore From Trash'"
-						:fill="'white'"
-						:width="'28px'"
-						:height="'28px'"
-					/>
+					<VueIcon :name="'Restore From Trash'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Вернуть
 				</VueButton>
 			</template>
@@ -213,17 +197,8 @@
 		<template #title>КОНТАКТЫ</template>
 
 		<template #options>
-			<VueButton
-				@click.prevent="saveContact"
-				:disabled="disabled.contacts.save"
-				:look="'inverse'"
-			>
-				<VueIcon
-					:name="'Save'"
-					:fill="'var(--primary-color)'"
-					:width="'28px'"
-					:height="'28px'"
-				/>
+			<VueButton @click.prevent="saveContact" :disabled="disabled.contacts.save" :look="'inverse'">
+				<VueIcon :name="'Save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
 			</VueButton>
 
@@ -237,12 +212,7 @@
 				"
 				:minWidth="'30px'"
 			>
-				<VueIcon
-					:name="'Info'"
-					:fill="'var(--primary-color)'"
-					:width="'30px'"
-					:height="'30px'"
-				/>
+				<VueIcon :name="'Info'" :fill="'var(--primary-color)'" :width="'30px'" :height="'30px'" />
 			</VueButton>
 		</template>
 
@@ -613,9 +583,7 @@ export default {
 			)
 				return;
 
-			let contact = this.contacts.find(
-				(contact) => contact.id === this.currentContact.data.id.value
-			);
+			let contact = this.contacts.find((contact) => contact.id === this.currentContact.data.id.value);
 
 			for (let key in this.currentContact.data) {
 				contact[key] = this.currentContact.data[key].value;
@@ -627,9 +595,7 @@ export default {
 		/* Удаление */
 		deleteContact() {
 			try {
-				let contact = this.contacts.find(
-					(item) => item.id == this.currentContact.data.id.value
-				);
+				let contact = this.contacts.find((item) => item.id == this.currentContact.data.id.value);
 
 				contact.delete = !contact.delete;
 
@@ -757,13 +723,11 @@ export default {
 		/* Удаление */
 		deleteContactPhone(selectedPhone) {
 			try {
-				this.currentContact.data.phones.value = this.currentContact.data.phones.value.filter(
-					(phone) => {
-						if (selectedPhone.id !== phone.id) {
-							return phone;
-						}
+				this.currentContact.data.phones.value = this.currentContact.data.phones.value.filter((phone) => {
+					if (selectedPhone.id !== phone.id) {
+						return phone;
 					}
-				);
+				});
 			} catch (error) {
 				this.$store.commit("addDebugger", {
 					title: "Ошибка.",
@@ -836,13 +800,11 @@ export default {
 
 		/* Удаление */
 		deleteContactMail(selectedMail) {
-			this.currentContact.data.mails.value = this.currentContact.data.mails.value.filter(
-				(mail) => {
-					if (selectedMail.id !== mail.id) {
-						return mail;
-					}
+			this.currentContact.data.mails.value = this.currentContact.data.mails.value.filter((mail) => {
+				if (selectedMail.id !== mail.id) {
+					return mail;
 				}
-			);
+			});
 		},
 	},
 	mounted() {

@@ -86,7 +86,7 @@
 				:error="currentSlide.errors.file.status"
 			>
 				<template #label>
-					<VueIcon :name="'Image'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+					<VueIcon :name="'Attach File'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
 					ИЗОБРАЖЕНИЕ (820х958)
 				</template>
 				<template #error>
@@ -101,7 +101,7 @@
 				:error="currentSlide.errors.name.status"
 			>
 				<template #label>
-					<VueIcon :name="'Edit'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+					<VueIcon :name="'Title'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
 					НАЗВАНИЕ
 				</template>
 				<template #error>

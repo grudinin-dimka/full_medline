@@ -15,7 +15,7 @@
 				:error="currentSpecialization.errors.name.status"
 			>
 				<template #label>
-					<VueIcon :name="'Edit'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+					<VueIcon :name="'Title'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
 					НАЗВАНИЕ
 				</template>
 				<template #error>

@@ -7,7 +7,7 @@
 
 		<template #body>
 			<div class="img-fio">
-				<div class="img">
+				<div class="users__item-img">
 					<div
 						v-if="currentUser.data.path.value"
 						:style="{ backgroundImage: `url(${currentUser.data.path.value})` }"
@@ -18,170 +18,182 @@
 					></div>
 				</div>
 
-				<VueInputContainer :direction="'column'" :gap="'10px'">
+				<VueFieldset :count="1" :gap="'20px'">
 					<template #legend> ФИО </template>
 					<template #inputs>
-						<VueInput
-							v-model="currentUser.data.family.value"
+						<VueValues
+							v-model.trim="currentUser.data.family.value"
 							:type="'text'"
 							:placeholder="'Введите фамилию'"
 							:error="currentUser.errors.family.status"
 						>
-							<template #label> ФАМИЛИЯ </template>
+							<template #label>
+								<VueIcon :name="'Id Card'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+								ФАМИЛИЯ
+							</template>
 							<template #error>
 								{{ currentUser.errors.family.message }}
 							</template>
-						</VueInput>
+						</VueValues>
 
-						<VueInput
-							v-model="currentUser.data.name.value"
+						<VueValues
+							v-model.trim="currentUser.data.name.value"
 							:type="'text'"
 							:placeholder="'Введите имя'"
 							:error="currentUser.errors.name.status"
 						>
-							<template #label> ИМЯ </template>
+							<template #label>
+								<VueIcon :name="'Id Card'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+								ИМЯ
+							</template>
 							<template #error>
 								{{ currentUser.errors.name.message }}
 							</template>
-						</VueInput>
+						</VueValues>
 
-						<VueInput
-							v-model="currentUser.data.surname.value"
+						<VueValues
+							v-model.trim="currentUser.data.surname.value"
 							:type="'text'"
 							:placeholder="'Введите отчество'"
 							:error="currentUser.errors.surname.status"
 						>
-							<template #label> ОТЧЕСТВО </template>
+							<template #label>
+								<VueIcon :name="'Id Card'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+								ОТЧЕСТВО
+							</template>
 							<template #error>
 								{{ currentUser.errors.surname.message }}
 							</template>
-						</VueInput>
+						</VueValues>
 					</template>
-				</VueInputContainer>
+				</VueFieldset>
 			</div>
 
-			<VueInputContainer :direction="'column'" :gap="'10px'">
+			<VueFieldset :count="1" :gap="'15px'">
 				<template #legend> ПАРОЛЬ И ГЕНЕРАТОР </template>
 				<template #inputs>
-					<VueInput
+					<VueValues
 						v-model="currentUser.data.password.value"
 						:type="'text'"
 						:placeholder="'Введите пароль'"
 						:error="currentUser.errors.password.status"
 					>
-						<template #label> ПАРОЛЬ </template>
+						<template #label>
+							<VueIcon :name="'Key'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+							ПАРОЛЬ
+						</template>
 						<template #error>
 							{{ currentUser.errors.password.message }}
 						</template>
-					</VueInput>
+					</VueValues>
 
 					<PasswordGenerator />
 				</template>
-			</VueInputContainer>
+			</VueFieldset>
 
-			<VueInputContainer :direction="'row'" :count="2" :gap="'10px'">
+			<VueFieldset :count="2" :gap="'10px'">
 				<template #legend> АВАТАР И ДАТА РОЖДЕНИЯ </template>
 				<template #inputs>
-					<VueInput
-						:placeholder="'Загрузите файл'"
-						:type="'file'"
+					<VueFile
 						v-model="currentUser.data.file.value"
-						:error="currentUser.errors.file.status"
 						ref="fileImage"
+						:type="'image'"
+						:placeholder="'Загрузите картинку'"
+						:error="currentUser.errors.file.status"
 					>
-						<template #label> ИЗОБРАЖЕНИЕ </template>
+						<template #label>
+							<VueIcon :name="'Attach File'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+							ИЗОБРАЖЕНИЕ
+						</template>
 						<template #error>
 							{{ currentUser.errors.file.message }}
 						</template>
-					</VueInput>
+					</VueFile>
 
-					<VueInput
-						v-model="currentUser.data.dateOfBirth.value"
+					<VueDate
+						v-model.trim="currentUser.data.dateOfBirth.value"
 						:type="'date'"
 						:error="currentUser.errors.dateOfBirth.status"
 					>
-						<template #label> ДАТА </template>
+						<template #label>
+							<VueIcon :name="'Id Card'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+							ДАТА
+						</template>
 						<template #error>
 							{{ currentUser.errors.dateOfBirth.message }}
 						</template>
-					</VueInput>
+					</VueDate>
 				</template>
-			</VueInputContainer>
+			</VueFieldset>
 
-			<VueInputContainer :direction="'row'" :count="2" :gap="'10px'">
+			<VueFieldset :count="2" :gap="'10px'">
 				<template #legend> ПОЧТА И ПСЕВДОНИМ </template>
 				<template #inputs>
-					<VueInput
-						:placeholder="'test@mail.ru'"
+					<VueValues
+						v-model.trim="currentUser.data.email.value"
 						:type="'mail'"
-						v-model="currentUser.data.email.value"
+						:placeholder="'test@mail.ru'"
 						:error="currentUser.errors.email.status"
 					>
 						<template #label> ПОЧТА </template>
 						<template #error>
 							{{ currentUser.errors.email.message }}
 						</template>
-					</VueInput>
+					</VueValues>
 
-					<VueInput
-						:placeholder="'Введите псевдоним'"
+					<VueValues
+						v-model.trim="currentUser.data.nickname.value"
 						:type="'text'"
-						v-model="currentUser.data.nickname.value"
+						:placeholder="'Введите псевдоним'"
 						:error="currentUser.errors.nickname.status"
 					>
 						<template #label> ПСЕВДОНИМ </template>
 						<template #error>
 							{{ currentUser.errors.nickname.message }}
 						</template>
-					</VueInput>
+					</VueValues>
 				</template>
-			</VueInputContainer>
+			</VueFieldset>
 
-			<VueInputContainer :direction="'row'" :count="2" :gap="'10px'">
+			<VueFieldset :count="2" :gap="'10px'">
 				<template #legend> ПОЧТА И ПСЕВДОНИМ </template>
 				<template #inputs>
-					<VueInput
+					<VueSelector
 						v-model="currentUser.data.statusId.value"
-						:options="filteredStatuses"
-						:type="'select'"
+						:is-clear="false"
+						:is-search="false"
+						:list="filteredStatuses"
 						:error="currentUser.errors.statusId.status"
 					>
 						<template #label> СТАТУС </template>
 						<template #error>
 							{{ currentUser.errors.statusId.message }}
 						</template>
-					</VueInput>
+					</VueSelector>
 
-					<VueInput
+					<VueSelector
 						v-model="currentUser.data.rightsId.value"
-						:options="filteredRights"
-						:type="'select'"
+						:is-clear="false"
+						:is-search="false"
+						:list="filteredRights"
 						:error="currentUser.errors.rightsId.status"
 					>
 						<template #label> ПРАВА </template>
 						<template #error>
 							{{ currentUser.errors.rightsId.message }}
 						</template>
-					</VueInput>
+					</VueSelector>
 				</template>
-			</VueInputContainer>
+			</VueFieldset>
 		</template>
 
 		<template #footer>
-			<VueButton
-				@click="saveUser"
-				:disabled="disabled.users.save"
-				v-if="modal.values.look == 'default'"
-			>
+			<VueButton @click="saveUser" :disabled="disabled.users.save" v-if="modal.values.look == 'default'">
 				<VueIcon :name="'Edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 				Обновить
 			</VueButton>
 
-			<VueButton
-				@click="addUser"
-				:disabled="disabled.users.create"
-				v-if="modal.values.look == 'create'"
-			>
+			<VueButton @click="addUser" :disabled="disabled.users.create" v-if="modal.values.look == 'create'">
 				<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
 				Добавить
 			</VueButton>
@@ -195,8 +207,8 @@
 		</template>
 
 		<template #body>
-			<VueInput
-				v-model="currentPassword.data.password.value"
+			<VueValues
+				v-model.trim="currentPassword.data.password.value"
 				:type="'text'"
 				:placeholder="'Введите пароль'"
 				:error="currentPassword.errors.password.status"
@@ -204,19 +216,15 @@
 				<template #error>
 					{{ currentPassword.errors.password.message }}
 				</template>
-			</VueInput>
+			</VueValues>
 
 			<PasswordGenerator />
 		</template>
 
 		<template #footer>
-			<VueButton :wide="true" @click="saveUserPassword" :disabled="disabled.userPassword.save">
-				Сбросить
-			</VueButton>
+			<VueButton :wide="true" @click="saveUserPassword" :disabled="disabled.userPassword.save"> Сбросить </VueButton>
 
-			<VueButton :wide="true" :look="'edit-secondary'" @click="$refs.modalPassword.close()">
-				Закрыть
-			</VueButton>
+			<VueButton :wide="true" :look="'edit-secondary'" @click="$refs.modalPassword.close()"> Закрыть </VueButton>
 		</template>
 	</VueModal>
 
@@ -238,21 +246,15 @@
 						currentUser.data.family.value +
 						" " +
 						currentUser.data.name.value +
-						(currentUser.data.surname.value !== null
-							? " " + currentUser.data.surname.value
-							: "")
+						(currentUser.data.surname.value !== null ? " " + currentUser.data.surname.value : "")
 					}} </span
 				>?
 			</div>
 		</template>
 
 		<template #footer>
-			<VueButton :wide="true" @click="saveUserBlock" :disabled="disabled.userBlock.save">
-				Да
-			</VueButton>
-			<VueButton :wide="true" :look="'edit-secondary'" @click="$refs.modalBlock.close()">
-				Нет
-			</VueButton>
+			<VueButton :wide="true" @click="saveUserBlock" :disabled="disabled.userBlock.save"> Да </VueButton>
+			<VueButton :wide="true" :look="'edit-secondary'" @click="$refs.modalBlock.close()"> Нет </VueButton>
 		</template>
 	</VueModal>
 
@@ -270,27 +272,16 @@
 						currentUser.data.family.value +
 						" " +
 						currentUser.data.name.value +
-						(currentUser.data.surname.value !== null
-							? " " + currentUser.data.surname.value
-							: "")
+						(currentUser.data.surname.value !== null ? " " + currentUser.data.surname.value : "")
 					}} </span
 				>?
 			</div>
 		</template>
 
 		<template #footer>
-			<VueButton
-				:look="'delete'"
-				:wide="true"
-				@click="deleteUser"
-				:disabled="disabled.users.delete"
-			>
-				Да
-			</VueButton>
+			<VueButton :look="'delete'" :wide="true" @click="deleteUser" :disabled="disabled.users.delete"> Да </VueButton>
 
-			<VueButton :wide="true" :look="'delete-secondary'" @click="$refs.modalDelete.close()">
-				Нет
-			</VueButton>
+			<VueButton :wide="true" :look="'delete-secondary'" @click="$refs.modalDelete.close()"> Нет </VueButton>
 		</template>
 	</VueModal>
 
@@ -305,34 +296,25 @@
 
 		<template #body>
 			<div class="users" v-if="loading.sections.users">
-				<div class="item" v-for="user in users">
-					<div class="user-container">
-						<div class="id">#{{ user.id }}</div>
-						<div class="img" :style="{ backgroundImage: `url(${user.path}` }"></div>
-						<div class="info">
-							<div class="fio">
+				<div class="users__item" v-for="user in users">
+					<div class="users__item-info">
+						<div class="users__item-id">#{{ user.id }}</div>
+						<div class="users__item-img" :style="{ backgroundImage: `url(${user.path}` }"></div>
+						<div class="users__item-fio">
+							<div class="users__item-name">
 								{{ user.family + " " + user.name + " " }}
 							</div>
-							<div class="nickname">{{ user.nickname }}</div>
+							<div class="users__item-nick">{{ user.nickname }}</div>
 						</div>
 					</div>
+
 					<div class="buttons">
 						<div class="icon edit" @click="openModalEdite(user)">
-							<VueIcon
-								:name="'Edit'"
-								:fill="'var(--icon-edit-fill)'"
-								:width="'28px'"
-								:height="'28px'"
-							/>
+							<VueIcon :name="'Edit'" :fill="'var(--icon-edit-fill)'" :width="'28px'" :height="'28px'" />
 							<div class="label">Редактирование</div>
 						</div>
 						<div class="icon admin" @click="openModalPassword(user)">
-							<VueIcon
-								:name="'password'"
-								:fill="'var(--icon-admin-fill)'"
-								:width="'22px'"
-								:height="'22px'"
-							/>
+							<VueIcon :name="'Key'" :fill="'var(--icon-admin-fill)'" :width="'28px'" :height="'28px'" />
 							<div class="label">Смена пароля</div>
 						</div>
 						<div
@@ -341,14 +323,14 @@
 							@click="openModalBlock(user)"
 						>
 							<VueIcon
-								:name="'lock-open'"
+								:name="'Lock Open'"
 								:fill="'var(--icon-fill)'"
 								:width="'24px'"
 								:height="'24px'"
 								v-if="user.statusId === 1"
 							/>
 							<VueIcon
-								:name="'lock-close'"
+								:name="'Lock'"
 								:fill="'var(--delete-secondary-color)'"
 								:width="'24px'"
 								:height="'24px'"
@@ -357,28 +339,18 @@
 							<div class="label">Блокировка</div>
 						</div>
 						<div class="icon delete" @click="openModalDelete(user)">
-							<VueIcon
-								:name="'Delete'"
-								:fill="'var(--delete-secondary-color)'"
-								:width="'28px'"
-								:height="'28px'"
-							/>
+							<VueIcon :name="'Delete'" :fill="'var(--delete-secondary-color)'" :width="'28px'" :height="'28px'" />
 							<div class="label">Удаление</div>
 						</div>
 					</div>
 				</div>
 			</div>
 
-			<VueLoader
-				:isLoading="loading.loader.users"
-				:isChild="true"
-				:minHeight="300"
-				@afterLeave="loaderChildAfterLeave"
-			/>
+			<VueLoader :isLoading="loading.loader.users" :isChild="true" :minHeight="300" @afterLeave="loaderChildAfterLeave" />
 		</template>
 
 		<template #buttons>
-			<VueButton @click="openModalСreate">
+			<VueButton @click="openModalСreate()">
 				<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
 				Добавить
 			</VueButton>
@@ -387,16 +359,8 @@
 </template>
 
 <script>
-import VueModal from "../../../components/modules/modal/VueModal.vue";
-import VueInput from "../../../components/modules/input/VueInput.vue";
-import VueInputContainer from "../../../components/modules/input/VueInputContainer.vue";
-
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 import PasswordGenerator from "../../../components/modules/PasswordGenerator.vue";
-
-import VueLoader from "../../../components/modules/VueLoader.vue";
-import VueIcon from "../../../components/modules/icon/VueIcon.vue";
-import VueButton from "../../../components/ui/VueButton.vue";
 
 import api from "../../../mixin/api";
 import validate from "../../../services/validate";
@@ -405,16 +369,8 @@ import shared from "../../../services/shared";
 
 export default {
 	components: {
-		VueModal,
-		VueInput,
-		VueInputContainer,
-
 		PasswordGenerator,
 		BlockOnce,
-
-		VueLoader,
-		VueIcon,
-		VueButton,
 	},
 	data() {
 		return {
@@ -1082,28 +1038,28 @@ export default {
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
-.users > .item {
+.users__item {
 	display: flex;
 	gap: 20px;
 	align-items: center;
 
 	border: var(--input-border);
-	border-radius: calc(var(--default-border-radius) / 2);
+	border-radius: calc(var(--default-border-radius) / 1.5);
 	padding: 10px 20px;
 	transition: all 0.2s;
 }
 
-.users > .item > .user-container {
+.users__item-info {
 	display: flex;
 	align-items: center;
 	gap: 20px;
 }
 
-.users > .item > .user-container > .id {
+.users__item-id {
 	font-size: 22px;
 }
 
-.users > .item > .user-container > .img {
+.users__item-img {
 	min-width: 70px;
 	min-height: 70px;
 	border-radius: 50%;
@@ -1112,17 +1068,17 @@ export default {
 	background-position: center center;
 }
 
-.users > .item > .user-container > .info > .fio {
+.users__item-name {
 	color: var(--primary-color);
 }
 
-.users > .item > .buttons {
+.users > .users__item > .buttons {
 	display: flex;
 	gap: 10px;
 	margin-left: auto;
 }
 
-.users > .item > .buttons > .icon {
+.users > .users__item > .buttons > .icon {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -1130,59 +1086,61 @@ export default {
 	padding: 10px;
 	border-radius: 100px;
 
-	width: 25px;
-	height: 25px;
+	width: 60px;
+	height: 60px;
+
+	aspect-ratio: 1 / 1;
 }
 
-.users > .item > .buttons > .icon > .label {
+.users > .users__item > .buttons > .icon > .label {
 	display: none;
 }
 
-.users > .item > .buttons > .icon.delete > .label {
+.users > .users__item > .buttons > .icon.delete > .label {
 	color: var(--icon-delete-font-color);
 }
 
-.users > .item > .buttons > .icon.default > .label {
+.users > .users__item > .buttons > .icon.default > .label {
 	color: rgb(100, 100, 100);
 }
 
-.users > .item > .buttons > .icon.admin > .label {
+.users > .users__item > .buttons > .icon.admin > .label {
 	color: rgb(208, 145, 62);
 }
 
-.users > .item > .buttons > .icon.edit > .label {
+.users > .users__item > .buttons > .icon.edit > .label {
 	color: var(--primary-color);
 }
 
-.users > .item > .buttons > .icon.delete {
+.users > .users__item > .buttons > .icon.delete {
 	background-color: var(--icon-delete-background-color);
 }
 
-.users > .item > .buttons > .icon.delete:hover {
+.users > .users__item > .buttons > .icon.delete:hover {
 	background-color: var(--icon-delete-background-color-hover);
 }
 
-.users > .item > .buttons > .icon.edit {
+.users > .users__item > .buttons > .icon.edit {
 	background-color: var(--icon-edit-background-color);
 }
 
-.users > .item > .buttons > .icon.edit:hover {
+.users > .users__item > .buttons > .icon.edit:hover {
 	background-color: var(--icon-edit-background-color-hover);
 }
 
-.users > .item > .buttons > .icon.admin {
+.users > .users__item > .buttons > .icon.admin {
 	background-color: rgb(255, 242, 222);
 }
 
-.users > .item > .buttons > .icon.admin:hover {
+.users > .users__item > .buttons > .icon.admin:hover {
 	background-color: rgb(248, 232, 208);
 }
 
-.users > .item > .buttons > .icon.default {
+.users > .users__item > .buttons > .icon.default {
 	background-color: var(--icon-background-color);
 }
 
-.users > .item > .buttons > .icon.default:hover {
+.users > .users__item > .buttons > .icon.default:hover {
 	background-color: var(--icon-background-color-hover);
 }
 
@@ -1211,18 +1169,19 @@ export default {
 	gap: 20px;
 }
 
-.img-fio > .img {
+.img-fio > .users__item-img {
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	margin-top: 10px;
 }
 
-.img-fio > .img > div {
+.img-fio > .users__item-img > div {
 	margin: 0 auto;
-	width: 300px;
+	width: 250px;
 	height: 100%;
 	max-height: 300px;
+	aspect-ratio: 1 / 1;
 	border-radius: 300px;
 	background-size: cover;
 	background-repeat: no-repeat;
@@ -1234,31 +1193,31 @@ export default {
 		grid-template-columns: 1fr;
 	}
 
-	.img-fio > .img {
+	.img-fio > .users__item-img {
 		height: 300px;
 	}
 }
 
 @media screen and (width <= 750px) {
-	.users > .item {
+	.users > .users__item {
 		flex-direction: column;
 		align-items: flex-start;
 	}
 
-	.users > .item > .buttons {
+	.users > .users__item > .buttons {
 		flex-direction: column;
 		margin-left: 0;
 		width: 100%;
 	}
 
-	.users > .item > .buttons > .icon {
+	.users > .users__item > .buttons > .icon {
 		flex-grow: 1;
 		justify-content: flex-start;
 		gap: 10px;
 		width: auto;
 	}
 
-	.users > .item > .buttons > .icon > .label {
+	.users > .users__item > .buttons > .icon > .label {
 		display: block;
 	}
 }

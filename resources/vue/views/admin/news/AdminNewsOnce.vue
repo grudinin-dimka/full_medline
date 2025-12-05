@@ -51,7 +51,7 @@
 							:width="'28px'"
 							:height="'28px'"
 						/>
-						Убрать с публикации
+						Снять с публикации
 					</VueButton>
 				</template>
 

@@ -78,7 +78,7 @@ export default {
 		},
 	},
 	getters: {
-		userRights(state) {
+		getUserRights(state) {
 			return state.user.rights;
 		},
 

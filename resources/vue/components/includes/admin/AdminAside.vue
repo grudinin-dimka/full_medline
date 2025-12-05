@@ -41,6 +41,7 @@
 						:is-child="true"
 						@click.prevent="insertPage('especialists-all')"
 					>
+						<VueIcon :name="'List'" :fill="'black'" :width="'28px'" :height="'28px'" />
 						<span v-if="!$store.getters.getIsHide" class="aside__item-button-label"> СПИСОК </span>
 					</VueAsideButton>
 
@@ -50,6 +51,7 @@
 						:is-child="true"
 						@click.prevent="insertPage('especialists-specializations')"
 					>
+						<VueIcon :name="'Category'" :fill="'black'" :width="'28px'" :height="'28px'" />
 						<span v-if="!$store.getters.getIsHide" class="aside__item-button-label"> СПЕЦИАЛИЗАЦИИ </span>
 					</VueAsideButton>
 
@@ -59,6 +61,7 @@
 						:is-child="true"
 						@click.prevent="insertPage('especialists-clinics')"
 					>
+						<VueIcon :name="'Home'" :fill="'black'" :width="'28px'" :height="'28px'" />
 						<span v-if="!$store.getters.getIsHide" class="aside__item-button-label"> КЛИНИКИ </span>
 					</VueAsideButton>
 				</template>
@@ -77,6 +80,7 @@
 						:is-child="true"
 						@click.prevent="insertPage('eprices-all')"
 					>
+						<VueIcon :name="'List'" :fill="'black'" :width="'28px'" :height="'28px'" />
 						<span v-if="!$store.getters.getIsHide" class="aside__item-button-label"> СПИСОК </span>
 					</VueAsideButton>
 
@@ -86,6 +90,7 @@
 						:is-child="true"
 						@click.prevent="insertPage('eprices-template')"
 					>
+						<VueIcon :name="'Article'" :fill="'black'" :width="'28px'" :height="'28px'" />
 						<span v-if="!$store.getters.getIsHide" class="aside__item-button-label"> ШАБЛОН </span>
 					</VueAsideButton>
 				</template>
@@ -131,6 +136,7 @@
 						:is-child="true"
 						@click.prevent="insertPage('enews')"
 					>
+						<VueIcon :name="'News'" :fill="'black'" :width="'28px'" :height="'28px'" />
 						<span v-if="!$store.getters.getIsHide" class="aside__item-button-label"> НОВОСТИ </span>
 					</VueAsideButton>
 
@@ -140,6 +146,7 @@
 						:is-child="true"
 						@click.prevent="insertPage('evideo')"
 					>
+						<VueIcon :name="'Videocam'" :fill="'black'" :width="'28px'" :height="'28px'" />
 						<span v-if="!$store.getters.getIsHide" class="aside__item-button-label"> ВИДЕО </span>
 					</VueAsideButton>
 
@@ -149,6 +156,7 @@
 						:is-child="true"
 						@click.prevent="insertPage('econtacts')"
 					>
+						<VueIcon :name="'Groups'" :fill="'black'" :width="'28px'" :height="'28px'" />
 						<span v-if="!$store.getters.getIsHide" class="aside__item-button-label"> КОНТАКТЫ </span>
 					</VueAsideButton>
 
@@ -158,12 +166,13 @@
 						:is-child="true"
 						@click.prevent="insertPage('eabout')"
 					>
+						<VueIcon :name="'Info I'" :fill="'black'" :width="'28px'" :height="'28px'" />
 						<span v-if="!$store.getters.getIsHide" class="aside__item-button-label"> О НАС </span>
 					</VueAsideButton>
 				</template>
 			</VueAsideList>
 
-			<VueAsideList v-if="isCreator" :alias="['eclients', 'users']">
+			<VueAsideList v-if="isCreator()" :alias="['eclients', 'users']">
 				<template #title>
 					<VueIcon :name="'Admin Panel Settings'" :fill="'black'" :width="'28px'" :height="'28px'" />
 					<span v-if="!$store.getters.getIsHide" class="aside__item-button-label"> СОЗДАТЕЛЬ </span>
@@ -204,7 +213,7 @@
 
 <script>
 import VueAside from "../../ui/aside/VueAside.vue";
-import VueAsideButton from "../../ui/aside/VueAsideButton.vue";
+import VueAsideButton from "../../ui/aside/VueAsideLink.vue";
 import VueAsideList from "../../ui/aside/VueAsideList.vue";
 
 import axios from "axios";

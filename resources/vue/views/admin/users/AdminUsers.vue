@@ -10,7 +10,7 @@ export default {
 		RouterView,
 	},
 	beforeCreate() {
-		if (this.$store.getters.userRights !== "creator") {
+		if (this.$store.getters.getUserRights !== "creator") {
 			this.$router.push("/404");
 		}
 	},

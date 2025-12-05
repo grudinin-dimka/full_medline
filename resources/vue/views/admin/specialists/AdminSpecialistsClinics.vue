@@ -18,7 +18,7 @@
 						:error="currentClinic.errors.name.status"
 					>
 						<template #label>
-							<VueIcon :name="'Id Card'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+							<VueIcon :name="'Title'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
 							НАЗВАНИЕ
 						</template>
 						<template #error>
@@ -33,7 +33,7 @@
 						:error="currentClinic.errors.other.status"
 					>
 						<template #label>
-							<VueIcon :name="'Edit'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+							<VueIcon :name="'Text Ad'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
 							ДРУГОЕ
 						</template>
 						<template #error>

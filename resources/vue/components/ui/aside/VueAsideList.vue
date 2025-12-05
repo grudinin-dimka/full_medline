@@ -1,12 +1,12 @@
 <template>
 	<div class="aside__list" :class="{ 'aside__list--hiden': $store.getters.getIsHide }" ref="asideList">
-		<AsideButton @click.prevent="isShow = !isShow" :is-active="isShow">
+		<VueAsideLink @click.prevent="isShow = !isShow" :is-active="isShow">
 			<div class="aside__list-arrow" v-if="!$store.getters.getIsHide" :class="{ show: isShow }">
 				<VueIcon :name="'Arrow'" :fill="'black'" :width="'14px'" :height="'14px'" />
 			</div>
 
 			<slot name="title"></slot>
-		</AsideButton>
+		</VueAsideLink>
 
 		<div class="aside__list-content" :class="{ show: isShow }">
 			<div class="aside__list-line" v-if="!$store.getters.getIsHide"></div>
@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import AsideButton from "./VueAsideButton.vue";
+import VueAsideLink from "./VueAsideLink.vue";
 
 export default {
 	props: {
@@ -27,7 +27,7 @@ export default {
 		},
 	},
 	components: {
-		AsideButton,
+		VueAsideLink,
 	},
 	data() {
 		return {

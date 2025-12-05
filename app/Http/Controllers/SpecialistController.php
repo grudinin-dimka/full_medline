@@ -1316,6 +1316,40 @@ class SpecialistController extends Controller
       ], 200);
    }
 
+   public function hideSpecialist(Request $request)
+   {
+      $validator = Validator::make($request->all(), [
+         'id' => [
+            'required',
+            Rule::exists('specialists', 'id'),
+         ],
+      ], [
+         'required' => 'Поле :attribute обязательно для заполнения.',
+         'exists' => 'Такого специалиста не существует.',
+      ]);
+
+      if ($validator->fails()) {
+         return response()->json([
+            "success" => false,
+            "debug" => true,
+            "errors" => $validator->errors(),
+            "message" => "Некорректные данные.",
+            "result" => null,
+         ], 422);
+      };
+
+      $specialist = Specialist::find($request->id);
+      $specialist->hide = !$specialist->hide;
+      $specialist->save();
+
+      return response()->json([
+         "success" => true,
+         "debug" => true,
+         "message" => "Данные обновлены.",
+         "result" => null,
+      ], 200);
+   }
+
    /* Создание XML */
    public function makeSpecialistsXML(Request $request)
    {

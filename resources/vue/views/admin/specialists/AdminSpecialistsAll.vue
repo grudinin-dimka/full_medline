@@ -84,7 +84,7 @@
 		<template v-slot:addreas>specialists</template>
 	</info-bar>
 
-	<block-once :minHeight="100" :hide="true">
+	<block-once :minHeight="100">
 		<template #title>СПИСОК ВРАЧЕЙ</template>
 
 		<template #options>

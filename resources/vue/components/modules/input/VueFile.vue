@@ -28,6 +28,14 @@
 							/>
 
 							<VueIcon
+								v-else-if="type === 'video'"
+								class="vue-input__file-icon"
+								:name="'Videocam'"
+								:width="'26px'"
+								:height="'26px'"
+							/>
+
+							<VueIcon
 								v-else
 								class="vue-input__file-icon"
 								:name="'Attach File'"

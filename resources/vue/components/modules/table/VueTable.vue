@@ -53,20 +53,53 @@
 				</VueTableButtonHead>
 
 				<VueTableButtonHead v-if="table.options.create" @click="$emit('create')">
-					<svg
-						width="18"
-						height="18"
-						viewBox="0 0 24 24"
-						fill="var(--primary-color)"
-						xmlns="http://www.w3.org/2000/svg"
-					>
-						<path d="M11 21V13H3V11H11V3H13V11H21V13H13V21H11Z" />
-					</svg>
+					<slot name="create" v-if="$slots.create"></slot>
 
-					<span>Добавить</span>
+					<template v-else>
+						<svg
+							width="18"
+							height="18"
+							viewBox="0 0 24 24"
+							fill="var(--primary-color)"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path d="M11 21V13H3V11H11V3H13V11H21V13H13V21H11Z" />
+						</svg>
+
+						<span>Добавить</span>
+					</template>
 				</VueTableButtonHead>
 
-				<input v-model="searchInput" type="text" placeholder="Поиск" />
+				<div class="vue-table__search" :class="{ 'active': searchInput }">
+					<div class="vue-table__search-icon">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							height="24px"
+							viewBox="0 -960 960 960"
+							width="24px"
+							v-if="!searchInput"
+						>
+							<path
+								d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"
+							/>
+						</svg>
+
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							height="24px"
+							viewBox="0 -960 960 960"
+							width="24px"
+							@click="searchInput = ''"
+							v-else
+						>
+							<path
+								d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
+							/>
+						</svg>
+					</div>
+
+					<input class="vue-table__search-input" v-model="searchInput" type="text" placeholder="Поиск" />
+				</div>
 			</div>
 		</div>
 
@@ -85,42 +118,38 @@
 
 							<div
 								class="vue-table__content-sort"
-								v-if="
-									['id', 'string', 'number', 'list', 'boolean', 'time'].includes(
-										value.type
-									)
-								"
+								v-if="['id', 'string', 'number', 'list', 'boolean', 'time'].includes(value.type)"
 							>
-								<VueIcon
-									class="th__content__sort-icon"
-									:class="{ rotate: this.sorting.sortType == 'up' }"
+								<svg
 									v-if="this.sorting.sortField == value.name"
-									:name="'arrow'"
-									:width="'16px'"
-									:height="'16px'"
-									:fill="'black'"
+									class="th__sort-icon"
+									:class="{ rotate: this.sorting.sortType == 'up' }"
+									width="16"
+									height="16"
+									viewBox="0 0 15 9"
+									xmlns="http://www.w3.org/2000/svg"
 									@click="changeTypeSort(value.name)"
 								>
-								</VueIcon>
+									<path
+										d="M8.20711 0.792893C7.81658 0.402369 7.18342 0.402369 6.79289 0.792893L0.428932 7.15685C0.0384079 7.54738 0.0384079 8.18054 0.428932 8.57107C0.819456 8.96159 1.45262 8.96159 1.84315 8.57107L7.5 2.91421L13.1569 8.57107C13.5474 8.96159 14.1805 8.96159 14.5711 8.57107C14.9616 8.18054 14.9616 7.54738 14.5711 7.15685L8.20711 0.792893ZM8.5 2.5V1.5H6.5V2.5H8.5Z"
+									/>
+								</svg>
 
-								<VueIcon
+								<svg
 									v-else
-									class="th__content__sort-icon"
-									:name="'sort'"
-									:width="'24px'"
-									:height="'24px'"
-									:fill="'black'"
+									class="th__sort-icon"
+									width="24"
+									height="24"
+									viewBox="0 0 24 24"
+									xmlns="http://www.w3.org/2000/svg"
 									@click="changeTypeSort(value.name)"
 								>
-								</VueIcon>
+									<path d="M3 18V16H9V18H3ZM3 13V11H15V13H3ZM3 8V6H21V8H3Z" />
+								</svg>
 							</div>
 						</div>
 					</th>
-					<th
-						class="vue-table__thead-cell"
-						style="width: 270px"
-						v-if="this.table.options.update"
-					>
+					<th class="vue-table__thead-cell" style="width: 270px" v-if="this.table.options.update">
 						<div>Действия</div>
 					</th>
 				</tr>
@@ -128,90 +157,74 @@
 				<!-- Поля фильтра -->
 				<tr class="vue-table__filter-row" v-if="isFilter">
 					<td class="vue-table__filter-cell" v-for="(value, key) in filterFields">
-						<!-- Фильтр: строка, число -->
-						<template
-							v-if="
-								['id', 'number'].includes(
-									filterFields.find((field) => field.name === value.name).type
-								)
-							"
-						>
-							<div class="vue-table__filter vue-table__filter--default">
-								<input
-									class="vue-table__filter-field"
-									type="text"
-									placeholder="Поиск"
+						<!-- Фильтр: идентификатор, число -->
+						<template v-if="['id', 'number'].includes(filterFields.find((field) => field.name === value.name).type)">
+							<div class="vue-table__filter vue-table__filter--number">
+								<VueNumber
 									v-model="filterFields.find((field) => field.name === value.name).filter"
+									:placeholder="'Поиск'"
+								/>
+							</div>
+						</template>
+
+						<!-- Фильтр: Строка -->
+						<template v-else-if="['string'].includes(filterFields.find((field) => field.name === value.name).type)">
+							<div class="vue-table__filter">
+								<VueValues
+									v-model="filterFields.find((field) => field.name === value.name).filter"
+									:type="'text'"
+									:placeholder="'Поиск'"
+								/>
+
+								<VueSelector
+									v-model="filterFields.find((field) => field.name === value.name).register"
+									:list="[
+										{
+											value: false,
+											label: 'Без регистра',
+										},
+										{
+											value: true,
+											label: 'С регистром',
+										},
+									]"
+									:size="2"
+									:is-search="false"
+									:is-clear="false"
 								/>
 							</div>
 						</template>
 
 						<!-- Фильтр: время -->
-						<template
-							v-else-if="
-								['string'].includes(
-									filterFields.find((field) => field.name === value.name).type
-								)
-							"
-						>
+						<template v-else-if="['time'].includes(filterFields.find((field) => field.name === value.name).type)">
 							<div class="vue-table__filter vue-table__filter--time">
-								<input
-									class="vue-table__filter-field"
-									type="text"
-									placeholder="Поиск"
-									v-model="filterFields.find((field) => field.name === value.name).filter"
-								/>
-								<select
-									class="vue-table__filter-field"
-									v-model="
-										filterFields.find((field) => field.name === value.name).register
-									"
-								>
-									<option value="" disabled>Учет регистра</option>
-									<option :value="true">с регистром</option>
-									<option :value="false">без регистра</option>
-								</select>
-							</div>
-						</template>
-
-						<!-- Фильтр: время -->
-						<template
-							v-else-if="
-								['time'].includes(
-									filterFields.find((field) => field.name === value.name).type
-								)
-							"
-						>
-							<div class="vue-table__filter vue-table__filter--time">
-								<input
-									class="vue-table__filter-field"
-									type="datetime-local"
-									v-model.trim="
-										filterFields.find((field) => field.name === value.name).from
-									"
+								<VueDateTime
+									v-model.trim="filterFields.find((field) => field.name === value.name).from"
 									@change="filterChangedStatus(value, 'on')"
-								/>
-								<input
-									class="vue-table__filter-field"
-									type="datetime-local"
+								>
+								</VueDateTime>
+
+								<VueDateTime
 									v-model.trim="filterFields.find((field) => field.name === value.name).to"
 									@change="filterChangedStatus(value, 'on')"
-								/>
+								>
+								</VueDateTime>
 							</div>
 						</template>
 
 						<!-- Фильтр: список -->
-						<template
-							v-else-if="
-								['list'].includes(
-									filterFields.find((field) => field.name === value.name).type
-								)
-							"
-						>
+						<template v-else-if="['list'].includes(filterFields.find((field) => field.name === value.name).type)">
 							<div class="vue-table__filter vue-table__filter--list">
-								<input
+								<VueValues
+									v-model="filterFields.find((field) => field.name === value.name).filter"
+									:type="'text'"
+									:placeholder="'Поиск'"
+								/>
+
+								<!-- <input
 									class="vue-table__filter-field"
 									type="text"
+									:id="`vue-table-` + value.name"
 									:list="filterFields.find((field) => field.name === value.name).name"
 									placeholder="Поиск"
 									v-model="filterFields.find((field) => field.name === value.name).filter"
@@ -226,7 +239,7 @@
 									>
 										{{ value.text }}
 									</option>
-								</datalist>
+								</datalist> -->
 							</div>
 						</template>
 
@@ -290,9 +303,8 @@
 							<!-- Список -->
 							<template v-else-if="typeOfField(key) == 'list'">
 								{{
-									table.head
-										.find((field) => field.name == key)
-										?.values.find((item) => item.value == value)?.label ?? "Не найдено"
+									table.head.find((field) => field.name == key)?.values.find((item) => item.value == value)
+										?.label ?? "Не найдено"
 								}}
 							</template>
 
@@ -301,10 +313,7 @@
 								<slot
 									:name="key"
 									v-bind:row="
-										table.body.find(
-											(item) =>
-												item[getNameOfColumnTypeById] == row[getNameOfColumnTypeById]
-										)
+										table.body.find((item) => item[getNameOfColumnTypeById] == row[getNameOfColumnTypeById])
 									"
 								></slot>
 							</template>
@@ -312,10 +321,7 @@
 					</td>
 
 					<!-- Действия -->
-					<td
-						class="vue-table__tbody-cell"
-						v-if="table.options.update || table.options.delete"
-					>
+					<td class="vue-table__tbody-cell" v-if="table.options.update || table.options.delete">
 						<div class="table__buttons">
 							<template v-if="table.options.update">
 								<VueTableButton
@@ -325,20 +331,28 @@
 										$emit(
 											'edite',
 											this.table.body.find(
-												(item) =>
-													item[getNameOfColumnTypeById] == row[getNameOfColumnTypeById]
+												(item) => item[getNameOfColumnTypeById] == row[getNameOfColumnTypeById]
 											)
 										)
 									"
 								>
-									<VueIcon
-										:name="'Edit'"
-										:width="'22px'"
-										:height="'22px'"
-										:fill="'white'"
-									/>
+									<slot name="edit" v-if="$slots.edit"></slot>
 
-									<span>Изменить</span>
+									<template v-else>
+										<svg
+											width="22"
+											height="22"
+											viewBox="0 0 24 24"
+											fill="white"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path
+												d="M5 19H6.425L16.2 9.225L14.775 7.8L5 17.575V19ZM3 21V16.75L16.2 3.575C16.4 3.39167 16.6208 3.25 16.8625 3.15C17.1042 3.05 17.3583 3 17.625 3C17.8917 3 18.15 3.05 18.4 3.15C18.65 3.25 18.8667 3.4 19.05 3.6L20.425 5C20.625 5.18333 20.7708 5.4 20.8625 5.65C20.9542 5.9 21 6.15 21 6.4C21 6.66667 20.9542 6.92083 20.8625 7.1625C20.7708 7.40417 20.625 7.625 20.425 7.825L7.25 21H3ZM15.475 8.525L14.775 7.8L16.2 9.225L15.475 8.525Z"
+											/>
+										</svg>
+
+										<span>Изменить</span>
+									</template>
 								</VueTableButton>
 							</template>
 
@@ -346,38 +360,42 @@
 								<VueTableButton
 									:wide="true"
 									:look="
-										this.table.body.find(
-											(item) =>
-												item[getNameOfColumnTypeById] == row[getNameOfColumnTypeById]
-										).create
+										this.table.body.find((item) => item[getNameOfColumnTypeById] == row[getNameOfColumnTypeById])
+											.create
 											? 'disabled'
 											: 'delete'
 									"
 									v-if="
 										table.options.delete &&
-										!table.body.find(
-											(item) =>
-												item[getNameOfColumnTypeById] == row[getNameOfColumnTypeById]
-										).delete
+										!table.body.find((item) => item[getNameOfColumnTypeById] == row[getNameOfColumnTypeById])
+											.delete
 									"
 									@click="
 										$emit(
 											'delete',
 											this.table.body.find(
-												(item) =>
-													item[getNameOfColumnTypeById] == row[getNameOfColumnTypeById]
+												(item) => item[getNameOfColumnTypeById] == row[getNameOfColumnTypeById]
 											)
 										)
 									"
 								>
-									<VueIcon
-										:name="'Delete'"
-										:width="'22px'"
-										:height="'22px'"
-										:fill="'white'"
-									/>
+									<slot name="delete" v-if="$slots.delete"></slot>
 
-									<span>Удалить</span>
+									<template v-else>
+										<svg
+											width="22"
+											height="22"
+											viewBox="0 0 24 24"
+											fill="white"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path
+												d="M7 21C6.45 21 5.97917 20.8042 5.5875 20.4125C5.19583 20.0208 5 19.55 5 19V6H4V4H9V3H15V4H20V6H19V19C19 19.55 18.8042 20.0208 18.4125 20.4125C18.0208 20.8042 17.55 21 17 21H7ZM17 6H7V19H17V6ZM9 17H11V8H9V17ZM13 17H15V8H13V17Z"
+											/>
+										</svg>
+
+										<span>Удалить</span>
+									</template>
 								</VueTableButton>
 
 								<VueTableButton
@@ -387,20 +405,28 @@
 										$emit(
 											'delete',
 											this.table.body.find(
-												(item) =>
-													item[getNameOfColumnTypeById] == row[getNameOfColumnTypeById]
+												(item) => item[getNameOfColumnTypeById] == row[getNameOfColumnTypeById]
 											)
 										)
 									"
 								>
-									<VueIcon
-										:name="'Restore From Trash'"
-										:width="'22px'"
-										:height="'22px'"
-										:fill="'white'"
-									/>
+									<slot name="restore" v-if="$slots.restore"></slot>
 
-									<span>Вернуть</span>
+									<template v-else>
+										<svg
+											width="22"
+											height="22"
+											viewBox="0 0 24 24"
+											fill="white"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path
+												d="M11 16H13V11.85L14.6 13.4L16 12L12 8L8 12L9.4 13.4L11 11.85V16ZM7 21C6.45 21 5.97917 20.8042 5.5875 20.4125C5.19583 20.0208 5 19.55 5 19V6H4V4H9V3H15V4H20V6H19V19C19 19.55 18.8042 20.0208 18.4125 20.4125C18.0208 20.8042 17.55 21 17 21H7ZM17 6H7V19H17V6Z"
+											/>
+										</svg>
+
+										<span>Вернуть</span>
+									</template>
 								</VueTableButton>
 							</template>
 						</div>
@@ -417,26 +443,36 @@
 			</tbody>
 		</table>
 
-		<VueTablePagination
-			:settings="settings"
-			:arrayLength="tableLength"
-			@changePage="changePage"
-		/>
+		<VueTablePagination :settings="settings" :arrayLength="tableLength" @changePage="changePage" />
 	</div>
 </template>
 
 <script>
+import VueIcon from "../../ui/VueIcon.vue";
+
 import VueTablePagination from "./VueTablePagination.vue";
 import VueTableButton from "./VueTableButton.vue";
 import VueTableButtonHead from "./VueTableButtonHead.vue";
+
+import VueDateTime from "../input/VueDateTime.vue";
+import VueValues from "../input/VueValues.vue";
+import VueNumber from "../input/VueNumber.vue";
+import VueSelector from "../input/VueSelector.vue";
 
 import sorted from "../../../services/sorted";
 
 export default {
 	components: {
+		VueIcon,
+
 		VueTablePagination,
 		VueTableButton,
 		VueTableButtonHead,
+
+		VueDateTime,
+		VueValues,
+		VueSelector,
+		VueNumber,
 	},
 	props: {
 		table: {
@@ -449,7 +485,7 @@ export default {
 			default: "",
 		},
 	},
-	emits: ["create", "edite", "delete", "report", "button"],
+	emits: ["create", "edite", "delete", "button"],
 	data() {
 		return {
 			/* Пагинация */
@@ -495,9 +531,7 @@ export default {
 			// 2. Применяем поиск
 			if (this.searchInput) {
 				const searchTerm = this.searchInput.toLowerCase();
-				tableBody = tableBody.filter((row) =>
-					Object.values(row).join(" ").toLowerCase().includes(searchTerm)
-				);
+				tableBody = tableBody.filter((row) => Object.values(row).join(" ").toLowerCase().includes(searchTerm));
 			}
 
 			// 3. Оптимизированная фильтрация
@@ -537,10 +571,7 @@ export default {
 									return cellDate < new Date(filterField.to);
 								}
 
-								return (
-									cellDate > new Date(filterField.from) &&
-									cellDate < new Date(filterField.to)
-								);
+								return cellDate > new Date(filterField.from) && cellDate < new Date(filterField.to);
 
 								break;
 							default:
@@ -689,7 +720,7 @@ export default {
 		/* Форматирование: string */
 		formatString(value) {
 			if (!value || value === null) {
-				return "...";
+				return "";
 			}
 
 			return String(value);
@@ -698,7 +729,7 @@ export default {
 		/* Форматирование: number */
 		formatNumber(value) {
 			if (Number.isNaN(Number(value)) || value === null) {
-				return "...";
+				return "";
 			}
 
 			return Number(value);
@@ -707,7 +738,7 @@ export default {
 		/* Форматирование: boolean */
 		formatBoolean(value) {
 			if (value === null) {
-				return "...";
+				return "";
 			}
 
 			return value ? "Да" : "Нет";
@@ -716,7 +747,7 @@ export default {
 		/* Форматирование: date */
 		formatDate(value) {
 			if (!value) {
-				return "...";
+				return "";
 			}
 
 			let currentDate = new Date(value);
@@ -745,9 +776,7 @@ export default {
 
 		/* Изменение статуса фильтра */
 		filterChangedStatus(field, status) {
-			let currentField = this.filterFields.find(
-				(itterateField) => itterateField.name == field.name
-			);
+			let currentField = this.filterFields.find((itterateField) => itterateField.name == field.name);
 
 			currentField.filter = status;
 		},
@@ -777,8 +806,8 @@ export default {
 					this.filterFields.push({
 						name: this.table.head[i].name,
 						type: "time",
-						from: null,
-						to: null,
+						from: "",
+						to: "",
 					});
 					break;
 				case "list":
@@ -810,7 +839,6 @@ export default {
 	gap: var(--default-gap);
 
 	min-width: 800px;
-	overflow-y: auto;
 
 	color: var(--main-font-color);
 
@@ -861,6 +889,71 @@ export default {
 	font-size: 1.125rem;
 }
 
+.vue-table__search {
+	position: relative;
+	box-sizing: border-box;
+	overflow: hidden;
+	display: flex;
+
+	border: var(--table-search-border);
+	border-radius: var(--table-search-border-radius);
+	padding: var(--table-search-padding);
+
+	width: var(--table-search-width);
+	height: var(--table-search-height);
+
+	background-color: var(--table-search-background-color);
+
+	transition: var(--table-search-transition);
+}
+
+.vue-table__search:is(:hover, .active) {
+	width: var(--table-search-active-width);
+	height: var(--table-search-active-height);
+}
+
+.vue-table__search:has(.vue-table__search-input:focus) {
+	width: var(--table-search-active-width);
+	border: var(--table-search-border-active);
+
+	background-color: var(--table-search-active-background-color);
+}
+
+.vue-table__search-icon {
+	cursor: pointer;
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	left: 0px;
+	top: 0px;
+
+	width: var(--table-search-icon-width);
+	height: var(--table-search-icon-height);
+
+	background-color: var(--table-search-icon-background-color);
+}
+
+.vue-table__search-icon > svg {
+	fill: var(--table-search-icon-fill);
+
+	width: var(--table-search-icon-svg-width);
+	height: var(--table-search-icon-svg-height);
+}
+
+.vue-table__search-icon > svg:hover {
+	fill: var(--table-search-icon-fill-hover);
+}
+
+.vue-table__search-input {
+	margin-left: var(--table-search-input-margin-left);
+	width: var(--table-search-input-width);
+	font-size: var(--table-search-font-size);
+
+	background-color: var(--table-search-input-background-color);
+	border: var(--table-search-input-border);
+}
+
 /* Компонент: Шапка -> Кнопки */
 .table__tbody-empty {
 	display: flex;
@@ -887,11 +980,18 @@ export default {
 	height: 25px;
 }
 
-.th__content__sort-icon {
-	transition: all 0.2s;
+.th__sort-icon {
+	cursor: pointer;
+	fill: var(--th-sort-icon-fill);
+
+	transition: var(--th-sort-icon-transition);
 }
 
-.th__content__sort-icon.rotate {
+.th__sort-icon:hover {
+	fill: var(--th-sort-icon-fill-hover);
+}
+
+.th__sort-icon.rotate {
 	transform: rotate(180deg);
 }
 
@@ -903,25 +1003,66 @@ export default {
 
 /* Компонент: Таблица -> Фильтры */
 .vue-table__filter {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 10px;
 	margin: 10px;
 }
 
-.vue-table__filter.vue-table__filter--time {
-	display: flex;
-	flex-direction: column;
+.vue-table__filter--string {
+	grid-template-columns: 1fr auto;
+}
+
+.vue-table__filter--time {
+	grid-template-columns: auto;
 }
 
 .vue-table__filter-field {
 	box-sizing: border-box;
-	width: 100%;
+	height: var(--table-filter-field-height);
+	width: var(--table-filter-field-width);
 
-	border: var(--default-border);
-	border-radius: calc(var(--button-border-radius) / 2);
-	padding: calc(var(--default-padding) / 2);
+	border: var(--table-filter-field-border);
+	border-radius: var(--table-filter-field-border-radius);
+	padding: var(--table-filter-field-padding);
 
-	font-size: 1rem;
-	color: black;
-	caret-color: var(--primary-color);
+	font-size: var(--table-filter-field-font-size);
+	color: var(--table-filter-field-font-color);
+	caret-color: var(--table-filter-field-caret-color);
+
+	background-color: var(--table-filter-field-background-color);
+
+	transition: var(--table-filter-field-transition);
+}
+
+.vue-table__filter-field:focus {
+	border: var(--table-filter-field-border-focus);
+	background-color: var(--table-filter-field-background-color-focus);
+}
+
+.vue-table__filter-button {
+	cursor: pointer;
+	box-sizing: border-box;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	width: 60px;
+	height: 60px;
+
+	border: var(--filter-button-border);
+	border-radius: var(--filter-button-border-radius);
+
+	font-size: var(--filter-button-font-size);
+	color: var(--filter-button-font-color);
+
+	transition: var(--filter-button-transition);
+}
+
+.vue-table__filter-button:is(:hover, .active) {
+	border: var(--filter-button-border-hover);
+	background-color: var(--filter-button-background-color-hover);
 }
 
 /* Компонент: Таблица -> Строка */
@@ -976,25 +1117,20 @@ export default {
 }
 
 /* Компонент: Таблица -> Ячейка */
-:is(
-		.vue-table__thead-cell,
-		.vue-table__filter-cell,
-		.vue-table__thead-cell,
-		.vue-table__tbody-cell
-	) {
-	border-top: 1px;
-	border-right: 1px;
-	border-bottom: 1px;
-	border-left: 1px;
-	border-style: solid;
-	border-color: rgb(200, 200, 200);
+:is(.vue-table__filter-cell, .vue-table__thead-cell, .vue-table__tbody-cell) {
+	border-top: var(--table-cell-border-top);
+	border-right: var(--table-cell-border-right);
+	border-bottom: var(--table-cell-border-bottom);
+	border-left: var(--table-cell-border-left);
+	border-style: var(--table-cell-border-style);
+	border-color: var(--table-cell-border-color);
 
 	height: 100%;
 
-	transition: all 0.2s;
+	transition: var(--table-cell-border-transition);
 }
 
-:is(.vue-table__thead-cell, .vue-table__thead-cell, .vue-table__tbody-cell) > div {
+:is(.vue-table__thead-cell, .vue-table__tbody-cell) > div {
 	padding: 0px 10px;
 	border-radius: 0px;
 	min-height: 50px;
@@ -1002,10 +1138,12 @@ export default {
 	transition: all 0.2s;
 }
 
-:is(.vue-table__thead-cell, .vue-table__filter-cell, .vue-table__thead-cell) > div {
+.vue-table__thead-cell > div {
 	box-sizing: border-box;
 	display: flex;
 	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
 	gap: var(--table-th-gap);
 
 	color: var(--primary-color);
@@ -1014,17 +1152,12 @@ export default {
 	font-size: 1.125rem;
 }
 
-:is(.vue-table__thead-cell, .vue-table__filter-cell, .vue-table__thead-cell) div {
-	align-items: center;
-	justify-content: space-between;
-}
-
-:is(.vue-table__thead-cell, .vue-table__filter-cell, .vue-table__thead-cell) div span {
+.vue-table__thead-cell div span {
 	font-size: var(--font-size-x-medium);
 	font-weight: bold;
 }
 
-:is(.vue-table__thead-cell, .vue-table__filter-cell, .vue-table__thead-cell) div .icon {
+.vue-table__thead-cell div .icon {
 	width: 25px;
 	height: 25px;
 

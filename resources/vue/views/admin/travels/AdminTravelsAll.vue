@@ -73,11 +73,11 @@
 				v-model="currentTravel.data.file.value"
 				ref="fileImage"
 				:type="'image'"
-				:placeholder="'Загрузите файл'"
+				:placeholder="'Загрузите картинку'"
 				:error="currentTravel.errors.file.status"
 			>
 				<template #label>
-					<VueIcon :name="'Image'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+					<VueIcon :name="'Attach File'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
 					ИЗОБРАЖЕНИЕ (500x600)
 				</template>
 				<template #error>
