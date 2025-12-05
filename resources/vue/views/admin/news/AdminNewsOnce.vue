@@ -13,12 +13,7 @@
 		<template #options>
 			<template v-if="$route.params.date === 'new' || $route.params.time === 'new'">
 				<VueButton look="inverse" :disabled="disabled.news.add" @click="addNews">
-					<VueIcon
-						:name="'Add'"
-						:fill="'var(--primary-color)'"
-						:width="'26px'"
-						:height="'26px'"
-					/>
+					<VueIcon :name="'Add'" :fill="'var(--primary-color)'" :width="'26px'" :height="'26px'" />
 					Добавить
 				</VueButton>
 			</template>
@@ -30,38 +25,18 @@
 						@click="publishNews"
 						v-if="!currentNews.data.hide.value"
 					>
-						<VueIcon
-							:name="'Publish'"
-							:fill="'var(--primary-color)'"
-							:width="'28px'"
-							:height="'28px'"
-						/>
+						<VueIcon :name="'Publish'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 						Опубликовать
 					</VueButton>
 
-					<VueButton
-						look="inverse"
-						:disabled="disabled.news.publish"
-						@click="publishNews"
-						v-else
-					>
-						<VueIcon
-							:name="'Unpublished'"
-							:fill="'var(--primary-color)'"
-							:width="'28px'"
-							:height="'28px'"
-						/>
+					<VueButton look="inverse" :disabled="disabled.news.publish" @click="publishNews" v-else>
+						<VueIcon :name="'Unpublished'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 						Снять с публикации
 					</VueButton>
 				</template>
 
 				<VueButton look="inverse" :disabled="disabled.news.save" @click="saveNews">
-					<VueIcon
-						:name="'Save'"
-						:fill="'var(--primary-color)'"
-						:width="'28px'"
-						:height="'28px'"
-					/>
+					<VueIcon :name="'Save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 					Сохранить
 				</VueButton>
 			</template>
@@ -76,98 +51,20 @@
 				"
 				:minWidth="'30px'"
 			>
-				<VueIcon
-					:name="'Info'"
-					:fill="'var(--primary-color)'"
-					:width="'30px'"
-					:height="'30px'"
-				/>
+				<VueIcon :name="'Info'" :fill="'var(--primary-color)'" :width="'30px'" :height="'30px'" />
 			</VueButton>
 		</template>
 
 		<template #body>
 			<div class="news__once" v-if="loading.sections.news">
+				<VueFile v-model="currentNews.data.image.value" :view="'dropzone'">
+					<template #label>
+						<VueIcon :name="'Attach File'" :fill="'var(--primary-color)'" :width="'26px'" :height="'26px'" />
+						ИЗОБРАЖЕНИЕ
+					</template>
+				</VueFile>
+
 				<div class="news__once-head">
-					<div class="news__once-image">
-						<template v-if="$route.params.date === 'new' || $route.params.time === 'new'">
-							<div class="input__wrapper">
-								<input
-									name="file"
-									type="file"
-									id="input__file"
-									class="input input__file"
-									ref="image"
-									@change="handleFileChange"
-									multiple
-								/>
-								<label
-									for="input__file"
-									class="input__file-button"
-									:class="{
-										active: hasFile,
-										error: currentNews.errors.image.status,
-									}"
-								>
-									<span class="input__file-icon-wrapper" ref="imageWrapper">
-										<span class="input__file-text" ref="imageText">Файл не загружен</span>
-									</span>
-								</label>
-								<div
-									class="input__file-button-error"
-									v-if="currentNews.errors.image.status"
-								>
-									{{ currentNews.errors.image.message }}
-								</div>
-							</div>
-						</template>
-
-						<template v-else>
-							<div class="input__wrapper image">
-								<input
-									name="file"
-									type="file"
-									id="input__file"
-									class="input input__file"
-									ref="image"
-									@change="handleFileChange"
-									multiple
-								/>
-								<label
-									for="input__file"
-									class="input__file-button"
-									:class="{
-										active: hasFile,
-										error: currentNews.errors.image.status,
-									}"
-								>
-									<div class="input__file-icon-wrapper" ref="imageWrapper">
-										<svg
-											v-if="!hasFile"
-											xmlns="http://www.w3.org/2000/svg"
-											height="60px"
-											viewBox="0 -960 960 960"
-											width="60px"
-										>
-											<path
-												d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"
-											/>
-										</svg>
-
-										<span class="input__file-text" ref="imageText"></span>
-									</div>
-								</label>
-								<div
-									class="input__file-button-error"
-									v-if="currentNews.errors.image.status"
-								>
-									{{ currentNews.errors.image.message }}
-								</div>
-							</div>
-
-							<img :src="currentNews.data.path.value" alt="Фото новости" />
-						</template>
-					</div>
-
 					<VueTiptap
 						ref="tiptapTitle"
 						v-model="currentNews.data.title.value"
@@ -200,12 +97,7 @@
 				</div>
 			</div>
 
-			<VueLoader
-				:isLoading="loading.loader.news"
-				:isChild="true"
-				:minHeight="300"
-				@afterLeave="loaderChildAfterLeave"
-			/>
+			<VueLoader :isLoading="loading.loader.news" :isChild="true" :minHeight="300" @afterLeave="loaderChildAfterLeave" />
 		</template>
 	</block-once>
 </template>
@@ -581,7 +473,7 @@ export default {
 	gap: 20px;
 }
 
-.news__once-image {
+.news__once-wrapper {
 	position: relative;
 	padding: 20px;
 	border: var(--input-border);
@@ -592,7 +484,7 @@ export default {
 	background-color: var(--item-background-color);
 }
 
-.news__once-image > img {
+/* .news__once-wrapper > img {
 	user-select: none;
 	border-radius: calc(var(--default-border-radius) / 1.5);
 
@@ -603,132 +495,5 @@ export default {
 	background-color: black;
 
 	animation: show 0.5s ease;
-}
-
-.input__wrapper {
-	height: 100%;
-	width: 100%;
-	position: relative;
-	text-align: center;
-
-	display: flex;
-	flex-direction: column;
-}
-
-.input__file {
-	opacity: 0;
-	visibility: hidden;
-	position: absolute;
-}
-
-.input__file-icon-wrapper {
-	margin-right: 15px;
-	display: -webkit-box;
-	display: -ms-flexbox;
-	display: flex;
-	flex-wrap: wrap;
-	word-wrap: break-word;
-	word-break: break-all;
-	width: 250px;
-
-	-webkit-box-align: center;
-	-ms-flex-align: center;
-	align-items: center;
-	-webkit-box-pack: center;
-	-ms-flex-pack: center;
-	justify-content: center;
-}
-
-.input__file-button {
-	box-sizing: border-box;
-	flex: 1 0 100px;
-	user-select: none;
-	cursor: pointer;
-	display: -webkit-box;
-	display: -ms-flexbox;
-	display: flex;
-	-webkit-box-align: center;
-	-ms-flex-align: center;
-	align-items: center;
-	-webkit-box-pack: start;
-	-ms-flex-pack: start;
-	justify-content: center;
-
-	border: var(--default-border);
-	border-radius: calc(var(--default-border-radius) / 2);
-	margin: 0 auto;
-
-	width: 100%;
-
-	font-size: 1.25rem;
-
-	color: rgba(0, 0, 0, 0.25);
-	background-color: white;
-
-	transition: all 0.2s;
-}
-
-.input__file-button:is(:hover, .active) {
-	border: var(--input-border-focus);
-	color: var(--primary-color);
-	background-color: var(--item-background-color-active);
-}
-
-.input__file-button.error {
-	border: var(--input-error-border);
-	border-radius: 10px 10px 0px 0px;
-
-	color: var(--input-error-color);
-	background-color: var(--input-error-background-color);
-}
-
-/* .image */
-.input__wrapper.image {
-	position: absolute;
-
-	width: calc(100% - 40px);
-	height: calc(100% - 40px);
-}
-
-.input__wrapper.image {
-	position: absolute;
-
-	width: calc(100% - 40px);
-	height: calc(100% - 40px);
-}
-
-.input__wrapper.image > .input__file-button {
-	color: rgba(0, 0, 0, 0.25);
-	background-color: rgba(255, 255, 255, 0);
-	border: 0px;
-	transition: all 0.2s;
-}
-
-.input__wrapper.image > .input__file-button:is(:hover, .active) {
-	background-color: rgba(0, 0, 0, 0.2);
-	color: white;
-}
-
-.input__wrapper > .input__file-button-error {
-	margin: 0px;
-	padding: 10px;
-	background-color: rgba(135, 10, 10, 0.6);
-
-	color: rgb(255, 255, 255);
-
-	border-radius: 0px 0px 10px 10px;
-}
-
-.input__wrapper.image > .input__file-button.error {
-	border-radius: 10px 10px 0px 0px;
-}
-
-.input__wrapper.image > .input__file-button > .input__file-icon-wrapper {
-	visibility: hidden;
-	fill: white;
-}
-
-.input__wrapper.image > .input__file-button:is(:hover, .active) > .input__file-icon-wrapper {
-	visibility: visible;
-}
+} */
 </style>

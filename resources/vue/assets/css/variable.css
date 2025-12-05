@@ -17,6 +17,7 @@
 @import url("./medline/modules/list.css");
 @import url("./medline/modules/loader.css");
 @import url("./medline/modules/wiki.css");
+@import url("./medline/modules/tiptap.css");
 
 /* Элементы */
 @import url("./medline/elements/icons.css");

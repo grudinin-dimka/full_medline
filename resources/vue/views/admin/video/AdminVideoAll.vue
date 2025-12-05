@@ -31,11 +31,10 @@
 		</template>
 
 		<template #body>
-			<div class="modal__video">
+			<div class="modal__video" :class="{ error: currentVideo.errors.file.status }">
 				<div
 					v-if="currentVideo.data.path.value === ''"
 					class="modal__video-clear"
-					:class="{ error: currentVideo.errors.file.status }"
 					:style="{ backgroundImage: `url(/storage/default/video-none-default.webp)` }"
 				></div>
 
@@ -114,6 +113,7 @@
 				v-model="currentVideo.data.file.value"
 				ref="fileVideo"
 				:type="'video'"
+				:view="'dropzone'"
 				:placeholder="'Загрузите видео файл'"
 				:error="currentVideo.errors.file.status"
 			>
@@ -628,6 +628,12 @@ export default {
 	height: 350px;
 
 	background-color: var(--item-background-color);
+
+	transition: var(--default-transition);
+}
+
+.modal__video.error {
+	background-color: var(--input-error-background-color);
 }
 
 .modal__video > video {
@@ -652,11 +658,6 @@ export default {
 	width: 100%;
 	height: 100%;
 	background-color: white;
-}
-
-.modal__video-clear.error {
-	border: var(--input-error-border);
-	background-color: var(--input-error-background-color);
 }
 
 .modal__video-buttons {

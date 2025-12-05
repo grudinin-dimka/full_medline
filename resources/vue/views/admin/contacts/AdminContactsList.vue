@@ -52,8 +52,6 @@
 </template>
 
 <script>
-import VueIcon from "../../../components/modules/icon/VueIcon.vue";
-
 export default {
 	components: {
 		VueIcon,

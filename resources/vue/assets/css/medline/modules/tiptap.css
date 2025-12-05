@@ -1,0 +1,33 @@
+:root {
+	/* tiptap -> buttons */
+	--tiptap-buttons-gap: 10px;
+
+	--tiptap-buttons-border-top: var(--default-border-width);
+	--tiptap-buttons-border-right: var(--default-border-width);
+	--tiptap-buttons-border-left: var(--default-border-width);
+	--tiptap-buttons-border-bottom: 0px;
+	--tiptap-buttons-border-style: var(--default-border-style);
+	--tiptap-buttons-border-color: var(--default-border-color);
+	--tiptap-buttons-border-radius: calc(var(--default-border-radius) / 1.5) calc(var(--default-border-radius) / 1.5) 0px 0px;
+
+	--tiptap-buttons-padding: calc(var(--default-padding) / 2);
+
+	/* tiptap -> buttons -> body */
+	--tiptap-buttons-body-gap: 20px;
+
+	/* tiptap -> buttons -> footer */
+	--tiptap-buttons-footer-gap: 20px;
+
+	/* tiptap -> error */
+	--tiptap-error-right: 10px;
+	--tiptap-error-top: -15px;
+
+	--tiptap-error-border: var(--error-border);
+	--tiptap-error-border-radius: var(--error-border-radius);
+	--tiptap-error-padding: var(--error-padding);
+
+	--tiptap-error-background-color: var(--error-background-color);
+	--tiptap-error-color: var(--error-color);
+
+	--tiptap-error-animation: showError 0.2s ease;
+}

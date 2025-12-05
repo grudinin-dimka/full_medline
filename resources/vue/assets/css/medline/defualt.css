@@ -30,4 +30,6 @@
 
 	--skeleton-background-color: rgb(235, 235, 235);
 	--skeleton-line-color: #fafafa;
+
+	--default-transition: all 0.2s ease;
 }

@@ -9,6 +9,7 @@
 @import url("./textarea.css");
 @import url("./fieldset.css");
 @import url("./label.css");
+@import url("./file.css");
 
 :root {
 	/* input */
@@ -17,6 +18,7 @@
 	--input-font-family: var(--default-font-family);
 	--input-font-size: 1.25rem;
 	--input-color: rgb(0, 0, 0);
+	--input-color-hover: var(--primary-color);
 	--input-background-color: white;
 	--input-height: 60px;
 

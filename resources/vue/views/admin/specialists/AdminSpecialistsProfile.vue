@@ -318,7 +318,7 @@
 	<!-- Основные данные врача -->
 	<block-once :minHeight="400">
 		<template #title>
-			<span>ПРОФИЛЬ</span>
+			<span>СПЕЦИАЛИСТ</span>
 		</template>
 
 		<template #options>

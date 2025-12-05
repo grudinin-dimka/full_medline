@@ -23,12 +23,7 @@
 					/>
 
 					<div class="vue-date__input-icon" @click="showPicker = !showPicker">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							height="24px"
-							viewBox="0 -960 960 960"
-							width="24px"
-						>
+						<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
 							<path
 								d="M200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Zm280 240q-17 0-28.5-11.5T440-440q0-17 11.5-28.5T480-480q17 0 28.5 11.5T520-440q0 17-11.5 28.5T480-400Zm-160 0q-17 0-28.5-11.5T280-440q0-17 11.5-28.5T320-480q17 0 28.5 11.5T360-440q0 17-11.5 28.5T320-400Zm320 0q-17 0-28.5-11.5T600-440q0-17 11.5-28.5T640-480q17 0 28.5 11.5T680-440q0 17-11.5 28.5T640-400ZM480-240q-17 0-28.5-11.5T440-280q0-17 11.5-28.5T480-320q17 0 28.5 11.5T520-280q0 17-11.5 28.5T480-240Zm-160 0q-17 0-28.5-11.5T280-280q0-17 11.5-28.5T320-320q17 0 28.5 11.5T360-280q0 17-11.5 28.5T320-240Zm320 0q-17 0-28.5-11.5T600-280q0-17 11.5-28.5T640-320q17 0 28.5 11.5T680-280q0 17-11.5 28.5T640-240Z"
 							/>
@@ -40,12 +35,7 @@
 				<div v-if="showPicker" class="vue-date__dropdown">
 					<div class="vue-date__year-controls">
 						<button @click="prevYear">
-							<svg
-								width="18"
-								height="18"
-								viewBox="0 0 24 24"
-								xmlns="http://www.w3.org/2000/svg"
-							>
+							<svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 								<path d="M14 18L8 12L14 6L15.4 7.4L10.8 12L15.4 16.6L14 18Z" />
 							</svg>
 						</button>
@@ -53,12 +43,7 @@
 						<span class="year">{{ currentYear }}</span>
 
 						<button @click="nextYear">
-							<svg
-								width="18"
-								height="18"
-								viewBox="0 0 24 24"
-								xmlns="http://www.w3.org/2000/svg"
-							>
+							<svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 								<path d="M12.6 12L8 7.4L9.4 6L15.4 12L9.4 18L8 16.6L12.6 12Z" />
 							</svg>
 						</button>
@@ -78,9 +63,7 @@
 					<div class="vue-date__buttons">
 						<button class="vue-date__buttons-subbutton" @click="clearDate">Удалить</button>
 
-						<button class="vue-date__buttons-subbutton" @click="setMonthCurrent">
-							Сейчас
-						</button>
+						<button class="vue-date__buttons-subbutton" @click="setMonthCurrent">Сейчас</button>
 					</div>
 				</div>
 			</div>
@@ -110,12 +93,7 @@
 					/>
 
 					<div class="vue-date__input-icon" @click="showPicker = !showPicker">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							height="24px"
-							viewBox="0 -960 960 960"
-							width="24px"
-						>
+						<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
 							<path
 								d="M200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Zm280 240q-17 0-28.5-11.5T440-440q0-17 11.5-28.5T480-480q17 0 28.5 11.5T520-440q0 17-11.5 28.5T480-400Zm-160 0q-17 0-28.5-11.5T280-440q0-17 11.5-28.5T320-480q17 0 28.5 11.5T360-440q0 17-11.5 28.5T320-400Zm320 0q-17 0-28.5-11.5T600-440q0-17 11.5-28.5T640-480q17 0 28.5 11.5T680-440q0 17-11.5 28.5T640-400ZM480-240q-17 0-28.5-11.5T440-280q0-17 11.5-28.5T480-320q17 0 28.5 11.5T520-280q0 17-11.5 28.5T480-240Zm-160 0q-17 0-28.5-11.5T280-280q0-17 11.5-28.5T320-320q17 0 28.5 11.5T360-280q0 17-11.5 28.5T320-240Zm320 0q-17 0-28.5-11.5T600-280q0-17 11.5-28.5T640-320q17 0 28.5 11.5T680-280q0 17-11.5 28.5T640-240Z"
 							/>
@@ -128,12 +106,7 @@
 					<div class="vue-date__year-controls">
 						<div class="vue-date__year-buttons">
 							<button @click="prevDateYear">
-								<svg
-									width="18"
-									height="18"
-									viewBox="0 0 24 24"
-									xmlns="http://www.w3.org/2000/svg"
-								>
+								<svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 									<path
 										d="M11 18L5 12L11 6L12.4 7.4L7.825 12L12.4 16.6L11 18ZM17.6 18L11.6 12L17.6 6L19 7.4L14.425 12L19 16.6L17.6 18Z"
 									/>
@@ -141,40 +114,23 @@
 							</button>
 
 							<button @click="prevDateMonth">
-								<svg
-									width="18"
-									height="18"
-									viewBox="0 0 24 24"
-									xmlns="http://www.w3.org/2000/svg"
-								>
+								<svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 									<path d="M14 18L8 12L14 6L15.4 7.4L10.8 12L15.4 16.6L14 18Z" />
 								</svg>
 							</button>
 						</div>
 
-						<span class="year">{{
-							getDateName(new Date(currentYear, currentMonth - 1), "short")
-						}}</span>
+						<span class="year">{{ getDateName(new Date(currentYear, currentMonth - 1), "short") }}</span>
 
 						<div class="vue-date__year-buttons">
 							<button @click="nextDateMonth">
-								<svg
-									width="18"
-									height="18"
-									viewBox="0 0 24 24"
-									xmlns="http://www.w3.org/2000/svg"
-								>
+								<svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 									<path d="M12.6 12L8 7.4L9.4 6L15.4 12L9.4 18L8 16.6L12.6 12Z" />
 								</svg>
 							</button>
 
 							<button @click="nextDateYear">
-								<svg
-									width="18"
-									height="18"
-									viewBox="0 0 24 24"
-									xmlns="http://www.w3.org/2000/svg"
-								>
+								<svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 									<path
 										d="M9.575 12L5 7.4L6.4 6L12.4 12L6.4 18L5 16.6L9.575 12ZM16.175 12L11.6 7.4L13 6L19 12L13 18L11.6 16.6L16.175 12Z"
 									/>
@@ -197,11 +153,7 @@
 						<div class="vue-date__calendar-tr" v-for="week in 6" :key="week">
 							<template v-for="day in 7" :key="day">
 								<div class="vue-date__calendar-td">
-									<button
-										class="date-btn"
-										:class="getStyleOfDay(week, day)"
-										@click="changeDay(week, day)"
-									>
+									<button class="date-btn" :class="getStyleOfDay(week, day)" @click="changeDay(week, day)">
 										{{ getDay(week, day) }}
 									</button>
 								</div>
@@ -212,9 +164,7 @@
 					<div class="vue-date__buttons">
 						<button class="vue-date__buttons-subbutton" @click="clearDate">Удалить</button>
 
-						<button class="vue-date__buttons-subbutton" @click="setDateCurrent">
-							Сейчас
-						</button>
+						<button class="vue-date__buttons-subbutton" @click="setDateCurrent">Сейчас</button>
 					</div>
 				</div>
 			</div>
@@ -259,9 +209,7 @@ export default {
 		return {
 			/* Общие */
 			showPicker: false,
-			currentYear: this.modelValue
-				? new Date(this.modelValue).getFullYear()
-				: new Date().getFullYear(),
+			currentYear: this.modelValue ? new Date(this.modelValue).getFullYear() : new Date().getFullYear(),
 
 			/* Месяц */
 			months: [
@@ -316,9 +264,7 @@ export default {
 			],
 
 			/* Дата */
-			currentMonth: this.modelValue
-				? new Date(this.modelValue).getMonth() + 1
-				: new Date().getMonth() + 1,
+			currentMonth: this.modelValue ? new Date(this.modelValue).getMonth() + 1 : new Date().getMonth() + 1,
 
 			maskOptions: {
 				mask: "DD.MM.YYYY", // шаблон
@@ -349,6 +295,12 @@ export default {
 				lazy: false,
 			},
 		};
+	},
+	watch: {
+		modelValue() {
+			this.currentYear = new Date(this.modelValue).getFullYear();
+			this.currentMonth = new Date(this.modelValue).getMonth() + 1;
+		},
 	},
 	computed: {
 		formatModel() {
@@ -518,10 +470,8 @@ export default {
 			// Проверка на текущий день
 			if (
 				dayOfMonth == new Date(this.modelValue).toLocaleString("default", { day: "numeric" }) &&
-				this.currentYear ==
-					new Date(this.modelValue).toLocaleString("default", { year: "numeric" }) &&
-				this.currentMonth ==
-					new Date(this.modelValue).toLocaleString("default", { month: "numeric" })
+				this.currentYear == new Date(this.modelValue).toLocaleString("default", { year: "numeric" }) &&
+				this.currentMonth == new Date(this.modelValue).toLocaleString("default", { month: "numeric" })
 			) {
 				return "active";
 			}
@@ -549,9 +499,7 @@ export default {
 
 			this.$emit(
 				"update:modelValue",
-				`${this.currentYear}-${String(this.currentMonth).padStart(2, "0")}-${String(
-					dayOfMonth
-				).padStart(2, "0")}`
+				`${this.currentYear}-${String(this.currentMonth).padStart(2, "0")}-${String(dayOfMonth).padStart(2, "0")}`
 			);
 
 			this.showPicker = false;

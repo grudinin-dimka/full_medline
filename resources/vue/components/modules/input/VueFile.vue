@@ -5,68 +5,103 @@
 		</template>
 
 		<template #input>
-			<div class="vue-input__wrapper">
-				<label class="vue-input__file-button">
-					<input name="file" type="file" class="vue-input vue-input__file" ref="image" @change="handleFileChange" />
+			<template v-if="view === 'dropzone'">
+				<div
+					class="dropzone"
+					:class="{ active: isDragOver }"
+					@dragover.prevent="onDragOver"
+					@dragleave.prevent="onDragLeave"
+					@drop.prevent="onDrop"
+					@click="openFileDialog"
+				>
+					<div class="dropzone__label">
+						<VueIcon v-if="type === 'image'" class="dropzone__icon" :name="'Image'" :width="'28px'" :height="'28px'" />
 
-					<span class="vue-input__file-icon-wrapper" ref="imageWrapper">
-						<span class="vue-input__file-text" ref="imageText">
-							<VueIcon
-								v-if="type === 'image'"
-								class="vue-input__file-icon"
-								:name="'Image'"
-								:width="'26px'"
-								:height="'26px'"
-							/>
+						<VueIcon
+							v-else-if="type === 'document'"
+							class="dropzone__icon"
+							:name="'Article'"
+							:width="'40px'"
+							:height="'40px'"
+						/>
 
-							<VueIcon
-								v-else-if="type === 'document'"
-								class="vue-input__file-icon"
-								:name="'Article'"
-								:width="'26px'"
-								:height="'26px'"
-							/>
+						<VueIcon
+							v-else-if="type === 'video'"
+							class="dropzone__icon"
+							:name="'Videocam'"
+							:width="'40px'"
+							:height="'40px'"
+						/>
 
-							<VueIcon
-								v-else-if="type === 'video'"
-								class="vue-input__file-icon"
-								:name="'Videocam'"
-								:width="'26px'"
-								:height="'26px'"
-							/>
+						<VueIcon v-else class="dropzone__icon" :name="'Attach File'" :width="'40px'" :height="'40px'" />
 
-							<VueIcon
-								v-else
-								class="vue-input__file-icon"
-								:name="'Attach File'"
-								:width="'26px'"
-								:height="'26px'"
-							/>
+						<template v-if="!file"> Перетащите файл сюда или кликните </template>
 
-							<!-- <svg
-								class="vue-input__file-icon"
-								width="20"
-								height="26"
-								viewBox="0 0 16 20"
-								fill="none"
-								xmlns="http://www.w3.org/2000/svg"
-							>
-								<path
-									d="M7 17H9V12.825L10.6 14.425L12 13L8 9L4 13L5.425 14.4L7 12.825V17ZM2 20C1.45 20 0.979167 19.8042 0.5875 19.4125C0.195833 19.0208 0 18.55 0 18V2C0 1.45 0.195833 0.979167 0.5875 0.5875C0.979167 0.195833 1.45 0 2 0H10L16 6V18C16 18.55 15.8042 19.0208 15.4125 19.4125C15.0208 19.8042 14.55 20 14 20H2ZM9 7V2H2V18H14V7H9Z"
+						<template v-else> {{ file.name }} </template>
+					</div>
+				</div>
+
+				<input type="file" ref="fileInput" class="hidden" @change="onFileSelect" />
+			</template>
+
+			<template v-else>
+				<div
+					class="vue-input__wrapper"
+					:class="{ active: isDragOver }"
+					@dragover.prevent="onDragOver"
+					@dragleave.prevent="onDragLeave"
+					@drop.prevent="onDrop"
+					@click="openFileDialog"
+				>
+					<label class="vue-input__file-button">
+						<input name="file" type="file" class="vue-input vue-input__file" ref="fileInput" />
+
+						<span class="vue-input__file-icon-wrapper" ref="imageWrapper">
+							<span class="vue-input__file-text" ref="imageText">
+								<VueIcon
+									v-if="type === 'image'"
+									class="vue-input__file-icon"
+									:name="'Image'"
+									:width="'26px'"
+									:height="'26px'"
 								/>
-							</svg> -->
 
-							<template v-if="hasFile">
-								{{ fileName ?? "Файл загружен" }}
-							</template>
-							<template v-else>
-								{{ placeholder ? placeholder : "Файл не загружен" }}
-							</template>
+								<VueIcon
+									v-else-if="type === 'document'"
+									class="vue-input__file-icon"
+									:name="'Article'"
+									:width="'26px'"
+									:height="'26px'"
+								/>
+
+								<VueIcon
+									v-else-if="type === 'video'"
+									class="vue-input__file-icon"
+									:name="'Videocam'"
+									:width="'26px'"
+									:height="'26px'"
+								/>
+
+								<VueIcon
+									v-else
+									class="vue-input__file-icon"
+									:name="'Attach File'"
+									:width="'26px'"
+									:height="'26px'"
+								/>
+
+								<template v-if="file">
+									{{ file.name ?? "Файл загружен" }}
+								</template>
+								<template v-else>
+									{{ placeholder ? placeholder : "Файл не загружен" }}
+								</template>
+							</span>
 						</span>
-					</span>
-				</label>
-				<div class="input__file-button-error" v-if="false">error</div>
-			</div>
+					</label>
+					<div class="input__file-button-error" v-if="false">error</div>
+				</div>
+			</template>
 		</template>
 
 		<template #error v-if="error">
@@ -91,9 +126,13 @@ export default {
 			type: String,
 			default: "file",
 		},
+		view: {
+			type: String,
+			default: "field",
+		},
 		placeholder: {
 			type: String,
-			default: "Введите значение",
+			default: "Загрузите файл",
 		},
 		error: {
 			type: Boolean,
@@ -102,33 +141,50 @@ export default {
 	},
 	data() {
 		return {
-			fileName: "",
-			hasFile: false,
+			file: null,
+			isDragOver: false,
 		};
 	},
 	methods: {
 		/* Получение массива файлов */
 		files() {
-			return this.$refs?.image.files ?? undefined;
+			return this.$refs.fileInput.files ?? undefined;
 		},
 
 		/* Очистка файлов в поле ввода */
 		clear() {
-			this.hasFile = false;
-			this.fileName = "";
-
-			this.$refs.image.value = "";
+			this.file = null;
+			this.$refs.fileInput.value = "";
 		},
 
 		/* Отслеживание изменений файлов */
 		handleFileChange(event) {
 			const files = event.target.files;
 
-			if (files && files.length > 0) {
-				this.hasFile = true;
+			if (files && files.length > 0) this.file = event.target.files[0];
+		},
 
-				this.fileName = event.target.files[0].name;
-			}
+		onDragOver() {
+			this.isDragOver = true;
+		},
+
+		onDragLeave() {
+			this.isDragOver = false;
+		},
+
+		onDrop(e) {
+			this.isDragOver = false;
+			const droppedFile = e.dataTransfer.files[0];
+			if (droppedFile) this.file = droppedFile;
+		},
+
+		openFileDialog() {
+			this.$refs.fileInput.click();
+		},
+
+		onFileSelect(e) {
+			const selectedFile = e.target.files[0];
+			if (selectedFile) this.file = selectedFile;
 		},
 	},
 };
@@ -226,7 +282,17 @@ export default {
 	background-color: var(--input-background-color);
 }
 
+.vue-input__wrapper.active .vue-input__file-button {
+	border: var(--input-border-focus);
+	color: var(--primary-color);
+	background-color: var(--input-background-color);
+}
+
 .vue-input__file-button:is(:hover, .active) .vue-input__file-icon {
+	fill: var(--primary-color);
+}
+
+.vue-input__wrapper.active .vue-input__file-icon {
 	fill: var(--primary-color);
 }
 
@@ -236,5 +302,60 @@ export default {
 
 	color: var(--input-error-color);
 	background-color: var(--input-error-background-color);
+}
+
+/* Перетаскивание */
+.dropzone {
+	cursor: pointer;
+
+	border: var(--file-dropzone-border);
+	border-radius: var(--file-dropzone-border-radius);
+	padding: var(--file-dropzone-padding);
+
+	height: var(--file-dropzone-height);
+
+	background-color: var(--file-dropzone-background-color);
+	text-align: center;
+
+	transition: var(--file-dropzone-transition);
+}
+
+.dropzone:is(.active, :hover) {
+	border: var(--file-dropzone-border--active);
+	background: var(--file-dropzone-background-color--active);
+}
+
+.hidden {
+	display: none;
+}
+
+.dropzone__label {
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--file-dropzone-label-gap);
+
+	width: var(--file-dropzone-label-width);
+	height: var(--file-dropzone-label-height);
+
+	font: var(--file-dropzone-label-font);
+	color: var(--file-dropzone-label-color);
+
+	transition: var(--file-dropzone-transition);
+}
+
+.dropzone:is(.active, :hover) .dropzone__label {
+	color: var(--file-dropzone-label-color--hover);
+}
+
+.dropzone .dropzone__icon {
+	fill: var(--file-dropzone-icon-fill);
+
+	transition: var(--file-dropzone-transition);
+}
+
+.dropzone:is(.active, :hover) .dropzone__icon {
+	fill: var(--file-dropzone-icon-fill--hover);
 }
 </style>
