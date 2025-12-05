@@ -91,7 +91,7 @@ header {
 	position: absolute;
 	top: calc(100% + 10px);
 	right: 10px;
-	z-index: 1;
+	z-index: 50;
 
 	display: flex;
 	flex-direction: column;

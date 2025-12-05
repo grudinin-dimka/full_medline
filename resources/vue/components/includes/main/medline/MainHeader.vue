@@ -38,8 +38,10 @@
 
 		<div class="header__buttons">
 			<a href="https://lk.medlinegroup.ru/" target="_blank" class="header__buttons-button">
-				<VueIcon :name="'Account Circle'" :fill="'black'" :width="'24px'" :height="'24px'" />
-				Личный кабинет
+				<VueIcon :name="'Account Circle'" :fill="'black'" :width="'28px'" :height="'28px'" />
+				<div class="header__buttons-button-text">
+					Личный кабинет
+				</div>
 			</a>
 		</div>
 	</header>
@@ -309,6 +311,27 @@ header.slide {
 
 @media screen and (max-width: 750px) {
 	.header__buttons {
+		position: absolute;
+
+		left: 20px;
+	}
+
+	.header__buttons-button {
+		padding: 0px;
+		border: 0px;
+	}
+
+	.header__buttons-button:hover {
+		border: 0px;
+		background-color: transparent;
+	}
+
+	.header__buttons-button svg {
+		width: 45px;
+		height: 45px;
+	}
+
+	.header__buttons-button-text {
 		display: none;
 	}
 

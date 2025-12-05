@@ -34,13 +34,9 @@
 		</template>
 
 		<template #dropdown>
-			<div class="header__dropdown__item">
-				<VueIcon :name="'Info'" :fill="'var(--primary-color)'" :width="'24px'" :height="'24px'" />
-				О системе
-			</div>
-			<div class="header__dropdown__item">
-				<VueIcon :name="'Settings'" :fill="'var(--primary-color)'" :width="'24px'" :height="'24px'" />
-				Настройки
+			<div class="header__dropdown__item" @click="pushPage('profile')">
+				<VueIcon :name="'Account Circle'" :fill="'var(--primary-color)'" :width="'24px'" :height="'24px'" />
+				Профиль
 			</div>
 
 			<div class="header__dropdown__item" @click="logout">
@@ -57,6 +53,11 @@ import VueHeader from "../../../ui/VueHeader.vue";
 export default {
 	components: { VueHeader },
 	methods: {
+		pushPage(page) {
+			this.$router.push({ name: `${page}` });
+			this.$refs.header.close();
+		},
+
 		logout() {
 			this.$store.commit("logoutOpen");
 			this.$refs.header.close();
@@ -93,11 +94,10 @@ export default {
 .header__user-icon {
 	cursor: pointer;
 
-	border-radius: 100px;
+	border-radius: 200px;
 
 	width: 50px;
 	height: 50px;
-	background-color: var(--primary-color);
 }
 
 .header__user-icon img {

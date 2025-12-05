@@ -41,19 +41,13 @@ body,
 }
 
 body.modal-open {
-	padding-right: 15px;
 	background-color: #ececec;
 	overflow: hidden;
 }
 
 body.wiki-open {
-	padding-right: 15px;
 	background-color: #ececec;
 	overflow: hidden;
-}
-
-body:is(.modal-open, .wiki-open) > #app > header > .user {
-	margin-right: 15px;
 }
 
 @media screen and (max-width: 600px) {

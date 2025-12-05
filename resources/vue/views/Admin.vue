@@ -37,8 +37,8 @@ import { RouterLink, RouterView } from "vue-router";
 
 // NOTE: Модули в админке
 import AdminHeader from "../components/includes/admin/medline/AdminHeader.vue";
+import AdminAside from "../components/includes/admin/medline/AdminAside.vue";
 import AdminContent from "../components/includes/admin/AdminContent.vue";
-import AdminAside from "../components/includes/admin/AdminAside.vue";
 
 import axios from "axios";
 

@@ -1,124 +1,129 @@
 <template>
-	<header>
-		<a @click.prevent="$router.push({ name: 'home' })" href="/" alt="Кардиологика">
-			<img src="../../../../assets/svg/cardiologika/logo.svg" alt="Кардиологика" />
-		</a>
-		<div class="user">
-			<p>{{ $store.getters.userNickname }}</p>
-		</div>
-	</header>
-	<!-- Кнопка "бургер" -->
-	<div
-		class="burger"
-		@click="$store.commit('setBurgerAdmin')"
-		:class="{ active: $store.getters.burgerAdminStatus }"
-	>
-		<div></div>
-		<div></div>
-		<div></div>
-	</div>
+	<VueHeader ref="header">
+		<template #left>
+			<div class="header__close" @click="$store.commit('setIsHide')">
+				<VueIcon
+					v-if="$store.getters.getIsHide"
+					:name="'Arrow Menu Open'"
+					:fill="'black'"
+					:hover="'var(--primary-color)'"
+					:width="'30px'"
+					:height="'30px'"
+				/>
+				<VueIcon
+					v-else
+					:name="'Arrow Menu Close'"
+					:fill="'black'"
+					:hover="'var(--primary-color)'"
+					:width="'30px'"
+					:height="'30px'"
+				/>
+			</div>
+		</template>
+
+		<template #right>
+			<div class="header__user" @click="$refs.header.open()">
+				<span class="header__user-info">
+					<span class="header__user-name"> {{ $store.getters.getUserNickname }} </span>
+					<span class="header__user-email"> {{ $store.getters.getUserEmail }} </span>
+				</span>
+				<div class="header__user-icon">
+					<img :src="$store.getters.getUserImage" alt="" />
+				</div>
+			</div>
+		</template>
+
+		<template #dropdown>
+			<div class="header__dropdown__item" @click="pushPage('profile')">
+				<VueIcon :name="'Account Circle'" :fill="'var(--primary-color)'" :width="'24px'" :height="'24px'" />
+				Профиль
+			</div>
+
+			<div class="header__dropdown__item" @click="logout">
+				<VueIcon :name="'Logout'" :fill="'var(--delete-background-color)'" :width="'24px'" :height="'24px'" />
+				Выход
+			</div>
+		</template>
+	</VueHeader>
 </template>
 
+<script>
+import VueHeader from "../../../ui/VueHeader.vue";
+
+export default {
+	components: { VueHeader },
+	methods: {
+		pushPage(page) {
+			this.$router.push({ name: `${page}` });
+			this.$refs.header.close();
+		},
+
+		logout() {
+			this.$store.commit("logoutOpen");
+			this.$refs.header.close();
+		},
+	},
+};
+</script>
+
 <style scoped>
-header {
-	position: fixed;
-	z-index: 200;
-
-	top: 0px;
-	left: 0px;
-	right: 0px;
+.header__user {
 	display: flex;
-	justify-content: space-between;
+	justify-content: center;
 	align-items: center;
-
-	padding: 0px 30px;
-
-	height: 80px;
-	background-color: white;
-	box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
+	gap: calc(var(--default-gap) / 2);
 }
 
-header img {
-	margin-left: 30px;
-	width: 80px;
+.header__user-name {
+	font-size: 1.125rem;
 }
 
-.user p {
-	font-size: 20px;
+.header__user-email {
+	font-size: 1.125rem;
+	color: rgba(0, 0, 0, 0.5);
 }
 
-.burger {
+.header__user-info {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-end;
+	gap: 5px;
+}
+
+.header__user-icon {
 	cursor: pointer;
-	display: none;
-	position: fixed;
-	z-index: 100;
 
-	top: 30px;
-	right: 30px;
-	height: 30px;
+	border-radius: 200px;
+
+	width: 50px;
+	height: 50px;
 }
 
-.burger div:nth-child(1),
-.burger div:nth-child(2),
-.burger div:nth-child(3) {
-	position: relative;
+.header__user-icon img {
+	width: 100%;
+	height: 100%;
 
-	width: 30px;
-	height: 3px;
-	background-color: var(--primary-color);
-
-	transition: all 0.5s;
+	border-radius: 100px;
+	object-fit: cover;
 }
 
-.burger div:nth-child(2) {
-	top: 7px;
-}
+.header__dropdown__item {
+	user-select: none;
+	cursor: pointer;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 10px;
 
-.burger div:nth-child(3) {
-	top: 15px;
-}
-
-.burger.active div:nth-child(1) {
-	top: 10px;
-	position: absolute;
-	transform: rotate(-45deg);
 	background-color: white;
+	padding: 10px;
+	border-radius: 10px;
+
+	font: var(--default-font-weight) 1.125rem var(--default-font-family);
 }
 
-.burger.active div:nth-child(2) {
-	top: 10px;
-	transform: rotate(45deg);
-	background-color: white;
-}
-
-.burger.active div:nth-child(3) {
-	top: 10px;
-	opacity: 0;
-	transform: rotate(45deg);
-	background-color: white;
-}
-
-@media screen and (max-width: 1000px) {
-	.user p {
-		font-size: 20px;
-		margin-right: 50px;
-	}
-
-	.burger {
-		cursor: pointer;
-		display: block;
-		position: fixed;
-		z-index: 500;
-
-		top: 30px;
-		right: 30px;
-		height: 30px;
-	}
-}
-
-@media screen and (max-width: 600px) {
-	header > img {
-		display: none;
-	}
+.header__dropdown__item:hover {
+	background-color: rgba(0, 0, 0, 0.05);
 }
 </style>

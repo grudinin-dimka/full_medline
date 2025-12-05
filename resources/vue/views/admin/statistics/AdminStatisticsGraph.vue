@@ -163,29 +163,29 @@
 		</template>
 
 		<template #body>
-			<VueInputContainer :direction="'row'" :count="2" :gap="'10px'">
+			<VueFieldset :count="2" :gap="'20px'">
 				<template #legend> ОТ И ДО </template>
 
 				<template #inputs>
-					<VueInput
-						v-model="currentDate.data.dateStart.value"
+					<VueDate
+						v-model.trim="currentDate.data.dateStart.value"
 						:type="'date'"
 						:error="currentDate.errors.dateStart.status"
 					>
 						<template #label> ОТ </template>
 						<template #error> {{ currentDate.errors.dateStart.message }} </template>
-					</VueInput>
+					</VueDate>
 
-					<VueInput
+					<VueDate
 						v-model.trim="currentDate.data.dateEnd.value"
 						:type="'date'"
 						:error="currentDate.errors.dateEnd.status"
 					>
 						<template #label> ДО </template>
 						<template #error> {{ currentDate.errors.dateEnd.message }} </template>
-					</VueInput>
+					</VueDate>
 				</template>
-			</VueInputContainer>
+			</VueFieldset>
 
 			<div
 				class="apexchart__skeleton"

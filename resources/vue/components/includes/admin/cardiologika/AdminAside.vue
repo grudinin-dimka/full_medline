@@ -7,7 +7,7 @@
 				</div>
 
 				<div class="aside__logo-label" v-if="!$store.getters.getIsHide">
-					<div class="aside__logo-label-main">МЕДЛАЙН</div>
+					<div class="aside__logo-label-main">КАРДИОЛОГИКА</div>
 					<div class="aside__logo-label-sub">РЕДАКТИРОВАНИЕ</div>
 				</div>
 			</div>
@@ -114,15 +114,6 @@
 				<span v-if="!$store.getters.getIsHide" class="aside__item-button-label">РАСПИСАНИЕ</span>
 			</VueAsideButton>
 
-			<VueAsideButton
-				:link="'/admin/etravels'"
-				:is-active="isActive('/admin/etravels')"
-				@click.prevent="insertPage('etravels')"
-			>
-				<VueIcon :name="'Travel'" :fill="'black'" :width="'28px'" :height="'28px'" />
-				<span v-if="!$store.getters.getIsHide" class="aside__item-button-label">ПУТЕВКИ</span>
-			</VueAsideButton>
-
 			<VueAsideList :alias="['enews', 'evideo', 'econtacts', 'eabout']">
 				<template #title>
 					<VueIcon :name="'Info'" :fill="'black'" :width="'28px'" :height="'28px'" />
@@ -179,16 +170,6 @@
 				</template>
 
 				<template #content>
-					<VueAsideButton
-						:link="'/admin/eclients'"
-						:is-active="isActive('/admin/eclients')"
-						:is-child="true"
-						@click.prevent="insertPage('eclients')"
-					>
-						<VueIcon :name="'Patient List'" :fill="'black'" :width="'28px'" :height="'28px'" />
-						<span v-if="!$store.getters.getIsHide" class="aside__item-button-label">КЛИЕНТЫ</span>
-					</VueAsideButton>
-
 					<VueAsideButton
 						:link="'/admin/users'"
 						:is-active="isActive('/admin/users')"
