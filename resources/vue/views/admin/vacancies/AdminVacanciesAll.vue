@@ -180,7 +180,7 @@
 		<template v-slot:addreas>vacancies</template>
 	</info-bar>
 
-	<block-once :minHeight="200">
+	<block-once :minHeight="100">
 		<template #title>СПИСОК</template>
 
 		<template #options>

@@ -6,68 +6,95 @@
 		</template>
 
 		<template #body>
-			<div class="img-fio">
-				<div class="users__item-img">
-					<div
-						v-if="currentUser.data.path.value"
-						:style="{ backgroundImage: `url(${currentUser.data.path.value})` }"
-					></div>
-					<div
-						v-if="!currentUser.data.path.value"
-						:style="{ backgroundImage: `url(/storage/default/avatar.png)` }"
-					></div>
-				</div>
+			<div class="slide__image">
+				<VueImage
+					:path="currentUser.data.path.value"
+					:default="'/storage/default/image-none-default.png'"
+					:alt="'Аватар'"
+					:height="'400px'"
+				/>
 
-				<VueFieldset :count="1" :gap="'20px'">
-					<template #legend> ФИО </template>
-					<template #inputs>
-						<VueValues
-							v-model.trim="currentUser.data.family.value"
-							:type="'text'"
-							:placeholder="'Введите фамилию'"
-							:error="currentUser.errors.family.status"
-						>
-							<template #label>
-								<VueIcon :name="'Id Card'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
-								ФАМИЛИЯ
-							</template>
-							<template #error>
-								{{ currentUser.errors.family.message }}
-							</template>
-						</VueValues>
-
-						<VueValues
-							v-model.trim="currentUser.data.name.value"
-							:type="'text'"
-							:placeholder="'Введите имя'"
-							:error="currentUser.errors.name.status"
-						>
-							<template #label>
-								<VueIcon :name="'Id Card'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
-								ИМЯ
-							</template>
-							<template #error>
-								{{ currentUser.errors.name.message }}
-							</template>
-						</VueValues>
-
-						<VueValues
-							v-model.trim="currentUser.data.surname.value"
-							:type="'text'"
-							:placeholder="'Введите отчество'"
-							:error="currentUser.errors.surname.status"
-						>
-							<template #label>
-								<VueIcon :name="'Id Card'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
-								ОТЧЕСТВО
-							</template>
-							<template #error>
-								{{ currentUser.errors.surname.message }}
-							</template>
-						</VueValues>
+				<VueFile
+					v-model="currentUser.data.file.value"
+					ref="fileImage"
+					:type="'image'"
+					:view="'dropzone'"
+					:placeholder="'Загрузите картинку'"
+					:error="currentUser.errors.file.status"
+				>
+					<template #label>
+						<VueIcon :name="'Attach File'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+						ИЗОБРАЖЕНИЕ
 					</template>
-				</VueFieldset>
+					<template #error>
+						{{ currentUser.errors.file.message }}
+					</template>
+				</VueFile>
 			</div>
+
+			<VueFieldset :count="1" :gap="'20px'">
+				<template #legend> ФИО </template>
+				<template #inputs>
+					<VueValues
+						v-model.trim="currentUser.data.family.value"
+						:type="'text'"
+						:placeholder="'Введите фамилию'"
+						:error="currentUser.errors.family.status"
+					>
+						<template #label>
+							<VueIcon :name="'Id Card'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+							ФАМИЛИЯ
+						</template>
+						<template #error>
+							{{ currentUser.errors.family.message }}
+						</template>
+					</VueValues>
+
+					<VueValues
+						v-model.trim="currentUser.data.name.value"
+						:type="'text'"
+						:placeholder="'Введите имя'"
+						:error="currentUser.errors.name.status"
+					>
+						<template #label>
+							<VueIcon :name="'Id Card'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+							ИМЯ
+						</template>
+						<template #error>
+							{{ currentUser.errors.name.message }}
+						</template>
+					</VueValues>
+
+					<VueValues
+						v-model.trim="currentUser.data.surname.value"
+						:type="'text'"
+						:placeholder="'Введите отчество'"
+						:error="currentUser.errors.surname.status"
+					>
+						<template #label>
+							<VueIcon :name="'Id Card'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+							ОТЧЕСТВО
+						</template>
+						<template #error>
+							{{ currentUser.errors.surname.message }}
+						</template>
+					</VueValues>
+
+					<VueDate
+						v-model.trim="currentUser.data.dateOfBirth.value"
+						:type="'date'"
+						:error="currentUser.errors.dateOfBirth.status"
+					>
+						<template #label>
+							<VueIcon :name="'Id Card'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+							ДАТА
+						</template>
+						<template #error>
+							{{ currentUser.errors.dateOfBirth.message }}
+						</template>
+					</VueDate>
+				</template>
+			</VueFieldset>
 
 			<VueFieldset :count="1" :gap="'15px'">
 				<template #legend> ПАРОЛЬ И ГЕНЕРАТОР </template>
@@ -88,41 +115,6 @@
 					</VueValues>
 
 					<PasswordGenerator />
-				</template>
-			</VueFieldset>
-
-			<VueFieldset :count="2" :gap="'10px'">
-				<template #legend> АВАТАР И ДАТА РОЖДЕНИЯ </template>
-				<template #inputs>
-					<VueFile
-						v-model="currentUser.data.file.value"
-						ref="fileImage"
-						:type="'image'"
-						:placeholder="'Загрузите картинку'"
-						:error="currentUser.errors.file.status"
-					>
-						<template #label>
-							<VueIcon :name="'Attach File'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
-							ИЗОБРАЖЕНИЕ
-						</template>
-						<template #error>
-							{{ currentUser.errors.file.message }}
-						</template>
-					</VueFile>
-
-					<VueDate
-						v-model.trim="currentUser.data.dateOfBirth.value"
-						:type="'date'"
-						:error="currentUser.errors.dateOfBirth.status"
-					>
-						<template #label>
-							<VueIcon :name="'Id Card'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
-							ДАТА
-						</template>
-						<template #error>
-							{{ currentUser.errors.dateOfBirth.message }}
-						</template>
-					</VueDate>
 				</template>
 			</VueFieldset>
 
@@ -1014,6 +1006,13 @@ export default {
 </script>
 
 <style scoped>
+.slide__image {
+	display: grid;
+	grid-template-columns: 1fr 0.5fr;
+	justify-content: center;
+	gap: var(--default-gap);
+}
+
 .users {
 	display: flex;
 	flex-direction: column;
@@ -1147,41 +1146,6 @@ export default {
 
 .sub-modal-text > span.delete {
 	color: #cd3f3e;
-}
-
-.img-fio {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 20px;
-}
-
-.img-fio > .users__item-img {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	margin-top: 10px;
-}
-
-.img-fio > .users__item-img > div {
-	margin: 0 auto;
-	width: 250px;
-	height: 100%;
-	max-height: 300px;
-	aspect-ratio: 1 / 1;
-	border-radius: 300px;
-	background-size: cover;
-	background-repeat: no-repeat;
-	background-position: center center;
-}
-
-@media screen and (width <= 860px) {
-	.img-fio {
-		grid-template-columns: 1fr;
-	}
-
-	.img-fio > .users__item-img {
-		height: 300px;
-	}
 }
 
 @media screen and (width <= 750px) {

@@ -13,12 +13,7 @@
 		<template #options>
 			<template v-if="$route.params.date === 'new' || $route.params.time === 'new'">
 				<VueButton look="inverse" :disabled="disabled.news.add" @click="addNews">
-					<VueIcon
-						:name="'Add'"
-						:fill="'var(--primary-color)'"
-						:width="'26px'"
-						:height="'26px'"
-					/>
+					<VueIcon :name="'Add'" :fill="'var(--primary-color)'" :width="'26px'" :height="'26px'" />
 					Добавить
 				</VueButton>
 			</template>
@@ -30,38 +25,18 @@
 						@click="publishNews"
 						v-if="!currentNews.data.hide.value"
 					>
-						<VueIcon
-							:name="'Publish'"
-							:fill="'var(--primary-color)'"
-							:width="'28px'"
-							:height="'28px'"
-						/>
+						<VueIcon :name="'Publish'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 						Опубликовать
 					</VueButton>
 
-					<VueButton
-						look="inverse"
-						:disabled="disabled.news.publish"
-						@click="publishNews"
-						v-else
-					>
-						<VueIcon
-							:name="'Unpublished'"
-							:fill="'var(--primary-color)'"
-							:width="'28px'"
-							:height="'28px'"
-						/>
+					<VueButton look="inverse" :disabled="disabled.news.publish" @click="publishNews" v-else>
+						<VueIcon :name="'Unpublished'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 						Снять с публикации
 					</VueButton>
 				</template>
 
 				<VueButton look="inverse" :disabled="disabled.news.save" @click="saveNews">
-					<VueIcon
-						:name="'Save'"
-						:fill="'var(--primary-color)'"
-						:width="'28px'"
-						:height="'28px'"
-					/>
+					<VueIcon :name="'Save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 					Сохранить
 				</VueButton>
 			</template>
@@ -76,136 +51,69 @@
 				"
 				:minWidth="'30px'"
 			>
-				<VueIcon
-					:name="'Info'"
-					:fill="'var(--primary-color)'"
-					:width="'30px'"
-					:height="'30px'"
-				/>
+				<VueIcon :name="'Info'" :fill="'var(--primary-color)'" :width="'30px'" :height="'30px'" />
 			</VueButton>
 		</template>
 
 		<template #body>
 			<div class="news__once" v-if="loading.sections.news">
-				<div class="news__once-head">
-					<div class="news__once-image">
-						<template v-if="$route.params.date === 'new' || $route.params.time === 'new'">
-							<div class="input__wrapper">
-								<input
-									name="file"
-									type="file"
-									id="input__file"
-									class="input input__file"
-									ref="image"
-									@change="handleFileChange"
-									multiple
-								/>
-								<label
-									for="input__file"
-									class="input__file-button"
-									:class="{
-										active: hasFile,
-										error: currentNews.errors.image.status,
-									}"
-								>
-									<span class="input__file-icon-wrapper" ref="imageWrapper">
-										<span class="input__file-text" ref="imageText">Файл не загружен</span>
-									</span>
-								</label>
-								<div
-									class="input__file-button-error"
-									v-if="currentNews.errors.image.status"
-								>
-									{{ currentNews.errors.image.message }}
-								</div>
-							</div>
-						</template>
+				<div class="news__once__image">
+					<VueImage
+						:path="currentNews.data.path.value"
+						:default="'/storage/default/image-none-default.png'"
+						:alt="'Путевка'"
+						:height="'400px'"
+					/>
 
-						<template v-else>
-							<div class="input__wrapper image">
-								<input
-									name="file"
-									type="file"
-									id="input__file"
-									class="input input__file"
-									ref="image"
-									@change="handleFileChange"
-									multiple
-								/>
-								<label
-									for="input__file"
-									class="input__file-button"
-									:class="{
-										active: hasFile,
-										error: currentNews.errors.image.status,
-									}"
-								>
-									<div class="input__file-icon-wrapper" ref="imageWrapper">
-										<svg
-											v-if="!hasFile"
-											xmlns="http://www.w3.org/2000/svg"
-											height="60px"
-											viewBox="0 -960 960 960"
-											width="60px"
-										>
-											<path
-												d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"
-											/>
-										</svg>
-
-										<span class="input__file-text" ref="imageText"></span>
-									</div>
-								</label>
-								<div
-									class="input__file-button-error"
-									v-if="currentNews.errors.image.status"
-								>
-									{{ currentNews.errors.image.message }}
-								</div>
-							</div>
-
-							<img :src="currentNews.data.path.value" alt="Фото новости" />
-						</template>
-					</div>
-
-					<VueTiptap
-						ref="tiptapTitle"
-						v-model="currentNews.data.title.value"
-						:editable="true"
-						:limit="500"
-						:options="['format', 'align']"
-						:placeholder="'Заголовок'"
-						:error="currentNews.errors.title.status"
+					<VueFile
+						v-model="currentNews.data.image.value"
+						ref="fileImage"
+						:type="'image'"
+						:view="'dropzone'"
+						:placeholder="'Загрузите картинку'"
+						:error="currentNews.errors.image.status"
 					>
-						<template #error>
-							{{ currentNews.errors.title.message }}
+						<template #label>
+							<VueIcon :name="'Attach File'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+							ИЗОБРАЖЕНИЕ (500x600)
 						</template>
-					</VueTiptap>
-				</div>
-				<div class="news__once-body">
-					<VueTiptap
-						ref="tiptapDescription"
-						v-model="currentNews.data.description.value"
-						:editable="true"
-						:limit="10_000"
-						:minHeight="300"
-						:options="['heading', 'format', 'align', 'list', 'link', 'image']"
-						:placeholder="'Текст новости'"
-						:error="currentNews.errors.description.status"
-					>
 						<template #error>
-							{{ currentNews.errors.description.message }}
+							{{ currentNews.errors.image.message }}
 						</template>
-					</VueTiptap>
+					</VueFile>
 				</div>
+
+				<VueTiptap
+					ref="tiptapTitle"
+					v-model="currentNews.data.title.value"
+					:editable="true"
+					:limit="500"
+					:options="['format', 'align']"
+					:placeholder="'Заголовок'"
+					:error="currentNews.errors.title.status"
+				>
+					<template #error>
+						{{ currentNews.errors.title.message }}
+					</template>
+				</VueTiptap>
+
+				<VueTiptap
+					ref="tiptapDescription"
+					v-model="currentNews.data.description.value"
+					:editable="true"
+					:limit="10_000"
+					:minHeight="300"
+					:options="['heading', 'format', 'align', 'list', 'link', 'image']"
+					:placeholder="'Текст новости'"
+					:error="currentNews.errors.description.status"
+				>
+					<template #error>
+						{{ currentNews.errors.description.message }}
+					</template>
+				</VueTiptap>
 			</div>
 
-			<VueLoader
-				:isLoading="loading.loader.news"
-				:isChild="true"
-				:minHeight="300"
-				@afterLeave="loaderChildAfterLeave"
-			/>
+			<VueLoader :isLoading="loading.loader.news" :isChild="true" :minHeight="300" @afterLeave="loaderChildAfterLeave" />
 		</template>
 	</block-once>
 </template>
@@ -291,9 +199,6 @@ export default {
 				},
 			},
 
-			/* Файл */
-			hasFile: false,
-
 			/* Таблица */
 			table: {
 				// Настройки
@@ -338,19 +243,6 @@ export default {
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                      Файл                         |*/
-		/* |___________________________________________________|*/
-		handleFileChange(event) {
-			const files = event.target.files;
-
-			if (files && files.length > 0) {
-				this.hasFile = true;
-
-				this.$refs.imageText.innerHTML = event.target.files[0].name;
-			}
-		},
-
-		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                  База данных                      |*/
 		/* |___________________________________________________|*/
 		/* Добавление данных */
@@ -360,7 +252,7 @@ export default {
 					{
 						key: "image",
 						type: "file",
-						value: this.$refs.image.files,
+						value: this.$refs.fileImage.files(),
 						formats: ["jpg", "jpeg", "png", "webp"],
 					},
 					{
@@ -378,7 +270,7 @@ export default {
 				return;
 
 			let formData = new FormData();
-			formData.append("image", this.$refs.image.files[0]);
+			formData.append("image", this.$refs.fileImage.files()[0]);
 			formData.append("title", this.currentNews.data.title.value);
 			formData.append("description", this.currentNews.data.description.value);
 
@@ -401,7 +293,7 @@ export default {
 					this.currentNews.data.title.value = response.data.result.title;
 					this.currentNews.data.description.value = response.data.result.description;
 
-					this.hasFile = false;
+					this.$refs.fileImage.clear();
 
 					this.$router.push({
 						name: "enews-once",
@@ -444,20 +336,20 @@ export default {
 				errors++;
 
 			let formData = new FormData();
-			if (this.$refs.image.files[0]) {
+			if (this.$refs.fileImage.files()[0]) {
 				if (
 					validate.checkInputsAll(this.currentNews, [
 						{
 							key: "image",
 							type: "file",
-							value: this.$refs.image.files,
+							value: this.$refs.fileImage.files(),
 							formats: ["jpg", "jpeg", "png", "webp"],
 						},
 					])
 				)
 					errors++;
 
-				formData.append("image", this.$refs.image.files[0]);
+				formData.append("image", this.$refs.fileImage.files()[0]);
 			}
 
 			if (errors) return;
@@ -483,9 +375,7 @@ export default {
 						this.currentNews.data[key].value = response.data.result[key];
 					}
 
-					this.hasFile = false;
-					this.$refs.image.value = "";
-					this.$refs.imageText.innerHTML = "";
+					this.$refs.fileImage.clear();
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
@@ -574,35 +464,11 @@ export default {
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }
 
-.news__once-head {
-	display: flex;
-	flex-direction: column;
+.news__once__image {
+	display: grid;
+	grid-template-columns: 1fr 0.5fr;
 	justify-content: center;
-	gap: 20px;
-}
-
-.news__once-image {
-	position: relative;
-	padding: 20px;
-	border: var(--input-border);
-	border-radius: calc(var(--default-border-radius) / 1.5);
-
-	height: 400px;
-
-	background-color: var(--item-background-color);
-}
-
-.news__once-image > img {
-	user-select: none;
-	border-radius: calc(var(--default-border-radius) / 1.5);
-
-	object-fit: contain;
-	width: 100%;
-	height: 100%;
-
-	background-color: black;
-
-	animation: show 0.5s ease;
+	gap: var(--default-gap);
 }
 
 .input__wrapper {

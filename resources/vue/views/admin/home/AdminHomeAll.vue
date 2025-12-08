@@ -61,38 +61,31 @@
 		</template>
 
 		<template #body>
-			<div
-				class="modal-slide-img"
-				v-if="modal.values.look == 'default'"
-				:style="{
-					backgroundImage: `url(${currentSlide.data.path.value})`,
-				}"
-				ref="modalImg"
-			></div>
-			<div
-				class="modal-slide-img"
-				v-if="modal.values.look == 'create'"
-				:style="{
-					backgroundImage: `url(/storage/default/image-none-default.png)`,
-				}"
-				ref="modalImg"
-			></div>
+			<div class="slide__image">
+				<VueImage
+					:path="currentSlide.data.path.value"
+					:default="`/storage/default/image-none-default.png`"
+					:height="'450px'"
+					:alt="'Слайд'"
+				/>
 
-			<VueFile
-				v-model="currentSlide.data.file.value"
-				ref="fileImage"
-				:type="'image'"
-				:placeholder="'Загрузите картинку'"
-				:error="currentSlide.errors.file.status"
-			>
-				<template #label>
-					<VueIcon :name="'Attach File'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
-					ИЗОБРАЖЕНИЕ (820х958)
-				</template>
-				<template #error>
-					{{ currentSlide.errors.file.message }}
-				</template>
-			</VueFile>
+				<VueFile
+					v-model="currentSlide.data.file.value"
+					ref="fileImage"
+					:type="'image'"
+					:view="'dropzone'"
+					:placeholder="'Загрузите картинку'"
+					:error="currentSlide.errors.file.status"
+				>
+					<template #label>
+						<VueIcon :name="'Attach File'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+						ИЗОБРАЖЕНИЕ (820х958)
+					</template>
+					<template #error>
+						{{ currentSlide.errors.file.message }}
+					</template>
+				</VueFile>
+			</div>
 
 			<VueValues
 				v-model.trim="currentSlide.data.name.value"
@@ -301,8 +294,6 @@
 </template>
 
 <script>
-import VueInput from "../../../components/modules/input/VueInput.vue";
-
 import Empty from "../../../components/modules/Empty.vue";
 import InfoBar from "../../../components/ui/admin/InfoBar.vue";
 import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
@@ -315,8 +306,6 @@ import validate from "../../../services/validate";
 
 export default {
 	components: {
-		VueInput,
-
 		Empty,
 		InfoBar,
 		BlockOnce,
@@ -784,14 +773,11 @@ export default {
 </script>
 
 <style scoped>
-.modal-slide-img {
-	background-size: contain;
-	background-position: center center;
-	background-repeat: no-repeat;
-
-	width: 100%;
-	min-height: 250px;
-	height: 400px;
+.slide__image {
+	display: grid;
+	grid-template-columns: 1fr 0.5fr;
+	justify-content: center;
+	gap: var(--default-gap);
 }
 
 .slider {

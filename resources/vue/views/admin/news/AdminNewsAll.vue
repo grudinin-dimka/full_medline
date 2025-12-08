@@ -5,7 +5,7 @@
 		<template v-slot:addreas>news</template>
 	</info-bar>
 
-	<block-once :minHeight="200">
+	<block-once :minHeight="100">
 		<template #title>НОВОСТИ</template>
 
 		<template #options>

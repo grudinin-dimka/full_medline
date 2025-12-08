@@ -7,6 +7,7 @@
 				v-model="currentUpload.data.file.value"
 				ref="fileUpload"
 				:type="'image'"
+				:view="'dropzone'"
 				:placeholder="'Загрузите картинку'"
 				:error="currentUpload.errors.file.status"
 			>

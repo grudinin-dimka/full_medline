@@ -1,0 +1,22 @@
+:root {
+	--image-padding: 20px;
+	--image-border: var(--input-border);
+	--image-border-radius: calc(var(--default-border-radius) / 1.5);
+
+	--image-height: 0px;
+
+	--image-background-color: var(--item-background-color);
+
+	--image-img-border: var(--input-border);
+	--image-img-border-radius: calc(var(--default-border-radius) / 1.5);
+
+	--image-object-fit: contain;
+	--image-img-width: 100%;
+	--image-img-height: 100%;
+
+	--image-img-animation: show 0.5s ease;
+	--image-img-background-color: var(--default-background-color);
+
+	/* image.clear -> img */
+	--image-img-background-color--clear: var(--default-background-color);
+}

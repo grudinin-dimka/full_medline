@@ -30,7 +30,7 @@
 					</button>
 				</div>
 
-				<div class="selector__menu" v-if="isOpen">
+				<div class="selector__menu" v-if="isOpen" :class="{ 'top': isTop }">
 					<div class="selector__menu-search" v-if="isSearch">
 						<div v-if="name !== ''" class="selector__menu-search-icon" @click.stop.prevent="name = ''">
 							<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px">
@@ -152,6 +152,10 @@ export default {
 			let result = menuListItemMinHeight * this.size + +controlPadding * 2;
 
 			return `${result}px`;
+		},
+
+		isTop() {
+			return true;
 		},
 	},
 	methods: {
@@ -395,6 +399,6 @@ export default {
 @media screen and (max-width: 500px) {
 	.selector__list-item {
 		text-wrap: balance;
-	}	
+	}
 }
 </style>

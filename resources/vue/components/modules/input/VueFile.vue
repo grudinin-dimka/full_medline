@@ -41,7 +41,7 @@
 					</div>
 				</div>
 
-				<input type="file" ref="fileInput" class="hidden" @change="onFileSelect" />
+				<input name="file" type="file" ref="fileInput" class="hidden" @change="onFileSelect" />
 			</template>
 
 			<template v-else>
@@ -156,13 +156,6 @@ export default {
 			this.$refs.fileInput.value = "";
 		},
 
-		/* Отслеживание изменений файлов */
-		handleFileChange(event) {
-			const files = event.target.files;
-
-			if (files && files.length > 0) this.file = event.target.files[0];
-		},
-
 		onDragOver() {
 			this.isDragOver = true;
 		},
@@ -173,8 +166,13 @@ export default {
 
 		onDrop(e) {
 			this.isDragOver = false;
-			const droppedFile = e.dataTransfer.files[0];
-			if (droppedFile) this.file = droppedFile;
+			const droppedFile = e.dataTransfer.files;
+
+			if (droppedFile.length) {
+				this.file = droppedFile[0];
+
+				this.$refs.fileInput.files = e.dataTransfer.files;
+			}
 		},
 
 		openFileDialog() {
@@ -305,6 +303,9 @@ export default {
 
 /* Перетаскивание */
 .dropzone {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	cursor: pointer;
 
 	border: var(--file-dropzone-border);
@@ -312,6 +313,7 @@ export default {
 	padding: var(--file-dropzone-padding);
 
 	height: var(--file-dropzone-height);
+	min-height: var(--file-dropzone-min-height);
 
 	background-color: var(--file-dropzone-background-color);
 	text-align: center;
@@ -330,13 +332,14 @@ export default {
 
 .dropzone__label {
 	cursor: pointer;
-	display: flex;
+	display: grid;
+	grid-template-columns: auto auto;
 	align-items: center;
 	justify-content: center;
 	gap: var(--file-dropzone-label-gap);
+	word-break: break-all;
 
 	width: var(--file-dropzone-label-width);
-	height: var(--file-dropzone-label-height);
 
 	font: var(--file-dropzone-label-font);
 	color: var(--file-dropzone-label-color);

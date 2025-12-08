@@ -364,22 +364,13 @@
 
 		<template #body>
 			<div class="container-profile" v-show="loading.sections.profile">
-				<div class="profile-image" v-if="$route.params.id == 'new'">
-					<div
-						class="clinics__list-head"
-						:style="{
-							backgroundImage: `url(/storage/default/image-none-default.png)`,
-						}"
-					></div>
-				</div>
-				<div class="profile-image" v-else>
-					<div
-						class="clinics__list-head"
-						:style="{
-							backgroundImage: `url(${specialist.profile.data.path.value})`,
-						}"
-					></div>
-				</div>
+				<VueImage
+					:path="specialist.profile.data.path.value"
+					:default="'/storage/default/image-none-default.png'"
+					:alt="'Специалист'"
+					:height="'460px'"
+				/>
+
 				<div class="profile-info">
 					<!-- Аватар и ссылка -->
 					<VueFieldset :count="1" :gap="'20px'">
@@ -808,7 +799,7 @@
 							</div>
 							<div class="item-priem"></div>
 							<div class="item-close" @click="removeArrValue('specializations', specialization)">
-								<VueIcon :name="'close'" :fill="'black'" :width="'16px'" :height="'16px'" />
+								<VueIcon :name="'Close'" :fill="'black'" :width="'20px'" :height="'20px'" />
 							</div>
 						</div>
 					</template>
@@ -859,7 +850,7 @@
 								{{ clinic.priem ? `Да` : "Нет" }}
 							</div>
 							<div class="item-close" @click="removeArrValue('clinics', clinic)">
-								<VueIcon :name="'close'" :fill="'black'" :width="'16px'" :height="'16px'" />
+								<VueIcon :name="'Close'" :fill="'black'" :width="'20px'" :height="'20px'" />
 							</div>
 						</div>
 					</template>
@@ -2606,7 +2597,7 @@ export default {
 						this.specialist.profile.data[key].value = "new";
 						break;
 					case "path":
-						this.specialist.profile.data[key].value = "storage/default/specialist.png";
+						this.specialist.profile.data[key].value = "";
 						break;
 					case "file":
 						this.specialist.profile.data[key] = "";
@@ -2880,7 +2871,8 @@ export default {
 
 /* Конейнер профиля */
 .container-profile {
-	display: flex;
+	display: grid;
+	grid-template-columns: 0.5fr 1fr;
 	flex-wrap: wrap;
 	gap: 20px;
 

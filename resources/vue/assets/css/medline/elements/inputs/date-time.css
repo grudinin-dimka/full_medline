@@ -97,7 +97,7 @@
 	--datetime-calendar-th-font: 1rem var(--input-font-family);
 
 	/* datetime: calendar -> tr -> th.weekend */
-	--datetime-calendar-th-weekend-color: #007be0;
+	--datetime-calendar-th-weekend-color: var(--primary-color);
 
 	/* datetime: button */
 	--datetime-button-border: var(--input-border);

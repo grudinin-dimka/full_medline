@@ -57,33 +57,31 @@
 		</template>
 
 		<template #body>
-			<div class="modal__info">
-				<div class="modal__info-image">
-					<template v-if="currentTravel.data.path.value">
-						<img :src="currentTravel.data.path.value" alt="" />
+			<div class="travel__image">
+				<VueImage
+					:path="currentTravel.data.path.value"
+					:default="'/storage/default/image-none-default.png'"
+					:alt="'Путевка'"
+					:height="'500px'"
+				/>
+				
+				<VueFile
+					v-model="currentTravel.data.file.value"
+					ref="fileImage"
+					:type="'image'"
+					:view="'dropzone'"
+					:placeholder="'Загрузите картинку'"
+					:error="currentTravel.errors.file.status"
+				>
+					<template #label>
+						<VueIcon :name="'Attach File'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+						ИЗОБРАЖЕНИЕ (500x600)
 					</template>
-
-					<template v-else>
-						<img :src="`/storage/default/travels-none-default.png`" alt="" />
+					<template #error>
+						{{ currentTravel.errors.file.message }}
 					</template>
-				</div>
+				</VueFile>
 			</div>
-
-			<VueFile
-				v-model="currentTravel.data.file.value"
-				ref="fileImage"
-				:type="'image'"
-				:placeholder="'Загрузите картинку'"
-				:error="currentTravel.errors.file.status"
-			>
-				<template #label>
-					<VueIcon :name="'Attach File'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
-					ИЗОБРАЖЕНИЕ (500x600)
-				</template>
-				<template #error>
-					{{ currentTravel.errors.file.message }}
-				</template>
-			</VueFile>
 
 			<VueValues
 				v-model.trim="currentTravel.data.title.value"
@@ -1249,35 +1247,11 @@ export default {
 </script>
 
 <style scoped>
-.modal__info {
-	display: flex;
-	flex-direction: column;
-	gap: var(--default-gap);
-}
-
-.modal__info-image {
-	box-sizing: border-box;
-
-	display: flex;
+.travel__image {
+	display: grid;
+	grid-template-columns: 1fr 0.5fr;
 	justify-content: center;
-	flex-wrap: wrap;
-	border-radius: var(--default-border-radius);
-
-	background-color: var(--item-background-color);
-	padding: var(--default-padding);
-	border: var(--default-border);
-}
-
-.modal__info-image > img {
-	object-fit: cover;
-	margin: auto;
-
-	border: var(--default-border);
-	border-radius: calc(var(--default-border-radius) / 1.5);
-
-	width: 400px;
-	background-color: white;
-	aspect-ratio: 1 / 1.2;
+	gap: var(--default-gap);
 }
 
 .modal__info-form {

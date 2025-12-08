@@ -20,6 +20,7 @@ export default {
 .vue-input__error {
 	user-select: none;
 	position: absolute;
+	z-index: 1;
 	right: 10px;
 	top: -10px;
 
