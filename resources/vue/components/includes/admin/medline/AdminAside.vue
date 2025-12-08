@@ -154,7 +154,7 @@
 						:link="'/admin/econtacts'"
 						:is-active="isActive('/admin/econtacts')"
 						:is-child="true"
-						@click.prevent="insertPage('econtacts')"
+						@click.prevent="insertPage('econtacts-all')"
 					>
 						<VueIcon :name="'Groups'" :fill="'black'" :width="'28px'" :height="'28px'" />
 						<span v-if="!$store.getters.getIsHide" class="aside__item-button-label"> КОНТАКТЫ </span>

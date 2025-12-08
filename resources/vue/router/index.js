@@ -39,9 +39,7 @@ const router = createRouter({
 					name: "specialists",
 					meta: {
 						title: "Специалисты",
-						description: `Список специалистов, работающих в медицинском центре ${
-							import.meta.env.VITE_MC_NAME
-						}.`,
+						description: `Список специалистов, работающих в медицинском центре ${import.meta.env.VITE_MC_NAME}.`,
 						keywords: "специалист, специалисты, врач, врачи",
 					},
 					component: () => import("../views/main/specialists/MainSpecialists.vue"),
@@ -94,14 +92,12 @@ const router = createRouter({
 								{
 									path: "",
 									name: "prices-clinics-all",
-									component: () =>
-										import("../views/main/prices/clinics/MainPricesClinicsAll.vue"),
+									component: () => import("../views/main/prices/clinics/MainPricesClinicsAll.vue"),
 								},
 								{
 									path: ":city/:street/:house",
 									name: "prices-clinics-template",
-									component: () =>
-										import("../views/main/prices/clinics/MainPricesClinicsTemplate.vue"),
+									component: () => import("../views/main/prices/clinics/MainPricesClinicsTemplate.vue"),
 								},
 							],
 						},
@@ -213,8 +209,7 @@ const router = createRouter({
 						description: `Актуальные новости о нашем медицинском центре ${
 							import.meta.env.VITE_MC_NAME
 						}. Скидки, объявления и многое другое, что может быть полезно для наших пациентов.`,
-						keywords:
-							"Новости, новости, акции, скидки, скидка, акция, объявления, объявления медицинского центра",
+						keywords: "Новости, новости, акции, скидки, скидка, акция, объявления, объявления медицинского центра",
 					},
 					redirect: { name: "news-all" },
 					component: () => import("../views/main/news/MainNews.vue"),
@@ -333,20 +328,17 @@ const router = createRouter({
 						{
 							path: ":id",
 							name: "especialist-profile",
-							component: () =>
-								import("../views/admin/specialists/AdminSpecialistsProfile.vue"),
+							component: () => import("../views/admin/specialists/AdminSpecialistsProfile.vue"),
 						},
 						{
 							path: "specializations",
 							name: "especialists-specializations",
-							component: () =>
-								import("../views/admin/specialists/AdminSpecialistsSpecializations.vue"),
+							component: () => import("../views/admin/specialists/AdminSpecialistsSpecializations.vue"),
 						},
 						{
 							path: "clinics",
 							name: "especialists-clinics",
-							component: () =>
-								import("../views/admin/specialists/AdminSpecialistsClinics.vue"),
+							component: () => import("../views/admin/specialists/AdminSpecialistsClinics.vue"),
 						},
 					],
 				},
@@ -408,6 +400,13 @@ const router = createRouter({
 					name: "econtacts",
 					meta: { title: "(e) Контакты" },
 					component: () => import("../views/admin/contacts/AdminContacts.vue"),
+					children: [
+						{
+							path: "",
+							name: "econtacts-all",
+							component: () => import("../views/admin/contacts/AdminContactsAll.vue"),
+						},
+					],
 				},
 				{
 					path: "enews",
@@ -504,10 +503,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
 	// Изменение заголовка
 	if (to.meta.title) {
-		store.commit(
-			"setDocumentTitle",
-			`${to.meta.title} | Медицинский центр ${import.meta.env.VITE_MC_NAME}`
-		);
+		store.commit("setDocumentTitle", `${to.meta.title} | Медицинский центр ${import.meta.env.VITE_MC_NAME}`);
 	} else {
 		store.commit("setDocumentTitle", `Медицинский центр ${import.meta.env.VITE_MC_NAME}`);
 	}

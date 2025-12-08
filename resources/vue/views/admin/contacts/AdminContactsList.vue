@@ -53,9 +53,6 @@
 
 <script>
 export default {
-	components: {
-		VueIcon,
-	},
 	props: {
 		contacts: {
 			type: Array,
