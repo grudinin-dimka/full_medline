@@ -20,15 +20,15 @@
 			</VueFile>
 		</template>
 		<template #footer>
-			<!-- <VueButton v-if="modalVideoUpload.values.look == 'default'" @click="uploadVideo" :disabled="disabled.video.upload">
+			<VueButton v-if="modalUpload.values.look == 'default'" @click="uploadImage" :disabled="disabled.tiptap.image">
 				<VueIcon :name="'Add'" :fill="'white'" :width="'28px'" :height="'28px'" />
 				Добавить
 			</VueButton>
 
-			<VueButton v-else @click="uploadVideo" :disabled="disabled.video.upload">
+			<VueButton v-else @click="uploadImage" :disabled="disabled.tiptap.image">
 				<VueIcon :name="'Edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
 				Обновить
-			</VueButton> -->
+			</VueButton>
 		</template>
 	</VueModal>
 
@@ -360,6 +360,7 @@ import StarterKit from "@tiptap/starter-kit";
 
 import validate from "../../services/validate";
 import axios from "axios";
+import api from "../../mixin/api";
 
 export default {
 	components: {
@@ -469,7 +470,7 @@ export default {
 
 		/* Открытие модального окна для добавления */
 		openImage() {
-			this.$refs.fileUpload.value = null;
+			this.$refs.fileUpload.clear();
 
 			this.openModal("modalUpload", "ИЗОБРАЖЕНИЕ", "default");
 		},
@@ -480,11 +481,11 @@ export default {
 		/* Открытие модального окна */
 		uploadImage() {
 			if (
-				validate.checkInputsAll(this.currentImage, [
+				validate.checkInputsAll(this.currentUpload, [
 					{
 						key: "file",
 						type: "file",
-						value: this.$refs.fileUpload,
+						value: this.$refs.fileUpload.files(),
 						formats: ["jpg", "jpeg", "png", "webp"],
 					},
 				])
@@ -493,33 +494,26 @@ export default {
 
 			/* Загрузка файла */
 			let formData = new FormData();
-			formData.append("file", this.$refs.fileUpload.files[0]);
+			formData.append("file", this.$refs.fileUpload.files()[0]);
 			formData.append("type", "news");
 			formData.append("formats", ["png", "jpg", "jpeg", "webp"]);
 
 			this.disabled.tiptap.image = true;
 
-			axios({
+			api({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `upload-file`,
+				url: this.$store.getters.urlApi + `upload-file`,
 				headers: {
 					"Content-Type": "multipart/form-data",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				data: formData,
 			})
 				.then((response) => {
-					if (response.data.status) {
-						this.insertBlockImage(response.data.data);
+					if (!response) return;
 
-						this.$refs.modalImage.close();
-					} else {
-						this.$store.commit("addDebugger", {
-							title: "Ошибка.",
-							body: response.data.message,
-							type: "error",
-						});
-					}
+					this.insertBlockImage(response.data.result);
+
+					this.$refs.modalUpload.close();
 				})
 				.catch((error) => {
 					this.$store.commit("addDebugger", {
