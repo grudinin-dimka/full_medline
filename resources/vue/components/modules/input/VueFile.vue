@@ -51,10 +51,9 @@
 					@dragover.prevent="onDragOver"
 					@dragleave.prevent="onDragLeave"
 					@drop.prevent="onDrop"
-					@click="openFileDialog"
 				>
 					<label class="vue-input__file-button">
-						<input name="file" type="file" class="vue-input vue-input__file" ref="fileInput" />
+						<input name="file" type="file" class="vue-input vue-input__file" ref="fileInput" @change="onFileSelect" />
 
 						<span class="vue-input__file-icon-wrapper" ref="imageWrapper">
 							<span class="vue-input__file-text" ref="imageText">
