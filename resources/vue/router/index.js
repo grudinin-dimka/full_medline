@@ -311,7 +311,15 @@ const router = createRouter({
 					path: "eabout",
 					name: "eabout",
 					meta: { title: "(e) О нас" },
-					component: () => import("../views/admin/about/AdminAboutUs.vue"),
+					component: () => import("../views/admin/about/AdminAbout.vue"),
+					redirect: { name: "eabout-all" },
+					children: [
+						{
+							path: "",
+							name: "eabout-all",
+							component: () => import("../views/admin/about/AdminAboutAll.vue"),
+						},
+					],
 				},
 				{
 					path: "especialists",
@@ -399,6 +407,7 @@ const router = createRouter({
 					path: "econtacts",
 					name: "econtacts",
 					meta: { title: "(e) Контакты" },
+					redirect: { name: "econtacts-all" },
 					component: () => import("../views/admin/contacts/AdminContacts.vue"),
 					children: [
 						{

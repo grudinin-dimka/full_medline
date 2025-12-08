@@ -582,13 +582,6 @@ export default {
 				};
 			});
 
-			array.unshift({
-				default: true,
-				disabled: true,
-				value: "",
-				label: "Выберите статус",
-			});
-
 			return array;
 		},
 
@@ -602,13 +595,6 @@ export default {
 					value: right.id,
 					label: right.name,
 				};
-			});
-
-			array.unshift({
-				default: true,
-				disabled: true,
-				value: "",
-				label: "Выберите права",
 			});
 
 			return array;

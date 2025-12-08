@@ -123,7 +123,7 @@
 				<span v-if="!$store.getters.getIsHide" class="aside__item-button-label">ПУТЕВКИ</span>
 			</VueAsideButton>
 
-			<VueAsideList :alias="['enews', 'evideo', 'econtacts', 'eabout']">
+			<VueAsideList :alias="['enews-all', 'evideo-all', 'econtacts-all', 'eabout-all']">
 				<template #title>
 					<VueIcon :name="'Info'" :fill="'black'" :width="'28px'" :height="'28px'" />
 					<span v-if="!$store.getters.getIsHide" class="aside__item-button-label"> ИНФОРМАЦИЯ </span>
@@ -164,7 +164,7 @@
 						:link="'/admin/eabout'"
 						:is-active="isActive('/admin/eabout')"
 						:is-child="true"
-						@click.prevent="insertPage('eabout')"
+						@click.prevent="insertPage('eabout-all')"
 					>
 						<VueIcon :name="'Info I'" :fill="'black'" :width="'28px'" :height="'28px'" />
 						<span v-if="!$store.getters.getIsHide" class="aside__item-button-label"> О НАС </span>

@@ -40,20 +40,10 @@
 					></div>
 					<div class="buttons" v-if="!currentInfoBlock.data.delete.value">
 						<div class="icon edit" @click="openModalImageEdite('imageOne')">
-							<VueIcon
-								:name="'Edit'"
-								:fill="'var(--icon-edit-fill)'"
-								:width="'28px'"
-								:height="'28px'"
-							/>
+							<VueIcon :name="'Edit'" :fill="'var(--icon-edit-fill)'" :width="'28px'" :height="'28px'" />
 						</div>
 						<div class="icon delete" @click="removeInfoBlockImage('imageOne')">
-							<VueIcon
-								:name="'Delete'"
-								:fill="'var(--delete-secondary-color)'"
-								:width="'28px'"
-								:height="'28px'"
-							/>
+							<VueIcon :name="'Delete'" :fill="'var(--delete-secondary-color)'" :width="'28px'" :height="'28px'" />
 						</div>
 					</div>
 				</div>
@@ -66,12 +56,7 @@
 					></div>
 					<div class="buttons add" v-if="!currentInfoBlock.data.delete.value">
 						<div class="icon create" @click="openModalImageCreate('imageOne')">
-							<VueIcon
-								:name="'Add'"
-								:fill="'var(--icon-create-fill)'"
-								:width="'24px'"
-								:height="'24px'"
-							/>
+							<VueIcon :name="'Add'" :fill="'var(--icon-create-fill)'" :width="'24px'" :height="'24px'" />
 						</div>
 					</div>
 				</div>
@@ -84,20 +69,10 @@
 					></div>
 					<div class="buttons" v-if="!currentInfoBlock.data.delete.value">
 						<div class="icon edit" @click="openModalImageEdite('imageTwo')">
-							<VueIcon
-								:name="'Edit'"
-								:fill="'var(--icon-edit-fill)'"
-								:width="'28px'"
-								:height="'28px'"
-							/>
+							<VueIcon :name="'Edit'" :fill="'var(--icon-edit-fill)'" :width="'28px'" :height="'28px'" />
 						</div>
 						<div class="icon delete" @click="removeInfoBlockImage('imageTwo')">
-							<VueIcon
-								:name="'Delete'"
-								:fill="'var(--delete-secondary-color)'"
-								:width="'28px'"
-								:height="'28px'"
-							/>
+							<VueIcon :name="'Delete'" :fill="'var(--delete-secondary-color)'" :width="'28px'" :height="'28px'" />
 						</div>
 					</div>
 				</div>
@@ -110,12 +85,7 @@
 					></div>
 					<div class="buttons add" v-if="!currentInfoBlock.data.delete.value">
 						<div class="icon create" @click="openModalImageCreate('imageTwo')">
-							<VueIcon
-								:name="'Add'"
-								:fill="'var(--icon-create-fill)'"
-								:width="'24px'"
-								:height="'24px'"
-							/>
+							<VueIcon :name="'Add'" :fill="'var(--icon-create-fill)'" :width="'24px'" :height="'24px'" />
 						</div>
 					</div>
 				</div>
@@ -128,20 +98,10 @@
 					></div>
 					<div class="buttons" v-if="!currentInfoBlock.data.delete.value">
 						<div class="icon edit" @click="openModalImageEdite('imageThree')">
-							<VueIcon
-								:name="'Edit'"
-								:fill="'var(--icon-edit-fill)'"
-								:width="'28px'"
-								:height="'28px'"
-							/>
+							<VueIcon :name="'Edit'" :fill="'var(--icon-edit-fill)'" :width="'28px'" :height="'28px'" />
 						</div>
 						<div class="icon delete" @click="removeInfoBlockImage('imageThree')">
-							<VueIcon
-								:name="'Delete'"
-								:fill="'var(--delete-secondary-color)'"
-								:width="'28px'"
-								:height="'28px'"
-							/>
+							<VueIcon :name="'Delete'" :fill="'var(--delete-secondary-color)'" :width="'28px'" :height="'28px'" />
 						</div>
 					</div>
 				</div>
@@ -154,12 +114,7 @@
 					></div>
 					<div class="buttons add" v-if="!currentInfoBlock.data.delete.value">
 						<div class="icon create" @click="openModalImageCreate('imageThree')">
-							<VueIcon
-								:name="'Add'"
-								:fill="'var(--icon-create-fill)'"
-								:width="'24px'"
-								:height="'24px'"
-							/>
+							<VueIcon :name="'Add'" :fill="'var(--icon-create-fill)'" :width="'24px'" :height="'24px'" />
 						</div>
 					</div>
 				</div>
@@ -210,12 +165,7 @@
 				</VueButton>
 
 				<VueButton @click="deleteInfoBlock" v-if="currentInfoBlock.data.delete.value">
-					<VueIcon
-						:name="'Restore From Trash'"
-						:fill="'white'"
-						:width="'28px'"
-						:height="'28px'"
-					/>
+					<VueIcon :name="'Restore From Trash'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Вернуть
 				</VueButton>
 			</template>
@@ -229,18 +179,21 @@
 		</template>
 
 		<template #body>
-			<VueInput
+			<VueFile
 				v-model="currentImage.data.file.value"
 				ref="fileImage"
-				:type="'file'"
+				:type="'image'"
 				:placeholder="'Загрузите изображение'"
 				:error="currentImage.errors.file.status"
 			>
-				<template #label> ИЗОБРАЖЕНИЕ </template>
+				<template #label>
+					<VueIcon :name="'Attach File'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+					ИЗОБРАЖЕНИЕ
+				</template>
 				<template #error>
 					{{ currentImage.errors.file.message }}
 				</template>
-			</VueInput>
+			</VueFile>
 		</template>
 
 		<template #footer>
@@ -267,18 +220,20 @@
 		</template>
 
 		<template #body>
-			<VueInput
+			<VueFile
 				v-model="currentFile.data.file.value"
-				ref="fileFile"
-				:type="'file'"
-				:placeholder="'Загрузите изображение'"
+				ref="fileUpload"
+				:placeholder="'Загрузите файл'"
 				:error="currentFile.errors.file.status"
 			>
-				<template #label> ФАЙЛ </template>
+				<template #label>
+					<VueIcon :name="'Attach File'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+					ФАЙЛ
+				</template>
 				<template #error>
 					{{ currentFile.errors.file.message }}
 				</template>
-			</VueInput>
+			</VueFile>
 		</template>
 
 		<template #footer>
@@ -302,17 +257,8 @@
 		<template #title>ИНФОРМАЦИОННЫЕ БЛОКИ</template>
 
 		<template #options>
-			<VueButton
-				@click.prevent="saveInfoBlocks"
-				:disabled="disabled.about.save"
-				:look="'inverse'"
-			>
-				<VueIcon
-					:name="'Save'"
-					:fill="'var(--primary-color)'"
-					:width="'28px'"
-					:height="'28px'"
-				/>
+			<VueButton @click.prevent="saveInfoBlocks" :disabled="disabled.about.save" :look="'inverse'">
+				<VueIcon :name="'Save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
 			</VueButton>
 
@@ -326,22 +272,13 @@
 				"
 				:minWidth="'30px'"
 			>
-				<VueIcon
-					:name="'Info'"
-					:fill="'var(--primary-color)'"
-					:width="'30px'"
-					:height="'30px'"
-				/>
+				<VueIcon :name="'Info'" :fill="'var(--primary-color)'" :width="'30px'" :height="'30px'" />
 			</VueButton>
 		</template>
 
 		<template #body>
 			<template v-if="loading.sections.infoBlocks">
-				<AdminAboutUsList
-					:infoBlocks="infoBlocks"
-					@touchEditBlock="openModalEdite"
-					v-if="infoBlocks.length > 0"
-				/>
+				<AdminAboutUsList :infoBlocks="infoBlocks" @touchEditBlock="openModalEdite" v-if="infoBlocks.length > 0" />
 
 				<!-- Элемент пустой страницы -->
 				<empty :minHeight="300" v-if="infoBlocks.length == 0" />
@@ -368,17 +305,8 @@
 		<template #title>ФАЙЛЫ</template>
 
 		<template #options>
-			<VueButton
-				@click.prevent="saveInfoFiles"
-				:disabled="disabled.files.save"
-				:look="'inverse'"
-			>
-				<VueIcon
-					:name="'Save'"
-					:fill="'var(--primary-color)'"
-					:width="'28px'"
-					:height="'28px'"
-				/>
+			<VueButton @click.prevent="saveInfoFiles" :disabled="disabled.files.save" :look="'inverse'">
+				<VueIcon :name="'Save'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 				Сохранить
 			</VueButton>
 
@@ -392,12 +320,7 @@
 				"
 				:minWidth="'30px'"
 			>
-				<VueIcon
-					:name="'Info'"
-					:fill="'var(--primary-color)'"
-					:width="'30px'"
-					:height="'30px'"
-				/>
+				<VueIcon :name="'Info'" :fill="'var(--primary-color)'" :width="'30px'" :height="'30px'" />
 			</VueButton>
 		</template>
 
@@ -724,6 +647,7 @@ export default {
 		/* Открытие модального окна для загрузки */
 		openModalImageEdite(name) {
 			shared.clearObjectFull(this.currentImage);
+
 			this.currentImage.data.file.value = name;
 
 			this.$refs.fileImage.clear();
@@ -735,7 +659,7 @@ export default {
 		openFilesCreate() {
 			shared.clearObjectFull(this.currentFile);
 
-			this.$refs.fileFile.clear();
+			this.$refs.fileUpload.clear();
 
 			this.openModal("modalFiles", "ФАЙЛ", "create");
 		},
@@ -783,21 +707,15 @@ export default {
 					switch (this.currentImage.data.file.value) {
 						case "imageOne":
 							this.currentInfoBlock.data.pathOne.value = response.data.result;
-							this.currentInfoBlock.data.imageOne.value = files.basename(
-								response.data.result
-							);
+							this.currentInfoBlock.data.imageOne.value = files.basename(response.data.result);
 							break;
 						case "imageTwo":
 							this.currentInfoBlock.data.pathTwo.value = response.data.result;
-							this.currentInfoBlock.data.imageTwo.value = files.basename(
-								response.data.result
-							);
+							this.currentInfoBlock.data.imageTwo.value = files.basename(response.data.result);
 							break;
 						case "imageThree":
 							this.currentInfoBlock.data.pathThree.value = response.data.result;
-							this.currentInfoBlock.data.imageThree.value = files.basename(
-								response.data.result
-							);
+							this.currentInfoBlock.data.imageThree.value = files.basename(response.data.result);
 							break;
 					}
 
@@ -824,9 +742,7 @@ export default {
 		/* Удаление */
 		deleteInfoBlock() {
 			try {
-				let block = this.infoBlocks.find(
-					(item) => item.id == this.currentInfoBlock.data.id.value
-				);
+				let block = this.infoBlocks.find((item) => item.id == this.currentInfoBlock.data.id.value);
 
 				block.delete = !block.delete;
 
@@ -871,9 +787,7 @@ export default {
 		/* Обновление */
 		updateInfoBlock() {
 			try {
-				let block = this.infoBlocks.find(
-					(item) => item.id == this.currentInfoBlock.data.id.value
-				);
+				let block = this.infoBlocks.find((item) => item.id == this.currentInfoBlock.data.id.value);
 
 				for (let key in this.currentInfoBlock.data) {
 					block[key] = this.currentInfoBlock.data[key].value;
@@ -952,19 +866,8 @@ export default {
 					{
 						key: "file",
 						type: "file",
-						value: this.$refs.fileFile.files(),
-						formats: [
-							"pdf",
-							"doc",
-							"docx",
-							"xlsx",
-							"xls",
-							"ods",
-							"jpg",
-							"jpeg",
-							"png",
-							"webp",
-						],
+						value: this.$refs.fileUpload.files(),
+						formats: ["pdf", "doc", "docx", "xlsx", "xls", "ods", "jpg", "jpeg", "png", "webp"],
 					},
 				])
 			)
@@ -974,20 +877,9 @@ export default {
 
 			/* Загрузка файла */
 			let formData = new FormData();
-			formData.append("file", this.$refs.fileFile.files()[0]);
+			formData.append("file", this.$refs.fileUpload.files()[0]);
 			formData.append("type", "files");
-			formData.append("formats", [
-				"pdf",
-				"doc",
-				"docx",
-				"xlsx",
-				"xls",
-				"ods",
-				"jpg",
-				"jpeg",
-				"png",
-				"webp",
-			]);
+			formData.append("formats", ["pdf", "doc", "docx", "xlsx", "xls", "ods", "jpg", "jpeg", "png", "webp"]);
 
 			api({
 				method: "post",
@@ -1187,9 +1079,6 @@ export default {
 	align-items: center;
 	padding: 10px;
 	border-radius: 100px;
-
-	width: 25px;
-	height: 25px;
 }
 
 .modal-images > .item > .buttons > .icon.delete {
