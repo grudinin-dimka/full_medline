@@ -21,8 +21,13 @@
 
 	--button-loader-border: 3px solid white;
 
-	--button-transition: border 0.2s ease-in-out, color 0.2s ease-in-out,
-		background-color 0.2s ease-in-out;
+	--button-box-shadow: 0px;
+	--button-transition: border 0.2s ease-in-out, color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+
+	/* .radial */
+	--button-radial-width: var(--button-min-height);
+	--button-radial-height: var(--button-min-height);
+	--button-radial-border-radius: 100px;
 
 	/* edit */
 	--button-edit-font-color: rgb(255, 255, 255);

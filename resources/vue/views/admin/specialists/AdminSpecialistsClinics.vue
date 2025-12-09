@@ -96,9 +96,8 @@
 						</template>
 					</VueValues>
 
-					<VueValues
+					<VueMask
 						v-model.trim="currentClinic.data.index.value"
-						:type="'mask'"
 						:mask="'######'"
 						:placeholder="'______'"
 						:inputmode="'numeric'"
@@ -111,16 +110,15 @@
 						<template #error>
 							{{ currentClinic.errors.index.message }}
 						</template>
-					</VueValues>
+					</VueMask>
 				</template>
 			</VueFieldset>
 
 			<VueFieldset :count="2" :gap="'20px'">
 				<template #legend> ГЕОГРАФИЧЕСКИЕ КООРДИНАТЫ </template>
 				<template #inputs>
-					<VueValues
+					<VueMask
 						v-model.trim="currentClinic.data.geoWidth.value"
-						:type="'mask'"
 						:mask="'##.######'"
 						:placeholder="'00.000000'"
 						:inputmode="'decimal'"
@@ -133,11 +131,10 @@
 						<template #error>
 							{{ currentClinic.errors.geoWidth.message }}
 						</template>
-					</VueValues>
+					</VueMask>
 
-					<VueValues
+					<VueMask
 						v-model.trim="currentClinic.data.geoLongitude.value"
-						:type="'mask'"
 						:mask="'##.######'"
 						:placeholder="'00.000000'"
 						:inputmode="'decimal'"
@@ -150,7 +147,7 @@
 						<template #error>
 							{{ currentClinic.errors.geoLongitude.message }}
 						</template>
-					</VueValues>
+					</VueMask>
 				</template>
 			</VueFieldset>
 		</template>

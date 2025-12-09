@@ -17,18 +17,6 @@
 				/>
 			</template>
 
-			<template v-else-if="type == 'mask'">
-				<input
-					type="tel"
-					:placeholder="placeholder"
-					v-mask="mask"
-					:value="modelValue"
-					:inputmode="inputmode"
-					autocomplete="off"
-					@input="$emit('update:modelValue', $event.target.value.trim())"
-				/>
-			</template>
-
 			<template v-else-if="type == 'search'">
 				<input
 					:type="'search'"
@@ -39,18 +27,8 @@
 					@input="$emit('update:modelValue', $event.target.value.trim())"
 				/>
 
-				<div
-					v-if="modelValue"
-					class="input__icon-search"
-					@click="$emit('update:modelValue', '')"
-				>
-					<svg
-						data-v-05b9c86b=""
-						xmlns="http://www.w3.org/2000/svg"
-						width="16"
-						height="16"
-						viewBox="0 0 14 14"
-					>
+				<div v-if="modelValue" class="input__icon-search" @click="$emit('update:modelValue', '')">
+					<svg data-v-05b9c86b="" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 14 14">
 						<path
 							data-v-05b9c86b=""
 							d="M1.4 14L0 12.6L5.6 7L0 1.4L1.4 0L7 5.6L12.6 0L14 1.4L8.4 7L14 12.6L12.6 14L7 8.4L1.4 14Z"
@@ -129,12 +107,6 @@ export default {
 			default: null,
 		},
 
-		/* Маска поля ввода */
-		mask: {
-			type: String,
-			default: "",
-		},
-
 		placeholder: {
 			type: String,
 			default: "Введите значение",
@@ -146,26 +118,6 @@ export default {
 		error: {
 			type: Boolean,
 			default: false,
-		},
-	},
-	methods: {
-		guardInput(type, value) {
-			switch (type) {
-				case "number":
-					this.$emit("update:modelValue", this.guardInputNumber(value));
-					break;
-
-				default:
-					break;
-			}
-		},
-
-		guardInputNumber(value) {
-			if (Number.isNaN(Number(value))) {
-				return this.modelValue;
-			}
-
-			return value;
 		},
 	},
 };

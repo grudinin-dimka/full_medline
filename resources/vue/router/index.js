@@ -1,16 +1,20 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import Main from "../views/Main.vue";
-import Admin from "../views/Admin.vue";
-import Login from "../views/Login.vue";
+import Main from "../views/main/Main.vue";
 import NotFound from "../views/NotFound.vue";
+
+import Admin from "../views/admin/Admin.vue";
+import ALogin from "../views/admin/Login.vue";
+
+import Cabinet from "../views/cabinet/Cabinet.vue";
+import CLogin from "../views/cabinet/Login.vue";
 
 import store from "../store/index.js";
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.VITE_BASE_URL || "/"),
 	routes: [
-		// Роутер для главной страницы
+		// Main: Главная страница
 		{
 			path: "/",
 			name: "Main",
@@ -242,7 +246,14 @@ const router = createRouter({
 				},
 			],
 		},
-		// Роутер для админки
+		// ALogin: Страница входа в панель администратора
+		{
+			path: "/rqukrdojysacarof",
+			name: "login",
+			meta: { title: "Вход в систему" },
+			component: ALogin,
+		},
+		// Admin: Панель администратора
 		{
 			path: "/admin",
 			name: "admin",
@@ -480,14 +491,80 @@ const router = createRouter({
 				},
 			],
 		},
-		// Роутер для логина
+		// CLogin: Страница входа в личный кабинет
 		{
-			path: "/rqukrdojysacarof",
-			name: "login",
-			meta: { title: "Вход в систему" },
-			component: Login,
+			path: "/login",
+			name: "c-login",
+			meta: { title: "Вход в личный кабинет" },
+			component: CLogin,
 		},
-		// Роутер для не найденных страниц
+		// Cabinet: Личный кабинет
+		{
+			path: "/cabinet",
+			name: "cabinet",
+			meta: { title: "Личный кабинет" },
+			redirect: { name: "cabinet-profile" },
+			component: Cabinet,
+			children: [
+				{
+					path: "profile",
+					name: "cabinet-profile",
+					meta: { title: "Профиль" },
+					redirect: { name: "cabinet-profile-all" },
+					component: () => import("../views/cabinet/profile/Profile.vue"),
+					children: [
+						{
+							path: "",
+							name: "cabinet-profile-all",
+							component: () => import("../views/cabinet/profile/ProfileAll.vue"),
+						},
+					],
+				},
+				{
+					path: "analyzes",
+					name: "cabinet-analyzes",
+					meta: { title: "Анализы" },
+					redirect: { name: "cabinet-analyzes-all" },
+					component: () => import("../views/cabinet/analyzes/Analyzes.vue"),
+					children: [
+						{
+							path: "",
+							name: "cabinet-analyzes-all",
+							component: () => import("../views/cabinet/analyzes/AnalyzesAll.vue"),
+						},
+					],
+				},
+				{
+					path: "appointments",
+					name: "cabinet-appointments",
+					meta: { title: "Приемы" },
+					redirect: { name: "cabinet-appointments-all" },
+					component: () => import("../views/cabinet/appointments/Appointments.vue"),
+					children: [
+						{
+							path: "",
+							name: "cabinet-appointments-all",
+							component: () => import("../views/cabinet/appointments/AppointmentsAll.vue"),
+						},
+					],
+				},
+				{
+					path: "research",
+					name: "cabinet-research",
+					meta: { title: "Анализы" },
+					redirect: { name: "cabinet-research-all" },
+					component: () => import("../views/cabinet/research/Research.vue"),
+					children: [
+						{
+							path: "",
+							name: "cabinet-research-all",
+							component: () => import("../views/cabinet/research/ResearchAll.vue"),
+						},
+					],
+				},
+			],
+		},
+		// NotFound: Страница не найдена
 		{
 			path: "/:pathMatch(.*)*",
 			name: "not-found",

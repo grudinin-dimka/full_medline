@@ -327,6 +327,7 @@ export default {
 				thin: false,
 				clamped: false,
 				touch: true,
+				fullscreen: false,
 				values: {
 					title: "",
 					look: "default",

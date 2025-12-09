@@ -21,9 +21,8 @@
 						</template>
 					</VueInput>
 
-					<VueInput
+					<VueMask
 						v-model="modalPointsForm.data.snils.value"
-						:type="'mask'"
 						:mask="'###-###-###-##'"
 						:placeholder="'___-___-___-__'"
 						:error="modalPointsForm.errors.snils.status"
@@ -32,7 +31,7 @@
 						<template #error>
 							{{ modalPointsForm.errors.snils.message }}
 						</template>
-					</VueInput>
+					</VueMask>
 				</template>
 			</VueFieldset>
 

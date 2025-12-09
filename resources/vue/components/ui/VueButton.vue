@@ -2,7 +2,8 @@
 	<button
 		class="button-default"
 		ref="button"
-		:class="{ [look]: look, wide: wide }"
+		:type="type"
+		:class="{ [look]: look, wide: wide, [figure]: figure }"
 		:disabled="disabled"
 	>
 		<span class="loader" v-if="disabled" :class="{ [look]: look }"></span>
@@ -23,9 +24,17 @@ export default {
 			type: String,
 			default: "",
 		},
+		figure: {
+			type: String,
+			default: "rectangle",
+		},
 		disabled: {
 			type: Boolean,
 			default: false,
+		},
+		type: {
+			type: String,
+			default: "button",
 		},
 		minWidth: {
 			type: [String, Number, null],
@@ -78,6 +87,7 @@ export default {
 	color: var(--button-font-color);
 	background-color: var(--button-background-color);
 
+	box-shadow: var(--button-box-shadow);
 	transition: var(--button-transition);
 }
 
@@ -197,6 +207,15 @@ button > .content.disabled {
 	display: inline-block;
 	box-sizing: border-box;
 	animation: rotation 1s linear infinite;
+}
+
+.button-default.circle {
+	min-width: 0px !important;
+	padding: 0px !important;
+
+	width: var(--button-radial-width);
+	height: var(--button-radial-height);
+	border-radius: var(--button-radial-border-radius);
 }
 
 @keyframes rotation {

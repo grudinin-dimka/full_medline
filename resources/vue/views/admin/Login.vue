@@ -1,85 +1,57 @@
 <template>
-	<debugger />
+	<VueDebugger />
 
-	<Loader :isLoading="loader.loading" />
+	<VueLoader :isLoading="loader.loading" />
 
 	<div class="container-login" v-if="loader.other">
-		<div class="login">
+		<form @submit.prevent class="login">
 			<div class="logo">
 				<!-- NOTE: Логотип в логине -->
-				<img src="../assets/svg/medline/logo.svg" alt="логотип" width="130"/>
+				<img src="../../assets/svg/medline/logo.svg" alt="логотип" width="130" />
 			</div>
-			<container-input>
-				<container-input-once :type="'edit'">
-					<template #title>
-						<span>ЛОГИН</span>
-					</template>
-					<template #input>
-						<input
-							type="text"
-							placeholder="Введите логин"
-							v-model="currentLogin.data.name.body"
-							:class="{ error: currentLogin.errors.name.status }"
-							@blur="checkModalInput('currentLogin', 'name', 'text')"
-						/>
-					</template>
-					<template #error>
-						<span class="error" v-if="currentLogin.errors.name.status">
-							{{ currentLogin.errors.name.body }}
-						</span>
-					</template>
-				</container-input-once>
-				<container-input-once :type="'edit'">
-					<template #title>
-						<span>ПАРОЛЬ</span>
-					</template>
-					<template #input>
-						<input
-							type="password"
-							placeholder="Введите пароль"
-							v-model="currentLogin.data.password.body"
-							:class="{ error: currentLogin.errors.password.status }"
-							@blur="checkModalInput('currentLogin', 'password', 'text')"
-						/>
-					</template>
-					<template #error>
-						<span class="error" v-if="currentLogin.errors.password.status">
-							{{ currentLogin.errors.password.body }}
-						</span>
-					</template>
-				</container-input-once>
-				<div class="buttons">
-					<ButtonDefault @click="loginUser" :disabled="disabled.login.update">
-						Войти
-					</ButtonDefault>
-				</div>
-			</container-input>
-		</div>
+
+			<VueValues
+				v-model.trim="currentLogin.data.name.body"
+				:type="'text'"
+				:placeholder="'Введите логин'"
+				:error="currentLogin.errors.name.status"
+			>
+				<template #label>
+					<VueIcon :name="'Alternate Email'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+					ЛОГИН
+				</template>
+				<template #error>
+					{{ currentLogin.errors.name.message }}
+				</template>
+			</VueValues>
+
+			<VuePassword
+				v-model.trim="currentLogin.data.password.body"
+				:placeholder="'Введите пароль'"
+				:error="currentLogin.errors.password.status"
+			>
+				<template #label>
+					<VueIcon :name="'Passkey'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+					ПАРОЛЬ
+				</template>
+				<template #error>
+					{{ currentLogin.errors.password.message }}
+				</template>
+			</VuePassword>
+
+			<div class="buttons">
+				<VueButton @click="loginUser" :disabled="disabled.login.update"> Войти </VueButton>
+			</div>
+		</form>
 	</div>
 </template>
 
 <script>
-import Debugger from "../components/modules/Debugger.vue";
-import Loader from "../components/modules/loader.vue";
-
 import axios from "axios";
-
-import ContainerInput from "../components/ui/admin/containers/ContainerInput.vue";
-import ContainerInputOnce from "../components/ui/admin/containers/input/ContainerInputOnce.vue";
-import ButtonDefault from "../components/ui/admin/buttons/ButtonDefault.vue";
-
-import validate from "../services/validate";
+import validate from "../../services/validate";
 
 export default {
 	components: {
-		Debugger,
-		Loader,
-
-		ButtonDefault,
-
-		ContainerInput,
-		ContainerInputOnce,
-		
 		axios,
 		validate,
 	},
@@ -146,7 +118,7 @@ export default {
 					errorLog = validate.checkInputEmail(this[currentName].data[dataKey].body);
 					break;
 				case "phone":
-					errorLog = validate.checkInputPhone(this[currentName].data[dataKey].body);
+					errorLog = validate.checkInputMask(this[currentName].data[dataKey].body);
 					break;
 				case "file":
 					errorLog = this.chekInputFile();
@@ -276,28 +248,34 @@ export default {
 	justify-content: center;
 	align-items: center;
 	height: 100vh;
-	background-color: #ececec;
+	background-color: var(--content-background-color);
 }
 
 .login {
 	display: flex;
 	flex-direction: column;
+	gap: var(--default-gap);
 
+	border: var(--default-border);
 	border-radius: 20px;
-
 	padding: 40px;
 	margin: 20px;
 
-	width: 500px;
+	width: min(100%, 600px);
 	background: white;
 
 	box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
 }
 
+form {
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--default-gap) / 2);
+}
+
 .logo {
 	display: flex;
 	justify-content: center;
-	margin-bottom: 30px;
 }
 
 .block {
@@ -314,8 +292,6 @@ export default {
 .buttons {
 	display: flex;
 	justify-content: flex-end;
-
-	margin-top: 30px;
 }
 
 @media screen and (max-width: 620px) {

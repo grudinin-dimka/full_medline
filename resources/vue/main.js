@@ -43,6 +43,7 @@ import VuePassword from "./components/modules/input/VuePassword.vue";
 import VueSelect from "./components/modules/input/VueSelect.vue";
 import VueSelector from "./components/modules/input/VueSelector.vue";
 import VueValues from "./components/modules/input/VueValues.vue";
+import VueMask from "./components/modules/input/VueMask.vue";
 import VueSwitch from "./components/modules/input/VueSwitch.vue";
 
 const app = createApp(App);
@@ -75,6 +76,7 @@ app.component("VuePassword", VuePassword);
 app.component("VueSelect", VueSelect);
 app.component("VueSelector", VueSelector);
 app.component("VueValues", VueValues);
+app.component("VueMask", VueMask);
 app.component("VueSwitch", VueSwitch);
 
 app.use(store);
