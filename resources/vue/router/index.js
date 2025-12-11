@@ -511,12 +511,12 @@ const router = createRouter({
 					name: "cabinet-profile",
 					meta: { title: "Профиль" },
 					redirect: { name: "cabinet-profile-all" },
-					component: () => import("../views/cabinet/profile/Profile.vue"),
+					component: () => import("../views/cabinet/profile/CabinetProfile.vue"),
 					children: [
 						{
 							path: "",
 							name: "cabinet-profile-all",
-							component: () => import("../views/cabinet/profile/ProfileAll.vue"),
+							component: () => import("../views/cabinet/profile/CabinetProfileAll.vue"),
 						},
 					],
 				},
@@ -525,12 +525,12 @@ const router = createRouter({
 					name: "cabinet-analyzes",
 					meta: { title: "Анализы" },
 					redirect: { name: "cabinet-analyzes-all" },
-					component: () => import("../views/cabinet/analyzes/Analyzes.vue"),
+					component: () => import("../views/cabinet/analyzes/CabinetAnalyzes.vue"),
 					children: [
 						{
 							path: "",
 							name: "cabinet-analyzes-all",
-							component: () => import("../views/cabinet/analyzes/AnalyzesAll.vue"),
+							component: () => import("../views/cabinet/analyzes/CabinetAnalyzesAll.vue"),
 						},
 					],
 				},
@@ -539,12 +539,12 @@ const router = createRouter({
 					name: "cabinet-appointments",
 					meta: { title: "Приемы" },
 					redirect: { name: "cabinet-appointments-all" },
-					component: () => import("../views/cabinet/appointments/Appointments.vue"),
+					component: () => import("../views/cabinet/appointments/CabinetAppointments.vue"),
 					children: [
 						{
 							path: "",
 							name: "cabinet-appointments-all",
-							component: () => import("../views/cabinet/appointments/AppointmentsAll.vue"),
+							component: () => import("../views/cabinet/appointments/CabinetAppointmentsAll.vue"),
 						},
 					],
 				},
@@ -553,12 +553,12 @@ const router = createRouter({
 					name: "cabinet-research",
 					meta: { title: "Анализы" },
 					redirect: { name: "cabinet-research-all" },
-					component: () => import("../views/cabinet/research/Research.vue"),
+					component: () => import("../views/cabinet/research/CabinetResearch.vue"),
 					children: [
 						{
 							path: "",
 							name: "cabinet-research-all",
-							component: () => import("../views/cabinet/research/ResearchAll.vue"),
+							component: () => import("../views/cabinet/research/CabinetResearchAll.vue"),
 						},
 					],
 				},

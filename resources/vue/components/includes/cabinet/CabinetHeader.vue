@@ -24,12 +24,12 @@
 		<template #right>
 			<div class="header__user" @click="$refs.header.open()">
 				<span class="header__user-info">
-					<span class="header__user-name"> {{ $store.getters.getClientNickname }} </span>
-					<span class="header__user-email"> {{ $store.getters.getClientEmail }} </span>
+					<span class="header__user-name"> {{ $store.getters.getClientNickname ?? "Пользователь" }} </span>
+					<span class="header__user-email"> {{ $store.getters.getClientSnils ?? "СНИЛС" }} </span>
 				</span>
 
 				<div class="header__user-icon">
-					<img :src="$store.getters.getClientImage" alt="" />
+					<VueIcon :name="'Account Circle'" :fill="'black'" :width="'50px'" :height="'50px'" />
 				</div>
 			</div>
 		</template>

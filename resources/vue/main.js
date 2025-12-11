@@ -28,6 +28,7 @@ import VueButton from "./components/ui/VueButton.vue";
 import VueLoader from "./components/modules/VueLoader.vue";
 import VueDebugger from "./components/modules/VueDebugger.vue";
 import VueWiki from "./components/modules/wiki/VueWiki.vue";
+import VueCalendar from "./components/modules/VueCalendar.vue";
 
 import VueCascader from "./components/modules/input/VueCascader.vue";
 import VueCheckbox from "./components/modules/input/VueCheckbox.vue";
@@ -61,6 +62,7 @@ app.component("VueLoader", VueLoader);
 app.component("VueButton", VueButton);
 app.component("VueDebugger", VueDebugger);
 app.component("VueWiki", VueWiki);
+app.component("VueCalendar", VueCalendar);
 
 app.component("VueCascader", VueCascader);
 app.component("VueCheckbox", VueCheckbox);

@@ -344,7 +344,7 @@ export default {
 
 .filters__item {
 	box-sizing: border-box;
-	gap: 10px;
+	gap: var(--default-gap);
 
 	border: 0px solid var(--input-border-color-inactive);
 	border-radius: 15px;

@@ -339,19 +339,39 @@ export default {
 
 @media screen and (max-width: 500px) {
 	.modal {
-		padding: 0px;
+		padding: 0px !important;
 	}
 
 	.modal__body {
-		height: 100%;
+		height: 100% !important;
 	}
 
 	.modal__container {
 		justify-content: space-between;
-		margin: 0px;
-		height: 100%;
-		border-radius: 0px;
-		max-height: 100%;
+		margin: 0px !important;
+		height: 100% !important;
+		border-radius: 0px !important;
+		max-height: 100% !important;
+	}
+}
+
+/* Печать */
+@media print {
+	.modal {
+		display: none;
+		overflow: hidden;
+	}
+
+	.modal__header {
+		display: none;
+	}
+
+	.modal__body {
+		overflow: hidden;
+	}
+
+	.modal__footer {
+		display: none;
 	}
 }
 </style>

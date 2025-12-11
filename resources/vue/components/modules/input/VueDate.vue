@@ -1,8 +1,8 @@
 <template>
-	<vue-input-container>
-		<vue-input-label v-if="$slots.label">
+	<VueInputContainer>
+		<VueInputLabel v-if="$slots.label">
 			<slot name="label"></slot>
-		</vue-input-label>
+		</VueInputLabel>
 
 		<template v-if="type === 'month'">
 			<div class="vue-date vue-date--month" ref="dateMonth">
@@ -10,6 +10,10 @@
 				<div class="vue-date__input">
 					<div class="vue-date__input-label" @click="showPicker = true">
 						{{ getDateName(modelValue) }}
+					</div>
+
+					<div class="vue-date__input-arrow left" @click="changeDate('down')">
+						<VueIcon :name="'Keyboard Arrow Left'" :width="'24px'" :height="'24px'" />
 					</div>
 
 					<input
@@ -29,12 +33,16 @@
 							/>
 						</svg>
 					</div>
+
+					<div class="vue-date__input-arrow right" @click="changeDate('up')">
+						<VueIcon :name="'Keyboard Arrow Right'" :width="'24px'" :height="'24px'" />
+					</div>
 				</div>
 
 				<!-- Выпадающее меню -->
 				<div v-if="showPicker" class="vue-date__dropdown">
 					<div class="vue-date__year-controls">
-						<button @click="prevYear">
+						<button @click="prevMonthYear">
 							<svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 								<path d="M14 18L8 12L14 6L15.4 7.4L10.8 12L15.4 16.6L14 18Z" />
 							</svg>
@@ -42,7 +50,7 @@
 
 						<span class="year">{{ currentYear }}</span>
 
-						<button @click="nextYear">
+						<button @click="nextMonthYear">
 							<svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 								<path d="M12.6 12L8 7.4L9.4 6L15.4 12L9.4 18L8 16.6L12.6 12Z" />
 							</svg>
@@ -73,6 +81,10 @@
 			<div class="vue-date vue-date--full" ref="dateFull">
 				<!-- Поле ввода -->
 				<div class="vue-date__input">
+					<div class="vue-date__input-arrow left" @click="changeDate('down')">
+						<VueIcon :name="'Keyboard Arrow Left'" :width="'24px'" :height="'24px'" />
+					</div>
+
 					<input
 						class="vue-date__input-label"
 						v-imask="maskOptions"
@@ -98,6 +110,10 @@
 								d="M200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Zm280 240q-17 0-28.5-11.5T440-440q0-17 11.5-28.5T480-480q17 0 28.5 11.5T520-440q0 17-11.5 28.5T480-400Zm-160 0q-17 0-28.5-11.5T280-440q0-17 11.5-28.5T320-480q17 0 28.5 11.5T360-440q0 17-11.5 28.5T320-400Zm320 0q-17 0-28.5-11.5T600-440q0-17 11.5-28.5T640-480q17 0 28.5 11.5T680-440q0 17-11.5 28.5T640-400ZM480-240q-17 0-28.5-11.5T440-280q0-17 11.5-28.5T480-320q17 0 28.5 11.5T520-280q0 17-11.5 28.5T480-240Zm-160 0q-17 0-28.5-11.5T280-280q0-17 11.5-28.5T320-320q17 0 28.5 11.5T360-280q0 17-11.5 28.5T320-240Zm320 0q-17 0-28.5-11.5T600-280q0-17 11.5-28.5T640-320q17 0 28.5 11.5T680-280q0 17-11.5 28.5T640-240Z"
 							/>
 						</svg>
+					</div>
+
+					<div class="vue-date__input-arrow right" @click="changeDate('up')">
+						<VueIcon :name="'Keyboard Arrow Right'" :width="'24px'" :height="'24px'" />
 					</div>
 				</div>
 
@@ -173,7 +189,7 @@
 		<VueInputError v-if="error" :is-top="!$slots.label">
 			<slot name="error"></slot>
 		</VueInputError>
-	</vue-input-container>
+	</VueInputContainer>
 </template>
 
 <script>
@@ -331,15 +347,77 @@ export default {
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                     Кнопки                        |*/
+		/* |___________________________________________________|*/
+		changeDate(type) {
+			switch (this.type) {
+				case "month":
+					if (type === "up") {
+						this.nextMonthMonth();
+					} else if (type === "down") {
+						this.prevMonthMonth();
+					}
+					break;
+				case "date":
+					if (type === "up") {
+						this.nextDateDay();
+					} else if (type === "down") {
+						this.prevDateDay();
+					}
+					break;
+			}
+		},
+
+		/* Переход на предыдущий месяц */
+		prevMonthMonth() {
+			this.currentMonth--;
+
+			if (this.currentMonth <= 0) {
+				this.currentMonth = 12;
+				this.currentYear--;
+			}
+
+			this.$emit("update:modelValue", `${this.currentYear}-${this.currentMonth}`);
+		},
+
+		/* Переход на следующий месяц */
+		nextMonthMonth() {
+			this.currentMonth++;
+
+			if (this.currentMonth > 12) {
+				this.currentMonth = 1;
+				this.currentYear++;
+			}
+
+			this.$emit("update:modelValue", `${this.currentYear}-${this.currentMonth}`);
+		},
+
+		/* Переход на предыдущий день */
+		prevDateDay() {
+			let day = new Date(this.modelValue);
+			day.setDate(day.getDate() - 1);
+
+			this.$emit("update:modelValue", day.toISOString().slice(0, 10));
+		},
+
+		/* Переход на следующий день */
+		nextDateDay() {
+			let day = new Date(this.modelValue);
+			day.setDate(day.getDate() + 1);
+
+			this.$emit("update:modelValue", day.toISOString().slice(0, 10));
+		},
+
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                      Месяц                        |*/
 		/* |___________________________________________________|*/
 		/* Предыдущий год */
-		prevYear() {
+		prevMonthYear() {
 			this.currentYear--;
 		},
 
 		/* Следующий год */
-		nextYear() {
+		nextMonthYear() {
 			this.currentYear++;
 		},
 
@@ -603,7 +681,7 @@ export default {
 	caret-color: var(--input-caret-color);
 	box-sizing: border-box;
 
-	border-radius: var(--input-border-radius);
+	border-radius: 0px;
 	border: var(--input-border);
 
 	height: var(--input-height);
@@ -626,7 +704,7 @@ export default {
 .vue-date__input-icon {
 	cursor: pointer;
 	position: absolute;
-	right: 10px;
+	right: 35px;
 
 	font-size: 16px;
 
@@ -635,6 +713,38 @@ export default {
 
 .vue-date__input-icon:hover {
 	fill: var(--input-icon-hover-color);
+}
+
+.vue-date__input-arrow {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+
+	height: var(--input-height);
+	background-color: var(--input-background-color);
+}
+
+.vue-date__input-arrow.left {
+	border-top: var(--input-border-width);
+	border-right: 0px;
+	border-bottom: var(--input-border-width);
+	border-left: var(--input-border-width);
+	border-style: var(--input-border-style);
+	border-color: var(--input-border-color);
+
+	border-radius: var(--input-border-radius) 0px 0px var(--input-border-radius);
+}
+
+.vue-date__input-arrow.right {
+	border-top: var(--input-border-width);
+	border-right: var(--input-border-width);
+	border-bottom: var(--input-border-width);
+	border-left: 0px;
+	border-style: var(--input-border-style);
+	border-color: var(--input-border-color);
+
+	border-radius: 0px var(--input-border-radius) var(--input-border-radius) 0px;
 }
 
 /* Месяц: Выпадающее меню */
@@ -663,6 +773,10 @@ export default {
 	justify-content: space-between;
 	align-items: center;
 	gap: var(--date-year-controls-gap);
+}
+
+.vue-date__year-controls .year {
+	user-select: none;
 }
 
 .vue-date__year-controls button {

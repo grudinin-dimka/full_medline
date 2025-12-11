@@ -936,7 +936,7 @@ export default {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	flex-wrap: wrap;
-	gap: 10px;
+	gap: var(--default-gap);
 
 	border: 0px solid var(--input-border-color-inactive);
 	border-radius: 15px;

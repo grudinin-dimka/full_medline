@@ -1,7 +1,7 @@
 :root {
 	/* [date, month]: label */
 	--date-label-z-index: 0;
-	--date-label-left: 15px;
+	--date-label-left: 40px;
 
 	--date-label-border: 0px;
 	--date-label-border-radius: var(--input-border-radius);
@@ -11,7 +11,7 @@
 	--date-label-font: var(--input-font-size) var(--input-font-family);
 	--date-label-background-color: var(--input-background-color);
 
-	--date-label-width: calc(100% - 20px);
+	--date-label-width: calc(100% - 70px);
 	--date-label-height: calc(100% - var(--input-border-width) * 2);
 
 	/* [date, month]: year -> controls */

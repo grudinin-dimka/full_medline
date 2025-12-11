@@ -329,16 +329,6 @@ export default {
 			},
 
 			/* Модальное окно */
-			modalPersonal: {
-				thin: false,
-				clamped: true,
-				touch: true,
-				values: {
-					title: "",
-					look: "default",
-				},
-			},
-
 			modalRequest: {
 				thin: false,
 				clamped: false,

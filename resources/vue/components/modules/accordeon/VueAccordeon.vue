@@ -1,21 +1,20 @@
 <template>
 	<div class="accordeon" ref="accordeon">
 		<div class="accordeon__head" ref="accordeonHead">
-			<div class="accordeon__head-name" v-if="$slots.name" @click.prevent="changeAccordeon">
+			<div class="accordeon__head-name" v-if="$slots.name">
 				<slot name="name"></slot>
 			</div>
 			<div class="accordeon__head-name" v-else>Меню</div>
-			<button class="accordeon__head-button" @click.prevent="changeAccordeon">
-				<svg
-					ref="accordeonButton"
-					xmlns="http://www.w3.org/2000/svg"
-					width="16"
-					height="8"
-					viewBox="0 0 10 5"
-				>
-					<path d="M5 5L0 0H10L5 5Z" />
-				</svg>
-			</button>
+
+			<div class="accordeon__head-buttons">
+				<slot name="buttons"></slot>
+
+				<VueAccordeonButton @click.prevent="changeAccordeon">
+					<svg ref="accordeonButton" xmlns="http://www.w3.org/2000/svg" width="16" height="8" viewBox="0 0 10 5">
+						<path d="M5 5L0 0H10L5 5Z" />
+					</svg>
+				</VueAccordeonButton>
+			</div>
 		</div>
 		<div class="accordeon__body" ref="accordeonContent">
 			<slot name="body"></slot>
@@ -24,6 +23,8 @@
 </template>
 
 <script>
+import VueAccordeonButton from "./VueAccordeonButton.vue";
+
 export default {
 	props: {
 		padding: {
@@ -34,6 +35,9 @@ export default {
 			type: Number,
 			default: 20,
 		},
+	},
+	components: { 
+		VueAccordeonButton 
 	},
 	data() {
 		return {
@@ -81,12 +85,12 @@ export default {
 	border: var(--accordeon-border);
 	border-radius: var(--accordeon-border-radius);
 	padding: var(--accordeon-padding);
-	margin: var( --accordeon-margin);	
-	
+	margin: var(--accordeon-margin);
+
 	background-color: var(--accordeon-background-color);
 }
 
-.accordeon > .accordeon__head {
+.accordeon__head {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -97,15 +101,10 @@ export default {
 	border-radius: var(--accordeon-head-border-radius);
 }
 
-.accordeon > .accordeon__head:is(.active, :hover) > :is(.accordeon__head-button) {
-	border: var(--accordeon-head-name-border-hover);
-	background-color: var(--accordeon-head-name-hover-background-color);
-}
-
-.accordeon > .accordeon__head > .accordeon__head-name {
+.accordeon__head-name {
+	user-select: none;
 	display: flex;
 	align-items: center;
-	cursor: pointer;
 	flex: 1 0 150px;
 
 	padding: var(--accordeon-head-name-padding);
@@ -115,40 +114,19 @@ export default {
 	height: 62px;
 
 	font-size: 1.125rem;
-	color: var(--primary-color);
+	color: black;
 
 	background-color: var(--accordeon-head-name-background-color);
 
 	transition: all 0.2s;
 }
 
-.accordeon > .accordeon__head > .accordeon__head-button {
-	cursor: pointer;
-
+.accordeon__head-buttons {
 	display: flex;
-	justify-content: center;
-	align-items: center;
-
-	padding: var(--accordeon-head-button-padding);
-	border: var(--accordeon-head-button-border);
-	border-radius: var(--accordeon-head-button-border-radius);
-
-	width: 40px;
-	height: 40px;
-
-	font-size: 1.125rem;
-
-	background-color: var(--accordeon-head-button-background-color);
-
-	transition: all 0.35s;
+	gap: var(--accordeon-head-gap);
 }
 
-.accordeon > .accordeon__head > .accordeon__head-button > svg {
-	fill: var(--primary-color);
-	transition: all 0.35s;
-}
-
-.accordeon > .accordeon__body {
+.accordeon__body {
 	overflow: hidden;
 	max-height: 0px;
 

@@ -17,13 +17,13 @@
    --accordeon-head-name-border-radius: var(--accordeon-border-radius);
    --accordeon-head-name-background-color: rgba(0, 0, 0, 0);
 
-   --accordeon-head-button-padding: 0px 10px;
-   --accordeon-head-button-border: var(--default-border);
-   --accordeon-head-button-border-radius: 100%;
-   --accordeon-head-button-background-color: white;
+   --accordeon-button-padding: 0px 0px;
+   --accordeon-button-border: var(--default-border);
+   --accordeon-button-border-radius: 100%;
+   --accordeon-button-background-color: white;
 
    --accordeon-head-name-border-hover: var(--default-border-active);
    --accordeon-head-name-hover-background-color: var(--item-background-color-active);
 
-   --accordeon-head-button-hover-background-color: white;
+   --accordeon-button-hover-background-color: white;
 }

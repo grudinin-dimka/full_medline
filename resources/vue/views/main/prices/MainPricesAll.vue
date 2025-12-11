@@ -360,7 +360,7 @@ export default {
 
 .filters__item {
 	display: flex;
-	gap: 10px;
+	gap: var(--default-gap);
 }
 
 .filters__item-button {

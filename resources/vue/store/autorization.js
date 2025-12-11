@@ -13,6 +13,13 @@ export default {
 			rights: null,
 			image: null,
 		},
+
+		client: {
+			surname: null,
+			snils: null,
+			status: null,
+			rights: null,
+		},
 	},
 	mutations: {
 		/* Обновление данных пользователя */

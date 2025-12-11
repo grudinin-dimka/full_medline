@@ -1,5 +1,5 @@
 <template>
-	<div class="accordeon_block">
+	<div class="accordeon__block">
 		<slot></slot>
 	</div>
 </template>
@@ -9,7 +9,7 @@ export default {};
 </script>
 
 <style scoped>
-.accordeon_block {
+.accordeon__block {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
