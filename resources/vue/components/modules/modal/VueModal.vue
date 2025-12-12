@@ -10,6 +10,7 @@
 					clamped: settings.clamped,
 					unclamped: !settings.clamped,
 					fullscreen: settings.fullscreen,
+					print: settings.print,
 				}"
 				ref="modal"
 				@click.self="settings.touch ? $emit('touch') : close()"
@@ -33,7 +34,7 @@
 								<slot name="buttons" v-if="$slots.buttons"></slot>
 
 								<button class="modal__header-close" @click.prevent="close">
-									<VueIcon name="Close" :width="'24px'" :height="'24px'"/>
+									<VueIcon name="Close" :width="'24px'" :height="'24px'" />
 								</button>
 							</div>
 						</div>
@@ -58,22 +59,22 @@ import VueIcon from "../../ui/VueIcon.vue";
 export default {
 	emits: ["touch"],
 	components: {
-		VueIcon
+		VueIcon,
 	},
 	props: {
-		/* 
-			settings: {
-				thin: false,
-				clamped: false,
+		settings: {
+			type: Object,
+			default: {
+				thin: false, // Уменьшенное тело окна
+				clamped: false, // Сжатое тело окна
+				touch: false, // При нажатии на модальное окно закрывается
+				fullscreen: false, // Полноэкранное окно
+				print: false, // Печать
 				values: {
 					title: "",
 					look: "default",
 				},
 			},
-		*/
-		settings: {
-			type: Object,
-			default: {},
 		},
 		look: {
 			type: String,
@@ -107,7 +108,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .modal-enter-active,
 .modal-leave-active {
 	transition: opacity 0.3s ease;
@@ -357,21 +358,48 @@ export default {
 
 /* Печать */
 @media print {
-	.modal {
-		display: none;
-		overflow: hidden;
+	/* Скрыть всё, что НЕ является модалкой печати */
+	body *:not(.modal.print, .modal.print *) {
+		display: none !important;
+		visibility: hidden !important;
 	}
 
-	.modal__header {
-		display: none;
+	/* Переместить печатную модалку в начало документа */
+	.modal.print {
+		position: relative !important;
+		overflow: visible !important;
+		height: auto !important;
+		max-height: none !important;
+		width: auto !important;
+		padding: 20px 20px 20px 20px !important;
+		margin: 0 !important;
 	}
 
-	.modal__body {
-		overflow: hidden;
+	.modal.print .modal__container {
+		overflow: visible !important;
+		height: auto !important;
+		max-height: none !important;
+		width: auto !important;
+		margin: 0 !important;
+		padding: 0 !important;
+		border: none !important;
+		box-shadow: none !important;
 	}
 
-	.modal__footer {
-		display: none;
+	/* Скрыть ненужные элементы модалки */
+	.modal.print .modal__header,
+	.modal.print .modal__footer,
+	.modal.print .modal__header-close {
+		display: none !important;
+	}
+
+	/* Тело оставляем без ограничений */
+	.modal.print .modal__body {
+		overflow: visible !important;
+		height: auto !important;
+		max-height: none !important;
+		padding: 0 !important;
+		margin: 0 !important;
 	}
 }
 </style>

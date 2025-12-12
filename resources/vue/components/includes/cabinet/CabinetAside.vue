@@ -8,7 +8,7 @@
 
 				<div class="aside__logo-label" v-if="!$store.getters.getIsHide">
 					<div class="aside__logo-label-main">МЕДЛАЙН</div>
-					<div class="aside__logo-label-sub">РЕДАКТИРОВАНИЕ</div>
+					<div class="aside__logo-label-sub">ЛИЧНЫЙ КАБИНЕТ</div>
 				</div>
 			</div>
 		</template>
