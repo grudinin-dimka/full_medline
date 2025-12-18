@@ -12,6 +12,7 @@
 				v-model="currentPrice.data.file.value"
 				ref="fileImage"
 				:type="'document'"
+				:view="'dropzone'"
 				:placeholder="'Загрузите табличный файл'"
 				:error="currentPrice.errors.file.status"
 			>

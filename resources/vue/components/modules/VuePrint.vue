@@ -15,6 +15,10 @@ export default {
 			type: Object,
 			default: {
 				width: "750px",
+				clear: {
+					styles: false,
+					spacing: false,
+				},
 				styles: {
 					"*": { fontSize: "14px", marginBottom: "10px", lineHeight: "20px" },
 				},
@@ -41,11 +45,20 @@ export default {
 			let wrapper = document.createElement("div");
 			wrapper.innerHTML = html;
 
-			wrapper.querySelectorAll("[style]").forEach((el) => {
-				el.removeAttribute("style");
-			});
+			// Очистка html
+			if (this.settings.clear) {
+				/* Очистка стилей */
+				if (this.settings.clear.styles) {
+					wrapper.querySelectorAll("[style]").forEach((el) => {
+						el.removeAttribute("style");
+					});
+				}
 
-			wrapper.innerHTML = wrapper.innerHTML.replaceAll("&nbsp;", " ");
+				/* Очистка пробелов */
+				if (this.settings.clear.spacing) {
+					wrapper.innerHTML = wrapper.innerHTML.replaceAll("&nbsp;", " ");
+				}
+			}
 
 			return wrapper.innerHTML;
 		},

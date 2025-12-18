@@ -8,7 +8,7 @@
 				<slot name="options"></slot>
 			</div>
 		</div>
-		<div class="block-once__body" :style="{ minHeight: `${minHeight}px` }">
+		<div class="block-once__body" ref="blockOnceBody">
 			<slot name="body"></slot>
 		</div>
 		<div class="block-once__buttons" v-if="$slots.buttons">
@@ -25,9 +25,22 @@ export default {
 			default: false,
 		},
 		minHeight: {
-			type: Number,
+			type: [Number, String],
 			default: 200,
 		},
+	},
+	mounted() {
+		switch (typeof this.minHeight) {
+			case "string":
+				this.$refs.blockOnce.style.minHeight = this.minHeight;
+				this.$refs.blockOnceBody.style.minHeight = this.minHeight;
+
+				break;
+			case "number":
+				this.$refs.blockOnceBody.style.minHeight = this.minHeight + "px";
+
+				break;
+		}
 	},
 };
 </script>

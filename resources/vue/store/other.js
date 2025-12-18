@@ -4,6 +4,7 @@ export default {
 
 		axios: {
 			urlApi: "/api/",
+			urlCabinet: "https://lk.medline.local/api/",
 		},
 
 		burger: {
@@ -53,6 +54,10 @@ export default {
 	getters: {
 		urlApi(state) {
 			return state.axios.urlApi;
+		},
+
+		urlCabinet(state) {
+			return state.axios.urlCabinet;
 		},
 
 		burgerAdminStatus(state) {

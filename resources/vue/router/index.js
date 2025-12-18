@@ -475,20 +475,6 @@ const router = createRouter({
 						},
 					],
 				},
-				{
-					path: "eclients",
-					name: "eclients",
-					meta: { title: "(e) Клиенты" },
-					redirect: { name: "eclients-all" },
-					component: () => import("../views/admin/clients/AdminClients.vue"),
-					children: [
-						{
-							path: "",
-							name: "eclients-all",
-							component: () => import("../views/admin/clients/AdminClientsAll.vue"),
-						},
-					],
-				},
 			],
 		},
 		// CLogin: Страница входа в личный кабинет
@@ -503,20 +489,20 @@ const router = createRouter({
 			path: "/cabinet",
 			name: "cabinet",
 			meta: { title: "Личный кабинет" },
-			redirect: { name: "cabinet-profile" },
+			redirect: { name: "cabinet-appointments" },
 			component: Cabinet,
 			children: [
 				{
-					path: "profile",
-					name: "cabinet-profile",
-					meta: { title: "Профиль" },
-					redirect: { name: "cabinet-profile-all" },
-					component: () => import("../views/cabinet/profile/CabinetProfile.vue"),
+					path: "appointments",
+					name: "cabinet-appointments",
+					meta: { title: "Приемы" },
+					redirect: { name: "cabinet-appointments-all" },
+					component: () => import("../views/cabinet/appointments/CabinetAppointments.vue"),
 					children: [
 						{
 							path: "",
-							name: "cabinet-profile-all",
-							component: () => import("../views/cabinet/profile/CabinetProfileAll.vue"),
+							name: "cabinet-appointments-all",
+							component: () => import("../views/cabinet/appointments/CabinetAppointmentsAll.vue"),
 						},
 					],
 				},
@@ -535,23 +521,9 @@ const router = createRouter({
 					],
 				},
 				{
-					path: "appointments",
-					name: "cabinet-appointments",
-					meta: { title: "Приемы" },
-					redirect: { name: "cabinet-appointments-all" },
-					component: () => import("../views/cabinet/appointments/CabinetAppointments.vue"),
-					children: [
-						{
-							path: "",
-							name: "cabinet-appointments-all",
-							component: () => import("../views/cabinet/appointments/CabinetAppointmentsAll.vue"),
-						},
-					],
-				},
-				{
 					path: "research",
 					name: "cabinet-research",
-					meta: { title: "Анализы" },
+					meta: { title: "Исследования" },
 					redirect: { name: "cabinet-research-all" },
 					component: () => import("../views/cabinet/research/CabinetResearch.vue"),
 					children: [

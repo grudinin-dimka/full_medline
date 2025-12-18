@@ -1,9 +1,8 @@
 <template>
 	<VueDebugger />
-
 	<VueLoader :isLoading="loader.loading" />
 
-	<div class="container-login" v-if="loader.other">
+	<div class="container-login" v-if="!loader.loading">
 		<form @submit.prevent class="login">
 			<div class="logo">
 				<!-- NOTE: Логотип в логине -->
@@ -11,7 +10,7 @@
 			</div>
 
 			<VueValues
-				v-model.trim="currentLogin.data.name.body"
+				v-model.trim="currentLogin.data.name.value"
 				:type="'text'"
 				:placeholder="'Введите логин'"
 				:error="currentLogin.errors.name.status"
@@ -26,7 +25,7 @@
 			</VueValues>
 
 			<VuePassword
-				v-model.trim="currentLogin.data.password.body"
+				v-model.trim="currentLogin.data.password.value"
 				:placeholder="'Введите пароль'"
 				:error="currentLogin.errors.password.status"
 			>
@@ -40,7 +39,7 @@
 			</VuePassword>
 
 			<div class="buttons">
-				<VueButton @click="loginUser" :disabled="disabled.login.update"> Войти </VueButton>
+				<VueButton @click="login" :disabled="disabled.login"> Войти </VueButton>
 			</div>
 		</form>
 	</div>
@@ -59,155 +58,76 @@ export default {
 		return {
 			loader: {
 				loading: true,
-				other: false,
 			},
-			name: "",
-			password: "",
+
 			disabled: {
-				login: {
-					update: false,
-				},
+				login: false,
 			},
+
 			currentLogin: {
 				errors: {
 					name: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					password: {
-						body: "",
+						message: "",
 						status: false,
 					},
 				},
 				data: {
 					name: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					password: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 				},
-			},
-			errors: {
-				name: {
-					status: false,
-					value: "",
-				},
-				password: {
-					status: false,
-					value: "",
-				},
-				server: false,
 			},
 		};
 	},
 	methods: {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                     ПРОВЕРКИ                      |*/
-		/* |___________________________________________________|*/
-		/* Проверка поля имени */
-		checkModalInput(currentName, dataKey, inputType) {
-			let errorLog = {};
-			switch (inputType) {
-				case "text":
-					errorLog = validate.checkInputText(this[currentName].data[dataKey].body);
-					break;
-				case "email":
-					errorLog = validate.checkInputEmail(this[currentName].data[dataKey].body);
-					break;
-				case "phone":
-					errorLog = validate.checkInputMask(this[currentName].data[dataKey].body);
-					break;
-				case "file":
-					errorLog = this.chekInputFile();
-					break;
-				case "select":
-					errorLog = this.checkSelect(this[currentName].data[dataKey].body);
-					break;
-				default:
-					break;
-			}
-
-			if (errorLog.status) {
-				this[currentName].errors[dataKey].body = errorLog.message;
-				this[currentName].errors[dataKey].status = true;
-
-				return true;
-			} else {
-				this[currentName].errors[dataKey].body = "";
-				this[currentName].errors[dataKey].status = false;
-
-				return false;
-			}
-		},
-		/* Проверка всех полей ввода модального окна */
-		checkModalInputsAll(currentName, inputKeys) {
-			let errorCount = 0;
-			for (let i = 0; i < inputKeys.length; i++) {
-				switch (inputKeys[i]) {
-					case "file":
-						if (this.checkModalInput(currentName, inputKeys[i], "file")) {
-							errorCount++;
-						}
-						break;
-					case "email":
-						if (this.checkModalInput(currentName, inputKeys[i], "email")) {
-							errorCount++;
-						}
-						break;
-					case "statusId":
-					case "rightsId":
-						if (this.checkModalInput(currentName, inputKeys[i], "select")) {
-							errorCount++;
-						}
-						break;
-					// Для всех остальных полей
-					default:
-						if (this.checkModalInput(currentName, inputKeys[i], "text")) {
-							errorCount++;
-						}
-						break;
-				}
-			}
-
-			if (errorCount > 0) {
-				return true;
-			} else {
-				return false;
-			}
-		},
-		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                   АВТОРИЗАЦИЯ                     |*/
 		/* |___________________________________________________|*/
 		/* Авторизация */
-		async loginUser() {
-			if (this.checkModalInputsAll("currentLogin", ["name", "password"])) return;
+		async login() {
+			if (
+				validate.checkInputsAll(this.currentLogin, [
+					{
+						key: "name",
+						type: "text",
+					},
+					{
+						key: "password",
+						type: "text",
+					},
+				])
+			)
+				return;
 
-			this.disabled.login.update = true;
+			this.disabled.login = true;
 
 			axios({
 				method: "post",
 				url: `${this.$store.getters.urlApi}` + `login`,
 				data: {
-					name: this.currentLogin.data.name.body,
-					password: this.currentLogin.data.password.body,
+					name: this.currentLogin.data.name.value,
+					password: this.currentLogin.data.password.value,
 				},
 			})
 				.then((response) => {
-					if (response.data.status) {
+					if (response.data.success) {
 						// Запись токена в глобальную переменную
-						this.$store.commit("setTokenToLocal", response.data.data.token);
+						this.$store.commit("setValueToLocal", {
+							name: "atoken",
+							value: response.data.result,
+						});
 
 						// Перевод на страницу админки
 						this.$router.push({ name: "ehome" });
-
-						// Очистка ошибок
-						this.errors.name.status = false;
-						this.errors.name.value = "";
-						this.errors.password.status = false;
-						this.errors.password.value = "";
 					} else {
 						this.$store.commit("addDebugger", {
 							title: "Ошибка.",
@@ -224,19 +144,17 @@ export default {
 					});
 				})
 				.finally(() => {
-					this.loader.loading = false;
-					this.disabled.login.update = false;
+					this.disabled.login = false;
 				});
 		},
 	},
 	mounted() {
 		this.$store.commit("clearDebugger");
 
-		if (localStorage.getItem("token")) {
+		if (localStorage.getItem("atoken")) {
 			this.$router.push({ name: "ehome" });
 		} else {
 			this.loader.loading = false;
-			this.loader.other = true;
 		}
 	},
 };

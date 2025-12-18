@@ -1,5 +1,5 @@
 <template>
-	<div v-if="status" class="container-empty" ref="empty">
+	<div class="container-empty" ref="empty">
 		<div>Пока здесь ничего нет...</div>
 	</div>
 </template>
@@ -7,18 +7,21 @@
 <script>
 export default {
 	props: {
-		status: {
-			type: Boolean,
-			default: true,
-		},
 		minHeight: {
-			type: Number,
+			type: [Number, String],
 			default: null,
 		},
 	},
 	mounted() {
-		if (this.minHeight) {
-			this.$refs.empty.style.minHeight = `${this.minHeight}px`;
+		switch (typeof this.minHeight) {
+			case "string":
+				this.$refs.empty.style.minHeight = this.minHeight;
+
+				break;
+			case "number":
+				this.$refs.empty.style.minHeight = this.minHeight + "px";
+
+				break;
 		}
 	},
 };
@@ -37,7 +40,6 @@ export default {
 
 	font-size: 20px;
 	color: #c7c7c7;
-	min-height: max(75dvh, 400px);
 
 	animation: show-bottom-to-top-15 0.5s ease-in-out;
 }

@@ -1,9 +1,16 @@
 <template>
-	<div>анализы</div>
+	<CabinetBlock :page="'analysis'" />
 </template>
 
 <script>
-export default {};
+import CabinetBlock from "../../../components/includes/cabinet/CabinetBlock.vue";
+
+export default {
+	components: {
+		CabinetBlock,
+	},
+	mounted() {},
+};
 </script>
 
 <style scoped></style>

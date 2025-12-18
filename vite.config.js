@@ -1,6 +1,6 @@
-import { defineConfig } from "vite"
+import { defineConfig } from "vite";
 
-import laravel from 'laravel-vite-plugin'
+import laravel from "laravel-vite-plugin";
 import vue from "@vitejs/plugin-vue";
 
 export default defineConfig({
@@ -15,10 +15,11 @@ export default defineConfig({
 
 	/* Настройка локального сервера */
 	server: {
+		https: false,
 		cors: {
-         origin: "https://medline.local",
-         methods: ["GET", "POST", "PUT", "DELETE"],
-      },
+			origin: ["https://medline.local", "http://medline.local"],
+			methods: ["GET", "POST", "PUT", "DELETE"],
+		},
 	},
 
 	/* Настройка сборки */

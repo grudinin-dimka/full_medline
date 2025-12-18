@@ -5,7 +5,7 @@
 		<template #footer>
 			<VueButton :wide="true" :look="'secondary'" @click="$refs.modalExit.close()"> Отменить </VueButton>
 
-			<VueButton :wide="true" :disabled="$store.getters.getLogoutStatus" @click="$store.dispatch('logout')">
+			<VueButton :wide="true" :disabled="$store.getters.getLogoutStatus" @click="$store.dispatch('logoutCabinet')">
 				Выход
 			</VueButton>
 		</template>
@@ -98,10 +98,40 @@ export default {
 		},
 	},
 	beforeCreate() {
+		// Проверка начилия токена в локальном хранилище
+		if (!localStorage.getItem("ctoken")) {
+			this.$router.push({ name: "c-login" });
+
+			return;
+		} else {
+			// Проверка токена в базе
+			axios({
+				method: "post",
+				url: `${this.$store.getters.urlCabinet}` + `check`,
+				headers: {
+					Accept: "application/json",
+					Authorization: `Bearer ${localStorage.getItem("ctoken")}`,
+				},
+			})
+				.then((response) => {
+					if (response.data.success) {
+						this.$store.commit("updateClient", response.data.result);
+
+						this.loader.loading = false;
+					} else {
+						localStorage.removeItem("ctoken");
+						this.$router.push({ name: "c-login" });
+					}
+				})
+				.catch((error) => {
+					localStorage.removeItem("ctoken");
+					this.$router.push({ name: "c-login" });
+					return;
+				});
+		}
 	},
 	mounted() {
-      this.loader.loading = false;
-      this.$store.commit("clearDebugger");
+		this.$store.commit("clearDebugger");
 	},
 };
 </script>

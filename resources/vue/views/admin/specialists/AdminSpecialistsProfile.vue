@@ -310,11 +310,6 @@
 	<!--____________________________________________________-->
 	<!--1. Профиль                                          -->
 	<!--‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾-->
-	<info-bar>
-		<template v-slot:title>Специалисты</template>
-		<template v-slot:addreas>specialists/{{ $route.params.id }}</template>
-	</info-bar>
-
 	<!-- Основные данные врача -->
 	<block-once :minHeight="400">
 		<template #title>

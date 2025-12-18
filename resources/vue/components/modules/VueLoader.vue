@@ -18,13 +18,18 @@ export default {
 			default: false,
 		},
 		minHeight: {
-			type: Number,
-			default: null,
+			type: [Number, String],
+			default: 200,
 		},
 	},
 	mounted() {
-		if (this.minHeight) {
-			this.$refs.loader.style.minHeight = `${this.minHeight}px`;
+		switch (typeof this.minHeight) {
+			case "string":
+				this.$refs.loader.style.minHeight = this.minHeight;
+				break;
+			case "number":
+				this.$refs.loader.style.minHeight = this.minHeight + "px";
+				break;
 		}
 	},
 };
@@ -93,36 +98,36 @@ export default {
 @keyframes mulShdSpin {
 	0%,
 	100% {
-		box-shadow: 0 -3em 0 0.2em, 2em -2em 0 0em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em,
-			-2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 0;
+		box-shadow: 0 -3em 0 0.2em, 2em -2em 0 0em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em,
+			-2em -2em 0 0;
 	}
 	12.5% {
-		box-shadow: 0 -3em 0 0, 2em -2em 0 0.2em, 3em 0 0 0, 2em 2em 0 -1em, 0 3em 0 -1em,
-			-2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 -1em;
+		box-shadow: 0 -3em 0 0, 2em -2em 0 0.2em, 3em 0 0 0, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em,
+			-2em -2em 0 -1em;
 	}
 	25% {
-		box-shadow: 0 -3em 0 -0.5em, 2em -2em 0 0, 3em 0 0 0.2em, 2em 2em 0 0, 0 3em 0 -1em,
-			-2em 2em 0 -1em, -3em 0 0 -1em, -2em -2em 0 -1em;
+		box-shadow: 0 -3em 0 -0.5em, 2em -2em 0 0, 3em 0 0 0.2em, 2em 2em 0 0, 0 3em 0 -1em, -2em 2em 0 -1em, -3em 0 0 -1em,
+			-2em -2em 0 -1em;
 	}
 	37.5% {
-		box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0em 0 0, 2em 2em 0 0.2em, 0 3em 0 0em,
-			-2em 2em 0 -1em, -3em 0em 0 -1em, -2em -2em 0 -1em;
+		box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0em 0 0, 2em 2em 0 0.2em, 0 3em 0 0em, -2em 2em 0 -1em, -3em 0em 0 -1em,
+			-2em -2em 0 -1em;
 	}
 	50% {
-		box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 0em, 0 3em 0 0.2em,
-			-2em 2em 0 0, -3em 0em 0 -1em, -2em -2em 0 -1em;
+		box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 0em, 0 3em 0 0.2em, -2em 2em 0 0, -3em 0em 0 -1em,
+			-2em -2em 0 -1em;
 	}
 	62.5% {
-		box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 0,
-			-2em 2em 0 0.2em, -3em 0 0 0, -2em -2em 0 -1em;
+		box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 0, -2em 2em 0 0.2em, -3em 0 0 0,
+			-2em -2em 0 -1em;
 	}
 	75% {
-		box-shadow: 0em -3em 0 -1em, 2em -2em 0 -1em, 3em 0em 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em,
-			-2em 2em 0 0, -3em 0em 0 0.2em, -2em -2em 0 0;
+		box-shadow: 0em -3em 0 -1em, 2em -2em 0 -1em, 3em 0em 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 0,
+			-3em 0em 0 0.2em, -2em -2em 0 0;
 	}
 	87.5% {
-		box-shadow: 0em -3em 0 0, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em,
-			-2em 2em 0 0, -3em 0em 0 0, -2em -2em 0 0.2em;
+		box-shadow: 0em -3em 0 0, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 0, -3em 0em 0 0,
+			-2em -2em 0 0.2em;
 	}
 }
 </style>

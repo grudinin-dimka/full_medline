@@ -16,9 +16,9 @@ export default {
 
 		client: {
 			surname: null,
+			name: null,
+			patronymic: null,
 			snils: null,
-			status: null,
-			rights: null,
 		},
 	},
 	mutations: {
@@ -29,18 +29,11 @@ export default {
 			}
 		},
 
-		/* Добавление токена в локальное хранилище */
-		setTokenToLocal(state, token) {
-			localStorage.setItem("token", token);
-		},
-
-		/* Установка данных пользователя */
-		setUser(state, user) {
-			state.user.nickname = user.nickname;
-			state.user.email = user.email;
-			state.user.status = user.status;
-			state.user.rights = user.rights;
-			state.user.image = user.image;
+		/* Обновление данных клиента */
+		updateClient(state, client) {
+			for (let key in state.client) {
+				state.client[key] = client[key];
+			}
 		},
 
 		logoutOpen(state) {
@@ -48,9 +41,9 @@ export default {
 		},
 
 		/* Удаление токена везде */
-		removeToken(state) {
+		removeAdminToken(state) {
 			// Удаление токена
-			localStorage.removeItem("token");
+			localStorage.removeItem("atoken");
 
 			// Очистка хранилища
 			this.commit("updateUser", {
@@ -65,6 +58,25 @@ export default {
 
 			router.push({ name: "login" });
 		},
+
+		/* Удаление токена везде */
+		removeCabinetToken(state) {
+			// Удаление токена
+			localStorage.removeItem("ctoken");
+
+			// Очистка хранилища
+			this.commit("updateClient", {
+				surname: null,
+				name: null,
+				patronymic: null,
+				snils: null,
+			});
+
+			// Удаление токена из заголовка
+			delete axios.defaults.headers.common.Authorization;
+
+			router.push({ name: "c-login" });
+		},
 	},
 	actions: {
 		logout({ state, commit, rootGetters }) {
@@ -74,17 +86,35 @@ export default {
 				method: "post",
 				url: rootGetters.urlApi + `logout`,
 				headers: {
-					Authorization: "Bearer " + localStorage.getItem("token"),
+					Authorization: "Bearer " + localStorage.getItem("atoken"),
 				},
 			}).finally(() => {
 				state.isLogout = false;
 				state.logoutCount = 0;
 
-				this.commit("removeToken");
+				this.commit("removeAdminToken");
+			});
+		},
+
+		logoutCabinet({ state, commit, rootGetters }) {
+			state.isLogout = true;
+
+			axios({
+				method: "post",
+				url: rootGetters.urlCabinet + `logout`,
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("ctoken"),
+				},
+			}).finally(() => {
+				state.isLogout = false;
+				state.logoutCount = 0;
+
+				this.commit("removeCabinetToken");
 			});
 		},
 	},
 	getters: {
+		/* Пользователи */
 		getUserRights(state) {
 			return state.user.rights;
 		},
@@ -107,6 +137,23 @@ export default {
 
 		getLogoutCount: (state) => {
 			return state.logoutCount;
+		},
+
+		/* Клиенты */
+		getClientSurname(state) {
+			return state.client.surname;
+		},
+
+		getClientName(state) {
+			return state.client.name;
+		},
+
+		getClientPatronymic(state) {
+			return state.client.patronymic;
+		},
+
+		getClientSnils(state) {
+			return state.client.snils;
 		},
 	},
 };

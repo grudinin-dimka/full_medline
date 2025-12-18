@@ -57,7 +57,6 @@ export default {
 		return {
 			loader: {
 				loading: true,
-				other: false,
 			},
 
 			/* Модальные окна */
@@ -99,7 +98,7 @@ export default {
 	},
 	beforeCreate() {
 		// Проверка начилия токена в локальном хранилище
-		if (!localStorage.getItem("token")) {
+		if (!localStorage.getItem("atoken")) {
 			this.$router.push({ name: "not-found" });
 			return;
 		} else {
@@ -109,22 +108,21 @@ export default {
 				url: `${this.$store.getters.urlApi}` + `check-user`,
 				headers: {
 					Accept: "application/json",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
+					Authorization: `Bearer ${localStorage.getItem("atoken")}`,
 				},
 			})
 				.then((response) => {
-					if (response.data.status) {
-						this.$store.commit("updateUser", response.data.data);
+					if (response.data.success) {
+						this.$store.commit("updateUser", response.data.result);
 
 						this.loader.loading = false;
-						this.loader.other = true;
 					} else {
-						localStorage.removeItem("token");
+						localStorage.removeItem("atoken");
 						this.$router.push({ name: "not-found" });
 					}
 				})
 				.catch((error) => {
-					localStorage.removeItem("token");
+					localStorage.removeItem("atoken");
 					this.$router.push({ name: "not-found" });
 					return;
 				});

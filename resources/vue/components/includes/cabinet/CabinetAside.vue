@@ -15,12 +15,12 @@
 
 		<template #body>
 			<VueAsideButton
-				:link="'/cabinet/profile'"
-				:is-active="isActive('/cabinet/profile')"
-				@click.prevent="insertPage('cabinet-profile')"
+				:link="'/cabinet/appointments'"
+				:is-active="isActive('/cabinet/appointments')"
+				@click.prevent="insertPage('cabinet-appointments')"
 			>
-				<VueIcon :name="'Account Circle'" :fill="'black'" :width="'28px'" :height="'28px'" />
-				<span v-if="!$store.getters.getIsHide" class="aside__item-button-label">ПРОФИЛЬ</span>
+				<VueIcon :name="'Patient List'" :fill="'black'" :width="'28px'" :height="'28px'" />
+				<span v-if="!$store.getters.getIsHide" class="aside__item-button-label">ПРИЕМЫ</span>
 			</VueAsideButton>
 
 			<VueAsideButton
@@ -30,15 +30,6 @@
 			>
 				<VueIcon :name="'Clinical Notes'" :fill="'black'" :width="'28px'" :height="'28px'" />
 				<span v-if="!$store.getters.getIsHide" class="aside__item-button-label">АНАЛИЗЫ</span>
-			</VueAsideButton>
-
-			<VueAsideButton
-				:link="'/cabinet/appointments'"
-				:is-active="isActive('/cabinet/appointments')"
-				@click.prevent="insertPage('cabinet-appointments')"
-			>
-				<VueIcon :name="'Patient List'" :fill="'black'" :width="'28px'" :height="'28px'" />
-				<span v-if="!$store.getters.getIsHide" class="aside__item-button-label">ПРИЕМЫ</span>
 			</VueAsideButton>
 
 			<VueAsideButton
@@ -74,14 +65,6 @@ export default {
 		VueAsideList,
 	},
 	methods: {
-		isCreator() {
-			return this.$store.getters.getUserRights === "creator";
-		},
-
-		isAdmin() {
-			return this.$store.getters.getUserRights === "admin";
-		},
-
 		insertPage(page) {
 			localStorage.setItem("page", page);
 
@@ -119,6 +102,7 @@ export default {
 }
 
 .aside__logo-label {
+	white-space: nowrap;
 	font-size: 1.8rem;
 	font-weight: bold;
 

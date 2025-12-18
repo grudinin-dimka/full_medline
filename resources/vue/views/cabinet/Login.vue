@@ -1,4 +1,7 @@
 <template>
+	<VueDebugger />
+	<VueLoader :isLoading="loader.loading" />
+
 	<div class="container-login">
 		<div class="login">
 			<div class="login__info">
@@ -6,139 +9,42 @@
 				<div class="login__info-text">v0.0</div>
 			</div>
 
-			<form @click.prevent class="login__form">
-				<template v-if="section === 'login'">
-					<VueMask
-						v-model.trim="currentLogin.data.snils.body"
-						:mask="'###-###-### ##'"
-						:placeholder="'000-000-000 00'"
-						:error="currentLogin.errors.snils.status"
-					>
-						<template #label>
-							<VueIcon :name="'Id Card'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
-							СНИЛС
-						</template>
-						<template #error>
-							{{ currentLogin.errors.snils.message }}
-						</template>
-					</VueMask>
+			<form @submit.prevent class="login__form">
+				<VueMask
+					v-model.trim="currentLogin.data.snils.value"
+					:mask="'###-###-### ##'"
+					:placeholder="'000-000-000 00'"
+					:error="currentLogin.errors.snils.status"
+				>
+					<template #label>
+						<VueIcon :name="'Id Card'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+						СНИЛС
+					</template>
+					<template #error>
+						{{ currentLogin.errors.snils.message }}
+					</template>
+				</VueMask>
 
-					<VuePassword
-						v-model.trim="currentLogin.data.password.body"
-						:placeholder="'Введите пароль'"
-						:error="currentLogin.errors.password.status"
-					>
-						<template #label>
-							<VueIcon :name="'Key'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
-							ПАРОЛЬ
-						</template>
-						<template #error>
-							{{ currentLogin.errors.password.message }}
-						</template>
-					</VuePassword>
+				<VuePassword
+					v-model.trim="currentLogin.data.password.value"
+					:placeholder="'Введите пароль'"
+					:error="currentLogin.errors.password.status"
+				>
+					<template #label>
+						<VueIcon :name="'Key'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+						ПАРОЛЬ
+					</template>
+					<template #error>
+						{{ currentLogin.errors.password.message }}
+					</template>
+				</VuePassword>
 
-					<div class="form__login-buttons">
-						<div class="form__login-buttons-item">
-							<VueButton :look="'inverse'" @click="changeSection('register')"> Регистрация </VueButton>
-							<VueButton :look="'inverse'" :figure="'circle'" @click="changeSection('recover')">
-								<VueIcon :name="'Key'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
-							</VueButton>
-						</div>
-
-						<div class="form__login-buttons-item">
-							<VueButton>
-								<VueIcon :name="'Login'" :fill="'white'" :width="'28px'" :height="'28px'" />
-								Войти
-							</VueButton>
-						</div>
-					</div>
-				</template>
-
-				<template v-if="section === 'register'">
-					<VueMask
-						v-model.trim="currentLogin.data.snils.body"
-						:mask="'###-###-### ##'"
-						:placeholder="'000-000-000 00'"
-						:error="currentLogin.errors.snils.status"
-					>
-						<template #label>
-							<VueIcon :name="'Id Card'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
-							СНИЛС
-						</template>
-						<template #error>
-							{{ currentLogin.errors.snils.message }}
-						</template>
-					</VueMask>
-
-					<VueValues
-						v-model.trim="currentLogin.data.surname.body"
-						:placeholder="'Введите фамилию'"
-						:error="currentLogin.errors.surname.status"
-					>
-						<template #label>
-							<VueIcon :name="'Id Card'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
-							ФАМИЛИЯ
-						</template>
-						<template #error>
-							{{ currentLogin.errors.surname.message }}
-						</template>
-					</VueValues>
-
-					<VuePassword
-						v-model.trim="currentLogin.data.password.body"
-						:placeholder="'Введите фамилию'"
-						:error="currentLogin.errors.password.status"
-					>
-						<template #label>
-							<VueIcon :name="'Key'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
-							ПАРОЛЬ
-						</template>
-						<template #error>
-							{{ currentLogin.errors.password.message }}
-						</template>
-					</VuePassword>
-
-					<VuePassword
-						v-model.trim="currentLogin.data.password.body"
-						:placeholder="'Введите фамилию'"
-						:error="currentLogin.errors.surname.status"
-					>
-						<template #label>
-							<VueIcon :name="'Key'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
-							ПОДТВЕРЖДЕНИЕ ПАРОЛЯ
-						</template>
-						<template #error>
-							{{ currentLogin.errors.surname.message }}
-						</template>
-					</VuePassword>
-
-					<div class="form__login-buttons">
-						<VueButton :look="'inverse'" @click="changeSection('login')"> Вернуться </VueButton>
-						<VueButton> Подтвердить </VueButton>
-					</div>
-				</template>
-
-				<template v-if="section === 'recover'">
-					<VueMask
-						v-model.trim="currentLogin.data.snils.body"
-						:mask="'###-###-### ##'"
-						:placeholder="'000-000-000 00'"
-						:error="currentLogin.errors.snils.status"
-					>
-						<template #label>
-							<VueIcon :name="'Id Card'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
-							СНИЛС
-						</template>
-						<template #error>
-							{{ currentLogin.errors.snils.message }}
-						</template>
-					</VueMask>
-
-					<div class="form__login-buttons">
-						<VueButton :look="'inverse'" @click="changeSection('login')"> Вернуться </VueButton>
-						<VueButton> Восстановить </VueButton>
-					</div>
-				</template>
+				<div class="form__login-buttons">
+					<VueButton :disabled="disabled.login" @click="login">
+						<VueIcon :name="'Login'" :fill="'white'" :width="'28px'" :height="'28px'" />
+						Войти
+					</VueButton>
+				</div>
 			</form>
 
 			<div class="login__footer">
@@ -159,6 +65,7 @@
 </template>
 
 <script>
+import capi from "../../mixin/capi";
 import axios from "axios";
 import validate from "../../services/validate";
 
@@ -171,62 +78,94 @@ export default {
 			},
 
 			disabled: {
-				login: {
-					update: false,
-				},
+				login: false,
 			},
 
 			currentLogin: {
 				errors: {
 					password: {
-						body: "",
+						message: "",
 						status: false,
 					},
 					snils: {
-						body: "",
-						status: false,
-					},
-					surname: {
-						body: "",
+						message: "",
 						status: false,
 					},
 				},
 				data: {
 					password: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 					snils: {
-						body: "",
-						edited: false,
-					},
-					surname: {
-						body: "",
+						value: "",
 						edited: false,
 					},
 				},
 			},
-			errors: {
-				name: {
-					status: false,
-					value: "",
-				},
-				password: {
-					status: false,
-					value: "",
-				},
-				server: false,
-			},
-
-			section: "login",
 		};
 	},
 	methods: {
 		changeSection(name) {
 			this.section = name;
 		},
+
+		login() {
+			if (
+				validate.checkInputsAll(this.currentLogin, [
+					{
+						key: "snils",
+						type: "mask",
+						mask: /\d{3}-\d{3}-\d{3} \d{2}/,
+					},
+					{
+						key: "password",
+						type: "text",
+					},
+				])
+			)
+				return;
+
+			this.disabled.login = true;
+
+			capi({
+				method: "post",
+				url: `${this.$store.getters.urlCabinet}` + `login`,
+				headers: {
+					"Content-Type": "application/json",
+				},
+				data: {
+					snils: this.currentLogin.data.snils.value,
+					password: this.currentLogin.data.password.value,
+				},
+			})
+				.then((response) => {
+					if (!response) return;
+
+					// Запись токена в глобальную переменную
+					this.$store.commit("setValueToLocal", {
+						name: "ctoken",
+						value: response.data.result,
+					});
+
+					// Перевод на страницу админки
+					this.$router.push({ name: "cabinet" });
+				})
+				.finally(() => {
+					this.disabled.login = false;
+				});
+		},
 	},
-	mounted() {},
+	mounted() {
+		this.$store.commit("clearDebugger");
+
+		if (localStorage.getItem("ctoken")) {
+			this.$router.push({ name: "cabinet" });
+		} else {
+			this.loader.loading = false;
+			this.loader.other = true;
+		}
+	},
 };
 </script>
 
@@ -289,12 +228,12 @@ export default {
 
 .form__login-buttons {
 	display: flex;
-	justify-content: space-between;
+	justify-content: flex-end;
 	align-items: center;
 	gap: 10px;
 }
 
-.form__login-buttons-item { 
+.form__login-buttons-item {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -308,6 +247,8 @@ export default {
 }
 
 .info__logo {
+	user-select: none;
+
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -316,6 +257,8 @@ export default {
 }
 
 .login__footer-text {
+	user-select: none;
+
 	text-align: center;
 	color: var(--primary-color);
 }

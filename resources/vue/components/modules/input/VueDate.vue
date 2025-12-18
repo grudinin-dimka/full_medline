@@ -350,6 +350,8 @@ export default {
 		/* |                     Кнопки                        |*/
 		/* |___________________________________________________|*/
 		changeDate(type) {
+			if (this.modelValue === "") return;
+
 			switch (this.type) {
 				case "month":
 					if (type === "up") {
@@ -844,6 +846,8 @@ export default {
 
 /* Месяц: Кнопки */
 .vue-date__buttons {
+	user-select: none;
+
 	display: flex;
 	justify-content: space-between;
 }
@@ -875,6 +879,8 @@ export default {
 
 /* Дата: Календарь */
 .vue-date__calendar {
+	user-select: none;
+
 	display: flex;
 	flex-direction: column;
 	gap: var(--date-calendar-gap);

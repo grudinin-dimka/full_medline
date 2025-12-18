@@ -371,7 +371,7 @@ export default {
 		height: auto !important;
 		max-height: none !important;
 		width: auto !important;
-		padding: 20px 20px 20px 20px !important;
+		padding: 20px 0px !important;
 		margin: 0 !important;
 	}
 

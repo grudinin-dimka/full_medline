@@ -8,7 +8,7 @@
 
 				<div class="aside__logo-label" v-if="!$store.getters.getIsHide">
 					<div class="aside__logo-label-main">МЕДЛАЙН</div>
-					<div class="aside__logo-label-sub">РЕДАКТИРОВАНИЕ</div>
+					<div class="aside__logo-label-sub">АДМИН</div>
 				</div>
 			</div>
 		</template>
@@ -208,16 +208,6 @@
 				</template>
 
 				<template #content>
-					<VueAsideButton
-						:link="'/admin/eclients'"
-						:is-active="isActive('/admin/eclients')"
-						:is-child="true"
-						@click.prevent="insertPage('eclients')"
-					>
-						<VueIcon :name="'Patient List'" :fill="'black'" :width="'28px'" :height="'28px'" />
-						<span v-if="!$store.getters.getIsHide" class="aside__item-button-label">КЛИЕНТЫ</span>
-					</VueAsideButton>
-
 					<VueAsideButton
 						:link="'/admin/users'"
 						:is-active="isActive('/admin/users')"

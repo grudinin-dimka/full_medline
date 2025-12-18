@@ -305,7 +305,7 @@ export default {
 		if (!String(value).match(mask)) {
 			return {
 				status: true,
-				message: "Значение не соответствует маске.",
+				message: "Неверное значение.",
 			};
 		}
 
