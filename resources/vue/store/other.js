@@ -4,7 +4,7 @@ export default {
 
 		axios: {
 			urlApi: "/api/",
-			urlCabinet: "https://lk.medline.local/api/",
+			urlCabinet: "https://medlinegroup.ru/api/",
 		},
 
 		burger: {

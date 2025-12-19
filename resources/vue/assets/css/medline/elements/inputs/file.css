@@ -25,6 +25,6 @@
 	--file-dropzone-label-color--hover: var(--input-color-hover);
 
 	/* dropzone -> icon */
-	--file-dropzone-icon-fill: var(--input-color);
+	--file-dropzone-icon-fill: var(--input-border-color);
 	--file-dropzone-icon-fill--hover: var(--input-color-hover);
 }

@@ -377,6 +377,13 @@
 								:placeholder="'Загрузите картинку'"
 								:type="'image'"
 								:error="specialist.profile.errors.file.status"
+								:accept="['.png', '.webp']"
+								@guard="
+									({status, message}) => {
+										specialist.profile.errors.file.status = status;
+										specialist.profile.errors.file.message = message;
+									}
+								"
 							>
 								<template #label>
 									<VueIcon :name="'Attach File'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />

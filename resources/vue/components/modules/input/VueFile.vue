@@ -14,34 +14,49 @@
 					@drop.prevent="onDrop"
 					@click="openFileDialog"
 				>
-					<div class="dropzone__label">
-						<VueIcon v-if="type === 'image'" class="dropzone__icon" :name="'Image'" :width="'28px'" :height="'28px'" />
+					<div class="dropzone__label" :class="{ 'has-preview': file }">
+						<div class="dropzone__label-text">
+							<VueIcon
+								v-if="type === 'image'"
+								class="dropzone__icon"
+								:name="'Image'"
+								:width="'28px'"
+								:height="'28px'"
+							/>
 
-						<VueIcon
-							v-else-if="type === 'document'"
-							class="dropzone__icon"
-							:name="'Article'"
-							:width="'40px'"
-							:height="'40px'"
-						/>
+							<VueIcon
+								v-else-if="type === 'document'"
+								class="dropzone__icon"
+								:name="'Article'"
+								:width="'40px'"
+								:height="'40px'"
+							/>
 
-						<VueIcon
-							v-else-if="type === 'video'"
-							class="dropzone__icon"
-							:name="'Videocam'"
-							:width="'40px'"
-							:height="'40px'"
-						/>
+							<VueIcon
+								v-else-if="type === 'video'"
+								class="dropzone__icon"
+								:name="'Videocam'"
+								:width="'40px'"
+								:height="'40px'"
+							/>
 
-						<VueIcon v-else class="dropzone__icon" :name="'Attach File'" :width="'40px'" :height="'40px'" />
+							<VueIcon v-else class="dropzone__icon" :name="'Attach File'" :width="'40px'" :height="'40px'" />
 
-						<template v-if="!file"> Перетащите файл сюда или кликните </template>
+							<template v-if="file">
+								{{ file.name ?? "Файл загружен" }}
+							</template>
+							<template v-else>
+								{{ placeholder ? placeholder : "Файл не загружен" }}
+							</template>
+						</div>
 
-						<template v-else> {{ file.name }} </template>
+						<template v-if="type === 'image'">
+							<img class="dropzone__label-preview" ref="preview" alt="Превью" />
+						</template>
 					</div>
 				</div>
 
-				<input name="file" type="file" ref="fileInput" class="hidden" @change="onFileSelect" />
+				<input name="file" type="file" ref="fileInput" class="hidden" :accept="getAccept" @change="onFileSelect" />
 			</template>
 
 			<template v-else>
@@ -53,7 +68,14 @@
 					@drop.prevent="onDrop"
 				>
 					<label class="vue-input__file-button">
-						<input name="file" type="file" class="vue-input vue-input__file" ref="fileInput" @change="onFileSelect" />
+						<input
+							name="file"
+							type="file"
+							class="vue-input vue-input__file"
+							ref="fileInput"
+							:accept="getAccept"
+							@change="onFileSelect"
+						/>
 
 						<span class="vue-input__file-icon-wrapper" ref="imageWrapper">
 							<span class="vue-input__file-text" ref="imageText">
@@ -114,6 +136,7 @@ import VueInput from "./VueInput.vue";
 
 export default {
 	name: "VueFile",
+	emits: ["update:modelValue", "guard"],
 	components: { VueInput },
 	props: {
 		modelValue: {
@@ -128,6 +151,10 @@ export default {
 		view: {
 			type: String,
 			default: "field",
+		},
+		accept: {
+			type: Array,
+			default: [],
 		},
 		placeholder: {
 			type: String,
@@ -144,6 +171,11 @@ export default {
 			isDragOver: false,
 		};
 	},
+	computed: {
+		getAccept() {
+			return this.accept.join(", ");
+		},
+	},
 	methods: {
 		/* Получение массива файлов */
 		files() {
@@ -156,32 +188,121 @@ export default {
 			this.$refs.fileInput.value = "";
 		},
 
+		/* Мышка над полем */
 		onDragOver() {
 			this.isDragOver = true;
 		},
 
+		/* Мышка вышла за пределы поля */
 		onDragLeave() {
 			this.isDragOver = false;
 		},
 
-		onDrop(e) {
-			this.isDragOver = false;
-			const droppedFile = e.dataTransfer.files;
-
-			if (droppedFile.length) {
-				this.file = droppedFile[0];
-
-				this.$refs.fileInput.files = e.dataTransfer.files;
-			}
-		},
-
+		/* Открытие диалогового окна */
 		openFileDialog() {
 			this.$refs.fileInput.click();
 		},
 
+		/* При отпускании мышки */
+		onDrop(e) {
+			this.isDragOver = false;
+
+			this.guardFile(e.dataTransfer);
+		},
+
+		/* Выбор файла */
 		onFileSelect(e) {
-			const selectedFile = e.target.files[0];
-			if (selectedFile) this.file = selectedFile;
+			this.guardFile(e.target);
+		},
+
+		guardFile(object) {
+			if (!object && !object.files && !object.files[0]) {
+				return;
+			}
+
+			switch (this.type) {
+				case "image":
+					this.guardFileImage(object.files);
+					break;
+				case "video":
+					this.guardFileVideo(object.files);
+					break;
+				case "document":
+					this.guardFileDocument(object.files);
+					break;
+				default:
+					this.file = object.files[0];
+					this.$refs.fileInput.files = object.files;
+					break;
+			}
+		},
+
+		guardFileImage(images) {
+			if (!images[0]?.type.startsWith("image")) {
+				this.$refs.fileInput.value = null;
+				this.file = null;
+
+				this.$emit("guard", {
+					status: true,
+					message: "Загрузите изображение",
+				});
+
+				return;
+			}
+
+			this.$emit("guard", {
+				status: false,
+				message: "",
+			});
+
+			if (this.view === "dropzone" && this.$refs.preview) {
+				this.$refs.preview.src = URL.createObjectURL(images[0]);
+			}
+
+			this.file = images[0];
+			this.$refs.fileInput.files = images;
+		},
+
+		guardFileVideo(videos) {
+			if (!videos[0]?.type.startsWith("video")) {
+				this.$refs.fileInput.value = null;
+				this.file = null;
+
+				this.$emit("guard", {
+					status: true,
+					message: "Загрузите видео",
+				});
+				return;
+			}
+
+			this.$emit("guard", {
+				status: false,
+				message: "",
+			});
+
+			this.file = videos[0];
+			this.$refs.fileInput.files = videos;
+		},
+
+		guardFileDocument(documents) {
+			if (!documents[0].type.startsWith("application")) {
+				this.$refs.fileInput.value = null;
+				this.file = null;
+
+				this.$emit("guard", {
+					status: true,
+					message: "Загрузите документом",
+				});
+				return;
+			}
+
+			this.$emit("guard", {
+				status: false,
+				message: "",
+			});
+
+			this.file = documents[0];
+			this.$refs.fileInput.files = documents;
 		},
 	},
 };
@@ -314,7 +435,6 @@ export default {
 
 	height: var(--file-dropzone-height);
 	min-height: var(--file-dropzone-min-height);
-
 	background-color: var(--file-dropzone-background-color);
 	text-align: center;
 
@@ -331,6 +451,41 @@ export default {
 }
 
 .dropzone__label {
+	display: flex;
+	flex-direction: column;
+	gap: var(--file-dropzone-label-gap);
+	justify-content: center;
+	align-items: center;
+
+	position: relative;
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+}
+
+/* Превью */
+.dropzone__label-preview {
+	position: absolute;
+	inset: 0;
+
+	width: 100%;
+	height: 100%;
+
+	object-fit: contain;
+	object-position: center;
+
+	opacity: 0;
+	background-color: white;
+
+	pointer-events: none;
+}
+
+/* когда есть файл */
+.dropzone__label.has-preview .dropzone__label-preview {
+	opacity: 1;
+}
+
+.dropzone__label-text {
 	cursor: pointer;
 	display: grid;
 	grid-template-columns: auto auto;
@@ -339,15 +494,16 @@ export default {
 	gap: var(--file-dropzone-label-gap);
 	word-break: break-all;
 
-	width: var(--file-dropzone-label-width);
-
-	font: var(--file-dropzone-label-font);
-	color: var(--file-dropzone-label-color);
+	height: var(--file-dropzone-height);
+	min-height: var(--file-dropzone-min-height);
 
 	transition: var(--file-dropzone-transition);
+
+	font-size: 1.125rem;
+	color: var(--input-border-color);
 }
 
-.dropzone:is(.active, :hover) .dropzone__label {
+.dropzone:is(.active, :hover) .dropzone__label-text {
 	color: var(--file-dropzone-label-color--hover);
 }
 

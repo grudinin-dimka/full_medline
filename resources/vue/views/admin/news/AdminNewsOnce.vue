@@ -71,7 +71,14 @@
 						:type="'image'"
 						:view="'dropzone'"
 						:placeholder="'Загрузите картинку'"
+						:accept="['.png', '.jpg', '.jpeg', '.webp']"
 						:error="currentNews.errors.image.status"
+						@guard="
+							({ status, message }) => {
+								currentNews.errors.image.status = status;
+								currentNews.errors.image.message = message;
+							}
+						"
 					>
 						<template #label>
 							<VueIcon :name="'Attach File'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />

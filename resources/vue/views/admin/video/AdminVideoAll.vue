@@ -116,6 +116,13 @@
 				:view="'dropzone'"
 				:placeholder="'Загрузите видео файл'"
 				:error="currentVideo.errors.file.status"
+				:accept="['.mp4', '.webm', '.mov']"
+				@guard="
+					({ status, message }) => {
+						currentVideo.errors.file.status = status;
+						currentVideo.errors.file.message = message;
+					}
+				"
 			>
 				<template #label>
 					<VueIcon :name="'Attach File'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />

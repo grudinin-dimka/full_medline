@@ -64,7 +64,7 @@
 					:alt="'Путевка'"
 					:height="'500px'"
 				/>
-				
+
 				<VueFile
 					v-model="currentTravel.data.file.value"
 					ref="fileImage"
@@ -72,6 +72,13 @@
 					:view="'dropzone'"
 					:placeholder="'Загрузите картинку'"
 					:error="currentTravel.errors.file.status"
+					:accept="['.png', '.webp', '.jpg', '.jpeg']"
+					@guard="
+						({ status, message }) => {
+							currentTravel.errors.file.status = status;
+							currentTravel.errors.file.message = message;
+						}
+					"
 				>
 					<template #label>
 						<VueIcon :name="'Attach File'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />

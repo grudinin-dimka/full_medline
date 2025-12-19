@@ -72,8 +72,15 @@
 					ref="fileImage"
 					:type="'image'"
 					:view="'dropzone'"
+					:accept="['.png', '.webp']"
 					:placeholder="'Загрузите картинку'"
 					:error="currentSlide.errors.file.status"
+					@guard="
+						({ status, message }) => {
+							currentSlide.errors.file.status = status;
+							currentSlide.errors.file.message = message;
+						}
+					"
 				>
 					<template #label>
 						<VueIcon :name="'Attach File'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />

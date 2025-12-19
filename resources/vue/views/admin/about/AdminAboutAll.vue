@@ -183,8 +183,16 @@
 				v-model="currentImage.data.file.value"
 				ref="fileImage"
 				:type="'image'"
+				:view="'dropzone'"
 				:placeholder="'Загрузите изображение'"
 				:error="currentImage.errors.file.status"
+				:accept="['.png', '.webp', '.jpg', '.jpeg']"
+				@guard="
+					({ status, message }) => {
+						currentImage.errors.file.status = status;
+						currentImage.errors.file.message = message;
+					}
+				"
 			>
 				<template #label>
 					<VueIcon :name="'Attach File'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />

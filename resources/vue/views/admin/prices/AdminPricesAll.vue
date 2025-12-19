@@ -14,7 +14,14 @@
 				:type="'document'"
 				:view="'dropzone'"
 				:placeholder="'Загрузите табличный файл'"
+				:accept="['.ods', '.xls', '.xlsx']"
 				:error="currentPrice.errors.file.status"
+				@guard="
+					({ status, message }) => {
+						currentPrice.errors.file.status = status;
+						currentPrice.errors.file.message = message;
+					}
+				"
 			>
 				<template #label>
 					<VueIcon :name="'Article'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
