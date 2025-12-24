@@ -10,6 +10,13 @@
 				:view="'dropzone'"
 				:placeholder="'Загрузите картинку'"
 				:error="currentUpload.errors.file.status"
+				:accept="['.png', '.webp', '.jpg', '.jpeg']"
+				@guard="
+					({ status, message }) => {
+						currentUpload.errors.file.status = status;
+						currentUpload.errors.file.message = message;
+					}
+				"
 			>
 				<template #label>
 					<VueIcon :name="'Attach File'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />

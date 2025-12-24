@@ -8,6 +8,8 @@
 	<!-- Навигация -->
 	<MainNav ref="mainNav" />
 
+	<MainAside />
+
 	<!-- События -->
 	<MainActions ref="mainActions" />
 
@@ -24,6 +26,7 @@ import MainHeader from "../../components/includes/main/medline/MainHeader.vue";
 import MainNav from "../../components/includes/main/medline/MainNav.vue";
 import MainFooter from "../../components/includes/main/medline/MainFooter.vue";
 import MainActions from "../../components/includes/main/medline/MainActions.vue";
+import MainAside from "../../components/includes/main/medline/MainAside.vue";
 
 export default {
 	data() {
@@ -39,6 +42,7 @@ export default {
 		MainNav,
 		MainFooter,
 		MainActions,
+		MainAside,
 	},
 };
 </script>

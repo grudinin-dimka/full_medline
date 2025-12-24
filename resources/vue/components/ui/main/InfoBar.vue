@@ -26,7 +26,7 @@ export default {
       width: 1350px;
    }
 
-   @media screen and (max-width: 750px) {
+   @media screen and (max-width: 850px) {
       .info-bar {
          margin: 100px 20px 20px 20px;
       }

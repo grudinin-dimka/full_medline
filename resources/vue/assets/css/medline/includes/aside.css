@@ -22,6 +22,8 @@
 	--aside-body-gap: calc(var(--default-gap) / 2);
 	--aside-footer-gap: var(--default-gap);
 
+	--aside-transition: all 0.35s ease;
+
 	/* aside.hidden */
 	--aside-width--hiden: 100px;
 
@@ -31,7 +33,7 @@
 	--aside-list-transition: ;
 
 	/* link */
-	--aside-link-padding: 10px 20px;
+	--aside-link-padding: 5px 15px;
 	--aside-link-height: 60px;
 	--aside-link-width: auto;
 	--aside-link-font-size: 1.25rem;
@@ -63,10 +65,10 @@
 	--aside-link-child-background-color-hover: rgba(0, 171, 190, 0.2);
 
 	/* link.hidden */
-	--aside-link-hidden-padding: 5px 15px;
+	--aside-link-small-padding: 5px 15px;
 
-	--aside-link-hidden-width: 60px;
-	--aside-link-hidden-height: 60px;
+	--aside-link-small-width: 60px;
+	--aside-link-small-height: 60px;
 
 	/* link -> .arrow */
 	--aside-arrow-top: none;

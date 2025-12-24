@@ -6,41 +6,88 @@
 		<div class="login">
 			<div class="login__info">
 				<div class="login__info-text">Личный кабинет</div>
-				<div class="login__info-text">v0.0</div>
+				<div class="login__info-text">v0.5</div>
 			</div>
 
 			<form @submit.prevent class="login__form">
-				<VueMask
-					v-model.trim="currentLogin.data.snils.value"
-					:mask="'###-###-### ##'"
-					:placeholder="'000-000-000 00'"
-					:error="currentLogin.errors.snils.status"
-				>
-					<template #label>
-						<VueIcon :name="'Id Card'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
-						СНИЛС
-					</template>
-					<template #error>
-						{{ currentLogin.errors.snils.message }}
-					</template>
-				</VueMask>
+				<VueFieldset :count="1" :gap="'20px'" :clear="true">
+					<template #inputs>
+						<VueMask
+							v-model.trim="currentLogin.data.snils.value"
+							:mask="'###-###-### ##'"
+							:placeholder="'000-000-000 00'"
+							:error="currentLogin.errors.snils.status"
+						>
+							<template #label>
+								<VueIcon :name="'Id Card'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+								СНИЛС
+							</template>
+							<template #error>
+								{{ currentLogin.errors.snils.message }}
+							</template>
+						</VueMask>
 
-				<VuePassword
-					v-model.trim="currentLogin.data.password.value"
-					:placeholder="'Введите пароль'"
-					:error="currentLogin.errors.password.status"
-				>
-					<template #label>
-						<VueIcon :name="'Key'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
-						ПАРОЛЬ
+						<VuePassword
+							v-model.trim="currentLogin.data.password.value"
+							:placeholder="'Введите пароль'"
+							:error="currentLogin.errors.password.status"
+						>
+							<template #label>
+								<VueIcon :name="'Key'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
+								ПАРОЛЬ
+							</template>
+							<template #error>
+								{{ currentLogin.errors.password.message }}
+							</template>
+						</VuePassword>
 					</template>
-					<template #error>
-						{{ currentLogin.errors.password.message }}
+				</VueFieldset>
+
+				<VueFieldset :count="1" :gap="'20px'">
+					<template #legend> ПРОВЕРОЧНЫЙ КОД </template>
+
+					<template #inputs>
+						<VueCaptcha
+							v-model="currentLogin.data.captcha.value"
+							:width="250"
+							:height="60"
+							:length="5"
+							:dots="1000"
+							:font="{
+								min: 30,
+								max: 30,
+								baseline: 'middle',
+							}"
+						/>
+
+						<VueValues
+							v-model.trim="currentLogin.data.captchaText.value"
+							:type="'text'"
+							:placeholder="'Введите текст'"
+							:error="currentLogin.errors.captchaText.status"
+						>
+							<template #label>
+								<VueIcon
+									:name="'Data Loss Prevention'"
+									:fill="'var(--primary-color)'"
+									:width="'20px'"
+									:height="'20px'"
+								/>
+								КОД С КАРТИНКИ
+							</template>
+							<template #error>
+								{{ currentLogin.errors.captchaText.message }}
+							</template>
+						</VueValues>
 					</template>
-				</VuePassword>
+				</VueFieldset>
+
+				<VueSwitch v-model="currentLogin.data.approval.value" :error="currentLogin.errors.approval.status">
+					<template #label> Я согласен с <a class="link" href="#">политикой конфиденциальности</a> кабинета </template>
+				</VueSwitch>
 
 				<div class="form__login-buttons">
-					<VueButton :disabled="disabled.login" @click="login">
+					<VueButton :disabled="disabled.login" :type="'submit'" @click="login">
 						<VueIcon :name="'Login'" :fill="'white'" :width="'28px'" :height="'28px'" />
 						Войти
 					</VueButton>
@@ -69,7 +116,13 @@ import capi from "../../mixin/capi";
 import axios from "axios";
 import validate from "../../services/validate";
 
+import VueCaptcha from "../../components/modules/VueCaptcha.vue";
+
 export default {
+	name: "CabinetLogin",
+	components: {
+		VueCaptcha,
+	},
 	data() {
 		return {
 			loader: {
@@ -91,6 +144,18 @@ export default {
 						message: "",
 						status: false,
 					},
+					captcha: {
+						message: "",
+						status: false,
+					},
+					captchaText: {
+						message: "",
+						status: false,
+					},
+					approval: {
+						message: "",
+						status: false,
+					},
 				},
 				data: {
 					password: {
@@ -101,16 +166,26 @@ export default {
 						value: "",
 						edited: false,
 					},
+					captcha: {
+						value: "",
+						edited: false,
+					},
+					captchaText: {
+						value: "",
+						edited: false,
+					},
+					approval: {
+						value: false,
+						edited: false,
+					},
 				},
 			},
 		};
 	},
 	methods: {
-		changeSection(name) {
-			this.section = name;
-		},
-
-		login() {
+		/* Авторизация */
+		async login() {
+			// проверка полей ввода
 			if (
 				validate.checkInputsAll(this.currentLogin, [
 					{
@@ -122,13 +197,30 @@ export default {
 						key: "password",
 						type: "text",
 					},
+					{
+						key: "captchaText",
+						type: "twice",
+						reference: this.currentLogin.data.captcha.value,
+					},
+					{
+						key: "approval",
+						type: "boolean",
+						reference: true,
+					},
 				])
-			)
+			) {
+				this.$store.commit("addDebugger", {
+					title: "Ошибка",
+					body: "Заполните важные поля",
+					type: "error",
+				});
+
 				return;
+			}
 
 			this.disabled.login = true;
 
-			capi({
+			await capi({
 				method: "post",
 				url: `${this.$store.getters.urlCabinet}` + `login`,
 				headers: {
@@ -198,7 +290,7 @@ export default {
 	height: 100%;
 	width: 100%;
 
-	box-shadow: var(--default-shadow);
+	box-shadow: var(--default-box-shadow);
 }
 
 .login__info {
@@ -271,5 +363,15 @@ export default {
 	font-size: 5rem;
 
 	color: var(--primary-color);
+}
+
+@media screen and (width <= 900px) {
+	.container-login {
+		grid-template-columns: 1fr;
+	}
+
+	.info {
+		display: none;
+	}
 }
 </style>

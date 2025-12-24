@@ -23,7 +23,7 @@
 
 	--default-outline: 0px solid rgba(0, 0, 0, 0.2);
 
-	--default-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.05);
+	--default-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.05);
 
 	--item-background-color: #f0fafc;
 	--item-background-color-active: #f2feff;

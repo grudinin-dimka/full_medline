@@ -266,7 +266,7 @@ p {
 	}
 }
 
-@media screen and (max-width: 750px) {
+@media screen and (max-width: 850px) {
 	.slider__loader {
 		margin-top: 70px;
 	}

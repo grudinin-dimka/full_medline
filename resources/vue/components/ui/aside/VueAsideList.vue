@@ -1,7 +1,7 @@
 <template>
-	<div class="aside__list" :class="{ 'aside__list--hiden': $store.getters.getIsHide }" ref="asideList">
-		<VueAsideLink @click.prevent="isShow = !isShow" :is-active="isShow">
-			<div class="aside__list-arrow" v-if="!$store.getters.getIsHide" :class="{ show: isShow }">
+	<div class="aside__list" :class="{ 'aside__list--hiden': $store.getters.getAsideSmall }" ref="asideList">
+		<VueAsideLink @click.prevent="isShow = !isShow" :is-active="isShow" :is-small="isSmall">
+			<div class="aside__list-arrow" v-if="!isSmall" :class="{ show: isShow }">
 				<VueIcon :name="'Arrow'" :fill="'black'" :width="'14px'" :height="'14px'" />
 			</div>
 
@@ -9,7 +9,7 @@
 		</VueAsideLink>
 
 		<div class="aside__list-content" :class="{ show: isShow }">
-			<div class="aside__list-line" v-if="!$store.getters.getIsHide"></div>
+			<div class="aside__list-line" v-if="!isSmall"></div>
 
 			<slot name="content"></slot>
 		</div>
@@ -24,6 +24,10 @@ export default {
 		alias: {
 			type: Array,
 			default: [],
+		},
+		isSmall: {
+			type: Boolean,
+			default: false,
 		},
 	},
 	components: {

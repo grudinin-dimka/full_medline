@@ -132,6 +132,7 @@ export default {
 	},
 	mounted() {
 		this.$store.commit("clearDebugger");
+		this.$store.commit("closeAside");
 	},
 };
 </script>

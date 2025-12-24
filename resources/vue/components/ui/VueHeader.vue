@@ -1,11 +1,7 @@
 <template>
 	<header :class="{ 'header--hidden': isHidden }" ref="header">
-		<div class="header__item header__item--left">
-			<slot name="left"></slot>
-		</div>
-
-		<div class="header__item header__item--right">
-			<slot name="right"></slot>
+		<div class="header__body">
+			<slot name="body"></slot>
 		</div>
 
 		<div class="header__dropdown" v-if="isShow" ref="headerDropdown">
@@ -80,10 +76,13 @@ header {
 	box-shadow: var(--header-box-shadow);
 }
 
-.header__item {
+.header__body {
 	display: flex;
 	align-items: center;
+	justify-content: space-between;
 	gap: var(--default-gap);
+
+	width: 100%;
 }
 
 /* Выпадающее меню */
@@ -101,11 +100,30 @@ header {
 	width: min(100%, 250px);
 
 	background-color: white;
-	border-radius: 10px;
+	border-radius: var(--default-border-radius);
 	border: var(--default-border);
 	box-shadow: var(--default-box-shadow);
 
 	animation: fadeIn 0.2s ease;
+}
+
+.header__dropdown__item {
+	user-select: none;
+	cursor: pointer;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 10px;
+
+	background-color: white;
+	padding: 10px;
+	border-radius: calc(var(--default-border-radius) / 1.5);
+
+	font: var(--default-font-weight) 1.125rem var(--default-font-family);
+}
+
+.header__dropdown__item:hover {
+	background-color: rgba(0, 0, 0, 0.05);
 }
 
 .header__dropdown__footer {
@@ -121,5 +139,12 @@ header {
 	border-color: var(--default-border-color);
 
 	padding: 10px;
+}
+
+@media screen and (width < 850px) {
+	.header__dropdown {
+		left: 10px;
+		right: auto;
+	}
 }
 </style>

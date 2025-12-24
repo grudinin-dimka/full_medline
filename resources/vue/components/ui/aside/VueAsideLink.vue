@@ -1,6 +1,14 @@
 <template>
-	<a :href="link" class="aside__link" :class="{ child: isChild, active: isActive, hidden: $store.getters.getIsHide }">
-		<div class="aside__link-stage" v-if="isChild && !$store.getters.getIsHide">
+	<a
+		:href="link"
+		class="aside__link"
+		:class="{ 
+			'aside__link--child': isChild, 
+			'aside__link--active': isActive, 
+			'aside__link--small': isSmall, 
+		}"
+	>
+		<div class="aside__link-stage" v-if="isChild && !$store.getters.getAsideSmall">
 			<div class="aside__link-stage-point"></div>
 		</div>
 
@@ -20,6 +28,10 @@ export default {
 			default: false,
 		},
 		isActive: {
+			type: Boolean,
+			default: false,
+		},
+		isSmall: {
 			type: Boolean,
 			default: false,
 		},
@@ -58,7 +70,7 @@ a.aside__link {
 	transition: var(--aside-link-transition);
 }
 
-a.aside__link:is(:hover, .active) {
+a.aside__link:is(:hover, .aside__link--active) {
 	color: var(--aside-link-font-color-hover);
 
 	border: var(--aside-link-border-hover);
@@ -70,37 +82,37 @@ a.aside__link svg {
 	transition: all 0s;
 }
 
-a.aside__link:is(:hover, .active) svg {
+a.aside__link:is(:hover, .aside__link--active) svg {
 	fill: var(--aside-link-icon-fill-hover);
 }
 
-a.aside__link.child {
+a.aside__link.aside__link--child {
 	border: var(--aside-link-child-border);
 	background-color: var(--aside-link-child-background-color);
 
 	color: var(--aside-link-child-font-color);
 }
 
-a.aside__link.child:is(:hover, .active) {
+a.aside__link.aside__link--child:is(:hover, .aside__link--active) {
 	border: var(--aside-link-child-border-hover);
 	background-color: var(--aside-link-child-background-color-hover);
 
 	color: var(--aside-link-child-font-color-hover);
 }
 
-a.aside__link.child svg {
+a.aside__link.aside__link--child svg {
 	fill: var(--aside-link-child-svg-fill);
 }
 
-a.aside__link.child:is(:hover, .active) svg {
+a.aside__link.aside__link--child:is(:hover, .aside__link--active) svg {
 	fill: var(--aside-link-child-svg-fill-hover);
 }
 
-a.aside__link.hidden {
-	padding: var(--aside-link-hidden-padding);
+a.aside__link.aside__link--small {
+	padding: var(--aside-link-small-padding);
 
-	width: var(--aside-link-hidden-width);
-	height: var(--aside-link-hidden-height);
+	width: var(--aside-link-small-width);
+	height: var(--aside-link-small-height);
 }
 
 .aside__link-stage {
@@ -132,11 +144,20 @@ a.aside__link.hidden {
 	transition: var(--aside-link-point-transition);
 }
 
-a.aside__link.child:is(:hover, .active) .aside__link-stage {
+a.aside__link.aside__link--child:is(:hover, .aside__link--active) .aside__link-stage {
 	background-color: var(--aside-link-stage-hover-background-color);
 }
 
-a.aside__link.child:is(:hover, .active) .aside__link-stage .aside__link-stage-point {
+a.aside__link.aside__link--child:is(:hover, .aside__link--active) .aside__link-stage .aside__link-stage-point {
 	background-color: var(--aside-link-stage-hover-background-color);
+}
+
+@media screen and (width < 850px) {
+	a.aside__link.aside__link--small {
+		padding: var(--aside-link-padding);
+
+		width: var(--aside-link-width);
+		height: var(--aside-link-height);
+	}
 }
 </style>

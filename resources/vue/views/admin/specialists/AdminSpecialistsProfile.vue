@@ -1136,7 +1136,7 @@ export default {
 						edited: false,
 					},
 					date: {
-						value: null,
+						value: "",
 						edited: false,
 					},
 					speсialization: {

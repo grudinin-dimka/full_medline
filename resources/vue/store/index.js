@@ -2,23 +2,23 @@ import { createStore } from "vuex";
 
 /* Импорт модулей */
 import autorization from "./autorization.js";	
-import other from "./other.js";
+import url from "./url.js";
 import debug from "./debug.js";
 import modals from "./modals.js";
 import wiki from "./wiki.js";
-import site from "./site.js";
-import shared from "./shared.js";
+import gui from "./gui.js";
+import local from "./local.js";
 
 /* Создание хранилища */
 const store = createStore({
 	modules: {
 		autorization,
-		other,
+		url,
 		debug,
 		modals,
 		wiki,
-		site,
-		shared,
+		gui,
+		local,
 	},
 });
 

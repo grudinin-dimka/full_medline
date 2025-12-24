@@ -50,10 +50,10 @@
 	</VueModal>
 
 	<VueHeader ref="header">
-		<template #left>
-			<div class="header__close" @click="$store.commit('setIsHide')">
+		<template #body>
+			<div class="header__close" @click="$store.commit('toggleAsideSmall')">
 				<VueIcon
-					v-if="$store.getters.getIsHide"
+					v-if="$store.getters.getAsideSmall"
 					:name="'Arrow Menu Open'"
 					:fill="'black'"
 					:hover="'var(--primary-color)'"
@@ -69,9 +69,7 @@
 					:height="'30px'"
 				/>
 			</div>
-		</template>
 
-		<template #right>
 			<div class="header__user" @click="$refs.header.open()">
 				<span class="header__user-info">
 					<span class="header__user-name">
@@ -84,6 +82,8 @@
 					<VueIcon :name="'Account Circle'" :fill="'black'" :width="'50px'" :height="'50px'" />
 				</div>
 			</div>
+
+			<VueBurger :isActive="!$store.getters.getAsideHide" @click="$store.commit('toggleAsideHide')" />
 		</template>
 
 		<template #dropdown>
@@ -107,9 +107,13 @@
 
 <script>
 import VueHeader from "../../ui/VueHeader.vue";
+import VueBurger from "../../ui/VueBurger.vue";
 
 export default {
-	components: { VueHeader },
+	components: {
+		VueHeader,
+		VueBurger,
+	},
 	data() {
 		return {
 			/* Модальное окно */
@@ -143,7 +147,7 @@ export default {
 
 		makeDebug() {
 			this.$store.commit("addDebugger", {
-				title: 'Соглашение',
+				title: "Соглашение",
 				body: "Узнавайте в медицинских центрах.",
 				type: "completed",
 			});
@@ -234,12 +238,27 @@ export default {
 
 	background-color: white;
 	padding: 10px;
-	border-radius: 10px;
+	border-radius: calc(var(--default-border-radius) / 1.5);
 
 	font: var(--default-font-weight) 1.125rem var(--default-font-family);
 }
 
 .header__dropdown__item:hover {
 	background-color: rgba(0, 0, 0, 0.05);
+}
+
+@media screen and (width < 850px) {
+	.header__close {
+		display: none;
+	}
+
+	.header__user-info {
+		align-items: flex-start;
+		order: 2;
+	}
+
+	.header__user-icon {
+		order: 1;
+	}
 }
 </style>

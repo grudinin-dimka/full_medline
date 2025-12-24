@@ -1,5 +1,5 @@
 <template>
-	<nav :class="{ active: $store.getters.burgerMainStatus }">
+	<nav>
 		<div class="nav__list">
 			<a
 				class="nav__list-item"
@@ -13,14 +13,7 @@
 			<div class="nav__dropdown">
 				<div class="nav__dropdown-title nav__list-item">
 					Цены
-					<VueIcon
-						class="item-arrow"
-						:name="'Arrow'"
-						:fill="'white'"
-						:width="'20px'"
-						:height="'20px'"
-						:rotate="180"
-					/>
+					<VueIcon class="item-arrow" :name="'Arrow'" :fill="'white'" :width="'20px'" :height="'20px'" :rotate="180" />
 				</div>
 				<div class="nav__dropdown-body">
 					<div class="nav__dropdown__body-list">
@@ -48,14 +41,7 @@
 			<div class="nav__dropdown">
 				<div class="nav__dropdown-title nav__list-item">
 					Услуги
-					<VueIcon
-						class="item-arrow"
-						:name="'Arrow'"
-						:fill="'white'"
-						:width="'20px'"
-						:height="'20px'"
-						:rotate="180"
-					/>
+					<VueIcon class="item-arrow" :name="'Arrow'" :fill="'white'" :width="'20px'" :height="'20px'" :rotate="180" />
 				</div>
 				<div class="nav__dropdown-body">
 					<div class="nav__dropdown__body-list">
@@ -101,14 +87,7 @@
 			<div class="nav__dropdown">
 				<div class="nav__dropdown-title nav__list-item">
 					Информация
-					<VueIcon
-						class="item-arrow"
-						:name="'Arrow'"
-						:fill="'white'"
-						:width="'20px'"
-						:height="'20px'"
-						:rotate="180"
-					/>
+					<VueIcon class="item-arrow" :name="'Arrow'" :fill="'white'" :width="'20px'" :height="'20px'" :rotate="180" />
 				</div>
 				<div class="nav__dropdown-body">
 					<div class="nav__dropdown__body-list">
@@ -185,7 +164,7 @@ nav {
 	color: white;
 	border-radius: var(--default-border-radius);
 
-	transition: all 0.5s ease-out;
+	transition: all 0.35s ease-out;
 }
 
 .nav__list {
@@ -317,79 +296,12 @@ nav {
 
 	.nav__list a {
 		width: auto;
-	}
+	}	
 }
 
-@media screen and (max-width: 800px) {
-	.nav__list {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-	}
-
-	.nav__list a {
-		width: auto;
-	}
-}
-
-@media screen and (max-width: 750px) {
+@media screen and (width <= 850px) {
 	nav {
-		z-index: 5;
-		position: fixed;
-		top: -100vh;
-		bottom: 100vh;
-		left: 0px;
-		right: 0px;
-
-		border-radius: 0px;
-
-		display: flex;
-		flex-direction: column;
-		margin: 0px;
-
-		overflow-y: auto;
-	}
-
-	.nav__list {
-		display: grid;
-		grid-template-columns: repeat(1, 1fr);
-	}
-
-	nav.active {
-		padding-top: 100px;
-		top: 0px;
-		left: 0px;
-		right: 0px;
-		bottom: 0;
-	}
-
-	.nav__dropdown-body {
-		position: static;
-		top: 0px;
-
-		visibility: visible;
-		opacity: 1;
-
 		display: none;
-	}
-
-	.nav__dropdown:hover .nav__dropdown-body {
-		display: block;
-	}
-
-	.nav__dropdown__body-list {
-		min-width: calc(100% - 20px);
-
-		margin-top: 10px;
-
-		background-color: rgba(255, 255, 255, 0.1);
-		padding: 10px;
-		border-radius: 10px;
-
-		box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0);
-	}
-
-	.nav__buttons {
-		display: flex;
 	}
 }
 </style>

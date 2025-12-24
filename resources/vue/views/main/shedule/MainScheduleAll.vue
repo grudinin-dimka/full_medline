@@ -43,7 +43,7 @@
 				:list="getFormatSpecializations"
 				:size="6"
 				:isSearch="true"
-				:isClear="false"
+				:isClear="true"
 			>
 				<template #label>
 					<VueIcon :name="'Category'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />

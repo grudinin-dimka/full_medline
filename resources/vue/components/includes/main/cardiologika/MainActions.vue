@@ -72,7 +72,7 @@ export default {
 	font-size: 16px;
 
 	transition: all 0.2s ease-in-out;
-	box-shadow: var(--default-shadow);
+	box-shadow: var(--default-box-shadow);
 }
 
 .main__buttons-button.rotate {
@@ -83,7 +83,7 @@ export default {
 	background-color: var(--primary-color-hover);
 }
 
-@media screen and (max-width: 750px) {
+@media screen and (width <= 850px) {
 	.main__buttons {
 		bottom: 20px;
 		right: 20px;

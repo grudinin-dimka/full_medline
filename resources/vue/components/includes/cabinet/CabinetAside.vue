@@ -1,12 +1,12 @@
 <template>
-	<VueAside :is-hide="$store.getters.getIsHide">
+	<VueAside :is-small="$store.getters.getAsideSmall" :is-hide="$store.getters.getAsideHide">
 		<template #header>
 			<div class="aside__logo">
 				<div class="aside__logo-icon">
 					<img :src="`/storage/img/logo.webp`" alt="Логотип" />
 				</div>
 
-				<div class="aside__logo-label" v-if="!$store.getters.getIsHide">
+				<div class="aside__logo-label" v-if="!$store.getters.getAsideSmall">
 					<div class="aside__logo-label-main">МЕДЛАЙН</div>
 					<div class="aside__logo-label-sub">ЛИЧНЫЙ КАБИНЕТ</div>
 				</div>
@@ -17,35 +17,38 @@
 			<VueAsideButton
 				:link="'/cabinet/appointments'"
 				:is-active="isActive('/cabinet/appointments')"
+				:is-small="$store.getters.getAsideSmall"
 				@click.prevent="insertPage('cabinet-appointments')"
 			>
 				<VueIcon :name="'Patient List'" :fill="'black'" :width="'28px'" :height="'28px'" />
-				<span v-if="!$store.getters.getIsHide" class="aside__item-button-label">ПРИЕМЫ</span>
+				<span :class="{ 'hide': $store.getters.getAsideSmall }" class="aside__item-button-label">ПРИЕМЫ</span>
 			</VueAsideButton>
 
 			<VueAsideButton
 				:link="'/cabinet/analyzes'"
 				:is-active="isActive('/cabinet/analyzes')"
+				:is-small="$store.getters.getAsideSmall"
 				@click.prevent="insertPage('cabinet-analyzes')"
 			>
 				<VueIcon :name="'Clinical Notes'" :fill="'black'" :width="'28px'" :height="'28px'" />
-				<span v-if="!$store.getters.getIsHide" class="aside__item-button-label">АНАЛИЗЫ</span>
+				<span :class="{ 'hide': $store.getters.getAsideSmall }" class="aside__item-button-label">АНАЛИЗЫ</span>
 			</VueAsideButton>
 
 			<VueAsideButton
 				:link="'/cabinet/research'"
 				:is-active="isActive('/cabinet/research')"
+				:is-small="$store.getters.getAsideSmall"
 				@click.prevent="insertPage('cabinet-research')"
 			>
 				<VueIcon :name="'Lab Research'" :fill="'black'" :width="'28px'" :height="'28px'" />
-				<span v-if="!$store.getters.getIsHide" class="aside__item-button-label">ИССЛЕДОВАНИЯ</span>
+				<span :class="{ 'hide': $store.getters.getAsideSmall }" class="aside__item-button-label">ИССЛЕДОВАНИЯ</span>
 			</VueAsideButton>
 		</template>
 
 		<template #footer>
 			<VueAsideButton @click.prevent="$store.commit('logoutOpen')">
 				<VueIcon :name="'Logout'" :fill="'black'" :width="'28px'" :height="'28px'" />
-				<span v-if="!$store.getters.getIsHide" class="aside__item-button-label"> ВЫХОД </span>
+				<span :class="{ 'hide': $store.getters.getAsideSmall }" class="aside__item-button-label"> ВЫХОД </span>
 			</VueAsideButton>
 		</template>
 	</VueAside>
@@ -76,6 +79,8 @@ export default {
 				left: 0,
 				behavior: "instant",
 			});
+
+			this.$store.commit("closeAside");
 		},
 
 		isActive(route) {
@@ -119,5 +124,30 @@ export default {
 .aside__logo-label-sub {
 	font-size: 1.4rem;
 	font-weight: 400;
+}
+
+.hide {
+	display: none;
+}
+
+@media screen and (width <= 850px) {
+	.aside__logo {
+		height: 60px;
+	}
+
+	.aside__logo-label {
+		display: none;
+	}
+
+	.aside__logo-icon img {
+		margin-left: 10px;
+
+		height: 100px;
+		width: 100px;
+	}
+
+	.hide {
+		display: block;
+	}
 }
 </style>

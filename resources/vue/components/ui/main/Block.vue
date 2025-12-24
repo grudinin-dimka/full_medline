@@ -50,7 +50,7 @@ export default {
 	}
 }
 
-@media screen and (width <= 750px) {
+@media screen and (width <= 850px) {
 	.block {
 		margin: 20px 20px;
 	}

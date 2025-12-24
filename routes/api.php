@@ -46,6 +46,7 @@ Route::post('/save-clieint-points', [ClientController::class, 'saveClientPoints'
 /* |                   АВТОРИЗАЦИЯ                     |*/
 /* |___________________________________________________|*/
 Route::post('/login', [LoginController::class, 'login']);
+Route::post('/test-login', [LoginController::class, 'testLogin']);
 
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 /* |                   ПОЛЬЗОВАТЕЛЬ                    |*/

@@ -1,9 +1,7 @@
 <template>
 	<div class="block-info">
 		<div class="info-bar"><span>Название:</span> <slot name="title"></slot></div>
-		<div class="info-bar">
-			<span>Адрес:</span> {{ getHostName() }}<slot name="addreas"></slot>
-		</div>
+		<div class="info-bar"><span>Адрес:</span> {{ getHostName() }}<slot name="addreas"></slot></div>
 	</div>
 </template>
 
@@ -45,11 +43,12 @@ export default {
 
 @media screen and (max-width: 430px) {
 	.block-info {
+		flex-direction: column;
 		gap: 10px;
 	}
 
 	.info-bar {
-		flex-basis: 150px;
+		flex: 1 0 0px;
 	}
 }
 </style>

@@ -92,7 +92,7 @@ export default {
 			default:
 				logs = {
 					status: true,
-					message: "Неизвестный тип проверки.",
+					message: "Неизвестный тип проверки",
 				};
 				break;
 		}
@@ -118,20 +118,20 @@ export default {
 		if (this.isEmpty(value)) {
 			return {
 				status: true,
-				message: "Пустое поле.",
+				message: "Пустое поле",
 			};
 		}
 
 		if (this.isString(value)) {
 			return {
 				status: true,
-				message: "Введите текст.",
+				message: "Введите текст",
 			};
 		}
 
 		return {
 			status: false,
-			message: "Ошибок нет.",
+			message: "Ошибок нет",
 		};
 	},
 
@@ -141,7 +141,7 @@ export default {
 		if (this.isEmpty(value)) {
 			return {
 				status: true,
-				message: "Пустое поле.",
+				message: "Пустое поле",
 			};
 		}
 
@@ -149,13 +149,13 @@ export default {
 		if (this.isNumber(value)) {
 			return {
 				status: true,
-				message: "Введите число.",
+				message: "Введите число",
 			};
 		}
 
 		return {
 			status: false,
-			message: "Ошибок нет.",
+			message: "Ошибок нет",
 		};
 	},
 
@@ -165,7 +165,7 @@ export default {
 		if (this.isEmpty(value)) {
 			return {
 				status: true,
-				message: "Пустое поле.",
+				message: "Пустое поле",
 			};
 		}
 
@@ -173,14 +173,14 @@ export default {
 			if (value !== reference) {
 				return {
 					status: true,
-					message: "Значение должно быть выбрано.",
+					message: "Значение должно быть выбрано",
 				};
 			}
 		}
 
 		return {
 			status: false,
-			message: "Ошибок нет.",
+			message: "Ошибок нет",
 		};
 	},
 
@@ -190,27 +190,27 @@ export default {
 		if (this.isEmpty(value) || this.isEmpty(reference)) {
 			return {
 				status: true,
-				message: "Пустое поле.",
+				message: "Пустое поле",
 			};
 		}
 
 		if (typeof value !== typeof reference) {
 			return {
 				status: true,
-				message: "Разные типы данных.",
+				message: "Разные типы данных",
 			};
 		}
 
 		if (value !== reference) {
 			return {
 				status: true,
-				message: "Совпадение отсутcтвует.",
+				message: "Совпадение отсутcтвует",
 			};
 		}
 
 		return {
 			status: false,
-			message: "Ошибок нет.",
+			message: "Ошибок нет",
 		};
 	},
 
@@ -220,20 +220,20 @@ export default {
 		if (this.isEmpty(value)) {
 			return {
 				status: true,
-				message: "Пустое поле.",
+				message: "Пустое поле",
 			};
 		}
 
 		if (!this.isDate(value)) {
 			return {
 				status: true,
-				message: "Некорректная дата.",
+				message: "Некорректная дата",
 			};
 		}
 
 		return {
 			status: false,
-			message: "Ошибок нет.",
+			message: "Ошибок нет",
 		};
 	},
 
@@ -248,13 +248,13 @@ export default {
 		if (!this.isMail(value)) {
 			return {
 				status: true,
-				message: "Некорректная почта.",
+				message: "Некорректная почта",
 			};
 		}
 
 		return {
 			status: false,
-			message: "Ошибок нет.",
+			message: "Ошибок нет",
 		};
 	},
 
@@ -269,13 +269,13 @@ export default {
 		if (!this.isPhone(value)) {
 			return {
 				status: true,
-				message: "Некорректный телефон.",
+				message: "Некорректный телефон",
 			};
 		}
 
 		return {
 			status: false,
-			message: "Ошибок нет.",
+			message: "Ошибок нет",
 		};
 	},
 
@@ -284,34 +284,34 @@ export default {
 		if (this.isEmpty(value)) {
 			return {
 				status: true,
-				message: "Пустое поле.",
+				message: "Пустое поле",
 			};
 		}
 
 		if (!value) {
 			return {
 				status: true,
-				message: "Введите значение.",
+				message: "Введите значение",
 			};
 		}
 
 		if (!mask) {
 			return {
 				status: true,
-				message: "Отсутствует маска.",
+				message: "Отсутствует маска",
 			};
 		}
 
 		if (!String(value).match(mask)) {
 			return {
 				status: true,
-				message: "Неверное значение.",
+				message: "Неверное значение",
 			};
 		}
 
 		return {
 			status: false,
-			message: "Ошибок нет.",
+			message: "Ошибок нет",
 		};
 	},
 
@@ -320,13 +320,13 @@ export default {
 		if (obj.getSymbols() < 1) {
 			return {
 				status: true,
-				message: "Введите текст.",
+				message: "Введите текст",
 			};
 		}
 
 		return {
 			status: false,
-			message: "Ошибок нет.",
+			message: "Ошибок нет",
 		};
 	},
 
@@ -336,7 +336,7 @@ export default {
 		if (!files[0]) {
 			return {
 				status: true,
-				message: "Пустое поле.",
+				message: "Загрузите файл",
 			};
 		}
 
@@ -357,7 +357,7 @@ export default {
 
 		return {
 			status: false,
-			message: "Ошибок нет.",
+			message: "Ошибок нет",
 		};
 	},
 

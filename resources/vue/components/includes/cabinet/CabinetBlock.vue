@@ -375,9 +375,17 @@ export default {
 }
 
 .cabinet-block__filters {
-	display: grid;
-	grid-template-columns: 1fr 0.5fr;
+	display: flex;
+	flex-wrap: wrap;
 	gap: var(--default-gap);
+}
+
+.filters__item:first-of-type {
+	flex: 1 0 auto;
+}
+
+.filters__item:last-of-type {
+	flex: 1 0 auto;
 }
 
 .cabinet-block__list {

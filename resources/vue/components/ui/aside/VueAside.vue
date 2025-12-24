@@ -1,5 +1,5 @@
 <template>
-	<aside class="aside" :class="{ 'aside--hiden': isHide }">
+	<aside class="aside" :class="{ 'aside--small': isSmall, 'aside--hide': isHide }">
 		<div class="aside__header">
 			<slot name="header"></slot>
 		</div>
@@ -17,6 +17,10 @@
 <script>
 export default {
 	props: {
+		isSmall: {
+			type: Boolean,
+			default: false,
+		},
 		isHide: {
 			type: Boolean,
 			default: false,
@@ -51,14 +55,16 @@ export default {
 	background-color: var(--aside-background-color);
 	color: var(--aside-font-color);
 
-	transition: all 0.2s;
+	box-shadow: var(--aside-box-shadow);
+
+	transition: var(--aside-transition);
 }
 
-.aside--hiden {
+.aside--small {
 	width: var(--aside-width--hiden);
 }
 
-.aside--hiden .aside__item {
+.aside--small .aside__item {
 	justify-content: center;
 
 	padding: 0px;
@@ -88,5 +94,27 @@ export default {
 	display: flex;
 	flex-direction: column;
 	gap: var(--aside-footer-gap);
+}
+
+@media screen and (width <= 850px) {
+	.aside {
+		position: fixed;
+		z-index: 100;
+		left: 0px;
+		top: 0px;
+
+		visibility: visible;
+		opacity: 1;
+
+		width: 100%;
+
+		box-shadow: 0px 0px 10px 20px rgba(0, 0, 0, 0.15);
+	}
+
+	.aside--hide {
+		left: 100%;
+		visibility: hidden;
+		opacity: 0;
+	}
 }
 </style>

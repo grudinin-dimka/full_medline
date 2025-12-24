@@ -35,43 +35,6 @@
 				</template>
 			</VueFieldset>
 
-			<VueFieldset :count="1" :gap="20">
-				<template #legend> ПРОВЕРОЧНЫЙ КОД </template>
-				<template #inputs>
-					<div class="captcha">
-						<div class="captcha__content">
-							<div class="captcha__content-text">
-								<span v-for="letter in getCaptchaSplited" :style="getLetterStyle()">
-									{{ letter }}
-								</span>
-
-								<div class="content__text-line" ref="line"></div>
-								<div class="content__text-trash"></div>
-							</div>
-							<div class="captcha__content-update" @click="reloadCaptcha">
-								<svg xmlns="http://www.w3.org/2000/svg" height="26px" viewBox="0 -960 960 960" width="26px">
-									<path
-										d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-110h80v280H520v-80h168q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q77 0 139-44t87-116h84q-28 106-114 173t-196 67Z"
-									/>
-								</svg>
-							</div>
-						</div>
-
-						<VueInput
-							v-model="modalPointsForm.data.captcha.value"
-							:type="'text'"
-							:placeholder="'Введите текст'"
-							:error="modalPointsForm.errors.captcha.status"
-						>
-							<template #label> КОД С КАРТИНКИ </template>
-							<template #error>
-								{{ modalPointsForm.errors.captcha.message }}
-							</template>
-						</VueInput>
-					</div>
-				</template>
-			</VueFieldset>
-
 			<VueInput
 				v-model="modalPointsForm.data.checkbox.value"
 				:type="'checkbox'"
@@ -146,7 +109,7 @@
 					</VueValues>
 
 					<VueValues
-						v-model.trim="modalRequestForm.data.phone.value"
+						v-model="modalRequestForm.data.phone.value"
 						:type="'phone'"
 						:placeholder="'Введите телефон'"
 						:error="modalRequestForm.errors.phone.status"
@@ -215,29 +178,25 @@
 			<VueFieldset :count="1" :gap="20">
 				<template #legend> ПРОВЕРОЧНЫЙ КОД </template>
 				<template #inputs>
-					<div class="captcha__content">
-						<div class="captcha__content-text">
-							<span v-for="letter in getCaptchaSplited" :style="getLetterStyle()">
-								{{ letter }}
-							</span>
-
-							<div class="content__text-line" ref="line"></div>
-							<div class="content__text-trash"></div>
-						</div>
-						<div class="captcha__content-update" @click="reloadCaptcha">
-							<svg xmlns="http://www.w3.org/2000/svg" height="26px" viewBox="0 -960 960 960" width="26px">
-								<path
-									d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-110h80v280H520v-80h168q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q77 0 139-44t87-116h84q-28 106-114 173t-196 67Z"
-								/>
-							</svg>
-						</div>
-					</div>
+					<VueCaptcha
+						v-model="modalRequestForm.data.captcha.value"
+						:width="250"
+						:height="60"
+						:length="5"
+						:dots="1000"
+						:font="{
+							min: 30,
+							max: 30,
+							baseline: 'middle',
+						}"
+						ref="captcha"
+					/>
 
 					<VueValues
-						v-model.trim="modalRequestForm.data.captcha.value"
+						v-model.trim="modalRequestForm.data.captchaText.value"
 						:type="'text'"
 						:placeholder="'Введите текст'"
-						:error="modalRequestForm.errors.captcha.status"
+						:error="modalRequestForm.errors.captchaText.status"
 					>
 						<template #label>
 							<VueIcon
@@ -249,7 +208,7 @@
 							КОД С КАРТИНКИ
 						</template>
 						<template #error>
-							{{ modalRequestForm.errors.captcha.message }}
+							{{ modalRequestForm.errors.captchaText.message }}
 						</template>
 					</VueValues>
 				</template>
@@ -301,8 +260,7 @@
 </template>
 
 <script>
-import VueInput from "../../../modules/input/VueInput.vue";
-import Captcha from "../../../modules/Captcha.vue";
+import VueCaptcha from "../../../modules/VueCaptcha.vue";
 
 import api from "../../../../mixin/api";
 import validate from "../../../../services/validate";
@@ -310,9 +268,7 @@ import shared from "../../../../services/shared";
 
 export default {
 	components: {
-		VueInput,
-
-		Captcha,
+		VueCaptcha,
 	},
 	data() {
 		return {
@@ -331,7 +287,7 @@ export default {
 			/* Модальное окно */
 			modalRequest: {
 				thin: false,
-				clamped: false,
+				clamped: true,
 				touch: false,
 				values: {
 					title: "",
@@ -432,10 +388,14 @@ export default {
 						status: false,
 						message: "",
 					},
+					captchaText: {
+						status: false,
+						message: "",
+					},
 				},
 				data: {
 					title: {
-						value: '',
+						value: "",
 						edited: false,
 					},
 					name: {
@@ -462,12 +422,15 @@ export default {
 						value: "",
 						edited: false,
 					},
+					captchaText: {
+						value: "",
+						edited: false,
+					},
 				},
 			},
 
 			/* Данные */
 			barcodes: [],
-			captcha: "",
 
 			personalText: `
 				<p style="text-align: justify">Настоящим субъект персональных данных, именуемый в дальнейшем «Пользователь», в соответствии с Федеральным законом от 27.07.2006 №152-ФЗ «О персональных данных», отправляя сообщение через форму обратной связи на интернет-сайте <a href='https://medlinegroup.ru/'>https://medlinegroup.ru/</a>, указывая сведения о своих персональных данных и проставляя отметку «✓» (или аналогичную) в соответствующем чек-боксе, действуя свободно, своей волей и в своем интересе, а также подтверждая свою дееспособность, дает свое на обработку персональных данных (далее – Согласие) ООО «Медицинская линия», (далее - Оператор) расположенному по адресу: г. Шадринск, ул. Комсомольская, д. 16, оф. 311, на обработку своих персональных данных со следующими условиями:</p>
@@ -482,17 +445,6 @@ export default {
 		};
 	},
 	computed: {
-		/* Разделение капчи на отдельные символы */
-		getCaptchaSplited() {
-			let array = [];
-
-			for (let i = 0; i < this.captcha.length; i++) {
-				array.push(this.captcha[i]);
-			}
-
-			return array;
-		},
-
 		/* Разделение капчи на отдельные символы */
 		filteredBarcodes() {
 			let array = [];
@@ -550,7 +502,6 @@ export default {
 		/* Открытие модального окна баллов */
 		openModalPointsEdite() {
 			shared.clearObjectFull(this.modalPointsForm);
-			this.reloadCaptcha();
 
 			this.barcodes = [
 				{
@@ -571,7 +522,6 @@ export default {
 		/* Открытие модального окна заявки */
 		openModalRequestEdite() {
 			shared.clearObjectFull(this.modalRequestForm);
-			this.reloadCaptcha();
 
 			this.openModal("modalRequest", "ЗАКАЗАТЬ ЗВОНОК", "default");
 		},
@@ -579,23 +529,6 @@ export default {
 		/* Открытие модального окна заявки */
 		openModalPersonalEdite() {
 			this.openModal("modalPersonal", "ИНФОРМАЦИЯ", "default");
-		},
-
-		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                     КАПТЧА                        |*/
-		/* |___________________________________________________|*/
-		/* Обновление */
-		reloadCaptcha() {
-			this.captcha = shared.generateRandomString(5);
-			this.$refs.line.style.transform = `rotate(${shared.generateRandomAngle(25)}deg)`;
-		},
-
-		/* Стилизация */
-		getLetterStyle() {
-			return {
-				transform: `translateY(${shared.generateRandomAngle(25)}deg)`,
-				transform: `rotate(${shared.generateRandomAngle(25)}deg)`,
-			};
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -665,10 +598,6 @@ export default {
 			}
 		},
 
-		redirectToCabinet() {
-			window.location.href = "https://lk.medlinegroup.ru/";
-		},
-
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 		/* |                 ОТПРАВКА ДАННЫХ                   |*/
 		/* |___________________________________________________|*/
@@ -696,9 +625,9 @@ export default {
 						reference: true,
 					},
 					{
-						key: "captcha",
+						key: "captchaText",
 						type: "twice",
-						reference: this.captcha,
+						reference: this.modalRequestForm.data.captcha.value,
 					},
 				])
 			)
@@ -766,11 +695,6 @@ export default {
 						key: "checkbox",
 						type: "boolean",
 						reference: true,
-					},
-					{
-						key: "captcha",
-						type: "twice",
-						reference: this.captcha,
 					},
 				])
 			)
@@ -876,7 +800,7 @@ export default {
 	font-size: 16px;
 
 	transition: all 0.2s ease-in-out;
-	box-shadow: var(--default-shadow);
+	box-shadow: var(--default-box-shadow);
 }
 
 .main__buttons-button.rotate {
@@ -936,108 +860,7 @@ export default {
 	}
 }
 
-.checkbox > .captcha__content {
-	display: flex;
-	justify-content: center;
-	font-size: 18px;
-}
-
-.checkbox.error > .captcha__content > label {
-	color: var(--span-color-error);
-}
-
-.checkbox > .captcha__content > input {
-	width: 17.5px;
-	height: 17.5px;
-}
-
-.captcha__content > input:checked {
-	accent-color: #8fe5ee;
-}
-
-.captcha {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 10px;
-
-	width: 100%;
-}
-
-.captcha__content {
-	width: 100%;
-	position: relative;
-}
-
-.captcha__content-text {
-	box-sizing: border-box;
-	overflow: hidden;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	position: relative;
-	user-select: none;
-	border: var(--input-border);
-
-	border-radius: var(--input-border-radius);
-	color: rgb(0, 0, 0);
-
-	height: 58px;
-
-	font-family: "Henny Penny";
-	font-weight: lighter;
-	font-size: 2rem;
-	letter-spacing: 10px;
-}
-
-.captcha__content-text > span {
-	font-family: "Henny Penny";
-	font-weight: lighter;
-	font-size: 2rem;
-}
-
-.content__text-line {
-	position: absolute;
-	z-index: 0;
-	width: 350px;
-	height: 1px;
-
-	background-color: rgb(140, 140, 140);
-}
-
-.content__text-trash {
-	position: absolute;
-	z-index: 0;
-	width: 100%;
-	height: 100%;
-
-	background-image: url("../../../../assets/img/trash.webp");
-	background-position: center center;
-	background-size: contain;
-	opacity: 0.7;
-}
-
-.captcha__content-update {
-	position: absolute;
-	cursor: pointer;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-
-	background-color: white;
-	padding: 5px;
-	border-radius: 100px;
-	border: var(--default-border);
-
-	top: 11px;
-	right: 5px;
-}
-
-.captcha__content-update > svg {
-	fill: rgb(0, 0, 0);
-}
-
-@media screen and (max-width: 750px) {
+@media screen and (width <= 850px) {
 	.main__buttons {
 		bottom: 20px;
 		right: 20px;

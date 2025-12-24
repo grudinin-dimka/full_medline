@@ -37,29 +37,27 @@
 		</div>
 
 		<div class="header__buttons">
-			<a href="https://lk.medlinegroup.ru/" target="_blank" class="header__buttons-button">
+			<a
+				href="/cabinet/login"
+				target="_blank"
+				class="header__buttons-button"
+				@click.prevent="$router.push({ name: 'c-login' })"
+			>
 				<VueIcon :name="'Account Circle'" :fill="'black'" :width="'28px'" :height="'28px'" />
-				<div class="header__buttons-button-text">
-					Личный кабинет
-				</div>
+				<div class="header__buttons-button-text">Личный кабинет</div>
 			</a>
 		</div>
 	</header>
 
 	<!-- Кнопка "бургер" -->
-	<div
-		class="burger"
-		@click="$store.commit('setBurgerMain')"
-		:class="{ active: $store.getters.burgerMainStatus }"
-	>
-		<div></div>
-		<div></div>
-		<div></div>
-	</div>
+	<VueBurger :is-active="!$store.getters.getAsideHide" @click="$store.commit('toggleAsideHide')" />
 </template>
 
 <script>
+import VueBurger from "../../../ui/VueBurger.vue";
+
 export default {
+	components: { VueBurger },
 	data() {
 		return {
 			countPoints: 0,
@@ -225,57 +223,6 @@ header.slide {
 	background-color: var(--button-background-color-hover);
 }
 
-.burger {
-	cursor: pointer;
-	display: none;
-	position: fixed;
-	z-index: 100;
-
-	top: 30px;
-	right: 30px;
-	height: 30px;
-}
-
-.burger div:nth-child(1),
-.burger div:nth-child(2),
-.burger div:nth-child(3) {
-	position: relative;
-
-	width: 30px;
-	height: 3px;
-	background-color: var(--primary-color);
-
-	transition: all 0.5s;
-}
-
-.burger div:nth-child(2) {
-	top: 7px;
-}
-
-.burger div:nth-child(3) {
-	top: 15px;
-}
-
-.burger.active div:nth-child(1) {
-	top: 10px;
-	position: absolute;
-
-	background-color: white;
-	transform: rotate(-45deg);
-}
-
-.burger.active div:nth-child(2) {
-	position: absolute;
-}
-
-.burger.active div:nth-child(2),
-.burger.active div:nth-child(3) {
-	top: 10px;
-
-	background-color: white;
-	transform: rotate(45deg);
-}
-
 .block-shadow {
 	box-shadow: -5px 0px 20px rgba(0, 0, 0, 0.3);
 }
@@ -298,18 +245,12 @@ header.slide {
 	}
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (width <= 850px) {
 	header {
 		padding: 10px 30px 10px 30px;
 		justify-content: space-between;
 	}
-
-	.header__logo {
-		display: none;
-	}
-}
-
-@media screen and (max-width: 750px) {
+	
 	.header__buttons {
 		position: absolute;
 
@@ -333,10 +274,6 @@ header.slide {
 
 	.header__buttons-button-text {
 		display: none;
-	}
-
-	.burger {
-		display: block;
 	}
 
 	header {

@@ -23,7 +23,7 @@
 					<div class="files__content-icon" v-if="file.path">
 						<VueIcon
 							v-if="getFiletype(file.path) === 'pdf'"
-							:name="'pdf'"
+							:name="'Document'"
 							:width="'30px'"
 							:height="'30px'"
 							:fill="'var(--primary-color)'"
@@ -54,7 +54,7 @@
 
 						<VueIcon
 							v-else
-							:name="'file'"
+							:name="'Attach File'"
 							:width="'30px'"
 							:height="'30px'"
 							:fill="'var(--primary-color)'"

@@ -38,21 +38,64 @@
 				</template>
 			</VuePassword>
 
+			<VueFieldset :count="1" :gap="'20px'">
+				<template #legend> ПРОВЕРОЧНЫЙ КОД </template>
+
+				<template #inputs>
+					<VueCaptcha
+						v-model="currentLogin.data.captcha.value"
+						:width="250"
+						:height="60"
+						:length="5"
+						:dots="1000"
+						:font="{
+							min: 30,
+							max: 30,
+							baseline: 'middle',
+						}"
+					/>
+
+					<VueValues
+						v-model.trim="currentLogin.data.captchaText.value"
+						:type="'text'"
+						:placeholder="'Введите текст'"
+						:error="currentLogin.errors.captchaText.status"
+					>
+						<template #label>
+							<VueIcon
+								:name="'Data Loss Prevention'"
+								:fill="'var(--primary-color)'"
+								:width="'20px'"
+								:height="'20px'"
+							/>
+							КОД С КАРТИНКИ
+						</template>
+						<template #error>
+							{{ currentLogin.errors.captchaText.message }}
+						</template>
+					</VueValues>
+				</template>
+			</VueFieldset>
+
 			<div class="buttons">
-				<VueButton @click="login" :disabled="disabled.login"> Войти </VueButton>
+				<VueButton @click="login" :disabled="disabled.login">
+					<VueIcon :name="'Login'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					Войти
+				</VueButton>
 			</div>
 		</form>
 	</div>
 </template>
 
 <script>
+import VueCaptcha from "../../components/modules/VueCaptcha.vue";
+
 import axios from "axios";
 import validate from "../../services/validate";
 
 export default {
 	components: {
-		axios,
-		validate,
+		VueCaptcha,
 	},
 	data() {
 		return {
@@ -74,6 +117,14 @@ export default {
 						message: "",
 						status: false,
 					},
+					captcha: {
+						message: "",
+						status: false,
+					},
+					captchaText: {
+						message: "",
+						status: false,
+					},
 				},
 				data: {
 					name: {
@@ -81,6 +132,14 @@ export default {
 						edited: false,
 					},
 					password: {
+						value: "",
+						edited: false,
+					},
+					captcha: {
+						value: "",
+						edited: false,
+					},
+					captchaText: {
 						value: "",
 						edited: false,
 					},
@@ -103,6 +162,11 @@ export default {
 					{
 						key: "password",
 						type: "text",
+					},
+					{
+						key: "captchaText",
+						type: "twice",
+						reference: this.currentLogin.data.captcha.value,
 					},
 				])
 			)

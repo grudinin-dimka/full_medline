@@ -15,7 +15,6 @@ export default defineConfig({
 
 	/* Настройка локального сервера */
 	server: {
-		https: false,
 		cors: {
 			origin: ["https://medline.local", "http://medline.local"],
 			methods: ["GET", "POST", "PUT", "DELETE"],

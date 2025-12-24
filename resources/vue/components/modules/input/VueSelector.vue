@@ -149,7 +149,7 @@ export default {
 			let controlPadding = element.getPropertyValue("--selector-control-padding").replace(/\D/gi, "");
 			let menuBorderWidth = element.getPropertyValue("--selector-menu-border-width").replace(/\D/gi, "");
 
-			let result = menuListItemMinHeight * this.size + +controlPadding * 2;
+			let result = menuListItemMinHeight * this.size + +controlPadding * 3;
 
 			return `${result}px`;
 		},
