@@ -15,7 +15,7 @@
 
 	--input-number-button-transition: all 0.2s ease;
 
-	--input-number-button-border-hover: var(--default-border-active);
+	--input-number-button-border-hover: var(--default-border-focus);
 	--input-number-button-background-color-hover: var(--item-background-color-active);
 
 	--input-number-button-svg-fill: rgba(0, 0, 0, 0.5);

@@ -167,12 +167,12 @@ svg:hover {
 }
 
 .pagination .item:hover {
-	border: var(--default-border-active);
+	border: var(--default-border-focus);
 	background-color: var(--item-background-color-active);
 }
 
 .pagination > .item.active {
-	border: var(--default-border-active);
+	border: var(--default-border-focus);
 	background-color: var(--item-background-color-active);
 }
 

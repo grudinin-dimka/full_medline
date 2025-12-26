@@ -230,7 +230,7 @@ export default {
 }
 
 .list__checkbox > .list__checkbox-item:hover {
-	border: var(--default-border-active);
+	border: var(--default-border-focus);
 	background-color: var(--item-background-color-active);
 }
 
@@ -248,7 +248,7 @@ export default {
 }
 
 .list__checkbox-input:hover {
-	border: var(--default-border-active);
+	border: var(--default-border-focus);
 	background-color: var(--default-background-color);
 }
 
@@ -278,7 +278,7 @@ export default {
 }
 
 .list__checkbox-input:checked {
-	border: var(--default-border-active);
+	border: var(--default-border-focus);
 	background-color: var(--default-background-color);
 }
 
@@ -329,7 +329,7 @@ export default {
 }
 
 .list__list:hover {
-	border: var(--default-border-active);
+	border: var(--default-border-focus);
 	background-color: var(--item-background-color-active);
 }
 

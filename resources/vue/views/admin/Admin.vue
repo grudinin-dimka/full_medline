@@ -105,7 +105,7 @@ export default {
 			// Проверка токена в базе
 			axios({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `check-user`,
+				url: `/api/check-user`,
 				headers: {
 					Accept: "application/json",
 					Authorization: `Bearer ${localStorage.getItem("atoken")}`,

@@ -609,7 +609,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `save-contacts-changes`,
+				url: `save-contacts-changes`,
 				headers: {
 					ContentType: "multipart/form-data",
 				},
@@ -801,7 +801,7 @@ export default {
 	mounted() {
 		api({
 			method: "get",
-			url: `${this.$store.getters.urlApi}` + `get-contacts-all`,
+			url: `get-contacts-all`,
 		})
 			.then((response) => {
 				if (!response) return;

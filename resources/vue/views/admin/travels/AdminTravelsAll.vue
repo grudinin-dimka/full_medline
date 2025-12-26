@@ -788,7 +788,7 @@ export default {
 
 				api({
 					method: "post",
-					url: this.$store.getters.urlApi + "upload-file",
+					url: "upload-file",
 					headers: {
 						"Content-Type": "multipart/form-data",
 					},
@@ -890,7 +890,7 @@ export default {
 
 					api({
 						method: "post",
-						url: this.$store.getters.urlApi + "upload-file",
+						url: "upload-file",
 						headers: {
 							"Content-Type": "multipart/form-data",
 						},
@@ -960,7 +960,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `save-travels-changes`,
+				url: `save-travels-changes`,
 				headers: {
 					Accept: "application/json",
 				},
@@ -1227,7 +1227,7 @@ export default {
 	mounted() {
 		api({
 			method: "get",
-			url: this.$store.getters.urlApi + `get-travels-all`,
+			url: `get-travels-all`,
 		})
 			.then((response) => {
 				if (!response) return;
@@ -1295,7 +1295,7 @@ export default {
 }
 
 .etravels__item:hover {
-	border: var(--default-border-active);
+	border: var(--default-border-focus);
 	background-color: var(--item-background-color-active);
 }
 
@@ -1304,7 +1304,7 @@ export default {
 }
 
 .etravels__item:hover > .etravels__item-header > .etravels__header-item {
-	border: var(--default-border-active);
+	border: var(--default-border-focus);
 }
 
 .etravels__item--create {

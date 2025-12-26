@@ -107,7 +107,7 @@ export default {
 			// Проверка токена в базе
 			axios({
 				method: "post",
-				url: `${this.$store.getters.urlCabinet}` + `check`,
+				url: `/api/cabinet/check`,
 				headers: {
 					Accept: "application/json",
 					Authorization: `Bearer ${localStorage.getItem("ctoken")}`,

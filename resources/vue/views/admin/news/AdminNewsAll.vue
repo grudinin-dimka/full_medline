@@ -270,7 +270,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `save-news-changes-all`,
+				url: `save-news-changes-all`,
 				headers: {
 					Accept: "application/json",
 				},
@@ -299,7 +299,7 @@ export default {
 	mounted() {
 		api({
 			method: "get",
-			url: this.$store.getters.urlApi + `get-news-all`,
+			url: `get-news-all`,
 		})
 			.then((response) => {
 				if (!response) return;

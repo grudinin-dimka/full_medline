@@ -339,6 +339,10 @@ export default {
 	font-weight: normal;
 }
 
+.plastic > article > :is(ul) {
+	margin: 10px 30px;
+}
+
 .plastic > article > h1 {
 	margin: 0px;
 }

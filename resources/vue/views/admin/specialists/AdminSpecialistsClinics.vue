@@ -1,7 +1,5 @@
 <template>
-	<!--|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|-->
-	<!--|                  МОДАЛЬНОЕ ОКНО                   |-->
-	<!--|___________________________________________________|-->
+	<!-- Модальное окно: Клиники -->
 	<VueModal ref="modal" :settings="modal">
 		<template #title>
 			{{ modal.values.title }}
@@ -586,7 +584,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `save-clinics-changes`,
+				url: `save-clinics-changes`,
 				headers: {
 					Accept: "application/json",
 				},
@@ -616,7 +614,7 @@ export default {
 	mounted() {
 		api({
 			method: "get",
-			url: this.$store.getters.urlApi + `get-clinics-all`,
+			url: `get-clinics-all`,
 		})
 			.then((response) => {
 				if (!response) return;

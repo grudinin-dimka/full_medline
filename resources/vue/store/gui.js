@@ -25,10 +25,18 @@ export default {
 
 		toggleAsideHide(state) {
 			state.aside.isHide = !state.aside.isHide;
+
+			if (state.aside.isHide) {
+				document.body.classList.remove("aside-open");
+			} else {
+				document.body.classList.add("aside-open");
+			}
 		},
 
 		closeAside(state) {
 			state.aside.isHide = true;
+
+			document.body.classList.remove("aside-open");
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/

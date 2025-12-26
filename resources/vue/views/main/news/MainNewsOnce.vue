@@ -75,7 +75,7 @@ export default {
 		fakeDelay(this.$store.getters.timeout, () =>
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `get-news-once-without`,
+				url: `get-news-once-without`,
 				headers: {
 					Accept: "application/json",
 				},

@@ -661,7 +661,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `save-vacancies-changes`,
+				url: `save-vacancies-changes`,
 				headers: {
 					Accept: "application/json",
 				},
@@ -694,7 +694,7 @@ export default {
 
 		api({
 			method: "get",
-			url: this.$store.getters.urlApi + `get-vacancies-all`,
+			url: `get-vacancies-all`,
 		})
 			.then((response) => {
 				if (!response) return;

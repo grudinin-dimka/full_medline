@@ -405,7 +405,7 @@ export default {
 		fakeDelay(this.$store.getters.timeout, () =>
 			api({
 				method: "get",
-				url: this.$store.getters.urlApi + `get-vacancies`,
+				url: `get-vacancies`,
 			})
 		).then((response) => {
 			if (!response) return;

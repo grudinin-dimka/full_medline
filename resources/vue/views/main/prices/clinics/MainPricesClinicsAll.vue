@@ -139,7 +139,7 @@ export default {
 		fakeDelay(this.$store.getters.timeout, () =>
 			api({
 				method: "get",
-				url: this.$store.getters.urlApi + `get-prices-choice`,
+				url: `get-prices-choice`,
 			})
 		).then((response) => {
 			if (!response) return;

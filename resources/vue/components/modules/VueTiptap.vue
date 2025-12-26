@@ -510,7 +510,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `upload-file`,
+				url: `upload-file`,
 				headers: {
 					"Content-Type": "multipart/form-data",
 				},

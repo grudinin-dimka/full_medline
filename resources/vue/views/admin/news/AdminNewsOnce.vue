@@ -285,7 +285,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `add-news`,
+				url: `add-news`,
 				headers: {
 					ContentType: "multipart/form-data",
 				},
@@ -369,7 +369,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `save-news-changes-once`,
+				url: `save-news-changes-once`,
 				headers: {
 					ContentType: "multipart/form-data",
 				},
@@ -401,7 +401,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `publish-news-once`,
+				url: `publish-news-once`,
 				headers: {
 					ContentType: "multipart/form-data",
 				},
@@ -432,7 +432,7 @@ export default {
 		} else {
 			api({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `get-news-once`,
+				url: `get-news-once`,
 				headers: {
 					Accept: "application/json",
 				},

@@ -427,7 +427,7 @@ export default {
 		fakeDelay(this.$store.getters.timeout, () =>
 			api({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `get-prices-template`,
+				url: `get-prices-template`,
 				headers: {
 					Accept: "application/json",
 				},

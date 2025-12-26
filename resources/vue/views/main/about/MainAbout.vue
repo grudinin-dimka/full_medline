@@ -176,7 +176,7 @@ export default {
 		fakeDelay(this.$store.getters.timeout, () =>
 			api({
 				method: "get",
-				url: this.$store.getters.urlApi + `get-abouts-all`,
+				url: `get-abouts-all`,
 			})
 		).then((response) => {
 			try {
@@ -203,7 +203,7 @@ export default {
 		fakeDelay(this.$store.getters.timeout, () =>
 			api({
 				method: "get",
-				url: this.$store.getters.urlApi + `get-info-files-all`,
+				url: `get-info-files-all`,
 			})
 		).then((response) => {
 			try {

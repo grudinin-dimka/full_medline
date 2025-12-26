@@ -22,7 +22,7 @@
    --accordeon-button-border-radius: 100%;
    --accordeon-button-background-color: white;
 
-   --accordeon-head-name-border-hover: var(--default-border-active);
+   --accordeon-head-name-border-hover: var(--default-border-focus);
    --accordeon-head-name-hover-background-color: var(--item-background-color-active);
 
    --accordeon-button-hover-background-color: white;

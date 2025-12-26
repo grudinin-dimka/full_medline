@@ -309,7 +309,7 @@ export default {
 		fakeDelay(this.$store.getters.timeout, () =>
 			api({
 				method: "get",
-				url: this.$store.getters.urlApi + `get-specialists`,
+				url: `get-specialists`,
 			})
 		).then((response) => {
 			if (!response) return;

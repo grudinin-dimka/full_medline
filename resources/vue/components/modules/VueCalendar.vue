@@ -255,7 +255,7 @@ export default {
 }
 
 .calendar__td:is(:hover, .active) {
-	border: var(--default-border-active);
+	border: var(--default-border-focus);
 	background-color: var(--item-background-color-active);
 
 	color: black;

@@ -6,30 +6,8 @@
 	</info-bar>
 
 	<Block :minHeight="100">
-		<div class="filter__list">
-			<div
-				class="filter__list-item"
-				:style="getClinicStyle('Все')"
-				@click="
-					changeActiveClinic({
-						id: 0,
-						name: 'Все',
-					})
-				"
-			>
-				<div>Все</div>
-			</div>
-			<div
-				class="filter__list-item"
-				:class="{ skeleton: !clinic.name }"
-				:style="getClinicStyle(clinic.id)"
-				v-for="clinic in clinics"
-				:key="clinic.id"
-				@click="changeActiveClinic(clinic)"
-			>
-				<div>{{ clinic.name }}</div>
-			</div>
-		</div>
+		<VueChange v-model="selectedClinic" :list="getClinicList" :isLoading="loading.loader.schedule" />
+
 		<div class="filter__blocks">
 			<VueValues v-model.trim="filters.fio.data.body" :type="'search'" :placeholder="'Введите специалиста'">
 				<template #label>
@@ -195,7 +173,7 @@
 													class="days__item all"
 													v-for="clinic in getClinicsWithoutAll"
 													:key="clinic.id"
-													v-if="activeClinic.name === 'Все'"
+													v-if="selectedClinic === 'all'"
 												>
 													<div
 														class="days__item-content"
@@ -212,8 +190,8 @@
 												<div class="days__item" v-else>
 													<div
 														class="days__item-content"
-														v-for="time in getDayTime(shedule.id, day.date, activeClinic.id)"
-														:style="getTimeStyle(activeClinic.id, time)"
+														v-for="time in getDayTime(shedule.id, day.date, selectedClinic)"
+														:style="getTimeStyle(selectedClinic, time)"
 													>
 														{{ time }}
 													</div>
@@ -239,7 +217,7 @@
 									class="days__item all"
 									v-for="clinic in getClinicsWithoutAll"
 									:key="clinic.id"
-									v-if="activeClinic.name === 'Все'"
+									v-if="selectedClinic === 'all'"
 								>
 									<div
 										class="days__item-content"
@@ -256,8 +234,8 @@
 								<div class="days__item" v-else>
 									<div
 										class="days__item-content"
-										v-for="time in getDayTime(shedule.id, day.date, activeClinic.id)"
-										:style="getTimeStyle(activeClinic.id, time)"
+										v-for="time in getDayTime(shedule.id, day.date, selectedClinic)"
+										:style="getTimeStyle(selectedClinic, time)"
 									>
 										{{ time }}
 									</div>
@@ -278,6 +256,8 @@
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import Block from "../../../components/ui/main/Block.vue";
 
+import VueChange from "./VueChange.vue";
+
 import api from "../../../mixin/api.js";
 import sorted from "../../../services/sorted.js";
 
@@ -285,6 +265,8 @@ import fakeDelay from "../../../mixin/fake-delay.js";
 
 export default {
 	components: {
+		VueChange,
+
 		InfoBar,
 		Block,
 	},
@@ -292,6 +274,7 @@ export default {
 		return {
 			isMobile: window.matchMedia("(max-width: 630px)").matches,
 			selected: null,
+			selectedClinic: "all",
 
 			/* Загрузка */
 			loading: {
@@ -301,11 +284,6 @@ export default {
 				sections: {
 					schedule: false,
 				},
-			},
-
-			activeClinic: {
-				id: 0,
-				name: "Все",
 			},
 
 			/* Фильтры */
@@ -391,6 +369,7 @@ export default {
 					date: null,
 				},
 			],
+
 			shedules: [
 				{
 					id: 1,
@@ -604,13 +583,13 @@ export default {
 
 			let filteredShedules = [];
 
-			switch (this.activeClinic.name) {
-				case "Все":
+			switch (this.selectedClinic) {
+				case "all":
 					filteredShedules = [...this.shedules];
 					break;
 				default:
 					filteredShedules = this.shedules.filter((item) =>
-						item.weeks.some((week) => week.clinicId === this.activeClinic.id && week.status === true)
+						item.weeks.some((week) => week.clinicId === this.selectedClinic && week.status === true)
 					);
 					break;
 			}
@@ -636,6 +615,29 @@ export default {
 			sorted.sortStringByKey("up", filteredShedules, "name");
 
 			return [...filteredShedules];
+		},
+
+		getClinicList() {
+			let array = [
+				{
+					value: "all",
+					label: "Все",
+					style: {
+						backgroundColor: "var(--item-background-color)",
+						border: "var(--default-border-focus)",
+					},
+				},
+			];
+
+			for (let i = 0; i < this.clinics.length; i++) {
+				array.push({
+					value: this.clinics[i].id,
+					label: this.clinics[i].name,
+					style: this.getClinicStyle(this.clinics[i].id),
+				});
+			}
+
+			return array;
 		},
 	},
 	methods: {
@@ -745,10 +747,10 @@ export default {
 		},
 
 		/* Получение класса у времени */
-		getClinicStyle(id) {
-			if (id === "Все") {
+		getClinicStyle(value) {
+			if (value === "all") {
 				// Если выбраны "Все"
-				if (this.activeClinic.name === "Все") {
+				if (this.selectedClinic === "all") {
 					return {
 						color: "black",
 						border: "1px solid var(--primary-color)",
@@ -764,7 +766,7 @@ export default {
 			}
 
 			let count = 0;
-			let number = id;
+			let number = value;
 			// Определение цвета в зависимости от id
 			while (number > this.colors.length) {
 				number -= this.colors.length;
@@ -772,7 +774,7 @@ export default {
 				count++;
 			}
 
-			if (this.activeClinic.id === id) {
+			if (this.selectedClinic === value) {
 				return {
 					color: "black",
 					border: `1px solid ${this.getColor(number, count, "primary")}`,
@@ -807,7 +809,7 @@ export default {
 				};
 			}
 
-			if (this.activeClinic.id === id) {
+			if (this.selectedClinic === id) {
 				return {
 					borderColor: this.getColor(number, count, "primary"),
 					backgroundColor: this.getColor(number, count, "secondary"),
@@ -849,7 +851,7 @@ export default {
 		fakeDelay(this.$store.getters.timeout, () =>
 			api({
 				method: "get",
-				url: `${this.$store.getters.urlApi}` + `get-shedules-all`,
+				url: `get-shedules-all`,
 			})
 		).then((response) => {
 			if (!response) return;

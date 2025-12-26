@@ -3,6 +3,9 @@ import * as check from "./chek-request.js";
 
 /* Создание axios */
 const capi = axios.create({
+	// Базовый адрес
+	baseURL: "/api/cabinet/",
+
 	// Время запроса
 	timeout: 10000,
 });

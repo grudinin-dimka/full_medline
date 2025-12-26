@@ -119,7 +119,7 @@ export default {
 		fakeDelay(this.$store.getters.timeout, () =>
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + "get-news-short",
+				url: "get-news-short",
 				headers: {
 					Accept: "application/json",
 				},
@@ -153,7 +153,7 @@ export default {
 		fakeDelay(this.$store.getters.timeout, () =>
 			api({
 				method: "get",
-				url: this.$store.getters.urlApi + "get-slides-not-hide",
+				url: "get-slides-not-hide",
 			})
 		).then((response) => {
 			if (!response) return;

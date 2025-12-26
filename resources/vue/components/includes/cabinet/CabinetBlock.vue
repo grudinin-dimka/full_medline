@@ -34,7 +34,7 @@
 		</template>
 	</VueModal>
 
-	<BlockOnce :minHeight="'100%'">
+	<BlockOnce :minHeight="'150px'">
 		<template #body>
 			<div class="cabinet-block">
 				<div class="cabinet-block__filters">
@@ -102,14 +102,13 @@
 			</div>
 
 			<template v-if="loading.sections.list">
-				<Empty v-if="list.length <= 0" :minHeight="'85%'" />
+				<Empty v-if="list.length <= 0" :minHeight="'200px'" />
 			</template>
 
 			<!-- Загрузка элементов -->
 			<VueLoader
 				:isLoading="loading.loader.list"
 				:isChild="true"
-				:minHeight="'85%'"
 				@afterLeave="loaderChildAfterLeave"
 			/>
 		</template>
@@ -343,7 +342,7 @@ export default {
 	mounted() {
 		capi({
 			method: "post",
-			url: `${this.$store.getters.urlCabinet}` + `documents`,
+			url: `documents`,
 			data: {
 				type: this.page,
 			},

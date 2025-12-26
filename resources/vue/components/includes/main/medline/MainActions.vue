@@ -649,7 +649,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `request-telegram-bot`,
+				url: `request-telegram-bot`,
 				headers: {
 					ContentType: "multipart/form-data",
 				},
@@ -726,7 +726,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `clieint-points`,
+				url: `clieint-points`,
 				headers: {
 					ContentType: "multipart/form-data",
 				},

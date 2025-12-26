@@ -163,7 +163,7 @@ export default {
 		fakeDelay(this.$store.getters.timeout, () =>
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + "get-travels-once",
+				url: "get-travels-once",
 				data: {
 					url: this.$route.params.name,
 				},

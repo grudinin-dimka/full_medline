@@ -176,7 +176,7 @@ export default {
 
 			axios({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `login`,
+				url: `/api/login`,
 				data: {
 					name: this.currentLogin.data.name.value,
 					password: this.currentLogin.data.password.value,

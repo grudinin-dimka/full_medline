@@ -82,7 +82,7 @@ export default {
 		fakeDelay(this.$store.getters.timeout, () =>
 			api({
 				method: "get",
-				url: this.$store.getters.urlApi + `get-contacts-clinics-all`,
+				url: `get-contacts-clinics-all`,
 			})
 		).then((response) => {
 			try {

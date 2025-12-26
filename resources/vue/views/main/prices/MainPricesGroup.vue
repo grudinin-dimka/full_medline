@@ -104,7 +104,6 @@
 								</ol>
 							</div>
 						</template>
-						<div class="price__group__prices--none" v-else>Ничего нет...</div>
 
 						<Empty :minHeight="300" v-else />
 					</div>
@@ -203,7 +202,7 @@ export default {
 		fakeDelay(this.$store.getters.timeout, () =>
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `get-prices-group`,
+				url: `get-prices-group`,
 				headers: {
 					Accept: "application/json",
 				},

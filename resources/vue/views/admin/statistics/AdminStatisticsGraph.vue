@@ -503,7 +503,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `get-tracking-statistics-diagram`,
+				url: `get-tracking-statistics-diagram`,
 				headers: {
 					Accept: "application/json",
 				},
@@ -545,7 +545,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `get-tracking-statistics-diagram`,
+				url: `get-tracking-statistics-diagram`,
 				headers: {
 					Accept: "application/json",
 				},
@@ -594,7 +594,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `get-tracking-statistics-range`,
+				url: `get-tracking-statistics-range`,
 				headers: {
 					Accept: "application/json",
 				},
@@ -655,7 +655,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `get-tracking-statistics-range`,
+				url: `get-tracking-statistics-range`,
 				headers: {
 					Accept: "application/json",
 				},
@@ -718,7 +718,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + "get-tracking-statistics-range",
+				url: "get-tracking-statistics-range",
 				headers: {
 					Accept: "application/json",
 				},
@@ -837,7 +837,7 @@ export default {
 		fakeDelay(this.$store.getters.timeout, () =>
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `get-tracking-statistics-range`,
+				url: `get-tracking-statistics-range`,
 				headers: {
 					Accept: "application/json",
 				},
@@ -913,7 +913,7 @@ export default {
 		fakeDelay(this.$store.getters.timeout, () =>
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `get-tracking-statistics-range`,
+				url: `get-tracking-statistics-range`,
 				headers: {
 					Accept: "application/json",
 				},
@@ -957,7 +957,7 @@ export default {
 		fakeDelay(this.$store.getters.timeout, () =>
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `get-tracking-statistics-range`,
+				url: `get-tracking-statistics-range`,
 				headers: {
 					Accept: "application/json",
 				},
@@ -1003,7 +1003,7 @@ export default {
 		fakeDelay(this.$store.getters.timeout, () =>
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `get-tracking-statistics-diagram`,
+				url: `get-tracking-statistics-diagram`,
 				headers: {
 					Accept: "application/json",
 				},
@@ -1035,7 +1035,7 @@ export default {
 		fakeDelay(this.$store.getters.timeout, () =>
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `get-tracking-statistics-diagram`,
+				url: `get-tracking-statistics-diagram`,
 				headers: {
 					Accept: "application/json",
 				},

@@ -221,7 +221,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `save-shedules-all/manual`,
+				url: `save-shedules-all/manual`,
 			}).finally(() => {
 				this.disabled.schedule.save = false;
 			});
@@ -230,7 +230,7 @@ export default {
 	mounted() {
 		api({
 			method: "get",
-			url: this.$store.getters.urlApi + `get-shedules-all`,
+			url: `get-shedules-all`,
 		})
 			.then((response) => {
 				if (!response) return;

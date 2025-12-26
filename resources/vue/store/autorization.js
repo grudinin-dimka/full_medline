@@ -84,7 +84,7 @@ export default {
 
 			axios({
 				method: "post",
-				url: rootGetters.urlApi + `logout`,
+				url: `/api/logout`,
 				headers: {
 					Authorization: "Bearer " + localStorage.getItem("atoken"),
 				},
@@ -101,7 +101,7 @@ export default {
 
 			axios({
 				method: "post",
-				url: rootGetters.urlCabinet + `logout`,
+				url: `/api/cabinet/logout`,
 				headers: {
 					Authorization: "Bearer " + localStorage.getItem("ctoken"),
 				},

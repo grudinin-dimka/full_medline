@@ -192,7 +192,7 @@ export default {
 		fakeDelay(this.$store.getters.timeout, () =>
 			api({
 				method: "get",
-				url: this.$store.getters.urlApi + `get-travels`,
+				url: `get-travels`,
 			})
 		).then((response) => {
 			if (!response) return;

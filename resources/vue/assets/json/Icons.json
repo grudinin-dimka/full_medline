@@ -473,6 +473,24 @@
 			}
 		]
 	},
+	{
+		"name": "Arrow Drop Down",
+		"viewBox": "0 0 24 24",
+		"path": [
+			{
+				"d": "M12 15L7 10H17L12 15Z"
+			}
+		]
+	},
+	{
+		"name": "Arrow Drop Up",
+		"viewBox": "0 0 24 24",
+		"path": [
+			{
+				"d": "M7 14L12 9L17 14H7Z"
+			}
+		]
+	},
 
 	{
 		"name": "Table",

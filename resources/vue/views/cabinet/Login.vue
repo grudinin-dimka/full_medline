@@ -222,7 +222,7 @@ export default {
 
 			await capi({
 				method: "post",
-				url: `${this.$store.getters.urlCabinet}` + `login`,
+				url: `login`,
 				headers: {
 					"Content-Type": "application/json",
 				},

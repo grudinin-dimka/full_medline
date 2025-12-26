@@ -1894,7 +1894,7 @@ export default {
 			// Сохранение данных
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `add-specialist`,
+				url: `add-specialist`,
 				headers: {
 					Accept: "multipart/form-data",
 				},
@@ -2030,7 +2030,7 @@ export default {
 			// Сохранение данных
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `save-specialist-modular`,
+				url: `save-specialist-modular`,
 				headers: {
 					Accept: "multipart/form-data",
 				},
@@ -2078,7 +2078,7 @@ export default {
 			// Сохранение данных
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `hide-specialist`,
+				url: `hide-specialist`,
 				headers: {
 					Accept: "multipart/form-data",
 				},
@@ -2504,7 +2504,7 @@ export default {
 				headers: {
 					Accept: "application/json",
 				},
-				url: this.$store.getters.urlApi + `get-specialist-all`,
+				url: `get-specialist-all`,
 				data: {
 					id: this.$route.params.id,
 				},
@@ -2617,7 +2617,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `get-specialist-sections`,
+				url: `get-specialist-sections`,
 			})
 				.then((response) => {
 					if (!response) return;
@@ -2717,7 +2717,7 @@ export default {
 }
 
 .list__checkbox-input:hover {
-	border: var(--default-border-active);
+	border: var(--default-border-focus);
 	background-color: var(--default-background-color);
 }
 
@@ -2747,7 +2747,7 @@ export default {
 }
 
 .list__checkbox-input:checked {
-	border: var(--default-border-active);
+	border: var(--default-border-focus);
 	background-color: var(--default-background-color);
 }
 

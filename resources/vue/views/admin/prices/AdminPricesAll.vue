@@ -307,7 +307,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `upload-file`,
+				url: `upload-file`,
 				headers: {
 					"Content-Type": "multipart/form-data",
 				},
@@ -348,7 +348,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `save-prices-changes`,
+				url: `save-prices-changes`,
 				headers: {
 					ContentType: "multipart/form-data",
 				},
@@ -380,7 +380,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `make-prices-files/xml`,
+				url: `make-prices-files/xml`,
 			})
 				.then((response) => {
 					if (!response) return;
@@ -406,7 +406,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `make-prices-files/xlsx`,
+				url: `make-prices-files/xlsx`,
 			})
 				.then((response) => {
 					if (!response) return;
@@ -429,7 +429,7 @@ export default {
 	mounted() {
 		api({
 			method: "get",
-			url: this.$store.getters.urlApi + `get-prices-files-all`,
+			url: `get-prices-files-all`,
 		})
 			.then((response) => {
 				if (!response) return;

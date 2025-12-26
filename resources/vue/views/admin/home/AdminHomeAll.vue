@@ -522,7 +522,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + "upload-file",
+				url: "upload-file",
 				headers: {
 					"Content-Type": "multipart/form-data",
 				},
@@ -614,7 +614,7 @@ export default {
 
 				api({
 					method: "post",
-					url: this.$store.getters.urlApi + "upload-file",
+					url: "upload-file",
 					headers: {
 						"Content-Type": "multipart/form-data",
 					},
@@ -674,7 +674,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `save-slides-changes`,
+				url: `save-slides-changes`,
 				headers: {
 					Accept: "application/json",
 				},
@@ -712,7 +712,7 @@ export default {
 			// Сохранение данных в базу данных
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `save-footer`,
+				url: `save-footer`,
 				headers: {
 					Accept: "application/json",
 				},
@@ -728,7 +728,7 @@ export default {
 		// Получение массива слайдов с сервера
 		api({
 			method: "get",
-			url: this.$store.getters.urlApi + "get-slides-all",
+			url: "get-slides-all",
 		})
 			.then((response) => {
 				if (!response) return;
@@ -757,7 +757,7 @@ export default {
 		// Получение массива данных о футере с сервера
 		api({
 			method: "get",
-			url: this.$store.getters.urlApi + `get-footer`,
+			url: `get-footer`,
 		})
 			.then((response) => {
 				if (!response) return;

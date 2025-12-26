@@ -1,5 +1,5 @@
 <template>
-	<div class="vue-table__pagination" v-if="getPagesCount > 1">
+	<div class="vue-table__pagination">
 		<!-- Кнопки пагинации в начале -->
 		<div class="vue-table__buttons-left">
 			<div

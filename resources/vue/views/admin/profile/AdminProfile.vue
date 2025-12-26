@@ -125,7 +125,7 @@ export default {
 	mounted() {
 		api({
 			method: "get",
-			url: this.$store.getters.urlApi + `get-profile-info`,
+			url: `get-profile-info`,
 		})
 			.then((response) => {
 				if (!response) return;

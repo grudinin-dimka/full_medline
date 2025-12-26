@@ -145,7 +145,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `get-news-more`,
+				url: `get-news-more`,
 				headers: {
 					Accept: "application/json",
 				},
@@ -177,7 +177,7 @@ export default {
 		fakeDelay(this.$store.getters.timeout, () =>
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `get-news-short`,
+				url: `get-news-short`,
 				headers: {
 					Accept: "application/json",
 				},

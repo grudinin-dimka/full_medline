@@ -286,7 +286,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `get-prices-manual`,
+				url: `get-prices-manual`,
 				headers: {
 					Accept: "application/json",
 				},
@@ -318,7 +318,7 @@ export default {
 		fakeDelay(this.$store.getters.timeout, () =>
 			api({
 				method: "post",
-				url: `${this.$store.getters.urlApi}` + `get-prices-complecte`,
+				url: `get-prices-complecte`,
 			})
 		).then((response) => {
 			if (!response) return;

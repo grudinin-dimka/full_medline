@@ -703,7 +703,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `upload-file`,
+				url: `upload-file`,
 				headers: {
 					"Content-Type": "multipart/form-data",
 				},
@@ -838,7 +838,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `save-abouts-changes`,
+				url: `save-abouts-changes`,
 				headers: {
 					ContentType: "multipart/form-data",
 				},
@@ -891,7 +891,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `upload-file`,
+				url: `upload-file`,
 				headers: {
 					"Content-Type": "multipart/form-data",
 				},
@@ -932,7 +932,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `save-info-files-changes`,
+				url: `save-info-files-changes`,
 				headers: {
 					ContentType: "multipart/form-data",
 				},
@@ -971,7 +971,7 @@ export default {
 	mounted() {
 		api({
 			method: "get",
-			url: this.$store.getters.urlApi + `get-abouts-all`,
+			url: `get-abouts-all`,
 		})
 			.then((response) => {
 				if (!response) return;
@@ -998,7 +998,7 @@ export default {
 
 		api({
 			method: "get",
-			url: this.$store.getters.urlApi + `get-info-files-all`,
+			url: `get-info-files-all`,
 		})
 			.then((response) => {
 				if (!response) return;

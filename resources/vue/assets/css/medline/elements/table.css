@@ -40,7 +40,7 @@
 	--table-button-head-transition: all 0.2s;
 
 	/* table -> .head -> button:hover */
-	--table-button-head-border--hover: var(--default-border-active);
+	--table-button-head-border--hover: var(--default-border-focus);
 	--table-button-head-background-color--hover: var(--secondary-color);
 
 	/* Поиск -> Поле */
@@ -51,7 +51,7 @@
 	--table-search-height: 50px;
 	--table-search-background-color: white;
 
-	--table-search-border-active: var(--default-border-active);
+	--table-search-border-active: var(--default-border-focus);
 	--table-search-active-width: 300px;
 	--table-search-active-height: #f2feff;
 	--table-search-active-background-color: white;
@@ -88,7 +88,7 @@
 	--filter-button-font-size: 1.125rem;
 	--filter-button-font-color: black;
 
-	--filter-button-border-hover: var(--default-border-active);
+	--filter-button-border-hover: var(--default-border-focus);
 	--filter-button-background-color-hover: var(--item-background-color-active);
 
 	--filter-button-transition: all 0.2s ease;
@@ -107,7 +107,7 @@
 
 	--table-filter-field-transition: all 0.2s ease;
 
-	--table-filter-field-border-focus: var(--default-border-active);
+	--table-filter-field-border-focus: var(--default-border-focus);
 	--table-filter-field-background-color-focus: white;
 
 	/* Пагинация */
@@ -121,7 +121,7 @@
 
 	--table-pagination-button-border-radius: 100px;
 	--table-pagination-button-border: var(--default-border);
-	--table-pagination-button-border-hover: var(--default-border-active);
+	--table-pagination-button-border-hover: var(--default-border-focus);
 	--table-pagination-button-background-color-hover: var(--item-background-color-active);
 
 	--table-pagination-button-font-size: 1rem;

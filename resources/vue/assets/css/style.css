@@ -33,7 +33,6 @@ body {
 	background-color: var(--main-background-color);
 }
 
-
 html,
 body,
 #app {
@@ -50,13 +49,18 @@ body.wiki-open {
 	overflow: hidden;
 }
 
+body.aside-open {
+	background-color: #ececec;
+	overflow: hidden;
+}
+
 @media screen and (max-width: 600px) {
-	body:is(.modal-open, .wiki-open) {
+	body:is(.modal-open, .wiki-open, .aside-open) {
 		padding-right: 0px;
 		background-color: white;
 	}
 
-	body:is(.modal-open, .wiki-open) > #app > header > .user {
+	body:is(.modal-open, .wiki-open, .aside-open) > #app > header > .user {
 		margin-right: 0px;
 	}
 }

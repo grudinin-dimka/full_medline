@@ -672,7 +672,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `set-user-status`,
+				url: `set-user-status`,
 				headers: {
 					Accept: "application/json",
 				},
@@ -721,7 +721,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `set-user-password`,
+				url: `set-user-password`,
 				headers: {
 					Accept: "application/json",
 				},
@@ -817,7 +817,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `save-user`,
+				url: `save-user`,
 				headers: {
 					Accept: "multipart/form-data",
 				},
@@ -916,7 +916,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `create-user`,
+				url: `create-user`,
 				headers: {
 					Accept: "multipart/form-data",
 				},
@@ -959,7 +959,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `delete-user`,
+				url: `delete-user`,
 				headers: {
 					Accept: "multipart/form-data",
 				},
@@ -989,7 +989,7 @@ export default {
 	mounted() {
 		api({
 			method: "get",
-			url: this.$store.getters.urlApi + `get-users-all`,
+			url: `get-users-all`,
 		})
 			.then((response) => {
 				if (!response) return;

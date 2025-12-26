@@ -320,7 +320,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `save-specializations-changes`,
+				url: `save-specializations-changes`,
 				headers: {
 					Accept: "application/json",
 				},
@@ -350,7 +350,7 @@ export default {
 	mounted() {
 		api({
 			method: "get",
-			url: this.$store.getters.urlApi + `get-specializations-all`,
+			url: `get-specializations-all`,
 		})
 			.then((response) => {
 				if (!response) return;

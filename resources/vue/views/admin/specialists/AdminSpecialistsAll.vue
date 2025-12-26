@@ -395,7 +395,7 @@ export default {
 			// Получение массива докторов с сервера
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `save-specialists-changes`,
+				url: `save-specialists-changes`,
 				headers: {
 					Accept: "application/json",
 				},
@@ -451,7 +451,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `make-specialists-xml`,
+				url: `make-specialists-xml`,
 				headers: {
 					Accept: "application/json",
 				},
@@ -484,7 +484,7 @@ export default {
 		// Получение массива докторов с сервера
 		api({
 			method: "get",
-			url: `${this.$store.getters.urlApi}` + `get-specialists-short`,
+			url: `get-specialists-short`,
 		})
 			.then((response) => {
 				if (!response) return;

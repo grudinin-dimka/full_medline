@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Http;
 
 use Throwable;
 
@@ -11,6 +12,30 @@ use App\Models\Tracking;
 
 class HomeController extends Controller
 {
+   /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+   /* |                     КАБИНЕТ                       |*/
+   /* |___________________________________________________|*/
+   /* Перенаправление запрос на сервер */
+   public function requestCabinet(Request $request, string $path)
+   {
+      $response = Http::withHeaders($request->header())
+         ->send(
+            $request->method(),
+            'http://192.168.1.99/api/' . $path,
+            [
+               'query' => $request->query(),
+               'json'  => $request->all(),
+            ]
+         );
+
+      return response(
+         $response->body(),
+         $response->status()
+      )->withHeaders(
+         $response->headers()
+      );
+   }
+
    /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
    /* |                 БОТ ТЕЛЕГРАММ                     |*/
    /* |___________________________________________________|*/
@@ -65,7 +90,7 @@ class HomeController extends Controller
          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
          curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
          curl_setopt($ch, CURLOPT_HEADER, false);
-         
+
          if (curl_exec($ch)) {
             curl_close($ch);
 

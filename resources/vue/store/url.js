@@ -2,7 +2,7 @@ export default {
 	state: {
 		axios: {
 			urlApi: "/api/",
-			urlCabinet: "https://lk.medline.local/api/",
+			urlCabinet: "/сapi/",
 		},
 	},
 	getters: {

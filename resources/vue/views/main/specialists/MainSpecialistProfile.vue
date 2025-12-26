@@ -268,7 +268,7 @@ export default {
 		fakeDelay(this.$store.getters.timeout, () =>
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + "get-specialist-profile",
+				url: "get-specialist-profile",
 				data: {
 					url: this.$route.params.name,
 				},

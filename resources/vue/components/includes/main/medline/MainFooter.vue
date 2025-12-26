@@ -140,7 +140,7 @@ export default {
 
 		api({
 			method: "get",
-			url: this.$store.getters.urlApi + "get-footer",
+			url: "get-footer",
 			headers: headers,
 		}).then((response) => {
 			if (!response) return;

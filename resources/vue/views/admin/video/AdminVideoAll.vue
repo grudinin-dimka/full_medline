@@ -514,7 +514,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `upload-file`,
+				url: `upload-file`,
 				headers: {
 					"Content-Type": "multipart/form-data",
 				},
@@ -549,7 +549,7 @@ export default {
 
 			api({
 				method: "post",
-				url: this.$store.getters.urlApi + `save-videos-changes`,
+				url: `save-videos-changes`,
 				headers: {
 					Accept: "application/json",
 				},
@@ -597,7 +597,7 @@ export default {
 	mounted() {
 		api({
 			method: "get",
-			url: this.$store.getters.urlApi + `get-videos-all`,
+			url: `get-videos-all`,
 		})
 			.then((response) => {
 				if (!response) return;

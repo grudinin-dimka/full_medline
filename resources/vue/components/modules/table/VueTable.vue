@@ -1,4 +1,30 @@
 <template>
+	<!-- Модальное окно: Клиники -->
+	<VueModal ref="modalFilter" :settings="modalFilter">
+		<template #title>
+			{{ modalFilter.values.title }}
+		</template>
+
+		<template #body> </template>
+
+		<template #footer>
+			<template v-if="modalFilter.values.look == 'create'">
+				<VueButton @click="console.log('create')">
+					<VueIcon :name="'Add'" :fill="'white'" :width="'26px'" :height="'26px'" />
+					Добавить
+				</VueButton>
+			</template>
+
+			<template v-if="modalFilter.values.look == 'default'">
+				<VueButton @click="console.log('update')">
+					<VueIcon :name="'Edit'" :fill="'white'" :width="'28px'" :height="'28px'" />
+					Обновить
+				</VueButton>
+			</template>
+		</template>
+	</VueModal>
+
+	<!-- Компонент таблицы -->
 	<div class="vue-table">
 		<div class="vue-table__header">
 			<div class="vue-table__header-left">
@@ -220,26 +246,6 @@
 									:type="'text'"
 									:placeholder="'Поиск'"
 								/>
-
-								<!-- <input
-									class="vue-table__filter-field"
-									type="text"
-									:id="`vue-table-` + value.name"
-									:list="filterFields.find((field) => field.name === value.name).name"
-									placeholder="Поиск"
-									v-model="filterFields.find((field) => field.name === value.name).filter"
-								/>
-								<datalist
-									:id="filterFields.find((field) => field.name === value.name).name"
-								>
-									<option
-										v-for="value in filterFields.find(
-											(field) => field.name === value.name
-										).values"
-									>
-										{{ value.text }}
-									</option>
-								</datalist> -->
 							</div>
 						</template>
 
@@ -443,7 +449,9 @@
 			</tbody>
 		</table>
 
-		<VueTablePagination :settings="settings" :arrayLength="tableLength" @changePage="changePage" />
+		<div class="vue-table__footer">
+			<VueTablePagination :settings="settings" :arrayLength="tableLength" @changePage="changePage" />
+		</div>
 	</div>
 </template>
 
@@ -454,11 +462,6 @@ import VueTablePagination from "./VueTablePagination.vue";
 import VueTableButton from "./VueTableButton.vue";
 import VueTableButtonHead from "./VueTableButtonHead.vue";
 
-import VueDateTime from "../input/VueDateTime.vue";
-import VueValues from "../input/VueValues.vue";
-import VueNumber from "../input/VueNumber.vue";
-import VueSelector from "../input/VueSelector.vue";
-
 import sorted from "../../../services/sorted";
 
 export default {
@@ -468,11 +471,6 @@ export default {
 		VueTablePagination,
 		VueTableButton,
 		VueTableButtonHead,
-
-		VueDateTime,
-		VueValues,
-		VueSelector,
-		VueNumber,
 	},
 	props: {
 		table: {
@@ -496,6 +494,17 @@ export default {
 				},
 				elements: {
 					range: 10,
+				},
+			},
+
+			/* Модальное окно */
+			modalFilter: {
+				thin: false,
+				clamped: false,
+				touch: true,
+				values: {
+					title: "",
+					look: "default",
 				},
 			},
 
@@ -620,19 +629,20 @@ export default {
 		},
 	},
 	methods: {
-		// Вспомогательная функция для нормализации строк
-		normalizeString(str, type = "") {
-			switch (type) {
-				case "lower":
-					return String(str).trim().toLowerCase();
-					break;
-				case "upper":
-					return String(str).trim().toUpperCase();
-					break;
-				default:
-					return String(str).trim();
-					break;
-			}
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                 Модальное окно                    |*/
+		/* |___________________________________________________|*/
+		/* Открытие модального окна */
+		openModal(name, title, look) {
+			this[name].values.title = title;
+			this[name].values.look = look;
+
+			this.$refs[name].open();
+		},
+
+		/* Открытие модального окна для добавления */
+		openModalFilter() {
+			this.openModal("modalFilter", "Фильтры", "default");
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -659,6 +669,21 @@ export default {
 		/* Удаление поля id из thead */
 		updateTableLength(length) {
 			this.tableLength = length;
+		},
+
+		// Вспомогательная функция для нормализации строк
+		normalizeString(str, type = "") {
+			switch (type) {
+				case "lower":
+					return String(str).trim().toLowerCase();
+					break;
+				case "upper":
+					return String(str).trim().toUpperCase();
+					break;
+				default:
+					return String(str).trim();
+					break;
+			}
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -836,7 +861,6 @@ export default {
 .vue-table {
 	display: flex;
 	flex-direction: column;
-	gap: var(--default-gap);
 
 	min-width: 800px;
 
@@ -850,6 +874,16 @@ export default {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+
+	border-top: var(--default-border-width);
+	border-right: var(--default-border-width);
+	border-bottom: 0px;
+	border-left: var(--default-border-width);
+	border-style: var(--default-border-style);
+	border-color: var(--default-border-color);
+	border-radius: calc(var(--default-border-radius) / 1.5) calc(var(--default-border-radius) / 1.5) 0px 0px;
+
+	padding: calc(var(--default-padding) / 2);
 }
 
 .vue-table__header-left {
@@ -865,7 +899,7 @@ export default {
 	height: 50px;
 
 	border-radius: 7.5px;
-	background-color: white;
+	background-color: rgba(0, 0, 0, 0);
 	border: 0px;
 
 	font-size: 1.125rem;
@@ -1164,15 +1198,16 @@ export default {
 	fill: var(--color-main-text);
 }
 
-.table-footer {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: center;
+.vue-table__footer {
+	border-top: 0px;
+	border-right: var(--default-border-width);
+	border-bottom: var(--default-border-width);
+	border-left: var(--default-border-width);
+	border-style: var(--default-border-style);
+	border-color: var(--default-border-color);
+	border-radius: 0px 0px calc(var(--default-border-radius) / 1.5) calc(var(--default-border-radius) / 1.5);
 
-	margin-top: 20px;
-
-	gap: 10px;
+	padding: calc(var(--default-padding) / 2);
 }
 
 @media screen and (width < 500px) {

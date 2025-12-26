@@ -32,7 +32,6 @@ export default {
 	mounted() {
 		switch (typeof this.minHeight) {
 			case "string":
-				this.$refs.blockOnce.style.minHeight = this.minHeight;
 				this.$refs.blockOnceBody.style.minHeight = this.minHeight;
 
 				break;
@@ -87,7 +86,8 @@ export default {
 }
 
 .block-once__body {
-	height: 100%;
+	flex: 1 1 auto;
+	min-height: 0; /* важно для overflow */
 }
 
 .block-once__buttons {

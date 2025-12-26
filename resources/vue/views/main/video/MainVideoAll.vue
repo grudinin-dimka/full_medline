@@ -95,7 +95,7 @@ export default {
 			api({
 				// <-- Теперь это функция, которая при вызове вернёт промис
 				method: "get",
-				url: `${this.$store.getters.urlApi}` + `get-videos-all`,
+				url: `get-videos-all`,
 			})
 		).then((response) => {
 			try {
