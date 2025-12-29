@@ -239,7 +239,7 @@ export default {
 	gap: var(--default-gap);
 
 	border: var(--default-border);
-	border-radius: 20px;
+	border-radius: var(--default-border-radius);
 	padding: 40px;
 	margin: 20px;
 

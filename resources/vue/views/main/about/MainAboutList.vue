@@ -1,43 +1,21 @@
 <template>
 	<div class="about">
 		<div class="about__item" v-for="about in abouts" :key="about.id">
-			<div
-				class="about__item-title"
-				v-if="about.title !== ''"
-				:class="{ skeleton: !about.title && about.title !== '' }"
-			>
-				<VueTiptap
-					v-if="about.title"
-					v-model="about.title"
-					:editable="false"
-					:limit="500"
-					:minHeight="0"
-				/>
+			<div class="about__item-title" v-if="about.title !== ''" :class="{ skeleton: !about.title && about.title !== '' }">
+				<VueTiptap v-if="about.title" v-model="about.title" :editable="false" :limit="500" :minHeight="0" />
 			</div>
 
 			<div class="about__item-images">
-				<div
-					class="item__images-item"
-					v-if="about.imageOne !== ''"
-					:class="{ skeleton: !about.imageOne }"
-				>
-					<img v-if="about.imageOne" :src="about.pathOne" alt="" loading="lazy"/>
+				<div class="item__images-item" v-if="about.imageOne !== ''" :class="{ skeleton: !about.imageOne }">
+					<img v-if="about.imageOne" :src="about.pathOne" alt="" loading="lazy" />
 				</div>
 
-				<div
-					class="item__images-item"
-					v-if="about.imageTwo !== ''"
-					:class="{ skeleton: !about.imageTwo }"
-				>
-					<img v-if="about.imageTwo" :src="about.pathTwo" alt="" loading="lazy"/>
+				<div class="item__images-item" v-if="about.imageTwo !== ''" :class="{ skeleton: !about.imageTwo }">
+					<img v-if="about.imageTwo" :src="about.pathTwo" alt="" loading="lazy" />
 				</div>
 
-				<div
-					class="item__images-item"
-					v-if="about.imageThree !== ''"
-					:class="{ skeleton: !about.imageThree }"
-				>
-					<img v-if="about.imageThree" :src="about.pathThree" alt="" loading="lazy"/>
+				<div class="item__images-item" v-if="about.imageThree !== ''" :class="{ skeleton: !about.imageThree }">
+					<img v-if="about.imageThree" :src="about.pathThree" alt="" loading="lazy" />
 				</div>
 			</div>
 
@@ -93,6 +71,8 @@ export default {
 	color: var(--primary-color);
 	min-height: 40px;
 
+	padding: var(--default-padding);
+	border: var(--default-border);
 	border-radius: var(--default-border-radius);
 }
 
@@ -108,7 +88,9 @@ export default {
 .item__images-item {
 	flex-grow: 1;
 	flex-basis: 300px;
+
 	padding: var(--default-padding);
+	border: var(--default-border);
 	border-radius: var(--default-border-radius);
 
 	width: 100%;
@@ -129,6 +111,8 @@ export default {
 .about__item-description {
 	min-height: 50px;
 
+	padding: var(--default-padding);
+	border: var(--default-border);
 	border-radius: var(--default-border-radius);
 }
 

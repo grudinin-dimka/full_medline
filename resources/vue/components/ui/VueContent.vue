@@ -21,9 +21,6 @@ main {
 	justify-content: flex-start;
 	align-items: stretch;
 
-	padding: var(--content-padding);
-	gap: var(--content-gap);
-
 	background-color: var(--content-background-color);
 }
 

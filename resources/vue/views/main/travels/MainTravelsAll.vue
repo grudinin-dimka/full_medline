@@ -13,9 +13,7 @@
 				:class="{ 'skeleton': loading.loader.travels }"
 				@click="pushTravel(travel)"
 			>
-				<div class="travels__item__hit" v-if="travel.hit">
-					Хит продаж!
-				</div>
+				<div class="travels__item__hit" v-if="travel.hit">Хит продаж!</div>
 
 				<div class="travels__item__header">
 					<div class="travels__item-title">
@@ -235,14 +233,21 @@ export default {
 	flex-direction: column;
 	gap: calc(var(--default-gap) / 2);
 
-	border-radius: var(--default-border-radius);
 	padding: var(--default-padding);
+	border: var(--default-border);
+	border-radius: var(--default-border-radius);
 
 	background-color: var(--skeleton-background-color);
 }
 
 .travels__item:hover {
-	background-image: linear-gradient(120deg, #ececec 50%, #fafafa 60%, #fafafa 61%, #ececec 70%);
+	background-image: linear-gradient(
+		120deg,
+		var(--skeleton-background-color) 50%,
+		var(--skeleton-line-color) 60%,
+		var(--skeleton-line-color) 61%,
+		var(--skeleton-background-color) 70%
+	);
 	background-size: 200%;
 	background-position: 100% 0;
 
@@ -336,12 +341,7 @@ export default {
 	margin: 0px 5px 0px 0px;
 }
 
-:is(
-		.travels__item-range,
-		.travels__item-food,
-		.travels__item-description,
-		.travels__item-services
-	) {
+:is(.travels__item-range, .travels__item-food, .travels__item-description, .travels__item-services) {
 	padding: 5px 10px;
 	text-align: justify;
 
@@ -438,7 +438,7 @@ export default {
 	right: 0px;
 	width: calc();
 	text-align: left;
-	
+
 	padding: 1px 7px;
 	border-radius: calc(var(--default-border-radius) / 1.5) calc(var(--default-border-radius) / 1.5) 0px 0px;
 	font-size: 1rem;

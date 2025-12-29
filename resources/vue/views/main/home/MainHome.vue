@@ -1,28 +1,19 @@
 <template>
-	<block :minHeight="400">
-		<MainHomeSlides v-if="slides.length > 0" class="slider__loader" :slides="slides" />
-		<Empty :minHeight="400" v-else />
+	<MainHomeSlides v-if="slides.length > 0" class="slider__loader" :slides="slides" />
+	<Empty :minHeight="400" v-else />
 
-		<div class="section-info">
-			<p class="section-info-title">Добро Пожаловать в {{ name }}</p>
-			<p class="section-info-sub-title">Индивидуальный подход и лучшие врачи</p>
-		</div>
-	</block>
-
-	<block :minHeight="450">
+	<Block :minHeight="450">
 		<div class="news__main">
 			<div class="news__main-head">
-				<div class="news__head-title">Новости</div>
-				<button class="news__head-button" @click="$router.push({ name: 'news-all' })">
-					Смотреть все
-				</button>
+				<div class="news__head-title">НОВОСТИ</div>
+				<button class="news__head-button" @click="$router.push({ name: 'news-all' })">СМОТРЕТЬ ВСЕ</button>
 			</div>
 			<div class="news__main-body" v-if="news.length > 0">
 				<MainNewsItem v-for="item in news" :key="item.id" :item="item" />
 			</div>
 			<Empty :minHeight="300" v-else />
 		</div>
-	</block>
+	</Block>
 </template>
 
 <script>
@@ -205,7 +196,7 @@ p {
 .news__main {
 	display: flex;
 	flex-direction: column;
-	gap: 20px;
+	gap: var(--default-gap);
 
 	width: 1350px;
 }
@@ -217,8 +208,7 @@ p {
 }
 
 .news__head-title {
-	font-size: 1.5rem;
-	font-weight: bold;
+	font-size: 1.75rem;
 	color: var(--primary-color);
 }
 
@@ -226,14 +216,15 @@ p {
 	cursor: pointer;
 	border: 0px;
 
-	font-size: 1.25rem;
+	font-size: 1.75rem;
+	color: var(--primary-color);
 
 	background-color: rgba(0, 0, 0, 0);
-	color: rgba(0, 0, 0, 0.5);
+	opacity: 0.3;
 }
 
 .news__head-button:hover {
-	color: rgba(0, 0, 0, 1);
+	opacity: 1;
 }
 
 .news__main-body {
@@ -268,7 +259,7 @@ p {
 
 @media screen and (max-width: 850px) {
 	.slider__loader {
-		margin-top: 70px;
+		margin-top: 82px;
 	}
 }
 

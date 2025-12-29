@@ -41,8 +41,9 @@ export default {
 	flex-direction: column;
 	gap: 10px;
 
+	border: var(--default-border);
 	border-radius: var(--default-border-radius);
-	padding: 20px;
+	padding: var(--default-padding);
 
 	text-decoration: none;
 	color: black;
@@ -54,7 +55,13 @@ export default {
 }
 
 .news__item:hover {
-	background-image: linear-gradient(120deg, #ececec 50%, #fafafa 60%, #fafafa 61%, #ececec 70%);
+	background-image: linear-gradient(
+		120deg,
+		var(--skeleton-background-color) 50%,
+		var(--skeleton-line-color) 60%,
+		var(--skeleton-line-color) 61%,
+		var(--skeleton-background-color) 70%
+	);
 	background-size: 200%;
 	background-position: 100% 0;
 
@@ -70,6 +77,8 @@ export default {
 	width: 100%;
 	aspect-ratio: 1/1;
 	object-fit: cover;
+
+	border: var(--default-border);
 	border-radius: calc(var(--default-border-radius) / 1.5);
 
 	animation: show 0.5s ease-in-out;

@@ -11,9 +11,7 @@
 		<template v-if="loading.loader.addresses">
 			<div class="prices__choice">
 				<div class="prices__item" v-for="city in 3">
-					<div class="prices__item-label" :class="{ skeleton: loading.loader.addresses }">
-						&nbsp;
-					</div>
+					<div class="prices__item-label" :class="{ skeleton: loading.loader.addresses }">&nbsp;</div>
 					<ul>
 						<li v-for="street in 3" :class="{ skeleton: loading.loader.addresses }">
 							<div class="address">&nbsp;</div>
@@ -187,6 +185,8 @@ export default {
 }
 
 .prices__item-label.skeleton {
+	border: var(--default-border);
+
 	max-width: 300px;
 }
 
@@ -206,10 +206,10 @@ export default {
 	align-items: center;
 	gap: 10px;
 
-	border: var(--input-border);
-	border-radius: var(--input-border-radius);
+	border: var(--default-border);
+	border-radius: var(--default-border-radius);
 	padding: 10px;
-	min-height: 42px;
+	min-height: 50px;
 
 	font-size: 1.125em;
 
@@ -217,7 +217,8 @@ export default {
 }
 
 .prices__item > ul > li.skeleton {
-	border: 0px;
+	min-height: 63px;
+	border: var(--default-border);
 }
 
 .prices__item > ul > li > a {
@@ -227,8 +228,7 @@ export default {
 
 	text-decoration: none;
 
-	border: 0px;
-	border-radius: 10px;
+	border-radius: var(--default-border-radius);
 	color: white;
 	background-color: var(--button-background-color);
 

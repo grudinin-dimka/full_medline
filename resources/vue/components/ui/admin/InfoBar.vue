@@ -21,13 +21,13 @@ export default {
 	flex-direction: row;
 	flex-wrap: wrap;
 
-	gap: 20px;
+	gap: calc(var(--default-gap) / 2);
 }
 
 .info-bar {
 	flex: 1 0 350px;
 
-	padding: 15px 20px;
+	padding: calc(var(--default-padding) / 2) var(--default-padding);
 	border: var(--default-border);
 	border-radius: var(--default-border-radius);
 

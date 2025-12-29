@@ -29,11 +29,11 @@ export default {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	gap: 20px;
+	gap: var(--default-gap);
 
 	min-height: max(75dvh, 400px);
 
-	margin: 20px 30px;
+	margin: var(--default-margin);
 }
 
 .block.hide {

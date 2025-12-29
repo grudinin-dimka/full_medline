@@ -800,8 +800,8 @@ export default {
 	gap: 10px;
 
 	border: var(--default-border);
-	border-radius: 10px;
-	padding: 10px;
+	border-radius: calc(var(--default-border-radius) / 1.5);
+	padding: calc(var(--default-padding) / 2);
 	overflow: hidden;
 
 	transition: all 0.2s;

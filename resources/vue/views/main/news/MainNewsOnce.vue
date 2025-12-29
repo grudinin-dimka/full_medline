@@ -127,6 +127,7 @@ export default {
 }
 
 .news__once-image {
+	border: var(--default-border);
 	border-radius: var(--default-border-radius);
 	min-height: 600px;
 	height: 600px;
@@ -139,19 +140,26 @@ export default {
 	width: 100%;
 	height: 100%;
 
+	border: var(--default-border);
 	border-radius: calc(var(--default-border-radius) / 1.5);
 	object-fit: contain;
+
+	background-color: white;
 
 	animation: show 0.5s ease-in-out;
 }
 
 .news__once-title {
+	padding: var(--default-padding);
+	border: var(--default-border);
 	border-radius: var(--default-border-radius);
 
 	min-height: 40px;
 }
 
 .news__once-description {
+	padding: var(--default-padding);
+	border: var(--default-border);
 	border-radius: var(--default-border-radius);
 
 	min-height: 100px;

@@ -436,7 +436,7 @@ export default {
 
 .filter > .filter-body > ol > li:hover {
 	padding: 10px;
-	border-radius: 10px;
+	border-radius: calc(var(--default-border-radius) / 1.5);
 	background-color: rgb(242, 242, 242);
 }
 

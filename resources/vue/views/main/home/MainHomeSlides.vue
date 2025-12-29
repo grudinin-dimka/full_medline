@@ -1,26 +1,26 @@
 <template>
-	<carousel
-		:itemsToShow="calcItemsToShow"
-		:clamp="true"
-		:wrapAround="true"
-		:transition="750"
-		:autoplay="5000"
-		:mouseDrag="true"
-		:touchDrag="true"
-		:pauseAutoplayOnHover="true"
-	>
-		<slide v-for="slide in slides" :key="slide.id">
-			<a :href="slide.link" class="slider__link" :class="{ skeleton: !slide.path }">
-				<img
-					v-if="slide.path"
-					:src="slide.path"
-					alt="Слайд"
-					class="slider__img"
-					loading="lazy"
-				/>
-			</a>
-		</slide>
-	</carousel>
+	<div class="home__carousel">
+		<div class="home__carousel-hide home__carousel-hide--left"></div>
+
+		<Carousel
+			:itemsToShow="calcItemsToShow"
+			:transition="750"
+			:autoplay="5000"
+			:mouseDrag="true"
+			:wrapAround="true"
+			:touchDrag="true"
+			:gap="20"
+			:pauseAutoplayOnHover="true"
+		>
+			<slide v-for="slide in slides" :key="slide.id">
+				<a :href="slide.link" class="slider__link" :class="{ skeleton: !slide.path }">
+					<img v-if="slide.path" :src="slide.path" alt="Слайд" class="slider__img" loading="lazy" />
+				</a>
+			</slide>
+		</Carousel>
+
+		<div class="home__carousel-hide home__carousel-hide--right"></div>
+	</div>
 </template>
 
 <script>
@@ -30,7 +30,11 @@ import "vue3-carousel/dist/carousel.css";
 export default {
 	components: { Carousel, Slide },
 	props: {
-		slides: { type: Array, required: true, default: () => [] },
+		slides: {
+			type: Array,
+			required: true,
+			default: () => [],
+		},
 	},
 	data() {
 		return {
@@ -79,42 +83,85 @@ export default {
 	contain: layout paint style;
 }
 
-.slider__link {
-	height: 375px;
-	width: 300px;
+.home__carousel {
+	position: relative;
+	margin: var(--default-margin);
+}
 
+.home__carousel-hide {
+	z-index: 5;
+	position: absolute;
+	top: 0px;
+
+	height: 440px;
+	width: 370px;
+
+	background-color: rgba(0, 0, 0, 0.1);
+}
+
+.home__carousel-hide--left {
+	left: 0px;
+
+	background: #ffffff;
+	background: linear-gradient(270deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 99%);
+}
+
+.home__carousel-hide--right {
+	right: 0px;
+
+	background: #ffffff;
+	background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 99%);
+}
+
+.slider__link {
+	height: 440px;
+	width: 370px;
+	padding: var(--default-padding);
+
+	border: var(--default-border);
 	border-radius: var(--default-border-radius);
 	background-color: var(--skeleton-background-color);
-	display: block;
-	overflow: hidden;
-
-	will-change: transform;
 }
 
 .slider__img {
 	height: 100%;
 	width: 100%;
+	aspect-ratio: 4.4/3.7;
+
 	object-fit: cover;
+	border: var(--default-border);
+	border-radius: calc(var(--default-border-radius) / 1.5);
+	background-color: white;
 	transform: translateZ(0);
+
 	will-change: transform;
 
 	animation: show 0.5s ease-in-out;
 }
 
 .carousel__slide:hover .slider__link {
-	background-image: linear-gradient(120deg, #ececec 50%, #fafafa 60%, #fafafa 61%, #ececec 70%);
+	background-image: linear-gradient(
+		120deg,
+		var(--skeleton-background-color) 50%,
+		var(--skeleton-line-color) 60%,
+		var(--skeleton-line-color) 61%,
+		var(--skeleton-background-color) 70%
+	);
 	background-size: 200%;
 	background-position: 100% 0;
 
 	animation: waves 2s linear infinite;
 }
 
-@media (max-width: 450px) {
-	.slider__link {
-		width: 100%;
-		height: 100%;
-		
-		min-height: 375px;
+@media screen and (width <= 1300px) {
+	.home__carousel-hide {
+		width: 150px;
+	}
+}
+
+@media screen and (width <= 500px) {
+	.home__carousel-hide {
+		display: none;
 	}
 }
 </style>

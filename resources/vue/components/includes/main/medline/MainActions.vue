@@ -6,7 +6,7 @@
 		</template>
 
 		<template #body>
-			<VueFieldset :count="1" :gap="20">
+			<VueFieldset :count="1" :gap="15">
 				<template #legend> КОНТАКТНЫЕ ДАННЫЕ </template>
 				<template #inputs>
 					<VueInput
@@ -90,7 +90,7 @@
 		</template>
 
 		<template #body>
-			<VueFieldset :count="1" :gap="20">
+			<VueFieldset :count="1" :gap="15">
 				<template #legend> КОНТАКТНЫЕ ДАННЫЕ </template>
 				<template #inputs>
 					<VueValues
@@ -125,7 +125,7 @@
 				</template>
 			</VueFieldset>
 
-			<VueFieldset :count="1" :gap="20">
+			<VueFieldset :count="1" :gap="15">
 				<template #legend> ДРУГАЯ ИНФОРМАЦИЯ </template>
 				<template #inputs>
 					<VueValues
@@ -175,7 +175,7 @@
 				</template>
 			</VueFieldset>
 
-			<VueFieldset :count="1" :gap="20">
+			<VueFieldset :count="1" :gap="15">
 				<template #legend> ПРОВЕРОЧНЫЙ КОД </template>
 				<template #inputs>
 					<VueCaptcha
@@ -776,7 +776,7 @@ export default {
 	position: fixed;
 	bottom: 30px;
 	right: 30px;
-	z-index: 1;
+	z-index: 5;
 
 	display: flex;
 	flex-direction: column;

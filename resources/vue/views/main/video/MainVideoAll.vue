@@ -140,6 +140,7 @@ export default {
 
 .video__item-video {
 	box-sizing: border-box;
+	border: var(--default-border);
 	border-radius: var(--default-border-radius);
 	height: 350px;
 	width: 100%;
@@ -155,14 +156,17 @@ export default {
 	width: 100%;
 	height: 100%;
 
-	border-radius: var(--default-border-radius);
+	border-radius: calc(var(--default-border-radius) / 1.5);
 	background-color: black;
 
 	animation: show 0.5s ease-in-out;
 }
 
 .video__item-description {
+	border: var(--default-border);
 	border-radius: var(--default-border-radius);
+
+	padding: var(--default-padding);
 
 	width: 100%;
 	min-height: 100px;

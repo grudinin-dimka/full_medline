@@ -35,26 +35,12 @@
 						СПЕЦИАЛИЗАЦИЯ
 					</template>
 				</VueSelector>
-
-				<!-- <VueSelector v-model="filters.clinic" :placeholder="'Выберите клинику'" :list="calcClinics" />
-				<VueSelector
-					v-model="filters.specialization"
-					:placeholder="'Выберите специализацию'"
-					:list="calcSpecializations"
-				/> -->
 			</div>
 		</div>
 
-		<div class="specialists" v-if="getFilteredSpecialists.length > 0">
-			<div class="specialists__header">
-				<div></div>
-				<div>Врач</div>
-				<div>Клиника</div>
-				<div></div>
-			</div>
-
-			<specialists-list :specialists="getFilteredSpecialists" />
-		</div>
+		<template v-if="getFilteredSpecialists.length > 0">
+			<SpecialistsList :specialists="getFilteredSpecialists" />
+		</template>
 
 		<Empty v-else />
 	</block>
@@ -363,36 +349,10 @@ export default {
 	grid-template-columns: 1fr 1fr;
 }
 
-/* Блок специалистов */
-.specialists {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
-
-	width: 1350px;
-	min-height: 400px;
-}
-
-.specialists > .specialists__header {
-	display: grid;
-	grid-template-columns: 110px 1fr 1fr 150px;
-	align-items: center;
-
-	color: rgb(150, 150, 150);
-	font-size: 1.125rem;
-}
-
 @media screen and (width < 1450px) {
-	.specialists,
 	.filters,
 	.filters__item {
 		width: 100%;
-	}
-}
-
-@media screen and (max-width: 1100px) {
-	.specialists > .specialists__header {
-		display: none;
 	}
 }
 

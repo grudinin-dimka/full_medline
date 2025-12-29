@@ -346,6 +346,7 @@ export default {
 	width: 350px;
 	height: 350px;
 	border-radius: 100%;
+	border: var(--default-border);
 
 	background-color: var(--skeleton-background-color);
 }

@@ -205,7 +205,7 @@ export default {
 		display: flex;
 	}
 
-	.vue-change__item {
+	.vue-change__header .vue-change__item {
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;

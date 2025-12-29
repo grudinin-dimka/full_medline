@@ -1,8 +1,8 @@
 /* По умолчанию */
 :root {
-	--default-gap: 20px;
-
-	--default-padding: 20px;
+	--default-gap: 30px;
+	--default-padding: 30px;
+	--default-margin: 30px;
 
 	--default-border-color: rgba(43, 102, 115, 0.4);
 	--default-border-width: 1px;
@@ -10,7 +10,7 @@
 	--default-border: var(--default-border-style) var(--default-border-width) var(--default-border-color);
 	--default-border-color-hover: var(--primary-color);
 	--default-border-focus: 1px solid var(--primary-color);
-	--default-border-radius: 20px;
+	--default-border-radius: 30px;
 
 	--default-background-color: white;
 	--secondary-background-color: rgb(220, 220, 220);
@@ -28,7 +28,7 @@
 	--item-background-color: #f0fafc;
 	--item-background-color-active: #f2feff;
 
-	--skeleton-background-color: rgb(235, 235, 235);
+	--skeleton-background-color: #E1ECED;
 	--skeleton-line-color: #fafafa;
 
 	--default-transition: all 0.2s ease;

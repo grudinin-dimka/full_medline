@@ -48,7 +48,7 @@ export default {
 .block-once {
 	display: flex;
 	flex-direction: column;
-	gap: 20px;
+	gap: calc(var(--default-gap) / 2);
 
 	box-sizing: border-box;
 
@@ -57,7 +57,7 @@ export default {
 	border: var(--default-border);
 	border-radius: var(--default-border-radius);
 
-	padding: 20px;
+	padding: var(--default-padding);
 
 	box-shadow: 0px 4px 10px -10px rgba(0, 0, 0, 0.99);
 

@@ -31,9 +31,7 @@
 						/>
 
 						<svg
-							v-else-if="
-								getFiletype(file.path) === 'jpg' || getFiletype(file.path) === 'jpeg'
-							"
+							v-else-if="getFiletype(file.path) === 'jpg' || getFiletype(file.path) === 'jpeg'"
 							width="30"
 							height="30"
 							viewBox="0 0 24 24"
@@ -243,7 +241,9 @@ export default {
 	align-items: center;
 	gap: 10px;
 
-	border-radius: calc(var(--default-border-radius) / 1.5);
+	padding: var(--default-padding);
+	border: var(--default-border);
+	border-radius: var(--default-border-radius);
 	padding: 10px;
 
 	min-height: 40px;

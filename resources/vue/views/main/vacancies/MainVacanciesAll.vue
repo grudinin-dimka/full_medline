@@ -7,54 +7,31 @@
 
 	<Block :minHeight="100">
 		<div class="vacancies" v-if="vacancies.length > 0">
-			<div
-				class="vacancies__item"
-				v-for="vacancy in vacancies"
-				:class="{ 'skeleton': loading.loader.vacancies }"
-			>
+			<div class="vacancies__item" v-for="vacancy in vacancies" :class="{ 'skeleton': loading.loader.vacancies }">
 				<div class="vacancies__item-header">
 					<div class="vacancies__item-title">
 						{{ vacancy.title }}
 					</div>
 
 					<div class="vacancies__item-salary" v-if="vacancy.salary">
-						<VueIcon
-							:name="'Payments'"
-							:fill="'var(--primary-color)'"
-							:width="'26px'"
-							:height="'26px'"
-						/>
+						<VueIcon :name="'Payments'" :fill="'var(--primary-color)'" :width="'26px'" :height="'26px'" />
 						{{ vacancy.salary.toLocaleString("ru-RU") }} ₽
 					</div>
 				</div>
 				<div class="vacancies__item-body">
 					<div class="vacancies__item-address" v-if="vacancy.address">
-						<VueIcon
-							:name="'Location On'"
-							:fill="'var(--primary-color)'"
-							:width="'24px'"
-							:height="'24px'"
-						/>
+						<VueIcon :name="'Location On'" :fill="'var(--primary-color)'" :width="'24px'" :height="'24px'" />
 						{{ vacancy.address }}
 					</div>
 					<div class="vacancies__item-schedule" v-if="vacancy.schedule">
-						<VueIcon
-							:name="'Calendar Month'"
-							:fill="'var(--primary-color)'"
-							:width="'24px'"
-							:height="'24px'"
-						/>
+						<VueIcon :name="'Calendar Month'" :fill="'var(--primary-color)'" :width="'24px'" :height="'24px'" />
 						{{ vacancy.schedule }}
 					</div>
 					<div class="vacancies__item-info">
 						<div class="vacancies__item-requirements" v-if="vacancy.requirements">
 							<div class="vacancies__requirements-title">Требования:</div>
 							<div class="vacancies__requirements-body">
-								<VueTiptap
-									:editable="false"
-									:limit="1_000"
-									v-model="vacancy.requirements"
-								/>
+								<VueTiptap :editable="false" :limit="1_000" v-model="vacancy.requirements" />
 							</div>
 						</div>
 						<div class="vacancies__item-conditions" v-if="vacancy.conditions">
@@ -70,12 +47,7 @@
 					</div>
 
 					<div class="vacancies__item-salary" v-if="vacancy.salary">
-						<VueIcon
-							:name="'Payments'"
-							:fill="'var(--primary-color)'"
-							:width="'26px'"
-							:height="'26px'"
-						/>
+						<VueIcon :name="'Payments'" :fill="'var(--primary-color)'" :width="'26px'" :height="'26px'" />
 						{{ vacancy.salary.toLocaleString("ru-RU") }} ₽
 					</div>
 				</div>
@@ -447,6 +419,7 @@ export default {
 	gap: calc(var(--default-gap) / 2);
 
 	padding: var(--default-padding);
+	border: var(--default-border);
 	border-radius: var(--default-border-radius);
 
 	font-size: 1.125rem;

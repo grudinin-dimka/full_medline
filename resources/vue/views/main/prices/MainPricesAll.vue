@@ -25,13 +25,7 @@
 			</form>
 
 			<div class="filters__item">
-				<VueSelector
-					v-model.trim="filters.address"
-					:list="getAdressesList"
-					:size="6"
-					:isSearch="true"
-					:isClear="false"
-				>
+				<VueSelector v-model.trim="filters.address" :list="getAdressesList" :size="6" :isSearch="true" :isClear="false">
 					<template #label>
 						<VueIcon :name="'Location On'" :fill="'var(--primary-color)'" :width="'20px'" :height="'20px'" />
 						АДРЕС
@@ -351,7 +345,7 @@ export default {
 .filters {
 	display: flex;
 	flex-direction: column;
-	gap: var(--default-gap);
+	gap: calc(var(--default-gap) / 2);
 
 	margin: 0 auto;
 
@@ -360,7 +354,7 @@ export default {
 
 .filters__item {
 	display: flex;
-	gap: var(--default-gap);
+	gap: calc(var(--default-gap) / 2);
 }
 
 .filters__item-button {
@@ -501,12 +495,20 @@ button > .content.disabled {
 	fill: var(--primary-color);
 }
 
+.prices__address-title-icon.skeleton {
+	border: var(--default-border);
+}
+
 .prices__address-title-name {
 	min-height: 36px;
 	display: flex;
 	align-items: center;
 
 	border-radius: 50px;
+}
+
+.prices__address-title-name.skeleton {
+	border: var(--default-border);
 }
 
 .prices__category.disabled > .prices__address-title {
@@ -561,6 +563,10 @@ button > .content.disabled {
 	border-radius: 50px;
 }
 
+.prices__values-name.skeleton {
+	border: var(--default-border);
+}
+
 .prices__values-price {
 	border-radius: 50px;
 
@@ -569,8 +575,16 @@ button > .content.disabled {
 	color: var(--primary-color);
 }
 
+.prices__values-price.skeleton {
+	border: var(--default-border);
+}
+
 .prices__values-valute {
 	border-radius: 50px;
+}
+
+.prices__values-valute.skeleton {
+	border: var(--default-border);
 }
 
 @media screen and (width <= 1450px) {

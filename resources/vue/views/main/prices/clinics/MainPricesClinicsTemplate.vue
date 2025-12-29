@@ -626,14 +626,6 @@ export default {
 	fill: var(--button-default-color);
 }
 
-.prices__address-title-name {
-	min-height: 36px;
-	display: flex;
-	align-items: center;
-
-	border-radius: 50px;
-}
-
 .prices__category {
 	display: flex;
 	flex-direction: column;
@@ -678,6 +670,22 @@ export default {
 	border-radius: 50px;
 
 	fill: var(--primary-color);
+}
+
+.prices__address-title-icon.skeleton {
+	border: var(--default-border);
+}
+
+.prices__address-title-name {
+	min-height: 36px;
+	display: flex;
+	align-items: center;
+
+	border-radius: 50px;
+}
+
+.prices__address-title-name.skeleton {
+	border: var(--default-border);
 }
 
 .prices__category.disabled > .prices__address-title {
@@ -726,8 +734,12 @@ export default {
 	gap: 5px;
 }
 
-.prices__values-name {
-	border-radius: 50px;
+.prices__values-name.skeleton {
+	border-radius: var(--default-border-radius);
+}
+
+.prices__values-name.skeleton {
+	border: var(--default-border);
 }
 
 .prices__values-price {
@@ -738,8 +750,16 @@ export default {
 	color: var(--primary-color);
 }
 
+.prices__values-price.skeleton {
+	border: var(--default-border);
+}
+
 .prices__values-valute {
 	border-radius: 50px;
+}
+
+.prices__values-valute.skeleton {
+	border: var(--default-border);
 }
 
 @media screen and (width <= 1450px) {

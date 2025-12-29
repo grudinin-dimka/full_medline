@@ -23,12 +23,14 @@
 					</div>
 				</div>
 			</div>
+
 			<!-- Блок с кнопками -->
 			<div class="buttons">
 				<a @click.prevent="$router.push({ name: `news` })" :href="`/news`" alt="контакты"> Новости </a>
 				<a @click.prevent="$router.push({ name: `about` })" :href="`/about`" alt="о нас"> О нас </a>
 				<a @click.prevent="$router.push({ name: `contacts` })" :href="`/contacts`" alt="контакты"> Контакты </a>
 			</div>
+
 			<!-- Блок доп. информации -->
 			<div class="more">
 				<!-- <div class="button" @click="">Записаться на прием</div> -->
@@ -74,7 +76,11 @@
 			/>
 		</section>
 
-		<article>Имеются противопоказания Необходима консультация специалиста</article>
+		<div class="footer__description">
+			<VueIcon :name="'Footer Description'" :fill="'#9E8282'" :width="'1344px'" :height="'30px'" />
+
+			<!-- <span>Имеются противопоказания Необходима консультация специалиста</span> -->
+		</div>
 	</footer>
 </template>
 
@@ -163,9 +169,12 @@ export default {
 
 <style scoped>
 footer {
-	width: 100%;
+	width: 1350px;
 	display: flex;
 	flex-direction: column;
+	gap: var(--default-gap);
+
+	margin: auto;
 }
 
 section.up {
@@ -174,10 +183,15 @@ section.up {
 	justify-content: space-around;
 	flex-wrap: wrap;
 	gap: 30px;
+	width: 100%;
 
 	text-transform: uppercase;
 
-	margin: 0px 30px 20px 30px;
+	padding: var(--default-padding);
+	border: var(--default-border);
+	border-radius: var(--default-border-radius);
+
+	font-size: 20px;
 }
 
 section.up > div {
@@ -342,49 +356,58 @@ section.up .more .links > a:hover > svg {
 
 section.bottom {
 	min-height: 200px;
-	padding: 20px;
-	margin: 0px 30px 20px 30px;
-	border-radius: calc(var(--default-border-radius) / 2);
+	padding: var(--default-padding);
+
+	border: var(--default-border);
+	border-radius: var(--default-border-radius);
 
 	font-size: 20px;
 
 	background-color: var(--skeleton-background-color);
 }
 
-footer article {
+.footer__description {
+	width: 1350px;
 	text-align: center;
 
 	border-radius: calc(var(--default-border-radius) / 2);
-	margin-bottom: 10px;
 
 	text-transform: uppercase;
-	font-size: 2.4vw;
+	font-size: max(12px, 1.85vw);
 
 	color: rgb(158, 130, 130);
 }
 
-@media screen and (width <= 850px) {
+.footer__description svg {
+	width: 100%;
+}
+
+@media screen and (width <= 1450px) {
+	footer {
+		width: 100%;
+	}
+
+	section.up {
+		margin: 0px var(--default-margin);
+
+		width: calc(100% - var(--default-margin) * 2);
+	}
+
 	section.bottom {
-		margin: 0px 20px 20px 20px;
+		margin: 0px var(--default-margin);
+
+		width: calc(100% - var(--default-margin) * 2);
+	}
+
+	.footer__description {
+		width: 100%;
 	}
 }
 
-@media screen and (max-width: 500px) {
-	footer a[href="/"] {
-		display: none;
-	}
-
-	section.up .more .links > a > svg {
-		width: 30px;
-		height: 30px;
-	}
-
-	section.up .more .links > a {
-		padding: 15px;
-	}
-
-	section.up .more .links {
-		justify-content: space-evenly;
+@media screen and (width <= 850px) {
+	.footer__description {
+		margin-top: -30px;
+		padding: 0px 20px;
 	}
 }
 </style>

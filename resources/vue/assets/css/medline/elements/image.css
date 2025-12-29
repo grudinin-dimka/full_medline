@@ -1,7 +1,7 @@
 :root {
-	--image-padding: 20px;
+	--image-padding: calc(var(--default-padding) / 2);
 	--image-border: var(--input-border);
-	--image-border-radius: calc(var(--default-border-radius) / 1.5);
+	--image-border-radius: var(--default-border-radius);
 
 	--image-height: 0px;
 

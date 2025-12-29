@@ -55,7 +55,7 @@ export default {
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
-	gap: 20px;
+	gap: var(--default-gap);
 }
 
 .block-two__item {
@@ -63,13 +63,13 @@ export default {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
-	gap: 20px;
+	gap: var(--default-gap);
 
 	background-color: white;
 	height: auto;
 	border: var(--default-border);
 	border-radius: var(--default-border-radius);
-	padding: 20px;
+	padding: var(--default-padding);
 
 	max-width: 100%;
 
