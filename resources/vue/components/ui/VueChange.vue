@@ -166,8 +166,6 @@ export default {
 	background-position: 100% 0;
 
 	animation: waves 2s linear infinite;
-
-	border: var(--default-border);
 }
 
 .vue-change__item--skeleton:hover {

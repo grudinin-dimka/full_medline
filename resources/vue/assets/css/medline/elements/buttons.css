@@ -46,7 +46,7 @@
 
 	--button-inverse-font-color: black;
 	--button-inverse-font-color-hover: black;
-	--button-inverse-background-color: rgba(190, 132, 86, 0);
+	--button-inverse-background-color: rgba(255, 255, 255, 1);
 	--button-inverse-background-color-hover: var(--edit-secondary-background-color);
 
 	--button-loader-inverse-border: 3px solid var(--primary-color);

@@ -33,6 +33,7 @@
 
 					<div class="specialists__body-buttons">
 						<div class="specialists__body-age">
+							Стаж
 							{{ getWorkAges(specialist.startWorkAge) }}
 						</div>
 
@@ -81,7 +82,7 @@ export default {
 
 		getWorkAges(date) {
 			if (!date) {
-				return "Менее года.";
+				return "менее года.";
 			}
 
 			let startDate = new Date(date);
@@ -95,7 +96,7 @@ export default {
 
 			// Исключения для чисел 11-19
 			if (lastTwoDigits >= 11 && lastTwoDigits <= 19) {
-				return "лет";
+				return year + " лет";
 			}
 
 			// Для остальных случаев
@@ -199,6 +200,7 @@ export default {
 
 .specialists__list-img {
 	width: 100%;
+	aspect-ratio: 1/1;
 	border-radius: 300px;
 	height: 100%;
 	object-fit: contain;
@@ -237,6 +239,7 @@ export default {
 
 .specialists__body-buttons {
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: space-between;
 
 	gap: calc(var(--default-gap) / 2);
@@ -387,6 +390,20 @@ export default {
 	.specialists__list-body {
 		text-align: center;
 		grid-template-columns: 1fr;
+	}
+
+	.specialists__body-buttons {
+		display: grid;
+		grid-template-columns: 1fr;
+
+		gap: calc(var(--default-gap) / 2);
+	}
+}
+
+@media screen and (max-width: 400px) {
+	.specialists__img {
+		height: 230px;
+		width: 230px;
 	}
 }
 </style>

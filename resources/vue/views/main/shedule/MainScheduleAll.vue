@@ -256,7 +256,7 @@
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import Block from "../../../components/ui/main/Block.vue";
 
-import VueChange from "./VueChange.vue";
+import VueChange from "../../../components/ui/VueChange.vue";
 
 import api from "../../../mixin/api.js";
 import sorted from "../../../services/sorted.js";
@@ -802,8 +802,8 @@ export default {
 
 			if (!number || time == "-") {
 				return {
-					borderColor: "rgba(255, 255, 255, 0)",
-					backgroundColor: "rgba(0, 0, 0, 0.05)",
+					borderColor: "var(--default-border-color)",
+					backgroundColor: "var(--transparent-color)",
 					height: "21px",
 					margin: "5px 0px",
 				};
@@ -1069,6 +1069,7 @@ export default {
 	height: 50px;
 	background-color: var(--skeleton-background-color);
 
+	border: var(--default-border);
 	border-radius: 50%;
 }
 
@@ -1262,6 +1263,11 @@ export default {
 	height: 100%;
 
 	border-radius: 50px;
+}
+
+.days__item-content.skeleton, 
+.shedule__table-date.skeleton {
+	border: var(--default-border) !important;
 }
 
 @keyframes show {

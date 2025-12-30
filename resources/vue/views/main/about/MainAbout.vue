@@ -23,32 +23,21 @@
 					<div class="files__content-icon" v-if="file.path">
 						<VueIcon
 							v-if="getFiletype(file.path) === 'pdf'"
-							:name="'Document'"
+							:name="'Article'"
 							:width="'30px'"
 							:height="'30px'"
 							:fill="'var(--primary-color)'"
 							:cursor="'pointer'"
 						/>
 
-						<svg
+						<VueIcon
 							v-else-if="getFiletype(file.path) === 'jpg' || getFiletype(file.path) === 'jpeg'"
-							width="30"
-							height="30"
-							viewBox="0 0 24 24"
-							fill="var(--primary-color)"
-							xmlns="http://www.w3.org/2000/svg"
-						>
-							<g clip-path="url(#clip0_768_2)">
-								<path
-									d="M2.66667 24C1.93333 24 1.30556 23.7389 0.783333 23.2167C0.261111 22.6944 0 22.0667 0 21.3333V2.66667C0 1.93333 0.261111 1.30556 0.783333 0.783333C1.30556 0.261111 1.93333 0 2.66667 0H21.3333C22.0667 0 22.6944 0.261111 23.2167 0.783333C23.7389 1.30556 24 1.93333 24 2.66667V21.3333C24 22.0667 23.7389 22.6944 23.2167 23.2167C22.6944 23.7389 22.0667 24 21.3333 24H2.66667ZM2.66667 21.3333H21.3333V2.66667H2.66667V21.3333ZM4 18.6667H20L15 12L11 17.3333L8 13.3333L4 18.6667Z"
-								/>
-							</g>
-							<defs>
-								<clipPath id="clip0_768_2">
-									<rect width="24" height="24" />
-								</clipPath>
-							</defs>
-						</svg>
+							:name="'Image'"
+							:width="'30px'"
+							:height="'30px'"
+							:fill="'var(--primary-color)'"
+							:cursor="'pointer'"
+						/>
 
 						<VueIcon
 							v-else
@@ -258,6 +247,12 @@ export default {
 	justify-content: center;
 	align-items: center;
 	gap: 10px;
+}
+
+.files__content-icon {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .files__other-button {

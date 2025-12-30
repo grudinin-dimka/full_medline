@@ -35,7 +35,7 @@
 			<div class="more">
 				<!-- <div class="button" @click="">Записаться на прием</div> -->
 				<p>Присоединяйтесь к нам</p>
-				<div class="links">
+				<div class="more__links">
 					<a href="https://ok.ru/profile/586067527945" class="ok" target="_blank">
 						<svg viewBox="0 0 198 342" xmlns="http://www.w3.org/2000/svg">
 							<path
@@ -318,16 +318,17 @@ section.up .more p {
 	font-size: 22px;
 }
 
-section.up .more .links {
+section.up .more .more__links {
 	display: flex;
+	flex-wrap: wrap;
 	gap: 10px;
-	justify-content: space-between;
+	justify-content: center;
 
 	text-align: center;
 	font-weight: bold;
 }
 
-section.up .more .links > a {
+section.up .more .more__links > a {
 	cursor: pointer;
 	display: flex;
 	justify-content: center;
@@ -340,17 +341,17 @@ section.up .more .links > a {
 	transition: all 0.2s;
 }
 
-section.up .more .links > a > svg {
+section.up .more .more__links > a > svg {
 	width: 45px;
 	height: 45px;
 	fill: var(--primary-color);
 }
 
-section.up .more .links > a:hover {
+section.up .more .more__links > a:hover {
 	background-color: var(--primary-color);
 }
 
-section.up .more .links > a:hover > svg {
+section.up .more .more__links > a:hover > svg {
 	fill: white;
 }
 
@@ -406,8 +407,22 @@ section.bottom {
 
 @media screen and (width <= 850px) {
 	.footer__description {
-		margin-top: -30px;
+		margin-top: -10px;
 		padding: 0px 20px;
+	}
+
+	section.bottom {
+		width: calc(100% - 40px);
+		margin: 0px 20px;
+	}
+
+	section.up {
+		width: calc(100% - 40px);
+		margin: 0px 20px 0px 20px;
+	}
+
+	footer {
+		gap: 20px;
 	}
 }
 </style>

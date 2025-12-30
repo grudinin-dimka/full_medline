@@ -19,144 +19,123 @@
 
 	<block :minHeight="700">
 		<div class="profile">
-			<div class="profile__img" :class="{ skeleton: loading.loader.profile }">
-				<img
-					class="profile__img-img"
-					v-if="specialist.profile.path"
-					:src="specialist.profile.path"
-					alt="Фото специалиста"
-				/>
+			<div class="profile__doctor" :class="{ skeleton: loading.loader.profile }">
+				<div class="profile__img">
+					<img
+						class="profile__img-img"
+						v-if="specialist.profile.path"
+						:src="specialist.profile.path"
+						alt="Фото специалиста"
+					/>
+				</div>
+
+				<div class="profile__buttons">
+					<VueButton :wide="true" @click="$store.commit('incrementCallCount')"> Записаться </VueButton>
+
+					<a :href="specialist.profile.link" target="_blank" class="profile__buttons-prodoctorov">
+						<VueButton :wide="true" :look="'inverse'">
+							<span>
+								<span class="red">ПРО</span>
+								<span class="blue">ДОКТОРОВ</span>
+							</span>
+						</VueButton>
+					</a>
+				</div>
 			</div>
 
 			<div class="profile__info">
-				<div class="profile__info-title" :class="{ skeleton: loading.loader.profile }">
-					{{
-						(specialist.profile.family ?? "") +
-						" " +
-						(specialist.profile.name ?? "") +
-						" " +
-						(specialist.profile.surname ?? "")
-					}}
+				<div class="profile__info-block" :class="{ skeleton: loading.loader.profile }">
+					<div class="profile__info-head">
+						<div class="profile__info-specs">
+							<div class="profile__info-name">
+								{{
+									(specialist.profile.family ?? "") +
+									" " +
+									(specialist.profile.name ?? "") +
+									" " +
+									(specialist.profile.surname ?? "")
+								}}
+							</div>
+
+							<div class="profile__info-specializations">
+								{{ getSpecializations }}
+							</div>
+						</div>
+
+						<div class="profile__info-other">
+							<div class="profile__info__button" v-if="!loading.loader.profile">
+								Прием
+
+								<div class="profile__info__button-radial" v-if="specialist.profile.childrenDoctorAge">
+									{{ specialist.profile.childrenDoctorAge }}+
+								</div>
+
+								<div class="profile__info__button-radial" v-if="specialist.profile.adultDoctor">18+</div>
+							</div>
+
+							<div class="profile__info__button" v-if="!loading.loader.profile">
+								Стаж
+
+								<div class="profile__info__button-radial">
+									{{ getWorkAges(specialist.profile.startWorkAge) }}
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="profile__info-body">
+						<div class="profile__info-line">
+							<span>Категория:</span>
+							<span>{{ specialist.profile.category }}</span>
+						</div>
+					</div>
 				</div>
 
-				<div class="profile__info-info info" :class="{ skeleton: loading.loader.profile }">
-					<template v-if="!loading.loader.profile">
-						<div class="label">Основная информация</div>
-						<ul>
-							<li>
-								<article>
-									<div>Специализация:</div>
-									<div>{{ getSpecializations }}.</div>
-								</article>
-							</li>
-							<li>
-								<article>
-									<div>Категория:</div>
-									<div>{{ specialist.profile.category }}.</div>
-								</article>
-							</li>
-							<li>
-								<article>
-									<div>Стаж:</div>
-									<div>{{ getWorkAges(specialist.profile.startWorkAge) }}.</div>
-								</article>
-							</li>
-						</ul>
-					</template>
-				</div>
-				<div class="profile__info-info priem" :class="{ skeleton: loading.loader.profile }">
-					<template v-if="!loading.loader.profile">
-						<div class="label">Прием пациентов</div>
-						<ul>
-							<li>
-								<article>
-									<div>У детей:</div>
-									<div v-if="specialist.profile.childrenDoctor">
-										{{ specialist.profile.childrenDoctorAge }}+.
-									</div>
-									<div v-else>Нет.</div>
-								</article>
-							</li>
-							<li>
-								<article>
-									<div>У взрослых:</div>
-									<div>{{ specialist.profile.adultDoctor ? "Да" : "Нет" }}.</div>
-								</article>
-							</li>
-						</ul>
-					</template>
+				<div class="profile__info-block" :class="{ skeleton: loading.loader.profile }">
+					<div class="profile__info-accordeon">
+						<VueAccordeon>
+							<template #name> Сертификаты </template>
+							<template #body>
+								<VueAccordeonBlock>
+									<ul class="profile__info-list">
+										<li v-for="certificate in specialist.certificates">
+											<article>
+												<div>
+													{{
+														`${formatDate(certificate.endEducation)} - ${certificate.name} (${
+															certificate.organization
+														}) `
+													}}.
+												</div>
+											</article>
+										</li>
+									</ul>
+								</VueAccordeonBlock>
+							</template>
+						</VueAccordeon>
+
+						<VueAccordeon>
+							<template #name> Образование </template>
+							<template #body>
+								<VueAccordeonBlock>
+									<ul class="profile__info-list">
+										<li v-for="education in specialist.educations">
+											<article>
+												<div>
+													{{ `${formatDate(education.date)} - ${education.name} (${education.organization}).` }}
+												</div>
+											</article>
+										</li>
+									</ul>
+								</VueAccordeonBlock>
+							</template>
+						</VueAccordeon>
+					</div>
 				</div>
 
-				<div
-					class="profile__info-info certificates"
-					:class="{ skeleton: loading.loader.profile }"
-					v-if="specialist.certificates.length"
-				>
-					<template v-if="specialist.certificates.length && !loading.loader.profile">
-						<div class="label">Сертификаты</div>
-						<ul>
-							<li v-for="certificate in specialist.certificates">
-								<article>
-									<div>
-										{{
-											`${formatDate(certificate.endEducation)} - ${certificate.name} (${
-												certificate.organization
-											}) `
-										}}.
-									</div>
-								</article>
-							</li>
-						</ul>
-					</template>
+				<div class="profile__description" v-if="specialist.profile.description">
+					<VueTiptap :editable="false" :limit="10_000" v-model="specialist.profile.description" />
 				</div>
-
-				<div
-					class="profile__info-info educations"
-					:class="{ skeleton: loading.loader.profile }"
-					v-if="specialist.educations.length"
-				>
-					<template v-if="specialist.educations.length && !loading.loader.profile">
-						<div class="label">Образование</div>
-						<ul>
-							<li v-for="education in specialist.educations">
-								<article>
-									<div>
-										{{
-											`${formatDate(education.date)} - ${education.name} (${
-												education.organization
-											}).`
-										}}
-									</div>
-								</article>
-							</li>
-						</ul>
-					</template>
-				</div>
-
-				<div class="profile__info-info links" :class="{ skeleton: loading.loader.profile }">
-					<template v-if="specialist.profile.link !== '#' && specialist.profile.link">
-						<div class="label">Ссылки</div>
-						<ul>
-							<li>
-								<article>
-									<div>
-										<a class="prodoctorov" :href="specialist.profile.link">
-											<span class="red">ПРО</span>
-											<span class="blue">ДОКТОРОВ</span>
-										</a>
-									</div>
-								</article>
-							</li>
-						</ul>
-					</template>
-				</div>
-
-				<VueTiptap
-					v-if="specialist.profile.description"
-					:editable="false"
-					:limit="10_000"
-					v-model="specialist.profile.description"
-				/>
 			</div>
 		</div>
 	</block>
@@ -166,6 +145,9 @@
 import InfoBar from "../../../components/ui/main/InfoBar.vue";
 import Block from "../../../components/ui/main/Block.vue";
 import LoadText from "../../../components/ui/main/LoadText.vue";
+
+import VueAccordeon from "../../../components/modules/accordeon/VueAccordeon.vue";
+import VueAccordeonBlock from "../../../components/modules/accordeon/VueAccordeonBlock.vue";
 
 import api from "../../../mixin/api";
 import sorted from "../../../services/sorted";
@@ -177,6 +159,9 @@ export default {
 		InfoBar,
 		Block,
 		LoadText,
+
+		VueAccordeon,
+		VueAccordeonBlock,
 	},
 	data() {
 		return {
@@ -332,50 +317,183 @@ export default {
 
 .profile {
 	display: grid;
-	grid-template-columns: 500px 1fr;
-	gap: 20px;
+	grid-template-columns: auto 1fr;
+	gap: var(--default-gap);
 
 	min-height: 300px;
 	width: 1350px;
+}
+
+.profile__doctor {
+	position: sticky;
+	top: var(--default-margin);
+	display: flex;
+	flex-direction: column;
+	gap: var(--default-gap);
+
+	padding: var(--default-padding);
+	border: var(--default-border);
+	border-radius: var(--default-border-radius);
+
+	height: fit-content;
+
+	background-color: var(--skeleton-background-color);
 }
 
 .profile__img {
 	align-self: self-start;
 	justify-self: end;
 
-	width: 350px;
-	height: 350px;
+	height: 250px;
+	width: 250px;
+
 	border-radius: 100%;
 	border: var(--default-border);
 
-	background-color: var(--skeleton-background-color);
+	background-color: white;
 }
 
 .profile__img-img {
 	width: 100%;
 	border-radius: 100%;
 	height: 100%;
+	aspect-ratio: 1 / 1;
 	object-fit: contain;
 
 	animation: show 0.5s ease-out;
 }
 
+.profile__buttons {
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--default-gap) / 2);
+}
+
+.profile__buttons-prodoctorov {
+	text-decoration: none;
+}
+
+.red {
+	color: #ec2227;
+}
+
+.blue {
+	color: #117cc0;
+}
+
 .profile__info {
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: var(--default-gap);
 
 	font-size: 1.125rem;
 }
 
-.profile__info-title {
+.profile__info-block {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	gap: var(--default-gap);
+
+	padding: var(--default-padding);
+	border: var(--default-border);
+	border-radius: var(--default-border-radius);
+
+	background-color: var(--skeleton-background-color);
+}
+
+.profile__info-head {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: center;
+
+	gap: var(--default-gap);
+}
+
+.profile__info-accordeon {
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--default-gap) / 2);
+}
+
+.profile__info-specs {
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--default-gap) / 2);
+}
+
+.profile__info-name {
 	font-size: 1.5rem;
 
 	border-radius: 15px;
 	border: 0px;
-	padding: 10px 30px;
-
 	min-height: 30px;
+
+	color: var(--primary-color);
+}
+
+.profile__info-specializations {
+	font-size: 1rem;
+}
+
+.profile__info-other {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+	gap: calc(var(--default-gap) / 2);
+}
+
+.profile__info__button {
+	user-select: none;
+	display: flex;
+	align-items: center;
+	gap: calc(var(--default-gap) / 3);
+
+	text-align: center;
+	border-radius: var(--button-border-radius);
+	border: 0px;
+
+	padding: 10px 20px;
+	color: var(--primary-color);
+
+	background-color: var(--transparent-color);
+}
+
+.profile__info__button-radial {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	padding: 10px;
+	border-radius: var(--default-border-radius);
+
+	background-color: white;
+	height: 45px;
+	min-width: 45px;
+}
+
+.profile__info-line {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: center;
+	gap: calc(var(--default-gap) / 2);
+
+	background-color: white;
+
+	min-height: 62px;
+	padding: calc(var(--default-padding) / 2) var(--default-padding);
+	border: var(--default-border);
+	border-radius: var(--button-border-radius);
+
+	width: 100%;
+}
+
+.profile__description {
+	padding: var(--default-padding);
+	border: var(--default-border);
+	border-radius: var(--default-border-radius);
 }
 
 .profile__info-info {
@@ -388,36 +506,11 @@ export default {
 	padding: 10px 30px;
 }
 
-.profile__info-info.info {
-	min-height: 160px;
-}
-
-.profile__info-info.priem {
-	min-height: 110px;
-}
-
-.profile__info-info.certificates {
-	min-height: 70px;
-}
-
-.profile__info-info.educations {
-	min-height: 70px;
-}
-
-.profile__info-info.links {
-	min-height: 70px;
-}
-
-.profile__info-info > .label {
-	color: var(--primary-color);
-	font-size: 1.25rem;
-}
-
-.profile__info-info > ul {
+.profile__info-list {
 	margin: 0px;
 }
 
-.profile__info-info > ul > li > article {
+.profile__info-list > li {
 	display: grid;
 	grid-template-columns: 200px 1fr;
 
@@ -427,103 +520,47 @@ export default {
 	transition: all 0.2s;
 }
 
-.profile__info-info:is(.educations, .certificates) > ul > li > article {
+.profile__info-list > li {
 	grid-template-columns: 1fr;
 }
 
-.specialist-profile-head th {
-	font-size: 24px;
-	text-align: left;
-	font-weight: normal;
-}
-
-.specialist-profile-head td {
-	font-size: 18px;
-	padding: 5px 0px;
-}
-
-.specialist-profile-head td ul {
-	margin: 0px;
-	list-style: none;
-	padding-left: 15px;
-}
-
-.specialist-profile-head td ul li {
-	display: flex;
-	gap: 5px;
-	align-items: center;
-}
-
-a.prodoctorov {
-	box-sizing: border-box;
-
-	border-radius: 50px;
-
-	font-size: 18px;
-	text-decoration: none;
-	text-align: center;
-
-	transition: all 0.2s;
-}
-
-a.prodoctorov:hover {
-	text-decoration: underline;
-	text-decoration-thickness: 2px;
-	text-decoration-color: #117cc0;
-}
-
-:is(a.prodoctorov, li > article > div) .red {
-	color: #ec2227;
-}
-
-:is(a.prodoctorov, li > article > div) .blue {
-	color: #117cc0;
-}
-
-@media screen and (width <= 1250px) {
+@media screen and (width <= 1450px) {
 	.profile {
-		grid-template-columns: 1fr 1fr;
-
 		width: 100%;
 	}
-
-	.profile > img {
-		align-self: center;
-		justify-self: center;
-	}
 }
 
-@media screen and (width <= 900px) {
+@media screen and (width <= 850px) {
 	.profile {
 		grid-template-columns: 1fr;
 	}
 
-	.profile__info-title {
-		padding: 10px 0px;
+	.profile__doctor {
+		position: static;
 	}
 
-	.profile__info > .profile__info-info {
-		padding: 0px 0px;
+	.profile__img {
+		margin: auto;
+
+		height: 350px;
+		width: 350px;
 	}
 
-	.profile__info > .profile__info-info > ul {
-		padding: 0px 0px 0px 20px;
-	}
+	.profile__img-img {
+		width: 100%;
+		border-radius: 100%;
+		height: 100%;
+		aspect-ratio: 1 / 1;
+		object-fit: contain;
 
-	.profile__info > .profile__info-info > ul > li > article {
-		grid-template-columns: 175px 1fr;
-	}
-
-	.profile > .profile__img {
-		margin: 0px auto;
+		animation: show 0.5s ease-out;
 	}
 }
 
-@media screen and (width <= 420px) {
-	.profile > .profile__img {
-		width: 100%;
-		height: 100%;
-		aspect-ratio: 1 / 1;
+@media screen and (width <= 450px) {
+	.profile__img {
+		height: 250px;
+		width: 250px;
 	}
 }
 </style>

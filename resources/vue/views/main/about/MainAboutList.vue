@@ -99,6 +99,7 @@ export default {
 }
 
 .item__images-item > img {
+	border: var(--default-border);
 	width: 100%;
 	height: 100%;
 	border-radius: calc(var(--default-border-radius) / 1.5);

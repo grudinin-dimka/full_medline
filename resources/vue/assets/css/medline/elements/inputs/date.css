@@ -41,10 +41,10 @@
 	--month-dropdown-gap: 10px;
 	--month-dropdown-z-index: 10;
 	--month-dropdown-top: calc(100% + 5px);
-	--month-dropdown-padding: var(--default-padding);
+	--month-dropdown-padding: calc(var(--default-padding) / 2);
 	--month-dropdown-border: var(--default-border);
 	--month-dropdown-border-radius: var(--input-border-radius);
-	--month-dropdown-width: 294px;
+	--month-dropdown-width: 285px;
 	--month-dropdown-background-color: white;
 	--month-dropdown-box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 	--month-dropdown-animation: fadeIn 0.2s ease;

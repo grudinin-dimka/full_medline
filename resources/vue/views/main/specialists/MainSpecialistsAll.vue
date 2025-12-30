@@ -325,7 +325,7 @@ export default {
 .filters {
 	display: flex;
 	flex-direction: column;
-	gap: var(--default-gap);
+	gap: calc(var(--default-gap) / 2);
 }
 
 .filters__item {

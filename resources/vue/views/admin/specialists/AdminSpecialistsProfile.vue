@@ -2684,7 +2684,7 @@ export default {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	gap: 10px;
+	gap: calc(var(--default-gap) / 2);
 
 	border: var(--list-checkbox-border);
 	border-radius: var(--list-checkbox-border-radius);
@@ -2723,7 +2723,7 @@ export default {
 
 .list__checkbox-label {
 	display: flex;
-	gap: 10px;
+	gap: calc(var(--default-gap) / 2);
 }
 
 .list__checkbox-icon {
@@ -2769,7 +2769,7 @@ export default {
 :is(.specializations-list, .clinics__list) {
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: calc(var(--default-gap) / 2);
 }
 
 .specializations-list {
@@ -2786,7 +2786,7 @@ export default {
 	align-items: center;
 
 	display: grid;
-	gap: 10px;
+	gap: calc(var(--default-gap) / 2);
 	border: var(--input-border);
 	border-radius: calc(var(--default-border-radius) / 1.5);
 	padding: 15px;
@@ -2799,7 +2799,7 @@ export default {
 .clinics__list-item {
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: calc(var(--default-gap) / 2);
 	justify-content: space-between;
 
 	border: var(--input-border);
@@ -2876,15 +2876,17 @@ export default {
 	display: grid;
 	grid-template-columns: 0.5fr 1fr;
 	flex-wrap: wrap;
-	gap: 20px;
+	gap: var(--default-gap);
 
 	animation: show-bottom-to-top-15 0.4s ease-in-out;
 }
 
 .container-profile-other {
+	margin-top: calc(var(--default-gap) / 2);
+
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: calc(var(--default-gap) / 2);
 
 	animation: show-bottom-to-top-15 0.4s ease-in-out;
 }
@@ -2909,14 +2911,14 @@ export default {
 	flex: 1 0 500px;
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: calc(var(--default-gap) / 2);
 }
 
 .profile-list {
 	flex-grow: 1;
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: calc(var(--default-gap) / 2);
 
 	animation: show-bottom-to-top-15 0.4s ease-in-out;
 }
@@ -2925,7 +2927,7 @@ export default {
 	display: grid;
 	align-items: center;
 	grid-template-columns: 1fr 1fr auto;
-	gap: 10px;
+	gap: calc(var(--default-gap) / 2);
 
 	border: var(--input-border);
 	border-radius: calc(var(--default-border-radius) / 1.5);
@@ -2940,7 +2942,7 @@ export default {
 	display: grid;
 	align-items: center;
 	grid-template-columns: 1fr 1fr 30px;
-	gap: 10px;
+	gap: calc(var(--default-gap) / 2);
 
 	border: 0px;
 	border-radius: calc(var(--default-border-radius) / 1.5);

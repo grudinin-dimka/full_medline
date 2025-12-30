@@ -1,5 +1,5 @@
 <template>
-	<MainHomeSlides v-if="slides.length > 0" class="slider__loader" :slides="slides" />
+	<MainHomeSlides v-if="slides.length > 0" class="slider__loader" :list="slides" />
 	<Empty :minHeight="400" v-else />
 
 	<Block :minHeight="450">
@@ -77,6 +77,22 @@ export default {
 					hide: 0,
 					order: 3,
 				},
+				{
+					id: 4,
+					name: null,
+					link: null,
+					path: null,
+					hide: 0,
+					order: 4,
+				},
+				{
+					id: 5,
+					name: null,
+					link: null,
+					path: null,
+					hide: 0,
+					order: 3,
+				},
 			],
 			news: [
 				{
@@ -125,12 +141,8 @@ export default {
 			try {
 				sorted.sortNumberByKey("up", response.data.result.news, "order");
 
-				for (let i = 0; i < response.data.result.news.length; i++) {
-					this.news[i] = response.data.result.news[i];
-				}
-
-				this.news.splice(response.data.result.news.length, this.news.length);
-
+				this.news = [...response.data.result.news];
+				
 				this.loading.loader.news = false;
 			} catch (error) {
 				this.$store.commit("addDebugger", {
@@ -152,11 +164,7 @@ export default {
 			try {
 				sorted.sortNumberByKey("up", response.data.result, "order");
 
-				for (let i = 0; i < response.data.result.length; i++) {
-					this.slides[i] = response.data.result[i];
-				}
-
-				this.slides.splice(response.data.result.length, this.slides.length);
+				this.slides = [...response.data.result];
 
 				this.loading.loader.slider = false;
 			} catch (error) {
@@ -276,6 +284,14 @@ p {
 
 	.section-info-sub-title {
 		font-size: 20px;
+	}
+
+	.news__head-title {
+		font-size: 1.5rem;
+	}
+
+	.news__head-button {
+		font-size: 1.5rem;
 	}
 }
 </style>

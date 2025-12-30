@@ -200,6 +200,8 @@ export default {
 
 .contacts__item.skeleton {
 	min-height: 300px;
+
+	border: var(--default-border);
 	border-radius: var(--default-border-radius);
 }
 

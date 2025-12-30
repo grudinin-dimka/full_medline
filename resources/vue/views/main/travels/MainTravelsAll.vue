@@ -380,6 +380,7 @@ export default {
 .travels__item-image > img {
 	width: 100%;
 	height: 100%;
+
 	border-radius: calc(var(--default-border-radius) / 1.5);
 	object-fit: cover;
 

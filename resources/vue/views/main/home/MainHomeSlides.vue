@@ -3,6 +3,7 @@
 		<div class="home__carousel-hide home__carousel-hide--left"></div>
 
 		<Carousel
+			:key="carouselKey"
 			:itemsToShow="calcItemsToShow"
 			:transition="750"
 			:autoplay="5000"
@@ -12,11 +13,11 @@
 			:gap="20"
 			:pauseAutoplayOnHover="true"
 		>
-			<slide v-for="slide in slides" :key="slide.id">
-				<a :href="slide.link" class="slider__link" :class="{ skeleton: !slide.path }">
-					<img v-if="slide.path" :src="slide.path" alt="Слайд" class="slider__img" loading="lazy" />
+			<Slide v-for="(item, index) in list" :key="`${item.id}-${index}`">
+				<a :href="item.link" class="slider__link" :class="{ skeleton: !item.path }">
+					<img v-if="item.path" :src="item.path" alt="Слайд" class="slider__img" loading="lazy" />
 				</a>
-			</slide>
+			</Slide>
 		</Carousel>
 
 		<div class="home__carousel-hide home__carousel-hide--right"></div>
@@ -30,7 +31,7 @@ import "vue3-carousel/dist/carousel.css";
 export default {
 	components: { Carousel, Slide },
 	props: {
-		slides: {
+		list: {
 			type: Array,
 			required: true,
 			default: () => [],
@@ -42,6 +43,10 @@ export default {
 		};
 	},
 	computed: {
+		carouselKey() {
+			return this.list.map(i => i.id).join("-");
+		},
+
 		calcItemsToShow() {
 			const width = this.windowWidth;
 			if (!width) return 1;

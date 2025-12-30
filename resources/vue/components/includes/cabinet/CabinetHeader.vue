@@ -7,44 +7,46 @@
 
 		<template #body>
 			<table class="info">
-				<tr class="info__tr">
-					<td class="info__td">Организация:</td>
-					<td class="info__td">ООО «Медицинская линия» (ООО «МедЛайн»)</td>
-				</tr>
-
-				<tr class="info__tr">
-					<td class="info__td">ИНН:</td>
-					<td class="info__td">4502019933</td>
-				</tr>
-
-				<tr class="info__tr">
-					<td class="info__td">ОГРН:</td>
-					<td class="info__td">1074502000990</td>
-				</tr>
-
-				<tr class="info__tr">
-					<td class="info__td">Почтовый адрес:</td>
-					<td class="info__td">641870, Курганская область, г. Шадринск, ул. Комсомольская, д. 16, корп. 2, оф. 311.</td>
-				</tr>
-
-				<tr class="info__tr">
-					<td class="info__td">Телефон:</td>
-					<td class="info__td">8 (35253) 9-000-9</td>
-				</tr>
-
-				<tr class="info__tr">
-					<td class="info__td">Лицензия:</td>
-					<td class="info__td">
-						<a
-							class="link"
-							target="_blank"
-							href="https://roszdravnadzor.gov.ru/services/licenses?qrguid=ce6bc584aebd5ecea4499dc22ccb1dd8 "
-						>
-							Лицензия № Л041-01107-72/00572725 от 11.09.2020 г., выдана Департаментом здравоохранения Курганской
-							области
-						</a>
-					</td>
-				</tr>
+				<tbody>
+					<tr class="info__tr">
+						<td class="info__td">Организация:</td>
+						<td class="info__td">ООО «Медицинская линия» (ООО «МедЛайн»)</td>
+					</tr>
+	
+					<tr class="info__tr">
+						<td class="info__td">ИНН:</td>
+						<td class="info__td">4502019933</td>
+					</tr>
+	
+					<tr class="info__tr">
+						<td class="info__td">ОГРН:</td>
+						<td class="info__td">1074502000990</td>
+					</tr>
+	
+					<tr class="info__tr">
+						<td class="info__td">Почтовый адрес:</td>
+						<td class="info__td">641870, Курганская область, г. Шадринск, ул. Комсомольская, д. 16, корп. 2, оф. 311.</td>
+					</tr>
+	
+					<tr class="info__tr">
+						<td class="info__td">Телефон:</td>
+						<td class="info__td">8 (35253) 9-000-9</td>
+					</tr>
+	
+					<tr class="info__tr">
+						<td class="info__td">Лицензия:</td>
+						<td class="info__td">
+							<a
+								class="link"
+								target="_blank"
+								href="https://roszdravnadzor.gov.ru/services/licenses?qrguid=ce6bc584aebd5ecea4499dc22ccb1dd8 "
+							>
+								Лицензия № Л041-01107-72/00572725 от 11.09.2020 г., выдана Департаментом здравоохранения Курганской
+								области
+							</a>
+						</td>
+					</tr>
+				</tbody>
 			</table>
 		</template>
 	</VueModal>

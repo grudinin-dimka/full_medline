@@ -444,6 +444,16 @@ export default {
 			`,
 		};
 	},
+	watch: {
+		"$store.getters.getCallCount": {
+			handler() {
+				if (this.$store.getters.getCallCount) {
+					this.openModalRequestEdite();
+				}
+			},
+			deep: true,
+		},
+	},
 	computed: {
 		/* Разделение капчи на отдельные символы */
 		filteredBarcodes() {

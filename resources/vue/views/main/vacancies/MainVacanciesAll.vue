@@ -486,6 +486,7 @@ export default {
 	gap: calc(var(--default-gap) / 2);
 
 	padding: calc(var(--default-padding) / 2);
+	border: var(--default-border);
 	border-radius: calc(var(--default-border-radius) / 2);
 
 	background-color: white;
