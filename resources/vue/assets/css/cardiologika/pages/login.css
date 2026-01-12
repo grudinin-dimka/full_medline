@@ -1,8 +1,0 @@
-/* Login.vue */
-:root {
-	--login-background-color: var(--main-background-color);
-
-	--login-form-border: var(--default-border);
-	--login-form-border-radius: var(--default-border-radius);
-	--login-form-background-color: white;
-}

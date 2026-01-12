@@ -1,7 +1,8 @@
 /* Акценты */
 :root {
 	/* Основные цвета */
-	--primary-color: #00abbd;
+	--primary-color: rgb(var(--primary-color-rgb));
+	--primary-color-rgb: 0, 171, 189;
 	--primary-color-hover: #26b8c7;
 
 	--transparent-color: rgba(0, 171, 189, 0.1);

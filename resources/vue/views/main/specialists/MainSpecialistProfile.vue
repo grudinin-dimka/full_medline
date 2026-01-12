@@ -30,6 +30,7 @@
 				</div>
 
 				<div class="profile__buttons">
+					<!-- NOTE: Кнопка записаться -->
 					<VueButton :wide="true" @click="$store.commit('incrementCallCount')"> Записаться </VueButton>
 
 					<a :href="specialist.profile.link" target="_blank" class="profile__buttons-prodoctorov">
@@ -151,6 +152,7 @@ import VueAccordeonBlock from "../../../components/modules/accordeon/VueAccordeo
 
 import api from "../../../mixin/api";
 import sorted from "../../../services/sorted";
+import shared from "../../../services/shared";
 
 import fakeDelay from "../../../mixin/fake-delay";
 
@@ -233,20 +235,15 @@ export default {
 		},
 
 		getWorkAges(date) {
+			if (!date) {
+				return "менее года.";
+			}
+
 			let startDate = new Date(date);
 			let currentDate = new Date();
-			let result = currentDate.getFullYear() - startDate.getFullYear();
-			if (result == 0) return "Менее года";
-			switch (result) {
-				case 1:
-					return result + " " + "год";
-				case 2:
-				case 3:
-				case 4:
-					return result + " " + "года";
-				default:
-					return result + " " + "лет";
-			}
+			let year = currentDate.getFullYear() - startDate.getFullYear();
+
+			return shared.getAgesText(year);
 		},
 	},
 	mounted() {

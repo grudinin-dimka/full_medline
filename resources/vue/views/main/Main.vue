@@ -25,7 +25,7 @@
 <script>
 import VueSnow from "../../components/ui/VueSnow.vue"
 
-// NOTE: Модули на главной
+/* NOTE: Компоненты главной */
 import MainHeader from "../../components/includes/main/medline/MainHeader.vue";
 import MainNav from "../../components/includes/main/medline/MainNav.vue";
 import MainFooter from "../../components/includes/main/medline/MainFooter.vue";

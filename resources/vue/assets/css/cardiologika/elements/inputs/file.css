@@ -1,0 +1,30 @@
+:root {
+	/* dropzone */
+   --file-dropzone-label-gap: 5px;
+
+	--file-dropzone-border: 2px dashed var(--input-border-color);
+	--file-dropzone-border-radius: calc(var(--input-border-radius) * 2);
+	--file-dropzone-padding: var(--default-padding);
+
+	--file-dropzone-height: 100%;
+	--file-dropzone-min-height: 150px;
+
+	--file-dropzone-transition: all 0.2s ease;
+	--file-dropzone-background-color: rgba(0, 0, 0, 0);
+
+	/* dropzone.active */
+	--file-dropzone-border--active: 2px dashed var(--input-border-color-hover);
+	--file-dropzone-background-color: rgba(0, 0, 0, 0);
+
+	/* dropzone -> label */
+	--file-dropzone-label-width: 100%;
+	--file-dropzone-label-height: 100%;
+	--file-dropzone-label-font: var(--input-font-size) var(--input-font-family);
+
+	--file-dropzone-label-color: var(--input-color);
+	--file-dropzone-label-color--hover: var(--input-color-hover);
+
+	/* dropzone -> icon */
+	--file-dropzone-icon-fill: var(--input-border-color);
+	--file-dropzone-icon-fill--hover: var(--input-color-hover);
+}

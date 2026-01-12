@@ -1,9 +1,11 @@
 /* Акценты */
 :root {
 	/* Основные цвета */
-	--primary-color: #b5013e;
+	--primary-color: rgb(var(--primary-color-rgb));
+	--primary-color-rgb: 181, 1, 62;
 	--primary-color-hover: #cf1855;
 
+	--transparent-color: rgba(189, 0, 94, 0.1);
 	--secondary-color: #f4e7ec;
 
 	/* edit */

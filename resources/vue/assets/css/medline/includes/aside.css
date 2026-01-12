@@ -48,21 +48,21 @@
 	--aside-link-border-radius: 100px;
 	--aside-link-border-hover: 0px;
 	--aside-link-background-color: rgba(0, 123, 224, 0);
-	--aside-link-background-color-hover: rgb(0, 171, 190);
+	--aside-link-background-color-hover: var(--primary-color);
 
 	--aside-link-transition: all 0s ease;
 
 	/* link.child */
 	--aside-link-child-font-color: rgba(0, 0, 0, 0.5);
-	--aside-link-child-font-color-hover: rgb(0, 171, 190);
+	--aside-link-child-font-color-hover: var(--primary-color);
 
 	--aside-link-child-svg-fill: rgba(0, 0, 0, 0.5);
-	--aside-link-child-svg-fill-hover: rgb(0, 171, 190);
+	--aside-link-child-svg-fill-hover: var(--primary-color);
 
 	--aside-link-child-border: 0px;
 	--aside-link-child-border-hover: 0px;
 	--aside-link-child-background-color: rgba(0, 123, 224, 0);
-	--aside-link-child-background-color-hover: rgba(0, 171, 190, 0.2);
+	--aside-link-child-background-color-hover: rgba(var(--primary-color-rgb), 0.2);
 
 	/* link.hidden */
 	--aside-link-small-padding: 5px 15px;
@@ -90,7 +90,7 @@
 
 	--aside-link-stage-background-color: rgba(0, 0, 0, 0);
 
-	--aside-link-stage-hover-background-color: rgb(0, 171, 190);
+	--aside-link-stage-hover-background-color: var(--primary-color);
 
 	/* link -> .point */
 	--aside-link-point-left: -4px;

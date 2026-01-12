@@ -20,8 +20,8 @@
 			</div>
 
 			<div class="header__item-list">
-				<a href="https://yandex.ru/maps/-/CHvFBP65" target="_blank">8-й микрорайон, 26</a>
-				<a href="https://yandex.ru/maps/-/CHvFBX8Q" target="_blank">10-й микрорайон, 15А</a>
+				<a href="https://yandex.ru/maps/-/CLd6eSZ5" target="_blank">8-й микрорайон, 26</a>
+				<a href="https://yandex.ru/maps/-/CLd6e0ns" target="_blank">10-й микрорайон, 15А</a>
 			</div>
 		</div>
 		<div class="header__item">
@@ -30,45 +30,30 @@
 			</div>
 
 			<div class="header__item-list">
-				<a href="tel:+73525390009" target="_blank">+7 (3456) 26-26-24</a>
+				<a href="tel:+73456262624" target="_blank">+7 (345) 626-26-24</a>
 				<a href="tel:+79961462624" target="_blank">+7 (996) 146-26-24</a>
 			</div>
 		</div>
 	</header>
 
-	<!-- Кнопки -->
-	<div class="main__buttons">
-		<button class="main__buttons-button" @click="topFunction">
-			<VueIcon :name="'Arrow'" :fill="'white'" :width="'26px'" :height="'26px'" />
-		</button>
-	</div>
-
 	<!-- Кнопка "бургер" -->
-	<div
-		class="burger"
-		@click="$store.commit('setBurgerMain')"
-		:class="{ active: $store.getters.burgerMainStatus }"
-	>
-		<div></div>
-		<div></div>
-		<div></div>
-	</div>
+	<VueBurger :is-active="!$store.getters.getAsideHide" @click="$store.commit('toggleAsideHide')" />
 </template>
 
 <script>
-import VueIcon from "../../../modules/icon/VueIcon.vue";
-
-import axios from "axios";
+import VueBurger from "../../../ui/VueBurger.vue";
 
 export default {
-	components: {
-		VueIcon,
-
-		axios,
-	},
+	components: { VueBurger },
 	data() {
 		return {
+			countPoints: 0,
+
 			isShadow: false,
+
+			/* Данные */
+			barcodes: [],
+			captcha: "",
 		};
 	},
 	methods: {
@@ -83,13 +68,6 @@ export default {
 				this.isShadow = false;
 			}
 		},
-
-		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾| */
-		/* |            Кнопки для пользователей               | */
-		/* |___________________________________________________| */
-		topFunction() {
-			window.scrollTo({ top: 0, behavior: "smooth" });
-		},
 	},
 	mounted() {
 		window.addEventListener("scroll", this.setShadow);
@@ -98,61 +76,7 @@ export default {
 </script>
 
 <style scoped>
-/* Кнопки */
-.main__buttons {
-	position: fixed;
-	bottom: 30px;
-	right: 30px;
-	z-index: 1;
-
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
-}
-
-.main__buttons__actions {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
-
-	opacity: 0;
-	visibility: hidden;
-	transition: all 0.2s ease-in-out;
-}
-
-.main__buttons__actions.active {
-	opacity: 1;
-	visibility: visible;
-}
-
-.main__buttons-button {
-	cursor: pointer;
-
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	border: none;
-	border-radius: 50%;
-	outline: none;
-
-	width: 70px;
-	height: 70px;
-	background-color: var(--primary-color);
-	color: white;
-	font-size: 16px;
-
-	transition: all 0.2s ease-in-out;
-	box-shadow: var(--default-box-shadow);
-}
-
-.main__buttons-button.rotate {
-	transform: rotate(-90deg);
-}
-
-.main__buttons-button:hover {
-	background-color: var(--primary-color-hover);
-}
-
+/* Шапка */
 header {
 	display: flex;
 	justify-content: space-between;
@@ -234,10 +158,33 @@ header.slide {
 	background-color: var(--primary-color-hover);
 }
 
-.header-buttons {
+.header__buttons {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 10px;
+}
+
+.header__buttons-button {
+	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: var(--button-gap);
+
+	padding: var(--button-padding);
+	border: var(--button-inverse-border);
+	border-radius: var(--button-border-radius);
+
+	text-decoration: none;
+	font-size: 1.125rem;
+	color: black;
+
+	transition: all 0.2s ease-in-out;
+}
+
+.header__buttons-button:hover {
+	border: var(--button-inverse-border-hover);
+	background-color: var(--button-inverse-background-color-hover);
 }
 
 .button {
@@ -263,233 +210,57 @@ header.slide {
 	background-color: var(--button-background-color-hover);
 }
 
-.burger {
-	cursor: pointer;
-	display: none;
-	position: fixed;
-	z-index: 100;
-
-	top: 30px;
-	right: 30px;
-	height: 30px;
-}
-
-.burger div:nth-child(1),
-.burger div:nth-child(2),
-.burger div:nth-child(3) {
-	position: relative;
-
-	width: 30px;
-	height: 3px;
-	background-color: var(--primary-color);
-
-	transition: all 0.5s;
-}
-
-.burger div:nth-child(2) {
-	top: 7px;
-}
-
-.burger div:nth-child(3) {
-	top: 15px;
-}
-
-.burger.active div:nth-child(1) {
-	top: 10px;
-	position: absolute;
-
-	background-color: white;
-	transform: rotate(-45deg);
-}
-
-.burger.active div:nth-child(2) {
-	position: absolute;
-}
-
-.burger.active div:nth-child(2),
-.burger.active div:nth-child(3) {
-	top: 10px;
-
-	background-color: white;
-	transform: rotate(45deg);
-}
-
 .block-shadow {
 	box-shadow: -5px 0px 20px rgba(0, 0, 0, 0.3);
 }
 
-.checkbox > .captcha__content {
-	display: flex;
-	justify-content: center;
-	font-size: 18px;
-}
-
-.checkbox.error > .captcha__content > label {
-	color: var(--span-color-error);
-}
-
-.checkbox > .captcha__content > input {
-	width: 17.5px;
-	height: 17.5px;
-}
-
-.captcha__content > input:checked {
-	accent-color: #8fe5ee;
-}
-
-.captcha {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	gap: 10px;
-}
-
-.captcha__input > input {
-	user-select: none;
-	box-sizing: border-box;
-	outline: none;
-	text-align: center;
-
-	padding: 10px;
-	border: var(--input-border);
-	border-radius: var(--input-border-radius);
-
-	width: 300px;
-	height: 58px;
-
-	font-size: 20px;
-	caret-color: var(--input-caret-color);
-	background-color: white;
-
-	transition: all 0.2s;
-}
-
-.captcha__input > input.error {
-	background-color: var(--input-error-background-color);
-	border: var(--input-error-border);
-
-	caret-color: var(--input-error-color);
-}
-
-.captcha__input > input:focus {
-	border: var(--input-border-focus);
-}
-
-.captcha__input > input.error:focus {
-	border: var(--input-error-border);
-}
-
-.captcha__input > .input-error {
-	margin-top: 5px;
-	color: var(--input-error-color);
-}
-
-.captcha__content {
-	position: relative;
-}
-
-.captcha__content-text {
-	box-sizing: border-box;
-	overflow: hidden;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	position: relative;
-	user-select: none;
-	border: var(--input-border);
-
-	border-radius: var(--input-border-radius);
-	color: rgb(0, 0, 0);
-
-	width: 300px;
-	height: 58px;
-
-	font-family: "Henny Penny";
-	font-weight: lighter;
-	font-size: 2rem;
-	letter-spacing: 10px;
-}
-
-.captcha__content-text > span {
-	font-family: "Henny Penny";
-	font-weight: lighter;
-	font-size: 2rem;
-}
-
-.content__text-line {
-	position: absolute;
-	z-index: 0;
-	width: 350px;
-	height: 1px;
-
-	background-color: rgb(140, 140, 140);
-}
-
-.content__text-trash {
-	position: absolute;
-	z-index: 0;
-	width: 100%;
-	height: 100%;
-
-	background-image: url("../../../../assets/img/trash.webp");
-	background-position: center center;
-	background-size: cover;
-	opacity: 0.7;
-}
-
-.captcha__content-update {
-	position: absolute;
-	cursor: pointer;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-
-	background-color: white;
-	padding: 5px;
-	border-radius: 100px;
-	border: var(--default-border);
-
-	top: 11px;
-	right: 5px;
-}
-
-.captcha__content-update > svg {
-	fill: rgb(0, 0, 0);
-}
-
-@media screen and (max-width: 1650px) {
-	.header-buttons {
-		display: none;
-	}
-}
-
-@media screen and (max-width: 1150px) {
+@media screen and (max-width: 1600px) {
 	.header__item:nth-child(3) {
 		display: none;
 	}
 }
 
-@media screen and (max-width: 900px) {
-	header {
-		padding: 10px 50px 10px 50px;
-		justify-content: space-between;
-	}
-
-	.header__logo {
+@media screen and (max-width: 1400px) {
+	.header__logo-name {
 		display: none;
 	}
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 1000px) {
 	.header__item:nth-child(4) {
 		display: none;
 	}
 }
 
-@media screen and (max-width: 500px) {
-	.burger {
-		display: block;
+@media screen and (width <= 850px) {
+	header {
+		padding: 10px 30px 10px 30px;
+		justify-content: space-between;
+	}
+
+	.header__buttons {
+		position: absolute;
+
+		left: 20px;
+	}
+
+	.header__buttons-button {
+		padding: 0px;
+		border: 0px;
+	}
+
+	.header__buttons-button:hover {
+		border: 0px;
+		background-color: transparent;
+	}
+
+	.header__buttons-button svg {
+		width: 45px;
+		height: 45px;
+	}
+
+	.header__buttons-button-text {
+		display: none;
 	}
 
 	header {
@@ -503,13 +274,6 @@ header.slide {
 		width: 100%;
 		margin: 0px;
 		background-color: white;
-	}
-
-	.captcha > .captcha__content,
-	.captcha > .captcha__input,
-	.captcha > .captcha__input > input,
-	.captcha > .captcha__content > .captcha__content-text {
-		width: 100%;
 	}
 }
 </style>

@@ -1,7 +1,7 @@
 :root {
 	/* [date, month]: label */
 	--date-label-z-index: 0;
-	--date-label-left: 15px;
+	--date-label-left: 40px;
 
 	--date-label-border: 0px;
 	--date-label-border-radius: var(--input-border-radius);
@@ -11,7 +11,7 @@
 	--date-label-font: var(--input-font-size) var(--input-font-family);
 	--date-label-background-color: var(--input-background-color);
 
-	--date-label-width: calc(100% - 20px);
+	--date-label-width: calc(100% - 70px);
 	--date-label-height: calc(100% - var(--input-border-width) * 2);
 
 	/* [date, month]: year -> controls */
@@ -41,10 +41,10 @@
 	--month-dropdown-gap: 10px;
 	--month-dropdown-z-index: 10;
 	--month-dropdown-top: calc(100% + 5px);
-	--month-dropdown-padding: var(--default-padding);
+	--month-dropdown-padding: calc(var(--default-padding) / 2);
 	--month-dropdown-border: var(--default-border);
 	--month-dropdown-border-radius: var(--input-border-radius);
-	--month-dropdown-width: 294px;
+	--month-dropdown-width: 285px;
 	--month-dropdown-background-color: white;
 	--month-dropdown-box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 	--month-dropdown-animation: fadeIn 0.2s ease;
@@ -93,7 +93,7 @@
 	--date-calendar-th-font: 1rem var(--input-font-family);
 
 	/* date: calendar -> tr -> th.weekend */
-	--date-calendar-th-weekend-color: #007be0;
+	--date-calendar-th-weekend-color: var(--primary-color);
 
 	/* date: button */
 	--date-button-border: var(--input-border);

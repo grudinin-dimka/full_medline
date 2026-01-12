@@ -52,6 +52,7 @@
 </template>
 
 <script>
+import shared from "../../../services/shared";
 import sorted from "../../../services/sorted";
 
 export default {
@@ -89,27 +90,7 @@ export default {
 			let currentDate = new Date();
 			let year = currentDate.getFullYear() - startDate.getFullYear();
 
-			// Получаем последние две цифры года
-			const lastTwoDigits = year % 100;
-			// Получаем последнюю цифру
-			const lastDigit = year % 10;
-
-			// Исключения для чисел 11-19
-			if (lastTwoDigits >= 11 && lastTwoDigits <= 19) {
-				return year + " лет";
-			}
-
-			// Для остальных случаев
-			switch (lastDigit) {
-				case 1:
-					return year + " год";
-				case 2:
-				case 3:
-				case 4:
-					return year + " года";
-				default:
-					return year + " лет";
-			}
+			return shared.getAgesText(year);
 		},
 
 		openspecialistProfile(specialist) {

@@ -99,9 +99,9 @@
 	--selector-control-button-border-radius: 100px;
 	--selector-control-button-background-color: rgba(0, 0, 0, 0);
 
-	--selector-control-button-width: 25px;
-	--selector-control-button-height: 25px;
-
+	--selector-control-button-width: 40px;
+	--selector-control-button-height: 40px;
+	
 	--selector-control-button-svg-fill: rgba(0, 0, 0, 0.5);
 	--selector-control-button-svg-fill-hover: rgba(0, 0, 0, 1);
 }

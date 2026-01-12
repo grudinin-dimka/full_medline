@@ -7,10 +7,10 @@
 	--wiki-left: none;
 
 	--wiki-gap: 20px;
-	--wiki-padding: 20px;
+   --wiki-padding: 20px;
 
-	--wiki-opacity: 0;
-	--wiki-visibility: hidden;
+   --wiki-opacity: 0;
+   --wiki-visibility: hidden;
 
 	--wiki-width: min(600px, 100dvw);
 	--wiki-height: 100dvh;
@@ -18,16 +18,16 @@
 	--wiki-background-color: white;
 	--wiki-box-shadow: 0px 0px 20px 10px rgba(0, 0, 0, 0.1);
 
-	--wiki-transition: 0.5s ease-out;
+   --wiki-transition: 0.5s ease-out;
 
-	/* Открыто */
+   /* Открыто */
 	--wiki-open-top: 0px;
 	--wiki-open-right: 0px;
 	--wiki-open-bottom: none;
 	--wiki-open-left: none;
 
-	--wiki-open-opacity: 1;
-	--wiki-open-visibility: visible;
+   --wiki-open-opacity: 1;
+   --wiki-open-visibility: visible;
 
 	/* Заголовок */
 	--wiki-title-gap: 5px;

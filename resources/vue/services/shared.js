@@ -304,6 +304,7 @@ export default {
 
 		return captcha;
 	},
+
 	/* Генерация угла */
 	generateRandomAngle(range = 25) {
 		let chance = Math.floor(Math.random() * 10);
@@ -312,6 +313,30 @@ export default {
 			return Math.floor(Math.random() * Math.abs(range));
 		} else {
 			return Math.floor(Math.random() * -Math.abs(range));
+		}
+	},
+
+	getAgesText(year) {
+		// Получаем последние две цифры года
+		const lastTwoDigits = year % 100;
+		// Получаем последнюю цифру
+		const lastDigit = year % 10;
+
+		// Исключения для чисел 11-19
+		if (lastTwoDigits >= 11 && lastTwoDigits <= 19) {
+			return year + " лет";
+		}
+
+		// Для остальных случаев
+		switch (lastDigit) {
+			case 1:
+				return year + " год";
+			case 2:
+			case 3:
+			case 4:
+				return year + " года";
+			default:
+				return year + " лет";
 		}
 	},
 };

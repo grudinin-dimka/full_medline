@@ -229,8 +229,9 @@ export default {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	height: 100vh;
-	background-color: var(--content-background-color);
+	background-color: rgba(var(--primary-color-rgb), 0.1);
+
+	min-height: 100vh;
 }
 
 .login {
@@ -244,6 +245,7 @@ export default {
 	margin: 20px;
 
 	width: min(100%, 600px);
+
 	background: white;
 
 	box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
@@ -253,6 +255,8 @@ form {
 	display: flex;
 	flex-direction: column;
 	gap: calc(var(--default-gap) / 2);
+
+	
 }
 
 .logo {

@@ -1,5 +1,5 @@
 <template>
-	<VueAside :is-small="$store.getters.getAsideSmall">
+	<VueAside :is-small="$store.getters.getAsideSmall" :is-hide="$store.getters.getAsideHide">
 		<template #header>
 			<div class="aside__logo">
 				<div class="aside__logo-icon">
@@ -129,7 +129,7 @@
 				<VueIcon :name="'Calendar Month'" :fill="'black'" :width="'28px'" :height="'28px'" />
 				<span v-if="!$store.getters.getAsideSmall" class="aside__item-button-label">РАСПИСАНИЕ</span>
 			</VueAsideButton>
-
+			
 			<VueAsideList
 				:alias="['enews-all', 'evideo-all', 'econtacts-all', 'eabout-all']"
 				:is-small="$store.getters.getAsideSmall"
@@ -280,6 +280,8 @@ export default {
 				left: 0,
 				behavior: "instant",
 			});
+
+			this.$store.commit("closeAside");
 		},
 
 		isActive(route) {

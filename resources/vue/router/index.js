@@ -385,7 +385,7 @@ const router = createRouter({
 						},
 					],
 				},
-				/* NOTE: Заблокировать */
+				/* NOTE: Заблокировать ред. "Путевки" */
 				{
 					path: "etravels",
 					name: "etravels",

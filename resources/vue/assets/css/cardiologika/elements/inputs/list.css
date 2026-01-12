@@ -107,10 +107,6 @@
 	--list-item-border-hover: var(--input-border-focus);
 	--list-item-background-color-hover: var(--button-inverse-background-color-hover);
 
-	/* list: body -> item.selected */
-	background-color: var(--primary-color);
-	color: white;
-
 	/* list: body -> checkbox */
 	--list-checkbox-border: var(--default-border);
 	--list-checkbox-border-radius: calc(var(--default-border-radius) / 2);

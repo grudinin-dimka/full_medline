@@ -14,12 +14,20 @@
 	--button-min-height: 54px;
 	--button-max-height: 54px;
 
-	--button-secondary-font-color: rgb(255, 255, 255);
-	--button-secondary-font-color-hover: rgb(255, 255, 255);
-	--button-secondary-background-color: #ffe8f0;
-	--button-secondary-background-color-hover: #eed2db;
+	--button-secondary-font-color: var(--primary-color);
+	--button-secondary-font-color-hover: var(--primary-color);
+	--button-secondary-background-color: #dcfbff;
+	--button-secondary-background-color-hover: #d3f1f5;
 
 	--button-loader-border: 3px solid white;
+
+	--button-box-shadow: 0px;
+	--button-transition: border 0.2s ease-in-out, color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+
+	/* .radial */
+	--button-radial-width: var(--button-min-height);
+	--button-radial-height: var(--button-min-height);
+	--button-radial-border-radius: 100px;
 
 	/* edit */
 	--button-edit-font-color: rgb(255, 255, 255);
@@ -27,8 +35,8 @@
 	--button-edit-background-color: var(--edit-background-color);
 	--button-edit-background-color-hover: var(--edit-background-color-hover);
 
-	--button-edit-secondary-font-color: rgb(255, 255, 255);
-	--button-edit-secondary-font-color-hover: rgb(255, 255, 255);
+	--button-edit-secondary-font-color: var(--primary-color);
+	--button-edit-secondary-font-color-hover: var(--primary-color);
 	--button-edit-secondary-background-color: var(--edit-secondary-background-color);
 	--button-edit-secondary-background-color-hover: var(--edit-secondary-background-color-hover);
 
@@ -38,7 +46,7 @@
 
 	--button-inverse-font-color: black;
 	--button-inverse-font-color-hover: black;
-	--button-inverse-background-color: rgba(190, 132, 86, 0);
+	--button-inverse-background-color: rgba(255, 255, 255, 1);
 	--button-inverse-background-color-hover: var(--edit-secondary-background-color);
 
 	--button-loader-inverse-border: 3px solid var(--primary-color);
@@ -55,8 +63,8 @@
 	--button-delete-background-color: var(--delete-background-color);
 	--button-delete-background-color-hover: var(--delete-background-color-hover);
 
-	--button-delete-secondary-font-color: var(--delete-color);
-	--button-delete-secondary-font-color-hover: var(--delete-color-hover);
+	--button-delete-secondary-font-color: var(--delete-secondary-color);
+	--button-delete-secondary-font-color-hover: var(--delete-secondary-color-hover);
 	--button-delete-secondary-background-color: var(--delete-secondary-background-color);
 	--button-delete-secondary-background-color-hover: var(--delete-secondary-background-color-hover);
 

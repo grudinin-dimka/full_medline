@@ -16,7 +16,7 @@
 
 	--selector-menu-border: var(--default-border);
 	--selector-menu-width: 100%;
-	--selector-menu-border-radius: 15px;
+	--selector-menu-border-radius: var(--input-border-radius);
 	--selector-menu-padding: 10px;
 
 	--selector-menu-background-color: white;
@@ -28,7 +28,7 @@
 	/* menu: input */
 	--selector-menu-input-padding: 0px 15px;
 	--selector-menu-input-border: var(--input-border);
-	--selector-menu-input-border-radius: calc(var(--default-border-radius) / 2);
+	--selector-menu-input-border-radius: calc(var(--input-border-radius) / 1.5);
 	--selector-menu-input-border-focus: var(--input-border-focus);
 
 	--selector-menu-input-height: var(--selector-menu-list-item-min-height);
@@ -49,7 +49,7 @@
 
 	--selector-menu-list-item-border: 0px;
 	--selector-menu-list-item-padding: 10px;
-	--selector-menu-list-item-border-radius: calc(var(--default-border-radius) / 2);
+	--selector-menu-list-item-border-radius: calc(var(--input-border-radius) / 1.5);
 
 	--selector-menu-list-item-font: var(--input-font-size) var(--input-font-family);
 
@@ -68,11 +68,17 @@
 	--selector-menu-list-item-active-color: white;
 	--selector-menu-list-item-active-background-color: var(--primary-color);
 
+	/* menu: list -> item.disabled */
+	--selector-menu-list-item-disabled-border: 0px;
+
+	--selector-menu-list-item-disabled-color: rgba(0, 0, 0, 0.5);
+	--selector-menu-list-item-disabled-background-color: rgba(0, 0, 0, 0);
+
 	/* control */
 	--selector-control-gap: 10px;
 
 	--selector-control-border: var(--default-border);
-	--selector-control-border-radius: calc(var(--default-border-radius) / 1.5);
+	--selector-control-border-radius: var(--input-border-radius);
 	--selector-control-border-focus: var(--input-border-focus);
 
 	--selector-control-padding: 10px;
@@ -86,13 +92,15 @@
 	--selector-control-label-height: var(--input-height);
 	--selector-control-label-width: 100%;
 
+	--selector-control-label-font: var(--input-font-size) var(--input-font-family);
+
 	/* control: button */
 	--selector-control-button-border: 0px;
 	--selector-control-button-border-radius: 100px;
 	--selector-control-button-background-color: rgba(0, 0, 0, 0);
 
-	--selector-control-button-width: 25px;
-	--selector-control-button-height: 25px;
+	--selector-control-button-width: 40px;
+	--selector-control-button-height: 40px;
 
 	--selector-control-button-svg-fill: rgba(0, 0, 0, 0.5);
 	--selector-control-button-svg-fill-hover: rgba(0, 0, 0, 1);

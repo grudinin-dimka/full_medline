@@ -1,89 +1,94 @@
 <template>
-	<nav :class="{ active: $store.getters.burgerMainStatus }">
+	<nav>
 		<div class="nav__list">
 			<a
-				class="element"
+				class="nav__list-item"
 				:class="{ active: isActive('/specialists') }"
 				href="/specialists"
 				@click.prevent="insertPage({ name: `specialists-all` })"
 			>
+				<VueIcon :name="'Ecg Heart'" :fill="'white'" :width="'28px'" :height="'28px'" />
 				Специалисты
 			</a>
 
 			<a
-				class="element"
+				class="nav__list-item"
 				:class="{ active: isActive('/prices') }"
 				href="/prices"
 				@click.prevent="insertPage({ name: `prices-all` })"
 			>
+				<VueIcon :name="'Payments'" :fill="'white'" :width="'28px'" :height="'28px'" />
 				Цены
 			</a>
 
 			<a
-				class="element"
-				:class="{ active: isActive('/schedule') }"
-				href="/schedule"
-				@click.prevent="insertPage({ name: `schedule-all` })"
-			>
-				Расписание
-			</a>
-
-			<a
-				class="element"
-				:class="{ active: isActive('/contacts') }"
-				href="/contacts"
-				@click.prevent="insertPage({ name: `contacts` })"
-			>
-				Контакты
-			</a>
-
-			<a
-				class="element"
+				class="nav__list-item"
 				:class="{ active: isActive('/vacancies') }"
 				href="/vacancies"
 				@click.prevent="insertPage({ name: `vacancies` })"
 			>
+				<VueIcon :name="'Badge'" :fill="'white'" :width="'28px'" :height="'28px'" />
 				Вакансии
 			</a>
 
-			<div class="dropdown">
-				<div class="dropdown-title element">
+			<a
+				class="nav__list-item"
+				:class="{ active: isActive('/schedule') }"
+				href="/schedule"
+				@click.prevent="insertPage({ name: `schedule-all` })"
+			>
+				<VueIcon :name="'Calendar Month'" :fill="'white'" :width="'28px'" :height="'28px'" />
+				Расписание
+			</a>
+
+			<div class="nav__dropdown">
+				<div class="nav__dropdown-title nav__list-item">
+					<VueIcon :name="'Info'" :fill="'white'" :width="'28px'" :height="'28px'" />
 					Информация
-					<VueIcon
-						class="item-arrow"
-						:name="'Arrow'"
-						:fill="'white'"
-						:width="'20px'"
-						:height="'20px'"
-						:rotate="180"
-					/>
+
+					<div class="nav__item-arrow">
+						<VueIcon :name="'Arrow'" :fill="'white'" :width="'20px'" :height="'20px'" :rotate="180" />
+					</div>
 				</div>
-				<div class="dropdown-body">
-					<div class="dropdown-body__list">
+				<div class="nav__dropdown-body">
+					<div class="nav__dropdown__body-list">
 						<a
-							class="element"
+							class="nav__list-item"
 							:class="{ active: isActive('/news') }"
 							href="/news"
 							@click.prevent="insertPage({ name: `news-all` })"
 						>
+							<VueIcon :name="'News'" :fill="'white'" :width="'28px'" :height="'28px'" />
 							Новости
 						</a>
 
 						<a
-							class="element"
+							class="nav__list-item"
 							:class="{ active: isActive('/videos') }"
 							href="/videos"
 							@click.prevent="insertPage({ name: `videos-all` })"
 						>
+							<VueIcon :name="'Videocam'" :fill="'white'" :width="'28px'" :height="'28px'" />
 							Видео
 						</a>
 
 						<a
-							class="element"
+							class="nav__list-item"
+							:class="{ active: isActive('/contacts') }"
+							href="/contacts"
+							@click.prevent="insertPage({ name: `contacts` })"
+						>
+							<VueIcon :name="'Groups'" :fill="'white'" :width="'28px'" :height="'28px'" />
+							Контакты
+						</a>
+
+						<a
+							class="nav__list-item"
 							:class="{ active: isActive('/about') }"
 							href="/contacts"
 							@click.prevent="insertPage({ name: `about` })"
 						>
+							<VueIcon :name="'Info I'" :fill="'white'" :width="'28px'" :height="'28px'" />
 							О нас
 						</a>
 					</div>
@@ -94,12 +99,7 @@
 </template>
 
 <script>
-import VueIcon from "../../../modules/icon/VueIcon.vue";
-
 export default {
-	components: {
-		VueIcon,
-	},
 	methods: {
 		/* Активная ссылка */
 		isActive(route) {
@@ -119,7 +119,6 @@ export default {
 nav {
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between;
 	gap: 10px;
 
 	padding: 10px;
@@ -127,51 +126,37 @@ nav {
 
 	background-color: var(--primary-color);
 	color: white;
-	border-radius: var(--default-border-radius);
+	border-radius: 100px;
 
-	transition: all 0.5s ease-out;
+	transition: all 0.35s ease-out;
 }
-
-/* Скролбар блока с контентом. */
-nav::-webkit-scrollbar {
-	width: 20px;
-}
-
-nav::-webkit-scrollbar-track {
-	background-color: rgba(255, 255, 255, 0);
-	border-radius: 10px;
-	margin: 2px;
-}
-
-nav::-webkit-scrollbar-thumb {
-	background-color: rgba(255, 255, 255, 0.3);
-	border: 6px solid var(--primary-color);
-	border-radius: 10px;
-}
-
-nav::-webkit-scrollbar-thumb:hover {
-	background-color: rgba(255, 255, 255, 0.5);
-	cursor: all-scroll;
-}
-/* Конец. */
 
 .nav__list {
 	display: grid;
-	grid-template-columns: repeat(6, auto);
+	grid-template-columns: repeat(5, 1fr);
 	gap: 10px;
 
 	background-color: var(--primary-color);
 	color: white;
-	border-radius: var(--default-border-radius);
+	border-radius: 100px;
 
 	transition: all 0.5s ease-out;
 }
 
-.nav__list a {
-	padding: 18px 0px;
-	border-radius: calc(var(--default-border-radius) / 1.5);
+.nav__list-item,
+.nav__dropdown-title {
+	text-transform: uppercase;
+	cursor: pointer;
 
-	text-align: center;
+	flex: 1 0 auto;
+	display: flex;
+	align-items: center;
+	gap: calc(var(--default-gap) / 2);
+
+	padding: 20px 20px;
+	height: 65px;
+	border-radius: 100px;
+
 	font-size: 1.25rem;
 	color: white;
 	text-decoration: none;
@@ -179,40 +164,16 @@ nav::-webkit-scrollbar-thumb:hover {
 	transition: all 0.15s ease-in-out;
 }
 
-.nav__list a:is(.active, :hover) {
+.nav__list-item:is(.active, :hover) {
 	background-color: rgba(255, 255, 255, 0.15);
-}
-
-.element {
-	text-transform: uppercase;
-
-	cursor: pointer;
 }
 
 /* Дропдаун */
-.nav__list > .dropdown {
+.nav__list > .nav__dropdown {
 	position: relative;
 }
 
-.dropdown-title {
-	position: relative;
-	padding: 18px 0px;
-	border-radius: calc(var(--default-border-radius) / 1.5);
-
-	text-align: center;
-	font-size: 1.25rem;
-	color: white;
-	text-decoration: none;
-
-	transition: all 0.15s ease-in-out;
-}
-
-.dropdown-title:hover {
-	cursor: pointer;
-	background-color: rgba(255, 255, 255, 0.15);
-}
-
-.dropdown-body {
+.nav__dropdown-body {
 	visibility: hidden;
 	opacity: 0;
 
@@ -221,18 +182,17 @@ nav::-webkit-scrollbar-thumb:hover {
 	top: calc(100% - 15px);
 
 	z-index: 10;
-	left: -10px;
 
 	transition: all 0.2s ease-in-out;
 }
 
-.dropdown:hover .dropdown-body {
+.nav__dropdown:hover .nav__dropdown-body {
 	visibility: visible;
 	opacity: 1;
 	top: 100%;
 }
 
-.dropdown-body__list {
+.nav__dropdown__body-list {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
@@ -247,9 +207,9 @@ nav::-webkit-scrollbar-thumb:hover {
 	box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.1);
 }
 
-.item-arrow {
+.nav__item-arrow {
 	position: absolute;
-	right: 10px;
+	right: 20px;
 	top: 20px;
 }
 
@@ -278,6 +238,10 @@ nav::-webkit-scrollbar-thumb:hover {
 }
 
 @media screen and (max-width: 1450px) {
+	nav {
+		border-radius: var(--default-border-radius);
+	}
+
 	.nav__list {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
@@ -288,76 +252,9 @@ nav::-webkit-scrollbar-thumb:hover {
 	}
 }
 
-@media screen and (max-width: 800px) {
-	.nav__list {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-	}
-
-	.nav__list a {
-		width: auto;
-	}
-}
-
-@media screen and (max-width: 500px) {
+@media screen and (width <= 850px) {
 	nav {
-		z-index: 5;
-		position: fixed;
-		top: -100vh;
-		bottom: 100vh;
-		left: 0px;
-		right: 0px;
-
-		border-radius: 0px;
-
-		display: flex;
-		flex-direction: column;
-		margin: 0px;
-
-		overflow-y: auto;
-	}
-
-	.nav__list {
-		display: grid;
-		grid-template-columns: repeat(1, 1fr);
-	}
-
-	nav.active {
-		padding-top: 100px;
-		top: 0px;
-		left: 0px;
-		right: 0px;
-		bottom: 0;
-	}
-
-	.dropdown-body {
-		position: static;
-		top: 0px;
-
-		visibility: visible;
-		opacity: 1;
-
 		display: none;
-	}
-
-	.dropdown:hover .dropdown-body {
-		display: block;
-	}
-
-	.dropdown-body__list {
-		min-width: calc(100% - 20px);
-
-		margin-top: 10px;
-
-		background-color: rgba(255, 255, 255, 0.1);
-		padding: 10px;
-		border-radius: 10px;
-
-		box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0);
-	}
-
-	.nav__buttons {
-		display: flex;
 	}
 }
 </style>

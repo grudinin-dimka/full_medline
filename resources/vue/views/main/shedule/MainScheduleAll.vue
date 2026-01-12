@@ -156,7 +156,7 @@
 
 											<div class="specialist__table-td days">
 												<div class="days__item all">
-													<div class="days__item-content skeleton">&nbsp;</div>
+													<div class="days__item-content" :class="{ skeleton: true }">&nbsp;</div>
 												</div>
 											</div>
 										</template>
@@ -803,7 +803,7 @@ export default {
 			if (!number || time == "-") {
 				return {
 					borderColor: "var(--default-border-color)",
-					backgroundColor: "var(--transparent-color)",
+					backgroundColor: "white",
 					height: "21px",
 					margin: "5px 0px",
 				};
@@ -1265,7 +1265,7 @@ export default {
 	border-radius: 50px;
 }
 
-.days__item-content.skeleton, 
+.days__item-content.skeleton,
 .shedule__table-date.skeleton {
 	border: var(--default-border) !important;
 }
@@ -1410,8 +1410,10 @@ export default {
 
 	.specialist__head-img {
 		flex-grow: 1;
-		width: 100%;
-		height: 100%;
+
+		min-width: 100px;
+		min-height: 100px;
+
 		max-height: 100px;
 		max-width: 100px;
 	}

@@ -35,7 +35,6 @@
 <script>
 import { RouterLink, RouterView } from "vue-router";
 
-// NOTE: Модули в админке
 import CabinetHeader from "../../components/includes/cabinet/CabinetHeader.vue";
 import CabinetAside from "../../components/includes/cabinet/CabinetAside.vue";
 import CabinetContent from "../../components/includes/cabinet/CabinetContent.vue";
