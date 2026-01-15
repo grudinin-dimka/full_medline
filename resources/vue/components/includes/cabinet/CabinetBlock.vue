@@ -6,11 +6,78 @@
 		</template>
 
 		<template #body>
+			<div class="print__modal-settings">
+				<VueCascader
+					v-model="direction"
+					:name="'direction'"
+					:list="[
+						{
+							label: 'Вертикальное',
+							value: 'portrait',
+						},
+						{
+							label: 'Горизонтальное',
+							value: 'landscape',
+						},
+					]"
+				/>
+
+				<VueCascader
+					v-model="template"
+					:name="'template'"
+					:list="[
+						{
+							label: 'A5',
+							value: 'A5',
+						},
+						{
+							label: 'A4',
+							value: 'A4',
+						},
+						{
+							label: 'A3',
+							value: 'A3',
+						},
+					]"
+				/>
+
+				<VueCascader
+					v-model="fontSize"
+					:name="'font-size'"
+					:list="[
+						{
+							label: '12px',
+							value: '12',
+						},
+						{
+							label: '14px',
+							value: '14',
+						},
+						{
+							label: '16px',
+							value: '16',
+						},
+						{
+							label: '18px',
+							value: '18',
+						},
+						{
+							label: '20px',
+							value: '20',
+						},
+					]"
+				/>
+			</div>
+
 			<VuePrint
 				v-model="currentItem.data.description.value"
 				:settings="{
-					width: '750px',
+					direction: direction,
+					template: template,
 					styles: {
+						'div': {
+							width: '100%',
+						},
 						'*': {
 							fontSize: `${fontSize}px`,
 							marginBottom: `${marginBottom}px`,
@@ -106,11 +173,7 @@
 			</template>
 
 			<!-- Загрузка элементов -->
-			<VueLoader
-				:isLoading="loading.loader.list"
-				:isChild="true"
-				@afterLeave="loaderChildAfterLeave"
-			/>
+			<VueLoader :isLoading="loading.loader.list" :isChild="true" @afterLeave="loaderChildAfterLeave" />
 		</template>
 	</BlockOnce>
 </template>
@@ -148,6 +211,10 @@ export default {
 	},
 	data() {
 		return {
+			/* Настройки */
+			direction: "portrait",
+			template: "A4",
+
 			/* Фильтры */
 			filters: {
 				text: "",
@@ -169,7 +236,7 @@ export default {
 				thin: false,
 				clamped: true,
 				touch: true,
-				fullscreen: false,
+				fullscreen: true,
 				print: true,
 				values: {
 					title: "",
@@ -177,7 +244,7 @@ export default {
 				},
 			},
 
-			fontSize: 14,
+			fontSize: '14',
 			marginBottom: 10,
 			lineHeight: 20,
 			fontFamily: "Times New Roman",
@@ -328,7 +395,18 @@ export default {
 
 		/* Печать */
 		printWindow() {
+			const style = document.createElement("style");
+			style.innerHTML = `
+				@media print {
+					@page {
+						size: ${this.template} ${this.direction};
+						margin: 10mm;
+					}
+				}
+			`;
+			document.head.appendChild(style);
 			window.print();
+			document.head.removeChild(style);
 		},
 
 		/* Сброс настроек печати */
@@ -367,6 +445,16 @@ export default {
 </script>
 
 <style scoped>
+.print__modal-settings {
+	position: sticky;
+	top: 0;
+
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: var(--default-gap);
+}
+
 .cabinet-block {
 	display: flex;
 	flex-direction: column;
@@ -374,9 +462,9 @@ export default {
 }
 
 .cabinet-block__filters {
-	display: flex;
-	flex-wrap: wrap;
-	gap: var(--default-gap);
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: calc(var(--default-gap) / 2);
 }
 
 .filters__item:first-of-type {
@@ -413,8 +501,20 @@ export default {
 	gap: calc(var(--default-gap) / 2);
 }
 
+@media screen and (width <= 1200px) {
+	.cabinet-block__filters {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media screen and (width <= 600px) {
+	.print__modal-settings {
+		display: none;
+	}
+}
+
 @media print {
-	.controls {
+	.print__modal-settings {
 		display: none;
 	}
 }

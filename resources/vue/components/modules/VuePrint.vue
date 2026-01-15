@@ -1,5 +1,10 @@
 <template>
-	<div class="print" ref="print" v-html="sanitizeHtml(modelValue)"></div>
+	<div
+		class="print"
+		ref="print"
+		v-html="sanitizeHtml(modelValue)"
+		:class="{ [settings.direction]: settings.direction, [settings.template]: settings.template }"
+	></div>
 </template>
 
 <script>
@@ -15,6 +20,8 @@ export default {
 			type: Object,
 			default: {
 				width: "750px",
+				direction: "portrait",
+				template: "A4",
 				clear: {
 					styles: false,
 					spacing: false,
@@ -88,12 +95,37 @@ export default {
 <style scoped>
 .print {
 	margin: 0 auto;
+	width: 100%;
 
 	font-family: "Times New Roman", Times, serif;
 }
 
 .print * {
 	font-family: "Times New Roman", Times, serif;
+}
+
+.print.portrait.A3 {
+	max-width: 277mm;
+}
+
+.print.landscape.A3 {
+	max-width: 400mm;
+}
+
+.print.portrait.A4 {
+	max-width: 190mm;
+}
+
+.print.landscape.A4 {
+	max-width: 277mm;
+}
+
+.print.portrait.A5 {
+	max-width: 128mm;
+}
+
+.print.landscape.A5 {
+	max-width: 190mm;
 }
 
 @media print {

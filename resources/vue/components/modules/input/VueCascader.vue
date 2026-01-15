@@ -20,14 +20,6 @@
 				{{ item.label }}
 			</template>
 		</label>
-
-		<div v-if="$slots.test">
-			<slot name="test">test</slot>
-		</div>
-
-		<div v-if="$slots.test2">
-			<slot name="test2">test2</slot>
-		</div>
 	</div>
 </template>
 
@@ -75,6 +67,7 @@ export default {
 
 	border: var(--default-border);
 	border-radius: 100px;
+	background-color: rgba(255, 255, 255, 0.75);
 }
 
 .vue-radio-group__title {
@@ -111,7 +104,6 @@ export default {
 
 	border-radius: 100px;
 	height: 40px;
-	background-color: white;
 
 	transition: all 0.2s ease;
 }

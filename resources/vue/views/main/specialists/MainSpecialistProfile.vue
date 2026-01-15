@@ -67,19 +67,24 @@
 							<div class="profile__info__button" v-if="!loading.loader.profile">
 								Прием
 
-								<div class="profile__info__button-radial" v-if="specialist.profile.childrenDoctorAge">
-									{{ specialist.profile.childrenDoctorAge }}+
-								</div>
+								<div class="profile__info__button-radials">
+									<div class="profile__info__button-radial" v-if="specialist.profile.childrenDoctorAge">
+										{{ specialist.profile.childrenDoctorAge }}+
+									</div>
 
-								<div class="profile__info__button-radial" v-if="specialist.profile.adultDoctor">18+</div>
+									<div class="profile__info__button-radial" v-if="specialist.profile.adultDoctor">18+</div>
+								</div>
 							</div>
 
 							<div class="profile__info__button" v-if="!loading.loader.profile">
 								Стаж
 
-								<div class="profile__info__button-radial">
-									{{ getWorkAges(specialist.profile.startWorkAge) }}
+								<div class="profile__info__button-radials">
+									<div class="profile__info__button-radial">
+										{{ getWorkAges(specialist.profile.startWorkAge) }}
+									</div>
 								</div>
+
 							</div>
 						</div>
 					</div>
@@ -443,6 +448,7 @@ export default {
 
 .profile__info__button {
 	user-select: none;
+	justify-content: space-between;
 	display: flex;
 	align-items: center;
 	gap: calc(var(--default-gap) / 3);
@@ -455,6 +461,11 @@ export default {
 	color: var(--primary-color);
 
 	background-color: var(--transparent-color);
+}
+
+.profile__info__button-radials {
+	display: flex;
+	gap: calc(var(--default-gap) / 3);
 }
 
 .profile__info__button-radial {
@@ -551,6 +562,12 @@ export default {
 		object-fit: contain;
 
 		animation: show 0.5s ease-out;
+	}
+}
+
+@media screen and (width <= 500px) {
+	.profile__info__button {
+		width: 100%;
 	}
 }
 

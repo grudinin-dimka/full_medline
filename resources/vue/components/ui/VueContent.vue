@@ -26,8 +26,8 @@ main {
 
 @media screen and (max-width: 450px) {
 	main {
-		padding: 10px;
-		gap: 10px;
+		padding: calc(var(--content-padding) / 2);
+		gap: calc(var(--content-gap) / 2);
 	}
 }
 </style>

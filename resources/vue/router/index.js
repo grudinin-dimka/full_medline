@@ -477,65 +477,65 @@ const router = createRouter({
 				},
 			],
 		},
-		// // CLogin: Страница входа в личный кабинет
-		// {
-		// 	path: "/login",
-		// 	name: "c-login",
-		// 	meta: { title: "Вход в личный кабинет" },
-		// 	component: CLogin,
-		// },
-		// // Cabinet: Личный кабинет
-		// {
-		// 	path: "/cabinet",
-		// 	name: "cabinet",
-		// 	meta: { title: "Личный кабинет" },
-		// 	redirect: { name: "cabinet-appointments" },
-		// 	component: Cabinet,
-		// 	children: [
-		// 		{
-		// 			path: "appointments",
-		// 			name: "cabinet-appointments",
-		// 			meta: { title: "Приемы" },
-		// 			redirect: { name: "cabinet-appointments-all" },
-		// 			component: () => import("../views/cabinet/appointments/CabinetAppointments.vue"),
-		// 			children: [
-		// 				{
-		// 					path: "",
-		// 					name: "cabinet-appointments-all",
-		// 					component: () => import("../views/cabinet/appointments/CabinetAppointmentsAll.vue"),
-		// 				},
-		// 			],
-		// 		},
-		// 		{
-		// 			path: "analyzes",
-		// 			name: "cabinet-analyzes",
-		// 			meta: { title: "Анализы" },
-		// 			redirect: { name: "cabinet-analyzes-all" },
-		// 			component: () => import("../views/cabinet/analyzes/CabinetAnalyzes.vue"),
-		// 			children: [
-		// 				{
-		// 					path: "",
-		// 					name: "cabinet-analyzes-all",
-		// 					component: () => import("../views/cabinet/analyzes/CabinetAnalyzesAll.vue"),
-		// 				},
-		// 			],
-		// 		},
-		// 		{
-		// 			path: "research",
-		// 			name: "cabinet-research",
-		// 			meta: { title: "Исследования" },
-		// 			redirect: { name: "cabinet-research-all" },
-		// 			component: () => import("../views/cabinet/research/CabinetResearch.vue"),
-		// 			children: [
-		// 				{
-		// 					path: "",
-		// 					name: "cabinet-research-all",
-		// 					component: () => import("../views/cabinet/research/CabinetResearchAll.vue"),
-		// 				},
-		// 			],
-		// 		},
-		// 	],
-		// },
+		// CLogin: Страница входа в личный кабинет
+		{
+			path: "/login",
+			name: "c-login",
+			meta: { title: "Вход в личный кабинет" },
+			component: CLogin,
+		},
+		// Cabinet: Личный кабинет
+		{
+			path: "/cabinet",
+			name: "cabinet",
+			meta: { title: "Личный кабинет" },
+			redirect: { name: "cabinet-appointments" },
+			component: Cabinet,
+			children: [
+				{
+					path: "appointments",
+					name: "cabinet-appointments",
+					meta: { title: "Приемы" },
+					redirect: { name: "cabinet-appointments-all" },
+					component: () => import("../views/cabinet/appointments/CabinetAppointments.vue"),
+					children: [
+						{
+							path: "",
+							name: "cabinet-appointments-all",
+							component: () => import("../views/cabinet/appointments/CabinetAppointmentsAll.vue"),
+						},
+					],
+				},
+				{
+					path: "analyzes",
+					name: "cabinet-analyzes",
+					meta: { title: "Анализы" },
+					redirect: { name: "cabinet-analyzes-all" },
+					component: () => import("../views/cabinet/analyzes/CabinetAnalyzes.vue"),
+					children: [
+						{
+							path: "",
+							name: "cabinet-analyzes-all",
+							component: () => import("../views/cabinet/analyzes/CabinetAnalyzesAll.vue"),
+						},
+					],
+				},
+				{
+					path: "research",
+					name: "cabinet-research",
+					meta: { title: "Исследования" },
+					redirect: { name: "cabinet-research-all" },
+					component: () => import("../views/cabinet/research/CabinetResearch.vue"),
+					children: [
+						{
+							path: "",
+							name: "cabinet-research-all",
+							component: () => import("../views/cabinet/research/CabinetResearchAll.vue"),
+						},
+					],
+				},
+			],
+		},
 		// NotFound: Страница не найдена
 		{
 			path: "/:pathMatch(.*)*",

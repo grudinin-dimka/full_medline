@@ -28,7 +28,11 @@
 				:style="getStyle(item)"
 				@click="changeModel(item)"
 			>
-				{{ item.label }}
+				<template v-if="isLoading"> &nbsp; </template>
+
+				<template v-else>
+					{{ item.label }}
+				</template>
 			</div>
 		</div>
 	</div>
@@ -59,6 +63,10 @@ export default {
 	methods: {
 		/* Получение класса у времени */
 		getStyle(item) {
+			if (this.isLoading) {
+				return {};
+			}
+
 			if (item.value === this.modelValue) {
 				return {
 					color: "black",

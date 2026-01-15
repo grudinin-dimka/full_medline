@@ -165,9 +165,9 @@ export default {
 }
 
 .modal.fullscreen {
-	border-radius: 0px;
+	/* border-radius: 0px; */
 
-	padding: 0px;
+	/* padding: 0px; */
 }
 
 .modal__container {
@@ -366,6 +366,8 @@ export default {
 
 	/* Переместить печатную модалку в начало документа */
 	.modal.print {
+		display: block !important;
+		position: relative !important;
 		position: relative !important;
 		overflow: visible !important;
 		height: auto !important;
@@ -379,7 +381,8 @@ export default {
 		overflow: visible !important;
 		height: auto !important;
 		max-height: none !important;
-		width: auto !important;
+		width: 100% !important;
+		max-width: 100% !important;
 		margin: 0 !important;
 		padding: 0 !important;
 		border: none !important;

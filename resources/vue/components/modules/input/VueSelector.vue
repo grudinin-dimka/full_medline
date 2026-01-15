@@ -24,9 +24,7 @@
 					</button>
 
 					<button class="selector__control-button">
-						<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
-							<path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
-						</svg>
+						<VueIcon :name="'Arrow'" :fill="'black'" :width="'15px'" :height="'15px'" />
 					</button>
 				</div>
 
@@ -240,8 +238,9 @@ export default {
 	border-radius: var(--selector-control-button-border-radius);
 	background-color: var(--selector-control-button-background-color);
 
-	width: var(--selector-control-button-width);
-	height: var(--selector-control-button-height);
+	aspect-ratio: 1 / 1;
+	width: auto;
+	height: auto;
 }
 
 .selector__control-button > svg {

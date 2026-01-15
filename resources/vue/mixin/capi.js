@@ -5,6 +5,7 @@ import * as check from "./chek-request.js";
 const capi = axios.create({
 	// Базовый адрес
 	baseURL: "/api/cabinet/",
+	// baseURL: "https://lk.medline.local/api/",
 
 	// Время запроса
 	timeout: 10000,

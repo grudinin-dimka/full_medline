@@ -23,7 +23,7 @@
 
 		<template v-if="!loading.loader.addresses">
 			<div class="prices__choice" v-if="getCities.length > 0">
-				<div class="prices__item" v-for="city in getCities">
+				<div class="prices__item" :class="{ loading: loading.loader.addresses }" v-for="city in getCities">
 					<div class="prices__item-label">{{ city }}</div>
 					<ul>
 						<li v-for="street in getStreet(city)" @click="pushStreet(street)">
@@ -171,23 +171,19 @@ export default {
 .prices__item {
 	display: flex;
 	flex-direction: column;
-	gap: 20px;
 }
 
 .prices__item-label {
-	border-radius: 50px;
+	border-radius: var(--default-border-radius) var(--default-border-radius) 0px 0px;
+	border: var(--default-border);
+	padding: calc(var(--default-padding) / 2) var(--default-padding);
 
 	min-height: 30px;
+	width: 100%;
 
 	font-weight: 600;
 	font-size: 1.5rem;
 	color: var(--primary-color);
-}
-
-.prices__item-label.skeleton {
-	border: var(--default-border);
-
-	max-width: 300px;
 }
 
 .prices__item > ul {
@@ -195,8 +191,17 @@ export default {
 	flex-direction: column;
 	gap: 20px;
 
+	border-radius: 0px 0px var(--default-border-radius) var(--default-border-radius);
+	border-top: 0px;
+	border-right: var(--default-border-width);
+	border-bottom: var(--default-border-width);
+	border-left: var(--default-border-width);
+	border-style: var(--default-border-style);
+	border-color: var(--default-border-color);
 	margin: 0px;
-	padding: 0px;
+	padding: var(--default-padding);
+
+	background-color: var(--skeleton-background-color);
 }
 
 .prices__item > ul > li {
@@ -208,9 +213,10 @@ export default {
 
 	border: var(--default-border);
 	border-radius: var(--default-border-radius);
-	padding: 10px;
+	padding: 10px 10px 10px 20px;
 	min-height: 50px;
 
+	background-color: white;
 	font-size: 1.125em;
 
 	transition: all 0.2s;

@@ -37,7 +37,7 @@
 		</div>
 
 		<div class="header__buttons">
-			<a href="https://lk.medlinegroup.ru/" target="_blank" class="header__buttons-button">
+			<a href="/cabinet/login" target="_blank" class="header__buttons-button">
 				<VueIcon :name="'Account Circle'" :fill="'black'" :width="'28px'" :height="'28px'" />
 				<div class="header__buttons-button-text">Личный кабинет</div>
 			</a>

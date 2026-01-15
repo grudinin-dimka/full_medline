@@ -18,7 +18,7 @@
 	--modal-unclamped-container-margin: auto;
 
 	/* modal -> .fullscreen */
-	--modal-fullscreen-container-border-radius: 0px;
+	--modal-fullscreen-container-border-radius: var(--modal-container-border-radius);
 	--modal-fullscreen-container-width: 100%;
 	--modal-fullscreen-container-height: 100%;
 
