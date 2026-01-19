@@ -90,7 +90,7 @@
 	--modal-body-flex-direction: column;
 	--modal-body-justify-content: justify;
 	--modal-body-align-items: justify;
-	--modal-body-gap: var(--default-gap);
+	--modal-body-gap: calc(var(--default-gap) / 2);
 
 	--modal-body-border-radius: 0px;
 	--modal-body-border-top: 0px;

@@ -16,6 +16,8 @@
 	<!-- Вики -->
 	<VueWiki />
 
+	<MainActions />
+
 	<!-- Загрузка -->
 	<VueLoader :isLoading="loader.loading" />
 
@@ -35,6 +37,8 @@
 <script>
 import { RouterLink, RouterView } from "vue-router";
 
+import MainActions from "../../components/includes/main/medline/MainActions.vue";
+
 import CabinetHeader from "../../components/includes/cabinet/CabinetHeader.vue";
 import CabinetAside from "../../components/includes/cabinet/CabinetAside.vue";
 import CabinetContent from "../../components/includes/cabinet/CabinetContent.vue";
@@ -43,6 +47,8 @@ import axios from "axios";
 
 export default {
 	components: {
+		MainActions,
+		
 		CabinetHeader,
 		CabinetAside,
 		CabinetContent,

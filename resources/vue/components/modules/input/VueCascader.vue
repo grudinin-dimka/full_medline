@@ -104,6 +104,7 @@ export default {
 
 	border-radius: 100px;
 	height: 40px;
+	min-width: 40px;
 
 	transition: all 0.2s ease;
 }

@@ -58,6 +58,8 @@ export default {
 	color: var(--input-color);
 	font-size: var(--switch-label-font-size);
 	font-family: var(--switch-label-font-family);
+
+	text-align: justify;
 }
 
 .vue-switch__button {

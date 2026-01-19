@@ -1,10 +1,12 @@
 <template>
-	<div
-		class="print"
-		ref="print"
-		v-html="sanitizeHtml(modelValue)"
-		:class="{ [settings.direction]: settings.direction, [settings.template]: settings.template }"
-	></div>
+	<div class="print" ref="print">
+		<div
+			class="print__body"
+			ref="printBody"
+			v-html="sanitizeHtml(modelValue)"
+			:class="{ [settings.direction]: settings.direction, [settings.template]: settings.template }"
+		></div>
+	</div>
 </template>
 
 <script>
@@ -71,9 +73,11 @@ export default {
 		},
 
 		setStyle() {
-			const root = this.$refs.print;
+			const root = this.$refs.printBody;
+			if (!root) return;
 
-			root.style.maxWidth = this.settings.width;
+			// Очистим старые линии (если пересчитываем)
+			root.querySelectorAll(".page-divider").forEach((el) => el.remove());
 
 			for (let point in this.settings.styles) {
 				root.querySelectorAll(point).forEach((el) => {
@@ -94,41 +98,69 @@ export default {
 
 <style scoped>
 .print {
-	margin: 0 auto;
+	margin: auto;
 	width: 100%;
-
-	font-family: "Times New Roman", Times, serif;
 }
 
 .print * {
 	font-family: "Times New Roman", Times, serif;
 }
 
-.print.portrait.A3 {
-	max-width: 277mm;
+.print__body {
+	border: 1px solid rgba(0, 0, 0, 0.5);
+	padding: 10mm;
+
+	margin: 0 auto;
+	width: 100%;
 }
 
-.print.landscape.A3 {
+.print__body.portrait.A3 {
+	max-width: 277mm;
+	min-height: 400mm;
+}
+
+.print__body.landscape.A3 {
 	max-width: 400mm;
+	min-height: 277mm;
 }
 
-.print.portrait.A4 {
+.print__body.portrait.A4 {
 	max-width: 190mm;
+	min-height: 277mm;
 }
 
-.print.landscape.A4 {
+.print__body.landscape.A4 {
 	max-width: 277mm;
+	min-height: 190mm;
 }
 
-.print.portrait.A5 {
+.print__body.portrait.A5 {
 	max-width: 128mm;
+	min-height: 190mm;
 }
 
-.print.landscape.A5 {
+.print__body.landscape.A5 {
 	max-width: 190mm;
+	min-height: 128mm;
+}
+
+.print__body-line {
+	position: absolute;
+	top: 30px;
+	left: 0px;
+
+	width: 100%;
+	height: 5px;
+
+	background-color: black;
 }
 
 @media print {
+	.print__body {
+		border: none;
+		padding: 0;
+	}
+
 	.print__controls {
 		display: none;
 	}

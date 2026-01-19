@@ -6,7 +6,11 @@
 
 		<template #input>
 			<div class="selector" ref="selector">
-				<div class="selector__control" :class="{ open: isOpen }" @click="isOpen = !isOpen">
+				<div
+					class="selector__control"
+					:class="{ open: isOpen, clear: modelValue !== '' && isClear }"
+					@click="isOpen = !isOpen"
+				>
 					<div class="selector__control-label">
 						{{ modelValue !== "" ? list.find((item) => item.value === modelValue)?.label : placeholder }}
 					</div>
@@ -24,7 +28,14 @@
 					</button>
 
 					<button class="selector__control-button">
-						<VueIcon :name="'Arrow'" :fill="'black'" :width="'15px'" :height="'15px'" />
+						<VueIcon
+							class="selector__control-button-svg"
+							:class="{ rotate: isOpen }"
+							:name="'Arrow'"
+							:fill="'black'"
+							:width="'15px'"
+							:height="'15px'"
+						/>
 					</button>
 				</div>
 
@@ -195,8 +206,8 @@ export default {
 	user-select: none;
 	box-sizing: border-box;
 	cursor: default;
-	display: flex;
-	justify-content: space-between;
+	display: grid;
+	grid-template-columns: 1fr auto;
 	align-items: center;
 	gap: var(--selector-control-gap);
 
@@ -212,6 +223,10 @@ export default {
 	font: var(--selector-control-font);
 
 	transition: var(--selector-control-transition);
+}
+
+.selector__control.clear {
+	grid-template-columns: 1fr auto auto;
 }
 
 .selector__control-label {
@@ -241,6 +256,14 @@ export default {
 	aspect-ratio: 1 / 1;
 	width: auto;
 	height: auto;
+}
+
+.selector__control-button-svg {
+	transform: rotate(180deg);
+}
+
+.selector__control-button-svg.rotate {
+	transform: rotate(0deg);
 }
 
 .selector__control-button > svg {

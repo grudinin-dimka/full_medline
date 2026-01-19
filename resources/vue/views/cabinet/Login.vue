@@ -83,7 +83,12 @@
 				</VueFieldset>
 
 				<VueSwitch v-model="currentLogin.data.approval.value" :error="currentLogin.errors.approval.status">
-					<template #label> Я согласен с <a class="link" href="#">политикой конфиденциальности</a> кабинета </template>
+					<template #label>
+						Я солгасен(на) на обработку моих
+						<a class="link" :href="`/storage/other/personal.docx`"> персональных данных </a>. С
+						<a class="link" :href="`/storage/other/politic.docx`"> политикой </a>
+						в отношении обработки персональных данных ознакомлен(на) и согласен(на).
+					</template>
 				</VueSwitch>
 
 				<div class="form__login-buttons">

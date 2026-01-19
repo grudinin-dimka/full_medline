@@ -117,7 +117,7 @@ header {
 
 	background-color: white;
 	padding: 10px;
-	border-radius: calc(var(--default-border-radius) / 1.5);
+	border-radius: 100px;
 
 	font: var(--default-font-weight) 1.125rem var(--default-font-family);
 }

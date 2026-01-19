@@ -34,10 +34,6 @@
 							label: 'A4',
 							value: 'A4',
 						},
-						{
-							label: 'A3',
-							value: 'A3',
-						},
 					]"
 				/>
 
@@ -46,27 +42,43 @@
 					:name="'font-size'"
 					:list="[
 						{
-							label: '12px',
+							label: '12',
 							value: '12',
 						},
 						{
-							label: '14px',
+							label: '14',
 							value: '14',
 						},
 						{
-							label: '16px',
+							label: '16',
 							value: '16',
-						},
-						{
-							label: '18px',
-							value: '18',
-						},
-						{
-							label: '20px',
-							value: '20',
 						},
 					]"
 				/>
+
+				<VueCascader
+					v-model="lineHeight"
+					:name="'interval'"
+					:list="[
+						{
+							label: '1.0',
+							value: '1.0',
+						},
+						{
+							label: '1.5',
+							value: '1.5',
+						},
+						{
+							label: '2.0',
+							value: '2.0',
+						},
+					]"
+				/>
+
+				<VueButton :look="'inverse'" @click="resetPrint" class="flexEnd"> 
+					<VueIcon :name="'Refresh'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
+					Сбросить
+				</VueButton>
 			</div>
 
 			<VuePrint
@@ -81,7 +93,7 @@
 						'*': {
 							fontSize: `${fontSize}px`,
 							marginBottom: `${marginBottom}px`,
-							lineHeight: `${lineHeight}px`,
+							lineHeight: `${lineHeight}em`,
 							fontFamily: `${fontFamily}`,
 						},
 						'blockquote': {
@@ -151,9 +163,9 @@
 														},
 														styles: {
 															'*': {
-																fontSize: `${fontSize}px`,
-																marginBottom: `${marginBottom}px`,
-																lineHeight: `${lineHeight}px`,
+																fontSize: `${14}px`,
+																marginBottom: `${10}px`,
+																lineHeight: `${20}px`,
 															},
 														},
 													}"
@@ -214,6 +226,10 @@ export default {
 			/* Настройки */
 			direction: "portrait",
 			template: "A4",
+			lineHeight: '1.5',
+			fontSize: '14',
+			marginBottom: 10,
+			fontFamily: "Times New Roman",
 
 			/* Фильтры */
 			filters: {
@@ -243,11 +259,6 @@ export default {
 					look: "default",
 				},
 			},
-
-			fontSize: '14',
-			marginBottom: 10,
-			lineHeight: 20,
-			fontFamily: "Times New Roman",
 
 			/* Форма */
 			currentItem: {
@@ -396,6 +407,7 @@ export default {
 		/* Печать */
 		printWindow() {
 			const style = document.createElement("style");
+
 			style.innerHTML = `
 				@media print {
 					@page {
@@ -404,16 +416,19 @@ export default {
 					}
 				}
 			`;
+
 			document.head.appendChild(style);
 			window.print();
 			document.head.removeChild(style);
 		},
 
 		/* Сброс настроек печати */
-		resetPrintSettings() {
-			this.fontSize = 16;
+		resetPrint() {
+			this.direction = "portrait";
+			this.template = "A4";
+			this.lineHeight = '1.5';
+			this.fontSize = '14';
 			this.marginBottom = 10;
-			this.lineHeight = 20;
 			this.fontFamily = "Times New Roman";
 		},
 	},
@@ -499,6 +514,10 @@ export default {
 	display: flex;
 	flex-direction: column;
 	gap: calc(var(--default-gap) / 2);
+}
+
+.flexEnd {
+	margin-left: auto;
 }
 
 @media screen and (width <= 1200px) {
