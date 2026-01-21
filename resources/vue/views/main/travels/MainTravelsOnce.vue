@@ -88,11 +88,7 @@
 								<template #body>
 									<VueAccordeonBlock>
 										<div class="travels__once-description-block">
-											<VueTiptap
-												:editable="false"
-												:limit="1_000"
-												v-model="service.description"
-											/>
+											<VueTiptap :editable="false" :limit="1_000" v-model="service.description" />
 										</div>
 									</VueAccordeonBlock>
 								</template>
@@ -167,7 +163,7 @@ export default {
 				data: {
 					url: this.$route.params.name,
 				},
-			})
+			}),
 		).then((response) => {
 			if (!response) return;
 
@@ -223,6 +219,11 @@ export default {
 	aspect-ratio: 1 / 1.2;
 }
 
+.travels__once-image.skeleton {
+	border: var(--default-border);
+	background-color: var(--skeleton-color);
+}
+
 .travels__once-image > img {
 	object-fit: cover;
 	height: 100%;
@@ -248,6 +249,10 @@ export default {
 	border-radius: var(--default-border-radius);
 }
 
+.travels__once-title.skeleton {
+	border: var(--default-border);
+}
+
 .travels__once-duration {
 	display: flex;
 	align-items: center;
@@ -257,6 +262,10 @@ export default {
 
 	font-size: 1.125rem;
 	border-radius: var(--default-border-radius);
+}
+
+.travels__once-duration.skeleton {
+	border: var(--default-border);
 }
 
 .travels__once-description {
@@ -276,6 +285,7 @@ export default {
 }
 
 .travels__once-description.skeleton {
+	border: var(--default-border);
 	min-height: 200px;
 
 	font-size: 1.125rem;
@@ -293,8 +303,10 @@ export default {
 }
 
 .travels__once-price.skeleton {
-	min-height: 90px;
+	border: var(--default-border);
 	border-radius: var(--default-border-radius);
+
+	min-height: 90px;
 }
 
 .travels__once-price-food {
@@ -338,6 +350,10 @@ export default {
 .travels__once-services-item {
 	height: 64px;
 	border-radius: var(--accordeon-head-border-radius);
+}
+
+.travels__once-services-item.skeleton {
+	border: var(--default-border);
 }
 
 @media screen and (max-width: 1450px) {

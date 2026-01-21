@@ -313,9 +313,14 @@ export default {
 		};
 	},
 	watch: {
-		modelValue() {
-			this.currentYear = new Date(this.modelValue).getFullYear();
-			this.currentMonth = new Date(this.modelValue).getMonth() + 1;
+		modelValue: {
+			handler(newValue, oldValue) {
+				if (!newValue) return;
+
+				this.currentYear = new Date(this.modelValue).getFullYear();
+				this.currentMonth = new Date(this.modelValue).getMonth() + 1;
+			},
+			deep: true,
 		},
 	},
 	computed: {
@@ -579,7 +584,7 @@ export default {
 
 			this.$emit(
 				"update:modelValue",
-				`${this.currentYear}-${String(this.currentMonth).padStart(2, "0")}-${String(dayOfMonth).padStart(2, "0")}`
+				`${this.currentYear}-${String(this.currentMonth).padStart(2, "0")}-${String(dayOfMonth).padStart(2, "0")}`,
 			);
 
 			this.showPicker = false;
@@ -962,5 +967,11 @@ export default {
 .vue-date--month .vue-date__input-label {
 	user-select: none;
 	cursor: default;
+}
+
+@media screen and (width <= 600px) {
+	.vue-date__input-label {
+		width: calc(100% - 50px - 30px) !important;
+	}
 }
 </style>

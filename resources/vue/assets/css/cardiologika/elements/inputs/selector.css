@@ -81,7 +81,7 @@
 	--selector-control-border-radius: var(--input-border-radius);
 	--selector-control-border-focus: var(--input-border-focus);
 
-	--selector-control-padding: 10px;
+	--selector-control-padding: 0px calc(var(--default-padding) / 2);
 	--selector-control-height: var(--input-height);
 	--selector-control-caret-color: var(--input-border-color-active);
 	--selector-control-background-color: white;

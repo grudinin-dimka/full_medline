@@ -75,7 +75,7 @@
 					]"
 				/>
 
-				<VueButton :look="'inverse'" @click="resetPrint" class="flexEnd"> 
+				<VueButton :look="'inverse'" @click="resetPrint" class="flexEnd">
 					<VueIcon :name="'Refresh'" :fill="'var(--primary-color)'" :width="'28px'" :height="'28px'" />
 					Сбросить
 				</VueButton>
@@ -83,6 +83,7 @@
 
 			<VuePrint
 				v-model="currentItem.data.description.value"
+				ref="printModal"
 				:settings="{
 					direction: direction,
 					template: template,
@@ -113,34 +114,38 @@
 		</template>
 	</VueModal>
 
-	<BlockOnce :minHeight="'150px'">
+	<BlockOnce :minHeight="'100px'">
+		<template #body>
+			<div class="filters">
+				<VueValues class="filters__item text" v-model="filters.text" :type="'search'" :placeholder="'Введите текст'" />
+
+				<VueSelector
+					class="filters__item title"
+					v-model="filters.title"
+					:placeholder="'Выберите заголовок'"
+					:list="getListNaims"
+					:is-clear="true"
+					:is-search="true"
+				/>
+
+				<VueDate class="filters__item date" v-model="filters.date" :type="'date'" :placeholder="'Выберите дату'" />
+			</div>
+		</template>
+	</BlockOnce>
+
+	<BlockOnce :minHeight="'100px'">
 		<template #body>
 			<div class="cabinet-block">
-				<div class="cabinet-block__filters">
-					<div class="filters__item">
-						<VueValues v-model="filters.text" :type="'search'" :placeholder="'Введите текст'" />
-					</div>
-
-					<div class="filters__item">
-						<VueSelector
-							v-model="filters.title"
-							:placeholder="'Выберите заголовок'"
-							:list="getListNaims"
-							:is-clear="true"
-							:is-search="true"
-						/>
-					</div>
-				</div>
-
 				<!-- Список элементов -->
 				<template v-if="loading.sections.list">
-					<div class="cabinet-block__list" v-if="list.length > 0">
-						<div class="cabinet-block__list-item" v-for="item in getList">
-							<div class="cabinet-block__item-label">
-								{{ item.date }}
+					<div class="cabinet-block__dates" v-if="getList.length > 0">
+						<div class="cabinet-block__date" v-for="item in getList">
+							<div class="cabinet-block__date-label">
+								<VueIcon :name="'Calendar Clock'" :fill="'var(--primary-color)'" :width="'24px'" :height="'24px'" />
+								{{ new Date(item.date).toLocaleString("ru", { day: "numeric", month: "numeric", year: "numeric" }) }}
 							</div>
 
-							<div class="cabinet-block__item-list">
+							<div class="cabinet-block__date-list">
 								<VueAccordeon v-for="value in item.list">
 									<template #name> {{ value.title }} </template>
 
@@ -167,6 +172,13 @@
 																marginBottom: `${10}px`,
 																lineHeight: `${20}px`,
 															},
+															'table': {
+																borderCollapse: 'collapse',
+																borderSpacing: '0',
+															},
+															'td': {
+																padding: '5px 10px',
+															},
 														},
 													}"
 												/>
@@ -181,11 +193,16 @@
 			</div>
 
 			<template v-if="loading.sections.list">
-				<Empty v-if="list.length <= 0" :minHeight="'200px'" />
+				<Empty v-if="getList.length <= 0" :minHeight="'244px'" />
 			</template>
 
 			<!-- Загрузка элементов -->
-			<VueLoader :isLoading="loading.loader.list" :isChild="true" @afterLeave="loaderChildAfterLeave" />
+			<VueLoader
+				:minHeight="'244px'"
+				:isLoading="loading.loader.list"
+				:isChild="true"
+				@afterLeave="loaderChildAfterLeave"
+			/>
 		</template>
 	</BlockOnce>
 </template>
@@ -202,6 +219,7 @@ import BlockOnce from "../../../components/ui/admin/blocks/BlockOnce.vue";
 
 import capi from "../../../mixin/capi";
 import shared from "../../../services/shared";
+import sorted from "../../../services/sorted";
 
 export default {
 	components: {
@@ -226,8 +244,8 @@ export default {
 			/* Настройки */
 			direction: "portrait",
 			template: "A4",
-			lineHeight: '1.5',
-			fontSize: '14',
+			lineHeight: "1.5",
+			fontSize: "14",
 			marginBottom: 10,
 			fontFamily: "Times New Roman",
 
@@ -235,6 +253,7 @@ export default {
 			filters: {
 				text: "",
 				title: "",
+				date: "",
 			},
 
 			/* Загрузчик */
@@ -324,7 +343,7 @@ export default {
 
 			days.forEach((day) => {
 				array.push({
-					date: new Date(day).toLocaleString("ru", { day: "numeric", month: "numeric", year: "numeric" }),
+					date: day,
 					list: this.list.filter((item) => item.date == day),
 				});
 			});
@@ -351,8 +370,18 @@ export default {
 				}
 			}
 
+			/* Фильтрация: по дате */
+			if (this.filters.date) {
+				for (let i = 0; i < array.length; i++) {
+					array[i].list = array[i].list.filter((item) => item.date == this.filters.date);
+				}
+			}
+
 			/* Очистка пустых ячеек массива */
 			array = array.filter((item) => item.list.length > 0);
+
+			/* Сортировка */
+			sorted.sortDateByKey("down", array, "date");
 
 			return array;
 		},
@@ -418,7 +447,7 @@ export default {
 			`;
 
 			document.head.appendChild(style);
-			window.print();
+			this.$refs.printModal.print();
 			document.head.removeChild(style);
 		},
 
@@ -426,8 +455,8 @@ export default {
 		resetPrint() {
 			this.direction = "portrait";
 			this.template = "A4";
-			this.lineHeight = '1.5';
-			this.fontSize = '14';
+			this.lineHeight = "1.5";
+			this.fontSize = "14";
 			this.marginBottom = 10;
 			this.fontFamily = "Times New Roman";
 		},
@@ -460,7 +489,29 @@ export default {
 </script>
 
 <style scoped>
+.filters {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-template-areas:
+		"text title"
+		"date date";
+	gap: calc(var(--default-gap) / 2);
+}
+
+.filters__item.text {
+	grid-area: text;
+}
+
+.filters__item.title {
+	grid-area: title;
+}
+
+.filters__item.date {
+	grid-area: date;
+}
+
 .print__modal-settings {
+	z-index: 1;
 	position: sticky;
 	top: 0;
 
@@ -490,7 +541,7 @@ export default {
 	flex: 1 0 auto;
 }
 
-.cabinet-block__list {
+.cabinet-block__dates {
 	display: flex;
 	flex-direction: column;
 	gap: var(--default-gap);
@@ -498,19 +549,24 @@ export default {
 	animation: show-bottom-to-top-15 0.4s ease-in-out;
 }
 
-.cabinet-block__list-item {
+.cabinet-block__date {
 	display: flex;
 	flex-direction: column;
 	gap: calc(var(--default-gap) / 2);
 }
 
-.cabinet-block__item-label {
+.cabinet-block__date-label {
+	display: flex;
+	flex-direction: row;
+	gap: calc(var(--default-gap) / 2);
+	align-items: center;
+
 	font-size: 1.5rem;
 
 	color: var(--primary-color);
 }
 
-.cabinet-block__item-list {
+.cabinet-block__date-list {
 	display: flex;
 	flex-direction: column;
 	gap: calc(var(--default-gap) / 2);
@@ -518,6 +574,26 @@ export default {
 
 .flexEnd {
 	margin-left: auto;
+}
+
+.travels__once-description-block {
+	position: relative;
+
+	max-height: 300px;
+	overflow: hidden;
+}
+
+.travels__once-description-block::after {
+	content: "";
+
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
+
+	background: #ffffff;
+	background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
 }
 
 @media screen and (width <= 1200px) {

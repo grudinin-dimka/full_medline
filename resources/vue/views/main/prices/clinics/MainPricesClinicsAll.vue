@@ -13,7 +13,7 @@
 				<div class="prices__item" v-for="city in 3">
 					<div class="prices__item-label" :class="{ skeleton: loading.loader.addresses }">&nbsp;</div>
 					<ul>
-						<li v-for="street in 3" :class="{ skeleton: loading.loader.addresses }">
+						<li v-for="street in 3">
 							<div class="address">&nbsp;</div>
 						</li>
 					</ul>
@@ -220,9 +220,7 @@ export default {
 	font-size: 1.125em;
 
 	transition: all 0.2s;
-}
 
-.prices__item > ul > li.skeleton {
 	min-height: 63px;
 	border: var(--default-border);
 }

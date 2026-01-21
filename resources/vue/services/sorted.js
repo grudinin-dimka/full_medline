@@ -3,6 +3,22 @@ export default {
 	/* |            УНИВЕРСАЛЬНАЯ СОРТИРОВКА               |*/
 	/* |___________________________________________________|*/
 	/* Универсальная сортировка строковых полей */
+	sortDateByKey(type = "up", array, key) {
+		switch (type) {
+			case "up":
+				array.sort((a, b) => {
+					return new Date(a[key]) - new Date(b[key]);
+				});
+				break;
+			case "down":
+				array.sort((a, b) => {
+					return new Date(b[key]) - new Date(a[key]);
+				});
+				break;
+		}
+	},
+
+	/* Универсальная сортировка строковых полей */
 	sortStringByKey(type = "up", array, key) {
 		switch (type) {
 			case "up":
@@ -18,7 +34,9 @@ export default {
 	sortNumberByKey(type = "up", array, key) {
 		switch (type) {
 			case "up":
-				array.sort((a, b) => Number(a[key]) - Number(b[key]));
+				array.sort((a, b) => {
+					return Number(a[key]) - Number(b[key]);
+				});
 				break;
 			case "down":
 				array.sort((a, b) => Number(b[key]) - Number(a[key]));

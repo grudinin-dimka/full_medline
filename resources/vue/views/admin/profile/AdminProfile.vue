@@ -187,7 +187,7 @@ export default {
 	flex: 1 0 400px;
 	padding: 20px;
 	
-	background-color: rgb(245, 245, 245);
+	background-color: var(--skeleton-background-color);
 	border: var(--default-border);
 	border-radius: calc(var(--default-border-radius) / 1.5);
 }
@@ -211,7 +211,7 @@ export default {
 
 .item > .body > .block > .title {
 	font-size: 16px;
-	color: rgb(180, 180, 180);
+	color: var(--primary-color);
 }
 
 .item > .body > .block > .content {

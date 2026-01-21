@@ -148,11 +148,7 @@ export default {
 		},
 
 		makeDebug() {
-			this.$store.commit("addDebugger", {
-				title: "Соглашение",
-				body: "Узнавайте в медицинских центрах.",
-				type: "completed",
-			});
+			window.location.href = "/storage/other/personal.docx";
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/

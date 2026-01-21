@@ -77,7 +77,7 @@ export default {
 			if (!root) return;
 
 			// Очистим старые линии (если пересчитываем)
-			root.querySelectorAll(".page-divider").forEach((el) => el.remove());
+			this.clearPaginate();
 
 			for (let point in this.settings.styles) {
 				root.querySelectorAll(point).forEach((el) => {
@@ -86,6 +86,69 @@ export default {
 					}
 				});
 			}
+
+			this.$nextTick(() => {
+				this.paginate();
+			});
+		},
+
+		paginate() {
+			const root = this.$refs.printBody;
+			if (!root) return;
+
+			// Получаем реальную высоту контента
+			const contentHeightPx = root.scrollHeight; // важно: scrollHeight, а не getBoundingClientRect().height!
+
+			let pageHeightPx = this.getPageHeightPx();
+
+			// Сколько полных страниц?
+			const pageCount = Math.ceil(contentHeightPx / pageHeightPx);
+
+			// Добавляем линии после каждой страницы (кроме последней)
+			for (let i = 1; i < pageCount; i++) {
+				const line = document.createElement("div");
+				line.className = "print__body-line";
+				line.style.pointerEvents = `none`;
+				line.style.position = `absolute`;
+				line.style.left = `0`;
+				line.style.top = `${i * pageHeightPx}px`;
+				line.style.zIndex = `10`;
+				line.style.width = `100%`;
+				line.style.height = `1px`;
+				line.style.border = `0.5px dashed rgba(0, 0, 0, 0.25)`;
+
+				root.appendChild(line);
+			}
+		},
+
+		clearPaginate() {
+			const root = this.$refs.printBody;
+			if (!root) return;
+
+			root.querySelectorAll(".print__body-line").forEach((el) => el.remove());
+		},
+
+		getPageHeightPx() {
+			const mmToPx = (mm) => mm * 3.7795275591;
+
+			const sizes = {
+				A3: { portrait: 420, landscape: 297 },
+				A4: { portrait: 297, landscape: 210 },
+				A5: { portrait: 210, landscape: 148 },
+			};
+
+			const mm = sizes[this.settings.template ?? "A4"][this.settings.direction ?? "portrait"];
+
+			return mmToPx(mm); // минус padding
+		},
+
+		print() {
+			const root = this.$refs.printBody;
+			if (!root) return;
+
+			this.clearPaginate();
+			window.print();
+			this.paginate();
 		},
 	},
 	mounted() {
@@ -107,62 +170,60 @@ export default {
 }
 
 .print__body {
-	border: 1px solid rgba(0, 0, 0, 0.5);
+	position: relative;
+	border: 1px solid rgba(0, 0, 0, 0.25);
 	padding: 10mm;
 
+	box-sizing: border-box;
 	margin: 0 auto;
 	width: 100%;
 }
 
 .print__body.portrait.A3 {
-	max-width: 277mm;
-	min-height: 400mm;
+	max-width: 297mm;
+	min-height: 420mm;
 }
 
 .print__body.landscape.A3 {
-	max-width: 400mm;
-	min-height: 277mm;
+	max-width: 420mm;
+	min-height: 297mm;
 }
 
 .print__body.portrait.A4 {
-	max-width: 190mm;
-	min-height: 277mm;
+	max-width: 210mm;
+	min-height: 297mm;
 }
 
 .print__body.landscape.A4 {
-	max-width: 277mm;
-	min-height: 190mm;
+	max-width: 297mm;
+	min-height: 210mm;
 }
 
 .print__body.portrait.A5 {
-	max-width: 128mm;
-	min-height: 190mm;
+	max-width: 148mm;
+	min-height: 210mm;
 }
 
 .print__body.landscape.A5 {
-	max-width: 190mm;
-	min-height: 128mm;
-}
-
-.print__body-line {
-	position: absolute;
-	top: 30px;
-	left: 0px;
-
-	width: 100%;
-	height: 5px;
-
-	background-color: black;
+	max-width: 210mm;
+	min-height: 148mm;
 }
 
 @media print {
 	.print__body {
 		border: none;
-		padding: 0;
+		padding: 0px 10mm 10mm 10mm;
+
+		min-height: 0px !important;
 	}
 
 	.print__controls {
 		display: none;
+	}
+
+	.print__body-line {
+		display: none !important;
+		border: none !important;
 	}
 }
 </style>

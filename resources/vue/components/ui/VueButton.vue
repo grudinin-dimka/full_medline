@@ -69,6 +69,7 @@ export default {
 <style scoped>
 /* Кнопка */
 .button-default {
+	position: relative;
 	user-select: none;
 	cursor: pointer;
 	display: flex;

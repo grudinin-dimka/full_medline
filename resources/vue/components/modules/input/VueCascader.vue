@@ -67,7 +67,7 @@ export default {
 
 	border: var(--default-border);
 	border-radius: 100px;
-	background-color: rgba(255, 255, 255, 0.75);
+	background-color: rgba(255, 255, 255, 0.85);
 }
 
 .vue-radio-group__title {
