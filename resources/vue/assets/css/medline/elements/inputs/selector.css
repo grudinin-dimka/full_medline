@@ -81,17 +81,18 @@
 	--selector-control-border-radius: var(--input-border-radius);
 	--selector-control-border-focus: var(--input-border-focus);
 
-	--selector-control-padding: 0px calc(var(--default-padding) / 2);
-	--selector-control-height: var(--input-height);
+	--selector-control-padding: 0px 15px 0px 0px;
+	--selector-control-height: calc(var(--input-height) - (var(--input-border-width) * 2));
 	--selector-control-caret-color: var(--input-border-color-active);
 	--selector-control-background-color: white;
 	--selector-control-font: var(--input-font-size) var(--input-font-family);
 	--selector-control-transition: all 0.2s ease;
 
 	/* control: label */
-	--selector-control-label-height: var(--input-height);
+	--selector-control-label-height: calc(var(--input-height) - (var(--input-border-width) * 4));
 	--selector-control-label-width: 100%;
-
+	--selector-control-label-padding: 0px 15px;
+	
 	--selector-control-label-font: var(--input-font-size) var(--input-font-family);
 
 	/* control: button */

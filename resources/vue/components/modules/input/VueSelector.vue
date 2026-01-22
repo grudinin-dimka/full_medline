@@ -155,10 +155,8 @@ export default {
 
 			let menuListItemMinHeight = element.getPropertyValue("--selector-menu-list-item-min-height").replace(/\D/gi, "");
 			let menuListGap = element.getPropertyValue("--selector-menu-list-gap").replace(/\D/gi, "");
-			let controlPadding = element.getPropertyValue("--selector-control-padding").replace(/\D/gi, "");
-			let menuBorderWidth = element.getPropertyValue("--selector-menu-border-width").replace(/\D/gi, "");
 
-			let result = menuListItemMinHeight * this.size + +controlPadding * 3;
+			let result = menuListItemMinHeight * this.size + menuListGap * (this.size - 1);
 
 			return `${result}px`;
 		},
@@ -236,6 +234,8 @@ export default {
 
 	overflow: hidden;
 	white-space: nowrap;
+
+	padding: var(--selector-control-label-padding);
 
 	height: var(--selector-control-label-height);
 	width: var(--selector-control-label-width);

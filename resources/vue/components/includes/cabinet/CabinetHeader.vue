@@ -1,5 +1,5 @@
 <template>
-	<!-- Модальное окно: Печать -->
+	<!-- Модальное окно: Информация -->
 	<VueModal ref="modalInfo" :settings="modalInfo">
 		<template #title>
 			{{ modalInfo.values.title }}
@@ -12,27 +12,29 @@
 						<td class="info__td">Организация:</td>
 						<td class="info__td">ООО «Медицинская линия» (ООО «МедЛайн»)</td>
 					</tr>
-	
+
 					<tr class="info__tr">
 						<td class="info__td">ИНН:</td>
 						<td class="info__td">4502019933</td>
 					</tr>
-	
+
 					<tr class="info__tr">
 						<td class="info__td">ОГРН:</td>
 						<td class="info__td">1074502000990</td>
 					</tr>
-	
+
 					<tr class="info__tr">
 						<td class="info__td">Почтовый адрес:</td>
-						<td class="info__td">641870, Курганская область, г. Шадринск, ул. Комсомольская, д. 16, корп. 2, оф. 311.</td>
+						<td class="info__td">
+							641870, Курганская область, г. Шадринск, ул. Комсомольская, д. 16, корп. 2, оф. 311.
+						</td>
 					</tr>
-	
+
 					<tr class="info__tr">
 						<td class="info__td">Телефон:</td>
 						<td class="info__td">8 (35253) 9-000-9</td>
 					</tr>
-	
+
 					<tr class="info__tr">
 						<td class="info__td">Лицензия:</td>
 						<td class="info__td">
@@ -48,6 +50,29 @@
 					</tr>
 				</tbody>
 			</table>
+		</template>
+	</VueModal>
+
+	<!-- Модальное окно: Сессии -->
+	<VueModal ref="modalDevices" :settings="modalDevices">
+		<template #title>
+			{{ modalDevices.values.title }}
+		</template>
+
+		<template #body>
+			<div class="devices">
+				<div class="devices__item" v-for="device in devices">
+					<div class="devices__item-info">
+						<div class="devices__item-platform">{{ device.platform }}</div>
+						<div class="devices__item-location">
+							{{ device.last_used_at }} - {{ device.location }} - {{ device.ip }}
+						</div>
+					</div>
+					<div class="devices__item-info">
+						<VueButton :look="'delete'">Выйти</VueButton>
+					</div>
+				</div>
+			</div>
 		</template>
 	</VueModal>
 
@@ -94,6 +119,11 @@
 				Информация
 			</div>
 
+			<div class="header__dropdown__item" @click="openModalDevices">
+				<VueIcon :name="'Devices'" :fill="'var(--primary-color)'" :width="'24px'" :height="'24px'" />
+				Устройства
+			</div>
+
 			<div class="header__dropdown__item" @click="makeDebug">
 				<VueIcon :name="'Contract'" :fill="'var(--primary-color)'" :width="'24px'" :height="'24px'" />
 				Соглашение
@@ -126,6 +156,31 @@ export default {
 					look: "default",
 				},
 			},
+
+			modalDevices: {
+				clamped: true,
+				values: {
+					title: "",
+					look: "default",
+				},
+			},
+
+			devices: [
+				{
+					id: 1,
+					platform: "Windows",
+					location: "Россия, Москва",
+					ip: "192.168.0.1",
+					last_used_at: "22 янв. 2026 в 11:00",
+				},
+				{
+					id: 2,
+					platform: "Android",
+					location: "Россия, Екаторинбург",
+					ip: "192.168.0.1",
+					last_used_at: "20 янв. 2026 в 16:31",
+				},
+			],
 		};
 	},
 	methods: {
@@ -145,6 +200,12 @@ export default {
 			this.$refs.header.close();
 
 			this.openModal("modalInfo", "Информация", "default");
+		},
+
+		openModalDevices() {
+			this.$refs.header.close();
+
+			this.openModal("modalDevices", "Устройства", "default");
 		},
 
 		makeDebug() {
@@ -243,6 +304,29 @@ export default {
 
 .header__dropdown__item:hover {
 	background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Устройства */
+.devices {
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--default-gap) / 2);
+}
+
+.devices__item {
+	display: grid;
+	grid-template-columns: 1fr auto;
+	gap: calc(var(--default-gap) / 2);
+
+	border: var(--default-border);
+	border-radius: var(--default-border-radius);
+	padding: calc(var(--default-padding) / 2);
+}
+
+.devices__item-info {
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--default-gap) / 2);
 }
 
 @media screen and (width < 850px) {
