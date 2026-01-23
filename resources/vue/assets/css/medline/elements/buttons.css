@@ -57,6 +57,11 @@
 	--button-create-background-color: var(--create-background-color);
 	--button-create-background-color-hover: var(--create-background-color-hover);
 
+	--button-create-secondary-font-color: var(--create-background-color);
+	--button-create-secondary-font-color-hover: var(--create-background-color);
+	--button-create-secondary-background-color: var(--create-secondary-background-color);
+	--button-create-secondary-background-color-hover: var(--create-secondary-background-color-hover);
+
 	/* delete */
 	--button-delete-font-color: var(--delete-color);
 	--button-delete-font-color-hover: var(--delete-color-hover);

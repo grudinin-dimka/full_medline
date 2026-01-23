@@ -225,6 +225,10 @@ export default {
 
 			this.disabled.login = true;
 
+			// генерация uuid
+			this.$store.commit("generateUuid");
+
+			// авторизация
 			await capi({
 				method: "post",
 				url: `login`,
@@ -234,6 +238,7 @@ export default {
 				data: {
 					snils: this.currentLogin.data.snils.value,
 					password: this.currentLogin.data.password.value,
+					uuid: this.$store.getters.getUuid,
 				},
 			})
 				.then((response) => {

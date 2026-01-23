@@ -168,6 +168,28 @@ export default {
 	background-color: var(--button-delete-secondary-background-color-hover);
 }
 
+/* create */
+.button-default.create {
+	color: var(--button-create-font-color);
+	background-color: var(--button-create-background-color);
+}
+
+.button-default.create:hover {
+	color: var(--button-create-font-color-hover);
+	background-color: var(--button-create-background-color-hover);
+}
+
+/* create-secondary */
+.button-default.create-secondary {
+	color: var(--button-create-secondary-font-color);
+	background-color: var(--button-create-secondary-background-color);
+}
+
+.button-default.create-secondary:hover {
+	color: var(--button-create-secondary-font-color-hover);
+	background-color: var(--button-create-secondary-background-color-hover);
+}
+
 .wide {
 	width: 100%;
 }

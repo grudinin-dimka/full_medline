@@ -759,6 +759,7 @@ export default {
 	position: absolute;
 	z-index: var(--month-dropdown-z-index);
 	top: var(--month-dropdown-top);
+	right: 0px;
 	display: flex;
 	flex-direction: column;
 	gap: var(--month-dropdown-gap);

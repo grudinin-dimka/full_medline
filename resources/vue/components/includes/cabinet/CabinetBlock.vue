@@ -602,6 +602,16 @@ export default {
 	}
 }
 
+@media screen and (width <= 700px) {
+	.filters {
+		grid-template-columns: 1fr;
+		grid-template-areas:
+			"text"
+			"title"
+			"date";
+	}
+}
+
 @media screen and (width <= 600px) {
 	.print__modal-settings {
 		display: none;

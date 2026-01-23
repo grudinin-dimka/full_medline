@@ -61,18 +61,46 @@
 
 		<template #body>
 			<div class="devices">
-				<div class="devices__item" v-for="device in devices">
+				<div class="devices__item" v-for="device in $store.getters.getClientDevices">
 					<div class="devices__item-info">
 						<div class="devices__item-platform">{{ device.platform }}</div>
 						<div class="devices__item-location">
-							{{ device.last_used_at }} - {{ device.location }} - {{ device.ip }}
+							{{
+								new Date(device.updated_at).toLocaleString("ru", {
+									day: "2-digit",
+									month: "short",
+									year: "numeric",
+									hour: "numeric",
+									minute: "numeric",
+									second: "numeric",
+								})
+							}}
+							- {{ device.browser }} - {{ device.ip }}
 						</div>
 					</div>
 					<div class="devices__item-info">
-						<VueButton :look="'delete'">Выйти</VueButton>
+						<VueButton
+							:look="'delete-secondary'"
+							v-if="device.uuid !== $store.getters.getUuid"
+							:disabled="disabled.delete"
+							@click="deleteDevice(device.id)"
+						>
+							Выйти
+						</VueButton>
+
+						<template v-else>
+							<VueButton :look="'create-secondary'">Текущий сеанс</VueButton>
+						</template>
 					</div>
 				</div>
 			</div>
+		</template>
+
+		<template #footer>
+			<VueButton :disabled="disabled.get" @click="getDevices">
+				<VueIcon :name="'Refresh'" :fill="'white'" :width="'26px'" :height="'26px'" />
+				Обновить
+			</VueButton>
 		</template>
 	</VueModal>
 
@@ -141,6 +169,8 @@
 import VueHeader from "../../ui/VueHeader.vue";
 import VueBurger from "../../ui/VueBurger.vue";
 
+import capi from "../../../mixin/capi";
+
 export default {
 	components: {
 		VueHeader,
@@ -148,6 +178,11 @@ export default {
 	},
 	data() {
 		return {
+			disabled: {
+				get: false,
+				delete: false,
+			},
+
 			/* Модальное окно */
 			modalInfo: {
 				clamped: true,
@@ -213,7 +248,7 @@ export default {
 		},
 
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
-		/* |                 МЕТОДЫ ПЕРЕХОДА                   |*/
+		/* |                    Интерфейс                      |*/
 		/* |___________________________________________________|*/
 		pushPage(page) {
 			this.$router.push({ name: `${page}` });
@@ -223,6 +258,55 @@ export default {
 		logout() {
 			this.$store.commit("logoutOpen");
 			this.$refs.header.close();
+		},
+
+		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
+		/* |                    Устройства                     |*/
+		/* |___________________________________________________|*/
+		getDevices() {
+			this.disabled.get = true;
+
+			capi({
+				method: "get",
+				url: `/devices`,
+			})
+				.then((response) => {
+					if (!response) return;
+
+					// Запись токена в глобальную переменную
+					this.$store.commit("updateClientDevices", response.data.result);
+				})
+				.finally(() => {
+					this.disabled.get = false;
+				});
+		},
+
+		deleteDevice(id) {
+			this.disabled.delete = true;
+
+			capi({
+				method: "delete",
+				url: `/device`,
+				data: {
+					id: id,
+				},
+				headers: {
+					ContentType: "application/json",
+				},
+			})
+				.then((response) => {
+					if (!response) return;
+
+					let devices = this.$store.getters.getClientDevices;
+
+					devices = devices.filter((device) => device.id !== id);
+
+					// Запись токена в глобальную переменную
+					this.$store.commit("updateClientDevices", devices);
+				})
+				.finally(() => {
+					this.disabled.delete = false;
+				});
 		},
 	},
 };
@@ -326,7 +410,14 @@ export default {
 .devices__item-info {
 	display: flex;
 	flex-direction: column;
+	justify-content: center;
 	gap: calc(var(--default-gap) / 2);
+
+	font-size: 1.125rem;
+}
+
+.devices__item-seans {
+	color: var(--create-secondary-color);
 }
 
 @media screen and (width < 850px) {

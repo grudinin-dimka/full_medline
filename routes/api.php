@@ -30,6 +30,8 @@ use App\Http\Middleware\TrackLoad;
 /* Перенаправлене на сервер                             */
 /* ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*/
 Route::post('/cabinet/{path}', [HomeController::class, 'requestCabinet']);
+Route::get('/cabinet/{path}', [HomeController::class, 'requestCabinet']);
+Route::delete('/cabinet/{path}', [HomeController::class, 'requestCabinet']);
 
 /* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
 /* |                      ДРУГОЕ                       |*/

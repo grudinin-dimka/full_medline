@@ -9,5 +9,16 @@ export default {
 		removeValueToLocal(state, name) {
 			localStorage.removeItem(name);
 		},
+
+		generateUuid(state) {
+			if (localStorage.getItem("uuid")) return;
+
+			localStorage.setItem("uuid", crypto.randomUUID());
+		},
+	},
+	getters: {
+		getUuid(state) {
+			return localStorage.getItem("uuid");
+		},
 	},
 };

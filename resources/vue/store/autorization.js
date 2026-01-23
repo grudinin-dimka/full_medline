@@ -1,5 +1,6 @@
 import axios from "axios";
 import router from "../router";
+import sorted from "../services/sorted";
 
 export default {
 	state: {
@@ -19,6 +20,7 @@ export default {
 			name: null,
 			patronymic: null,
 			snils: null,
+			devices: [],
 		},
 	},
 	mutations: {
@@ -34,6 +36,10 @@ export default {
 			for (let key in state.client) {
 				state.client[key] = client[key];
 			}
+		},
+
+		updateClientDevices(state, devices) {
+			state.client.devices = devices;
 		},
 
 		logoutOpen(state) {
@@ -154,6 +160,14 @@ export default {
 
 		getClientSnils(state) {
 			return state.client.snils;
+		},
+
+		getClientDevices(state) {
+			if (state.client.devices.length === 0) return [];
+
+			sorted.sortDateByKey("down", state.client.devices, "created_at");
+
+			return state.client.devices;
 		},
 	},
 };

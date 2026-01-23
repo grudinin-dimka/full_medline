@@ -249,7 +249,7 @@ export default {
 			let date = new Date();
 			this.$emit(
 				"update:modelValue",
-				`${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`
+				`${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`,
 			);
 
 			this.showPicker = false;
@@ -300,7 +300,7 @@ export default {
 		}
 
 		if (!this.minutes.includes("59")) {
-			this.minutes.push("59");			
+			this.minutes.push("59");
 		}
 
 		document.addEventListener("click", this.handleClickOutside);
@@ -395,6 +395,7 @@ export default {
 	position: absolute;
 	z-index: var(--time-dropdown-z-index);
 	top: var(--time-dropdown-top);
+	right: 0px;
 	display: flex;
 	flex-direction: column;
 	gap: var(--time-dropdown-gap);

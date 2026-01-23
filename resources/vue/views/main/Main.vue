@@ -1,6 +1,4 @@
 <template>
-	<VueSnow />
-
 	<!-- Дебагер -->
 	<VueDebugger />
 
@@ -23,8 +21,6 @@
 </template>
 
 <script>
-import VueSnow from "../../components/ui/VueSnow.vue"
-
 /* NOTE: Компоненты главной */
 import MainHeader from "../../components/includes/main/medline/MainHeader.vue";
 import MainNav from "../../components/includes/main/medline/MainNav.vue";
@@ -42,8 +38,6 @@ export default {
 		};
 	},
 	components: {
-		VueSnow,
-
 		MainHeader,
 		MainNav,
 		MainFooter,

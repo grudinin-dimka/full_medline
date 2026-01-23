@@ -16,8 +16,6 @@
 	<!-- Вики -->
 	<VueWiki />
 
-	<MainActions />
-
 	<!-- Загрузка -->
 	<VueLoader :isLoading="loader.loading" />
 

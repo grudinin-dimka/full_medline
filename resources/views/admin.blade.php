@@ -27,7 +27,7 @@
       <!-- Yandex.Maps -->
       <script src="https://api-maps.yandex.ru/v3/?apikey=599ae210-3f94-4561-9fbb-3668aa323749&lang=ru_RU"></script>
    </head>
-   <body>
+   <body lang="ru">
       <div id="app"></div>
       @vite('resources/vue/main.js')
    </body>

@@ -832,6 +832,7 @@ export default {
 	position: absolute;
 	z-index: var(--datetime-dropdown-z-index);
 	top: var(--datetime-dropdown-top);
+	right: 0px;
 	display: flex;
 	flex-direction: row;
 	gap: var(--datetime-dropdown-gap);
