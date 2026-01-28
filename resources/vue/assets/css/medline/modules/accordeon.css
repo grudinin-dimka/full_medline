@@ -12,7 +12,7 @@
    --accordeon-head-padding: 0px 20px;
 
    --accordeon-head-gap: calc(var(--default-gap) / 2);
-   --accordeon-head-name-padding: 0px 0px;
+   --accordeon-head-name-padding: 15px 0px;
    --accordeon-head-name-border: 0px;
    --accordeon-head-name-border-radius: var(--accordeon-border-radius);
    --accordeon-head-name-background-color: rgba(0, 0, 0, 0);

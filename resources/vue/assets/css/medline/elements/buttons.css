@@ -62,6 +62,8 @@
 	--button-create-secondary-background-color: var(--create-secondary-background-color);
 	--button-create-secondary-background-color-hover: var(--create-secondary-background-color-hover);
 
+	--button-loader-create-secondary-border: 3px solid var(--create-background-color);
+
 	/* delete */
 	--button-delete-font-color: var(--delete-color);
 	--button-delete-font-color-hover: var(--delete-color-hover);
@@ -72,6 +74,8 @@
 	--button-delete-secondary-font-color-hover: var(--delete-secondary-color-hover);
 	--button-delete-secondary-background-color: var(--delete-secondary-background-color);
 	--button-delete-secondary-background-color-hover: var(--delete-secondary-background-color-hover);
+
+	--button-loader-delete-secondary-border: 3px solid var(--delete-background-color);
 
 	/* disabled */
 	--button-disabled-background-color: rgb(150, 150, 150);

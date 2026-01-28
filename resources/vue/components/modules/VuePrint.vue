@@ -1,7 +1,7 @@
 <template>
-	<div class="print" ref="print">
+	<div class="vue-print" ref="print">
 		<div
-			class="print__body"
+			class="vue-print__body"
 			ref="printBody"
 			v-html="sanitizeHtml(modelValue)"
 			:class="{ [settings.direction]: settings.direction, [settings.template]: settings.template }"
@@ -107,7 +107,7 @@ export default {
 			// Добавляем линии после каждой страницы (кроме последней)
 			for (let i = 1; i < pageCount; i++) {
 				const line = document.createElement("div");
-				line.className = "print__body-line";
+				line.className = "vue-print__body-line";
 				line.style.pointerEvents = `none`;
 				line.style.position = `absolute`;
 				line.style.left = `0`;
@@ -125,7 +125,7 @@ export default {
 			const root = this.$refs.printBody;
 			if (!root) return;
 
-			root.querySelectorAll(".print__body-line").forEach((el) => el.remove());
+			root.querySelectorAll(".vue-print__body-line").forEach((el) => el.remove());
 		},
 
 		getPageHeightPx() {
@@ -160,16 +160,16 @@ export default {
 </script>
 
 <style scoped>
-.print {
+.vue-print {
 	margin: auto;
 	width: 100%;
 }
 
-.print * {
+.vue-print * {
 	font-family: "Times New Roman", Times, serif;
 }
 
-.print__body {
+.vue-print__body {
 	position: relative;
 	border: 1px solid rgba(0, 0, 0, 0.25);
 	padding: 10mm;
@@ -179,49 +179,54 @@ export default {
 	width: 100%;
 }
 
-.print__body.portrait.A3 {
+.vue-print__body.portrait.A3 {
 	max-width: 297mm;
 	min-height: 420mm;
 }
 
-.print__body.landscape.A3 {
+.vue-print__body.landscape.A3 {
 	max-width: 420mm;
 	min-height: 297mm;
 }
 
-.print__body.portrait.A4 {
+.vue-print__body.portrait.A4 {
 	max-width: 210mm;
 	min-height: 297mm;
 }
 
-.print__body.landscape.A4 {
+.vue-print__body.landscape.A4 {
 	max-width: 297mm;
 	min-height: 210mm;
 }
 
-.print__body.portrait.A5 {
+.vue-print__body.portrait.A5 {
 	max-width: 148mm;
 	min-height: 210mm;
 }
 
-.print__body.landscape.A5 {
+.vue-print__body.landscape.A5 {
 	max-width: 210mm;
 	min-height: 148mm;
 }
 
+@media screen and (width <= 500px) {
+	.vue-print__body {
+		border: 0px solid rgba(0, 0, 0, 0.25);
+		padding: 0;
+
+		width: auto;
+	}
+}
+
 @media print {
-	.print__body {
+	.vue-print__body {
 		border: none;
 		padding: 0px 10mm 10mm 10mm;
 
 		min-height: 0px !important;
 	}
 
-	.print__controls {
-		display: none;
-	}
-
-	.print__body-line {
+	.vue-print__body-line {
 		display: none !important;
 		border: none !important;
 	}

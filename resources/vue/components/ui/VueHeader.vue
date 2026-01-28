@@ -147,4 +147,18 @@ header {
 		right: auto;
 	}
 }
+
+@media screen and (width < 500px) {
+	.header__dropdown {
+		width: calc(100% - 20px);
+	}
+}
+
+@media screen and (width < 450px) {
+	.header__dropdown {
+		top: calc(100% + 15px);
+		left: 15px;
+		width: calc(100% - 28px);
+	}
+}
 </style>

@@ -97,9 +97,23 @@
 							lineHeight: `${lineHeight}em`,
 							fontFamily: `${fontFamily}`,
 						},
-						'blockquote': {
-							padding: '0px',
-							margin: '0px',
+						'table': {
+							borderCollapse: 'collapse',
+							width: '100%',
+						},
+						'.Apple-tab-span': {
+							whiteSpace: 'normal',
+						},
+						'tr': {
+							width: 'auto',
+						},
+						'th': {
+							padding: '2.5px 5px',
+							width: 'auto',
+						},
+						'td': {
+							padding: '2.5px 5px',
+							width: 'auto',
 						},
 					},
 				}"
@@ -135,61 +149,77 @@
 
 	<BlockOnce :minHeight="'100px'">
 		<template #body>
-			<div class="cabinet-block">
-				<!-- Список элементов -->
-				<template v-if="loading.sections.list">
-					<div class="cabinet-block__dates" v-if="getList.length > 0">
-						<div class="cabinet-block__date" v-for="item in getList">
-							<div class="cabinet-block__date-label">
-								<VueIcon :name="'Calendar Clock'" :fill="'var(--primary-color)'" :width="'24px'" :height="'24px'" />
-								{{ new Date(item.date).toLocaleString("ru", { day: "numeric", month: "numeric", year: "numeric" }) }}
-							</div>
+			<div class="cabinet">
+				<div class="cabinet__pagination" v-if="loading.sections.list">
+					<div class="cabinet__pagination-count">{{ getListSlice.length }} записей из {{ getList.length }}</div>
+					<div class="cabinet__pagination-pagination">
+						<VuePagination :settings="settings" :arrayLength="getList.length" @changePage="changePage" />
+					</div>
+				</div>
 
-							<div class="cabinet-block__date-list">
-								<VueAccordeon v-for="value in item.list">
-									<template #name> {{ value.title }} </template>
+				<div class="cabinet__block">
+					<!-- Список элементов -->
+					<template v-if="loading.sections.list">
+						<div class="cabinet__dates" v-if="getList.length > 0">
+							<div class="cabinet__block-date" v-for="item in getListSlice">
+								<div class="cabinet__block-date-label">
+									<VueIcon
+										:name="'Calendar Clock'"
+										:fill="'var(--primary-color)'"
+										:width="'24px'"
+										:height="'24px'"
+									/>
+									{{
+										new Date(item.date).toLocaleString("ru", { day: "numeric", month: "numeric", year: "numeric" })
+									}}
+								</div>
 
-									<template #buttons>
-										<VueAccordeonButton @click="openModalPrint(value)">
-											<VueIcon :name="'Print'" :fill="'black'" :width="'24px'" :height="'24px'" />
-										</VueAccordeonButton>
-									</template>
+								<div class="cabinet__block-date-list">
+									<VueAccordeon v-for="value in item.list">
+										<template #name> {{ value.title }} </template>
 
-									<template #body>
-										<VueAccordeonBlock>
-											<div class="travels__once-description-block">
-												<VuePrint
-													v-model="value.description"
-													:settings="{
-														width: '100%',
-														clear: {
-															spacing: true,
-															styles: true,
-														},
-														styles: {
-															'*': {
-																fontSize: `${14}px`,
-																marginBottom: `${10}px`,
-																lineHeight: `${20}px`,
+										<template #buttons>
+											<VueAccordeonButton @click="openModalPrint(value)">
+												<VueIcon :name="'Print'" :fill="'black'" :width="'24px'" :height="'24px'" />
+											</VueAccordeonButton>
+										</template>
+
+										<template #body>
+											<VueAccordeonBlock>
+												<div class="travels__once-description-block">
+													<VuePrint
+														v-model="value.description"
+														:settings="{
+															width: '100%',
+															clear: {
+																spacing: true,
+																styles: true,
 															},
-															'table': {
-																borderCollapse: 'collapse',
-																borderSpacing: '0',
+															styles: {
+																'*': {
+																	fontSize: `${14}px`,
+																	marginBottom: `${10}px`,
+																	lineHeight: `${20}px`,
+																},
+																'table': {
+																	borderCollapse: 'collapse',
+																	borderSpacing: '0',
+																},
+																'td': {
+																	padding: '5px 10px',
+																},
 															},
-															'td': {
-																padding: '5px 10px',
-															},
-														},
-													}"
-												/>
-											</div>
-										</VueAccordeonBlock>
-									</template>
-								</VueAccordeon>
+														}"
+													/>
+												</div>
+											</VueAccordeonBlock>
+										</template>
+									</VueAccordeon>
+								</div>
 							</div>
 						</div>
-					</div>
-				</template>
+					</template>
+				</div>
 			</div>
 
 			<template v-if="loading.sections.list">
@@ -209,6 +239,7 @@
 
 <script>
 import VuePrint from "../../../components/modules/VuePrint.vue";
+import VuePagination from "../../modules/VuePagination.vue";
 
 import VueAccordeon from "../../../components/modules/accordeon/VueAccordeon.vue";
 import VueAccordeonBlock from "../../../components/modules/accordeon/VueAccordeonBlock.vue";
@@ -224,6 +255,7 @@ import sorted from "../../../services/sorted";
 export default {
 	components: {
 		VuePrint,
+		VuePagination,
 
 		VueAccordeon,
 		VueAccordeonBlock,
@@ -241,6 +273,19 @@ export default {
 	},
 	data() {
 		return {
+			/* Пагинация */
+			settings: {
+				pages: {
+					range: 3,
+					current: 1,
+				},
+				elements: {
+					range: 10,
+				},
+			},
+
+			watchWide: window.matchMedia("(max-width: 500px)").matches,
+
 			/* Настройки */
 			direction: "portrait",
 			template: "A4",
@@ -333,6 +378,7 @@ export default {
 		},
 
 		getList() {
+			// 1. Группировка по дням
 			let days = new Set();
 
 			for (let i = 0; i < this.list.length; i++) {
@@ -348,7 +394,7 @@ export default {
 				});
 			});
 
-			/* Фильтрация: по наименованию */
+			// 2. Фильтрация: по тексту
 			if (this.filters.text) {
 				for (let i = 0; i < array.length; i++) {
 					array[i].list = array[i].list.filter((item) => {
@@ -363,27 +409,42 @@ export default {
 				}
 			}
 
-			/* Фильтрация: по наименованию */
+			/* 3. Фильтрация: по наименованию */
 			if (this.filters.title) {
 				for (let i = 0; i < array.length; i++) {
 					array[i].list = array[i].list.filter((item) => item.title == this.filters.title);
 				}
 			}
 
-			/* Фильтрация: по дате */
+			/* 4. Фильтрация: по дате */
 			if (this.filters.date) {
+				let date = new Date(this.filters.date);
+				date.setHours(0, 0, 0);
+
 				for (let i = 0; i < array.length; i++) {
-					array[i].list = array[i].list.filter((item) => item.date == this.filters.date);
+					array[i].list = array[i].list.filter((item) => {
+						let itemDate = new Date(item.date);
+						itemDate.setHours(0, 0, 0);
+
+						return itemDate.getTime() == date.getTime();
+					});
 				}
 			}
 
-			/* Очистка пустых ячеек массива */
+			/* 5. Очистка пустых ячеек массива */
 			array = array.filter((item) => item.list.length > 0);
 
-			/* Сортировка */
+			/* 6. Сортировка */
 			sorted.sortDateByKey("down", array, "date");
 
 			return array;
+		},
+
+		getListSlice() {
+			let start = (this.settings.pages.current - 1) * this.settings.elements.range;
+			let end = this.settings.pages.current * this.settings.elements.range;
+
+			return this.getList.slice(start, end);
 		},
 
 		getListNaims() {
@@ -460,6 +521,24 @@ export default {
 			this.marginBottom = 10;
 			this.fontFamily = "Times New Roman";
 		},
+
+		/* Переключение страниц */
+		changePage(page) {
+			let main = document.querySelector("main");
+
+			main.scrollTo({
+				top: 0,
+				behavior: "smooth",
+			});
+
+			if (page > Math.ceil(this.list.length / this.settings.elements.range)) {
+				return;
+			} else if (page < 1) {
+				return;
+			}
+
+			this.settings.pages.current = page;
+		},
 	},
 	mounted() {
 		capi({
@@ -521,7 +600,24 @@ export default {
 	gap: var(--default-gap);
 }
 
-.cabinet-block {
+.cabinet {
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--default-gap) / 2);
+}
+
+.cabinet__pagination {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: var(--default-gap);
+}
+
+.cabinet__pagination-count {
+	font-size: 1.25rem;
+}
+
+.cabinet__block {
 	display: flex;
 	flex-direction: column;
 	gap: var(--default-gap);
@@ -541,7 +637,7 @@ export default {
 	flex: 1 0 auto;
 }
 
-.cabinet-block__dates {
+.cabinet__dates {
 	display: flex;
 	flex-direction: column;
 	gap: var(--default-gap);
@@ -549,13 +645,13 @@ export default {
 	animation: show-bottom-to-top-15 0.4s ease-in-out;
 }
 
-.cabinet-block__date {
+.cabinet__block-date {
 	display: flex;
 	flex-direction: column;
 	gap: calc(var(--default-gap) / 2);
 }
 
-.cabinet-block__date-label {
+.cabinet__block-date-label {
 	display: flex;
 	flex-direction: row;
 	gap: calc(var(--default-gap) / 2);
@@ -566,7 +662,7 @@ export default {
 	color: var(--primary-color);
 }
 
-.cabinet-block__date-list {
+.cabinet__block-date-list {
 	display: flex;
 	flex-direction: column;
 	gap: calc(var(--default-gap) / 2);
@@ -599,6 +695,19 @@ export default {
 @media screen and (width <= 1200px) {
 	.cabinet-block__filters {
 		grid-template-columns: 1fr;
+	}
+
+	.cabinet__pagination {
+		justify-content: center;
+		order: 2;
+	}
+
+	.cabinet__pagination-count {
+		display: none;
+	}
+
+	.cabinet__block {
+		order: 1;
 	}
 }
 

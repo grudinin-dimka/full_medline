@@ -6,38 +6,52 @@
 		</template>
 
 		<template #body>
-			<table class="info">
-				<tbody>
-					<tr class="info__tr">
-						<td class="info__td">Организация:</td>
-						<td class="info__td">ООО «Медицинская линия» (ООО «МедЛайн»)</td>
-					</tr>
+			<div class="table">
+				<div class="table__thead">
+					<div class="table__thead-img">
+						<div class="table__thead-img-count" v-if="count > 0">
+							{{ count }}
+						</div>
 
-					<tr class="info__tr">
-						<td class="info__td">ИНН:</td>
-						<td class="info__td">4502019933</td>
-					</tr>
+						<img class="table__thead-img-image" @click="count++" :src="`/storage/img/logo.svg`" alt="" />
+					</div>
+				</div>
+				<div class="table__tbody">
+					<div class="table__tbody-tr">
+						<div class="table__tbody-td">Версия:</div>
+						<div class="table__tbody-td">1.0</div>
+					</div>
 
-					<tr class="info__tr">
-						<td class="info__td">ОГРН:</td>
-						<td class="info__td">1074502000990</td>
-					</tr>
+					<div class="table__tbody-tr">
+						<div class="table__tbody-td">Организация:</div>
+						<div class="table__tbody-td">ООО «Медицинская линия» (ООО «МедЛайн»)</div>
+					</div>
 
-					<tr class="info__tr">
-						<td class="info__td">Почтовый адрес:</td>
-						<td class="info__td">
+					<div class="table__tbody-tr">
+						<div class="table__tbody-td">ИНН:</div>
+						<div class="table__tbody-td">4502019933</div>
+					</div>
+
+					<div class="table__tbody-tr">
+						<div class="table__tbody-td">ОГРН:</div>
+						<div class="table__tbody-td">1074502000990</div>
+					</div>
+
+					<div class="table__tbody-tr">
+						<div class="table__tbody-td">Почтовый адрес:</div>
+						<div class="table__tbody-td">
 							641870, Курганская область, г. Шадринск, ул. Комсомольская, д. 16, корп. 2, оф. 311.
-						</td>
-					</tr>
+						</div>
+					</div>
 
-					<tr class="info__tr">
-						<td class="info__td">Телефон:</td>
-						<td class="info__td">8 (35253) 9-000-9</td>
-					</tr>
+					<div class="table__tbody-tr">
+						<div class="table__tbody-td">Телефон:</div>
+						<div class="table__tbody-td">8 (35253) 9-000-9</div>
+					</div>
 
-					<tr class="info__tr">
-						<td class="info__td">Лицензия:</td>
-						<td class="info__td">
+					<div class="table__tbody-tr">
+						<div class="table__tbody-td">Лицензия:</div>
+						<div class="table__tbody-td">
 							<a
 								class="link"
 								target="_blank"
@@ -46,10 +60,10 @@
 								Лицензия № Л041-01107-72/00572725 от 11.09.2020 г., выдана Департаментом здравоохранения Курганской
 								области
 							</a>
-						</td>
-					</tr>
-				</tbody>
-			</table>
+						</div>
+					</div>
+				</div>
+			</div>
 		</template>
 	</VueModal>
 
@@ -97,6 +111,11 @@
 		</template>
 
 		<template #footer>
+			<VueButton :look="'delete'" :disabled="disabled.reset" @click="deleteDevices">
+				<VueIcon :name="'Delete Forever'" :fill="'white'" :width="'26px'" :height="'26px'" />
+				Сбросить
+			</VueButton>
+
 			<VueButton :disabled="disabled.get" @click="getDevices">
 				<VueIcon :name="'Refresh'" :fill="'white'" :width="'26px'" :height="'26px'" />
 				Обновить
@@ -178,8 +197,11 @@ export default {
 	},
 	data() {
 		return {
+			count: 0,
+
 			disabled: {
 				get: false,
+				reset: false,
 				delete: false,
 			},
 
@@ -217,6 +239,46 @@ export default {
 				},
 			],
 		};
+	},
+	watch: {
+		count: {
+			handler(newValue, oldValue) {
+				if (newValue === 1 && oldValue === 0) {
+					this.$store.commit("addDebugger", {
+						title: "Ураааа!",
+						body: "Вы нашли скрытую пасхалку :).",
+						type: "completed",
+					});
+				}
+
+				if (newValue === 100 && oldValue < 100) {
+					this.$store.commit("addDebugger", {
+						title: "Зачем?",
+						body: "Эй, здесь больше ничего нет!",
+						type: "completed",
+					});
+				}
+
+				if (newValue === 1000 && oldValue < 1000) {
+					this.$store.commit("addDebugger", {
+						title: "Железная воля.",
+						body: "Не бойся того, кто изучал 10 000 ударов, бойся того, кто изучал 1 удар 10 000 раз.",
+						type: "completed",
+					});
+				}
+
+				if (newValue === 10000 && oldValue < 10000) {
+					this.$store.commit("addDebugger", {
+						title: "Заслуженный анекдот!",
+						body: `Врач — пациенту:
+							— У меня для вас две новости: хорошая и плохая. С какой начать?
+							— Давайте с хорошей, доктор.
+							— Болезнь назовут в вашу честь!`,
+						type: "completed",
+					});
+				}
+			},
+		},
 	},
 	methods: {
 		/* |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|*/
@@ -281,6 +343,24 @@ export default {
 				});
 		},
 
+		deleteDevices() {
+			this.disabled.reset = true;
+
+			capi({
+				method: "delete",
+				url: `/devices`,
+			})
+				.then((response) => {
+					if (!response) return;
+
+					// Сброс токена
+					this.$store.commit("removeCabinetToken");
+				})
+				.finally(() => {
+					this.disabled.reset = false;
+				});
+		},
+
 		deleteDevice(id) {
 			this.disabled.delete = true;
 
@@ -313,19 +393,132 @@ export default {
 </script>
 
 <style scoped>
-.info__tr {
-	font-size: 1.125rem;
+.table__thead {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	padding: var(--default-padding);
 }
 
-.info__td:first-of-type {
+.table__thead-img {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	border-radius: 100px;
+
+	aspect-ratio: 1 / 1;
+}
+
+.table__thead-img:hover {
+	background-color: rgba(var(--primary-color-rgb), 0.15);
+}
+
+.table__thead-img-image {
+	cursor: pointer;
+}
+
+.table__thead-img-count {
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	top: 0px;
+	right: 0px;
+
+	min-height: 30px;
+	min-width: 30px;
+	padding: 2.5px;
+	border-radius: 100px;
+
+	background-color: var(--primary-color);
+	color: white;
+}
+
+.table__tbody-td:first-of-type {
 	font-size: large;
 	color: rgba(0, 0, 0, 0.5);
 
 	width: 175px;
 }
 
-.info__td {
-	height: 30px;
+.table__tbody-tr {
+	display: grid;
+	grid-template-columns: 175px 1fr;
+	grid-template-rows: auto;
+}
+
+.table__tbody-td {
+	min-height: 30px;
+
+	padding: max(calc(var(--default-padding) / 3), 12.5px);
+
+	border-top: var(--default-border-width);
+	border-right: 0px;
+	border-bottom: 0px;
+	border-left: var(--default-border-width);
+	border-style: var(--default-border-style);
+	border-color: var(--default-border-color);
+
+	word-break: break-all;
+}
+
+.table__tbody-td:last-of-type {
+	border-top: var(--default-border-width);
+	border-right: var(--default-border-width);
+	border-bottom: 0px;
+	border-left: var(--default-border-width);
+	border-style: var(--default-border-style);
+	border-color: var(--default-border-color);
+	border-radius: 0px;
+}
+
+.table__tbody-tr:first-of-type .table__tbody-td:first-child {
+	border-radius: calc(var(--default-border-radius) / 1.5) 0px 0px 0px;
+}
+
+.table__tbody-tr:first-of-type .table__tbody-td:last-child {
+	border-radius: 0px calc(var(--default-border-radius) / 1.5) 0px 0px;
+}
+
+.table__tbody-tr:last-of-type .table__tbody-td {
+	border-top: var(--default-border-width);
+	border-right: var(--default-border-width);
+	border-bottom: var(--default-border-width);
+	border-left: var(--default-border-width);
+	border-style: var(--default-border-style);
+	border-color: var(--default-border-color);
+}
+
+.table__tbody-tr:last-of-type .table__tbody-td {
+	border-top: var(--default-border-width);
+	border-right: var(--default-border-width);
+	border-bottom: var(--default-border-width);
+	border-left: var(--default-border-width);
+	border-style: var(--default-border-style);
+	border-color: var(--default-border-color);
+}
+
+.table__tbody-tr:last-of-type .table__tbody-td:first-child {
+	border-top: var(--default-border-width);
+	border-right: 0px;
+	border-bottom: var(--default-border-width);
+	border-left: var(--default-border-width);
+	border-style: var(--default-border-style);
+	border-color: var(--default-border-color);
+
+	border-radius: 0px 0px 0px calc(var(--default-border-radius) / 1.5);
+}
+
+.table__tbody-tr:last-of-type .table__tbody-td:first-child {
+	border-radius: 0px 0px 0px calc(var(--default-border-radius) / 1.5);
+}
+
+.table__tbody-tr:last-of-type .table__tbody-td:last-child {
+	border-radius: 0px 0px calc(var(--default-border-radius) / 1.5) 0px;
 }
 
 /* Пользователь */

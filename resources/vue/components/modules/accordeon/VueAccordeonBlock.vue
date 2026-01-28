@@ -12,8 +12,10 @@ export default {};
 .accordeon__block {
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: calc(var(--default-gap) / 2);
 
-	padding: 0px 20px 20px 20px;
+	padding: 0px var(--default-padding) var(--default-padding) var(--default-padding);
+
+	font-size: 1.125rem;
 }
 </style>

@@ -91,8 +91,9 @@ export default {
 }
 
 .accordeon__head {
-	display: flex;
-	justify-content: space-between;
+	display: grid;
+	/* justify-content: space-between; */
+	grid-template-columns: 1fr auto;
 	align-items: center;
 	gap: var(--accordeon-head-gap);
 
@@ -111,8 +112,7 @@ export default {
 	border-radius: var(--accordeon-head-name-border-radius);
 	border: var(--accordeon-head-name-border);
 
-	height: 62px;
-
+	min-height: 62px;
 	font-size: 1.125rem;
 	color: black;
 

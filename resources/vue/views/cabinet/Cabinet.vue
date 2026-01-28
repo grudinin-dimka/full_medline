@@ -141,6 +141,10 @@ export default {
 </script>
 
 <style scoped>
+#app {
+	background-color: white;
+}
+
 #page {
 	box-sizing: border-box;
 	padding: 0px 0px 0px 0px;

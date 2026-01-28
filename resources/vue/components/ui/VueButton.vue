@@ -163,6 +163,11 @@ export default {
 	background-color: var(--button-delete-secondary-background-color);
 }
 
+.button-default.delete-secondary .loader {
+	border: var(--button-loader-delete-secondary-border);
+	border-bottom-color: transparent;
+}
+
 .button-default.delete-secondary:hover {
 	color: var(--button-delete-secondary-font-color-hover);
 	background-color: var(--button-delete-secondary-background-color-hover);
@@ -183,6 +188,11 @@ export default {
 .button-default.create-secondary {
 	color: var(--button-create-secondary-font-color);
 	background-color: var(--button-create-secondary-background-color);
+}
+
+.button-default.create-secondary .loader {
+	border: var(--button-loader-create-secondary-border);
+	border-bottom-color: transparent;
 }
 
 .button-default.create-secondary:hover {

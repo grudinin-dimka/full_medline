@@ -163,7 +163,7 @@ export default {
 		},
 
 		getClientDevices(state) {
-			if (state.client.devices.length === 0) return [];
+			if (!state.client.devices?.length) return [];
 
 			sorted.sortDateByKey("down", state.client.devices, "created_at");
 
